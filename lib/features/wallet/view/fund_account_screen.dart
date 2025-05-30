@@ -61,11 +61,17 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
   void _handleSubmit() async {
     // Convert amount string to double for comparison
     double numericAmount = double.tryParse(amount) ?? 0;
-
-    // Validate amount
+    
     if (amount == "0.00" || amount == "0" || amount.startsWith("00")) {
       setState(() {
         errorMessage = "Please enter a valid amount";
+      });
+      return;
+    }
+
+    if (numericAmount <= 50) {
+      setState(() {
+        errorMessage = "Amount must be greater than 50 NGN";
       });
       return;
     }
@@ -110,6 +116,20 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
             .read(walletFundingOptionsVmProvider.notifier)
             .walletFunding(
                 amount: double.parse(amount), fundOptionCode: fundOptionCode);
+        if (mounted) {
+          WayaLoadingDialog.hide(context);
+          if (data != null) {
+            WayaNav.toNamed(BankTransferScreen.route,
+                arguments: {...data, "amount": amount, 'redirect': redirect});
+          }
+        }
+        break;
+      case "9PSB":
+        WayaLoadingDialog.show(context);
+        final data = await ref
+            .read(walletFundingOptionsVmProvider.notifier)
+            .walletFunding(
+            amount: double.parse(amount), fundOptionCode: fundOptionCode);
         if (mounted) {
           WayaLoadingDialog.hide(context);
           if (data != null) {

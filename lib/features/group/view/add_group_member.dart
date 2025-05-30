@@ -36,6 +36,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
 
   @override
   Widget build(BuildContext context) {
+    print('GROUPID ==>>> ${widget.id}');
     final viewModel = ref.watch(groupProvider);
 
     final wayaTheme = Theme.of(context);
@@ -49,6 +50,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
             ? WayaButton(
                 callback: viewModel.isLoading
                     ? () async {
+
                         if (_formKey.currentState!.validate()) {}
                       }
                     : null,
@@ -124,6 +126,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                     onResult: (user) {
                       notifier.setAddedUser(user?.id);
                     },
+                    hintText: 'Search with email',
                     backgroundColor: wayaTheme.colorScheme.primary50,
                     searchController: viewModel.username,
                     buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
@@ -297,7 +300,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
           child: Padding(
             padding: EdgeInsets.only(left: 10, bottom: 16),
             child: SizedBox(
-              height: 120,
+              height: 126,
               width: size.width,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),

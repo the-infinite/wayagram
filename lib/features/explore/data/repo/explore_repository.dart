@@ -4,8 +4,25 @@ import 'package:wayagram/core/utils/utils.dart';
 
 class ExploreRepository extends BaseRepository {
   static const serviceUrl = WayaServiceUri.graph;
+  static final instance = ExploreRepository._();
+  ExploreRepository._();
 
-  Future<WayaRequestResponse> getFeeds(int page, [int limit = 20 ]) {
+  Future<WayaRequestResponse> getFeeds(int page, [int limit = 20]) {
     return get("$serviceUrl/posts/users/feed?page=$page&limit=$limit");
+  }
+
+  Future<WayaRequestResponse> fetchCommentedPost(int page, [int limit = 20]) {
+    return get(
+        "$serviceUrl/posts/users/feed?hasCommented=true&page=$page&limit=$limit");
+  }
+
+  Future<WayaRequestResponse> fetchLikedPosts(int page, [int limit = 20]) {
+    return get(
+        "$serviceUrl/posts/users/feed?isLiked=true&page=$page&limit=$limit");
+  }
+
+   Future<WayaRequestResponse> fetchReposts(String userId,int page, [int limit = 20]) {
+    return get(
+        "$serviceUrl/posts/users/feed?type=repost&userId=$userId$page&limit=$limit");
   }
 }

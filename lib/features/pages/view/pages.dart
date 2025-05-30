@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import '../../../shared/features/pages/notifier/default.dart';
 import 'create_page.dart';
 import 'pages_for_you.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -28,15 +28,15 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      myPageNotifier.getManagedPages();
       final args = ModalRoute.of(context)?.settings.arguments as dynamic;
-      if(args != null){
+      if (args != null) {
         setState(() {
-        _selectedIndex = args['index'];
+          _selectedIndex = args['index'];
         });
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +50,9 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
       appBarTrailing: Row(
         spacing: 12,
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-          WayaDp(
-            radius: 15.r,
-            
-          ),
+          InkWell(
+              onTap: ()=> WayaNav.toNamed('/searchPage'),
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           Gap(8)
         ],
       ),

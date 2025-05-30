@@ -73,7 +73,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? Parse the conversations as they are in the response object...
       final docs = (data['docs'] as List)
           .map((doc) => ChatModel.fromJson(doc))
-          .where((chat) => chat.latestMessageId != null)
+          .where((chat) => (chat.latestMessageId != null && chat.chatType != ChatType.group) || chat.chatType == ChatType.group)
           .toList();
 
       //? First, we check each of the members in each conversation...
@@ -335,7 +335,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return response.success;
   }
 
-  /// Helper function used to mute or unmute a user as the case may be.
+  /// Helper function used to report a user as the case may be.
   Future<bool> reportUser(String id, String reason) async {
     final response = await repo.reportUser(id, reason);
 

@@ -170,11 +170,12 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     }
   }
 
-  Future<void> fetchBusinessTypes() async {
+  Future<List<Select>?> fetchBusinessTypes() async {
     try {
       state = state.copyWith(isLoadingBusinessType: true);
       final response = await _authRepository.getBusinessTypes();
       _logger.d(response.data);
+      List<Select> biz = [];
       final businesses = response.data['data']['docs'] as List;
       final businessTypes = businesses
           .map((item) => Select(
@@ -183,9 +184,13 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
               ))
           .toList();
 
+      biz = businessTypes;
+
       state = state.copyWith(businessTypes: businessTypes);
+
+      return biz;
     } catch (e) {
-      _logger.e(e);
+      return [];
     } finally {
       state = state.copyWith(isLoadingBusinessType: false);
     }
@@ -216,8 +221,6 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       debugPrint(error.toString());
     }
   }
-
-  // Future<Waya>
 
   Future<void> onSubmit(Function gotoNextTab) async {
     try {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -21,12 +24,12 @@ class WayaShop extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _WayaShopState();
 }
 
-class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderStateMixin {
+class _WayaShopState extends ConsumerState<WayaShop>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     _selectedIndex = widget.currentIndex;
     super.initState();
   }
@@ -39,9 +42,35 @@ class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderSt
       isLoading: ref.watch(createShopVmProvider).isLoading,
       isScrollable: false,
       progressIndicator: loadingState(context: context),
-      onTapBackButton: () => WayaNav.toNamed(BottomView.route, arguments: 0, preventDuplicates: false),
+      onTapBackButton: () => WayaNav.toNamed(BottomView.route,
+          arguments: 0, preventDuplicates: false),
       title: 'Shop',
-      appBarTrailing: WayaCartIcon(),
+      appBarTrailing: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 3,
+            children: [
+              InkWell(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  //
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: EdgeInsets.all(6),
+                  child: SvgPicture.asset(
+                    WayaAssets.icons.mSmallHeart.path,
+                    fit: BoxFit.cover,
+                    width: 18,
+                    height: 18,
+                    color: wayaTheme.colorScheme.white,
+                  ),
+                ),
+              ),
+              WayaCartIcon(),
+            ]),
       body: Column(
         children: [
           const Gap(10),
@@ -71,12 +100,14 @@ class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderSt
         ],
       ),
       floatingActionButton: Visibility(
-        visible: ConversationState.self.role != 'PERSONAL' && _selectedIndex == 2,
+        visible:
+            ConversationState.self.role != 'PERSONAL' && _selectedIndex == 2,
         child: SizedBox(
           height: 50,
           width: 50,
           child: WayaButton(
-            callback: () => WayaNav.toNamed(CreateShop.route, arguments: CreateShopArg(uniqueKey: 'create-shop')),
+            callback: () => WayaNav.toNamed(CreateShop.route,
+                arguments: CreateShopArg(uniqueKey: 'create-shop')),
             height: 50,
             centerWidget: Center(
               child: Icon(

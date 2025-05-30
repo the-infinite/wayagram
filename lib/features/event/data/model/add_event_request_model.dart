@@ -1,4 +1,3 @@
-
 class AddEventRequestModel {
   final String title;
   final String organizerName;
@@ -15,6 +14,8 @@ class AddEventRequestModel {
   final String privacyOption;
   final String image;
   final String userId;
+  final String ticketSalesStartDate;
+  final String ticketSalesEndDate;
 
   AddEventRequestModel({
     this.description,
@@ -31,6 +32,8 @@ class AddEventRequestModel {
     required this.image,
     required this.locationAddress,
     required this.userId,
+    required this.ticketSalesEndDate,
+    required this.ticketSalesStartDate,
     this.maxCapacity,
   });
 
@@ -52,6 +55,8 @@ class AddEventRequestModel {
       privacyOption: json['privacyOption'],
       image: json['image'],
       userId: json['userId'],
+      ticketSalesEndDate: json['ticketSalesEndDate'],
+      ticketSalesStartDate: json['ticketSalesStartDate']
     );
   }
 
@@ -71,11 +76,13 @@ class AddEventRequestModel {
       'privacyOption': privacyOption,
       'image': image,
       'userId': userId,
+      'ticketSalesStartDate': ticketSalesStartDate,
+      'ticketSalesEndDate': ticketSalesEndDate
     };
 
     if (description != null) json['description'] = description;
     if (maxCapacity != null) json['maxCapacity'] = maxCapacity;
-    
+
     return json;
   }
 }

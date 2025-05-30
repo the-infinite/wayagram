@@ -66,7 +66,7 @@ class _MuteChatGroupModalState extends State<MuteChatGroupModal> {
           children: [
             //? Section title.
             Text(
-              "Mute Group",
+              "Mute ${widget.chat.chatType == ChatType.group ? "Group" : "Chat"}",
               style: wayaTheme.textTheme.headlineLarge,
             ),
 
@@ -76,7 +76,7 @@ class _MuteChatGroupModalState extends State<MuteChatGroupModal> {
             //? The hint next.
             Text(
               maxLines: 3,
-              "You won't receive notifications from this group conversation based on the time you set",
+              "You won't receive notifications from this ${widget.chat.chatType == ChatType.group ? "group conversation" : "chat"} based on the time you set",
               style: wayaTheme.textTheme.hintStyle,
             ),
 

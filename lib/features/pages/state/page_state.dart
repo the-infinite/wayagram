@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
+import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
@@ -17,7 +18,9 @@ class PageState {
   final List<PostImage> images;
   final List<PostModel>? fetchAllPostData;
   final List<PostModel>? getAllPost;
+  final List<GetAllPostDocs>? getAllPagePost;
   final List<CommentModel>? comments;
+  final List<PageFollowerDocs>? pageFollowerDocs;
   final num? postCount;
   final GetAllPost? allPostData;
   List<PageModel>? recommendedPages;
@@ -53,12 +56,14 @@ class PageState {
     this.images = const [],
     this.fetchAllPostData = const [],
     this.comments = const [],
+    this.pageFollowerDocs = const [],
     this.pagePopularPostDocs = const [],
     this.getAllPost = const [],
     this.docs = const [],
     this.allPageModelDocs = const [],
     this.getPageMemberDocs = const [],
     this.recommendedPages = const [],
+    this.getAllPagePost = const [],
     this.data,
     this.allPostData,
     this.shareModelData,
@@ -74,7 +79,9 @@ class PageState {
     TextEditingController? username,
     String? foundUserId,
     String? roleType,
+    List<PageFollowerDocs>? pageFollowerDocs,
     List<PostImage>? images,
+    List<GetAllPostDocs>? getAllPagePost,
     List<PostModel>? fetchAllPostData,
     List<PostModel>? getAllPost,
     List<PageModel>? recommendedPages,
@@ -95,12 +102,14 @@ class PageState {
     return PageState(
       roleType: roleType ?? this.roleType,
       username: username ?? this.username,
+      getAllPagePost: getAllPagePost ?? this.getAllPagePost,
       foundUserId: foundUserId ?? this.foundUserId,
       pageName: pageName ?? this.pageName,
       pageDescription: pageDescription ?? this.pageDescription,
       content: content ?? this.content,
       images: images ?? this.images,
       data: data ?? this.data,
+      pageFollowerDocs: pageFollowerDocs ?? this.pageFollowerDocs,
       postCount: postCount ?? this.postCount,
       recommendedPages: recommendedPages ?? this.recommendedPages,
       shareModelData: shareModelData ?? this.shareModelData,

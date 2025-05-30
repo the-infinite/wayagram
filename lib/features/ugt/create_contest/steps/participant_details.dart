@@ -16,10 +16,12 @@ import '../../vm/ugt_vm.dart';
 class ParticipantDetails extends StatefulHookConsumerWidget {
   final Function goToNextTab;
   final Function(int) goToPrevTab;
-  const ParticipantDetails({super.key, required this.goToNextTab, required this.goToPrevTab});
+  const ParticipantDetails(
+      {super.key, required this.goToNextTab, required this.goToPrevTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ParticipantDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ParticipantDetailsState();
 }
 
 class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
@@ -44,16 +46,20 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
           if (contestViewModel?.entryType?.toLowerCase() == "free") {
             viewModel2.amount.text = "0";
           }
-          ref
-              .read(contestNotifierProvider.notifier)
-              .updateEntryType(contestViewModel?.entryType?.toLowerCase() == "free" ? "Free" : "Paid");
+          ref.read(contestNotifierProvider.notifier).updateEntryType(
+              contestViewModel?.entryType?.toLowerCase() == "free"
+                  ? "Free"
+                  : "Paid");
           // viewModel2.entrySelectType = contestViewModel.entryType??"";
           viewModel2.amount.text = contestViewModel?.amount?.toString() ?? "";
-          ref
-              .read(contestNotifierProvider.notifier)
-              .updateParticipationDate(contestViewModel?.participationStartDate?.split("T").first ?? "");
+          ref.read(contestNotifierProvider.notifier).updateParticipationDate(
+              contestViewModel?.participationStartDate?.split("T").first ?? "");
 
-          viewModel2.descriptionOfAwards.text = contestViewModel?.descriptionOfAwards ?? "";
+          ref.read(contestNotifierProvider.notifier).updateParticipationEndDate(
+              contestViewModel?.participationEndDate?.split("T").first ?? "");
+
+          viewModel2.descriptionOfAwards.text =
+              contestViewModel?.descriptionOfAwards ?? "";
         });
       }
       return null;
@@ -66,7 +72,8 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
         children: [
           Text("Participation Details", style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
-          Text("Bring your talent contest vision to life. Customize details, set stages, and make it unforgettable",
+          Text(
+              "Bring your talent contest vision to life. Customize details, set stages, and make it unforgettable",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
           FormField<String>(validator: (value) {
@@ -83,17 +90,21 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                   controller: viewModel2.howItWorks,
                   hintText: "Enter Contest Description",
                   label: "How to Participate",
+                  keyboardType: TextInputType.multiline,
                   maxLength: 500,
                   line: 6,
                   borderColor:
-                      formState.hasError && viewModel2.howItWorks.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                      formState.hasError && viewModel2.howItWorks.text.isEmpty
+                          ? wayaTheme.colorScheme.error
+                          : null,
                 ),
                 if (formState.hasError && viewModel2.howItWorks.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText!,
-                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -116,13 +127,17 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                   value: viewModel2.entrySelectType,
                   label: "Entry Type",
                   hintText: 'Choose entry type',
-                  items: ref.read(contestNotifierProvider.notifier).ugtPaymentType(),
+                  items: ref
+                      .read(contestNotifierProvider.notifier)
+                      .ugtPaymentType(),
                   onSelected: (value) {
                     debugPrint(" i am poo ${value.first.label}");
                     if (value.first.label == "Free") {
                       viewModel2.amount.text = "0";
                     }
-                    ref.read(contestNotifierProvider.notifier).updateEntryType(value.first.label);
+                    ref
+                        .read(contestNotifierProvider.notifier)
+                        .updateEntryType(value.first.label);
                   },
                   uniqueKey: 'contest-state',
                 ),
@@ -131,7 +146,8 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText!,
-                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -144,7 +160,12 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                 return 'Amount is required';
               }
               String value = viewModel2.amount.text.contains("NGN")
-                  ? viewModel2.amount.text.replaceAll("NGN", "").replaceAll(",", "").split(".").first.toString()
+                  ? viewModel2.amount.text
+                      .replaceAll("NGN", "")
+                      .replaceAll(",", "")
+                      .split(".")
+                      .first
+                      .toString()
                   : viewModel2.amount.text;
 
               if (int.parse(value) <= 0) {
@@ -161,15 +182,21 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     hintText: "NGN0",
                     isReadOnly: viewModel2.entrySelectType == "Free",
                     label: "Amount",
-                    inputFormatters: [CurrencyTextInputFormatter.currency(name: 'NGN', symbol: 'NGN', locale: 'en_NG')],
-                    borderColor: formState.hasError ? wayaTheme.colorScheme.error : null,
+                    inputFormatters: [
+                      CurrencyTextInputFormatter.currency(
+                          name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                    ],
+                    borderColor:
+                        formState.hasError ? wayaTheme.colorScheme.error : null,
                   ),
                   if (formState.hasError)
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
-                        style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
                       ),
                     ),
                 ],
@@ -269,17 +296,24 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    ref.read(contestNotifierProvider.notifier).showDatePickerDialog(context);
+                    ref
+                        .read(contestNotifierProvider.notifier)
+                        .showDatePickerDialog(context);
                   },
                   child: AbsorbPointer(
                     child: WayaSelectField<String>(
                       height: 0.3,
-                      value: viewModel2.startDate.isEmpty ? 'DD/MM/YYYY' : viewModel2.startDate,
+                      value: viewModel2.startDate.isEmpty
+                          ? 'DD/MM/YYYY'
+                          : viewModel2.startDate,
                       label: "Participation Start Date",
                       hintText: 'Select Start Date',
-                      items: ref.read(contestNotifierProvider.notifier).ugtDurationType(),
-                      onSelected: (value) =>
-                          ref.read(contestNotifierProvider.notifier).updateParticipationDate(value.first.label),
+                      items: ref
+                          .read(contestNotifierProvider.notifier)
+                          .ugtDurationType(),
+                      onSelected: (value) => ref
+                          .read(contestNotifierProvider.notifier)
+                          .updateParticipationDate(value.first.label),
                       uniqueKey: 'contest-state',
                     ),
                   ),
@@ -289,7 +323,55 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText!,
-                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(15),
+          FormField<String>(validator: (value) {
+            if (viewModel2.endDate.isEmpty) {
+              return 'Date is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    ref
+                        .read(contestNotifierProvider.notifier)
+                        .showDatePickerDialog2(context);
+                  },
+                  child: AbsorbPointer(
+                    child: WayaSelectField<String>(
+                      height: 0.3,
+                      value: viewModel2.endDate.isEmpty
+                          ? 'DD/MM/YYYY'
+                          : viewModel2.endDate,
+                      label: "Participation End Date",
+                      hintText: 'Select End Date',
+                      items: ref
+                          .read(contestNotifierProvider.notifier)
+                          .ugtDurationType(),
+                      onSelected: (value) => ref
+                          .read(contestNotifierProvider.notifier)
+                          .updateParticipationEndDate(value.first.label),
+                      uniqueKey: 'contest-state',
+                    ),
+                  ),
+                ),
+                if (formState.hasError && viewModel2.endDate.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText!,
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -308,20 +390,24 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               children: [
                 WayaTextFormField(
                   controller: viewModel2.descriptionOfAwards,
+                  keyboardType: TextInputType.multiline,
                   hintText: "Enter Contest Description",
                   label: "Contest Description",
                   maxLength: 500,
                   line: 6,
-                  borderColor: formState.hasError && viewModel2.descriptionOfAwards.text.isEmpty
+                  borderColor: formState.hasError &&
+                          viewModel2.descriptionOfAwards.text.isEmpty
                       ? wayaTheme.colorScheme.error
                       : null,
                 ),
-                if (formState.hasError && viewModel2.descriptionOfAwards.text.isEmpty)
+                if (formState.hasError &&
+                    viewModel2.descriptionOfAwards.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText!,
-                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -352,7 +438,8 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               text: 'Go Back',
               color: wayaTheme.colorScheme.greyColor300,
               textColor: wayaTheme.colorScheme.customBlack,
-              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
                 widget.goToPrevTab(0);
                 //  WayaNav.goBack();

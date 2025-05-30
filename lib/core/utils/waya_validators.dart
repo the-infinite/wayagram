@@ -1,5 +1,6 @@
 class WayaValidators {
   // all validators will be here
+  WayaValidators._();
 
   static String? passwordValidator(String password) {
     if (password.isEmpty) {
@@ -41,7 +42,11 @@ class WayaValidators {
   }
 
   static String? isValidInput(String? data,
-      {int? minLength = 1, int? maxLength, num? balance, num? amount, String? message}) {
+      {int? minLength = 1,
+      int? maxLength,
+      num? balance,
+      num? amount,
+      String? message}) {
     if (balance != null) {
       if (balance < amount!) {
         return 'Insufficient Balance';
@@ -102,7 +107,9 @@ class WayaValidators {
     return null;
   }
 
-  static String? isValidPasswordChange(String data, String newPassword, String newPassword2, {int? minLength}) {
+  static String? isValidPasswordChange(
+      String data, String newPassword, String newPassword2,
+      {int? minLength}) {
     data = data.trim();
     if (newPassword != newPassword2) return 'New Passwords do not match';
 
@@ -115,7 +122,8 @@ class WayaValidators {
     return null;
   }
 
-  static String? isValidPhoneNumber(String data, {int minLength = 9, int maxLength = 10}) {
+  static String? isValidPhoneNumber(String data,
+      {int minLength = 9, int maxLength = 10}) {
     data = data.trim();
     String? result = isValidInput(
       data,

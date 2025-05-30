@@ -1,18 +1,21 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:typed_data';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -23,6 +26,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import '../views/media_moment.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image/image.dart' as img;
 import 'dart:io';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -271,7 +275,44 @@ class MomentVm extends StateNotifier<MomentState> {
     }
   }
 
-  Future<void> submitMoment({required BuildContext context}) async {
+//> generate image preview
+  Future<File> generateImagePreview(File imageFile) async {
+    final imageBytes = await imageFile.readAsBytes();
+    final image = img.decodeImage(imageBytes);
+
+    final thumbnail = img.copyResize(image!, width: 150);
+    final previewFile = File(
+        '${imageFile.path}_preview.${WayaFileHelper.getFileExtension(imageFile.path)}');
+    await previewFile.writeAsBytes(img.encodeJpg(thumbnail, quality: 60));
+
+    return previewFile;
+  }
+
+//> generate video preview
+  Future<File?> generateVideoPreview(String videoPath) async {
+    final thumb = await VideoThumbnail.thumbnailFile(
+      video: videoPath,
+      imageFormat: ImageFormat.JPEG,
+      maxHeight: 150,
+      quality: 60,
+    );
+
+    return thumb != null ? File(thumb) : null;
+  }
+
+//> generate text preview
+  Future<Uint8List?> captureTextMomentPreview(GlobalKey previewKey) async {
+    RenderRepaintBoundary boundary =
+        previewKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
+
+    final image = await boundary.toImage(pixelRatio: 2.0);
+    final byteData = await image.toByteData(format: ImageByteFormat.png);
+    return byteData?.buffer.asUint8List();
+  }
+
+  Future<void> submitMoment(
+      {required BuildContext context,
+      GlobalKey<State<StatefulWidget>>? previewKey}) async {
     final text = state.text;
     final backgroundColor = state.backgroundColor;
     final textStyle = state.textStyle;
@@ -282,6 +323,7 @@ class MomentVm extends StateNotifier<MomentState> {
     String contentType = '';
     String color = '';
     String fontType = '';
+    String? thumbnail = state.thumbnail;
 
     debugPrint('Submitting moment:');
     debugPrint('Text: $text');
@@ -298,7 +340,26 @@ class MomentVm extends StateNotifier<MomentState> {
       contentType = 'text';
       fontType = MomentHelper.textStyleToJson(textStyle);
       color = MomentHelper.colorToHex(backgroundColor);
-    } else if (state.type == StatusType.media && state.mediaType == MediaType.image) {
+
+      // if (previewKey != null) {
+      //   final previewBytes = await captureTextMomentPreview(previewKey);
+      //   if (previewBytes != null) {
+      //     final tempDir = await getTemporaryDirectory();
+      //     final fileName =
+      //         '${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}_text_preview.png';
+      //     final filePath = path.join(tempDir.path, fileName);
+
+      //     final textPreviewFile =
+      //         await File(filePath).writeAsBytes(previewBytes);
+
+      //     thumbnail = await WayaFileRepository.instance.uploadFile(
+      //       textPreviewFile,
+      //       "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(textPreviewFile.path)}}",
+      //     );
+      //   }
+      // }
+    } else if (state.type == StatusType.media &&
+        state.mediaType == MediaType.image) {
       contentType = 'image';
       // image
       if (state.selectedFile != null) {
@@ -306,6 +367,13 @@ class MomentVm extends StateNotifier<MomentState> {
           selectedAsset!,
           "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
         );
+        //> get preview
+        // final preview = await generateImagePreview(state.selectedFile!);
+
+        // thumbnail = await WayaFileRepository.instance.uploadFile(
+        //   preview,
+        //   "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(preview.path)}}",
+        // );
 
         if (publicUrl != null) {
           content = publicUrl;
@@ -325,6 +393,13 @@ class MomentVm extends StateNotifier<MomentState> {
           selectedAsset!,
           "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
         );
+        // //> get preview
+        // final preview = await generateVideoPreview(publicUrl ?? '');
+
+        // thumbnail = await WayaFileRepository.instance.uploadFile(
+        //   preview!,
+        //   "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(preview.path)}}",
+        // );
 
         if (publicUrl != null) {
           content = publicUrl;
@@ -339,32 +414,29 @@ class MomentVm extends StateNotifier<MomentState> {
     }
 
     try {
-      final userId = await _secureDataSource.getUserId();
-
-      final userProfile =
-          ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user;
-
       final response = state.isEditingMode
           ? await _momentRepository.editMoment(
-              userId: userId!,
+              userId: ConversationState.self.id,
               name:
-                  "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
-              image: userProfile?.profilePicture ?? '',
+                  "${ConversationState.self.firstName.capitalizeFirst ?? ''} ${ConversationState.self.lastName.capitalizeFirst ?? ''}",
+              image: ConversationState.self.profilePicture ?? '',
               content: content,
               caption: caption,
               color: color,
               momentId: state.momentId,
               fontType: fontType,
+              thumbnail: thumbnail ?? '',
               contentType: contentType)
           : await _momentRepository.createMoment(
-              userId: userId!,
+              userId: ConversationState.self.id,
               name:
-                  "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
-              image: userProfile?.profilePicture ?? '',
+                  "${ConversationState.self.firstName.capitalizeFirst ?? ''} ${ConversationState.self.lastName.capitalizeFirst ?? ''}",
+              image: ConversationState.self.profilePicture ?? '',
               content: content,
               caption: caption,
               color: color,
               fontType: fontType,
+              thumbnail: thumbnail ?? '',
               contentType: contentType);
       if (response.success) {
         reset();
@@ -521,33 +593,46 @@ class MomentVm extends StateNotifier<MomentState> {
     }
   }
 
-  Future<void> reportMoment(
-      {required String momentId,
-      required String reason,
-      String? comment,
-      required BuildContext context}) async {
+  Future<bool> reportMoment({
+    required String momentId,
+    required String reason,
+    String? comment,
+  }) async {
     try {
       state = state.copyWith(isReportingMoment: true);
       final userId = await _secureDataSource.getUserId();
       final response = await _momentRepository.reportMoment(
           userId: userId!, momentId: momentId, reason: reason);
-      if (response.success && context.mounted) {
-        // show success modal
-        WayaNav.goBack();
-        await WayaUtils.showNotice(
-            context: context,
-            title: "Report Submitted Successfully",
-            onPress: () {
-              WayaNav.goBack();
-            },
-            icon: Image.asset(
-              WayaAssets.images.eCheckEvent.path,
-              scale: 1.5,
-            ),
-            message: 'Thank you for reporting. We take your feedback seriously',
-            buttonText: 'Dismiss');
-        debugPrint(response.data.toString());
+      bool isSuccess = false;
+      if (response.success) {
+       
+        isSuccess = true;
+      } else {
+        
+        isSuccess = false;
       }
+
+      // if (response.success && context.mounted) {
+      // show success modal
+    //  WayaNav.goBack();
+      //
+      // await WayaUtils.showNotice(
+      //     context: context,
+      //     title: "Report Submitted Successfully",
+      //     onPress: () {
+      //       WayaNav.goBack();
+      //     },
+      //     icon: Image.asset(
+      //       WayaAssets.images.eCheckEvent.path,
+      //       scale: 1.5,
+      //     ),
+      //     message: 'Thank you for reporting. We take your feedback seriously',
+      //     buttonText: 'Dismiss');
+      //  print("fwfewfwef $isSuccess");
+      debugPrint(response.data.toString());
+      return isSuccess;
+
+      // }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -555,6 +640,7 @@ class MomentVm extends StateNotifier<MomentState> {
         WayaDebugEventModule.moments,
         WayaDebugHelpers.getStackTrace(e),
       );
+      return false;
     } finally {
       state = state.copyWith(isReportingMoment: false);
     }
@@ -593,6 +679,7 @@ class MomentVm extends StateNotifier<MomentState> {
             ? MomentHelper.hexToColor(moment.color!)
             : null,
         text: moment.contentType == 'text' ? moment.content : '',
+        thumbnail: moment.thumbnail ?? '',
         textStyle: moment.fontType != null && moment.fontType!.isNotEmpty
             ? MomentHelper.textStyleFromJson(moment.fontType!)
             : GoogleFonts.roboto(

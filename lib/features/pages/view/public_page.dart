@@ -61,6 +61,8 @@ class _PublicPageState extends ConsumerState<PublicPage>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+      debugPrint('DIALA PAGEID ${widget.id}');
       if (wayaPageCache.getCachedData(widget.id) != null) return;
 
       final result = await myPageNotifier.getSinglePage(widget.id);
@@ -103,7 +105,12 @@ class _PublicPageState extends ConsumerState<PublicPage>
       appBarTrailing: Row(
         spacing: 12,
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          InkWell(
+              onTap: () {
+                WayaNav.toNamed('/searchGroupAndPage',
+                    arguments: {'pageId': widget.id, 'name': 'page'});
+              },
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
             onTap: () => Share.share(
               WayaValueHelper.getShareableUrl(
@@ -240,7 +247,8 @@ class _PublicPageState extends ConsumerState<PublicPage>
                           onTap: _followPage,
                           child: Container(
                             margin: EdgeInsets.only(right: 20.w),
-                            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5.h, horizontal: 8.w),
                             decoration: BoxDecoration(
                               border: Border.all(
                                   color: wayaTheme.colorScheme.primary600,
@@ -300,13 +308,19 @@ class _PublicPageState extends ConsumerState<PublicPage>
                         color: wayaTheme.colorScheme.greyColor500,
                       ),
                     ),
+                    /// 0e2f98e8-2b78-455f-8ade-567298ee648f
                     const Gap(10),
                     Row(
                       children: [
                         //? This is fine too.
-                        actionType2(
-                          WayaValueHelper.formatNumber(page.followerCount),
-                          'Followers',
+                        InkWell(
+                          onTap: () => WayaNav.toNamed(
+                              '/pageFollowerScreen',
+                          arguments: widget.id),
+                          child: actionType2(
+                            WayaValueHelper.formatNumber(page.followerCount),
+                            'Followers',
+                          ),
                         ),
 
                         //? Some space.

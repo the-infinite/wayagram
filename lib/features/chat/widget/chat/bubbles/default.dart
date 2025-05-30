@@ -30,6 +30,7 @@ bool _isMediaFile(MessageModel data) {
 class _MyBubbleWidget extends StatelessWidget {
   final MessageModel data;
   final ChatInputController controller;
+  final ChatModel chat;
   final bool interactive;
 
   // Construct.
@@ -37,13 +38,13 @@ class _MyBubbleWidget extends StatelessWidget {
     required this.data,
     required this.controller,
     required this.interactive,
+    required this.chat,
   });
 
   @override
   Widget build(BuildContext context) {
     final timeString =
         "${data.readAt != null ? 'Read' : data.deliveredAt != null ? 'Delivered' : 'Sent'} ${WayaDateHelper.getTimestamp(data.readAt ?? data.deliveredAt ?? data.updatedAt)}";
-
     //? The time string.
     return SizedBox(
       width: double.infinity,
@@ -163,16 +164,15 @@ class _MyBubbleWidget extends StatelessWidget {
                                 child: ChatReplyToWidget(
                                   controller: controller,
                                   message: data.originalMessage!,
+                                  chat: chat,
                                   interactive: false,
                                 ),
                               ),
 
                             //? Second below.
                             switch (data.messageType) {
-                              MessageType.text => TextMessageWidget(
-                                  data: data,
-                                  textColor: WayaColors.white,
-                                ),
+                              MessageType.text =>
+                                TextMessageWidget(data: data, textColor: WayaColors.white, isMyMessage: true),
                               MessageType.voiceNote => VoiceMessageWidget(
                                   data: data,
                                   isSender: true,
@@ -263,7 +263,7 @@ class _YourBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = chat.allOthers.firstWhere((member) => member.userId == data.senderId).combined;
+    final user = chat.chatMembers.firstWhere((member) => member.userId == data.senderId).combined;
 
     // This is fine.
     return Padding(
@@ -392,6 +392,7 @@ class _YourBubbleWidget extends StatelessWidget {
                                 child: ChatReplyToWidget(
                                   controller: controller,
                                   message: data.originalMessage!,
+                                  chat: chat,
                                   interactive: false,
                                 ),
                               ),
@@ -518,7 +519,8 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
 
 class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   OverlayEntry? _entry;
-  late final notifier = ref.watch(chatProvider.notifier);
+  late final notifier = ref.watch(chatProvider(widget.chat?.id ?? widget.data.chatId).notifier);
+  late final messageController = notifier.getController(widget.data);
 
   /// This is the message we are replying to.
   void _replyTo() {
@@ -561,6 +563,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
     // This is fine.
     final offset = renderBox.localToGlobal(Offset.zero);
     final isMe = widget.data.senderId == ConversationState.self.id;
+    final messageController = notifier.getController(widget.data);
 
     // This is fine.
     _entry = OverlayEntry(
@@ -897,7 +900,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
     // Insert this overlay.
     Overlay.of(context).insert(_entry!);
-    widget.controller.setFocus(widget.data);
+    widget.controller.setFocus(messageController.data);
 
     // Update this lad.
     setState(() {
@@ -907,7 +910,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
   /// Utility runnable used to resend this message when it failed.
   Future<void> _resendMessage() async {
-    final notifier = ref.watch(chatProvider.notifier);
+    final notifier = ref.watch(chatProvider(widget.chat!.id).notifier);
 
     //? If this is actually fine.
     notifier.sendMessage(widget.data.dto!, widget.data.id);
@@ -916,11 +919,21 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   /// A utility function used to check whether I have seen this message and then
   /// notify others of it.
   Future<void> _checkStatusAndNotify() async {
+    //? The member data.
+    final me = widget.chat?.self;
+    final other = widget.chat?.other;
+
     //? If this is not interactive, leave.
     if (!widget.interactive) return;
 
     //? If this message was sent by me, leave.
     if (widget.data.senderId == ConversationState.self.id) return;
+
+    //? If this user does not have read receipts...
+    if (widget.chat?.chatType == ChatType.personal && !(me?.chatUser?.canSeeReadReceipt ?? true)) return;
+
+    //? If the other user does not have read receipts...
+    if (widget.chat?.chatType == ChatType.personal && !(other?.chatUser?.canSeeReadReceipt ?? true)) return;
 
     //* My read status.
     final status = widget.data.myStatus?.status;
@@ -1031,16 +1044,23 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     : null,
                 onRightSwipe: widget.interactive ? (details) => _replyTo() : null,
                 child: widget.data.senderId == user.id
-                    ? _MyBubbleWidget(
-                        data: widget.data,
-                        controller: widget.controller,
-                        interactive: widget.interactive,
+                    ? ValueListenableBuilder(
+                        valueListenable: messageController,
+                        builder: (context, redraws, _) => _MyBubbleWidget(
+                          data: messageController.data,
+                          chat: widget.chat!,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                        ),
                       )
-                    : _YourBubbleWidget(
-                        data: widget.data,
-                        chat: widget.chat!,
-                        controller: widget.controller,
-                        interactive: widget.interactive,
+                    : ValueListenableBuilder(
+                        valueListenable: messageController,
+                        builder: (context, redraws, _) => _YourBubbleWidget(
+                          data: messageController.data,
+                          chat: widget.chat!,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                        ),
                       ),
               ),
             ],

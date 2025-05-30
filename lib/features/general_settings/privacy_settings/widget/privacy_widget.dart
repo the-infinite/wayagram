@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 class PrivacyWidget extends StatelessWidget {
@@ -18,7 +20,6 @@ class PrivacyWidget extends StatelessWidget {
       required this.value,
       required this.showSwitch,
       this.whoCanContactMe,
-     
       this.onSwitchChanged,
       required this.switchValue,
       super.key});
@@ -28,12 +29,11 @@ class PrivacyWidget extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
-        Card(
-          elevation: 0.5,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-          //  margin: EdgeInsets.only(bottom: 10),
+        Material(
+          borderRadius: BorderRadius.circular(14),
+          color: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,13 +71,22 @@ class PrivacyWidget extends StatelessWidget {
                                 color: wayaTheme.colorScheme.greyColor400),
                           ],
                         )
-                      : Switch(
+                      : CupertinoSwitch(
+                          activeTrackColor: WayaColors.primary,
+                          value: switchValue!.value,
+                          onChanged: (value) {
+                            switchValue?.value = value;
+                            onSwitchChanged?.call(value);
+                          },
+                        ),
+
+                  /*  Switch(
                           value: switchValue!.value,
                           onChanged: (vale) {
                             switchValue?.value = vale;
                             onSwitchChanged?.call(vale);
                           },
-                          activeColor: wayaTheme.colorScheme.primary),
+                          activeColor: wayaTheme.colorScheme.primary), */
                 ),
               ],
             ),

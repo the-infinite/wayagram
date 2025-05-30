@@ -16,7 +16,8 @@ class MemberModelBase {
   final int? statusCode;
   final List<MemberModel>? data;
 
-  factory MemberModelBase.fromJson(Map<String, dynamic> json) => _$MemberModelBaseFromJson(json);
+  factory MemberModelBase.fromJson(Map<String, dynamic> json) =>
+      _$MemberModelBaseFromJson(json);
 
   Map<String, dynamic> toJson() => _$MemberModelBaseToJson(this);
 }
@@ -27,6 +28,7 @@ class MemberModel {
     required this.id,
     required this.userId,
     required this.shopId,
+    required this.contestId,
     required this.roles,
     required this.email,
     required this.isActive,
@@ -38,6 +40,7 @@ class MemberModel {
   final String? id;
   final String? userId;
   final String? shopId;
+  final String? contestId;
   final List<String>? roles;
   final String? email;
   final bool? isActive;
@@ -47,7 +50,8 @@ class MemberModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  factory MemberModel.fromJson(Map<String, dynamic> json) => _$MemberModelFromJson(json);
+  factory MemberModel.fromJson(Map<String, dynamic> json) =>
+      _$MemberModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MemberModelToJson(this);
 }

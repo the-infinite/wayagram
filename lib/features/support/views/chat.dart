@@ -83,7 +83,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
       onPopInvokedWithResult: (popping, _) {
         if (!popping) return;
         inputController.reset();
-        notifier.reset();
+        notifier.setInactive();
       },
       child: WayaScaffold(
         isLoading: false,

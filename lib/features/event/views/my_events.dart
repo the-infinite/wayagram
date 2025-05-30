@@ -38,7 +38,7 @@ class _MyEventState extends ConsumerState<MyEvents> {
   }
 
   @override
-  void dispose() {
+void dispose() {
     searchController.dispose();
     super.dispose();
   }

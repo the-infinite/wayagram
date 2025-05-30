@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
 import 'package:wayagram/features/ugt/data/model/single_contestant_profile.dart';
@@ -31,8 +34,8 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     } catch (e) {}
 
     try {
-      final response =
-          await _contestRepository.getContestForYou(isFirst ? 1 : state.page);
+      final response = await _contestRepository.getContestForYou(
+          isFirst ? 1 : state.page, state.filter);
       //  List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
@@ -59,6 +62,11 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     } finally {}
   }
 
+  void updateFilter(String? filter) {
+    state = state.copyWith(filter: filter);
+    fetchContestForYou(true);
+  }
+
   Future<Contest?> fetchSingleContest(
       {required String contestId, WidgetRef? ref}) async {
     try {
@@ -70,12 +78,22 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
         if (ref != null) {
           ref.read(selectedContestProvider.notifier).state = contest;
         }
-        
       }
       return contest;
     } catch (error) {
       return null;
     }
+  }
+  //> generate video preview
+  Future<File?> generateVideoPreview(String videoPath) async {
+    final thumb = await VideoThumbnail.thumbnailFile(
+      video: videoPath,
+      imageFormat: ImageFormat.JPEG,
+      maxHeight: 250,
+      quality: 60,
+    );
+
+    return thumb != null ? File(thumb) : null;
   }
 
   Future<SingleContestProfileBase?> fetchSingleContestantDetails(

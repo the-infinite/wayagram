@@ -8,7 +8,6 @@ import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/event_widget.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
-import 'package:wayagram/features/shop/mixin/product_mixin.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
@@ -22,8 +21,7 @@ class AllUpcomingEvents extends ConsumerStatefulWidget {
       _AllUpcomingEventsState();
 }
 
-class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents>
-    with ProductMixin {
+class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -34,7 +32,7 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    
 
   
     return WayaScaffold(

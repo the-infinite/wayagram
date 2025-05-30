@@ -29,13 +29,14 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(loginVmProvider);
+    final notifier = ref.read(loginVmProvider.notifier);
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
         Platform.isAndroid ?
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
-          callback: ref.read(loginVmProvider.notifier).signinWithGoogle,
+          callback: notifier.signinWithGoogle,
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,
@@ -43,7 +44,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
         //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
-          callback: () {},
+          callback: notifier.signinWithApple,
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
           text: "Continue with Apple",
           textColor: wayaTheme.colorScheme.onPrimary,
@@ -152,6 +153,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                                 : Icons.visibility_off_outlined),
                             color: wayaTheme.colorScheme.greyColor300,
                           ),
+                          helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
                         ),
                       ),
                       if (formState.hasError && !viewModel.isPasswordFocused)
@@ -237,7 +239,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
         Platform.isAndroid ?
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
-          callback: () {},
+          callback: () {
+            ref.watch(loginVmProvider.notifier).signinWithGoogle();
+          },
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,
@@ -245,7 +249,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
         //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
-          callback: () {},
+          callback: () {
+           ref.watch(loginVmProvider.notifier).signinWithApple();
+          },
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
           text: "Continue with Apple",
           textColor: wayaTheme.colorScheme.onPrimary,
@@ -351,6 +357,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                                 : Icons.visibility_off_outlined),
                             color: wayaTheme.colorScheme.greyColor300,
                           ),
+                            helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
                         ),
                       ),
                       if (formState.hasError && !viewModel.isPasswordFocused)
@@ -396,18 +403,20 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
               ],
             )),
         Gap(30),
-        Chip(
-            label: WayaRichText(
-          title1: "Don't have an account? ",
-          title2: "Create new account",
-          onTap2: () {
-            print("dsvdvdf");
+    InkWell(
+          onTap: () {
             WayaNav.toNamed("/account-creation");
           },
-          style1: wayaTheme.textTheme.hintStyle
-              .wayaCopyWith(color: wayaTheme.colorScheme.black),
-        )),
+          child: Chip(
+              label: WayaRichText(
+            title1: "Don't have an account? ",
+            title2: "Create new account",
+            style1: wayaTheme.textTheme.hintStyle
+                .wayaCopyWith(color: wayaTheme.colorScheme.black),
+          )),
+        ),
       ],
+    
     );
   }
 }

@@ -26,7 +26,8 @@ class MomentUserInfoWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MomentUserInfoWidget();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MomentUserInfoWidget();
 }
 
 class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
@@ -35,7 +36,8 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return GestureDetector(
-      onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.moment.userId)),
+      onTap: () =>
+          WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.moment.userId)),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -48,7 +50,8 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(width: 1, color: wayaTheme.colorScheme.white),
+                    border: Border.all(
+                        width: 1, color: wayaTheme.colorScheme.white),
                   ),
                   child: WayaDp(
                     image: widget.moment.image,
@@ -95,28 +98,35 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
             if (!widget.isMine)
               GestureDetector(
                 onTap: () async {
-                  Future<void> report({
-                    required String reason,
-                    required BuildContext context,
-                    String? comment,
-                  }) async {
-                    notifier.reportMoment(
-                      momentId: widget.moment.id,
-                      reason: reason,
-                      context: context,
-                    );
-                  }
-
                   widget.pause();
-                  await WayaUtils.showModalSheet(
+
+                  //  if (context.mounted) {
+                  final response = await WayaUtils.showModalSheet(
                     context,
                     child: Report(
-                      statuses: eventReport,
-                      currentStatus: '',
-                      report: report,
-                    ),
+                        statuses: eventReport,
+                        currentStatus: '',
+                        momentId: widget.moment.id),
                   );
-                  widget.continues();
+
+                    widget.continues();
+
+                  // if (response) {
+                  if (response == false) {
+                  //  print("fwefewfw $response");
+                    return WayaSnackBar.showToast(
+                        "You already submit a report");
+                  }
+
+                  if (response == true) {
+                    return WayaSnackBar.showToast(
+                        "Moment reported successfully");
+                  }
+
+                  // }
+
+                
+                  // }
                 },
                 child: SvgPicture.asset(
                   WayaAssets.icons.mThreeDots.path,

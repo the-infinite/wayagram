@@ -12,7 +12,44 @@
           "package_name": "ng.wayagram"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "276195200870-3bpe9spns25h5go0t9p1v47ovdtu626t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "05df54f1e74727851119dae7e22f0f7ad5ab0c33"
+          }
+        },
+        {
+          "client_id": "276195200870-ig943874k6q8rh86dbdlfrst8pqv5u8q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "36eefb2aa6007d20afee81a37ca2c8a354816df6"
+          }
+        },
+        {
+          "client_id": "276195200870-m8larkp51qb1l4cpr1caur80daouf7r9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "4fd5157a3db26477b973df7a286aaa3ae124704e"
+          }
+        },
+        {
+          "client_id": "276195200870-rtfd4m15164mi0pphnihdhgg79fjt5d5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "437bd8e7d4586db9ae422afed08610d478f1d2fc"
+          }
+        },
+        {
+          "client_id": "276195200870-o5382ijj550evijhajp13p4itbc34dl6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDblceeBZQZyjAoWlNEvW6-zD_8-oXWMos"
@@ -20,7 +57,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276195200870-o5382ijj550evijhajp13p4itbc34dl6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

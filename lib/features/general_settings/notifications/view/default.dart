@@ -4,20 +4,39 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
 import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
 import 'package:wayagram/features/general_settings/notifications/widget/notification_switch.dart';
 
-class NotificationSettingsScreen extends ConsumerWidget {
+class NotificationSettingsScreen extends ConsumerStatefulWidget {
   static const route = "/settings/notifications";
 
   // Then this is fine.
   const NotificationSettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NotificationSettingsScreen> createState() => _NotificationSettingsScreenState();
+}
+
+class _NotificationSettingsScreenState extends ConsumerState<NotificationSettingsScreen> {
+  late final notifier = ref.watch(notificationSettingsProvider.notifier);
+  final controller = NotificationSettingsController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        await Future.delayed(const Duration(milliseconds: 300));
+        await notifier.getSettings(controller);
+      },
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final state = ref.watch(notificationSettingsProvider);
-    final notifier = ref.watch(notificationSettingsProvider.notifier);
 
     // Now, the widget itself.
     return WayaScaffold(
@@ -62,20 +81,22 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
                 //* The switch for chat notifications.
                 NotificationSwitchButton(
-                  name: "Show notifications for chat",
+                  name: "Show notifications for Chats",
                   description: "Receive notifications when you get new messages",
                   value: state.showChat,
-                  uid: "show-chat",
+                  uid: "chats",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 //* The switch for call notifications.
                 NotificationSwitchButton(
-                  name: "Show notifications for call",
+                  name: "Show notifications for Calls",
                   description: "Get alerts for incoming calls so you never miss one",
                   value: state.showCall,
-                  uid: "show-call",
+                  uid: "call",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 //* The switch for follow request notifications.
@@ -83,8 +104,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Show notifications for follow requests",
                   description: "Receive alerts when someone wants to follow you",
                   value: state.showFollowRequest,
-                  uid: "show-follow-request",
+                  uid: "follow_request",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 //* The switch for like notifications.
@@ -92,8 +114,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Show notifications for likes",
                   description: "Get notified when people like your posts",
                   value: state.showLikes,
-                  uid: "show-like",
+                  uid: "likes",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 //* The switch for comment notifications.
@@ -101,8 +124,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Show notifications for comments",
                   description: "Receive alerts for new comments on your posts",
                   value: state.showComments,
-                  uid: "show-comment",
+                  uid: "comments",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 //* The switch for share notifications.
@@ -110,8 +134,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Show notifications for shared posts",
                   description: "Be notified when your posts are shared by others",
                   value: state.showShares,
-                  uid: "show-shares",
+                  uid: "shares",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 //* The switch for views notifications.
@@ -119,8 +144,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Show notifications for views",
                   description: "Get updates on how many people have viewed your posts or profile",
                   value: state.showViews,
-                  uid: "show-views",
+                  uid: "views",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 // Some space.
@@ -143,8 +169,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Show notifications for events",
                   description: "Receive reminders and alerts for events you're attending or interested in",
                   value: state.showEvents,
-                  uid: "show-events",
+                  uid: "events",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 //* The switch for livestream notifications.
@@ -152,8 +179,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Show notifications for livestream",
                   description: "Get notified when a livestream you follow goes live",
                   value: state.showLivestream,
-                  uid: "show-livestream",
+                  uid: "livestream",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 // Some space.
@@ -176,8 +204,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Debit transaction alerts",
                   description: "Stay informed with notifications for every debit transaction on your account",
                   value: state.showDebit,
-                  uid: "show-debit-transaction",
+                  uid: "debit_alert",
                   notifier: notifier,
+                  controller: controller,
                 ),
 
                 //* The switch for credit transaction notifications.
@@ -185,8 +214,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   name: "Credit transaction alerts",
                   description: "Receive alerts whenever money enters your wallet",
                   value: state.showCredit,
-                  uid: "show-credit-transaction",
+                  uid: "credit_alert",
                   notifier: notifier,
+                  controller: controller,
                 ),
               ],
             ),

@@ -42,6 +42,7 @@ class UgtAllPostContestModel {
   UgtAllPostContestModel({
     required this.id,
     required this.contestantProfileId,
+    required this.fullName,
     required this.contestId,
     required this.mediaContent,
     required this.description,
@@ -57,6 +58,7 @@ class UgtAllPostContestModel {
 
   final String? id;
   final String? contestantProfileId;
+  String? fullName;
   final String? contestId;
   final List<MediaContent>? mediaContent;
   final String? description;
@@ -74,6 +76,7 @@ class UgtAllPostContestModel {
 
   UgtAllPostContestModel copyWith({
     String? id,
+    String? fullName,
     String? contestantProfileId,
     String? contestId,
     List<MediaContent>? mediaContent,
@@ -90,6 +93,7 @@ class UgtAllPostContestModel {
     return UgtAllPostContestModel(
       id: id ?? this.id,
       contestantProfileId: contestantProfileId ?? this.contestantProfileId,
+      fullName: fullName ?? this.fullName,
       contestId: contestId ?? this.contestId,
       mediaContent: mediaContent ?? this.mediaContent,
       description: description ?? this.description,
@@ -126,7 +130,7 @@ class ContestApplication {
   final String? id;
   final String? contestId;
   final String? userId;
-  final String? fullName;
+  String? fullName;
   final String? email;
   final String? phoneNumber;
   final String? state;
@@ -159,11 +163,13 @@ class ContestantProfile {
   ContestantProfile({
     required this.id,
     required this.profilePhoto,
+    required this.profileId,
     required this.contestApplicationId,
   });
 
   final String? id;
   final String? profilePhoto;
+  final String? profileId;
   final String? contestApplicationId;
 
   factory ContestantProfile.fromJson(Map<String, dynamic> json) =>

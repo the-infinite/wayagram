@@ -162,7 +162,7 @@ class BankTransferScreen extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () {
                   Share.share(
-                    WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage('${args?["accountNumber"]}')),
+                    WayaValueHelper.getShareableUrl(WayaAppRoutes.getWalletDetailsPage('${args?["accountNumber"]}')),
                     subject: 'Share Poll',
                   );
                 },

@@ -15,6 +15,7 @@ class GroupState {
   final TextEditingController username;
   final TextEditingController content;
   late final File? image;
+  final bool? hasNextPage;
   String? profileImage;
   String? coverImage;
   String? name;
@@ -33,6 +34,7 @@ class GroupState {
   final bool isReportingGroup;
   final bool isFocused;
   final bool isLoading;
+  final bool isPrivate;
   final bool openToEveryone;
   final bool requireApproval;
   final String roleType;
@@ -47,7 +49,9 @@ class GroupState {
     TextEditingController? content,
     this.allPostData,
     this.foundUserId,
+    this.hasNextPage = true,
     this.isFocused = false,
+    this.isPrivate = false,
     this.isLoading = false,
     this.openToEveryone = false,
     this.requireApproval = false,
@@ -77,6 +81,7 @@ class GroupState {
     TextEditingController? groupDescription,
     TextEditingController? username,
     TextEditingController? content,
+    bool? hasNextPage,
     List<JoinRequestDocs>? docs,
     List<GroupModel>? getAllGroups,
     List<EventDoc>? fetchAllEventDocs,
@@ -91,6 +96,7 @@ class GroupState {
     bool? isLoading,
     bool? joinGroupLoading,
     bool? openToEveryone,
+    bool? isPrivate,
     bool? requireApproval,
     String? foundUserId,
     String? roleType,
@@ -118,6 +124,8 @@ class GroupState {
       recommendedGroupDocs: recommendedGroupDocs ?? this.recommendedGroupDocs,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
+      isPrivate: isPrivate ?? this.isPrivate,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
       isReportingGroup: isReportingGroup ?? this.isReportingGroup,
       openToEveryone: openToEveryone ?? this.openToEveryone,
       requireApproval: requireApproval ?? this.requireApproval,

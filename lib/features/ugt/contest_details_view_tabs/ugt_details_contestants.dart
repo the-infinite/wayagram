@@ -47,7 +47,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
             notifier.searchList(value);
           },
           controller: searchController,
-          hintText: "search by name, univerisity , stage, category",
+          hintText: "search by name",
         ),
         Gap(10),
 
@@ -73,6 +73,8 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
             );
           },
         ),
+
+        Gap(50)
       ],
     );
   }
@@ -81,8 +83,9 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
         desc: "There is no Contestant for this contest yet",
-        title: "No Post Created",
+        title: "No Contestant",
         buttonText: "",
+        showButtonBusiness: false,
         hideButton: false,
         onTap: () {});
   }

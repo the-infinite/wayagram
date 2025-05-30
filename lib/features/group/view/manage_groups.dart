@@ -20,7 +20,8 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      myGroupNotifier.getCreatedGroups();
+      myGroupNotifier.getMyGroups();
+      //myGroupNotifier.getCreatedGroups();
     });
   }
 

@@ -13,7 +13,9 @@ import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 class UgtPostAllContestant extends ConsumerStatefulWidget {
   //final  MyContestContestantModel? contestApplicant;
   final Contest? model;
-  const UgtPostAllContestant(this.model, {super.key});
+  final canViewDashboard;
+  const UgtPostAllContestant(this.model,
+      {this.canViewDashboard = false, super.key});
 
   @override
   ConsumerState<UgtPostAllContestant> createState() => _UgtDetailsPostState();
@@ -41,7 +43,8 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
       children: [
         // UgtPostCard(),
         //  UgtPostCard(),
-        if (viewModelNotifier.getLoggedInUserId() == widget.model?.profileId)
+        if (viewModelNotifier.getLoggedInUserId() == widget.model?.profileId ||
+            widget.canViewDashboard)
           //? button to switch between approved contest
           Column(
             children: [
@@ -55,12 +58,14 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                       callback: () {
                         //?switch to active posts
                         viewModelNotifier.changeActive(true);
-                        viewModelNotifier.fetchAllContestPosts(widget.model?.id ?? "");
+                        viewModelNotifier
+                            .fetchAllContestPosts(widget.model?.id ?? "");
                       },
                       color: Colors.white,
                       text: "Active Posts",
 
-                      border: Border.all(color: wayaTheme.colorScheme.greyColor400),
+                      border:
+                          Border.all(color: wayaTheme.colorScheme.greyColor400),
                       //   leadingIcon: WayaAssets.icons.caution.svg(),
                       textColor: wayaTheme.colorScheme.greyColor700,
                     ),
@@ -71,7 +76,9 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                       callback: () {
                         //?switch to pending posts
                         viewModelNotifier.changeActive(false);
-                        viewModelNotifier.fetchAllContestPosts(widget.model?.id ?? "", hostApproved: false);
+                        viewModelNotifier.fetchAllContestPosts(
+                            widget.model?.id ?? "",
+                            hostApproved: false);
                       },
                       color: wayaTheme.colorScheme.primary50,
                       text: "Pending Posts",
@@ -79,7 +86,8 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                       // border: Border.all(),
                       // trailingIcon: WayaAssets.icons.caution.svg(),
                       textColor: wayaTheme.colorScheme.customPrimary,
-                      trailingIcon: _counter(context, viewModel.pendingPostCount ?? 0),
+                      trailingIcon:
+                          _counter(context, viewModel.pendingPostCount ?? 0),
                     ),
                   ),
                 ],
@@ -111,41 +119,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
     );
   }
 
-//   Widget _ourButtons(
-//     BuildContext context,
-//   ) {
-//     final wayaTheme = Theme.of(context);
-//     return Row(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         Expanded(
-//           child: WayaButton(
-//             callback: () {},
-//             color: Colors.white,
-//             text: "Active Posts",
 
-//             border: Border.all(color: wayaTheme.colorScheme.greyColor400),
-//             //   leadingIcon: WayaAssets.icons.caution.svg(),
-//             textColor: wayaTheme.colorScheme.greyColor700,
-//           ),
-//         ),
-//         Gap(10),
-//         Expanded(
-//           child: WayaButton(
-//             callback: () {},
-//             color: wayaTheme.colorScheme.primary50,
-//             text: "Pending Posts",
-//             leadingIcon: Container(),
-//             // border: Border.all(),
-//             // trailingIcon: WayaAssets.icons.caution.svg(),
-//             textColor: wayaTheme.colorScheme.customPrimary,
-//             trailingIcon: _counter(context, 0),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
 
   Widget emptyWidget() {
     return UgtEmptyState(
@@ -153,6 +127,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
         desc: "There is no Post for this contest yet",
         title: "No Post Created",
         buttonText: "",
+        showButtonBusiness: false,
         hideButton: false,
         onTap: () {});
   }

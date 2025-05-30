@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
@@ -24,15 +25,27 @@ class AuthRepository extends BaseRepository {
     return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
   }
 
-  Future<WayaRequestResponse> resendOtp(String email,
-      {String purpose = 'REGISTER_USER'}) {
-    return post('$serviceUrl/client/auth/resend-otp',
-        {"email": email, "purpose": purpose});
+  Future<WayaRequestResponse> resendOtp(
+      {String purpose = 'REGISTER_USER', String? email, String? phone}) {
+    final payload = {"purpose": purpose};
+
+    if (email != null) payload['email'] = email;
+    if (phone != null) payload['phoneNumber'] = phone;
+
+    debugPrint("$payload");
+
+    return post('$serviceUrl/client/auth/resend-otp', payload);
   }
 
   Future<WayaRequestResponse> oauth(String token, String authType) {
     return post('$serviceUrl/client/auth/login/oauth',
         {"oauthProvider": authType, "token": token});
+  }
+
+  Future<WayaRequestResponse> phoneVerification(String code, String phone) {
+    return post('$serviceUrl/client/auth/verify-phone',
+        {"otp": code, "phoneNumber": phone, "purpose": 'REGISTER_USER'},
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> verifyEmail(String email) {
@@ -44,11 +57,38 @@ class AuthRepository extends BaseRepository {
         showErrors: true);
   }
 
+  Future<WayaRequestResponse> getOtp(
+      {required String purpose, String? email, String? phone}) {
+    final payload = {"purpose": purpose};
+
+    if (email != null) payload['email'] = email;
+      if (phone != null) payload['phoneNumber'] = phone;
+
+    return post(
+        '$serviceUrl/client/auth/resend-otp',
+        payload,
+        showErrors: true);
+  }
+
+  Future<WayaRequestResponse> verifyCAC(String cacNumber) {
+    return post('$serviceUrl/client/kyc/verify-cac-number',
+        {"cacNumber": cacNumber, "mode": "basic"},
+        showErrors: true);
+  }
+
+  Future<WayaRequestResponse> verifyBVN(String bvnNumber) {
+    return post('$serviceUrl/client/kyc/verify-bvn',
+        {"bvn": bvnNumber, "mode": "basic"},
+        showErrors: true);
+  }
+
   Future<WayaRequestResponse> resetPassword(ForgotPassword payload) {
     return post(
         '$serviceUrl/client/auth/password/new-password', payload.toJson(),
         showErrors: true);
   }
+
+  ///client/users/:userId/email-or-phone/update
 
   Future<WayaRequestResponse> login(
       {required String password,
@@ -114,9 +154,9 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> selectInterest(dynamic data) {
-    return post(
-      '$graphServiceUrl/interests',
-      data,
+    return patch(
+      '$graphServiceUrl/interests/toggle',
+      {"interests": data},
     );
   }
 
@@ -126,7 +166,7 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getInterestsCategories() async {
-    return get("$graphServiceUrl/interests/categories");
+    return get("$graphServiceUrl/interests");
   }
 
   Future<WayaRequestResponse> refreshToken({required String token}) async {

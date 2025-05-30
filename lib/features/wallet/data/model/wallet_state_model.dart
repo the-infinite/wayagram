@@ -9,7 +9,7 @@ class WalletState {
   final bool? isLoading;
   final bool? isMakePaymentLoading;
   final Wallet? data;
-  final String bank;
+  final Select? bank;
   final String status;
   final String amount;
   final String refNumber;
@@ -18,6 +18,7 @@ class WalletState {
   final String accountName;
   final String time;
   final TextEditingController acctNumber;
+  final TextEditingController acctName;
   final List<ExternalWalletModel>? externalWallets;
   final List<PayoutMethodData> payoutMethod;
   final List<RequestDocs> requestDocs;
@@ -35,18 +36,21 @@ class WalletState {
     this.accountName = '',
     this.payoutAccountNumber = '',
     this.banks = const [],
-    this.bank = '',
+    this.bank,
     TextEditingController? acctNumber,
+    TextEditingController? acctName,
     this.externalWallets,
     this.payoutMethod = const [],
     this.requestDocs = const [],
 
-  }):acctNumber = acctNumber ?? TextEditingController();
+  }):
+        acctNumber = acctNumber ?? TextEditingController(),
+        acctName = acctName ?? TextEditingController();
 
   WalletState copyWith({
     bool? isLoading,
     Wallet? data,
-    String? bank,
+    Select? bank,
     String? time,
     String? status,
     String? amount,
@@ -55,6 +59,7 @@ class WalletState {
     String? accountName,
     String? payoutAccountNumber,
     TextEditingController? acctNumber,
+    TextEditingController? acctName,
     List<ExternalWalletModel>? externalWallets,
     List<Select>? banks,
     List<RequestDocs>? requestDocs,
@@ -75,6 +80,7 @@ class WalletState {
         requestDocs: requestDocs ?? this.requestDocs,
         accountName: accountName ?? this.accountName,
         acctNumber: acctNumber ?? this.acctNumber,
+        acctName: acctName ?? this.acctName,
         externalWallets: externalWallets ?? this.externalWallets,
         payoutMethod: payoutMethod ?? this.payoutMethod
       );

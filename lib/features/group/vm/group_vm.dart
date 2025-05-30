@@ -5,11 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
@@ -18,6 +18,7 @@ import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/groups.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/cache/post.dart';
@@ -130,6 +131,7 @@ class GroupVm extends StateNotifier<GroupState> {
       //? If this is fine...
       if (response.success && ctx.mounted) {
         final group = await myGroupNotifier.getSingleGroup(groupId);
+        final notifier = ref.read(createPageProvider.notifier);
         final post = PostModel.fromJson(response.data['data']).copyWith(group: group);
         final previous = state.getAllPost;
         wayaPostCache.cache(post.id, post);
@@ -140,7 +142,22 @@ class GroupVm extends StateNotifier<GroupState> {
         );
 
         //? This is fine.
-        WayaSnackBar.showToast('Post created successfully!');
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text('Post created successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+            action: SnackBarAction(
+              label: "Undo",
+              onPressed: () async => await notifier.deletePost(
+                ctx,
+                postId: post.id,
+                userId: ConversationState.self.id,
+                notify: false,
+              ),
+            ),
+          ),
+        );
       }
 
       //? If it failed...
@@ -258,6 +275,40 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
+  Future<void> updateGroupSetting(BuildContext ctx,bool isPrivate, String groupId,) async {
+
+    try {
+      //state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.updateGroupSetting(isPrivate, groupId);
+      state = state.copyWith(isLoading: false);
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Group setting updated successfully!',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        debugPrint('Update group');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   void prefillFunc(GroupModel group) {
     state = state.copyWith(
       groupName: TextEditingController(text: group.name),
@@ -323,7 +374,7 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.inviteUserToGroup(groupId, role, targetId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        await getGroupMembers(groupId);
+        getGroupMembers(groupId);
       } else {
         WayaNav.goBack();
       }
@@ -505,7 +556,10 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {}
   }
 
-  Future<void> getRecommendedGroups() async {
+  Future<void> getRecommendedGroups({int? page = 1,
+    int? limit = 10,
+    bool? hasNextPage,
+    }) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.recommendedGroup();
@@ -513,7 +567,11 @@ class GroupVm extends StateNotifier<GroupState> {
       if (response.success) {
         RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
         wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
-        state = state.copyWith(recommendedGroupDocs: responseModel.data?.docs);
+        state = state.copyWith(
+            isLoading: false,
+            recommendedGroupDocs: responseModel.data?.docs,
+            hasNextPage: responseModel.data?.hasNextPage
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -524,6 +582,35 @@ class GroupVm extends StateNotifier<GroupState> {
       );
     } finally {}
   }
+
+ /* Future<void> getAllGroups({int? page = 1,
+    int? limit = 10,
+    bool? hasNextPage,
+  }) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getAllGroups();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
+        state = state.copyWith(
+            isLoading: false,
+            recommendedGroupDocs: responseModel.data?.docs,
+            hasNextPage: responseModel.data?.hasNextPage
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }*/
+
+
 
   Future<void> getEvent() async {
     try {

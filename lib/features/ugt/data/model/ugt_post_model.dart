@@ -112,6 +112,7 @@ class Contest {
     required this.entryType,
     required this.amount,
     required this.participationStartDate,
+    required this.participationEndDate,
     required this.descriptionOfAwards,
     required this.startDate,
     required this.endDate,
@@ -151,6 +152,7 @@ class Contest {
   final String? entryType;
   final int? amount;
   final String? participationStartDate;
+  final String? participationEndDate;
   final String? descriptionOfAwards;
   final String? startDate;
   final String? endDate;
@@ -190,6 +192,7 @@ class Contest {
     String? entryType,
     int? amount,
     String? participationStartDate,
+    String? participationEndDate,
     String? descriptionOfAwards,
     String? startDate,
     String? endDate,
@@ -228,8 +231,8 @@ class Contest {
       howItWorks: howItWorks ?? this.howItWorks,
       entryType: entryType ?? this.entryType,
       amount: amount ?? this.amount,
-      participationStartDate:
-          participationStartDate ?? this.participationStartDate,
+      participationStartDate:participationStartDate ?? this.participationStartDate,
+      participationEndDate:participationEndDate ?? this.participationEndDate,
       descriptionOfAwards: descriptionOfAwards ?? this.descriptionOfAwards,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,

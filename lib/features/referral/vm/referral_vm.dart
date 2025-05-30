@@ -38,7 +38,24 @@ class ReferralVm extends StateNotifier<ReferralState> {
     return _localDataSource.getUserId().toString();
   }
 
-  Future<void> getAllUserReferrals(bool isFirst) async {
+  void filterList(String filterString) {
+    if (filterString.trim().isEmpty) {
+      state = state.copyWith(referralList: [...state.referralListCopy]);
+      return;
+    }
+    var list = state.referralListCopy.where((dispute) {
+      String name = dispute.referredUser?.displayName??"";
+      if (name.contains(filterString)) {
+        return true;
+      }
+      return false;
+    }).toList();
+    state = state.copyWith(referralList: [...list]);
+  }
+
+  Future<void> getAllUserReferrals(
+    bool isFirst,
+  ) async {
     /*  if (isFirst) {
       state = state.copyWith(page: 1);
     } */
@@ -51,7 +68,9 @@ class ReferralVm extends StateNotifier<ReferralState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _referralRepository.getUserReferral(
-          getLoggedInUserId() ?? "", isFirst ? 1 : state.page);
+          getLoggedInUserId() ?? "", isFirst ? 1 : state.page,
+          startDate: state.startDate ?? "1990-12-31",
+          endDate: state.endDate ?? "3021-12-31");
       state = state.copyWith(isLoading: false);
       if (response.success == true) {
         ReferralModelBase responseModel =
@@ -60,12 +79,21 @@ class ReferralVm extends StateNotifier<ReferralState> {
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
           state = state.copyWith(
-              referralList: responseModel.data?.docs ?? [], page: 1);
+            referralList: responseModel.data?.docs ?? [],
+            referralListCopy: responseModel.data?.docs ?? [],
+            page: 1,
+          );
         } else {
-          state = state.copyWith(referralList: [
-            ...state.referralList,
-            ...responseModel.data?.docs ?? []
-          ]);
+          state = state.copyWith(
+            referralList: [
+              ...state.referralList,
+              ...responseModel.data?.docs ?? []
+            ],
+            referralListCopy: [
+              ...state.referralList,
+              ...responseModel.data?.docs ?? []
+            ],
+          );
         }
         state = state.copyWith(page: state.page + 1);
         // contestList = responseModel.data?.docs ?? [];
@@ -76,6 +104,10 @@ class ReferralVm extends StateNotifier<ReferralState> {
       state = state.copyWith(isLoading: false);
       debugPrint(e.toString());
     } finally {}
+  }
+
+  void updateStartAndEndDate(String? startDate, String? endDate) {
+    state = state.copyWith(startDate: startDate, endDate: endDate);
   }
 }
 

@@ -1,8 +1,9 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/waya_constants.dart';
 
 class ContestRepo extends BaseRepository {
-  static const serviceUrl2 = "school-contest/api/v1";
+  static const serviceUrl2 = WayaServiceUri.contest;
 
   Future<WayaRequestResponse> getCategory() {
     return get('$serviceUrl2/category/getAll');
@@ -26,8 +27,13 @@ class ContestRepo extends BaseRepository {
     return post('$serviceUrl2/application/', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> getContestForYou(int page) {
-    return get('$serviceUrl2/contests/contest-for-you?page=$page');
+  Future<WayaRequestResponse> getContestForYou(int page, String? filter) {
+    if (filter != null) {
+      return get(
+          '$serviceUrl2/contests/contest-for-you?page=$page&state=$filter');
+    } else {
+      return get('$serviceUrl2/contests/contest-for-you?page=$page');
+    }
   }
 
   Future<WayaRequestResponse> fetchHostedContest(String userId, int page) {
@@ -129,6 +135,11 @@ class ContestRepo extends BaseRepository {
     return patch('$serviceUrl2/profile/accept-stage', payLoad, formdata: false);
   }
 
+    Future<WayaRequestResponse> acceptPaidStageContest(payLoad) {
+    return patch('$serviceUrl2/profile/pay-for-satge', payLoad, formdata: false);
+  }
+ 
+
   Future<WayaRequestResponse> fetchAllTotalEarningContest(
       String contestId, String filter) {
     return get(
@@ -151,73 +162,10 @@ class ContestRepo extends BaseRepository {
   Future<WayaRequestResponse> fetchSingleContestantDetails(
       String contestId, String contestantProfileId) {
     return get(
-        '$serviceUrl2/admin/profile/votes/$contestId?profileId=$contestantProfileId');
+        '$serviceUrl2/profile/votes/$contestId?profileId=$contestantProfileId');
   }
 
   Future<WayaRequestResponse> fetchSingleContest(String contestId) {
     return get('$serviceUrl2/admin/contests/?id=$contestId');
   }
-
-  /*Future<WayaRequestResponse> createContestController({
-    required final String contestStatus,
-    required final String profileId,
-    required final String title,
-    required final String category,
-    required final String state,
-    required final String winnerPrize,
-    required final String description,
-    required final String voteCountToQualify,
-    required final int amount,
-    required final String durationType,
-    required final String numberOfDuration,
-    required final String descriptionOfAwards,
-    required final int amountPerVote,
-    required final String type,
-    required final String overallResult,
-    required final String multipleStages,
-    required final String publicity,
-    required final String status,
-    required final String howItWorks,
-    required final int numberOfWeeks,
-    required final String currentStage,
-    required final String participationStartDate,
-    required final String startDate,
-    required final String endDate,
-    required final String entryType,
-    required List<Map<String, dynamic>> stages,
-    required List<Map<String, dynamic>> formRequirements,
-  }) async {
-    final response = await post('$serviceUrl/contests/create', {
-      "title": title,
-      "profileId": profileId,
-      "category": category,
-      "state": state,
-      "winnerPrize": winnerPrize,
-      "description": description,
-      "voteCountToQualify": voteCountToQualify,
-      "amount": amountPerVote,
-      "durationType": numberOfWeeks,
-      "numberOfDuration": numberOfDuration,
-      "descriptionOfAwards": description,
-      "amountPerVote": amountPerVote,
-      "type": type,
-      "overallResult": overallResult,
-      "multipleStages": multipleStages,
-      "publicity": publicity,
-      "status": status,
-      "howItWorks": howItWorks,
-      "numberOfWeeks": numberOfWeeks,
-      "currentStage": currentStage,
-      "participationStartDate": participationStartDate,
-      "startDate": startDate,
-      "endDate": endDate,
-      "entryType": entryType,
-      "contestSettings": {
-        "stages":stages,
-      },
-      "formRequirements":formRequirements,
-    });
-    debugPrint("newSingle ${response}");
-    return response;
-  }*/
 }

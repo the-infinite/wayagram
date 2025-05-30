@@ -19,17 +19,20 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   late TextEditingController fullName;
   late TextEditingController emailAddress;
   late TextEditingController address;
+  late TextEditingController age;
   late TextEditingController phoneNumber;
   String university = "";
   String selectedState = "";
   String? postId = "";
   Contest? post;
 
-  RegisterFormNotifier(this._contestRepository, this._localDataSource) : super([]) {
+  RegisterFormNotifier(this._contestRepository, this._localDataSource)
+      : super([]) {
     fullName = TextEditingController();
     emailAddress = TextEditingController();
     address = TextEditingController();
     phoneNumber = TextEditingController();
+    age = TextEditingController();
   }
 
   // Add a text input field
@@ -100,8 +103,8 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     state = [...fieldList];
   }
 
-  Future<void> submitDetail(
-      BuildContext context, ValueNotifier<bool> isLoading, String mySelectedState, VoidCallback onPressed) async {
+  Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
+      String mySelectedState, VoidCallback onPressed) async {
     isLoading.value = true;
     debugPrint("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
@@ -116,7 +119,11 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       File(image!),
     );
         } */
-        return <String, dynamic>{"title": model.title, "data": image, "type": model.type};
+        return <String, dynamic>{
+          "title": model.title,
+          "data": image,
+          "type": model.type
+        };
       },
     ).toList();
     debugPrint("Mean $detailsList");
@@ -144,6 +151,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       "email": emailAddress.text,
       "address": address.text,
       "phoneNumber": phoneNumber.text,
+      "age": age.text,
       // "university": university,
       "state": mySelectedState,
       "applicationData": mapNew
@@ -153,10 +161,13 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     isLoading.value = false;
 
     if (response.success) {
-      WayaSnackBar.showToast("Application sent, Your Application is under review");
+      WayaSnackBar.showToast(
+          "Application sent, Your Application is under review");
       Future.delayed(Duration(seconds: 1), () {
         WayaNav.removeAllUntil(UgtHome(), "/ugt-home");
       });
+    } else {
+      WayaSnackBar.showToast(response.data["message"]);
     }
   }
 
@@ -196,7 +207,8 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
 }
 
 // Provider for the StateNotifier
-final registerFormProvider = StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>(
+final registerFormProvider =
+    StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>(
   (ref) => RegisterFormNotifier(ContestRepo(), WayaLocalDataSource()),
 );
 

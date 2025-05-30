@@ -49,7 +49,8 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/products/get?page=$page');
   }
 
-  Future<WayaRequestResponse> getOngoingWayaDealProducts({required int page, int limit = 20}) {
+  Future<WayaRequestResponse> getOngoingWayaDealProducts(
+      {required int page, int limit = 20}) {
     return get('$serviceUrl/products/get?page=$page&dealStatus=ongoing');
   }
 
@@ -57,38 +58,49 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/products/get?id=$id');
   }
 
-  ///products/:productId/shop/:shopId
+ //
+Future<WayaRequestResponse> getBanner() {
+    return get("$serviceUrl/banners/all");
+  }
 
-  Future<WayaRequestResponse> deleteProductRequest({required String shopId, required String productId}) {
+  Future<WayaRequestResponse> deleteProductRequest(
+      {required String shopId, required String productId}) {
     return delete("$serviceUrl/products/$productId/shop/$shopId");
   }
 
-  Future<WayaRequestResponse> editProductRequest({required AddProductModel payload, required String productId}) {
+  Future<WayaRequestResponse> editProductRequest(
+      {required AddProductModel payload, required String productId}) {
     return patch("$serviceUrl/products/edit/$productId", payload.toJson());
   }
 
-  Future<WayaRequestResponse> getSellerProducts({required String shopId, required int page}) {
-    return get('$serviceUrl/products/get?shopId=$shopId&page=$page');
+  Future<WayaRequestResponse> getSellerProducts(
+      {required String shopId, required int page}) {
+    return get('$serviceUrl/products/get?shopId=$shopId&page=$page&limit=100');
   }
 
-  Future<WayaRequestResponse> getSellerListedWayaDealProducts({required String shopId, required int page}) {
-    return get('$serviceUrl/products/get?shopId=$shopId&page=$page&dealStatus=ongoing');
+  Future<WayaRequestResponse> getSellerListedWayaDealProducts(
+      {required String shopId, required int page}) {
+    return get(
+        '$serviceUrl/products/get?shopId=$shopId&page=$page&dealStatus=ongoing');
   }
 
-  Future<WayaRequestResponse> editShop(CreateShopModel payload, String vendorId) {
+  Future<WayaRequestResponse> editShop(
+      CreateShopModel payload, String vendorId) {
     return patch(
       "$serviceUrl/shops/edit/$vendorId",
       payload.toJson(),
     );
   }
 
-  Future<WayaRequestResponse> addToFavorite({required String productId, required String shopId}) {
+  Future<WayaRequestResponse> addToFavorite(
+      {required String productId, required String shopId}) {
     return post("$serviceUrl/favorites/add/$shopId", {"productId": productId});
   }
 
   ///
   Future<WayaRequestResponse> addToken({required String deliveryToken}) {
-    return post("$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
+    return post(
+        "$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
   }
 
   Future<WayaRequestResponse> getShopDetailsById(String id) {
@@ -102,7 +114,12 @@ class ShopRepository extends BaseRepository {
       required int score,
       required String review,
       required String type}) {
-    final payload = {'raterId': raterId, 'score': score, 'review': review, 'type': type};
+    final payload = {
+      'raterId': raterId,
+      'score': score,
+      'review': review,
+      'type': type
+    };
 
     if (productId != null) payload['productId'] = productId;
     if (shopId != null) payload['shopId'] = shopId;
@@ -119,6 +136,26 @@ class ShopRepository extends BaseRepository {
   Future<WayaRequestResponse> getShopMetrics({required String shopId}) {
     return get('$serviceUrl/orders/shop-metrics/$shopId');
   }
+
   //
+  Future<WayaRequestResponse> getShopSettings() {
+    return get('$serviceUrl/user-shop/settings');
+  }
+
+  Future<WayaRequestResponse> updateShopSettings(
+      bool notifyFriendsAboutProductPosts, bool makeProductPostsPublic) {
+    return patch('$serviceUrl/user-shop/setting', {
+      "notifyFriendsAboutProductPosts": notifyFriendsAboutProductPosts,
+      "makeProductPostsPublic": makeProductPostsPublic
+    });
+  }
+    Future<WayaRequestResponse> updateQuotationSettings(
+      bool receiveQuotationRequests, bool makeRequestsPublic, bool displayQuotationRequestsInFeed) {
+    return patch('$serviceUrl/user-shop/setting', {
+     "receiveQuotationRequests": receiveQuotationRequests,
+    "makeRequestsPublic": makeRequestsPublic,
+    "displayQuotationRequestsInFeed": displayQuotationRequestsInFeed,
+    });
+  }
 }
 //

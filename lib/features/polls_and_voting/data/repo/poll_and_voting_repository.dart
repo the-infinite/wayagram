@@ -10,6 +10,11 @@ class PollAndVotingRepository extends BaseRepository {
         formdata: true, showErrors: true);
   }
 
+  Future<WayaRequestResponse> requestSettlement(String pollId) {
+    final payload = {};
+    return post('$serviceUrl/client/polls/$pollId/settle', payload, showErrors: true);
+  }
+
   Future<WayaRequestResponse> castVote(
       dynamic amountPaid, String qty, String choiceId, String pollId) {
     final payload = {
@@ -48,6 +53,12 @@ class PollAndVotingRepository extends BaseRepository {
         "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=ongoing");
   }
 
+  Future<WayaRequestResponse> getAllPendingPolls(int page,String creatorId,
+      [int limit = 15, ]) {
+    return get(
+        "$serviceUrl/client/polls?page=$page&creatorId=$creatorId&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=pending");
+  }
+
   Future<WayaRequestResponse> getMyPolls(String creatorId, int page) {
     return get(
         "$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active");
@@ -73,7 +84,7 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllPollsById(String id) {
-    return get("$serviceUrl/client/polls/$id");
+    return get("$serviceUrl/client/polls?id=$id");
   }
 
   Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {
@@ -87,11 +98,9 @@ class PollAndVotingRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getAllFeedPolls() {
     return get(
-        "$serviceUrl/client/polls?limit=10&page=1&orderBy=createdAt&orderDirection=DESC");
+        "$serviceUrl/client/polls?limit=100&page=1&orderBy=createdAt&orderDirection=DESC");
   }
 
-  //
-  ///
   Future<WayaRequestResponse> getSinglePollById({required String id}) {
     return get("$serviceUrl/client/polls/$id");
   }

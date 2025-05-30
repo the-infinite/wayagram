@@ -222,10 +222,16 @@ class _UpcomingContestDetailsState
                   textColor: WayaColors.black,
                   callback: () {
                     //? if user has a profile
-
                     if (hasProfile.value || model?.hasApplied == true) {
                       ref.read(selectedContestProvider.notifier).state = model;
                       WayaNav.toNamed('/upcoming-manage-contest-details');
+                      return;
+                    }
+
+                    //? check if the participation date is in range
+                    if (!isTodayInRange(model?.participationStartDate ?? "",
+                        model?.participationEndDate ?? "")) {
+                      WayaSnackBar.showToast("Application Closed!!!");
                       return;
                     }
                     //  ivalidateUGTVM(ref);

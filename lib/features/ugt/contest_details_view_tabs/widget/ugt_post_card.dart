@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/navigation.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -27,14 +28,15 @@ import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.da
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/shared/features/media/video.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
-import '../../data/model/ugt_post_model.dart';
+import '../../data/model/ugt_post_model.dart' as contest;
 import '../../ugt_buttomsheet_modal/contest_vote_modal.dart';
 
 class UgtPostCard extends StatefulHookConsumerWidget {
   final SingleContestantPosts post;
-  final Contest contestModel;
+  final contest.Contest contestModel;
   final MyContestContestantModel? contestApplicant;
   const UgtPostCard(this.post, this.contestApplicant, this.contestModel,
       {super.key});
@@ -128,7 +130,19 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                 value: 1,
                                 child: _buildActionNav(
                                     context: context,
-                                    onTap: () {},
+                                    onTap: () async {
+                                      await Share.share(
+                                        WayaValueHelper.getShareableUrl(
+                                            WayaAppRoutes
+                                                .getContestantProfileRoute(
+                                                    widget.post
+                                                            .contestantProfileId ??
+                                                        "",
+                                                    widget.post.contestId ??
+                                                        "")),
+                                        subject: "Share Contestant Profile",
+                                      );
+                                    },
                                     asset: WayaAssets.icons.genSet.share
                                         .svg(fit: BoxFit.none),
                                     text: "Share Post Link",
@@ -137,7 +151,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               /*   if (viewModel.getLoggedInUserId() ==
                                   widget.post.contestantProfileId) */
                               if (viewModel.getLoggedInUserId() ==
-                                  widget.contestApplicant?.profileId)
+                                      widget.contestApplicant?.profileId &&
+                                  widget.post.shares == 0)
                                 PopupMenuItem<int>(
                                   value: 1,
                                   child: _buildActionNav(
@@ -187,47 +202,61 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
               Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-              MediaCard(
-                  //just a random id
-                  ontap: (String url, MyFullMediaType type) {
-                    if (type == MyFullMediaType.image) {
-                      WayaNav.toNamed("/view-media-full-page", arguments: {
-                        "url": url,
-                        "title": widget
-                                .contestApplicant?.contestApplicant?.fullName ??
-                            "",
-                        "createdAt": widget.post.createdAt,
-                        "likeCount": widget.post.likes,
-                        "isLike": widget.post.hasLiked,
-                        "showDescription": false,
-                        "discription": widget.post.description,
-                        "shareCount": widget.post.shares,
-                        "type": MyFullMediaType.image
-                      });
-                    } else {
-                      WayaNav.toNamed("/view-media-full-page", arguments: {
-                        "url": url,
-                        "title": widget
-                                .contestApplicant?.contestApplicant?.fullName ??
-                            "",
-                        "createdAt": widget.post.createdAt,
-                        "likeCount": widget.post.likes,
-                        "isLike": widget.post.hasLiked,
-                        "showDescription": false,
-                        "discription": widget.post.description,
-                        "shareCount": widget.post.shares,
-                        "type": MyFullMediaType.video
-                      });
-                    }
-                  },
-                  mediaUrls: [
-                    // post.mediaContent![0].url!,
-                    ...widget.post.mediaContent!.map((e) {
-                      return CardMediaContent(
-                          type: e.type ?? "", url: e.url ?? "");
-                    })
-                  ] // post.mediaContent![0].url!,
-                  ),
+              if (widget.post.mediaContent != null &&
+                  widget.post.mediaContent!.isNotEmpty)
+                MediaCard(
+                    //just a random id
+                    ontap: (String url, MyFullMediaType type) {
+                      if (type == MyFullMediaType.image) {
+                        WayaNavigationHelper.toImageDetailsScreen(
+                          null,
+                          [url],
+                        );
+
+                        /*  WayaNav.toNamed("/view-media-full-page", arguments: {
+                          "url": url,
+                          "title": widget.contestApplicant?.contestApplicant
+                                  ?.fullName ??
+                              "",
+                          "createdAt": widget.post.createdAt,
+                          "likeCount": widget.post.likes,
+                          "isLike": widget.post.hasLiked,
+                          "showDescription": false,
+                          "discription": widget.post.description,
+                          "shareCount": widget.post.shares,
+                          "type": MyFullMediaType.image
+                        }); */
+                      } else {
+                        WayaNav.to(
+                          transition: Transition.circularReveal,
+                          WayaVideoDetailScreen(
+                            file: null,
+                            videoUrl: url,
+                          ),
+                        );
+                        /*   WayaNav.toNamed("/view-media-full-page", arguments: {
+                          "url": url,
+                          "title": widget.contestApplicant?.contestApplicant
+                                  ?.fullName ??
+                              "",
+                          "createdAt": widget.post.createdAt,
+                          "likeCount": widget.post.likes,
+                          "isLike": widget.post.hasLiked,
+                          "showDescription": false,
+                          "discription": widget.post.description,
+                          "shareCount": widget.post.shares,
+                          "type": MyFullMediaType.video
+                        }); */
+                      }
+                    },
+                    mediaUrls: [
+                      // post.mediaContent![0].url!,
+                      ...widget.post.mediaContent!.map((e) {
+                        return CardMediaContent(
+                            type: e.type ?? "", url: e.url ?? "");
+                      })
+                    ] // post.mediaContent![0].url!,
+                    ),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -236,7 +265,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                   Row(
                     children: [
                       PostActionType(
-                        text: "${widget.post.likes} Likes",
+                        text:
+                            "${widget.post.likes} ${WayaValueHelper.getComment(widget.post.likes ?? 0, WayaPostAction.likes)}",
                         image: WayaAssets.images.pages.like2.path,
                         color: widget.post.hasLiked != true
                             ? wayaTheme.colorScheme.greyColor500
@@ -256,7 +286,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                       ),
                       const Gap(10),
                       PostActionType(
-                        text: "${widget.post.shares} Shares",
+                        text:
+                            "${widget.post.shares} ${WayaValueHelper.getComment(widget.post.shares ?? 0, WayaPostAction.share)}",
                         image: WayaAssets.images.pages.share2.path,
                         color: wayaTheme.colorScheme.primary,
                         onPressed: () async {
@@ -278,16 +309,44 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                   ),
                   WayaButton(
                     fontSize: 12.sp,
-                    callback: () {
+                    callback: () async {
+                      var list = await getCurrentFee(contestModel2,
+                          contestModel2?.contestSettings?.stages);
+
+                      if (contestModel2?.amountPerVote == 0) {
+                        WayaUtils.showModalSheet(
+                          context,
+                          child: ConfirmVoteOptionModal(
+                            amount: "1",
+                            voteFee: "0",
+                            isFree: true,
+                            model: ContestVoteModel(
+                                contestId: widget.post.contestId ?? "",
+                                contestantId:
+                                    widget.post.contestantProfileId ?? "",
+                                hostUserId:
+                                    widget.post.contestantProfileId ?? "",
+                                amount: "0",
+                                numberOfVotes: "0",
+                                profileId: "",
+                                type: list[0].toString().toLowerCase()),
+                            candidateName: widget.contestApplicant
+                                    ?.contestApplicant?.fullName ??
+                                "Name",
+                            votingLink: "votingLink",
+                          ),
+                        );
+
+                        return;
+                      }
+
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
-                          isFree:
-                              contestModel2?.entryType?.toLowerCase() == "free"
-                                  ? true
-                                  : false,
-                          voteFee:
-                              contestModel2?.amountPerVote?.toString() ?? "0",
+                          isFree: list[0].toString().toLowerCase() == "free"
+                              ? true
+                              : false,
+                          voteFee: list[1].toString(),
                           model: ContestVoteModel(
                               contestId: widget.post.contestId ?? "",
                               contestantId:
@@ -315,54 +374,73 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
       ],
     );
   }
-}
 
-InkWell _buildActionNav(
-    {required BuildContext context,
-    required VoidCallback onTap,
-    required Widget asset,
-    required String text,
-    required Color color}) {
-  //final wayaTheme = Theme.of(context);
-  return InkWell(
-    onTap: onTap,
-    splashFactory: NoSplash.splashFactory,
-    child: Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        asset,
-        const Gap(8),
-        Text(
-          text,
-          style: WayaTextStyles.bodyMedium.copyWith(color: color),
-        ),
-      ],
-    ),
-  );
-}
-
-String formatDate(String isoDate) {
-  DateTime date = DateTime.parse(isoDate);
-  String day = DateFormat('d').format(date);
-  String suffix = getDaySuffix(int.parse(day));
-  String month = DateFormat('MMM').format(date);
-  String year = DateFormat('y').format(date);
-  return "$day$suffix $month $year";
-}
-
-String getDaySuffix(int day) {
-  if (day >= 11 && day <= 13) {
-    return "th";
+  InkWell _buildActionNav(
+      {required BuildContext context,
+      required VoidCallback onTap,
+      required Widget asset,
+      required String text,
+      required Color color}) {
+    //final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          asset,
+          const Gap(8),
+          Text(
+            text,
+            style: WayaTextStyles.bodyMedium.copyWith(color: color),
+          ),
+        ],
+      ),
+    );
   }
-  switch (day % 10) {
-    case 1:
-      return "st";
-    case 2:
-      return "nd";
-    case 3:
-      return "rd";
-    default:
+
+  String formatDate(String isoDate) {
+    DateTime date = DateTime.parse(isoDate);
+    String day = DateFormat('d').format(date);
+    String suffix = getDaySuffix(int.parse(day));
+    String month = DateFormat('MMM').format(date);
+    String year = DateFormat('y').format(date);
+    return "$day$suffix $month $year";
+  }
+
+  String getDaySuffix(int day) {
+    if (day >= 11 && day <= 13) {
       return "th";
+    }
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
   }
+}
+
+Future<List<dynamic>> getCurrentFee(
+    contest.Contest? contestModel, List<contest.Stage>? stages) async {
+  // int amount = 0;
+  //String type = "";
+
+  /*  if (stages != null) {
+    for (var model in stages) {
+      if (model.isActive == true) {
+        amount = int.parse(model.entryAmount);
+        type = model.entryType ?? "";
+
+        return [type, amount];
+      }
+    }
+  } */
+
+  return [contestModel?.entryType, contestModel?.amountPerVote];
 }

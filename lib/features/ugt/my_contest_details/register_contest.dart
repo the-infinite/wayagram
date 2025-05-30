@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -50,6 +51,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
     // String term = "${redColor}terms";
     final viewModel = ref.watch(registerFormProvider);
     final notifier = ref.read(registerFormProvider.notifier);
+    final notifier2 = ref.read(contestNotifierProvider.notifier);
     final wayaTheme = Theme.of(context);
     // final selectedUniversity = useState("");
     final selectedState = useState("");
@@ -268,9 +270,51 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                 ],
               );
             }),
+            FormField<String>(validator: (value) {
+              if (notifier.age.text.isEmpty) {
+                return 'Date of Birth is required';
+              }
+
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaTextFormField(
+                    controller: notifier.age,
+                    hintText: "Date of Birth here",
+                    label: "Date of Birth ",
+                    onTap: () async {
+                      var date = await notifier2.pickerDialog2(context,
+                          lastDate: DateTime(2011, 9, 7, 17, 30));
+                      if (date != null) {
+                        String stringDate =
+                            DateFormat('yyyy-MM-dd').format(date);
+
+                        notifier.age.text = stringDate;
+                      }
+                    },
+                    isReadOnly: true,
+                    borderColor: formState.hasError && notifier.age.text.isEmpty
+                        ? wayaTheme.colorScheme.error
+                        : null,
+                  ),
+                  if (formState.hasError && notifier.age.text.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
+                      ),
+                    ),
+                ],
+              );
+            }),
+
             const Gap(20),
-            Text("University Information",
-                style: wayaTheme.textTheme.hintStyle),
+            Text("Information", style: wayaTheme.textTheme.hintStyle),
             //  const Gap(20),
             FormField<String>(validator: (value) {
               if (selectedState.value.isEmpty) {

@@ -49,8 +49,6 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
     return viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any completed polls"):
     SizedBox(
       height: 503.h,
-      //height: Platform.isAndroid ? 300 : 460,
-      //height: Platform.isAndroid ? 560 : 460,
       child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -185,23 +183,19 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
                                     );
                                   }
                                   else{
-                                    // WayaUtils.showModalSheet(
-                                    //   context,
-                                    //   child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',
-                                    //     pollId: '${poll.id}',candidateName: '${e.text}',
-                                    //     votingLink: '${poll.url}',),
-                                    // );
                                   }
                                 }))
                     ],
                   ),
                   const Gap(10),
-                  //...poll.choices!.map((e)=>
                   WayaButton(
                     callback: (){
-                      //WayaNav.to(PollDashboard(pollId: '${poll.choices?[index].pollId}',));
                       WayaNav.toNamed('/poll-dashboard',
-                          arguments: '${poll.id}'
+                          arguments: {
+                            'id':'${poll.id}',
+                            'endDate':'${poll.endDate}',
+                          }
+                         // arguments: '${poll.id}'
                         // arguments: '${poll.choices?[index].pollId}'
                       );
                     },
@@ -213,15 +207,6 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
 
           }),
     );
-     /* SizedBox(
-      height: 503,
-      child: ListView(
-        children: [
-
-
-        ],
-      ),
-    );*/
 
   }
   userIm(ctx, net) {
@@ -339,7 +324,6 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
       ),
     );
   }
-
   Widget _buildActionNav({
     required BuildContext context,
     required VoidCallback onTap,

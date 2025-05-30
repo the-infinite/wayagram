@@ -5,9 +5,11 @@ import 'package:http_parser/http_parser.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class ProfileRepo extends BaseRepository {
   String get serviceUrl => WayaServiceUri.account;
+  String get serviceUrl2 => WayaServiceUri.product;
 
   Future<WayaRequestResponse> updateAccountRepo({
     required String userId,
@@ -23,6 +25,18 @@ class ProfileRepo extends BaseRepository {
           };
 
     return patch('$serviceUrl/client/users/$userId/update', payload);
+  }
+
+  Future<WayaRequestResponse> updateEmailOrPhone(
+      {required String userId, required String purpose, required String otp, String? email, String? phone}) {
+    final payload = {"purpose": purpose, "otp": otp};
+
+    if (email != null) payload['newEmail'] = email;
+    if (phone != null) payload['newPhoneNumber'] = phone;
+
+    print(payload);
+
+    return patch('$serviceUrl/client/users/$userId/email-or-phone/update', payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> updateProfileRepo(
@@ -55,6 +69,24 @@ class ProfileRepo extends BaseRepository {
 
   Future<WayaRequestResponse> getUserDataRepo({required String userId}) async {
     return get("$serviceUrl/client/users/$userId");
+  }
+
+  Future<WayaRequestResponse> postSupportDetails(payload) async {
+    return post("$serviceUrl2/client/support", payload, formdata: false);
+  }
+
+  Future<WayaRequestResponse> removeCoverPhoto() async {
+    return patch(
+      "$serviceUrl/client/profiles/${ConversationState.self.id}/remove-imagaes",
+      {
+        "fields": ["coverImage"]
+      },
+      showErrors: true,
+    );
+  }
+
+  Future<WayaRequestResponse> postDisputeDetails(payload) async {
+    return post("$serviceUrl2/client/dispute", payload, formdata: false);
   }
 
   Future<WayaRequestResponse> getUserProfileRepo({required String userId}) async {

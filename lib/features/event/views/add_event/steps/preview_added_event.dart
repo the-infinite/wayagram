@@ -164,6 +164,21 @@ class PreviewAddedEvent extends ConsumerWidget {
           ],
         ),
         const Gap(10),
+           
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child:
+                  AboutEvent(title: 'Ticket Sales Start Date', content: viewModel.ticketStartDate),
+            ),
+            Expanded(
+              child:
+                  AboutEvent(title: 'Ticket Sales End Date', content: viewModel.ticketEndDate),
+            ),
+          ],
+        ),
+        const Gap(10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

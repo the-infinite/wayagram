@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 
-class ExportTransaction extends StatefulWidget {
+class ExportTransaction extends ConsumerStatefulWidget {
   const ExportTransaction({super.key});
 
   @override
-  _ExportTransactionState createState() => _ExportTransactionState();
+  ConsumerState createState() => _ExportTransactionState();
 }
 
-class _ExportTransactionState extends State<ExportTransaction> {
+class _ExportTransactionState extends ConsumerState<ExportTransaction> {
   String selectedTimeFrame = 'Last Month';
   DateTime? startDate;
   DateTime? endDate;
@@ -122,7 +126,19 @@ class _ExportTransactionState extends State<ExportTransaction> {
               onPressed: () {
                 // Handle export logic here
                 debugPrint('Exporting transactions from $startDate to $endDate');
+                WayaNav.goBack();
+                ref.read(transactionVmProvider.notifier).downloadPdf('transaction');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Transaction was exported successfully!'),
+                    backgroundColor: WayaColors.primary,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+
+
               },
+
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrange,
                 padding: const EdgeInsets.symmetric(vertical: 15),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:share_plus/share_plus.dart';
@@ -10,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'edit_page_info.dart';
 import 'page_post.dart';
 import 'team_page.dart';
@@ -28,7 +30,8 @@ class PrivatePage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PrivatePageState();
 }
 
-class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProviderStateMixin {
+class _PrivatePageState extends ConsumerState<PrivatePage>
+    with SingleTickerProviderStateMixin {
   late final pageProvider = singlePageProvider("page-${widget.page.id}");
   late final notifier = ref.read(pageProvider.notifier);
   int _selectedIndex = 0;
@@ -46,17 +49,67 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
       appBarTrailing: Row(
         spacing: 12.w,
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          InkWell(
+              onTap: () {
+                WayaNav.toNamed('/searchGroupAndPage',
+                    arguments: {'pageId': widget.page.id, 'name': 'page'});
+              },
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
             onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(WayaAppRoutes.getPageDetailsPage(widget.page.id)),
+              WayaValueHelper.getShareableUrl(
+                  WayaAppRoutes.getPageDetailsPage(widget.page.id)),
               subject: 'Share ${widget.page.name}',
             ),
             child: WayaAssets.icons.genSet.share.svg(
               fit: BoxFit.none,
             ),
           ),
-          WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+          PopupMenuButton(
+            onSelected: (value) {},
+            iconColor: wayaTheme.colorScheme.greyColor400,
+            position: PopupMenuPosition.under,
+            child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem<int>(
+                  value: 0,
+                  onTap: () {
+                    WayaNav.goBack();
+                    WayaNav.toNamed('/pageSetting', arguments: {
+                      'pageId': widget.page.id,
+                      "isPublic": widget.page.isPublic,
+                      "commentPermission": widget.page.everyoneCanComment
+                    });
+                  },
+                  child: WayaActionNav(
+                    context: context,
+                    asset: SvgPicture.asset('assets/images/pages/setting.svg'),
+                    text: "Page settings",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
+                ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  onTap: () async {
+                    await myPageNotifier.deletePage(widget.page.id);
+
+                    WayaNav.goBack(closeOverlays: true);
+                  },
+                  child: WayaActionNav(
+                    context: context,
+                    asset: SvgPicture.asset(
+                      'assets/images/pages/delete.svg',
+                      color: wayaTheme.colorScheme.error500,
+                      height: 16,
+                    ),
+                    text: "Delete Page",
+                    color: wayaTheme.colorScheme.error500,
+                  ),
+                ),
+              ];
+            },
+          ),
           Gap(8)
         ],
       ),
@@ -82,7 +135,8 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
                               fit: BoxFit.cover,
                             )
                           : DecorationImage(
-                              image: AssetImage('assets/images/pages/image_placeholder.png'),
+                              image: AssetImage(
+                                  'assets/images/pages/image_placeholder.png'),
                               fit: BoxFit.cover,
                             ),
                     ),
@@ -105,7 +159,9 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
                       margin: EdgeInsets.only(right: 20.w),
                       padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                        border: Border.all(
+                            color: wayaTheme.colorScheme.primary600,
+                            width: 1.5),
                         color: wayaTheme.colorScheme.white,
                         borderRadius: BorderRadius.circular(7.r),
                       ),
@@ -161,15 +217,22 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
                 //? Our followers.
                 Row(
                   children: [
-                    actionType(
-                      WayaValueHelper.formatNumber(widget.page.followerCount),
-                      'Followers',
+                    InkWell(
+                      onTap: (){
+                        WayaNav.toNamed('/pageFollowerScreen',
+                            arguments: {
+                          'pageId': widget.page.id
+                            });
+                      },
+                      child: actionType(
+                        WayaValueHelper.formatNumber(widget.page.followerCount),
+                        'Followers',
+                      ),
                     ),
 
                     //? This is fine.
                     const Gap(10),
 
-                    //?
                     actionType(
                       WayaValueHelper.formatNumber(viewModel.postCount ?? 0),
                       'Posts',
@@ -211,7 +274,8 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () => WayaNav.toNamed(WayaAppRoutes.getPagePostScreen(widget.page.id)),
+          callback: () =>
+              WayaNav.toNamed(WayaAppRoutes.getPagePostScreen(widget.page.id)),
           height: 50,
           centerWidget: Center(
             child: Icon(

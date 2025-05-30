@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -39,7 +38,7 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final args = ModalRoute.of(context)?.settings.arguments as dynamic;
-      if(args != null){
+      if (args != null) {
         setState(() {
           _selectedIndex = args['index'];
         });
@@ -58,11 +57,10 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
       appBarTrailing: Row(
         spacing: 12,
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-          WayaDp(
-            radius: 15.r,
-          ),
-          Gap(8)
+          InkWell(
+              onTap: ()=> WayaNav.toNamed('/searchGroup'),
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
+          Gap(8),
         ],
       ),
       body: Column(

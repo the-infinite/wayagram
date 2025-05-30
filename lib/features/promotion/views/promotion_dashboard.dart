@@ -31,7 +31,7 @@ class _PromotionDashboard extends ConsumerState<PromotionDashboard> {
   Widget build(BuildContext context) {
     final state = ref.watch(promoteVmProvider);
     final wayaTheme = Theme.of(context);
-    // TODO: implement build
+    
     return WayaScaffold(
         isLoading: state.loadingPromos,
         isScrollable: true,

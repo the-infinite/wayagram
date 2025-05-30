@@ -8,11 +8,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
-import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
@@ -27,6 +24,7 @@ class UgtContestantCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+        final viewModelNotifier = ref.watch(votersContestNotifier.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,8 +87,17 @@ class UgtContestantCard extends ConsumerWidget {
                   WayaSnackBar.showToast("Contest has ended");
                   return;
                 }
-
-                if (model.entryType?.toLowerCase() == "free") {
+                //? go to  the contestant page instead of voting directly
+                 ref.read(selectedContestantProfile.notifier).state =
+                              contestantData;
+                            viewModelNotifier.updateContestId(model.id);
+                            ref.read(selectedContestProvider.notifier).state =
+                                model;
+                            WayaNav.toNamed(
+                              '/contest-profile-page',
+                            );
+                          
+              /*   if (model.amountPerVote == 0) {
                   WayaUtils.showModalSheet(
                     context,
                     child: ConfirmVoteOptionModal(
@@ -136,7 +143,7 @@ class UgtContestantCard extends ConsumerWidget {
                     votingLink: "votingLink",
                   ),
                 );
-              },
+             */  },
               text: "Vote",
             ),
           ),

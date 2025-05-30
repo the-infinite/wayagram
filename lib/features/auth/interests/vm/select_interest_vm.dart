@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/successful_setup.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
@@ -24,28 +25,32 @@ class SelectedInterest {
 class States {
   final bool isLoading;
   final bool isPostingInterest;
-  final Map<String, Map<String, int>>? interests;
-  final List<SelectedInterest> selected;
-  final List<InterestData> userInterests;
+  final List<RestructuredCategory> interests;
+  final List<String> selected;
+  final List<UserInterest> userInterests;
+  final List<String> prevSelected;
 
   States(
       {this.isLoading = false,
-      this.interests,
+      this.interests = const [],
       this.selected = const [],
+      this.prevSelected = const [],
       this.userInterests = const [],
       this.isPostingInterest = false});
 
   States copyWith(
       {bool? isLoading,
-      Map<String, Map<String, int>>? interests,
+      List<RestructuredCategory>? interests,
       bool? isPostingInterest,
-      List<InterestData>? userInterests,
-      List<SelectedInterest>? selected}) {
+      List<UserInterest>? userInterests,
+      List<String>? prevSelected,
+      List<String>? selected}) {
     return States(
         isLoading: isLoading ?? this.isLoading,
         userInterests: userInterests ?? this.userInterests,
         selected: selected ?? this.selected,
         isPostingInterest: isPostingInterest ?? this.isPostingInterest,
+        prevSelected: prevSelected ?? this.prevSelected,
         interests: interests ?? this.interests);
   }
 }
@@ -55,17 +60,19 @@ class SelectInterestVm extends StateNotifier<States> {
   SelectInterestVm(this._repository, this.ref) : super(States());
   final Ref ref;
 
-  Future<Map<String, Map<String, int>>?> getInterest() async {
+  Future<List<RestructuredCategory>?> getInterest() async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _repository.getInterestsCategories();
 
-      Map<String, Map<String, int>>? allInterests;
+      List<RestructuredCategory>? allInterests;
       if (response.success) {
         InterestsResponseModel responseModel =
             InterestsResponseModel.fromJson(response.data);
-        state = state.copyWith(interests: responseModel.data);
-        allInterests = responseModel.data;
+        List<RestructuredCategory> data =
+            restructureCategoriesRefined(responseModel.data);
+        state = state.copyWith(interests: data);
+        allInterests = data;
       }
       return allInterests;
     } catch (error) {
@@ -74,6 +81,10 @@ class SelectInterestVm extends StateNotifier<States> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  void reset() {
+    state = States();
   }
 
   Future<void> getUserInterest() async {
@@ -85,6 +96,10 @@ class SelectInterestVm extends StateNotifier<States> {
         SelectedInterestsResponseModel responseModel =
             SelectedInterestsResponseModel.fromJson(response.data);
         state = state.copyWith(userInterests: responseModel.data);
+        state = state.copyWith(
+            prevSelected:
+                responseModel.data.map((el) => el.interest.id).toList(), selected: responseModel.data.map((el) => el.interest.id).toList());
+            
         debugPrint(response.data.toString());
       }
     } catch (error) {
@@ -92,20 +107,27 @@ class SelectInterestVm extends StateNotifier<States> {
     }
   }
 
-  Future<void> addInterest() async {
+  Future<void> addInterest({bool? isSettingsScreen}) async {
     try {
-      List<SelectedInterest> selectedData = [];
-      selectedData = List.from(state.selected);
-      final data = selectedData.map((d) {
-        return {"category": d.category, "score": d.interest.length};
-      }).toList();
-
-      debugPrint(data.toString());
       state = state.copyWith(isPostingInterest: true);
-      final response = await _repository.selectInterest(data);
-      if (response.success) {
-        final accountState = ref.read(selectAccountProvider);
+      List<String> interests = [];
 
+      
+
+    if (state.prevSelected.isNotEmpty) {
+      interests = List.from(state.prevSelected);
+    }
+
+   
+    final combinedInterests = {...state.selected, ...interests}.toList();
+      final response =
+          await _repository.selectInterest(combinedInterests);
+      if (response.success) {
+        if (isSettingsScreen == true) {
+          return WayaSnackBar.showToast("Interests updated successfully");
+        }
+
+        final accountState = ref.read(selectAccountProvider);
         if (accountState.selectedType!.type == 'BUSINESS') {
           WayaNav.toNamed('/add-business-account');
         } else {
@@ -119,42 +141,23 @@ class SelectInterestVm extends StateNotifier<States> {
     }
   }
 
-  void updateSelected({required String category, required String interest}) {
-    List<SelectedInterest> selected = List.from(state.selected);
+  void updateSelected({required String interest}) {
+    List<String> selected = List.from(state.selected);
 
     //> Find the index of the category
-    int categoryIndex =
-        selected.indexWhere((item) => item.category == category);
+    int selectedIndex = selected.indexWhere((item) => item == interest);
 
-    if (categoryIndex != -1) {
-      //> Category exists, update its interests
-      SelectedInterest existingCategory = selected[categoryIndex];
-
-      //> Check if interest already exists
-      if (existingCategory.interest.contains(interest)) {
-        //> Remove the interest if it exists
-        selected[categoryIndex] = existingCategory.copyWith(
-          interest:
-              existingCategory.interest.where((i) => i != interest).toList(),
-        );
-
-        //> If the category has no more interests, remove it
-        if (selected[categoryIndex].interest.isEmpty) {
-          selected.removeAt(categoryIndex);
-        }
-      } else {
-        //> Add new interest
-        selected[categoryIndex] = existingCategory.copyWith(
-          interest: [...existingCategory.interest, interest],
-        );
-      }
+    if (selectedIndex != -1) {
+      selected.removeAt(selectedIndex);
     } else {
       //> Category doesn't exist, create new category with interest
-      selected.add(SelectedInterest(category: category, interest: [interest]));
+      selected.add(interest);
     }
 
     //> Update state with new selected interests
     state = state.copyWith(selected: selected);
+
+    print(state.selected);
   }
 }
 

@@ -6,6 +6,7 @@ import 'package:wayagram/features/auth/account_creation/data/select_account_data
 import 'package:wayagram/features/auth/account_creation/view/personal/personal_first_step_view.dart';
 import 'package:wayagram/features/auth/account_creation/view/select_account.dart';
 import 'package:wayagram/features/auth/account_creation/view/verify_account.dart';
+import 'package:wayagram/features/auth/account_creation/view/verify_phone_number.dart';
 import 'package:wayagram/features/auth/account_creation/vm/account_creation_vm.dart';
 
 class AccountCreation extends ConsumerStatefulWidget {
@@ -25,7 +26,7 @@ class _AccountCreationState extends ConsumerState<AccountCreation>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   void _goToNextTab({String? emailAddress}) {
@@ -52,12 +53,13 @@ class _AccountCreationState extends ConsumerState<AccountCreation>
           goToNextTab: updateSelected,
         ),
         PersonalFirstStepView(
-          goToNextTab: _goToNextTab,
-          referral: widget.referral
-        ),
+            goToNextTab: _goToNextTab, referral: widget.referral),
         VerifyAccount(
           goToNextTab: _goToNextTab,
           type: "account-creation",
+        ),
+        VerifyPhoneNumber(
+          goToNextTab: _goToNextTab,
         ),
       ],
       tabController: _tabController,

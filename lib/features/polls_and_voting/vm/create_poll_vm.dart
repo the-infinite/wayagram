@@ -20,6 +20,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/create_poll_respon
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
 
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/single_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
@@ -767,7 +768,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         );
 
         _logger.i(response.data['data']);
-      } else if (response.data['error'] == 'Insufficient wallet balance') {
+      } else if (response.data['responseCode'] == 1644) {
         WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
       }
     } catch (e) {
@@ -795,6 +796,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       if (response.success) {
         FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
         state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+        state = state.copyWith(activePolls: responseModel.data?.docs);
       } else {}
     } catch (e) {
       debugPrint(e.toString());
@@ -877,6 +879,33 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
+  Future<void> requestSettlement(ctx, String pollId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.requestSettlement(pollId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Request was sent successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+
   Future<PaginatedResult<Docs>?> getAllPolls({required int page}) async {
     try {
       //state = state.copyWith(isLoading: true);
@@ -906,6 +935,24 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
+  Future<void> getAllPendingPolls(int page) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getAllPendingPolls(page, ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
   Future<void> getPollsByUrl(String pollUrl) async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getAPollsByUrl(pollUrl);
@@ -927,10 +974,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     final response = await _pollAndVotingRepository.getAllPollsById(pollId);
     state = state.copyWith(isLoading: false);
     if (response.statusCode == 200) {
-      GetAllPollModel responseModel = GetAllPollModel.fromJson(response.data);
+      SinglePollModel responseModel = SinglePollModel.fromJson(response.data);
       _logger.i('GENERATED ${responseModel.data}');
 
-      state = state.copyWith(getAllPollModel: responseModel.data);
+      state = state.copyWith(singlePollModelDocs: responseModel.data?.docs);
     } else {
       state = state.copyWith(isLoading: false);
     }
@@ -976,11 +1023,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         PollDashboardModel responseModel =
             PollDashboardModel.fromJson(response.data);
         state = state.copyWith(
-            // startDate: responseModel.data?.docs?[0].endDate,
-            // endDate: responseModel.data?.docs?[0].endDate,
-            //pollDashboardModelDocs: responseModel.data?.docs?[0].choices,
             pollDashboardChoices: responseModel.data?.docs?[0].choices,
-            //pollDashboardChoices: responseModel?.data!.docs,
             voteCount: responseModel.data?.docs?[0].voteCount.toString(),
             moneyGenerated: responseModel.data?.docs?[0].amountGenerated,
             numberOfPeopleVoted:

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
@@ -21,9 +23,17 @@ class AddBusinessAccountView extends ConsumerStatefulWidget {
 class _AddBusinessAccountViewState
     extends ConsumerState<AddBusinessAccountView> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await ref.read(addBusinessAccountProvider.notifier).getBusiness();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
- 
     final viewModel = ref.watch(addBusinessAccountProvider);
+    final wayaTheme = Theme.of(context);
 
     return WayaScaffold(
         isLoading: false,
@@ -86,16 +96,117 @@ class _AddBusinessAccountViewState
                           WayaTextFormField(
                             controller: viewModel.cac,
                             hintText: 'E.g ERC44444232',
+                            counterText: "",
+                            maxLength: 10,
+                            suffixIcon: viewModel.isLoading &&
+                                    viewModel.isCACVerify
+                                ? Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: SizedBox(
+                                      height: 10,
+                                      width: 10,
+                                      child: CircularProgressIndicator(
+                                          // strokeWidth: 1,
+                                          color: wayaTheme.colorScheme.primary),
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: 10,
+                                    width: 10,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: viewModel.isValidCAC
+                                          ? WayaAssets.images.eCheckEvent
+                                              .image()
+                                          : null,
+                                    )),
+                            onChanged: (value) {
+                              if (value.trim().isNotEmpty) {
+                                if (
+                                    /*  value.length == 8 ||
+                                    value.length == 9 || */
+                                    value.length == 10) {
+                                  ref
+                                      .read(addBusinessAccountProvider.notifier)
+                                      .verifyCAC();
+                                }
+                              }
+                            },
                             label: 'CAC Number',
                           ),
+                          if (!viewModel.isValidCAC)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                "CAC Number not valid",
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12.sp),
+                              ),
+                            ),
                         ],
                       )),
+
                   // const Gap(6),
                   // WayaTextFormField(
                   //   controller: viewModel.businessAddress,
                   //   hintText: 'E.g 23 john doe lagos, Nigeria',
                   //   label: 'Business Address',
                   // ),
+                  const Gap(10),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        controller: viewModel.bvn,
+                        hintText: 'E.g 22200000000',
+                        maxLength: 11,
+                        counterText: "",
+                        suffixIcon: viewModel.isLoading && viewModel.isBVNVerify
+                            ? Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: SizedBox(
+                                  height: 10,
+                                  width: 10,
+                                  child: CircularProgressIndicator(
+                                      // strokeWidth: 1,
+                                      color: wayaTheme.colorScheme.primary),
+                                ),
+                              )
+                            : viewModel.isValidBVN
+                                ? SizedBox(
+                                    height: 10,
+                                    width: 10,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child:
+                                          WayaAssets.images.eCheckEvent.image(),
+                                    ))
+                                : null,
+                        onChanged: (value) {
+                          if (value.trim().isNotEmpty) {
+                            if (value.length == 11) {
+                              ref
+                                  .read(addBusinessAccountProvider.notifier)
+                                  .verifyBVN();
+                            }
+                          }
+                        },
+                        label: 'BVN Number',
+                      ),
+                      if (!viewModel.isValidBVN)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            "BVN Number not valid",
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
+                          ),
+                        ),
+                    ],
+                  ),
                   const Gap(30),
                   Text("Business Document", style: WayaTextStyles.hintStyle),
                   const Gap(30),

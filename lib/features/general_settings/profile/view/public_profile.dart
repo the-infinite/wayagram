@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use_from_same_package
+// ignore_for_file: deprecated_member_use_from_same_package, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,19 +11,22 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/block.dart';
+import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
+import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
+import 'package:wayagram/shared/cache/chat.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/follow/state/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
-import 'package:wayagram/shared/features/profile/state/default.dart';
 import 'package:wayagram/shared/features/profile/vm/donation.dart';
 import 'package:wayagram/shared/features/profile/vm/poll.dart';
 import 'package:wayagram/shared/features/profile/vm/product.dart';
@@ -54,24 +57,18 @@ class UsersProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<UsersProfilePage> {
-  late final userFollowProvider = FollowProvider(
-    (ref) => FollowNotifier(FollowState.initial.copyWith(
-      userId: widget.data.$1.id,
-    )),
-  );
-  late final userPostsProvider =
-      StateNotifierProvider<PostNotifier, PostState>((ref) {
-    return PostNotifier(PostState.initial);
-  });
-  late final postNotifier = ref.watch(userPostsProvider.notifier);
-  late final eventNotifier = ref.watch(userEventsProvider.notifier);
-  late final groupsNotifier = ref.watch(userGroupsProvider.notifier);
-  late final pagesNotifier = ref.watch(userPagesProvider.notifier);
-  late final followNotifier = ref.watch(userFollowProvider.notifier);
-  late final pollsNotifier = ref.watch(userPollsProvider.notifier);
-  late final donationsNotifier = ref.watch(userDonationsProvider.notifier);
-  late final productsNotifier = ref.watch(userProductsProvider.notifier);
-  late final conversationNotifier = ref.watch(conversationProvider.notifier);
+  late final userFollowProvider = userFollowersProvider(widget.data.$1.id);
+  late final userPostsProvider = otherUserPostsProvider(widget.data.$1.id);
+  late final postNotifier = ref.read(userPostsProvider.notifier);
+  late final eventNotifier = ref.read(userEventsProvider.notifier);
+  late final groupsNotifier = ref.read(userGroupsProvider.notifier);
+  late final pagesNotifier = ref.read(userPagesProvider.notifier);
+  late final followNotifier = ref.read(userFollowProvider.notifier);
+  late final pollsNotifier = ref.read(userPollsProvider.notifier);
+  late final donationsNotifier = ref.read(userDonationsProvider.notifier);
+  late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
+  late final conversationNotifier = ref.read(conversationProvider.notifier);
+
   final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
@@ -169,13 +166,28 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
   void _shareProfile() async {
     final result = await Share.share(
-      WayaValueHelper.getShareableUrl(
-          WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
+      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
       subject: 'Share Profile',
     );
 
     // This is fi
     if (result.status == ShareResultStatus.success) return;
+  }
+
+  void _chatWithUser() async {
+    final user = widget.data.$1;
+    var chat = wayaChatsCache.getItem(
+      (chat) => chat.chatType == ChatType.personal && chat.chatMembers.any((member) => member.userId == user.id),
+    );
+    chat ??= await conversationNotifier.startChat(ChatType.personal, [widget.data.$1.id]);
+
+    //? Stop if we could not make this chat.
+    if (chat == null) return;
+
+    //? If we could make this chat...
+    final chatNotifier = ref.read(chatProvider(chat.id).notifier);
+    chatNotifier.setChat(chat);
+    WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
   }
 
   @override
@@ -189,10 +201,13 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
     final followState = ref.watch(userFollowProvider);
     final pollsState = ref.watch(userPollsProvider);
     final donationsState = ref.watch(userDonationsProvider);
-    final productsState = ref.watch(userProductsProvider);
+    final productsState = ref.watch(userProductsProvider(widget.data.$1.id));
     final conversationState = ref.watch(conversationProvider);
     final user = widget.data.$1;
     final profile = widget.data.$2;
+    var chat = wayaChatsCache.getItem(
+      (chat) => chat.chatType == ChatType.personal && chat.chatMembers.any((member) => member.userId == user.id),
+    );
 
     //? Return the component.
     return ValueListenableBuilder(
@@ -201,21 +216,22 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
         isScrollable: false,
         padding: EdgeInsets.zero,
         appBarTrailing: Row(
-          spacing: 12,
+          spacing: 6,
           children: [
-            //? Search
-            IconButton(
-              icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-              onPressed: () async {},
-            ),
-
-            //? Share
-            IconButton(
-              icon: WayaAssets.icons.genSet.share.svg(
-                fit: BoxFit.none,
+            //? Chat only works when you have not blocked a user.
+            if (!conversationState.isBlocked(user.id))
+              IconButton(
+                icon: WayaAssets.icons.chat.svg(fit: BoxFit.none, color: wayaTheme.colorScheme.customBlack),
+                onPressed: _chatWithUser,
               ),
-              onPressed: _shareProfile,
-            ),
+
+            // //? Share
+            // IconButton(
+            //   icon: WayaAssets.icons.genSet.share.svg(
+            //     fit: BoxFit.none,
+            //   ),
+            //   onPressed: _shareProfile,
+            // ),
 
             //? More
             PopupMenuButton(
@@ -244,8 +260,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
                           //? Then pop.
                           if (result) {
-                            WayaSnackBar.showToast(
-                                "This user has been unblocked successfully");
+                            WayaSnackBar.showToast("This user has been unblocked successfully");
                           }
                         }
                       : () async {
@@ -263,8 +278,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
                           //? Then pop.
                           if (result) {
-                            WayaSnackBar.showToast(
-                                "This user has been blocked successfully");
+                            WayaSnackBar.showToast("This user has been blocked successfully");
                           }
                         },
                   child: WayaActionNav(
@@ -275,9 +289,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           ? wayaTheme.colorScheme.customBlack
                           : wayaTheme.colorScheme.error,
                     ),
-                    text: conversationState.isBlocked(widget.data.$1.id)
-                        ? "Unblock account"
-                        : "Block account",
+                    text: conversationState.isBlocked(widget.data.$1.id) ? "Unblock account" : "Block account",
                     color: conversationState.isBlocked(widget.data.$1.id)
                         ? wayaTheme.colorScheme.customBlack
                         : wayaTheme.colorScheme.error,
@@ -288,9 +300,30 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                 PopupMenuItem<int>(
                   value: 2,
                   height: 36.h,
-                  onTap: () {
-                    conversationNotifier.muteOrUnmuteUser(
-                        context, ref, widget.data.$1.id);
+                  onTap: () async {
+                    //? This is fine.
+                    chat ??= await conversationNotifier.startChat(ChatType.personal, [user.id]);
+
+                    //? This is fine.
+                    if (chat == null) {
+                      return;
+                    }
+
+                    //? If this is already muted...
+                    if (chat!.self.isMuted) {
+                      await conversationNotifier.muteOrUnmuteGroup(chat!.id, null);
+                    }
+
+                    //? Mute the group
+                    else {
+                      WayaUtils.showModalSheet(
+                        context,
+                        child: MuteChatGroupModal(
+                          chat: chat!,
+                          notifier: conversationNotifier,
+                        ),
+                      );
+                    }
                   },
                   child: WayaActionNav(
                     context: context,
@@ -311,10 +344,9 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                     //conversationNotifier.reportUser(widget.data.$1.id);
                     final result = await WayaUtils.showModalSheet<bool?>(
                       context,
-                      child: ReportDialog(
-                        user: widget.data.$1,
-                        profile: widget.data.$2,
-                        ref: ref,
+                      child: ReportChatPage(
+                        statuses: pageReport,
+                        userId: widget.data.$1.id,
                       ),
                     );
 
@@ -367,22 +399,26 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
             pagesNotifier.reset();
             pollsNotifier.reset();
             donationsNotifier.reset();
-            productsNotifier.reset();
             if (widget.source != 'profile') followNotifier.reset();
           },
           child: ValueListenableBuilder(
             valueListenable: _pageController,
             builder: (context, selectedPage, _) {
+              //? Get the filtered data for each type.
+              final filteredPosts = postState.posts(null);
+              final filteredPolls = pollsState.polls(null);
+              final filteredEvents = eventState.events(null);
+              final filteredProducts = productsState.products(null);
+
               //? Is this empty?
               final isEmpty = switch (selectedPage) {
-                0 => postState.posts.isEmpty && postState.hasLoaded,
-                2 => pollsState.polls.isEmpty && pollsState.hasLoaded,
-                3 =>
-                  donationsState.donations.isEmpty && donationsState.hasLoaded,
+                0 => filteredPosts.isEmpty && postState.hasLoaded,
+                2 => filteredPolls.isEmpty && pollsState.hasLoaded,
+                3 => donationsState.donations.isEmpty && donationsState.hasLoaded,
                 4 => groupsState.groups.isEmpty && groupsState.hasLoaded,
                 5 => pagesState.pages.isEmpty && pagesState.hasLoaded,
-                6 => eventState.events.isEmpty && eventState.hasLoaded,
-                7 => productsState.products.isEmpty && productsState.hasLoaded,
+                6 => filteredEvents.isEmpty && eventState.hasLoaded,
+                7 => filteredProducts.isEmpty && productsState.hasLoaded,
                 _ => true,
               };
 
@@ -415,9 +451,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                 handler: scrollHandler,
                 shouldFetch: shouldFetch,
                 isAtEnd: isAtEnd,
-                onReachEnd: () async {
-                  await _fetchMore();
-                },
+                onReachEnd: () async => await _fetchMore(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -439,59 +473,77 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                             const Gap(15),
 
                             //? Toggle following
-                            GestureDetector(
-                              onTap: _followStatus == null
-                                  ? null
-                                  : () async {
-                                      //? If this user is following this one.
-                                      if (_followStatus!.isUserFollowing) {
-                                        await myFollowProvider
-                                            .unfollowUser(widget.data.$1.id);
-                                      }
+                            ValueListenableBuilder(
+                              valueListenable: wayaChatsCache,
+                              builder: (context, redraws, _) => Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                spacing: 10.w,
+                                children: [
+                                  //? If this is muted.
+                                  if (chat?.self.isMuted ?? false)
+                                    WayaAssets.icons.cProfileUnmute.svg(
+                                      height: 24.sp,
+                                      width: 24.sp,
+                                      colorFilter: ColorFilter.mode(
+                                        wayaTheme.colorScheme.error,
+                                        BlendMode.srcIn,
+                                      ),
+                                    ),
 
-                                      //? Since I am not yet following this user...
-                                      else {
-                                        await myFollowProvider
-                                            .followUser(widget.data.$1.id);
-                                      }
+                                  //? Toggle following
+                                  GestureDetector(
+                                    onTap: _followStatus == null
+                                        ? null
+                                        : () async {
+                                            //? If this user is following this one.
+                                            if (_followStatus!.isUserFollowing) {
+                                              await myFollowProvider.unfollowUser(widget.data.$1.id);
+                                            }
 
-                                      //? Update the following state on screen.
-                                      await _getFollowState();
-                                    },
-                              child: Container(
-                                margin: EdgeInsets.only(right: 20.w),
-                                padding: REdgeInsets.symmetric(
-                                    vertical: 5.dg, horizontal: 10.dg),
-                                decoration: BoxDecoration(
-                                  border: _followStatus?.isUserFollowing == true
-                                      ? Border.all(
-                                          color: wayaTheme.colorScheme.primary,
-                                          width: 1.5,
-                                        )
-                                      : null,
-                                  color: _followStatus == null
-                                      ? wayaTheme.colorScheme.greyColor200
-                                      : _followStatus!.isUserFollowing
-                                          ? wayaTheme.colorScheme.white
-                                          : wayaTheme.colorScheme.primary,
-                                  borderRadius: BorderRadius.circular(7.r),
-                                ),
-                                child: Text(
-                                  _followStatus == null
-                                      ? "Loading"
-                                      : _followStatus!.isUserFollowing
-                                          ? "Following"
-                                          : "Follow",
-                                  style:
-                                      wayaTheme.textTheme.labelSmall?.copyWith(
-                                    color: _followStatus == null
-                                        ? wayaTheme.colorScheme.greyColor500
-                                        : _followStatus!.isUserFollowing
-                                            ? wayaTheme.colorScheme.primary
-                                            : wayaTheme.colorScheme.white,
-                                    fontWeight: FontWeight.w600,
+                                            //? Since I am not yet following this user...
+                                            else {
+                                              await myFollowProvider.followUser(widget.data.$1.id);
+                                            }
+
+                                            //? Update the following state on screen.
+                                            await _getFollowState();
+                                          },
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 20),
+                                      padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                      decoration: BoxDecoration(
+                                        border: _followStatus?.isUserFollowing == true
+                                            ? Border.all(
+                                                color: wayaTheme.colorScheme.primary,
+                                                width: 1.5,
+                                              )
+                                            : null,
+                                        color: _followStatus == null
+                                            ? wayaTheme.colorScheme.greyColor200
+                                            : _followStatus!.isUserFollowing
+                                                ? wayaTheme.colorScheme.white
+                                                : wayaTheme.colorScheme.primary,
+                                        borderRadius: BorderRadius.circular(7.r),
+                                      ),
+                                      child: Text(
+                                        _followStatus == null
+                                            ? "Loading"
+                                            : _followStatus!.isUserFollowing
+                                                ? "Following"
+                                                : "Follow",
+                                        style: wayaTheme.textTheme.labelSmall?.copyWith(
+                                          color: _followStatus == null
+                                              ? wayaTheme.colorScheme.greyColor500
+                                              : _followStatus!.isUserFollowing
+                                                  ? wayaTheme.colorScheme.primary
+                                                  : wayaTheme.colorScheme.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           ],
@@ -516,8 +568,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
                     //? Second, the picture set.
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0, vertical: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -537,8 +588,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           if (profile.username != null) ...[
                             Text(
                               '@${profile.username}',
-                              style:
-                                  wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                 color: wayaTheme.colorScheme.greyColor500,
                                 fontSize: 13.sp,
                               ),
@@ -552,8 +602,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           if (profile.bio != null) ...[
                             Text(
                               profile.bio!,
-                              style:
-                                  wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                 color: wayaTheme.colorScheme.greyColor700,
                               ),
                             ),
@@ -565,80 +614,61 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           //? Fourth the profile overview.
                           InkWell(
                             customBorder: const StadiumBorder(),
-                            onTap: () => WayaNav.toNamed(
-                                WayaAppRoutes.getFollowersPage(
-                                    widget.data.$1.id, 'mutual', 'profile')),
+                            onTap: () =>
+                                WayaNav.toNamed(WayaAppRoutes.getFollowersPage(widget.data.$1.id, 'mutual', 'profile')),
                             borderRadius: BorderRadius.circular(12.r),
-                            splashColor:
-                                wayaTheme.colorScheme.primary.withAlpha(30),
-                            focusColor: const Color.fromARGB(255, 179, 173, 170)
-                                .withAlpha(30),
-                            highlightColor:
-                                wayaTheme.colorScheme.primary.withAlpha(30),
+                            splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
+                            focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+                            highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               spacing: 10.w,
                               children: [
                                 //? Users following.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(
-                                      followState.followingTotalSize),
+                                  title1: WayaValueHelper.formatNumber(followState.followingTotalSize),
                                   title2: ' Following',
-                                  style1:
-                                      wayaTheme.textTheme.bodySmall?.copyWith(
+                                  style1: wayaTheme.textTheme.bodySmall?.copyWith(
                                     color: wayaTheme.colorScheme.black,
                                     fontSize: 12.sp,
                                   ),
-                                  style2:
-                                      wayaTheme.textTheme.bodySmall?.copyWith(
+                                  style2: wayaTheme.textTheme.bodySmall?.copyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp,
                                   ),
                                   onTap2: () => WayaNav.toNamed(
-                                    WayaAppRoutes.getFollowersPage(
-                                        widget.data.$1.id,
-                                        'following',
-                                        'profile'),
+                                    WayaAppRoutes.getFollowersPage(widget.data.$1.id, 'following', 'profile'),
                                   ),
                                 ),
 
                                 //? Followers.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(
-                                      followState.followersTotalSize),
+                                  title1: WayaValueHelper.formatNumber(followState.followersTotalSize),
                                   title2: ' Followers',
-                                  style1: wayaTheme.textTheme.bodySmall
-                                      ?.wayaCopyWith(
+                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
                                     fontSize: 12.sp,
                                   ),
-                                  style2: wayaTheme.textTheme.bodySmall
-                                      ?.wayaCopyWith(
+                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp,
                                   ),
                                   onTap2: () => WayaNav.toNamed(
-                                    WayaAppRoutes.getFollowersPage(
-                                        widget.data.$1.id,
-                                        'followers',
-                                        'profile'),
+                                    WayaAppRoutes.getFollowersPage(widget.data.$1.id, 'followers', 'profile'),
                                   ),
                                 ),
 
                                 //? Posts.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(
-                                      postState.totalSize),
+                                  title1: WayaValueHelper.formatNumber(postState.totalSize),
                                   title2: ' Posts',
-                                  style1: wayaTheme.textTheme.bodySmall
-                                      ?.wayaCopyWith(
+                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
                                     fontSize: 12.sp,
                                   ),
-                                  style2: wayaTheme.textTheme.bodySmall
-                                      ?.wayaCopyWith(
+                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp,
@@ -655,8 +685,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           //if (isSelf)
                           WayaRichText(
                             title1: 'Joined: ',
-                            title2: WayaDateHelper.getMonthlyTimestamp(
-                                user.createdAt ?? DateTime.now()),
+                            title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
                             style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                               color: wayaTheme.colorScheme.black,
                               fontSize: 12.sp,
@@ -788,7 +817,47 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                     Gap(5.w),
 
                     // Now our component.
-                    if (isEmpty) ...[
+                    if (!(widget.data.$2.isPublic ?? true) && _followStatus?.isUserFollowing == false) ...[
+                      Gap(100.h),
+
+                      //? Fair enough.
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //? First, the lock icon.
+                            WayaAssets.icons.genSet.lock.svg(),
+
+                            // Some space.
+                            Gap(10.h),
+
+                            //? The private text.
+                            Text(
+                              'This account is private',
+                              style: wayaTheme.textTheme.titleLarge,
+                            ),
+
+                            // Some space.
+                            Gap(10.h),
+
+                            //?
+                            Text(
+                              'You must follow this user to see their posts and content',
+                              style: wayaTheme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: WayaConstants.fontFamily,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+
+                            // Some space.
+                            Gap(30.h),
+                          ],
+                        ),
+                      ),
+                    ] else if (isEmpty) ...[
                       //? First, space that scales with the screen size.
                       Gap(60.h),
 
@@ -804,18 +873,18 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                       Gap(60.h),
                     ] else if (selectedPage == 0)
                       ...List.generate(
-                        postState.posts.length,
+                        filteredPosts.length,
                         (index) => WayaPostWidget(
-                          data: postState.posts[index],
+                          data: filteredPosts[index],
                           index: index,
                           padded: true,
                         ),
                       )
                     else if (selectedPage == 2)
                       ...List.generate(
-                        pollsState.polls.length,
+                        filteredPolls.length,
                         (index) => SinglePollWidget(
-                          poll: pollsState.polls[index],
+                          poll: filteredPolls[index],
                           user: user,
                           padded: true,
                         ),
@@ -825,23 +894,19 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                         donationsState.donations.length,
                         (index) {
                           final donation = donationsState.donations[index];
-                          int daysLeft = donation.expirationDate
-                              .difference(donation.startDate)
-                              .inDays;
-                          int amountRaised =
-                              double.parse(donation.amountRaised!).toInt();
-                          int targetedAmount =
-                              double.parse(donation.targetAmount!).toInt();
+                          int daysLeft = donation.expirationDate.difference(donation.startDate).inDays;
+                          int amountRaised = double.parse(donation.amountRaised!).toInt();
+                          int targetedAmount = double.parse(donation.targetAmount!).toInt();
                           double ratioLeft = amountRaised / targetedAmount;
 
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
                             child: ManageDonationWidget(
                               text: "Donate",
-                              amountRaised: WayaHelpers.formatPrice(int.parse(
-                                  '${donation.amountRaised?.replaceAll('.00', '')}')),
-                              targetAmount: WayaHelpers.formatPrice(int.parse(
-                                  '${donation.targetAmount?.replaceAll('.00', '')}')),
+                              amountRaised:
+                                  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
+                              targetAmount:
+                                  WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
                               title: donation.title.capitalizeFirst,
                               image: donation.imageURL,
                               dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
@@ -851,16 +916,13 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                                 WayaNav.toNamed('/donationDetails', arguments: {
                                   'title': '${donation.title.capitalizeFirst}',
                                   'image': '${donation.imageURL}',
-                                  'amountRaised':
-                                      '${donation.amountRaised?.replaceAll('.00', '')}',
-                                  'targetAmount':
-                                      '${donation.targetAmount?.replaceAll('.00', '')}',
+                                  'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
+                                  'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
                                   'desc': donation.description,
                                   'solution': donation.solution,
                                   'impact': donation.impact,
                                   'url': '${donation.url}',
-                                  'minimumDonationAmount':
-                                      '${donation.minimumDonationAmount}',
+                                  'minimumDonationAmount': '${donation.minimumDonationAmount}',
                                   'daysLeft': '$daysLeft',
                                   'privacy': '${donation.privacy}',
                                   'id': donation.id,
@@ -897,9 +959,9 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                       )
                     else if (selectedPage == 6)
                       ...List.generate(
-                        eventState.events.length,
+                        filteredEvents.length,
                         (index) => EventCard(
-                          event: eventState.events[index],
+                          event: filteredEvents[index],
                           userId: widget.data.$1.id,
                         ),
                       )
@@ -907,7 +969,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 5.w),
                         child: ProductsGrid(
-                          products: productsState.products,
+                          products: filteredProducts,
                         ),
                       ),
                   ],

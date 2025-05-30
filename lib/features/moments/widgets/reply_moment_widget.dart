@@ -41,7 +41,6 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
 
 class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
   late final notifier = ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
-  late final chatNotifier = ref.read(chatProvider.notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
 
   Map<String, bool> likedMoments = {};
@@ -135,11 +134,13 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                   //? Since this is fine...
                   if (chat != null) {
                     //? If we could make this chat our focus.
+                    late final chatNotifier = ref.read(chatProvider(chat.id).notifier);
                     chatNotifier.setChat(chat);
 
                     //? This is fine too.
                     final message = await chatNotifier.sendMessage(
                       SendMessageDto(
+                        id: WayaValueHelper.createUid(),
                         chatId: chat.id,
                         type: MessageType.text,
                         originalMessage: null,

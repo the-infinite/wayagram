@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
+import 'package:wayagram/shared/cache/chat.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ConversationState {
@@ -161,31 +162,43 @@ class ConversationState {
   /// A helper function used to check if a user is blocked by using the current
   /// list of blocked users.
   bool isBlocked(String userId) => blocked.any((user) => user.userId == userId);
-  bool isMuted(String id) => conversations.any((chat) {
-        //? looping to get the right chat member first
-        for (var model in chat.chatMembers) {
-          //? checking if it same chat id, found out the position changes
-          if (model.chatId == id) {
-            //? checking if the user id is the same as the current user
-            if (model.userId == ConversationState.self.id) {
-              //?if null means it could be muted, i had to check if the date is past or not
-              if (model.mutedUntil != null) {
-                //? format the date
-                DateTime targetTime = model.mutedUntil!;
 
-                //? Current time (in UTC)
-                DateTime now = DateTime.now().toUtc();
+  /// A helper function used to check if any chat is muted by this user in
+  /// question.
+  bool isMuted(String id) => wayaChatsCache.data.any(
+        (chat) {
+          //? looping to get the right chat member first
+          for (var model in chat.chatMembers) {
+            //? checking if it same chat id, found out the position changes
+            if (model.chatId == id) {
+              //? checking if the user id is the same as the current user
+              if (model.userId == ConversationState.self.id) {
+                //?if null means it could be muted, i had to check if the date is past or not
+                if (model.isMuted) {
+                  //? checking if the user is muted by doing the now and
+                  //?date comparison with the returned date
+                  if (model.mutedUntil != null) {
+                    //? format the date
+                    DateTime targetTime = model.mutedUntil!;
 
-                //? Check if target time  is after the current time
+                    //? Current time (in UTC)
+                    DateTime now = DateTime.now().toUtc();
 
-                return targetTime.isAfter(now);
+                    //? Check if target time  is after the current time
+
+                    return targetTime.isAfter(now);
+                  }
+                } else {
+                  //? checking if the user is not muted
+                  return false;
+                }
               }
             }
           }
-        }
 
-        return false;
-      });
+          return false;
+        },
+      );
 
   /// Clone this conversation but change a little bit of details about it.
   ConversationState copyWith({

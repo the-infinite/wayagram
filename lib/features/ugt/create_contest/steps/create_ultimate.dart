@@ -62,6 +62,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
     // final viewModel2 = ref.watch(upgradeToBusinessVmProvider);
     final notifier = ref.read(contestNotifierProvider.notifier);
     var isEditing = ref.watch(stateIsEditingContestProvider);
+    final isFree = useState("");
 
     final wayaTheme = Theme.of(context);
     useEffect(() {
@@ -73,6 +74,11 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           notifier.winnerPrize.text = contestViewModel?.winnerPrize ?? "";
           notifier.amountPerVote.text =
               contestViewModel?.amountPerVote?.toString() ?? "";
+          if (int.parse(notifier.amountPerVote.text) == 0) {
+            isFree.value = "Free";
+          } else {
+            isFree.value = "Paid";
+          }
           /* notifier.voteCountToQualify.text =
               contestViewModel?.voteCountToQualify ?? ""; */
 
@@ -251,6 +257,8 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   controller: notifier.description,
                   hintText: "Enter Contest Description",
                   label: "Contest Description",
+                  keyboardType: TextInputType.multiline,
+                  // textInputAction: TextInputAction.,
                   line: 6,
                   borderColor:
                       formState.hasError && notifier.description.text.isEmpty
@@ -497,8 +505,8 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           if (selectedValue2 == "Paid") */
           const Gap(15),
           FormField<String>(validator: (value) {
-            if (notifier.amountPerVote.text.isEmpty) {
-              return 'Amount is required';
+            if (isFree.value.trim().isEmpty) {
+              return 'Entry type is required';
             }
 
             return null;
@@ -506,46 +514,29 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WayaTextFormField(
-                  keyboardType: TextInputType.number,
-                  controller: notifier.amountPerVote,
-                  hintText: "Enter Amount per Vote",
-                  label: "Amount per Vote",
-                  inputFormatters: [
-                    CurrencyTextInputFormatter.currency(
-                        name: 'NGN', symbol: 'NGN', locale: 'en_NG')
-                  ],
-                  onChanged: (value) {
-                    debugPrint(
-                        "Amount in word${value.replaceAll(",", "").substring(3)}");
-                    if (value.trim().isNotEmpty) {
-                      if (double.parse(
-                              value.replaceAll(",", "").substring(3).trim()) >
-                          0) {
-                        setState(() {
-                          selectedValue2 = "Paid";
-                        });
-                      } else {
-                        setState(() {
-                          selectedValue2 = "Free";
-                        });
-                      }
-                    } else {
-                      setState(() {
-                        selectedValue2 = "Free";
-                      });
+                //   state.contestFreePaid
+                WayaSelectField<String>(
+                  height: 0.3,
+                  value: isFree.value,
+                  label: "Entry Type",
+                  hintText: 'Choose entry type',
+                  items: ref
+                      .read(contestNotifierProvider.notifier)
+                      .ugtPaymentType(),
+                  onSelected: (value) {
+                    debugPrint(" i am poo ${value.first.label}");
+                    if (value.first.label == "Free") {
+                      notifier.amountPerVote.text = "0";
                     }
+                    isFree.value = value.first.label;
                   },
-                  borderColor:
-                      formState.hasError && notifier.amountPerVote.text.isEmpty
-                          ? wayaTheme.colorScheme.error
-                          : null,
+                  uniqueKey: 'contest-state',
                 ),
-                if (formState.hasError && notifier.amountPerVote.text.isEmpty)
+                if (formState.hasError && isFree.value.trim().isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
-                      formState.errorText ?? "",
+                      formState.errorText!,
                       style: TextStyle(
                           color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
@@ -553,6 +544,66 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               ],
             );
           }),
+          const Gap(15),
+          if (isFree.value != "Free")
+            FormField<String>(validator: (value) {
+              if (notifier.amountPerVote.text.isEmpty) {
+                return 'Amount is required';
+              }
+
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaTextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: notifier.amountPerVote,
+                    hintText: "Enter Amount per Vote",
+                    label: "Amount per Vote",
+                    inputFormatters: [
+                      CurrencyTextInputFormatter.currency(
+                          name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                    ],
+                    onChanged: (value) {
+                      debugPrint(
+                          "Amount in word${value.replaceAll(",", "").substring(3)}");
+                      if (value.trim().isNotEmpty) {
+                        if (double.parse(
+                                value.replaceAll(",", "").substring(3).trim()) >
+                            0) {
+                          setState(() {
+                            selectedValue2 = "Paid";
+                          });
+                        } else {
+                          setState(() {
+                            selectedValue2 = "Free";
+                          });
+                        }
+                      } else {
+                        setState(() {
+                          selectedValue2 = "Free";
+                        });
+                      }
+                    },
+                    borderColor: formState.hasError &&
+                            notifier.amountPerVote.text.isEmpty
+                        ? wayaTheme.colorScheme.error
+                        : null,
+                  ),
+                  if (formState.hasError && notifier.amountPerVote.text.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText ?? "",
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
+                      ),
+                    ),
+                ],
+              );
+            }),
           const Gap(15),
           /*   FormField<String>(validator: (value) {
             if (notifier.numberOfWeeks.text.isEmpty) {
@@ -617,33 +668,35 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 ),
               ),
               const Gap(20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(width: 22),
-                  Text(
-                    "Tap Icon to upload.",
-                    style: wayaTheme.textTheme.bodyMedium,
-                  ),
-                  SizedBox(height: 4),
-                  viewModel.image.trim().isEmpty
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("PNG, JPG or MP4 (max. 5MB)",
-                                style: wayaTheme.textTheme.hintStyle),
-                          ],
-                        )
-                      : Image.file(
-                          File(viewModel.image),
-                          height: 100,
-                        ),
-                ],
+              Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 22),
+                    Text(
+                      "Tap Icon to upload.",
+                      style: wayaTheme.textTheme.bodyMedium,
+                    ),
+                    SizedBox(height: 4),
+                    viewModel.image.trim().isEmpty
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("PNG, JPG or MP4 (max. 5MB)",
+                                  style: wayaTheme.textTheme.hintStyle),
+                            ],
+                          )
+                        : Image.file(
+                            File(viewModel.image),
+                            height: 100,
+                          ),
+                  ],
+                ),
               ),
-              const Gap(20),
-              Text(
+              //  const Gap(20),
+              /*   Text(
                 "Or.",
                 style: wayaTheme.textTheme.hintStyle,
               ),
@@ -668,6 +721,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   ),
                 ],
               ),
+            */
             ],
           ),
           /*UploadImage(onUpload: () {
@@ -799,11 +853,9 @@ class UgtRadioSelect extends StatelessWidget {
       ],
     );
   }
-
-
 }
 
-  DateTime convertToUsableDate(String dateString) {
-    DateFormat inputFormat = DateFormat('yyyy-M-d');
-    return inputFormat.parse(dateString);
-  }
+DateTime convertToUsableDate(String dateString) {
+  DateFormat inputFormat = DateFormat('yyyy-M-d');
+  return inputFormat.parse(dateString);
+}

@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
@@ -19,6 +20,7 @@ import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_detail
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
+import 'package:wayagram/shared/share/share_gen_modal.dart';
 import '../../../core/components/waya_buttons.dart';
 
 class PollsModal extends ConsumerStatefulWidget {
@@ -145,9 +147,14 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
         WayaNav.goBack();
         WayaUtils.showModalSheet(context,
             child: VoteSuccessModal(
-              candidateName: widget.candidateName,
-              votingLink: "link",
-            ));
+                candidateName: widget.candidateName,
+                votingLink:
+                    "I have just voted for ${widget.candidateName} for the amazing performance join me and cast your votes ${WayaValueHelper.getShareableUrl(
+                  WayaAppRoutes.getContestantProfileRoute(
+                    widget.model.contestantId ?? "",
+                    widget.model.contestId ?? "",
+                  ),
+                )}"));
       } else {
         /* WayaUtils.showModalSheet(context,
             child: VoteSuccessModal(
@@ -522,8 +529,6 @@ class ConfirmVoteOptionModal extends StatefulHookConsumerWidget {
 }
 
 class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal> {
-
-
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -591,7 +596,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                           "contestId": widget.model.contestId ?? "",
                           "contestantId": widget.model.contestantId ?? "",
                           // "hostUserId": widget.model.hostUserId ?? "",
-                          // "amount": "0",
+                          "amount": "0",
                           "numberOfVotes": "1",
                           // "profileId": widget.model.profileId ?? "",
                           //"type": "FREE"
@@ -604,7 +609,15 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                           WayaUtils.showModalSheet(context,
                               child: VoteSuccessModal(
                                 candidateName: widget.candidateName,
-                                votingLink: "link",
+
+                                votingLink:
+                                    "I have just voted for ${widget.candidateName} for the amazing performance join me and cast your votes ${WayaValueHelper.getShareableUrl(
+                                  WayaAppRoutes.getContestantProfileRoute(
+                                    widget.model.contestantId ?? "",
+                                    widget.model.contestId ?? "",
+                                  ),
+                                )}",
+
                               ));
                         }
                         return;
@@ -956,7 +969,21 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
               color: Colors.white,
               callback: () async {
                 debugPrint('YOUR URL ${widget.votingLink}');
-                Share.share(widget.votingLink);
+                // Share.share(widget.votingLink);
+                // final result = await WayaNavigationHelper.sharePost(null, ref);
+                final result = await WayaUtils.showModalSheet<ShareResult>(
+                  WayaNav.context,
+                  child: ShareGenModal(
+                    link: widget.votingLink,
+                    pageNotifier: ref.read(createPageProvider.notifier),
+                  ),
+                );
+
+                if (result != null) {
+                  debugPrint("Share result: ${result.status}");
+                }
+
+                WayaNav.removeAllUntil(AdminContestDetails(id: ""), "/upcoming-manage-contest-details");
 
                 //WayaNav.toNamed('/share-voting', arguments: widget.votingLink);
               },

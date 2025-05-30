@@ -17,6 +17,7 @@ import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/applied_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
 import 'package:wayagram/features/donation/model/donation_category_model.dart';
+import 'package:wayagram/features/donation/model/donation_setting_response.dart';
 import 'package:wayagram/features/donation/model/kyc_model.dart';
 import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
@@ -75,12 +76,10 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
   void addFile(File file) {
-    state =
-        state.copyWith(donationImage: [
-          DocType(file: file, type: "donation-image", name: file.path
-              .split('/')
-              .last)
-        ]);
+    state = state.copyWith(donationImage: [
+      DocType(
+          file: file, type: "donation-image", name: file.path.split('/').last)
+    ]);
   }
 
   void removeFile() {
@@ -121,8 +120,8 @@ class DonationVm extends StateNotifier<DonationState> {
       final response = await _donationRepository.getDonationCategory();
 
       if (response.success) {
-        DonationCategoryModel responseModel = DonationCategoryModel.fromJson(
-            response.data);
+        DonationCategoryModel responseModel =
+            DonationCategoryModel.fromJson(response.data);
 
         final List<Select>? categories = responseModel.data?.docs?.map((val) {
           return Select(
@@ -139,8 +138,8 @@ class DonationVm extends StateNotifier<DonationState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getDonationBasedOnCategory(
-          categoryName);
+      final response =
+          await _donationRepository.getDonationBasedOnCategory(categoryName);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
@@ -171,11 +170,12 @@ class DonationVm extends StateNotifier<DonationState> {
     return state.selected;
   }
 
-
-  Future<void> makeDonation(String campaignId, int amount, String message, ctx) async {
+  Future<void> makeDonation(
+      String campaignId, int amount, String message, ctx) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.donate(campaignId, amount, message);
+      final response =
+          await _donationRepository.donate(campaignId, amount, message);
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
@@ -193,7 +193,8 @@ class DonationVm extends StateNotifier<DonationState> {
     }
   }
 
-  Future<PaginatedResult<AllDonationDocs>?> getAllDonation({required int page}) async {
+  Future<PaginatedResult<AllDonationDocs>?> getAllDonation(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getAllCampaigns(page);
@@ -201,7 +202,8 @@ class DonationVm extends StateNotifier<DonationState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        AllDonationModel responseModel = AllDonationModel.fromJson(response.data);
+        AllDonationModel responseModel =
+            AllDonationModel.fromJson(response.data);
         fetchAllDonations = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(allDonationDocs: fetchAllDonations);
@@ -209,7 +211,8 @@ class DonationVm extends StateNotifier<DonationState> {
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchAllDonations!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchAllDonations!);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -253,7 +256,8 @@ class DonationVm extends StateNotifier<DonationState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        AppliedDonationModel responseModel = AppliedDonationModel.fromJson(response.data);
+        AppliedDonationModel responseModel =
+            AppliedDonationModel.fromJson(response.data);
         state = state.copyWith(appliedDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
@@ -262,8 +266,8 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
   Future<bool> verifyWalletPin(String pin, ctx) async {
-    final response =
-        await _donationRepository.confirmWalletPin(ConfirmWalletPin(userId: ConversationState.self.id, pin: pin));
+    final response = await _donationRepository.confirmWalletPin(
+        ConfirmWalletPin(userId: ConversationState.self.id, pin: pin));
     if (response.success) {
       return true;
     } else if (response.data['error'] == 'User hasn\'t set wallet pin yet') {
@@ -271,7 +275,8 @@ class DonationVm extends StateNotifier<DonationState> {
         SnackBar(
           content: Text(
             'Kindly set your wallet pin',
-            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            style: TextStyle(
+                fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
           ),
           backgroundColor: WayaColors.primary,
           duration: Duration(seconds: 2),
@@ -286,7 +291,8 @@ class DonationVm extends StateNotifier<DonationState> {
   Future<void> editCampaign(ctx, amount, campaignId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.updateDonation(amount, campaignId);
+      final response =
+          await _donationRepository.updateDonation(amount, campaignId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
@@ -294,7 +300,8 @@ class DonationVm extends StateNotifier<DonationState> {
           SnackBar(
             content: Text(
               'Minimum amount updated successfully!',
-              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+              style: TextStyle(
+                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
@@ -315,8 +322,8 @@ class DonationVm extends StateNotifier<DonationState> {
     }
   }
 
-  Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate,
-      image, startDate, category,
+  Future<void> onSubmit(title, description, solution, impact, targetAmount,
+      minimumAmount, privacy, expirationDate, image, startDate, category,
       {required BuildContext context}) async {
     try {
       // validate image
@@ -350,14 +357,29 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final image = state.donationImage[0].file == null
           ? state.donationImage[0].url
-          : await WayaUtils.uploadFile(file: state.donationImage[0].file!, repository: _uploadFileRepository);
+          : await WayaUtils.uploadFile(
+              file: state.donationImage[0].file!,
+              repository: _uploadFileRepository);
 
-      final response = await _donationRepository.createCampaign(title, description, solution, impact, targetAmount,
-          minimumAmount, privacy, expirationDate, image!, startDate, category);
+      final response = await _donationRepository.createCampaign(
+          title,
+          description,
+          solution,
+          impact,
+          targetAmount,
+          minimumAmount,
+          privacy,
+          expirationDate,
+          image!,
+          startDate,
+          category);
 
       if (response.success) {
+        reset();
+        debugPrint('CREATE DONATION ${response.data}');
         if (context.mounted) {
-          CreateDonationResponse createDonationResponse = CreateDonationResponse.fromJson(response.data);
+          CreateDonationResponse createDonationResponse =
+              CreateDonationResponse.fromJson(response.data);
           WayaUtils.showModalSheet(
             context,
             child: DonationSuccessModal(
@@ -379,7 +401,8 @@ class DonationVm extends StateNotifier<DonationState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getMyCampaigns(ConversationState.self.id);
+      final response =
+          await _donationRepository.getMyCampaigns(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
@@ -397,7 +420,8 @@ class DonationVm extends StateNotifier<DonationState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getApprovedDonation(ConversationState.self.id);
+      final response = await _donationRepository
+          .getApprovedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
@@ -416,7 +440,8 @@ class DonationVm extends StateNotifier<DonationState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getAppliedDonation(ConversationState.self.id);
+      final response = await _donationRepository
+          .getAppliedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
@@ -434,14 +459,16 @@ class DonationVm extends StateNotifier<DonationState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getAppliedDonation(ConversationState.self.id);
+      final response = await _donationRepository
+          .getAppliedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
-        state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+        state = state.copyWith(myDonationDocs: responseModel.data?.docs,
+        pendingDonations: responseModel.data?.docs);
       } else {}
     } catch (e) {
       debugPrint(e.toString());
@@ -452,7 +479,8 @@ class DonationVm extends StateNotifier<DonationState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getRejectedDonation(ConversationState.self.id);
+      final response = await _donationRepository
+          .getRejectedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
@@ -471,7 +499,8 @@ class DonationVm extends StateNotifier<DonationState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getMyKYC(ConversationState.self.id);
+      final response =
+          await _donationRepository.getMyKYC(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
@@ -488,8 +517,6 @@ class DonationVm extends StateNotifier<DonationState> {
       debugPrint(e.toString());
     } finally {}
   }
-
-
 
   Future<void> getSingleDonation(String campaignId) async {
     debugPrint('Fetching saved posts...');
@@ -526,6 +553,48 @@ class DonationVm extends StateNotifier<DonationState> {
     }
   }
 
+  Future<bool?> updateDonationSettings(
+      {bool notifyFriends = false, bool makeDonationsPublic = false}) async {
+    try {
+      // debugPrint(productId);
+
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.updateDonationSettings(
+          notifyFriends, makeDonationsPublic);
+      debugPrint(response.toString());
+      bool isSuccess = false;
+      if (response.success) {
+        debugPrint(response.data.toString());
+        isSuccess = true;
+      } else {
+        isSuccess = false;
+      }
+
+      return isSuccess;
+    } catch (error) {
+      debugPrint(error.toString());
+      return null;
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<DonationSettingsModel?> getDonationSettings() async {
+    try {
+      final response = await _donationRepository.getDonationSettings();
+
+      if (response.success) {
+        DonationSettingsModel shopMetricResponse =
+            DonationSettingsModel.fromJson(response.data);
+
+        debugPrint(response.data.toString());
+        return shopMetricResponse;
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+    return null;
+  }
 
 /* Future<PaginatedResult<MyDonationDocs>?> getMyDonation(int page) async {
 
@@ -574,6 +643,7 @@ class DonationVm extends StateNotifier<DonationState> {
   // }
 }
 
-final donationVmProvider = StateNotifierProvider<DonationVm, DonationState>((ref) {
+final donationVmProvider =
+    StateNotifierProvider<DonationVm, DonationState>((ref) {
   return DonationVm(DonationRepository(), ref, UploadFileRepository());
 });

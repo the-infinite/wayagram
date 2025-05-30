@@ -3,12 +3,18 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 class UgtEmptyState extends StatelessWidget {
   final Widget icon;
   final String title;
   final String desc;
   final bool hideButton;
+  final bool showButtonBusiness;
+
   final Widget? leadingButtonIcon;
   final VoidCallback onTap;
   final String buttonText;
@@ -18,6 +24,7 @@ class UgtEmptyState extends StatelessWidget {
       required this.desc,
       required this.title,
       this.hideButton = false,
+      this.showButtonBusiness = true,
       required this.buttonText,
       required this.onTap,
       this.leadingButtonIcon});
@@ -33,19 +40,19 @@ class UgtEmptyState extends StatelessWidget {
         children: [
           // const Gap(40),
           icon,
-          const Gap(20),
+          //  const Gap(20),
           Text(
             title,
             textAlign: TextAlign.center,
             style: wayaTheme.textTheme.titleLarge,
           ),
-          const Gap(25),
+          const Gap(5),
           Text(
             desc,
             textAlign: TextAlign.center,
             style: wayaTheme.textTheme.descriptionStyle,
           ),
-          const Gap(25),
+          const Gap(20),
           if (hideButton)
             WayaButton(
               callback: onTap,
@@ -69,7 +76,15 @@ class UgtEmptyState extends StatelessWidget {
                   )
                 ],
               ),
-            )
+            ),
+
+          if (ConversationState.self.accountType != UserAccountType.business &&showButtonBusiness)
+            WayaButton(
+              callback: () {
+                WayaNav.toNamed(UpgradeToBusiness.route);
+              },
+              text: "Upgrade to Business",
+            ),
         ],
       ),
     );

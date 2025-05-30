@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:svg_flutter/svg.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/my_events.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/event_widget.dart';
@@ -47,7 +40,7 @@ class _AllEventsState extends ConsumerState<AllEvents> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(eventVmProvider);
 
     if (viewModel.isLoadingEventWithStatus) {
@@ -74,33 +67,33 @@ class _AllEventsState extends ConsumerState<AllEvents> {
                 ref.read(eventVmProvider.notifier).getEventWithStatus(page:1),
             child: ListView(
               children: [
-                WayaButton(
-                  callback: () {
+                // WayaButton(
+                //   callback: () {
                     
-                     WayaNav.replaceNamed( AddEvent.route);
-                  },
-                  color: wayaTheme.colorScheme.primary50,
-                  centerWidget: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        WayaAssets.icons.addEventIcon.path,
-                        colorFilter: ColorFilter.mode(
-                            wayaTheme.colorScheme.customPrimary,
-                            BlendMode.srcIn),
-                      ),
-                      const Gap(6),
-                      Text(
-                        "Create an Event",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500),
-                      )
-                    ],
-                  ),
-                ),
+                //      WayaNav.replaceNamed( AddEvent.route);
+                //   },
+                //   color: wayaTheme.colorScheme.primary50,
+                //   centerWidget: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     crossAxisAlignment: CrossAxisAlignment.center,
+                //     children: [
+                //       SvgPicture.asset(
+                //         WayaAssets.icons.addEventIcon.path,
+                //         colorFilter: ColorFilter.mode(
+                //             wayaTheme.colorScheme.customPrimary,
+                //             BlendMode.srcIn),
+                //       ),
+                //       const Gap(6),
+                //       Text(
+                //         "Create an Event",
+                //         style: TextStyle().wayaCopyWith(
+                //             color: wayaTheme.colorScheme.customPrimary,
+                //             fontSize: 14.sp,
+                //             fontWeight: FontWeight.w500),
+                //       )
+                //     ],
+                //   ),
+                // ),
                 const Gap(10),
                 FilterWidget(
                   search: searchController,

@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/create_new_password_vm.dart';
-import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 
 class CreateNewPassword extends ConsumerStatefulWidget {
   final String email;
@@ -25,7 +24,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createNewPasswordProvider);
-    final credential = ref.watch(credentialInputProvider);
+    // final credential = ref.watch(credentialInputProvider);
     final verify = ref.watch(verifyAccountProvider);
     final wayaTheme = Theme.of(context);
 
@@ -77,6 +76,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                               : Icons.visibility_off_outlined),
                           color: wayaTheme.colorScheme.greyColor300,
                         ),
+                          helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
                       ),
                       if (formState.hasError && viewModel.password.text.isEmpty)
                         Padding(

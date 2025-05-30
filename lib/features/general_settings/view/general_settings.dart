@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/helpers/package.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/account_security/account_security.dart';
+import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
+import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
+import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
+import 'package:wayagram/features/general_settings/quotation/quotation_settings_page.dart';
+import 'package:wayagram/features/general_settings/shop/shop_setting_page.dart';
 import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
@@ -98,9 +109,20 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
+                title: 'Interests',
+                iconPath: 'edit',
+                onTap: () => WayaNav.toNamed(EditInterest.route),
+              ),
+              GeneralSettingsOptionModel(
                 title: 'Change Transaction PIN',
                 iconPath: 'password',
                 onTap: () => WayaNav.toNamed('/change-pin-page'),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Set Transaction PIN',
+                iconPath: 'password',
+                onTap: () => WayaNav.toNamed(TransactionPinView.route,
+                    arguments: "account-setting"),
               ),
               /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
@@ -124,7 +146,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Account Security',
                 iconPath: 'shield_star',
-                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+                onTap: () => WayaNav.toNamed(AccountSecurity.route),
               ),
             ],
           ),
@@ -151,10 +173,34 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: 'users_group',
                 onTap: () => WayaNav.toNamed(FriendFollowerPage.route),
               ),
+              GeneralSettingsOptionModel(
+                title: 'Donation Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mDonation.path,
+                onTap: () => WayaNav.toNamed(DonationSettingsPage.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Quotation Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mQuotation.path,
+                onTap: () => WayaNav.toNamed(QuotationSettingsPage.route),
+              ),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Shop Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mShop.path,
+                onTap: () => WayaNav.toNamed(ShopSettingPage.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Event Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mEvents.path,
+                onTap: () => WayaNav.toNamed(EventSettingsPage.route),
+              ),
               GeneralSettingsOptionModel(
                 title: 'Account Sync Settings',
                 iconPath: 'bell',
@@ -162,6 +208,23 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
             ],
           ),
+          /*  GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Page Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mPages.path,
+                onTap: () => WayaNav.toNamed(PageGeneralSetting.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Group Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mGroup.path,
+                onTap: () => WayaNav.toNamed(GroupSettingPage.route),
+              ),
+             
+            ],
+          ), */
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
@@ -195,6 +258,27 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
             ],
           ),
+          SizedBox(height: 10),
+          WayaErrorWidget(
+            onError: (context, e) {
+              WayaDebugConsoleController.instance.addException(
+                WayaDebugHelpers.getMessage(e),
+                e,
+                WayaDebugEventModule.unknown,
+                WayaDebugHelpers.getStackTrace(e),
+              );
+              return const SizedBox();
+            },
+            builder: (context) => Text(
+              "v${PackageData.info.version}-${WayaConstants.isProduction ? "live" : "test"}",
+              textAlign: TextAlign.center,
+              style: WayaTextStyles.bodySmall.copyWith(
+                color: WayaColors.greyColor400,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
         ],
       ),
     );

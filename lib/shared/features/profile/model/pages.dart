@@ -1,16 +1,18 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 part 'pages.g.dart';
 
 @JsonSerializable()
-class PageModel {
+class PageModel extends BaseModel<PageModel>{
   final String id;
   final int followerCount;
   final String ownerId;
   final String name;
   final String description;
   final bool isPublic;
+  final bool everyoneCanComment;
   final String? coverImage;
   final List<String>? categories;
   final String? url;
@@ -33,6 +35,7 @@ class PageModel {
     required this.name,
     required this.description,
     required this.isPublic,
+    required this.everyoneCanComment,
     required this.coverImage,
     required this.categories,
     required this.url,
@@ -49,6 +52,11 @@ class PageModel {
   DateTime get updatedAt => aUpdatedAt ?? bUpdatedAt!;
 
   factory PageModel.fromJson(Map<String, dynamic> json) => _$PageModelFromJson(json);
-
   Map<String, dynamic> toJson() => _$PageModelToJson(this);
+
+  @override
+  Map<String, dynamic> toMap() => {
+    "name": name,
+    "description": description
+  };
 }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -89,11 +90,14 @@ class WayaImage2 extends ConsumerWidget {
   final String? imageUrl;
   final Function()? onTap;
   final bool isEdit;
+  final bool canDelete;
 
+  // Construct.
   const WayaImage2({
     super.key,
     required this.height,
     this.isEdit = false,
+    this.canDelete = false,
     this.onTap,
     this.imageUrl,
   });
@@ -146,6 +150,28 @@ class WayaImage2 extends ConsumerWidget {
                 ),
               ),
             ),
+
+          //? If this can delete,
+          if (canDelete)
+            Positioned(
+              right: 16.dg,
+              bottom: 16.dg,
+              child: InkWell(
+                onTap: () => removeCoverPhoto(ref),
+                child: Container(
+                  padding: EdgeInsets.all(8.dg),
+                  decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.error,
+                    shape: BoxShape.circle,
+                  ),
+                  child: WayaAssets.images.pages.delete.svg(
+                    height: 18.h,
+                    width: 18.w,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
         ],
       ),
     );
@@ -166,6 +192,10 @@ class WayaImage2 extends ConsumerWidget {
 
   void updateCoverPhoto(WidgetRef ref) {
     ref.read(profileVmProvider.notifier).updateCoverPhoto();
+  }
+
+  void removeCoverPhoto(WidgetRef ref) {
+    ref.read(profileVmProvider.notifier).removeCoverPhoto();
   }
 }
 

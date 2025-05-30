@@ -61,6 +61,7 @@ class ShopMember {
     required this.id,
     required this.userId,
     required this.shopId,
+    required this.contestId,
     required this.roles,
     required this.email,
     required this.isActive,
@@ -72,6 +73,7 @@ class ShopMember {
   final String? id;
   final String? userId;
   final String? shopId;
+  final String? contestId;
   final List<Role>? roles;
   final String? email;
   final bool? isActive;

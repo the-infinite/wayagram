@@ -92,8 +92,14 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
               stream: WayaFileRepository.instance.downloadFile(
                 widget.message!.media!.first.mediaUrl,
                 widget.video,
-                (result) {
+                (result) async {
                   if (result) {
+                    //! DO NOT REMOVE THIS LINE. It is us giving the operating 
+                    //! system enough time to flush the file to storage. Some
+                    //! times the file might be lingering in memory as opposed
+                    //! to storage.
+                    await Future.delayed(const Duration(seconds: 4));
+                    if (!mounted) return;
                     setState(() {
                       downloaded = true;
                     });

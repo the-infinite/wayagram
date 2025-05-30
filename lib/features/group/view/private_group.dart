@@ -46,7 +46,14 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
       isScrollable: true,
       appBarTrailing: Row(
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          InkWell(
+              onTap: ()=> WayaNav.toNamed('/searchGroupAndPage',
+                  arguments: {
+                    'groupId': widget.group.id,
+                    'name': 'group'
+                  }
+              ),
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           const Gap(12),
           InkWell(
             onTap: () => Share.share(
@@ -65,7 +72,9 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                   value: 0,
                   onTap: () {
                     WayaNav.goBack();
-                    WayaNav.toNamed('/groupSetting');
+                    WayaNav.toNamed('/groupSetting', arguments: {
+                      'groupId': widget.group.id
+                    });
                   },
                   child: WayaActionNav(
                     context: context,
@@ -103,7 +112,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                   value: 3,
                   onTap: () async {
                     await myGroupNotifier.deleteGroup(widget.group.id);
-                    WayaNav.goBack();
+                    WayaNav.goBack(closeOverlays: true);
                   },
                   child: WayaActionNav(
                     context: context,

@@ -8,11 +8,13 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
-import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 class AddEventVm extends StateNotifier<AddEventState> {
@@ -61,6 +63,14 @@ class AddEventVm extends StateNotifier<AddEventState> {
     state = state.copyWith(endDateString: date, endDate: date);
   }
 
+  void selectTicketSalesStartDate({required String date, required String iso}) {
+    state = state.copyWith(ticketStartDate: date);
+  }
+
+  void selectTicketSalesEndDate({required String date, required String iso}) {
+    state = state.copyWith(ticketEndDate: date);
+  }
+
   void selectStartTime({required String time}) {
     state = state.copyWith(startTime: time);
   }
@@ -83,6 +93,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
+    if (startDate.isEmpty || endDate.isEmpty) return true;
     DateTime start = DateTime.parse(startDate);
     DateTime end = DateTime.parse(endDate);
 
@@ -119,6 +130,12 @@ class AddEventVm extends StateNotifier<AddEventState> {
         return false;
       }
 
+      // validate ticket sale start date
+      if (isStartDateAfterEndDate(state.ticketStartDate, state.ticketEndDate)) {
+        WayaSnackBar.showToast("Sales Start date must be before the end date");
+        return false;
+      }
+
       // validate payment option
       if (state.eventType == 'Paid' && state.eventFee.text.isEmpty) {
         WayaSnackBar.showToast("Add price for a PAID event");
@@ -127,6 +144,21 @@ class AddEventVm extends StateNotifier<AddEventState> {
 
       if (state.eventType == 'Free' && state.eventFee.text.isEmpty) {
         state = state.copyWith(eventFee: TextEditingController(text: '0'));
+      }
+
+      if (state.eventType == "Paid" &&
+          ConversationState.self.accountType == UserAccountType.personal) {
+        WayaUtils.showNotice(
+            context: context,
+            title: "You don't have a Business Account",
+            message:
+                'Please upgrade to a business account to create a paid poll',
+            onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+            buttonText: 'Upgrade to Business',
+            secondButtonText: 'Cancel',
+            icon: Image.asset('assets/images/cp-shop.png'));
+
+        return false;
       }
 
       if (state.privacyOption.isEmpty) {
@@ -154,19 +186,16 @@ class AddEventVm extends StateNotifier<AddEventState> {
             context: context,
             title: state.isEditingMode
                 ? "Your Event has been updated successfully"
-                : "Your Event has been created successfully",
+                : "Your Event has been created successfully.",
             message:
-                "Your event is now live. Share it with your audience and start engaging with attendees today!",
+                "Your event is now live. Share it with your audience and start engaging with attendees today!. ${state.eventType == "Paid" ? "Waya will take a commission from the payment and the rest of the money will be paid into your account" : ""}",
             onPress: () {
               WayaNav.goBack();
               reset();
             },
             buttonText: 'Go To Event Home Page',
-            secondButtonText: 'Share Event Link',
+            secondButtonText: 'Go Back',
             onCancel: () async {
-              await ref
-                  .read(eventVmProvider.notifier)
-                  .shareEvent(context: context, shareUrl: "shareUrl");
               WayaNav.goBack();
               reset();
             },
@@ -208,6 +237,12 @@ class AddEventVm extends StateNotifier<AddEventState> {
       privacyOption: event.privacyOption,
       startDate: event.startDate.toIso8601String().split('T')[0],
       endDate: event.endDate.toIso8601String().split('T')[0],
+      ticketEndDate: event.ticketSalesEndDate != null
+          ? event.ticketSalesEndDate?.toIso8601String().split('T')[0]
+          : '',
+      ticketStartDate: event.ticketSalesStartDate != null
+          ? event.ticketSalesStartDate?.toIso8601String().split('T')[0]
+          : '',
       startTime: event.startTime,
       eventId: event.id,
       endTime: event.endTime,
