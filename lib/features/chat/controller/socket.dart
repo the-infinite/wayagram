@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -354,6 +355,10 @@ class WayaSocketController {
 
         // This is fine.
         await chatNotifier.getMessage(args.messageId!);
+        await chatNotifier.updateMessageStatus(
+          chatNotifier.isActive ? MessageStatusCode.read : MessageStatusCode.delivered,
+          args.messageId!,
+        );
 
         //? Wait for this to finish
         await updateChats();
