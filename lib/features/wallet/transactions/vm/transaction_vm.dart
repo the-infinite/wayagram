@@ -162,14 +162,9 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
         }
       }
 
-      // ?Initialize Dio
-      final dio = Dio();
+
       //? Make GET request to fetch PDF
       final response = await _transactionRepository.getTransactionForExportThree();
-      dio.get(
-        'https://services.staging.wayagram.ng/wayagram-wallet/api/v2/client/transactions/export',
-        options: Options(responseType: ResponseType.bytes),
-      );
 
       if (response.statusCode == 200) {
         //? Get temporary directory
