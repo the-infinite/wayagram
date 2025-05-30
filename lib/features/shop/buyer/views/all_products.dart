@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -19,7 +19,6 @@ import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
-import 'package:flutter_screenutil/src/size_extension.dart';
 
 class AllProducts extends ConsumerStatefulWidget {
   const AllProducts({super.key});

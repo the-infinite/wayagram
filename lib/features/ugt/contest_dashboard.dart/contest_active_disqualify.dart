@@ -8,6 +8,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
@@ -111,6 +112,9 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                       label: Text("Status",
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
+                      label: Text("Current Stage",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  DataColumn(
                       label: Text("Action",
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
@@ -140,6 +144,8 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                         ),
                       ),
                     ),
+                    DataCell(Text(
+                        getUserCurrentStage(item))),
                     DataCell(
                       PopupMenuButton(
                         onSelected: (value) {},
@@ -227,6 +233,19 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
               ),
       ),
     );
+  }
+
+  String getUserCurrentStage(
+      MyContestContestantModel myFullContestantList) {
+    String currentUserStage = "None";
+    for(var model in myFullContestantList.stages!){
+        if(model.hasAccepted == true){
+          currentUserStage = model.stageName ?? "";
+          break;
+        }
+    }
+
+    return currentUserStage;
   }
 }
 

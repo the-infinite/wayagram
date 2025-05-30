@@ -64,12 +64,9 @@ class _SearchState extends ConsumerState<SearchView> {
       //ref.read(createGroupProvider.notifier).getRecommendedGroups();
       ref.read(createPageProvider.notifier).getAllPages();
       ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
-      ref.read(createGroupProvider.notifier).getAllGroups();
        ref.read(createGroupProvider.notifier).getRecommendedGroups();
       //> fetch upcoming events
-      final upcomingEvents = await ref
-          .read(eventVmProvider.notifier)
-          .getEventWithStatus(page: 1, limit: 1000);
+      final upcomingEvents = await ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1, limit: 1000);
       if (upcomingEvents != null) {
         events = upcomingEvents.items;
       }
@@ -106,7 +103,7 @@ class _SearchState extends ConsumerState<SearchView> {
     final state = ref.watch(servicesProvider);
     final pageState = ref.watch(createPageProvider);
     final pollState = ref.watch(createPollVotingProvider);
-    final groupState = ref.read(createGroupProvider);
+    //final groupState = ref.read(createGroupProvider);
 
     final query = searchController.text.trim();
 
@@ -124,8 +121,7 @@ class _SearchState extends ConsumerState<SearchView> {
     }
 
     //? Searching posts.
-    final List<PostModel> filteredPosts =
-        WayaUtils.strictSearch<PostModel>(state.topPosts, ['hashtags'], query);
+    final List<PostModel> filteredPosts = WayaUtils.strictSearch<PostModel>(state.topPosts, ['hashtags'], query);
     final history = storage.getSearchHistory();
 
     //? Moments
@@ -136,8 +132,7 @@ class _SearchState extends ConsumerState<SearchView> {
     );
 
     //? Searching user data.
-    final List<UserDetails> filteredAccounts =
-        WayaUtils.strictSearch<UserDetails>(
+    final List<UserDetails> filteredAccounts = WayaUtils.strictSearch<UserDetails>(
       state.usersDetails,
       ['firstName', 'lastName', 'email'],
       query,
@@ -164,12 +159,16 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-    //? Group
-    final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
-      groupState.getAllGroups ?? [],
-      ['name', 'description'],
-      query,
-    );
+     //? Group
+    final filteredGroups = GroupsCache.instance.data.where((group) {
+      return group.name.toLowerCase().contains(query.trim().toLowerCase());
+    }).toList();
+
+    // final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
+    //   groupState.recommendedGroupDocs ?? [],
+    //   ['question', 'description'],
+    //   query,
+    // );
 
     final serviceData = {
       'Post': filteredPosts,
@@ -180,13 +179,10 @@ class _SearchState extends ConsumerState<SearchView> {
       "Poll": filteredPolls,
       "Group": filteredGroups
     };
-    final matchingServices = serviceData.entries
-        .where((entry) => (entry.value as List).isNotEmpty)
-        .map((entry) => entry.key)
-        .toList();
+    final matchingServices =
+        serviceData.entries.where((entry) => (entry.value as List).isNotEmpty).map((entry) => entry.key).toList();
     selectedServices.retainAll(matchingServices);
-    List<String> activeServices =
-        selectedServices.isEmpty ? matchingServices : selectedServices.toList();
+    List<String> activeServices = selectedServices.isEmpty ? matchingServices : selectedServices.toList();
     bool allServicesEmpty = matchingServices.isEmpty;
 
     if (!allServicesEmpty) {
@@ -206,11 +202,10 @@ class _SearchState extends ConsumerState<SearchView> {
         leading: WayaBackButton(onTap: () => WayaNav.goBack()),
         title: WayaTextFormField(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-          prefixIcon:
-              Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
+          prefixIcon: Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
           controller: searchController,
           hintText: 'Search hashtags, accounts, comments, users, etc.',
-          maxLength: 10,
+          maxLength: 40,
           counterText: '',
         ),
       ),
@@ -237,8 +232,7 @@ class _SearchState extends ConsumerState<SearchView> {
               child: ListView.builder(
                 itemCount: history.length,
                 itemBuilder: (context, index) => Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 3.w),
+                  padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 3.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -301,8 +295,7 @@ class _SearchState extends ConsumerState<SearchView> {
                               }
                             });
                           },
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           backgroundColor: wayaTheme.colorScheme.transparent,
                           selectedColor: wayaTheme.colorScheme.primary50,
                           showCheckmark: false,
@@ -310,9 +303,8 @@ class _SearchState extends ConsumerState<SearchView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                             side: BorderSide(
-                              color: isSelected
-                                  ? wayaTheme.colorScheme.customPrimary
-                                  : wayaTheme.colorScheme.greyColor300,
+                              color:
+                                  isSelected ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300,
                             ),
                           ),
                         ));

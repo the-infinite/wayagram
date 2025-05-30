@@ -116,7 +116,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                     ),
                   );
                 } else {
-                  viewModel.acceptFreeStageContest(widget.model?.contestId ?? "", {
+                  viewModel.acceptPaidStageContest(widget.model?.contestId ?? "", {
                     "contestId": widget.model?.contestId ?? "",
                     "stageName": widget.post?.stageName ?? "",
                     "profileId": widget.model?.profileId ?? "",

@@ -152,7 +152,7 @@ class _ReportChatGroupModalState extends State<ReportChatGroupModal> {
               WayaProgressiveButton(
                 callback: () async {
                   //? Get the result.
-                  final result = await widget.notifier.reportGroup(widget.chat.other.userId, valueNotifier.value);
+                  final result = await widget.notifier.reportGroup(widget.chat.id, valueNotifier.value);
 
                   //? The result of your efforts is needed for this much.
                   if (result) {

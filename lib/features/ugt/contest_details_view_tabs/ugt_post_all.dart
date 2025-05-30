@@ -119,41 +119,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
     );
   }
 
-//   Widget _ourButtons(
-//     BuildContext context,
-//   ) {
-//     final wayaTheme = Theme.of(context);
-//     return Row(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         Expanded(
-//           child: WayaButton(
-//             callback: () {},
-//             color: Colors.white,
-//             text: "Active Posts",
 
-//             border: Border.all(color: wayaTheme.colorScheme.greyColor400),
-//             //   leadingIcon: WayaAssets.icons.caution.svg(),
-//             textColor: wayaTheme.colorScheme.greyColor700,
-//           ),
-//         ),
-//         Gap(10),
-//         Expanded(
-//           child: WayaButton(
-//             callback: () {},
-//             color: wayaTheme.colorScheme.primary50,
-//             text: "Pending Posts",
-//             leadingIcon: Container(),
-//             // border: Border.all(),
-//             // trailingIcon: WayaAssets.icons.caution.svg(),
-//             textColor: wayaTheme.colorScheme.customPrimary,
-//             trailingIcon: _counter(context, 0),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
 
   Widget emptyWidget() {
     return UgtEmptyState(

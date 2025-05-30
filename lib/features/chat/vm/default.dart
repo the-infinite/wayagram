@@ -73,7 +73,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? Parse the conversations as they are in the response object...
       final docs = (data['docs'] as List)
           .map((doc) => ChatModel.fromJson(doc))
-          .where((chat) => chat.latestMessageId != null)
+          .where((chat) => (chat.latestMessageId != null && chat.chatType != ChatType.group) || chat.chatType == ChatType.group)
           .toList();
 
       //? First, we check each of the members in each conversation...

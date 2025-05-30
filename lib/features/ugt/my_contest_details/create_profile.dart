@@ -37,13 +37,13 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
   String videoDate = "";
   static const int maxFileSize = 25 * 1024 * 1024; // 25MB in bytes
 
-  Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _selectedImage = image;
-    });
-  }
+//   Future<void> _pickImage() async {
+//     final ImagePicker picker = ImagePicker();
+//     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+//     setState(() {
+//       _selectedImage = image;
+//     });
+//   }
 
   File? _imgFile;
   File? _videoFile;

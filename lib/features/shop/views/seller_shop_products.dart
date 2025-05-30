@@ -11,7 +11,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
-import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/shared/features/shop/model/default.dart';
 
@@ -30,7 +29,7 @@ class _SellerShopProducts extends ConsumerState<SellerShopProducts> {
   late final shopNotifier = ref.read(manageShopVmProvider.notifier);
   bool isLoading = false;
   ShopDetailsModel? sellerShop;
-  List<SellerProduct>? sellerProducts;
+  List<SellerProduct> sellerProducts = [];
   @override
   void initState() {
     super.initState();
@@ -53,7 +52,7 @@ class _SellerShopProducts extends ConsumerState<SellerShopProducts> {
 
           if (products != null) {
             setState(() {
-              print("prods ${products.length}");
+             
               sellerProducts = products;
             });
           }

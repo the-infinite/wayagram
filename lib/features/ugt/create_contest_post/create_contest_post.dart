@@ -56,7 +56,8 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
           _selectedImages.removeWhere((e) => e.type == false);
           List<MyMediaType> listImage = images
               .take(5)
-              .map((e) => MyMediaType(path: e.path, type: false))
+              .map((e) => MyMediaType(
+                  path: e.path, type: false, extention: e.mimeType ?? ""))
               .toList();
           _selectedImages.addAll(listImage);
         });
@@ -68,24 +69,27 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
   }
 
   File? _videoFile;
+  XFile? pickedVideoFile;
 
   Future<void> pickVideo() async {
-    final XFile? pickedFile =
-        await _pickers.pickVideo(source: ImageSource.gallery);
+    pickedVideoFile = await _pickers.pickVideo(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
+    if (pickedVideoFile != null) {
       //  setState(() {
 
       //  Directory tempDir = await getTemporaryDirectory();
 
       //  File tempVideo = File("${tempDir.path}/assets/my_video_thumb.png");
 
-      _videoFile = File(pickedFile.path);
+      _videoFile = File(pickedVideoFile?.path ?? "");
 
       //var file = await uint8ListToFile(myDat, "my_video_thumb.jpeg");
       _selectedImages.removeWhere((e) => e.type == true);
       setState(() {
-        _selectedImages.add(MyMediaType(path: pickedFile.path, type: true));
+        _selectedImages.add(MyMediaType(
+            path: pickedVideoFile?.path ?? "",
+            type: true,
+            extention: pickedVideoFile?.mimeType ?? ""));
       });
       // });
     }
@@ -161,6 +165,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                 textField.text,
                                 _selectedImages,
                                 _videoFile,
+                                pickedVideoFile?.mimeType ?? "",
                                 sel ? "public" : "private",
                                 model?.id ?? "", () {
                               WayaNav.removeAllUntil(
@@ -743,15 +748,18 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
 
 class MyMediaType {
   final String path;
+  final String extention;
   final bool type;
 
-  MyMediaType({required this.path, required this.type});
+  MyMediaType(
+      {required this.path, required this.type, required this.extention});
 
   // Convert object to JSON
   Map<String, dynamic> toJson() {
     return {
       'path': path,
       'type': type,
+      'extention': extention,
     };
   }
 
@@ -760,6 +768,7 @@ class MyMediaType {
     return MyMediaType(
       path: json['path'],
       type: json['type'],
+      extention: json['extention'],
     );
   }
 }
