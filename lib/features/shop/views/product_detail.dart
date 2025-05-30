@@ -19,6 +19,7 @@ import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart'
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
+import 'package:wayagram/features/shop/views/favorites_product.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
@@ -40,25 +41,33 @@ class ProductDetail extends ConsumerStatefulWidget {
 
 class _ProductDetailState extends ConsumerState<ProductDetail> {
   bool isLiked = false;
+  late final notifier = ref.read(productDetailVmProvider.notifier);
+  late final shopNotifier = ref.read(shopVmProvider.notifier);
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      final product = await ref
-          .read(productDetailVmProvider.notifier)
-          .getCurrentProduct(id: widget.id);
+      try {
+        final product = await notifier.getCurrentProduct(id: widget.id);
 
-      final provider = ref.read(productEngagementProvider.notifier);
+        final provider = ref.read(productEngagementProvider.notifier);
 
-      provider.startViewingProduct();
+        provider.startViewingProduct();
 
-      if (product != null) {
-        provider.addCategory(product.categoryId, ProductPoint.viewPoints.value);
+        if (product != null) {
+          final favs = await notifier.getFavorites();
 
-        ref
-            .read(shopVmProvider.notifier)
-            .getProductReviews(productId: product.id);
-      }
+          setState(() {
+            isLiked = favs?.any((c) => c.id == product.id) ?? false;
+          });
+
+          provider.addCategory(
+              product.categoryId, ProductPoint.viewPoints.value);
+
+          shopNotifier.getProductReviews(productId: product.id);
+        }
+      } catch (_) {}
     });
   }
 
@@ -91,7 +100,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
               InkWell(
                 onTap: () {
                   HapticFeedback.lightImpact();
-                  //
+                  WayaNav.toNamed(FavoritesProducts.route);
                 },
                 child: Container(
                   decoration: BoxDecoration(

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/vm/upgrade_to_business_vm.dart';
 import 'package:wayagram/features/shop/filter/vm/filter_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
@@ -28,18 +30,32 @@ class FilterView extends ConsumerStatefulWidget {
 }
 
 class _FilterViewState extends ConsumerState<FilterView> {
+  late final statesNotifier = ref.read(upgradeToBusinessVmProvider.notifier);
   List<Product> filteredProducts = [];
   List<Product> allProducts = [];
+  List<Select> allStates = [];
 
   @override
   void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final products =
-          ModalRoute.of(context)!.settings.arguments as List<Product>;
-      allProducts = products;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final listOfStates = await statesNotifier.fetchStates();
+
+      if (listOfStates != null) {
+        setState(() {
+          allStates = listOfStates
+              .map((d) => Select(label: d.label, value: d.label))
+              .toList();
+        });
+      }
+
+      if (mounted) {
+        final products =
+            ModalRoute.of(context)!.settings.arguments as List<Product>;
+        allProducts = products;
+      }
     });
     applyFilter(); // Run filter initially to set the correct state
+    super.initState();
   }
 
   void applyFilter() {
@@ -62,6 +78,8 @@ class _FilterViewState extends ConsumerState<FilterView> {
                 filterState.discountType.contains(product.discountTypeId)) &&
             (filterState.condition.isEmpty ||
                 filterState.condition.contains(product.condition)) &&
+            (filterState.chosenStates.isEmpty ||
+                filterState.chosenStates.contains(product.state)) &&
             ((product.height ?? 0) >= filterState.minHeight &&
                 (product.height ?? 0) <= filterState.maxHeight) &&
             ((product.width ?? 0) >= filterState.minWidth &&
@@ -174,6 +192,16 @@ class _FilterViewState extends ConsumerState<FilterView> {
             title: 'Depth',
             onChanged: (min, max) {
               viewModel.updateDepth(min, max);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+          const SizedBox(height: 24),
+          FilterSection(
+            title: 'Location',
+            options: allStates,
+            selectedOption: filterState.chosenStates,
+            onOptionSelected: (value) {
+              viewModel.updateStates(value);
               applyFilter(); // Trigger filtering
             },
           ),
