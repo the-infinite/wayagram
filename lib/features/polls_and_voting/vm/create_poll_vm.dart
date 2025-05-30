@@ -710,7 +710,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         );
 
         _logger.i(response.data['data']);
-      } else if (response.data['error'] == 1644) {
+      } else if (response.data['responseCode'] == 1620) {
         WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
       }
     } catch (e) {

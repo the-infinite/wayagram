@@ -50,6 +50,8 @@ PODS:
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
+  - file_saver (0.0.1):
+    - Flutter
   - Firebase/Analytics (11.8.0):
     - Firebase/Core
   - Firebase/Auth (11.8.0):
@@ -318,6 +320,7 @@ DEPENDENCIES:
   - audio_waveforms (from `.symlinks/plugins/audio_waveforms/ios`)
   - ffmpeg_kit_flutter (from `.symlinks/plugins/ffmpeg_kit_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
+  - file_saver (from `.symlinks/plugins/file_saver/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -392,6 +395,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/ffmpeg_kit_flutter/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
+  file_saver:
+    :path: ".symlinks/plugins/file_saver/ios"
   firebase_analytics:
     :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_auth:
@@ -454,6 +459,7 @@ SPEC CHECKSUMS:
   ffmpeg-kit-ios-https: ac1fbdb6095fc1595b446084a3447de2c6d78347
   ffmpeg_kit_flutter: b4ca70cac3fc1d8ac14cdc660754b60870358732
   file_picker: b159e0c068aef54932bb15dc9fd1571818edaf49
+  file_saver: 503e386464dbe118f630e17b4c2e1190fa0cf808
   Firebase: d80354ed7f6df5f9aca55e9eb47cc4b634735eaf
   firebase_analytics: e3b6782e70e32b7fa18f7cd233e3201975dd86aa
   firebase_auth: 3d848b9b866b201e5c8e0c06d8b2cec272fd8825
