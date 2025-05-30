@@ -164,6 +164,29 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
+  Future<void> inviteToEvent(
+      {required String eventTitle, required String eventId}) async {
+    try {
+      if (state.invitees.isEmpty) {
+        return WayaSnackBar.showToast("Kindly Select Invitees");
+      }
+      final String eventLink = WayaValueHelper.getShareableUrl(
+          WayaAppRoutes.getEventDetailsScreen(eventId));
+
+      final response = await _eventRepository.inviteUsers(
+          userIds: state.invitees.map((c) => c.id).toList(),
+          eventLink: eventLink,
+          eventTitle: eventTitle);
+      if (response.success) {
+        WayaNav.goBack();
+        WayaSnackBar.showToast("Invite Successfully Sent");
+        
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   Future<PaginatedResult<EventDoc>?> getJoinedEvents(
       {required int page}) async {
     try {

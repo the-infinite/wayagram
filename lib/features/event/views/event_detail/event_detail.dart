@@ -19,6 +19,7 @@ import 'package:wayagram/features/event/views/event_invite.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
@@ -172,8 +173,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {
-                          WayaNav.toNamed(EventInvite.route,
-                              arguments: event.id);
+                          WayaNav.toNamed(WayaAppRoutes.getEventInviteScreen(
+                              viewModel.singleEvent?.id ?? '',
+                              viewModel.singleEvent?.title ?? ''));
                           /**
                            Share.share(
                           subject: "Share event",
