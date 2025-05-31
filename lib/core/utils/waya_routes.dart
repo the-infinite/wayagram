@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
+import 'package:wayagram/features/auth/account_creation/view/two_factor_auth.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
@@ -424,7 +425,9 @@ class WayaAppRoutes {
           eventId: WayaNav.search["id"].toString(),
           eventTitle: WayaNav.search["title"].toString(),
         ),
-    FavoritesProducts.route: () => FavoritesProducts()
+    FavoritesProducts.route: () => FavoritesProducts(),
+    TwoFactorAuth.route: () =>
+        TwoFactorAuth(email: WayaNav.search["email"].toString())
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -572,8 +575,13 @@ class WayaAppRoutes {
   static String getSellerShopDetailScreen(String vendorId, String shopId) =>
       "${SellerShopProducts.route}?id=$vendorId&shopId=$shopId";
 
-     static String getEventInviteScreen(String id, String title) =>
-      "${EventInvite.route}?id=$id&title=$title";   
+  static String getEventInviteScreen(String id, String title) =>
+      "${EventInvite.route}?id=$id&title=$title";
+
+  static String get2FaScreen(
+    String email, 
+  ) =>
+      "${TwoFactorAuth.route}?email=$email";
 
   /// This is fine.
   static List<GetPage> get getPages {
