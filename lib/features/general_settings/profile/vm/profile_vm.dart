@@ -133,7 +133,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
     }
   }
 
-  void getUserData() async {
+  Future<void> getUserData() async {
     final userId = _localDataSource.getUserId();
 
     try {

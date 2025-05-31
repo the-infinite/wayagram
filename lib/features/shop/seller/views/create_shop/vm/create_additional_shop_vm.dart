@@ -24,7 +24,9 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   final Ref ref;
 
   final _logger = getLogger('CreateAdditionalShopVm');
-  CreateAdditionalShopVm(this._shopRepository, this._authRepository, this._picker, this.ref) : super(CreateShopState());
+  CreateAdditionalShopVm(
+      this._shopRepository, this._authRepository, this._picker, this.ref)
+      : super(CreateShopState());
 
   Future<void> selectState(Select value) async {
     String finalState = state.state;
@@ -46,12 +48,14 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
   Future<void> createSellerShop() async {
     try {
-      if ((state.image == null && !state.isEditingMode) || state.isEditingMode && state.url == null) {
+      if ((state.image == null && !state.isEditingMode) ||
+          state.isEditingMode && state.url == null) {
         return WayaSnackBar.showToast('Pls add a Logo');
       }
       state = state.copyWith(isLoading: true);
       if (state.image != null) {
-        String? url = await WayaFileRepository.instance.uploadFile(state.image!);
+        String? url =
+            await WayaFileRepository.instance.uploadFile(state.image!);
         state = state.copyWith(logo: url);
       }
       state = state.copyWith(vendorId: ConversationState.self.id);
@@ -72,29 +76,36 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
     }
   }
 
-  Future<void> fetchStates() async {
+  Future<List<Select>?> fetchStates() async {
     try {
       final response = await _authRepository.getAllStates();
-
+      List<Select>? states;
       if (response.success) {
-        StatesResponseModel responseModel = StatesResponseModel.fromJson(response.data);
+        StatesResponseModel responseModel =
+            StatesResponseModel.fromJson(response.data);
 
         final List<Select> allStates = responseModel.data.map((val) {
           return Select(label: val.name, value: val.isoCode);
         }).toList();
+        states = allStates;
         state = state.copyWith(states: allStates);
       }
+
+      return states;
     } catch (e) {
       _logger.e(e);
+      return null;
     }
   }
 
   Future<void> fetchLGA(String stateCode, String countryCode) async {
     try {
-      final response = await _authRepository.getAllLGA(stateCode: stateCode, countryCode: countryCode);
+      final response = await _authRepository.getAllLGA(
+          stateCode: stateCode, countryCode: countryCode);
 
       if (response.success) {
-        LGAResponseModel responseModel = LGAResponseModel.fromJson(response.data);
+        LGAResponseModel responseModel =
+            LGAResponseModel.fromJson(response.data);
 
         final List<Select> lgas = responseModel.data.lgas.map((val) {
           return Select(label: val, value: val);
@@ -144,7 +155,8 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   }
 }
 
-final createAdditionalShopVmProvider =
-    StateNotifierProvider.family<CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
-  return CreateAdditionalShopVm(ShopRepository.instance, AuthRepository(), ImagePicker(), ref);
+final createAdditionalShopVmProvider = StateNotifierProvider.family<
+    CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
+  return CreateAdditionalShopVm(
+      ShopRepository.instance, AuthRepository(), ImagePicker(), ref);
 });

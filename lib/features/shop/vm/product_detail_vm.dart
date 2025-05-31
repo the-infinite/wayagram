@@ -5,6 +5,7 @@ import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
+import 'package:wayagram/features/shop/seller/data/model/favorites_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 
@@ -12,7 +13,7 @@ class ProductDetailState {
   final Product? product;
   final bool isProductOwner;
   final List<Product>? similarProduct;
- 
+
   final bool isLoading;
 
   ProductDetailState(
@@ -70,12 +71,33 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
   Future<void> likeProduct() async {
     try {
       final response = await _shopRepository.addToFavorite(
-          productId: state.product!.id, shopId: state.product!.shopId);
+          productId: state.product!.id, userId: ConversationState.self.id);
       if (response.success) {
         WayaSnackBar.showToast("Added to your favorites");
       }
     } catch (error) {
       debugPrint(error.toString());
+    }
+  }
+
+  Future<List<FavoriteItem>?> getFavorites() async {
+    try {
+      final response = await _shopRepository.fetchFavorites();
+      List<FavoriteItem> favorites = [];
+      if (response.success) {
+        FavoritesResponse favoritesResponse =
+            FavoritesResponse.fromJson(response.data);
+
+        if (favoritesResponse.data.favorites.isNotEmpty) {
+          favorites = favoritesResponse.data.favorites;
+        }
+      }
+
+      return favorites;
+    } catch (e) {
+      debugPrint(e.toString());
+
+      return null;
     }
   }
 
