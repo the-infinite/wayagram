@@ -10,10 +10,9 @@ import '../../../core/data/local_data_source.dart';
 
 class ReferralVm extends StateNotifier<ReferralState> {
   final ReferralRepo _referralRepository;
-  final WayaLocalDataSource _localDataSource;
-//this is ok
+  //final WayaLocalDataSource _localDataSource;
 
-  ReferralVm(this._referralRepository, this._localDataSource)
+  ReferralVm(this._referralRepository)
       : super(ReferralState());
 
   Future<void> getReferralCount() async {
@@ -115,7 +114,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
 
 final referralVm = StateNotifierProvider<ReferralVm, ReferralState>(
   (ref) {
-    return ReferralVm(ReferralRepo(), WayaLocalDataSource());
+    return ReferralVm(ReferralRepo());
   },
 );
 

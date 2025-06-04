@@ -15,7 +15,6 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
-import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 class PollsModal extends ConsumerStatefulWidget {
   final String url;

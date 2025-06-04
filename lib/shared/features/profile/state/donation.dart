@@ -10,7 +10,7 @@ class DonationsState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<DonationModel> donations;
+  final List<DonationModel> docs;
 
   DonationsState({
     required this.hasLoaded,
@@ -22,7 +22,7 @@ class DonationsState {
     required this.totalPages,
     required this.hasNextPage,
     required this.hasPreviousPage,
-    required this.donations,
+    required this.docs,
   });
 
   DonationsState copyWith({
@@ -35,7 +35,7 @@ class DonationsState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<DonationModel>? donations,
+    List<DonationModel>? docs,
   }) {
     return DonationsState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -47,7 +47,7 @@ class DonationsState {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      donations: donations ?? this.donations,
+      docs: docs ?? this.docs,
     );
   }
 
@@ -61,6 +61,20 @@ class DonationsState {
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
-    donations: [],
+    docs: [],
   );
+
+  List<DonationModel> donations(String? search) {
+    //? If there is searching enabled...
+    if (search?.isNotEmpty ?? false) {
+      return docs
+          .where((donation) =>
+              donation.title.toLowerCase().contains(search!) ||
+              donation.description.toString().toLowerCase().contains(search))
+          .toList();
+    }
+
+    //? Return what we already have.
+    return docs;
+  }
 }

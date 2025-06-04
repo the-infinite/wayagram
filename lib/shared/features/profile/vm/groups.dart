@@ -28,12 +28,12 @@ class GroupsNotifier extends StateNotifier<GroupsState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.groups);
+          result.addAll(state.docs);
         }
 
         //? This is fine.
         state = state.copyWith(
-          groups: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],
@@ -62,6 +62,6 @@ class GroupsNotifier extends StateNotifier<GroupsState> {
   }
 }
 
-final userGroupsProvider = StateNotifierProvider<GroupsNotifier, GroupsState>((ref) {
+final userGroupsProvider = StateNotifierProvider.family<GroupsNotifier, GroupsState, String>((ref, id) {
   return GroupsNotifier(GroupsState.initial);
 });
