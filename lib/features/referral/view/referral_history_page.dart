@@ -11,11 +11,16 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/referral/vm/referral_vm.dart';
+import 'package:wayagram/features/referral/widget/custom_date_widget.dart';
 import 'package:wayagram/features/referral/widget/referral_card.dart';
+
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
+
+import '../widget/filter_widget.dart';
 
 class ReferralHistoryPage extends ConsumerStatefulWidget {
   static const route = '/referral-history-page';
@@ -28,6 +33,7 @@ class ReferralHistoryPage extends ConsumerStatefulWidget {
 
 class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
   final ScrollController _scrollController = ScrollController();
+  final _searchController = TextEditingController();
   double _previousScrollOffset = 0.0;
 
   @override
@@ -84,7 +90,105 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             //filter
-            Row(
+            FilterWidget(
+              isPopFilter: false,
+              hintText: 'Search by name',
+              onTap: () {},
+              onTextChanged: (value) {
+                notifier.filterList(value);
+              },
+              search: _searchController,
+              extraChild: Align(
+                alignment: Alignment.topRight,
+                child: PopupMenuButton(
+                    onSelected: (value) {},
+                    position: PopupMenuPosition.under,
+                    itemBuilder: (context) {
+                      return [
+                        ...myFilterList.map((e) {
+                          return PopupMenuItem<int>(
+                            value: 1,
+                            child: _buildActionNav(
+                                context: context,
+                                onTap: () {
+                                  WayaNav.goBack();
+                                  /*   dashboardNotifier.fetchTotalEarnings(
+                                          model?.id ?? "", e.text.toLowerCase()); */
+
+                                  if (e.text == "All") {
+                                    notifier.updateStartAndEndDate(
+                                        "1990-12-31", "3021-12-31");
+                                    notifier.getAllUserReferrals(true);
+                                  } else if (e.text == "Today") {
+                                    var list = todayDate();
+                                    notifier.updateStartAndEndDate(
+                                        list.first, list.last);
+                                    notifier.getAllUserReferrals(true);
+                                  } else if (e.text == "This Month") {
+                                    var list = thisMonthDate();
+                                    notifier.updateStartAndEndDate(
+                                        list.first, list.last);
+                                    notifier.getAllUserReferrals(true);
+                                  } else if (e.text == "This Year") {
+                                    var list = thisYearDate();
+                                    notifier.updateStartAndEndDate(
+                                        list.first, list.last);
+                                    notifier.getAllUserReferrals(true);
+                                  } else if (e.text == "Custom") {
+                                    print("i dey here plenty");
+                                    WayaUtils.showModalSheetUgt(context,
+                                        child: CustomDateWidget());
+                                  }
+
+                                  selectPresentTap(e);
+                                },
+                                asset: WayaAssets.icons.mComments.svg(
+                                  color: wayaTheme.colorScheme.customBlack,
+                                  height: 20,
+                                ),
+                                text: e.text,
+                                isActive: e.isActive,
+                                color: wayaTheme.colorScheme.customBlack),
+                          );
+                        })
+                      ];
+                    },
+                    child: Container(
+                      //  margin: EdgeInsets.only(right: 20.w),
+                      width: 50.w,
+                      padding: REdgeInsets.symmetric(
+                          vertical: 8.dg, horizontal: 12.dg),
+                      decoration: BoxDecoration(
+                        color: wayaTheme.colorScheme.transparent,
+                        border: Border.all(
+                          color: wayaTheme.colorScheme.greyColor300,
+                          width: 1.5,
+                        ),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+
+                      /*   centerWidget: Center(
+                        child: Icon(
+                          Icons.filter_list,
+                          size: 28,
+                          color: wayaTheme.colorScheme.customBlack,
+                        ),
+                      ), */
+                      //  color: wayaTheme.colorScheme.transparent,
+                      height: 46,
+                      child: Center(
+                        child: Icon(
+                          Icons.filter_list,
+                          size: 28,
+                          color: wayaTheme.colorScheme.customBlack,
+                        ),
+                      ),
+                      // horizontalPadding: 8,
+                    )),
+              ),
+              products: [],
+            ),
+            /*  Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -182,7 +286,8 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
                   ),
                 ),
               ],
-            ),
+            ), */
+
             Card(
               child: Padding(
                 padding:
@@ -305,6 +410,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
         desc: "No user referred yet",
         title: "Referrals",
         buttonText: "",
+        showButtonBusiness: false,
         hideButton: false,
         onTap: () {});
   }
@@ -314,6 +420,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
     MyFilterModel(text: 'Today', isActive: false),
     MyFilterModel(text: 'This Month', isActive: false),
     MyFilterModel(text: 'This Year', isActive: false),
+    MyFilterModel(text: 'Custom', isActive: false),
   ];
 
   List<String> todayDate() {
