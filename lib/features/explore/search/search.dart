@@ -64,7 +64,7 @@ class _SearchState extends ConsumerState<SearchView> {
       //ref.read(createGroupProvider.notifier).getRecommendedGroups();
       ref.read(createPageProvider.notifier).getAllPages();
       ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
-       ref.read(createGroupProvider.notifier).getRecommendedGroups();
+       ref.read(createGroupProvider.notifier).getAllGroups();
       //> fetch upcoming events
       final upcomingEvents = await ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1, limit: 1000);
       if (upcomingEvents != null) {
@@ -103,7 +103,7 @@ class _SearchState extends ConsumerState<SearchView> {
     final state = ref.watch(servicesProvider);
     final pageState = ref.watch(createPageProvider);
     final pollState = ref.watch(createPollVotingProvider);
-    //final groupState = ref.read(createGroupProvider);
+    final groupState = ref.read(createGroupProvider);
 
     final query = searchController.text.trim();
 
@@ -159,16 +159,11 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-     //? Group
-    final filteredGroups = GroupsCache.instance.data.where((group) {
-      return group.name.toLowerCase().contains(query.trim().toLowerCase());
-    }).toList();
-
-    // final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
-    //   groupState.recommendedGroupDocs ?? [],
-    //   ['question', 'description'],
-    //   query,
-    // );
+    final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
+      groupState.getAllGroups ?? [],
+      ['name', 'description',],
+      query,
+    );
 
     final serviceData = {
       'Post': filteredPosts,

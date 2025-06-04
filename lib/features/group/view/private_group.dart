@@ -18,6 +18,9 @@ import 'package:wayagram/features/group/view/group_post.dart';
 import 'package:wayagram/features/group/view/group_team.dart';
 import 'package:wayagram/features/group/view/media_post.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
+import 'package:wayagram/features/promotion/views/promote.dart';
+import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/features/group/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 
@@ -34,11 +37,15 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
   late final groupProvider = singleGroupProvider("group-${widget.group.id}");
   late final notifier = ref.read(groupProvider.notifier);
   int _selectedIndex = 0;
+  GroupModel? _thisGroup;
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(groupProvider);
+
+    //? Return this component.
+    final group = wayaGroupCache.getCachedData(widget.group.id) ?? _thisGroup;
 
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -110,6 +117,26 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                 ),
                 PopupMenuItem<int>(
                   value: 3,
+                  onTap: () {
+                    WayaNav.goBack();
+                    WayaNav.toNamed(Promote.route, arguments: {
+                      "contentId": widget.group.id,
+                      "contentType": PromotionServiceType.page.name,
+                      "data": group
+                    });
+                  },
+                  child: WayaActionNav(
+                    context: context,
+                    asset: SvgPicture.asset(
+                      WayaAssets.icons.mFire.path,
+                      height: 20,
+                    ),
+                    text: "Promote Group",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
+                ),
+                PopupMenuItem<int>(
+                  value: 4,
                   onTap: () async {
                     await myGroupNotifier.deleteGroup(widget.group.id);
                     WayaNav.goBack(closeOverlays: true);

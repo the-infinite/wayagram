@@ -11,9 +11,18 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> requestSettlement(String pollId) {
-    final payload = {};
-    return post('$serviceUrl/client/polls/$pollId/settle', payload, showErrors: true);
+    final payload = {
+      "pollId": pollId
+    };
+    return post('$serviceUrl/client/polls/request/payouts', payload, showErrors: true);
   }
+
+  Future<WayaRequestResponse> getAllRequestPayout(int page,
+      [int limit = 15,]) {
+    return get(
+        "$serviceUrl/client/polls/all/payouts?limit=$limit&page=$page");
+  }
+
 
   Future<WayaRequestResponse> castVote(
       dynamic amountPaid, String qty, String choiceId, String pollId) {
