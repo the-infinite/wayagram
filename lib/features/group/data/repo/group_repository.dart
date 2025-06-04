@@ -11,14 +11,15 @@ class GroupRepository extends BaseRepository {
   GroupRepository._();
 
   Future<WayaRequestResponse> createGroup(
-      String groupName, String groupDesc, bool groupType, String coverImage, String profileImage) {
+      String groupName, String groupDesc, bool groupType, String coverImage, String profileImage, String category) {
     final payload = {
       "name": groupName,
       "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
       //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage": coverImage,
-      "profileImage": profileImage
+      "profileImage": profileImage,
+      "categories": [category]
     };
 
     return post("$serviceUrl/groups", payload, showErrors: true);
@@ -43,6 +44,10 @@ class GroupRepository extends BaseRepository {
     final payload = {"content": content, "groupId": groupId, "type": "generic", "media": images, "privacy": postType};
 
     return post("$serviceUrl/posts", payload, showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getUserCategory() {
+    return get("$serviceUrl/interests/categories");
   }
 
   Future<WayaRequestResponse> editGroup(

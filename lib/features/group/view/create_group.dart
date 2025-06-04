@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -46,6 +47,14 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
         _coverImage = pickedFile;
       });
     }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createGroupProvider.notifier).fetchCategory();
+    });
+    super.initState();
   }
 
   @override
@@ -273,6 +282,37 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                             child: Text(
                               formState.errorText!,
                               style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                  const Gap(20),
+                  FormField<String>(validator: (value) {
+                    if (viewModel.category.isEmpty) {
+                      return 'Category is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaSelectField<String>(
+                            height: 0.2,
+                            uniqueKey: 'category-type',
+                            label: "Category",
+                            hintText: 'Select Category',
+                            value: viewModel.category.capitalizeFirst,
+                            items: viewModel.categories,
+                            onSelected: (value) =>
+                                ref.read(createGroupProvider.notifier).selectCategory(value.first)),
+                        if (formState.hasError && viewModel.category.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                             ),
                           ),
                       ],

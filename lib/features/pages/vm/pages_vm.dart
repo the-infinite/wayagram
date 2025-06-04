@@ -279,7 +279,7 @@ class PageVm extends StateNotifier<PageState> {
             context: context,
             title: "Thank you for reporting",
             onPress: () {
-              WayaNav.goBack();
+              WayaNav.removeUntilNamed(BottomView.route, arguments: 0);
             },
             icon: Image.asset(
               WayaAssets.images.eCheckEvent.path,

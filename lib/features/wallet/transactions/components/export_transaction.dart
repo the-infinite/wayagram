@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,7 +48,8 @@ class _ExportTransactionState extends ConsumerState<ExportTransaction> {
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isStartDate ? startDate ?? DateTime.now() : endDate ?? DateTime.now(),
+      initialDate:
+          isStartDate ? startDate ?? DateTime.now() : endDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
@@ -64,6 +67,7 @@ class _ExportTransactionState extends ConsumerState<ExportTransaction> {
 
   @override
   Widget build(BuildContext context) {
+    final notifier = ref.read(transactionVmProvider.notifier);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -123,22 +127,20 @@ class _ExportTransactionState extends ConsumerState<ExportTransaction> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // Handle export logic here
-                debugPrint('Exporting transactions from $startDate to $endDate');
+                debugPrint(
+                    'Exporting transactions from $startDate to $endDate');
                 WayaNav.goBack();
-                ref.read(transactionVmProvider.notifier).downloadPdf('transaction');
-                ScaffoldMessenger.of(context).showSnackBar(
+                await notifier.downloadPdf('transaction');
+                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Transaction was exported successfully!'),
                     backgroundColor: WayaColors.primary,
                     duration: Duration(seconds: 2),
                   ),
                 );
-
-
               },
-
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrange,
                 padding: const EdgeInsets.symmetric(vertical: 15),
@@ -208,7 +210,9 @@ class _ExportTransactionState extends ConsumerState<ExportTransaction> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              date != null ? DateFormat('MMMM dd\'th\' yyyy').format(date) : 'Select date',
+              date != null
+                  ? DateFormat('MMMM dd\'th\' yyyy').format(date)
+                  : 'Select date',
               style: TextStyle(
                 color: date != null ? Colors.black : Colors.grey,
               ),

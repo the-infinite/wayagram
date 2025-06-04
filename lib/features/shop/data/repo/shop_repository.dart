@@ -45,6 +45,10 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/discount/all?page=$page');
   }
 
+   Future<WayaRequestResponse> fetchFavorites() {
+    return get('$serviceUrl/favorites/all');
+  }
+
   Future<WayaRequestResponse> getProducts({required int page, int limit = 20}) {
     return get('$serviceUrl/products/get?page=$page');
   }
@@ -93,8 +97,8 @@ Future<WayaRequestResponse> getBanner() {
   }
 
   Future<WayaRequestResponse> addToFavorite(
-      {required String productId, required String shopId}) {
-    return post("$serviceUrl/favorites/add/$shopId", {"productId": productId});
+      {required String productId, required String userId}) {
+    return post("$serviceUrl/favorites/add/$userId", {"productId": productId});
   }
 
   ///

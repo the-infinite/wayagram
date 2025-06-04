@@ -1,5 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class TransactionRepository extends BaseRepository {
   Future<WayaRequestResponse> getUserTransactions(
@@ -14,7 +23,46 @@ class TransactionRepository extends BaseRepository {
     );
   }
 
-  Future<WayaRequestResponse> getTransactionForExport() {
+  Future<void> getTransactionForExport() async {
+    final secureDataSource = WayaSecureDataSource();
+
+    try {
+      String? value = await FileSaver.instance.saveAs(
+        name: "transaction",
+        link: LinkDetails(
+            link:
+                "${WayaConstants.baseUrl}/${WayaServiceUri.wallet}/client/transactions/export",
+            method: "GET",
+            headers: {
+              'Authorization': 'Bearer ${await secureDataSource.getToken()}'
+            }),
+        ext: 'pdf',
+        mimeType: MimeType.pdf,
+      );
+
+      print("resposeeee $value");
+    } catch (e) {
+      print("error $e");
+    }
+  }
+
+  Future<void> getTransactionForExportTwo() async {
+    //getExternalStorageDirectory();
+    final directory = await getTemporaryDirectory(); //
+    debugPrint('LOG PDF $directory');
+
+    final filePath = '${directory.path}/transaction.pdf';
+
+    final data = await download(
+        'wayagram-wallet/api/v2/client/transactions/export', filePath,
+        (data, size) {
+      debugPrint('PPDF size $size');
+    });
+
+    debugPrint('PPDF ${data.data}');
+  }
+
+  Future<WayaRequestResponse> getTransactionForExportThree() {
     return get(
       'wayagram-wallet/api/v2/client/transactions/export',
     );

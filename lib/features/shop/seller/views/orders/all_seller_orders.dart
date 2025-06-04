@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
+import 'package:wayagram/features/shop/views/favorites_product.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
@@ -84,7 +88,32 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
         isLoading: false,
         isScrollable: false,
         title: 'Orders',
-        appBarTrailing: WayaCartIcon(),
+        appBarTrailing:Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 3,
+            children: [
+              InkWell(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  WayaNav.toNamed(FavoritesProducts.route);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: EdgeInsets.all(6),
+                  child: SvgPicture.asset(
+                    WayaAssets.icons.mSmallHeart.path,
+                    fit: BoxFit.cover,
+                    width: 18,
+                    height: 18,
+                    color: wayaTheme.colorScheme.white,
+                  ),
+                ),
+              ),
+              WayaCartIcon(),
+            ]),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

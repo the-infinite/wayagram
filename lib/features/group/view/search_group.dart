@@ -48,8 +48,8 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
   Widget build(BuildContext context) {
     final query = searchController.text.trim();
     final wayaTheme = Theme.of(context);
-    final mySearch = GroupsCache.instance.data.where((page) {
-      return page.name.toLowerCase().contains(query.toLowerCase());
+    final mySearch = GroupsCache.instance.data.where((group) {
+      return group.name.toLowerCase().contains(query.toLowerCase());
     });
 
     return WayaScaffold(
