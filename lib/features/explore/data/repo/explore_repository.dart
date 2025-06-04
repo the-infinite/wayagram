@@ -23,6 +23,6 @@ class ExploreRepository extends BaseRepository {
 
    Future<WayaRequestResponse> fetchReposts(String userId,int page, [int limit = 20]) {
     return get(
-        "$serviceUrl/posts/users/feed?type=repost&userId=$userId$page&limit=$limit");
+        "$serviceUrl/posts/users/feed?isReposted=true&userId=$userId&$page&limit=$limit");
   }
 }

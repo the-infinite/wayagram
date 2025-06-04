@@ -28,12 +28,12 @@ class UserDonationsNotifier extends StateNotifier<DonationsState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.donations);
+          result.addAll(state.docs);
         }
 
         //? This is fine.
         state = state.copyWith(
-          donations: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],
@@ -62,6 +62,6 @@ class UserDonationsNotifier extends StateNotifier<DonationsState> {
   }
 }
 
-final userDonationsProvider = StateNotifierProvider<UserDonationsNotifier, DonationsState>(
-  (ref) => UserDonationsNotifier(),
+final userDonationsProvider = StateNotifierProvider.family<UserDonationsNotifier, DonationsState,String>(
+  (ref,id) => UserDonationsNotifier(),
 );

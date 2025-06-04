@@ -290,11 +290,15 @@ class WayaCheckButton extends StatelessWidget {
   final bool hasBackground;
   final bool isExpanded;
   final bool isClickable;
+  final double? verticalPadding;
+  final double? horizontalPadding;
 
   const WayaCheckButton({
     super.key,
     required this.isSelected,
     required this.text,
+    this.verticalPadding,
+    this.horizontalPadding,
     this.onTap,
     this.isClickable = true,
     this.isExpanded = true,
@@ -308,7 +312,12 @@ class WayaCheckButton extends StatelessWidget {
 
     // The real widget.
     final contents = Container(
-      padding: EdgeInsets.only(top: 7.h, bottom: 7.h, left: 15.w),
+      padding: EdgeInsets.only(
+        top: verticalPadding ?? 7.h,
+        bottom: verticalPadding ?? 7.h,
+        left: horizontalPadding ?? 15.w,
+        // right: horizontalPadding ?? 0,
+      ),
       decoration: hasBackground
           ? BoxDecoration(
               color: isSelected
@@ -317,7 +326,8 @@ class WayaCheckButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(2000.r),
               border: Border.all(
                 color: isSelected ? theme.colorScheme.customPrimary : theme.colorScheme.greyColor300,
-              ))
+              ),
+            )
           : null,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -425,6 +435,9 @@ class WayaExpandedTabButton extends StatefulWidget {
   final String text;
   final ExpandedTabController controller;
   final double? width;
+  final double? verticalPadding;
+  final double? horizontalPadding;
+  final Offset? offset;
   final List<WayaExpandedTab> tabs;
 
   //? This is fine.
@@ -434,6 +447,9 @@ class WayaExpandedTabButton extends StatefulWidget {
     required this.text,
     required this.tabs,
     required this.controller,
+    this.offset,
+    this.verticalPadding,
+    this.horizontalPadding,
     this.width,
   }) {
     controller._widget = this;
@@ -464,7 +480,7 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
     return Expanded(
       child: PopupMenuButton(
         position: PopupMenuPosition.under,
-        offset: Offset(0, 5),
+        offset: widget.offset ?? const Offset(0, 5),
         padding: const EdgeInsets.symmetric(vertical: 15),
         shape: RoundedRectangleBorder(
           side: BorderSide(color: theme.colorScheme.greyColor300, width: 1),
@@ -481,10 +497,12 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
               value: tab.text,
               onTap: () => _do(tab),
               child: WayaCheckButton(
+                verticalPadding: widget.verticalPadding,
+                horizontalPadding: widget.horizontalPadding,
                 isSelected: tab.isSelected,
-                isClickable: false,
                 text: tab.text,
                 fontSize: fontSize,
+                isClickable: false,
               ),
             );
           },

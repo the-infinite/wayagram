@@ -10,7 +10,7 @@ class GroupsState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<GroupModel> groups;
+  final List<GroupModel> docs;
 
   // Construct.
   GroupsState({
@@ -23,7 +23,7 @@ class GroupsState {
     required this.totalPages,
     required this.hasNextPage,
     required this.hasPreviousPage,
-    required this.groups,
+    required this.docs,
   });
 
   GroupsState copyWith({
@@ -36,7 +36,7 @@ class GroupsState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<GroupModel>? groups,
+    List<GroupModel>? docs,
   }) {
     return GroupsState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -48,7 +48,7 @@ class GroupsState {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      groups: groups ?? this.groups,
+      docs: docs ?? this.docs,
     );
   }
 
@@ -62,6 +62,19 @@ class GroupsState {
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
-    groups: [],
+    docs: [],
   );
+
+  List<GroupModel> groups(String? search) {
+    // If there is searching enabled...
+    if (search?.isNotEmpty ?? false) {
+      return docs
+          .where((group) =>
+              group.name.toLowerCase().contains(search!) || group.description.toString().toLowerCase().contains(search))
+          .toList();
+    }
+
+    // Return what we already have.
+    return docs;
+  }
 }
