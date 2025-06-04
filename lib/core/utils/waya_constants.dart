@@ -1,7 +1,7 @@
 class WayaConstants {
   WayaConstants._();
   static const appName = 'Wayagram';
-  static const baseUrl = 'https://services.wayagram.ng/';
+  static const baseUrl = 'https://services.staging.wayagram.ng/';
   static const webUrl = 'https://staging.wayagram.ng/';
   static const fontFamily = 'SFProDisplay';
   static const isProduction = false;
