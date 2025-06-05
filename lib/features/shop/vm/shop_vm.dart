@@ -104,6 +104,23 @@ class ShopVm extends StateNotifier<ShopState> {
     }
   }
 
+  Future<void> topSelling() async {
+    try {
+      final response = await _repository.getTopSellingProducts();
+
+      if (response.success) {
+        final data = response.data['data'] as List;
+
+        state = state.copyWith(
+            topSelling: data.map((c) => Product.fromJson(c)).toList());
+
+      
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   Future<PaginatedResult<Product>?> getAllProducts(
       {required int page, int limit = 20}) async {
     state = state.copyWith(isLoading: true);

@@ -4,23 +4,29 @@ import 'package:wayagram/core/service/repos/base_repository.dart';
 class CartRepository extends BaseRepository {
   static const serviceUrl = "wayagram-shop/api/v2";
 
-  Future<WayaRequestResponse> addItemToCart(
-      {required String productId,
-      required int quantity,
-      required String userId,
-      required String shopId,
-     }) {
+  Future<WayaRequestResponse> addItemToCart({
+    required String productId,
+    required int quantity,
+    required String userId,
+    required String shopId,
+  }) {
     return post("$serviceUrl/cart/add-to-cart", {
       "productId": productId,
       "quantity": quantity,
       "shopId": shopId,
       "userId": userId,
-      
     });
   }
 
   Future<WayaRequestResponse> getUserCart(String userId) async {
     return get("$serviceUrl/cart/$userId");
+  }
+
+  // //
+  ///
+  Future<WayaRequestResponse> removeShopProduct(
+      {required String shopId}) async {
+    return patch("$serviceUrl/cart/remove-shop-product", {"shopId": shopId});
   }
 
   Future<WayaRequestResponse> decreaseQuantity(

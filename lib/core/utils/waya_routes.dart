@@ -120,6 +120,7 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.d
 import 'package:wayagram/features/shop/views/favorites_product.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/shop/views/seller_shop_products.dart';
+import 'package:wayagram/features/shop/views/top_selling_list.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
@@ -426,6 +427,7 @@ class WayaAppRoutes {
           eventTitle: WayaNav.search["title"].toString(),
         ),
     FavoritesProducts.route: () => FavoritesProducts(),
+        TopSellingList.route: () => TopSellingList(),
     TwoFactorAuth.route: () =>
         TwoFactorAuth(email: WayaNav.search["email"].toString())
   };
