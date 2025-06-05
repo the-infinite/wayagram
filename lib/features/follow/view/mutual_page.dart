@@ -46,6 +46,7 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final followingState = ref.watch(userFollowProvider);
 
     //? This is fine.
     return PopScope(
@@ -91,6 +92,7 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
                 WayaTabButton(
                   isSelected: _selectedIndex == 1,
                   text: 'Following',
+                  count: followingState.hasLoadedFollowing ? followingState.followingTotalSize : null,
                   onTap: () => setState(() => _selectedIndex = 1),
                 ),
 
@@ -98,6 +100,7 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
                 WayaTabButton(
                   isSelected: _selectedIndex == 2,
                   text: 'Followers',
+                  count: followingState.hasLoadedFollowers ? followingState.followersTotalSize : null,
                   onTap: () => setState(() => _selectedIndex = 2),
                 ),
               ],

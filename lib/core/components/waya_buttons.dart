@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -213,6 +214,7 @@ class WayaActionNav extends StatelessWidget {
 class WayaTabButton extends StatelessWidget {
   final bool isSelected;
   final bool isLongerTab;
+  final int? count;
   final String text;
   final VoidCallback onTap;
 
@@ -224,8 +226,9 @@ class WayaTabButton extends StatelessWidget {
     required this.isSelected,
     required this.text,
     required this.onTap,
-    this.width,
     this.isLongerTab = false,
+    this.count,
+    this.width,
     this.end,
   });
 
@@ -271,6 +274,27 @@ class WayaTabButton extends StatelessWidget {
                   ),
                 ),
               ),
+
+              //? Finally, the other thing.
+              if (count != null)
+                ClipPath(
+                  clipper: ShapeBorderClipper(
+                    shape: StadiumBorder(),
+                  ),
+                  child: ColoredBox(
+                    color: isSelected ? theme.colorScheme.primary : theme.colorScheme.scaffoldColor,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Text(
+                        WayaValueHelper.formatNumber(count!),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: isSelected ? theme.colorScheme.white : theme.colorScheme.greyColor500,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
 
               //? Put the thing here if needed.
               if (end != null) end!,
