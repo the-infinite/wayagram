@@ -5,8 +5,6 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/filter/views/filter_view.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 
 //********* */

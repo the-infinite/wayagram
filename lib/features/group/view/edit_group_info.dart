@@ -109,8 +109,8 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                 viewModel.groupName.text,
                 viewModel.groupDescription.text,
                 sel ? false : true,
-                _coverImage == null ? editCoverImage! : (_coverImage as File).path,
                 _selectedImage == null ? image! : (_selectedImage as File).path,
+                _coverImage == null ? editCoverImage! : (_coverImage as File).path,
                 widget.group.id,
               );
             }

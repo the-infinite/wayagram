@@ -8,7 +8,6 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';

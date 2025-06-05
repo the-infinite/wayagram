@@ -1,10 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/repos/transactions/transaction_history_model.dart';
@@ -13,7 +11,6 @@ import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.d
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_state_model.dart';
-import 'package:dio/dio.dart';
 
 class TransactionVm extends StateNotifier<TransactionHistoryState> {
   final TransactionRepository _transactionRepository;
@@ -157,83 +154,6 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
     // Android 13+ (SDK 33+), permission not required for scoped saving
     return true;
-  }
-
-  Future<File> downloadPdfTwo(String fileName) async {
-    state = state.copyWith(isLoading: true);
-
-    try {
-      // Request storage permission for Android
-      if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          state = state.copyWith(error: 'Storage permission denied');
-          throw Exception('Storage permission denied');
-        }
-      }
-
-      //? Make GET request to fetch PDF
-      final response =
-          await _transactionRepository.getTransactionForExportThree();
-
-      if (response.statusCode == 200) {
-        //? Get temporary directory
-        final dir = await getTemporaryDirectory();
-        //? Create file path
-        final file = File('${dir.path}/$fileName.pdf'); // Added .pdf extension
-        //? Write the bytes
-        await file.writeAsBytes(response.data);
-
-        print("PDF saved at: ${file.path}");
-        state = state.copyWith(filePath: file.path, isLoading: false);
-        return file;
-      } else {
-        state = state.copyWith(
-            error: 'Failed to download PDF: ${response.statusCode}',
-            isLoading: false);
-        throw Exception('Failed to download PDF: ${response.statusCode}');
-      }
-    } catch (e) {
-      state = state.copyWith(error: 'Error: $e', isLoading: false);
-      throw Exception('Error downloading PDF: $e');
-    }
-  }
-
-  Future<void> downloadAndSavePdf(String fileName) async {
-    state = state.copyWith(isLoading: true);
-
-    try {
-      //? Request storage permission for Android
-      if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          state = state.copyWith(error: 'Storage permission denied');
-          return;
-        }
-      }
-
-      //? Make GET request to fetch PDF
-      final response =
-          await _transactionRepository.getTransactionForExportThree();
-
-      if (response.statusCode == 200) {
-        debugPrint('DOWNLOAD PDF ===> ${response.data}');
-        //? Use file_saver to save the PDF
-        final filePath = await FileSaver.instance.saveFile(
-          name: '$fileName.pdf',
-          bytes: response.data,
-          ext: 'pdf',
-          mimeType: MimeType.pdf,
-        );
-
-        state = state.copyWith(filePath: filePath);
-      } else {
-        state = state.copyWith(
-            error: 'Failed to download PDF: ${response.statusCode}');
-      }
-    } catch (e) {
-      state = state.copyWith(error: 'Error: $e');
-    }
   }
 
   Future<void> verifyTransaction(

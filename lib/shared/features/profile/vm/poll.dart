@@ -62,4 +62,4 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
   }
 }
 
-final userPollsProvider = StateNotifierProvider<UserPollsNotifier, PollsState>((ref) => UserPollsNotifier());
+final userPollsProvider = StateNotifierProvider.family<UserPollsNotifier, PollsState, String>((ref, id) => UserPollsNotifier());

@@ -100,44 +100,49 @@ class WayaPaginatedListView<T> extends StatefulWidget {
   });
 
   @override
-  State<WayaPaginatedListView<T>> createState() => _WayaPaginatedListViewState<T>();
+  State<WayaPaginatedListView<T>> createState() => WayaPaginatedListViewState<T>();
 }
 
-class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
+class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
   late final _scrollController = widget.controller ?? ScrollController();
   final _itemsNotifier = ValueNotifier(0);
   final _loadingController = ValueNotifier(false);
 
   @override
   void initState() {
-    if (widget.shouldFetch) {
-      //? When fetching this is fine.
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) async {
-          await _getPage(widget.nextPage);
+    //? Bind the handler to this scroll view.
+    widget.handler.paginatedListView = this;
 
-          //? Add this listener to this one.
-          _scrollController.addListener(
-            () async {
-              final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
-              final current = _scrollController.offset;
+    //? When fetching this is fine.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        //? First, fetch the first page.
+        await getPage(widget.nextPage);
 
-              //? Stop if this is at the end.
-              if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) return;
+        //? If we should not fetch, then skip this.
+        if (!widget.shouldFetch) return;
 
-              //? Call this function.
-              await widget.onScroll?.call(_scrollController);
+        //? Add this listener to this one.
+        _scrollController.addListener(
+          () async {
+            final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
+            final current = _scrollController.offset;
 
-              //? If we should scroll.
-              if (current >= target) {
-                debugPrint("paginated-list-builder> Fetching because (T: $target, X: $current)");
-                _getPage(widget.nextPage);
-              }
-            },
-          );
-        },
-      );
-    }
+            //? Stop if this is at the end.
+            if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) return;
+
+            //? Call this function.
+            await widget.onScroll?.call(_scrollController);
+
+            //? If we should scroll.
+            if (current >= target) {
+              debugPrint("paginated-list-builder> Fetching because (T: $target, X: $current)");
+              getPage(widget.nextPage);
+            }
+          },
+        );
+      },
+    );
 
     // Initialize state.
     super.initState();
@@ -148,7 +153,7 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
     if (widget.shouldFetch) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) async {
-          await _getPage(widget.nextPage);
+          await getPage(widget.nextPage);
         },
       );
     }
@@ -157,7 +162,7 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
     super.reassemble();
   }
 
-  Future<void> _getPage(int page) async {
+  Future<void> getPage(int page) async {
     /// Skip this.
     try {
       //? We are currently loading this up.

@@ -181,7 +181,7 @@ class DonationVm extends StateNotifier<DonationState> {
       if (response.success && ctx.mounted) {
         WayaUtils.showModalSheet(ctx, child: DonationGenerosityModal());
         _logger.i(response.data['data']);
-      } else if (response.data['error'] == 'Insufficient wallet balance') {
+      } else if (response.data['responseCode'] == 1620) {
         WayaUtils.showModalSheet(ctx, child: DonationUnSuccessfulModal());
 
         debugPrint('CHECKINGGGGG');

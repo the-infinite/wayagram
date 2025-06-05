@@ -5,6 +5,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/follow/widget/follows.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 
 class FollowRelationshipsPage extends ConsumerStatefulWidget {
   static const route = '/follow/relationships/self';
@@ -58,22 +59,28 @@ class _MutualPageState extends ConsumerState<FollowRelationshipsPage> with Singl
             const Gap(10),
 
             //? This section for the tabs.
-            Row(
-              children: [
-                //? The list of users the user in question is following.
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'Following',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
+            ValueListenableBuilder(
+              valueListenable: myFollowProvider,
+              builder: (context, state, _) => Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  //? The list of users the user in question is following.
+                  WayaTabButton(
+                    isSelected: _selectedIndex == 1,
+                    text: 'Following',
+                    count: state.hasLoadedFollowing ? state.followingTotalSize : null,
+                    onTap: () => setState(() => _selectedIndex = 1),
+                  ),
 
-                //? The list of followers of this person.
-                WayaTabButton(
-                  isSelected: _selectedIndex == 2,
-                  text: 'Followers',
-                  onTap: () => setState(() => _selectedIndex = 2),
-                ),
-              ],
+                  //? The list of followers of this person.
+                  WayaTabButton(
+                    isSelected: _selectedIndex == 2,
+                    text: 'Followers',
+                    count: state.hasLoadedFollowers ? state.followersTotalSize : null,
+                    onTap: () => setState(() => _selectedIndex = 2),
+                  ),
+                ],
+              ),
             ),
 
             // Some space.
