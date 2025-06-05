@@ -316,7 +316,10 @@ class _PublicPageState extends ConsumerState<PublicPage>
                         InkWell(
                           onTap: () => WayaNav.toNamed(
                               '/pageFollowerScreen',
-                          arguments: widget.id),
+                              arguments: {
+                                'pageId': widget.id
+                              }
+                          ),
                           child: actionType2(
                             WayaValueHelper.formatNumber(page.followerCount),
                             'Followers',
