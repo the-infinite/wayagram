@@ -1,17 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:path/path.dart' as path;
 import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
@@ -61,10 +56,10 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
   }
 
   // Function to generate and download/share PDF
-  Future<void> generateTransactionPdf(BuildContext context,
-      List< TransactionDetail> transactions,
-
-      ) async {
+  Future<void> generateTransactionPdf(
+    BuildContext context,
+    List<TransactionDetail> transactions,
+  ) async {
     // Create a PDF document
     final pdf = pw.Document();
 
@@ -148,13 +143,11 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
     );
   }
 
-
-  Future<void> generateTransactionPdfTwo(BuildContext context,
-      List< TransactionDetail> transactions,
-
-      ) async {
-
-   final state = ref.read(transactionVmProvider);
+  Future<void> generateTransactionPdfTwo(
+    BuildContext context,
+    List<TransactionDetail> transactions,
+  ) async {
+    final state = ref.read(transactionVmProvider);
     // Create a PDF document
     final pdf = pw.Document();
 
@@ -184,7 +177,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                   //color: pw.Theme.of(context).primaryColor,
                 ),
               ),
-               pw.SizedBox(height: 20),
+              pw.SizedBox(height: 20),
               pw.Text(
                 '₦${state.transaction?.netAmount ?? "0"}',
                 style: pw.TextStyle(
@@ -205,28 +198,29 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                 //valueColor: wayaTheme.colorScheme.primary200,
               ),
               buildPdfDetailRowTwo(
-               label: 'Description',
-               value: state.transaction?.description ?? "",
+                label: 'Description',
+                value: state.transaction?.description ?? "",
               ),
               buildPdfDetailRowTwo(
-                label:'Transaction Type',
+                label: 'Transaction Type',
                 value: state.transaction?.type ?? "",
                 //valueColor: wayaTheme.colorScheme.success,
               ),
               buildPdfDetailRowTwo(
-               label: 'Date',
+                label: 'Date',
                 value: WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
               ),
               buildPdfDetailRowTwo(
-                label:'Time',
+                label: 'Time',
                 value: DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
               ),
               buildPdfDetailRowTwo(
-                  label:'Reference Number',
-                  value:shortenReference(state.transaction?.referenceId ?? ""), ),
+                label: 'Reference Number',
+                value: shortenReference(state.transaction?.referenceId ?? ""),
+              ),
               buildPdfDetailRowTwo(
-               label: 'Transaction Status',
-                value:state.transaction?.status ?? "",
+                label: 'Transaction Status',
+                value: state.transaction?.status ?? "",
                 //valueColor: PdfColor.fromHex('0xff0F973D')
                 //valueColor: wayaTheme.colorScheme.success,
               ),
@@ -242,7 +236,6 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
       filename: 'pr_${transactions.first.id.replaceAll('-', '')}.pdf',
     );
   }
-
 
 // Function to create a PDF row similar to _buildDetailRow
   pw.Widget buildPdfDetailRowTwo({
@@ -380,8 +373,6 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
 
   final List<TransactionHistoryModelDocs> transactions = [];
 
-
-
   Widget _buildDetailRow(String label, String value, {Color? valueColor, Widget? trailing}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -497,7 +488,6 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => WayaNav.goBack(),
         ),
-
         title: Text(
           'Transaction Details',
           style: TextStyle(
@@ -628,10 +618,9 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                         return [
                           PopupMenuItem<int>(
                             value: 0,
-                            onTap: () async{
-
+                            onTap: () async {
                               //final file = await generateTransactionPdf(context, [state.transaction!]);
-                              final file = await generateTransactionPdfTwo(context, [state.transaction!]);
+                              await generateTransactionPdfTwo(context, [state.transaction!]);
                             },
                             child: WayaActionNav(
                               context: context,
@@ -642,7 +631,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                           ),
                           PopupMenuItem<int>(
                             value: 1,
-                            onTap: () async{
+                            onTap: () async {
                               shareReceipt(screenshotController, _buildReceiptContent(context));
                             },
                             child: WayaActionNav(
@@ -652,7 +641,6 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                               color: wayaTheme.colorScheme.customBlack,
                             ),
                           ),
-
                         ];
                       },
                       child: Container(
@@ -662,7 +650,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                         ),
                         width: double.infinity,
                         height: 50.h,
-                        child:Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.share, size: 20, color: Colors.white),
