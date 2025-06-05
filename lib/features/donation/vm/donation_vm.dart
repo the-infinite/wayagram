@@ -179,7 +179,8 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
-        WayaUtils.showModalSheet(ctx, child: DonationGenerosityModal());
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        WayaUtils.showModalSheet(ctx, child: DonationGenerosityModal(campaignId: '${responseModel.data?.docs?[0].id}',));
         _logger.i(response.data['data']);
       } else if (response.data['responseCode'] == 1620) {
         WayaUtils.showModalSheet(ctx, child: DonationUnSuccessfulModal());

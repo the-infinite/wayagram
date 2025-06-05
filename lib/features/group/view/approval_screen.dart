@@ -71,9 +71,11 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: viewModel.docs?.length,
+                itemCount: viewModel.allGroupMemberDocs!.length,
+                //viewModel.docs?.length,
                 itemBuilder: (_, index) {
-                  final group = viewModel.docs?[index];
+                  //final group = viewModel.docs?[index];
+                  final group = viewModel.allGroupMemberDocs![index];
                   return Container(
                     height: 60.h,
                     margin: EdgeInsets.only(bottom: 8),
@@ -91,12 +93,12 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                             CircleAvatar(
                               radius: 20,
                               backgroundColor: WayaColors.greyColor100,
-                              backgroundImage: group?.user?.profilePicture == null
+                              backgroundImage: group.user?.profilePicture == null
                                   ? AssetImage(
                                       '',
                                     )
                                   : NetworkImage(
-                                      '${group?.user?.profilePicture}',
+                                      '${group.user?.profilePicture}',
                                     ),
                             ),
                             Gap(10),
@@ -105,7 +107,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${group?.user?.firstName} ${group?.user?.lastName}',
+                                  '${group.user?.firstName} ${group.user?.lastName}',
                                   style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
@@ -113,7 +115,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                                 ),
                                 Gap(5),
                                 Text(
-                                  '${group?.user?.email}',
+                                  '${group.user?.email}',
                                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w400,
