@@ -4,6 +4,7 @@ import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
@@ -29,6 +30,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       myPageNotifier.getCreatedPages();
       myPageNotifier.getPagesUserFollows();
+      ref.read(createPageProvider.notifier).getAllPages();
+
     });
     searchController = TextEditingController();
     searchController.addListener(() {

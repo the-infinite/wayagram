@@ -121,7 +121,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                     WayaNav.goBack();
                     WayaNav.toNamed(Promote.route, arguments: {
                       "contentId": widget.group.id,
-                      "contentType": PromotionServiceType.page.name,
+                      "contentType": PromotionServiceType.group.name,
                       "data": group
                     });
                   },

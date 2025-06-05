@@ -84,7 +84,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
     );
 
     return SizedBox(
-      height: 560,
+      height: 530.h,
       child: ListView(
         children: [
           WayaButton(
