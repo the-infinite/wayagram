@@ -32,7 +32,13 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
 
 //? get user settings to update the UI Once
     useEffect(() {
-      notifier.getEventSettings();
+      notifier.getEventSettings().then((value) {
+        print("value: ${value?.toJson()}");
+        if (value != null) {
+          letEveryOneJoin.value = value.letEveryoneJoin ?? false;
+          approveJoinRequest.value = value.approveJoinRequest ?? false;
+        }
+      });
       /*  myFollowProvider.getUserSettings().then((value) {
         if (value != null) {
           restrictRequest.value = value.restrictRequestToPeopleFollow ?? false;
@@ -75,7 +81,7 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
                 onSwitchChanged: (value) {
                   notifier.updateEventSettings(
                       letEveryoneJoin: value,
-                      approveJoinRequest: letEveryOneJoin.value);
+                      approveJoinRequest: approveJoinRequest.value);
                 },
                 switchValue: letEveryOneJoin),
             Gap(10),
@@ -85,8 +91,8 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
                 showSwitch: true,
                 onSwitchChanged: (value) {
                   notifier.updateEventSettings(
-                      letEveryoneJoin: value,
-                      approveJoinRequest: letEveryOneJoin.value);
+                      letEveryoneJoin: letEveryOneJoin.value,
+                      approveJoinRequest: value);
                 },
                 switchValue: approveJoinRequest),
             Gap(10),

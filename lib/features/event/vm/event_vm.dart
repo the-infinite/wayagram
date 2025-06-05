@@ -7,6 +7,7 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/bottom_sheets/share/social_share.dart';
+import 'package:wayagram/features/event/data/model/event_setting_response.dart';
 import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
@@ -355,12 +356,12 @@ class EventVm extends StateNotifier<EventState> {
   }
 
   /// Helper function used to retrieve all of the details of just one conversation.
-  Future<String?> getEventSettings() async {
+  Future<EventSettingResponse?> getEventSettings() async {
     final response = await _eventRepository.getEventSettings();
 
     //? This is fine.
     if (response.success) {
-      //  return PrivacySettingsDto.fromJson(response.data['data']);
+        return EventSettingResponse.fromJson(response.data['data']);
     }
 
     //? Return null if empty

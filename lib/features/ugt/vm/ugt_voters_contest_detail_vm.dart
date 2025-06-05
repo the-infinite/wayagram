@@ -349,6 +349,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
         // createPostId = ;
         final myContestantList = contestList.where((e) {
+          print("ErrorOLODO ${e.status?.toLowerCase()}");
           return e.status?.toLowerCase() == "active" &&
               e.contestApplicant != null;
         }).toList();
