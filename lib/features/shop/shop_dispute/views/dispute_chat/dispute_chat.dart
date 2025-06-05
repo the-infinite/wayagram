@@ -133,6 +133,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
         onPopInvokedWithResult: (popping, _) {
           if (!popping) return;
           inputController.reset();
+          notifier.setInactive();
         },
         child: WayaScaffold(
           isLoading: false,

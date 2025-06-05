@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -13,6 +15,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
+import 'package:wayagram/features/group/data/model/group_category_model.dart';
 import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
@@ -90,6 +93,29 @@ class GroupVm extends StateNotifier<GroupState> {
 
   void updateRequireApproval(bool value) {
     state = state.copyWith(requireApproval: value);
+  }
+
+  void selectCategory(Select value) {
+    state = state.copyWith(category: value.value);
+  }
+
+  Future<void> fetchCategory() async {
+    try {
+      final response = await _groupRepository.getUserCategory();
+
+      if (response.success) {
+        GroupCategoryModel responseModel =
+        GroupCategoryModel.fromJson(response.data);
+
+        final List<Select>? categories = responseModel.data?.map((val) {
+          return Select(
+              label: '${val.name?.capitalizeFirst}', value: '${val.id}');
+        }).toList();
+        state = state.copyWith(categories: categories);
+      }
+    } catch (e) {
+      _logger.e(e);
+    }
   }
 
   Future<void> createGroupPost(ctx, String content, String postType, List<XFile> images, String groupId) async {

@@ -11,7 +11,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
-import 'package:wayagram/features/wallet/view/wallet_page.dart';
+import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
 import '../../../core/components/components.dart';
@@ -574,7 +574,7 @@ class _DonationUnSuccessfulModalState extends ConsumerState<DonationUnSuccessful
             WayaButton(
               callback: () async {
                 WayaNav.goBack();
-                WayaNav.toNamed(WalletPage.route);
+                WayaNav.toNamed(FundWalletOptionsScreen.route);
                 ref.read(donationVmProvider.notifier).reset();
               },
               text: "Fund Your Wallet",

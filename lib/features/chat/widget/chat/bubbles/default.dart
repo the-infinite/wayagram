@@ -755,7 +755,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                       width: 20,
                       color: WayaColors.error,
                     ),
-                    text: "Unsend",
+                    text: "Delete for everyone",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
                       fontSize: 13.sp,
                     ),

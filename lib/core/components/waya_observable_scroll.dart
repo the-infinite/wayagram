@@ -3,10 +3,42 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
+import 'waya_paginated_list.dart';
 import 'waya_preloader.dart';
 
 class WayaObservableScrollController {
   bool hasScrolled = false;
+  bool get forListView => paginatedListView != null;
+  _WayaObservableScrollViewState? _scrollView;
+  WayaPaginatedListViewState? paginatedListView;
+
+  Future<void> getMore() async {
+    /// If this is not a paginated list view, then we cannot do anything.
+    if (paginatedListView == null && _scrollView == null) {
+      return;
+    }
+
+    /// If this has already scrolled, then we cannot do anything.
+    if (hasScrolled) {
+      return;
+    }
+
+    /// Set the flag to true.
+    hasScrolled = true;
+
+    /// Get the next page.
+    if (paginatedListView != null) {
+      await paginatedListView!.getPage(paginatedListView!.widget.nextPage);
+    }
+
+    /// Trigger the scroll view to fetch more stuff.
+    if (_scrollView != null) {
+      await _scrollView!._getPage();
+    }
+
+    /// Set the flag to false.
+    hasScrolled = false;
+  }
 }
 
 class WayaObservableScrollView extends StatefulWidget {
@@ -69,12 +101,19 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        //? Get the current page.
-        _getPage();
+    //? Bind the handler to this scroll view.
+    widget.handler._scrollView = this;
 
-        //? Add this listener to this one.
+    //? If this is a should fetch, then do the needful.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        //? Get the current page.
+        await _getPage();
+
+        //? If this should not fetch, do not place this here.
+        if (!widget.shouldFetch) return;
+
+        //? Add a listener to the scroll controller, if we are allowed to keep listening.
         _scrollController.addListener(
           () {
             final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;

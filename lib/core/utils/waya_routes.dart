@@ -4,6 +4,7 @@ import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
 import 'package:wayagram/features/auth/account_creation/view/two_factor_auth.dart';
+import 'package:wayagram/features/activity_logs/view/page_logs.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
@@ -382,6 +383,7 @@ class WayaAppRoutes {
     ActivityLog.route: () => ActivityLog(),
     QuotationSellerOrders.route: () => QuotationSellerOrders(),
     VisitedPage.route: () => VisitedPage(),
+    PageLogs.route: () => PageLogs(),
     DonationSettingsPage.route: () => DonationSettingsPage(),
     QuotationSettingsPage.route: () => QuotationSettingsPage(),
     ShopSettingPage.route: () => ShopSettingPage(),

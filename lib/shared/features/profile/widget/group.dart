@@ -43,6 +43,7 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
     //? Then leave the group.
     if (myGroupNotifier.isMemberOf(widget.group.id)) {
       await myGroupNotifier.leaveGroup(widget.group.id);
+
     }
 
     //? Then, join the group.

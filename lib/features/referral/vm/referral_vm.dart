@@ -1,17 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/referral/data/referral_state.dart';
 import 'package:wayagram/features/referral/data/repo/referral_repo.dart';
+import 'package:wayagram/features/referral/model/referral_amount_model.dart';
 import 'package:wayagram/features/referral/model/referral_count_model.dart';
 import 'package:wayagram/features/referral/model/referral_model.dart';
 import '../../../core/data/local_data_source.dart';
 
 class ReferralVm extends StateNotifier<ReferralState> {
   final ReferralRepo _referralRepository;
-  final WayaLocalDataSource _localDataSource;
-//this is ok
+  //final WayaLocalDataSource _localDataSource;
 
-  ReferralVm(this._referralRepository, this._localDataSource)
+  ReferralVm(this._referralRepository)
       : super(ReferralState());
 
   Future<void> getReferralCount() async {
@@ -20,7 +21,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
     if (response.success == true) {
       ReferralCountModel responseModel =
           ReferralCountModel.fromJson(response.data);
-      state = state.copyWith(count: responseModel.data);
+      state = state.copyWith(count: responseModel.data?.totalReferrals??0);
     } else {}
   }
 
@@ -28,14 +29,29 @@ class ReferralVm extends StateNotifier<ReferralState> {
     final response =
         await _referralRepository.getReferralEarned(getLoggedInUserId() ?? "");
     if (response.success == true) {
-      ReferralCountModel responseModel =
-          ReferralCountModel.fromJson(response.data);
-      state = state.copyWith(count: responseModel.data);
+      ReferralAmountModel responseModel =
+          ReferralAmountModel.fromJson(response.data);
+      state = state.copyWith(count: responseModel.data?.totalAmountEarned??0);
     } else {}
   }
 
   String? getLoggedInUserId() {
-    return _localDataSource.getUserId().toString();
+    return ConversationState.profile.id;
+  }
+
+  void filterList(String filterString) {
+    if (filterString.trim().isEmpty) {
+      state = state.copyWith(referralList: [...state.referralListCopy]);
+      return;
+    }
+    var list = state.referralListCopy.where((dispute) {
+      String name = dispute.referredUser?.displayName ?? "";
+      if (name.contains(filterString)) {
+        return true;
+      }
+      return false;
+    }).toList();
+    state = state.copyWith(referralList: [...list]);
   }
 
   Future<void> getAllUserReferrals(
@@ -64,12 +80,21 @@ class ReferralVm extends StateNotifier<ReferralState> {
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
           state = state.copyWith(
-              referralList: responseModel.data?.docs ?? [], page: 1);
+            referralList: responseModel.data?.docs ?? [],
+            referralListCopy: responseModel.data?.docs ?? [],
+            page: 1,
+          );
         } else {
-          state = state.copyWith(referralList: [
-            ...state.referralList,
-            ...responseModel.data?.docs ?? []
-          ]);
+          state = state.copyWith(
+            referralList: [
+              ...state.referralList,
+              ...responseModel.data?.docs ?? []
+            ],
+            referralListCopy: [
+              ...state.referralList,
+              ...responseModel.data?.docs ?? []
+            ],
+          );
         }
         state = state.copyWith(page: state.page + 1);
         // contestList = responseModel.data?.docs ?? [];
@@ -81,16 +106,15 @@ class ReferralVm extends StateNotifier<ReferralState> {
       debugPrint(e.toString());
     } finally {}
   }
-  void updateStartAndEndDate(String? startDate, String? endDate){
-   state = state.copyWith(startDate: startDate, endDate: endDate);
-}
-}
 
-
+  void updateStartAndEndDate(String? startDate, String? endDate) {
+    state = state.copyWith(startDate: startDate, endDate: endDate);
+  }
+}
 
 final referralVm = StateNotifierProvider<ReferralVm, ReferralState>(
   (ref) {
-    return ReferralVm(ReferralRepo(), WayaLocalDataSource());
+    return ReferralVm(ReferralRepo());
   },
 );
 

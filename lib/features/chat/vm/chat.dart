@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/features/chat/controller/message.dart';
@@ -16,6 +17,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
   final shopDisputeRepo = ShopDisputeRepository();
 
   ChatNotifier(super.state);
+
+  /// A helper function used to retrieve the
+  bool get isActive => state.isActive;
 
   /// Helper function used to get or create and then get a message controller for
   /// a chat using the ID of the chat.
@@ -363,17 +367,38 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }
 
   /// A helper function used to update the currently viewable chat on screen. It
-  /// would clear out all visible messages and only retrieve messages sent by
-  /// a given user.
+  /// would clear out all visible messages and only retrieve messages sent by a
+  /// given user.
   void setChat(ChatModel chat) {
     if (state.chat != null) {
       return;
     }
 
+    // Log.
+    debugPrint("Activating ${chat.id}");
+
     // Clear the controllers and then update the chat we are listening to.
-    _controllers.clear();
     state = state.copyWith(
       chat: chat,
+      isActive: true,
+    );
+  }
+
+  /// A helper function used to notify the state that the chat is no longer in
+  /// the foreground.
+  void setInactive() {
+    //? If this is already inactive, then we can just return.
+    if (!state.isActive) {
+      return;
+    }
+
+    // Log.
+    debugPrint("Deactivating ${state.chat?.id}");
+
+    //? Clear the controllers and then update the chat we are listening to.
+    state = state.copyWith(
+      isActive: false,
+      chat: null,
     );
   }
 }
