@@ -64,6 +64,6 @@ class EventNotifier extends StateNotifier<EventState> {
   }
 }
 
-final userEventsProvider = StateNotifierProvider<EventNotifier, EventState>((ref) {
+final userEventsProvider = StateNotifierProvider.family<EventNotifier, EventState,String>((ref, id) {
   return EventNotifier(EventState.initial);
 });

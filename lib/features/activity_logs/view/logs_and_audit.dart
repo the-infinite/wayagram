@@ -8,7 +8,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
-import 'package:wayagram/features/activity_logs/view/page_logs.dart';
 import 'account_activity.dart';
 
 class LogsAndAuditTrials extends ConsumerStatefulWidget {
@@ -49,10 +48,10 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
           logCard('Polls & Voting', WayaAssets.icons.genSet.polls.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
             'name': 'polls'
           })),
-          logCard('Pages', WayaAssets.icons.genSet.pages.path,()=>WayaNav.toNamed(ActivityLog.route,
-              arguments: {
-            'name': 'pages'
-          }
+          logCard('Pages', WayaAssets.icons.genSet.pages.path,()=>WayaNav.toNamed('/pageLogs',
+          //     arguments: {
+          //   'name': 'pages'
+          // }
           )),
           logCard('Groups', WayaAssets.icons.genSet.group.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
             'name': 'groups'

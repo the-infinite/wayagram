@@ -11,7 +11,9 @@ import '../../../core/data/local_data_source.dart';
 class ReferralVm extends StateNotifier<ReferralState> {
   final ReferralRepo _referralRepository;
 
-  ReferralVm(this._referralRepository) : super(ReferralState());
+  ReferralVm(this._referralRepository)
+      : super(ReferralState());
+
 
   Future<void> getReferralCount() async {
     final response =

@@ -10,7 +10,7 @@ class PagesState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<PageModel> pages;
+  final List<PageModel> docs;
 
   PagesState({
     required this.hasLoaded,
@@ -22,7 +22,7 @@ class PagesState {
     required this.totalPages,
     required this.hasNextPage,
     required this.hasPreviousPage,
-    required this.pages,
+    required this.docs,
   });
 
   PagesState copyWith({
@@ -35,7 +35,7 @@ class PagesState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<PageModel>? pages,
+    List<PageModel>? docs,
   }) {
     return PagesState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -47,7 +47,7 @@ class PagesState {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      pages: pages ?? this.pages,
+      docs: docs ?? this.docs,
     );
   }
 
@@ -61,6 +61,19 @@ class PagesState {
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
-    pages: [],
+    docs: [],
   );
+
+  List<PageModel> pages(String? search) {
+    // If there is searching enabled...
+    if (search?.isNotEmpty ?? false) {
+      return docs
+          .where((page) =>
+              page.name.toLowerCase().contains(search!) || page.description.toString().toLowerCase().contains(search))
+          .toList();
+    }
+
+    // Return what we already have.
+    return docs;
+  }
 }

@@ -18,8 +18,7 @@ class SellerShopProducts extends ConsumerStatefulWidget {
   static const route = "/seller-shop-products";
   final String vendorId;
   final String shopId;
-  const SellerShopProducts(
-      {super.key, required this.vendorId, required this.shopId});
+  const SellerShopProducts({super.key, required this.vendorId, required this.shopId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SellerShopProducts();
@@ -46,13 +45,10 @@ class _SellerShopProducts extends ConsumerState<SellerShopProducts> {
           }
 
           //> get shop products by shop id
-          final products = await ref
-              .read(sellerProductsVmProvider.notifier)
-              .sellerProducts(shopId: widget.shopId);
+          final products = await ref.read(sellerProductsVmProvider.notifier).sellerProducts(shopId: widget.shopId);
 
           if (products != null) {
             setState(() {
-             
               sellerProducts = products;
             });
           }
@@ -77,37 +73,37 @@ class _SellerShopProducts extends ConsumerState<SellerShopProducts> {
       );
     }
     return WayaScaffold(
-        isLoading: isLoading,
-        isScrollable: true,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 4,
-              children: [
-                WayaImage(
-                  imageUrl: sellerShop?.shop.logo ?? WayaConstants.shopLogo,
-                  height: 50,
-                  width: 50,
-                  radius: BorderRadius.circular(50),
-                ),
-                Text(
-                  sellerShop?.shop.name ?? 'Waya User Shop',
-                  style: wayaTheme.textTheme.bodyMedium,
-                )
-              ],
-            ),
-            Gap(6.h),
-            Text(
-              sellerShop?.shop.address ?? '',
-              style: wayaTheme.textTheme.descriptionStyle,
-            ),
-            Gap(6.h),
+      isLoading: isLoading,
+      isScrollable: true,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 4,
+            children: [
+              WayaImage(
+                imageUrl: sellerShop?.shop.logo ?? WayaConstants.shopLogo,
+                height: 50,
+                width: 50,
+                radius: BorderRadius.circular(50),
+              ),
+              Text(
+                sellerShop?.shop.name ?? 'Waya User Shop',
+                style: wayaTheme.textTheme.bodyMedium,
+              )
+            ],
+          ),
+          Gap(6.h),
+          Text(
+            sellerShop?.shop.address ?? '',
+            style: wayaTheme.textTheme.descriptionStyle,
+          ),
+          Gap(6.h),
 
-           if (sellerShop?.shop.description.isNotEmpty == true) ...[
- //? Content.
+          if (sellerShop?.shop.description.isNotEmpty == true) ...[
+            //? Content.
             Text(
               "Description",
               style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
@@ -126,21 +122,22 @@ class _SellerShopProducts extends ConsumerState<SellerShopProducts> {
                 color: wayaTheme.colorScheme.greyColor400,
               ),
             ),
-           ],
-                Gap(20.h),
-    //? Content.
-            Text(
-              "Products",
-              style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: context.width * 0.040,
-                  fontWeight: FontWeight.w500),
-            ),
-             // Some space.
-            const Gap(10),
-            //> Seller Products
-            SellerProductGrid(products: sellerProducts ?? [])
           ],
-        ));
+          Gap(20.h),
+          //? Content.
+          Text(
+            "Products",
+            style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                color: wayaTheme.colorScheme.customBlack, fontSize: context.width * 0.040, fontWeight: FontWeight.w500),
+          ),
+          // Some space.
+          const Gap(10),
+          //> Seller Products
+          SellerProductGrid(
+            products: sellerProducts,
+          )
+        ],
+      ),
+    );
   }
 }
