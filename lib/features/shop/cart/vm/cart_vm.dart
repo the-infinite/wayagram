@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:uuid/uuid.dart';
@@ -21,13 +22,18 @@ class CartState {
       this.isAddingDeliveryFee = false});
 
   CartState copyWith(
-      {CartData? cart, bool? isLoading, bool? isRequestingDelivery, int? totalItem, bool? isAddingDeliveryFee}) {
+      {CartData? cart,
+      bool? isLoading,
+      bool? isRequestingDelivery,
+      int? totalItem,
+      bool? isAddingDeliveryFee}) {
     return CartState(
         cart: cart ?? this.cart,
         isLoading: isLoading ?? this.isLoading,
         isAddingDeliveryFee: isAddingDeliveryFee ?? this.isAddingDeliveryFee,
         totalItem: totalItem ?? this.totalItem,
-        isRequestingDelivery: isRequestingDelivery ?? this.isRequestingDelivery);
+        isRequestingDelivery:
+            isRequestingDelivery ?? this.isRequestingDelivery);
   }
 }
 
@@ -37,7 +43,8 @@ class CartVm extends StateNotifier<CartState> {
   final WayaSecureDataSource _secureDataSource;
   final CartRepository _cartRepository;
 
-  CartVm(this.ref, this._cartRepository, this._secureDataSource) : super(CartState());
+  CartVm(this.ref, this._cartRepository, this._secureDataSource)
+      : super(CartState());
 
   Future<void> loadCart() async {
     try {
@@ -145,7 +152,9 @@ class CartVm extends StateNotifier<CartState> {
 
         final totalFee = updatedItems[i].products.fold<int>(
               0,
-              (sum, product) => sum + (double.parse(product.unitPrice).toInt() * product.quantity),
+              (sum, product) =>
+                  sum +
+                  (double.parse(product.unitPrice).toInt() * product.quantity),
             );
         updatedItems[i] = updatedItems[i].copyWith(totalFee: totalFee);
 
@@ -203,7 +212,10 @@ class CartVm extends StateNotifier<CartState> {
     debugPrint(state.cart?.toJson().toString());
   }
 
-  void removeFromCart({required String productId, required String shopId, bool isNotWayaDeal = true}) async {
+  void removeFromCart(
+      {required String productId,
+      required String shopId,
+      bool isNotWayaDeal = true}) async {
     final existingCart = state.cart;
     if (existingCart == null) return;
     debugPrint(productId);
@@ -214,7 +226,9 @@ class CartVm extends StateNotifier<CartState> {
               .map((product) {
                 if (product.productId == productId) {
                   final newQuantity = product.quantity - 1;
-                  return newQuantity > 0 ? product.copyWith(quantity: newQuantity) : null;
+                  return newQuantity > 0
+                      ? product.copyWith(quantity: newQuantity)
+                      : null;
                 }
                 return product;
               })
@@ -223,7 +237,9 @@ class CartVm extends StateNotifier<CartState> {
 
           final totalFee = updatedProducts.fold<int>(
             0,
-            (sum, product) => sum + (double.parse(product.unitPrice).toInt() * product.quantity),
+            (sum, product) =>
+                sum +
+                (double.parse(product.unitPrice).toInt() * product.quantity),
           );
 
           return item.copyWith(products: updatedProducts, totalFee: totalFee);
@@ -253,7 +269,8 @@ class CartVm extends StateNotifier<CartState> {
     await decreaseCartItem(shopId: shopId, id: productId);
   }
 
-  Future<bool> postCartItem({required String id, required String shopId}) async {
+  Future<bool> postCartItem(
+      {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
@@ -270,7 +287,8 @@ class CartVm extends StateNotifier<CartState> {
       } else if (response.data['responseCode'] == 703) {
         isSuccess = false;
         removeFromCart(productId: id, shopId: shopId, isNotWayaDeal: false);
-        WayaSnackBar.showToast("You are not yet eligible to purchase another wayagram deal");
+        WayaSnackBar.showToast(
+            "You are not yet eligible to purchase another wayagram deal");
       }
 
       return isSuccess;
@@ -280,7 +298,8 @@ class CartVm extends StateNotifier<CartState> {
     }
   }
 
-  Future<void> updateCartItem({required String id, required String shopId}) async {
+  Future<void> updateCartItem(
+      {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
@@ -297,7 +316,8 @@ class CartVm extends StateNotifier<CartState> {
     }
   }
 
-  Future<void> decreaseCartItem({required String id, required String shopId}) async {
+  Future<void> decreaseCartItem(
+      {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
@@ -332,7 +352,8 @@ class CartVm extends StateNotifier<CartState> {
     state = state.copyWith(totalItem: totalQuantity);
   }
 
-  Future<void> deliveryRequest({required String shopId, required String address}) async {
+  Future<void> deliveryRequest(
+      {required String shopId, required String address}) async {
     try {
       state = state.copyWith(isRequestingDelivery: true);
       final userId = await _secureDataSource.getUserId();
@@ -343,7 +364,8 @@ class CartVm extends StateNotifier<CartState> {
         shopId: shopId,
       );
       if (response.success) {
-        WayaSnackBar.showToast("You have successfully requested for the delivery price");
+        WayaSnackBar.showToast(
+            "You have successfully requested for the delivery price");
         debugPrint(response.data.toString());
       }
     } catch (e) {
@@ -377,6 +399,21 @@ class CartVm extends StateNotifier<CartState> {
   //     state = state.copyWith(isAddingDeliveryFee: false);
   //   }
   // }
+
+  Future<void> removeShopProductFromCart({required String shopId}) async {
+    try {
+      final response = await _cartRepository.removeShopProduct(shopId: shopId);
+
+      if (response.success) {
+        WayaNav.replaceNamed(CartView.route);
+        WayaSnackBar.showToast("Request has been cancelled");
+      } else {
+        WayaSnackBar.showToast("An error occured. Try again!!");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }
 
 final cartVmProvider = StateNotifierProvider<CartVm, CartState>((ref) {

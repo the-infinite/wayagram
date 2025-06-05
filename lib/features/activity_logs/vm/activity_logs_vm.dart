@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
@@ -23,6 +24,24 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
   ActivityLogsVm( this._activityLogsRepository,
       this.ref,)
       : super(ActivityLogsState());
+
+  Future<void> getPageActivityLogs(int page) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getPageLogs(page);
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response==>>>: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        state = state.copyWith(pageDocs: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
 
   Future<PaginatedResult<AccountActivityDocs>?> getAccountActivity({required int page}) async {
 

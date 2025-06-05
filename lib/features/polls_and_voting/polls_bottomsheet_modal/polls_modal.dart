@@ -14,7 +14,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:wayagram/features/wallet/view/wallet_page.dart';
+import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 
 class PollsModal extends ConsumerStatefulWidget {
   final String url;
@@ -367,7 +367,6 @@ class _PollPinEntryBottomSheetState extends ConsumerState<PollPinEntryBottomShee
         await ref.read(createPollVotingProvider.notifier).castYourVote(
               '${num.parse(widget.amount) * num.parse(widget.voteFee)}',
               widget.amount,
-              //'118ff236-2410-4b84-8976-1e96f26a2d47','89b12d4a-9f16-49c8-8592-8ff7402246f3',
               widget.choiceId,
               widget.pollId,
               context,
@@ -392,7 +391,6 @@ class _PollPinEntryBottomSheetState extends ConsumerState<PollPinEntryBottomShee
 
   @override
   Widget build(BuildContext context) {
-    //debugPrint('DARLINGTON AMOUNT ${widget.amount}');
     ref.watch(createPollVotingProvider.notifier);
     return SafeArea(
       child: Container(
@@ -816,7 +814,8 @@ class _VoteInsufficientModalState extends State<VoteInsufficientModal> {
             SizedBox(height: 30.h),
             WayaButton(
               callback: () async {
-                WayaNav.toNamed(WalletPage.route);
+                WayaNav.goBack();
+                WayaNav.toNamed(FundWalletOptionsScreen.route);
               },
               text: "Fund Wallet",
             ),

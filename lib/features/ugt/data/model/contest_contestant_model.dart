@@ -30,7 +30,8 @@ class ContestContestantModelMean {
     );
   }
 
-  factory ContestContestantModelMean.fromJson(Map<String, dynamic> json) => _$ContestContestantModelMeanFromJson(json);
+  factory ContestContestantModelMean.fromJson(Map<String, dynamic> json) =>
+      _$ContestContestantModelMeanFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContestContestantModelMeanToJson(this);
 }
@@ -156,7 +157,8 @@ class MyContestContestantModel {
       contestId: contestId ?? this.contestId,
       profilePhoto: profilePhoto ?? this.profilePhoto,
       bio: bio ?? this.bio,
-      expectationFromVoters: expectationFromVoters ?? this.expectationFromVoters,
+      expectationFromVoters:
+          expectationFromVoters ?? this.expectationFromVoters,
       introVideo: introVideo ?? this.introVideo,
       hasPaid: hasPaid ?? this.hasPaid,
       status: status ?? this.status,
@@ -168,7 +170,8 @@ class MyContestContestantModel {
     );
   }
 
-  factory MyContestContestantModel.fromJson(Map<String, dynamic> json) => _$MyContestContestantModelFromJson(json);
+  factory MyContestContestantModel.fromJson(Map<String, dynamic> json) =>
+      _$MyContestContestantModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MyContestContestantModelToJson(this);
 }
@@ -241,7 +244,8 @@ class ContestApplicant {
     );
   }
 
-  factory ContestApplicant.fromJson(Map<String, dynamic> json) => _$ContestApplicantFromJson(json);
+  factory ContestApplicant.fromJson(Map<String, dynamic> json) =>
+      _$ContestApplicantFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContestApplicantToJson(this);
 }
@@ -278,7 +282,7 @@ class Stage {
   final bool? isActive;
   final bool? hasPaid;
   final bool? hasAccepted;
-  final int? noOfVotes;
+  final dynamic noOfVotes;
   final int? amountEarned;
   final int? position;
 
@@ -295,7 +299,7 @@ class Stage {
     bool? isActive,
     bool? hasPaid,
     bool? hasAccepted,
-    int? noOfVotes,
+    dynamic noOfVotes,
     int? amountEarned,
     int? position,
   }) {
@@ -351,7 +355,8 @@ class Metadata {
     );
   }
 
-  factory Metadata.fromJson(Map<String, dynamic> json) => _$MetadataFromJson(json);
+  factory Metadata.fromJson(Map<String, dynamic> json) =>
+      _$MetadataFromJson(json);
 
   Map<String, dynamic> toJson() => _$MetadataToJson(this);
 }
@@ -372,7 +377,8 @@ class AppliedFilters {
     );
   }
 
-  factory AppliedFilters.fromJson(Map<String, dynamic> json) => _$AppliedFiltersFromJson(json);
+  factory AppliedFilters.fromJson(Map<String, dynamic> json) =>
+      _$AppliedFiltersFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppliedFiltersToJson(this);
 }

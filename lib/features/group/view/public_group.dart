@@ -108,22 +108,22 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
             position: PopupMenuPosition.under,
             itemBuilder: (context) {
               return [
-                //   PopupMenuItem<int>(
-                //     value: 0,
-                //     onTap: () {
-                //       WayaNav.goBack();
-                //       //WayaNav.toNamed('/groupSetting');
-                //     },
-                //     child: WayaActionNav(
-                //       context: context,
-                //       asset: SvgPicture.asset(
-                //         'assets/images/pages/mute.svg',
-                //         height: 20,
-                //       ),
-                //       text: "  Mute Group",
-                //       color: wayaTheme.colorScheme.customBlack,
-                //     ),
-                //   ),
+                  PopupMenuItem<int>(
+                    value: 0,
+                    onTap: () {
+                      WayaNav.goBack();
+
+                    },
+                    child: WayaActionNav(
+                      context: context,
+                      asset: SvgPicture.asset(
+                        'assets/images/pages/mute.svg',
+                        height: 20,
+                      ),
+                      text: "  Mute Group",
+                      color: wayaTheme.colorScheme.customBlack,
+                    ),
+                  ),
                 PopupMenuItem<int>(
                   value: 1,
                   onTap: () => Share.share(

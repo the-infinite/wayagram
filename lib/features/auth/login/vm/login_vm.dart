@@ -58,7 +58,8 @@ class LoginState {
         userData: userData ?? this.userData,
         emailController: emailController ?? this.emailController,
         passwordController: passwordController ?? this.passwordController,
-        businessAcctController: businessAcctController ?? this.businessAcctController);
+        businessAcctController:
+            businessAcctController ?? this.businessAcctController);
   }
 }
 
@@ -74,8 +75,8 @@ class LoginVm extends StateNotifier<LoginState> {
     scopes: ['email', 'profile'],
   );
 
-  LoginVm(
-      this.ref, this._authRepository, this._localDataSource, this._secureDataSource, this._setupVm, this._profileRepo)
+  LoginVm(this.ref, this._authRepository, this._localDataSource,
+      this._secureDataSource, this._setupVm, this._profileRepo)
       : super(LoginState(
             emailController: TextEditingController(),
             passwordController: TextEditingController(),
@@ -116,7 +117,8 @@ class LoginVm extends StateNotifier<LoginState> {
       return;
     }
 
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     // final OAuthCredential credential = GoogleAuthProvider.credential(
     //   idToken: googleAuth.idToken,
@@ -124,12 +126,13 @@ class LoginVm extends StateNotifier<LoginState> {
     // );
 
     log(googleAuth.idToken ?? "");
-    print("april fools -----------------wefwfwfwf wefw----------");
+
     // if (idToken != null) {
     await oauthSignIn(authType: 'GOOGLE', token: googleAuth.idToken ?? '');
   }
 
-  Future<void> oauthSignIn({required String token, required String authType}) async {
+  Future<void> oauthSignIn(
+      {required String token, required String authType}) async {
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
@@ -154,7 +157,8 @@ class LoginVm extends StateNotifier<LoginState> {
     }
   }
 
-  Future<void> onSubmit(WidgetRef ref, {String? email, bool? isBusinessLogin}) async {
+  Future<void> onSubmit(WidgetRef ref,
+      {String? email, bool? isBusinessLogin}) async {
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
@@ -172,9 +176,11 @@ class LoginVm extends StateNotifier<LoginState> {
         if (response.data['responseCode'] == 625) {
           await ref
               .read(verifyAccountProvider.notifier)
-              .resendOtpForRegisteredButNotVerifiedUser(email: state.emailController.text);
+              .resendOtpForRegisteredButNotVerifiedUser(
+                  email: state.emailController.text);
 
-          WayaNav.toNamed(VerifyEmail.route, arguments: state.emailController.text);
+          WayaNav.toNamed(VerifyEmail.route,
+              arguments: state.emailController.text);
         }
       }
     } catch (e) {
@@ -189,12 +195,30 @@ class LoginVm extends StateNotifier<LoginState> {
   Future<void> getUserInfo({required dynamic data}) async {
     // clearStorage();
     final remoteUserData = UserModel.fromJson(data);
+
+    //? if two factor authentication is enabled verify and there token is absent
+    if (remoteUserData.data?.userdata?.user?.twoFactorEnabled == true &&
+        remoteUserData.data?.token == null) {
+      final email =
+          Uri.encodeComponent(remoteUserData.data?.userdata?.user?.email ?? '');
+      WayaNav.toNamed(
+          WayaAppRoutes.get2FaScreen(
+              email),
+          arguments: "login");
+      WayaPreloaderController.instance.hide();
+      return;
+    }
+
     state = state.copyWith(userData: remoteUserData);
 
-    _localDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-    await _secureDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-    await _secureDataSource.saveToken(remoteUserData.data?.token?.token as String);
-    await _secureDataSource.saveRefreshToken(remoteUserData.data?.token?.refreshToken as String);
+    _localDataSource
+        .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+    await _secureDataSource
+        .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+    await _secureDataSource
+        .saveToken(remoteUserData.data?.token?.token as String);
+    await _secureDataSource
+        .saveRefreshToken(remoteUserData.data?.token?.refreshToken as String);
 
     //
     if (remoteUserData.data != null) {
@@ -231,17 +255,22 @@ class LoginVm extends StateNotifier<LoginState> {
       }
 
       //? Now we do the unnecessPary part of things.
-      final response = await _profileRepo.getUserDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
+      final response = await _profileRepo.getUserDataRepo(
+          userId: remoteUserData.data?.userdata?.user?.id as String);
 
       if (response.success) {
-        UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
+        UserAccountModel userAccountModel =
+            UserAccountModel.fromJson(response.data);
 
-        _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+        _setupVm.state =
+            _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
-        if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
-          final bizResponse =
-              await _profileRepo.getBusinessDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
-          BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
+        if (userAccountModel.data != null &&
+            userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
+          final bizResponse = await _profileRepo.getBusinessDataRepo(
+              userId: remoteUserData.data?.userdata?.user?.id as String);
+          BusinessAccountData bizData =
+              BusinessAccountData.fromJson(bizResponse.data["data"]);
 
           _setupVm.state = _setupVm.state.copyWith(business: bizData);
 
@@ -252,7 +281,8 @@ class LoginVm extends StateNotifier<LoginState> {
 
     //? This is fine.
     final notificationVm = ref.read(notificationProvider.notifier);
-    final notificationSettings = ref.read(notificationSettingsProvider.notifier);
+    final notificationSettings =
+        ref.read(notificationSettingsProvider.notifier);
 
     try {
       //? If this has not yet generated any device tokens, send them across.
@@ -264,7 +294,8 @@ class LoginVm extends StateNotifier<LoginState> {
       }
 
       // Before moving forward, try to retrieve the user's notifications.
-      await notificationSettings.getSettings(NotificationSettingsController.instance);
+      await notificationSettings
+          .getSettings(NotificationSettingsController.instance);
       await notificationVm.getUserNotifications();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -278,10 +309,24 @@ class LoginVm extends StateNotifier<LoginState> {
     // This is good too.
     WayaNav.replaceNamed("/explore");
   }
+
+  Future<void> loginVerification(
+      {required String email, required String code, String? purpose}) async {
+    try {
+      final response = await _authRepository.validate2Fa(
+          email: email, code: code, purpose: purpose);
+
+      if (response.success) {
+        await getUserInfo(data: response.data);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }
 
 final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
   final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
-  return LoginVm(
-      ref, AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
+  return LoginVm(ref, AuthRepository(), WayaLocalDataSource(),
+      WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
 });

@@ -1,10 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/repos/transactions/transaction_history_model.dart';
@@ -13,7 +11,6 @@ import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.d
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_state_model.dart';
-import 'package:dio/dio.dart';
 
 class TransactionVm extends StateNotifier<TransactionHistoryState> {
   final TransactionRepository _transactionRepository;
@@ -39,13 +36,22 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        TransactionHistoryModel responseModel = TransactionHistoryModel.fromJson(response.data);
-      debugPrint('DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
+        TransactionHistoryModel responseModel =
+            TransactionHistoryModel.fromJson(response.data);
+        debugPrint(
+            'DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
         state = state.copyWith(
             isLoading: false,
             docs: responseModel.data?.docs,
-            totalCreditTransaction: responseModel.data?.totalCreditTransaction== null ? 0:  double.parse('${responseModel.data?.totalCreditTransaction}') ,
-            totalDebitTransaction: responseModel.data?.totalDebitTransaction == null ? 0 : double.parse('${responseModel.data?.totalDebitTransaction}'),
+            totalCreditTransaction: responseModel
+                        .data?.totalCreditTransaction ==
+                    null
+                ? 0
+                : double.parse('${responseModel.data?.totalCreditTransaction}'),
+            totalDebitTransaction: responseModel.data?.totalDebitTransaction ==
+                    null
+                ? 0
+                : double.parse('${responseModel.data?.totalDebitTransaction}'),
             hasNextPage: responseModel.data?.hasNextPage);
       }
     } catch (e) {
@@ -104,125 +110,51 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     }
   }
 
-
   Future<void> downloadPdf(String fileName) async {
     state = state.copyWith(isLoading: true);
 
     try {
       //? Request storage permission
-      if (Platform.isAndroid) {
+      //? to request only on required Android Devices
+      checkAndRequestStoragePermission();
+      /*  if (Platform.isAndroid) {
         final status = await Permission.storage.request();
+       
         if (!status.isGranted) {
           state = state.copyWith(error: 'Storage permission denied');
           return;
         }
-      }
+      } */
 
       //? Make GET request
-      final response = await _transactionRepository.getTransactionForExport();
-
-      //? Use file_saver to save the PDF
-      /*final filePath = await FileSaver.instance.saveFile(
-        name: '$fileName.pdf',
-        //bytes: response.,
-        ext: 'pdf',
-        mimeType: MimeType.pdf,
-      );*/
-
-      //debugPrint('PPDF Size $response');
-     /* if (response.statusCode == 200) {
-        debugPrint('PPDF ${response.data}');
-        //? Get directory to save the file
-        final directory = await getExternalStorageDirectory(); // Or getApplicationDocumentsDirectory()
-        final filePath = '${directory!.path}/$fileName.pdf';
-        //final file = File(filePath);
-
-        //? Write PDF bytes to file
-       // await file.writeAsBytes(response.data);
-
-       // state = state.copyWith(filePath: filePath);
-      } else {
-        state = state.copyWith(error: 'Failed to download PDF: ${response.statusCode}');
-      }*/
+       await _transactionRepository.getTransactionForExport();
     } catch (e) {
       state = state.copyWith(error: 'Error: $e');
     }
   }
 
-  Future<File> downloadPdfTwo(String fileName) async {
-    state = state.copyWith(isLoading: true);
+  Future<bool> checkAndRequestStoragePermission() async {
+    if (!Platform.isAndroid) return true; // Not Android, no need for permission
 
-    try {
-      // Request storage permission for Android
-      if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          state = state.copyWith(error: 'Storage permission denied');
-          throw Exception('Storage permission denied');
-        }
+    // Only request permission on Android 12 or lower (SDK <= 32)
+    final androidVersion = int.tryParse(
+      (await File('/system/build.prop').readAsLines())
+          .firstWhere((line) => line.startsWith('ro.build.version.sdk='),
+              orElse: () => 'ro.build.version.sdk=33') // fallback to 33
+          .split('=')[1],
+    );
+
+    if (androidVersion != null && androidVersion <= 32) {
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        status = await Permission.storage.request();
       }
-
-
-      //? Make GET request to fetch PDF
-      final response = await _transactionRepository.getTransactionForExportThree();
-
-      if (response.statusCode == 200) {
-        //? Get temporary directory
-        final dir = await getTemporaryDirectory();
-        //? Create file path
-        final file = File('${dir.path}/$fileName.pdf'); // Added .pdf extension
-        //? Write the bytes
-        await file.writeAsBytes(response.data);
-
-        print("PDF saved at: ${file.path}");
-        state = state.copyWith(filePath: file.path, isLoading: false);
-        return file;
-      } else {
-        state = state.copyWith(error: 'Failed to download PDF: ${response.statusCode}', isLoading: false);
-        throw Exception('Failed to download PDF: ${response.statusCode}');
-      }
-    } catch (e) {
-      state = state.copyWith(error: 'Error: $e', isLoading: false);
-      throw Exception('Error downloading PDF: $e');
+      return status.isGranted;
     }
+
+    // Android 13+ (SDK 33+), permission not required for scoped saving
+    return true;
   }
-
-  Future<void> downloadAndSavePdf(String fileName) async {
-    state = state.copyWith(isLoading: true);
-
-    try {
-      //? Request storage permission for Android
-      if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          state = state.copyWith(error: 'Storage permission denied');
-          return;
-        }
-      }
-
-      //? Make GET request to fetch PDF
-      final response = await  _transactionRepository.getTransactionForExportThree();
-
-      if (response.statusCode == 200) {
-        debugPrint('DOWNLOAD PDF ===> ${response.data}');
-        //? Use file_saver to save the PDF
-        final filePath = await FileSaver.instance.saveFile(
-          name: '$fileName.pdf',
-          bytes: response.data,
-          ext: 'pdf',
-          mimeType: MimeType.pdf,
-        );
-
-        state = state.copyWith(filePath: filePath);
-      } else {
-        state = state.copyWith(error: 'Failed to download PDF: ${response.statusCode}');
-      }
-    } catch (e) {
-      state = state.copyWith(error: 'Error: $e');
-    }
-  }
-
-
 
   Future<void> verifyTransaction(
       String transactionId, String fundingOption) async {
@@ -258,9 +190,9 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
         if (state.docs != null) {
           state = state.copyWith(
-              docs: state.docs, 
+            docs: state.docs,
             //  hasNextPage: state.hasNextPage ?? false
-              );
+          );
           //  docs = viewModel.docs!;
           //hasNextPage = viewModel.hasNextPage ?? false;
         }
@@ -283,7 +215,6 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     /*  setState(() {
       isLoadingMore = true;
     }); */
-
 
     try {
       state = state.copyWith(page: state.page! + 1);

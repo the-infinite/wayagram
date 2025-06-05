@@ -3,6 +3,8 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
+import 'package:wayagram/features/auth/account_creation/view/two_factor_auth.dart';
+import 'package:wayagram/features/activity_logs/view/page_logs.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
@@ -119,10 +121,12 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.d
 import 'package:wayagram/features/shop/views/favorites_product.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/shop/views/seller_shop_products.dart';
+import 'package:wayagram/features/shop/views/top_selling_list.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_leaderboard_contest.dart';
@@ -250,6 +254,7 @@ class WayaAppRoutes {
     EditContestantProfile.route: () => EditContestantProfile(),
     ViewSingleContestantData.route: () => ViewSingleContestantData(),
     ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
+    AllStateContest.route: () => AllStateContest(),
     ContestProfilePage.route: () => ContestProfilePage(
           id: WayaNav.search['id'].toString(),
           contest: WayaNav.search['contest'].toString(),
@@ -380,6 +385,7 @@ class WayaAppRoutes {
     ActivityLog.route: () => ActivityLog(),
     QuotationSellerOrders.route: () => QuotationSellerOrders(),
     VisitedPage.route: () => VisitedPage(),
+    PageLogs.route: () => PageLogs(),
     DonationSettingsPage.route: () => DonationSettingsPage(),
     QuotationSettingsPage.route: () => QuotationSettingsPage(),
     ShopSettingPage.route: () => ShopSettingPage(),
@@ -424,7 +430,10 @@ class WayaAppRoutes {
           eventId: WayaNav.search["id"].toString(),
           eventTitle: WayaNav.search["title"].toString(),
         ),
-    FavoritesProducts.route: () => FavoritesProducts()
+    FavoritesProducts.route: () => FavoritesProducts(),
+        TopSellingList.route: () => TopSellingList(),
+    TwoFactorAuth.route: () =>
+        TwoFactorAuth(email: WayaNav.search["email"].toString())
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -572,8 +581,13 @@ class WayaAppRoutes {
   static String getSellerShopDetailScreen(String vendorId, String shopId) =>
       "${SellerShopProducts.route}?id=$vendorId&shopId=$shopId";
 
-     static String getEventInviteScreen(String id, String title) =>
-      "${EventInvite.route}?id=$id&title=$title";   
+  static String getEventInviteScreen(String id, String title) =>
+      "${EventInvite.route}?id=$id&title=$title";
+
+  static String get2FaScreen(
+    String email, 
+  ) =>
+      "${TwoFactorAuth.route}?email=$email";
 
   /// This is fine.
   static List<GetPage> get getPages {

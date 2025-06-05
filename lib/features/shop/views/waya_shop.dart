@@ -47,31 +47,31 @@ class _WayaShopState extends ConsumerState<WayaShop>
           arguments: 0, preventDuplicates: false),
       title: 'Shop',
       appBarTrailing: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 3,
-            children: [
-              InkWell(
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                   WayaNav.toNamed(FavoritesProducts.route);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.customPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all(6),
-                  child: SvgPicture.asset(
-                    WayaAssets.icons.mSmallHeart.path,
-                    fit: BoxFit.cover,
-                    width: 18,
-                    height: 18,
-                    color: wayaTheme.colorScheme.white,
-                  ),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 3,
+          children: [
+            InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                WayaNav.toNamed(FavoritesProducts.route);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: wayaTheme.colorScheme.customPrimary,
+                  shape: BoxShape.circle,
+                ),
+                padding: EdgeInsets.all(6),
+                child: SvgPicture.asset(
+                  WayaAssets.icons.mSmallHeart.path,
+                  fit: BoxFit.cover,
+                  width: 18,
+                  height: 18,
+                  color: wayaTheme.colorScheme.white,
                 ),
               ),
-              WayaCartIcon(),
-            ]),
+            ),
+            WayaCartIcon(),
+          ]),
       body: Column(
         children: [
           const Gap(10),

@@ -19,7 +19,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_card.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
-import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
@@ -149,7 +148,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         imageUrl.value = value;
       }); */
       notifier.generateVideoPreview(model?.introVideo ?? "").then((value) {
-       
         imagePath.value = value?.path ?? "";
       });
       return null;
@@ -315,7 +313,9 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 ),
                 Positioned(
                   //   bo: -10,
-                  bottom: 10,
+                  bottom: model?.profileId == viewModel.getLoggedInUserId()
+                      ? 10
+                      : -20,
                   left: 20,
                   child: GestureDetector(
                     onTap: () async {

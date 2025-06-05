@@ -88,6 +88,21 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
                   : SellerShop()
         ],
       ),
+      floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () => WayaNav.toNamed(CreateRequest.route),
+            height: 50,
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
+              ),
+            ),
+          ),
+        ),
     );
   }
 }
