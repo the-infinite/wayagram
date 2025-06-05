@@ -60,12 +60,14 @@ class _PayoutMethodScreenState extends ConsumerState<PayoutMethodScreen> {
               bankName: '${viewModel.payoutMethod[index].bankName}',
               wayaTheme: wayaTheme,
               onTap: ()=> ref.watch(walletVmProvider.notifier).deletePayoutMethod(context, id: '${viewModel.payoutMethod[index].id}'),
-              onClick: ()=> WayaNav.toNamed('/enterRequestAmountScreen',
-              arguments: {
-                'id':'${viewModel.payoutMethod[index].id}',
-                'bankName':viewModel.payoutMethod[index].bankName,
-                'acctNumber':viewModel.payoutAccountNumber
-              }),
+              onClick: (){
+                // WayaNav.toNamed('/enterRequestAmountScreen',
+                //     arguments: {
+                //       'id':'${viewModel.payoutMethod[index].id}',
+                //       'bankName':viewModel.payoutMethod[index].bankName,
+                //       'acctNumber':viewModel.payoutAccountNumber
+                //     });
+              }
 
             );
           }),

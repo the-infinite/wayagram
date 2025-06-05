@@ -52,7 +52,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              debugPrint('DIALA POLL ==>> ${ConversationState.self.accountType}');
+              //debugPrint('DIALA POLL ==>> ${ConversationState.self.accountType}');
+              debugPrint('DIALA POLL ==>> ${ConversationState.self.accountTypeId}');
 
               if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
 
