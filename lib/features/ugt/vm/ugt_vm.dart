@@ -510,6 +510,15 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           value: entries.value.id.toString(), label: entries.value.state);
     }).toList();
   }
+  
+  List<Select> ugtStatesExcludedAllState() {
+    var list= states.asMap().entries.map((entries) {
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.state);
+    }).toList();
+    list.removeAt(0);
+    return list;
+  }
 
   List<Select> ugtCategoryStat() {
     return ugtCategoryStates.asMap().entries.map((entries) {

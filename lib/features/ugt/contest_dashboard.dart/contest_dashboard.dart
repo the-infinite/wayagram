@@ -14,6 +14,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/pdf/contestant_pdf.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 
@@ -378,7 +380,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
 
             SizedBox(height: 20),
 
-          
             // Manage Contestants
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -417,6 +418,63 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         },
                         child: _buildProfileItem(context,
                             post.contestApplicant?.fullName ?? "", true),
+                      );
+                    },
+                  ),
+                  /*   _buildProfileItem(context, "Obubra Imengie", true),
+                  Gap(10),
+                  _buildProfileItem(context, "Oluchi Obiano", true),
+                  Gap(10),
+                  _buildProfileItem(context, "Sadiya Wakil", true),
+                  Gap(10),
+                  _buildProfileItem(context, "Ibrahim Ahmad", true),
+                  Gap(10),
+                  _buildProfileItem(context, "Ibrahim Nasiru", true), */
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+
+            // Manage State
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+              decoration: BoxDecoration(
+                // color: Colors.orange[100],
+                border: Border.all(
+                  color: Colors.green[100]!, // Border color
+                  width: 1.0, // Border width
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  GestureDetector(
+                      onTap: () {
+                        WayaNav.toNamed(AllStateContest.route);
+                      },
+                      child: _buildSectionTitle("Manage States", seeAll: true)),
+                  ListView.builder(
+                    // controller: _scrollController,
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: viewModel.listState.length > 6
+                        ? 6
+                        : viewModel.listState.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.isLoading!) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final post = viewModel.listState[index];
+                      return GestureDetector(
+                        onTap: () {
+                          notifier.filterByState(post.state );
+                          WayaNav.toNamed(ManageStateSingleContest.route);
+                        },
+                        child: _buildProfileItem2(
+                            context,
+                            viewModel.listState[index].state ?? "",
+                            viewModel.listState[index].id ?? "0"),
                       );
                     },
                   ),
@@ -545,7 +603,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
       ),
     );
   }
-
 
   Widget _buildStatCard(BuildContext context, String title, String value) {
     final wayaTheme = Theme.of(context);
@@ -747,6 +804,32 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   color: Colors.black,
                   fontSize: 16.sp)),
           Text(isprofile ? "View profile" : "View application",
+              style: TextStyle(
+                  color: wayaTheme.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileItem2(
+      BuildContext context, String name, String numberContestant) {
+    final wayaTheme = Theme.of(context);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      decoration: BoxDecoration(
+        color: wayaTheme.colorScheme.greyColor50,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(name,
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16.sp)),
+          Text("$numberContestant contestants",
               style: TextStyle(
                   color: wayaTheme.primaryColor,
                   fontWeight: FontWeight.w600,
