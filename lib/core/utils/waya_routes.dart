@@ -124,6 +124,7 @@ import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_leaderboard_contest.dart';
@@ -251,6 +252,7 @@ class WayaAppRoutes {
     EditContestantProfile.route: () => EditContestantProfile(),
     ViewSingleContestantData.route: () => ViewSingleContestantData(),
     ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
+    AllStateContest.route: () => AllStateContest(),
     ContestProfilePage.route: () => ContestProfilePage(
           id: WayaNav.search['id'].toString(),
           contest: WayaNav.search['contest'].toString(),

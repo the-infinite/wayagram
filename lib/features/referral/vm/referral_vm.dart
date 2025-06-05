@@ -10,11 +10,8 @@ import '../../../core/data/local_data_source.dart';
 
 class ReferralVm extends StateNotifier<ReferralState> {
   final ReferralRepo _referralRepository;
-  final WayaLocalDataSource _localDataSource;
-//this is ok
 
-  ReferralVm(this._referralRepository, this._localDataSource)
-      : super(ReferralState());
+  ReferralVm(this._referralRepository) : super(ReferralState());
 
   Future<void> getReferralCount() async {
     final response =
@@ -22,7 +19,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
     if (response.success == true) {
       ReferralCountModel responseModel =
           ReferralCountModel.fromJson(response.data);
-      state = state.copyWith(count: responseModel.data?.totalReferrals??0);
+      state = state.copyWith(count: responseModel.data?.totalReferrals ?? 0);
     } else {}
   }
 
@@ -32,7 +29,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
     if (response.success == true) {
       ReferralAmountModel responseModel =
           ReferralAmountModel.fromJson(response.data);
-      state = state.copyWith(count: responseModel.data?.totalAmountEarned??0);
+      state = state.copyWith(count: responseModel.data?.totalAmountEarned ?? 0);
     } else {}
   }
 
@@ -47,11 +44,12 @@ class ReferralVm extends StateNotifier<ReferralState> {
     }
     var list = state.referralListCopy.where((dispute) {
       String name = dispute.referredUser?.displayName ?? "";
-      if (name.contains(filterString)) {
+      if (name.toLowerCase().contains(filterString)) {
         return true;
       }
       return false;
     }).toList();
+   // print("object $list");
     state = state.copyWith(referralList: [...list]);
   }
 
@@ -115,7 +113,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
 
 final referralVm = StateNotifierProvider<ReferralVm, ReferralState>(
   (ref) {
-    return ReferralVm(ReferralRepo(), WayaLocalDataSource());
+    return ReferralVm(ReferralRepo());
   },
 );
 

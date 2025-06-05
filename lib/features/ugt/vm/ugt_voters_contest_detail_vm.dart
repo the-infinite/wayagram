@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide State;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
+import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
@@ -360,15 +361,63 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
             myContestListCopy: myContestantList,
             myFullContestantList: myContestantList2,
             createPostId: model?.id ?? "");
+
+        updateStateList(contestList);
         // _page++;
         //isLoading = false;
       }
       // return contestList;
     } catch (e) {
+      print("ErrorOLODO , ${e.toString()}}");
       _logger.e(e.toString());
     } finally {
       // isLoading = false;
     }
+  }
+
+  void updateStateList(List<MyContestContestantModel> contestList) {
+    Map<String, int> mapState = {};
+    var listStates = <State>[];
+    var listStates2 = <State>[];
+    // var myState = [];
+
+    for (var model in states) {
+      if (model.id != "1") {
+        listStates2.add(State(state: model.state, id: model.id));
+      }
+    }
+
+    for (int i = 0; i < listStates2.length; i++) {
+      mapState[listStates2[i].state] = 0;
+    }
+    for (var contestantModel in contestList) {
+      String contestantState = contestantModel.contestApplicant?.state ?? "";
+
+      // Increment count or initialize to 1
+      if (mapState.containsKey(contestantState)) {
+        mapState[contestantState] = (mapState[contestantState] ?? 0) + 1;
+      }
+    }
+
+    for (var entry in mapState.entries) {
+      print("ErrorOLODO ${entry.key}  ${entry.value.toString()},");
+      listStates.add(State(state: entry.key, id: entry.value.toString()));
+    }
+    listStates.sort((a, b) => b.id.compareTo(a.id));
+    state = state.copyWith(listState: listStates);
+  }
+
+  void filterByState(String stateName) {
+    state = state.copyWith(selectedState: stateName);
+    var listContestant = <MyContestContestantModel>[];
+    for (var contestantModel in state.myFullContestantList) {
+      String contestantState = contestantModel.contestApplicant?.state ?? "";
+
+      if (stateName.toLowerCase() == contestantState) {
+        listContestant.add(contestantModel);
+      }
+    }
+    state = state.copyWith(selectedStateContestants: listContestant);
   }
 
   Future<void> fetchAllContestPosts(String id, {hostApproved = true}) async {
@@ -543,7 +592,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     for (var model in selectedImages) {
       if (!model.type) {
         String mimeType = WayaHelpers.getContentTypeFromPath(model.path) ?? "";
-      
+
         final imageUrl = await WayaFileRepository.instance.uploadFile(
             File(model.path),
             "ugt-image-${Uuid().v4()}.${mimeType.split("/").last}");
@@ -553,7 +602,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (videoFile != null) {
       String mimeType =
           WayaHelpers.getContentTypeFromPath(videoFile.path) ?? "";
-     
 
       videoUrl = await WayaFileRepository.instance.uploadFile(
           File(videoFile.path),

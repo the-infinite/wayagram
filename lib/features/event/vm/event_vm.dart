@@ -180,7 +180,6 @@ class EventVm extends StateNotifier<EventState> {
       if (response.success) {
         WayaNav.goBack();
         WayaSnackBar.showToast("Invite Successfully Sent");
-        
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -337,6 +336,35 @@ class EventVm extends StateNotifier<EventState> {
     } finally {
       state = state.copyWith(isReportingEvent: false);
     }
+  }
+
+  Future<void> updateEventSettings(
+      {required bool letEveryoneJoin, required bool approveJoinRequest}) async {
+    try {
+      await _eventRepository.updateEventSettings(
+          letEveryoneJoin: letEveryoneJoin,
+          approveJoinRequest: approveJoinRequest);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.events,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
+  /// Helper function used to retrieve all of the details of just one conversation.
+  Future<String?> getEventSettings() async {
+    final response = await _eventRepository.getEventSettings();
+
+    //? This is fine.
+    if (response.success) {
+      //  return PrivacySettingsDto.fromJson(response.data['data']);
+    }
+
+    //? Return null if empty
+    return null;
   }
 
   Future<PaginatedResult<Doc>?> getAttendees(

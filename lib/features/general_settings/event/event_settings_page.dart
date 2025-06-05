@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
 
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
 
@@ -24,12 +25,14 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     //? store state of the switch
+    final notifier = ref.watch(eventVmProvider.notifier);
 
-    final notifyDonation = useState(false);
-    final donationPublicPrivate = useState(false);
+    final letEveryOneJoin = useState(false);
+    final approveJoinRequest = useState(false);
 
 //? get user settings to update the UI Once
     useEffect(() {
+      notifier.getEventSettings();
       /*  myFollowProvider.getUserSettings().then((value) {
         if (value != null) {
           restrictRequest.value = value.restrictRequestToPeopleFollow ?? false;
@@ -70,24 +73,22 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
                 value: "Allow only friend to join event created",
                 showSwitch: true,
                 onSwitchChanged: (value) {
-                  /*  myFollowProvider.updateUserSettings(UserSettingsDto(
-                      restrictRequestToPeopleFollow: value,
-                      showPeopleFollowing: showPeopleFollowing.value,
-                      showPeopleFollowMe: showPeopleFollowMe.value)); */
+                  notifier.updateEventSettings(
+                      letEveryoneJoin: value,
+                      approveJoinRequest: letEveryOneJoin.value);
                 },
-                switchValue: notifyDonation),
+                switchValue: letEveryOneJoin),
             Gap(10),
             PrivacyWidget(
                 title: "Approve join request",
                 value: "Approve join request before allow any body to join",
                 showSwitch: true,
                 onSwitchChanged: (value) {
-                  /*  myFollowProvider.updateUserSettings(UserSettingsDto(
-                      restrictRequestToPeopleFollow: restrictRequest.value,
-                      showPeopleFollowing: value,
-                      showPeopleFollowMe: showPeopleFollowMe.value)); */
+                  notifier.updateEventSettings(
+                      letEveryoneJoin: value,
+                      approveJoinRequest: letEveryOneJoin.value);
                 },
-                switchValue: donationPublicPrivate),
+                switchValue: approveJoinRequest),
             Gap(10),
           ],
         ),
