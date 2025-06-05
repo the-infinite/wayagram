@@ -8,6 +8,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/modal/widget/share.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
@@ -70,11 +71,14 @@ class SharePostModal extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
-                          final result = await pageNotifier.bookmarkPost(context, postId: post.id);
+                          final result = await pageNotifier
+                              .bookmarkPost(context, postId: post.id);
                           WayaNav.goBack(
                             result: ShareResult(
                               "save",
-                              result ? ShareResultStatus.success : ShareResultStatus.dismissed,
+                              result
+                                  ? ShareResultStatus.success
+                                  : ShareResultStatus.dismissed,
                             ),
                           );
                         },
@@ -107,13 +111,14 @@ class SharePostModal extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
-                          await WayaNavigationHelper.showComingSoonModal(true);
-                          WayaNav.goBack(
-                            result: ShareResult(
-                              "moment",
-                              ShareResultStatus.unavailable,
-                            ),
-                          );
+                          WayaNav.toNamed(Moment.route,
+                              arguments: {"content": post.url});
+                          // WayaNav.goBack(
+                          //   result: ShareResult(
+                          //     "moment",
+                          //     ShareResultStatus.unavailable,
+                          //   ),
+                          // );
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -147,11 +152,15 @@ class SharePostModal extends StatelessWidget {
                           if (post.url != null) {
                             await WayaUtils.copyText(post.url!);
                             WayaSnackBar.showToast("Copied ${post.url}");
-                            WayaNav.goBack(result: ShareResult("copy", ShareResultStatus.success));
+                            WayaNav.goBack(
+                                result: ShareResult(
+                                    "copy", ShareResultStatus.success));
 
                             return;
                           }
-                          WayaNav.goBack(result: ShareResult("copy", ShareResultStatus.dismissed));
+                          WayaNav.goBack(
+                              result: ShareResult(
+                                  "copy", ShareResultStatus.dismissed));
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -181,11 +190,14 @@ class SharePostModal extends StatelessWidget {
                     //? The fifth option, is to share outward.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => Share.share('${post.url}', subject: 'Share Post URL').then(
+                        onTap: () async => Share.share('${post.url}',
+                                subject: 'Share Post URL')
+                            .then(
                           (value) {
                             if (value.status == ShareResultStatus.success) {
                               // Share the post.
-                              pageNotifier.sharePost(context, postId: post.originalPostId ?? post.id);
+                              pageNotifier.sharePost(context,
+                                  postId: post.originalPostId ?? post.id);
 
                               // Now stop.
                               return;
@@ -235,12 +247,16 @@ class SharePostModal extends StatelessWidget {
 
               //? Then, to share the post.
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
                 child: ShareChatsWidget(url: post.url),
               ),
 
               //? One divider.
-              Divider(color: theme.colorScheme.greyColor200, height: 1, thickness: 3),
+              Divider(
+                  color: theme.colorScheme.greyColor200,
+                  height: 1,
+                  thickness: 3),
 
               // Some space.
               const Gap(13),
@@ -261,7 +277,9 @@ class SharePostModal extends StatelessWidget {
                     //? Second, the button for instagram.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -290,7 +308,9 @@ class SharePostModal extends StatelessWidget {
                     //? Third, the button for snapchat.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -319,7 +339,9 @@ class SharePostModal extends StatelessWidget {
                     //? Fourth, the button for telegram.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -348,7 +370,9 @@ class SharePostModal extends StatelessWidget {
                     //? Fifth, the button for whatsapp.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -391,7 +415,9 @@ class SharePostModal extends StatelessWidget {
                     //? Sixth, the button for facebook.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -420,7 +446,9 @@ class SharePostModal extends StatelessWidget {
                     //? Seventh, the button for LinkedIn.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -449,7 +477,9 @@ class SharePostModal extends StatelessWidget {
                     //? Eighth, the button for snapchat story.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -478,7 +508,9 @@ class SharePostModal extends StatelessWidget {
                     //? Ninth, the button for WhatsApp status.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -507,7 +539,9 @@ class SharePostModal extends StatelessWidget {
                     //? Tenth, the button for Twitter.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
