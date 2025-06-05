@@ -42,6 +42,28 @@ class AuthRepository extends BaseRepository {
         {"oauthProvider": authType, "token": token});
   }
 
+//
+///
+ Future<WayaRequestResponse> toggle2Fa(
+      { required String code, String? purpose}) {
+    final payload = {"code": code};
+
+    if (purpose != null) payload['purpose'] = purpose;
+
+    return post('$serviceUrl/client/auth/toggle-2fa', payload,
+        showErrors: true);
+  }
+
+  Future<WayaRequestResponse> validate2Fa(
+      {required String email, required String code, String? purpose}) {
+    final payload = {"email": email, "code": code};
+
+    if (purpose != null) payload['purpose'] = purpose;
+
+    return post('$serviceUrl/client/auth/validate-2fa', payload,
+        showErrors: true);
+  }
+
   Future<WayaRequestResponse> phoneVerification(String code, String phone) {
     return post('$serviceUrl/client/auth/verify-phone',
         {"otp": code, "phoneNumber": phone, "purpose": 'REGISTER_USER'},
@@ -62,11 +84,9 @@ class AuthRepository extends BaseRepository {
     final payload = {"purpose": purpose};
 
     if (email != null) payload['email'] = email;
-      if (phone != null) payload['phoneNumber'] = phone;
+    if (phone != null) payload['phoneNumber'] = phone;
 
-    return post(
-        '$serviceUrl/client/auth/resend-otp',
-        payload,
+    return post('$serviceUrl/client/auth/resend-otp', payload,
         showErrors: true);
   }
 

@@ -12,6 +12,7 @@ import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
+import 'package:wayagram/features/explore/bottom_sheet/create_sheet.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
@@ -136,7 +137,8 @@ class _ExploreState extends ConsumerState<Explore> {
           SharedMoments(),
           const Gap(25),
           GroupedWidgetHeader(
-            onTap: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
+            onTap: () =>
+                WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
             subTitle: 'Have a buy request, just create a quote',
             title: 'Get Quotation',
           ),
@@ -175,7 +177,8 @@ class _ExploreState extends ConsumerState<Explore> {
           //? For the next section.
           GroupedWidgetHeader(
               onTap: () {
-                WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
+                WayaNav.toNamed(BottomView.route,
+                    arguments: 1, preventDuplicates: false);
               },
               subTitle: 'Explore Categories & Best Offers',
               title: 'Shop'),
@@ -183,7 +186,9 @@ class _ExploreState extends ConsumerState<Explore> {
           CategoriesFilterWidget(setCategory: (value) {
             ref.read(shopVmProvider.notifier).setCategory(value);
             for (String categoryId in value) {
-              ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
+              ref
+                  .read(productEngagementProvider.notifier)
+                  .addCategory(categoryId, ProductPoint.searchPoint.value);
             }
           }),
           const Gap(25),
@@ -196,7 +201,8 @@ class _ExploreState extends ConsumerState<Explore> {
           const Gap(25),
           GroupedWidgetHeader(
             onTap: () => WayaNav.toNamed(DisplayFeed.route),
-            subTitle: 'Explore content based on your interests and interactions.',
+            subTitle:
+                'Explore content based on your interests and interactions.',
             title: 'Discover',
           ),
           const Gap(25),
@@ -303,9 +309,8 @@ class _ExploreState extends ConsumerState<Explore> {
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/createPost');
-          },
+          callback: () =>
+              WayaUtils.showModalSheet(context, child: CreateSheet()),
           height: 50,
           centerWidget: Center(
             child: Icon(

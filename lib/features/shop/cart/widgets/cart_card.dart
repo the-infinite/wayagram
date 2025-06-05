@@ -29,15 +29,21 @@ class _CartCardState extends ConsumerState<CartCard> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     final wayaTheme = Theme.of(context);
     //  final viewModel = ref.watch(cartCardVmProvider);
 
+//? check if the delveryCharge is true and there is no delivery date set by the seller,
+//or if the deliveryOption is delivery and the seller has not set the delivery date
     final bool isDeliveryCharge = widget.cartItem.products.any((prod) =>
-        (prod.deliveryCharge && widget.cartItem.deliveryFee == null) ||
+        (prod.deliveryCharge && widget.cartItem.deliveryDate == null) ||
         (prod.deliveryOptions == 'Delivery' &&
-            widget.cartItem.deliveryAddress == null));
+            widget.cartItem.deliveryDate == null));
+
+//? to cancel delivery during checkout or to know if the delivery date has been added
+    final bool isAddedDeliveryDate = widget.cartItem.products.any((prod) =>
+        (prod.deliveryCharge && widget.cartItem.deliveryDate != null) ||
+        (prod.deliveryOptions == 'Delivery' &&
+            widget.cartItem.deliveryDate != null));
 
     return Column(
       children: [
@@ -76,13 +82,13 @@ class _CartCardState extends ConsumerState<CartCard> {
                               fontSize: 18.sp,
                               color: wayaTheme.colorScheme.customBlack),
                         ),
-                        if (isDeliveryCharge)
-                        Text(
-                          "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not Requested'}",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.greyColor400,
-                              fontSize: 14.sp),
-                        )
+                        if (isDeliveryCharge || isAddedDeliveryDate)
+                          Text(
+                            "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not Requested'}",
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.greyColor400,
+                                fontSize: 14.sp),
+                          )
                       ],
                     )
                   ],
@@ -169,7 +175,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                                 widget.cartItem.shopName,
                                 widget.cartItem.shopLogo);
                       }
-                      WayaNav.toNamed(Checkout.route,
+                      WayaNav.replaceNamed(Checkout.route,
                           arguments: CheckoutArg(
                               cartId: widget.cartId,
                               cartItem: widget.cartItem));
@@ -239,7 +245,9 @@ class CartProductCard extends ConsumerWidget {
                       ),
                       const Gap(5),
                       Text(
-                        WayaHelpers.formatPrice(double.parse(cartProduct.unitPrice).toInt() * cartProduct.quantity),
+                        WayaHelpers.formatPrice(
+                            double.parse(cartProduct.unitPrice).toInt() *
+                                cartProduct.quantity),
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontWeight: FontWeight.w600,

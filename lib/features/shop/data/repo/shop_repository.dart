@@ -45,7 +45,7 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/discount/all?page=$page');
   }
 
-   Future<WayaRequestResponse> fetchFavorites() {
+  Future<WayaRequestResponse> fetchFavorites() {
     return get('$serviceUrl/favorites/all');
   }
 
@@ -62,8 +62,8 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/products/get?id=$id');
   }
 
- //
-Future<WayaRequestResponse> getBanner() {
+  //
+  Future<WayaRequestResponse> getBanner() {
     return get("$serviceUrl/banners/all");
   }
 
@@ -137,6 +137,11 @@ Future<WayaRequestResponse> getBanner() {
   }
 
   //
+  Future<WayaRequestResponse> getTopSellingProducts() {
+    return get('$serviceUrl/products/most-sold');
+  }
+
+  //
   Future<WayaRequestResponse> getShopMetrics({required String shopId}) {
     return get('$serviceUrl/orders/shop-metrics/$shopId');
   }
@@ -153,12 +158,15 @@ Future<WayaRequestResponse> getBanner() {
       "makeProductPostsPublic": makeProductPostsPublic
     });
   }
-    Future<WayaRequestResponse> updateQuotationSettings(
-      bool receiveQuotationRequests, bool makeRequestsPublic, bool displayQuotationRequestsInFeed) {
+
+  Future<WayaRequestResponse> updateQuotationSettings(
+      bool receiveQuotationRequests,
+      bool makeRequestsPublic,
+      bool displayQuotationRequestsInFeed) {
     return patch('$serviceUrl/user-shop/setting', {
-     "receiveQuotationRequests": receiveQuotationRequests,
-    "makeRequestsPublic": makeRequestsPublic,
-    "displayQuotationRequestsInFeed": displayQuotationRequestsInFeed,
+      "receiveQuotationRequests": receiveQuotationRequests,
+      "makeRequestsPublic": makeRequestsPublic,
+      "displayQuotationRequestsInFeed": displayQuotationRequestsInFeed,
     });
   }
 }
