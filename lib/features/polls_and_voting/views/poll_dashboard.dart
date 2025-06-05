@@ -219,7 +219,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
               }
                   : null,
               centerWidget: LoadingState(
-                  loading: viewModel.isLoading, text: 'Request Settlement'),
+                  loading: viewModel.isLoading, text: 'Request Payout'),
             ):
             Container(),
           ],
