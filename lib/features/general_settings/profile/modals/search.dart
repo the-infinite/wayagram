@@ -347,7 +347,7 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                       values: RangeValues((start ?? 0).toDouble(), (end ?? 0.0).toDouble()),
                       min: filterSections.minCount.toDouble(),
                       max: filterSections.maxCount.toDouble(),
-                      divisions: 1000000,
+                      divisions: filterSections.maxCount,
                       labels: RangeLabels((start ?? 0).toString(), (end ?? 0).toString()),
                       onChanged: (newValues) {
                         startingActivity.value = newValues.start.toInt();
@@ -407,7 +407,8 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                       controller: startingTime,
                       hintText: 'Starting date',
                       label: 'Start Date',
-                      initialDate: DateTime.now().subtract(const Duration(days: 4)),
+                      firstDate: DateTime.now().subtract(const Duration(days: 3652, minutes: 30)),
+                      initialDate: startingTime.value ?? DateTime.now().subtract(const Duration(days: 4)),
                     ),
                   ),
 
@@ -416,8 +417,9 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                     child: WayaDatePicker(
                       controller: endingTime,
                       hintText: 'Ending date',
+                      firstDate: DateTime.now().subtract(const Duration(days: 3652, minutes: 30)),
                       label: 'End Date',
-                      initialDate: DateTime.now(),
+                      initialDate: endingTime.value ?? DateTime.now(),
                     ),
                   ),
                 ],
@@ -435,7 +437,7 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                   //? How is this too?
                   widget.searchManager.value = BaseFilterModel(
                     isPromoted: promotionEnabled.value,
-                    categories: categoriesSelected,
+                    categories: categoriesSelected.isEmpty ? null : categoriesSelected,
                     timeStart: startingTime.value,
                     timeEnd: endingTime.value,
                     activityStart: startingActivity.value,
