@@ -143,6 +143,15 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             ],
           ),
             const Gap(10),
+            DateTime.now().isAfter(DateTime.parse("${args['endDate']}"))?
+            Text(
+              '0 days: 0hrs: 0min: 0sec',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 14.sp,
+                  fontFamily: WayaConstants.fontFamily,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primary500 ),
+            ):
             Text(
               _formatDuration(remainingTime),
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
