@@ -10,14 +10,16 @@ import 'private_profile.dart';
 import 'public_profile.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
-  static const route = '/profile-page';
+  static const route = '/p';
   final String id;
+  final String? username;
   final String source;
 
   // Construct.
   const ProfilePage({
     super.key,
     required this.id,
+    required this.username,
     required this.source,
   });
 

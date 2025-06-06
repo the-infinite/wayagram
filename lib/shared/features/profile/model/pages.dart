@@ -48,6 +48,8 @@ class PageModel extends BaseModel<PageModel>{
     required this.owner,
   });
 
+  int get engagementCount => followerCount;
+
   DateTime get createdAt => aCreatedAt ?? bCreatedAt!;
   DateTime get updatedAt => aUpdatedAt ?? bUpdatedAt!;
 
