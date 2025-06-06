@@ -233,6 +233,7 @@ class WayaAppRoutes {
     ProfilePage.route: () => ProfilePage(
           id: WayaNav.search['id'].toString(),
           source: WayaNav.search['source'].toString(),
+          username: WayaNav.search['u'],
         ),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
@@ -443,8 +444,8 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getProfileRoute(String id, [String source = 'any']) =>
-      "${ProfilePage.route}?id=$id&source=$source";
+  static String getProfileRoute(String id, [String source = 'any', String? username,]) =>
+      "${ProfilePage.route}?${username != null ? 'u=$username' : 'id=$id&source=$source'}";
 
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.

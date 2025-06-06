@@ -73,6 +73,8 @@ class PostModel extends BaseModel<PostModel> {
     this.originalPost,
   });
 
+  int get engagementCount => commentCount + likeCount + shareCount;
+
   PostModel copyWith({
     String? id,
     String? userId,
