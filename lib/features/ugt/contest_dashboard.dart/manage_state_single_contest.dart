@@ -8,6 +8,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 
@@ -16,17 +18,22 @@ class ManageStateSingleContest extends StatefulHookConsumerWidget {
   const ManageStateSingleContest({super.key});
 
   @override
-  ConsumerState<ManageStateSingleContest> createState() => _ManageStateContestState();
+  ConsumerState<ManageStateSingleContest> createState() =>
+      _ManageStateContestState();
 }
 
 class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(votersContestNotifier);
+    // final notifier = ref.read(votersContestNotifier.notifier);
+    var model = ref.watch(selectedContestProvider.notifier).state;
+    var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      title: "Lagos States",
+      title: "${viewModel.selectedState} State",
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         //  padding: EdgeInsets.all(),
@@ -39,8 +46,10 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Overview",
-                    style: wayaTheme.textTheme.hintStyle
-                        .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w400, color: Colors.black)),
+                    style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black)),
               ],
             ),
             const Gap(20),
@@ -50,7 +59,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                 _buildStatCard(
                     context,
                     "Number of Contestants",
-                    "57",
+                    viewModel.selectedStateContestants.length.toString(),
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
@@ -66,15 +75,48 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
-                  GestureDetector(
+                  /*  GestureDetector(
                       onTap: () {
-                        WayaNav.toNamed('/contest-active-disqualify');
+                      //  WayaNav.toNamed('/contest-active-disqualify');
                       },
-                      child: _buildStateItem(context, "Obubra Inengite", "")),
+                      child: _buildStateItem(context, "Obubra Inengite", "")), */
                   Gap(20),
-                  _buildStateItem(context, "Oluchi Obiano", ""),
-                  Gap(20),
-                  _buildStateItem(context, "Sadiya Wakili", ""),
+                  ListView.builder(
+                    // controller: _scrollController,
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: viewModel.selectedStateContestants.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.isLoading!) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final post = viewModel.selectedStateContestants[index];
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(selectedContestantProfile.notifier).state =
+                              post;
+                          viewModelNotifier.updateContestId(model?.id);
+                          ref.read(selectedContestProvider.notifier).state =
+                              model;
+                          WayaNav.toNamed(
+                            '/contest-profile-page',
+                          );
+                          /*   notifier.filterByState(post.state );
+                          WayaNav.toNamed(ManageStateSingleContest.route); */
+                        },
+                        child: Column(
+                          children: [
+                            _buildStateItem(
+                                context,
+                                post.contestApplicant?.fullName ?? "",
+                                post.profilePhoto ?? ""),
+                            Gap(10)
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -86,7 +128,8 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String title, String value, Widget widget) {
+  Widget _buildStatCard(
+      BuildContext context, String title, String value, Widget widget) {
     final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
@@ -104,7 +147,9 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
+                Text(title,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
                 Container(
                   width: 50.w, // Must be equal to height for a perfect circle
                   height: 50.w,
@@ -121,7 +166,8 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
               ],
             ),
             Gap(10),
-            Text(value, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            Text(value,
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -194,7 +240,8 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
 //     );
 //   }
 
-  Widget _buildStateItem(BuildContext context, String state, String contestants) {
+  Widget _buildStateItem(
+      BuildContext context, String name, String profileImage) {
     final wayaTheme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,21 +249,38 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
         Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(45),
-              child: Image.asset(
-                'assets/images/frameuni.png',
-                height: 45,
-                width: 45,
-                fit: BoxFit.cover, // Ensures the image covers the area properly
-              ),
-            ),
+                borderRadius:
+                    BorderRadius.circular(45), // Adjust the radius as needed
+                child: WayaImage(
+                  imageUrl: profileImage,
+                  height: 45,
+                  width: 45,
+                  fit: BoxFit.cover,
+                  radius: BorderRadius.circular(45),
+                )
+
+                /*    Image.network(
+                    contestantData.profilePhoto ?? "",
+                    height: 45,
+                    width: 45,
+                    fit: BoxFit
+                        .cover, // Ensures the image covers the area properly
+                  ), */
+                ),
             Gap(15),
-            Text(state, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 16.sp)),
+            Text(name,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 16.sp)),
           ],
         ),
         Row(
           children: [
-            Text(contestants, style: TextStyle(color: wayaTheme.colorScheme.greyColor700, fontSize: 14.sp)),
+            Text("",
+                style: TextStyle(
+                    color: wayaTheme.colorScheme.greyColor700,
+                    fontSize: 14.sp)),
             Gap(10),
             Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
             Gap(10)

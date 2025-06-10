@@ -75,4 +75,19 @@ class EventRepository extends BaseRepository {
   Future<WayaRequestResponse> getSingleEvent(String id) {
     return get("$serviceUrl/events/get-event?id=$id");
   }
+
+  Future<WayaRequestResponse> updateEventSettings(
+      {required bool letEveryoneJoin, required bool approveJoinRequest}) {
+    return patch(
+        "$serviceUrl/events-settings/update",
+        {
+          "letEveryoneJoin": letEveryoneJoin,
+          "approveJoinRequest": approveJoinRequest
+        },
+        showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getEventSettings() {
+    return get("$serviceUrl/events-settings");
+  }
 }

@@ -16,7 +16,7 @@ class GroupRepository extends BaseRepository {
       "name": groupName,
       "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
-      //"isOpen": false, // this defaults to true if it is not inserted
+      "isOpen": groupType, // this defaults to true if it is not inserted
       "coverImage": coverImage,
       "profileImage": profileImage,
       "categories": [category]
@@ -149,7 +149,7 @@ class GroupRepository extends BaseRepository {
 
 
   // recommended groups
-  Future<WayaRequestResponse> recommendedGroup({int? page = 1, int? limit = 10}) {
+  Future<WayaRequestResponse> recommendedGroup({int? page = 1, int? limit = 40}) {
     return get("$serviceUrl/groups/recommended?page=$page&limit=$limit");
   }
 

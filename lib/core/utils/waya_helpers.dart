@@ -22,8 +22,9 @@ class WayaHelpers {
 
     return mimeType ?? 'application/octet-stream';
   }
+
   //?using imagePath
-    static String? getContentTypeFromPath(String contentPathUrl) {
+  static String? getContentTypeFromPath(String contentPathUrl) {
     final mimeType = lookupMimeType(contentPathUrl);
 
     return mimeType ?? 'application/octet-stream';
@@ -66,7 +67,7 @@ class WayaHelpers {
   }
 
   static String formatPrice(int price) {
-    String formattedCurrency = NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
+    final formattedCurrency = NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
 
     return formattedCurrency;
   }

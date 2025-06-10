@@ -583,7 +583,7 @@ class GroupVm extends StateNotifier<GroupState> {
   }
 
   Future<void> getRecommendedGroups({int? page = 1,
-    int? limit = 10,
+    int? limit = 40,
     bool? hasNextPage,
     }) async {
     try {

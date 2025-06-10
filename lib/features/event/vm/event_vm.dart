@@ -7,6 +7,7 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/bottom_sheets/share/social_share.dart';
+import 'package:wayagram/features/event/data/model/event_setting_response.dart';
 import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
@@ -180,7 +181,6 @@ class EventVm extends StateNotifier<EventState> {
       if (response.success) {
         WayaNav.goBack();
         WayaSnackBar.showToast("Invite Successfully Sent");
-        
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -337,6 +337,35 @@ class EventVm extends StateNotifier<EventState> {
     } finally {
       state = state.copyWith(isReportingEvent: false);
     }
+  }
+
+  Future<void> updateEventSettings(
+      {required bool letEveryoneJoin, required bool approveJoinRequest}) async {
+    try {
+      await _eventRepository.updateEventSettings(
+          letEveryoneJoin: letEveryoneJoin,
+          approveJoinRequest: approveJoinRequest);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.events,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
+  /// Helper function used to retrieve all of the details of just one conversation.
+  Future<EventSettingResponse?> getEventSettings() async {
+    final response = await _eventRepository.getEventSettings();
+
+    //? This is fine.
+    if (response.success) {
+        return EventSettingResponse.fromJson(response.data['data']);
+    }
+
+    //? Return null if empty
+    return null;
   }
 
   Future<PaginatedResult<Doc>?> getAttendees(

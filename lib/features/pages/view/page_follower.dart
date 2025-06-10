@@ -30,7 +30,8 @@ class _PageFollowerScreenState extends ConsumerState<PageFollowerScreen> with Si
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      notifier.getPageFollowers(args['pageId']);
+      notifier.getPageFollowers('${args['pageId']}');
+      //notifier.getPageFollowers(widget.id);
     });
   }
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -171,6 +170,25 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     try {
       final response =
           await _authRepository.verify(VerifyOtp(email: email, otp: code));
+      if (response.success) {
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> verifyPayout(
+      {required VoidCallback onSuccess,
+        required String code,
+        required String email}) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final response =
+      await _authRepository.verifyPayout(email, code);
       if (response.success) {
         onSuccess();
       }

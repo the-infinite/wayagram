@@ -123,7 +123,7 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
                   height: 36.h,
                   radius: 30.0,
                   color: wayaTheme.colorScheme.onPrimary.withOpacity(0.4),
-                  text: 'Request Payout',
+                  text: 'Add Payout Method',
                   textStyle: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
                   callback: () {
                     debugPrint('Request ==>> Wallet');
