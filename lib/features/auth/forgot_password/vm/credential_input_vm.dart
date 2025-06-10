@@ -103,11 +103,6 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     }
   }
 
-  /**
-   WayaNav.toNamed(TransactionPinView.route,
-                         
-   */
-
   Future<void> onToTransactionPin({VoidCallback? onSuccess}) async {
     try {
       state = state.copyWith(isLoading: true);
