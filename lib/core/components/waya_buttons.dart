@@ -613,7 +613,7 @@ class WayaActionButton extends StatelessWidget {
   final String description;
   final double iconSize;
   final double spacing;
-  final Color? iconBackground;
+  final Color? iconBackground, titleColor, textColor;
   final FutureOr<void> Function() callback;
 
   // Construct.
@@ -626,6 +626,8 @@ class WayaActionButton extends StatelessWidget {
     this.iconSize = 24,
     this.spacing = 2,
     this.iconBackground,
+    this.titleColor,
+    this.textColor,
   });
 
   @override
@@ -666,7 +668,9 @@ class WayaActionButton extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyBold,
+              style: theme.textTheme.bodyBold.copyWith(
+                color: titleColor,
+              ),
             ),
 
             //* The body of this action button.
@@ -676,6 +680,7 @@ class WayaActionButton extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.descriptionStyle.copyWith(
                 fontSize: 13.sp,
+                color: textColor,
               ),
             )
           ],

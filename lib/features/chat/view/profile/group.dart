@@ -7,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/modals/clear.dart';
 import 'package:wayagram/features/chat/modals/group/leave.dart';
 import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/group/report.dart';
@@ -36,10 +37,12 @@ class GroupChatProfilePage extends StatefulWidget {
 class _GroupChatProfilePageState extends State<GroupChatProfilePage> {
   late final notifier = widget.ref.read(conversationProvider.notifier);
   final tabController = ValueNotifier(0);
+  final clearLoader = ValueNotifier(false);
 
   @override
   void dispose() {
     tabController.dispose();
+    clearLoader.dispose();
     super.dispose();
   }
 
@@ -208,6 +211,43 @@ class _GroupChatProfilePageState extends State<GroupChatProfilePage> {
                   ),
                 ),
               ],
+            ),
+
+            // Some more space.
+            Gap(20.h),
+
+            //? Next, the section for media shared in the messages.
+            Text(
+              "Chat Settings",
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.greyColor300,
+              ),
+            ),
+
+            // Some space.
+            Gap(5.h),
+
+            //? First, a button for clearing all the messages off in a chat.
+            WayaProgressiveButton(
+              callback: () => WayaUtils.showModalSheet(
+                context,
+                child: ClearChatModal(
+                  chat: widget.chat,
+                  notifier: notifier,
+                ),
+              ),
+              text: "Clear Chat",
+              color: theme.colorScheme.error50,
+              textColor: theme.colorScheme.error,
+              leadingIcon: WayaAssets.images.pages.delete.svg(
+                height: 18.sp,
+                width: 18.sp,
+                colorFilter: ColorFilter.mode(
+                  theme.colorScheme.error,
+                  BlendMode.srcIn,
+                ),
+              ),
+              notifier: clearLoader,
             ),
 
             //? If this is for the group chat.

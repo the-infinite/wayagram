@@ -177,7 +177,7 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+      behavior: HitTestBehavior.translucent,
       onLongPress: widget.onLongPress,
       onPanUpdate: (details) {
         if (details.delta.dx > widget.swipeSensitivity && widget.onRightSwipe != null) {

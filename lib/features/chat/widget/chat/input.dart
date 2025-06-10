@@ -54,6 +54,9 @@ class ChatInputController {
   /// Our momentId.
   String? _momentId;
 
+  /// Our current widget reference.
+  WidgetRef? _ref;
+
   /// Where we keep the voice note currently being sent in chat.
   final _voiceMessage = ValueNotifier<String?>(null);
 
@@ -324,6 +327,14 @@ class ChatInputController {
     return _textController.text.trim();
   }
 
+  /// A helper function used to set the current widget reference.
+  void setRef(WidgetRef ref) {
+    _ref = ref;
+  }
+
+  /// A helper used to get the current widget reference.
+  WidgetRef? get ref  => _ref;
+
   /// A helper used to get the chat that is currently being controlled by this
   /// controller.
   ChatModel get chat => _chat!;
@@ -380,6 +391,9 @@ class ChatInputWidget extends StatefulWidget {
   final bool voiceEnabled;
   final bool padded;
   final Future<ChatModel?> Function() createChat;
+  final bool isDark;
+  final Color? backgroundColor;
+  final Color? grayColor;
 
   // Construct.
   const ChatInputWidget({
@@ -388,8 +402,11 @@ class ChatInputWidget extends StatefulWidget {
     required this.notifier,
     required this.createChat,
     required this.focusNode,
+    this.isDark = false,
     this.voiceEnabled = true,
     this.padded = true,
+    this.backgroundColor,
+    this.grayColor,
   });
 
   @override
@@ -404,8 +421,12 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
   void _addAttachment(BuildContext context) async {
     final result = await WayaUtils.showModalSheet<AttachmentResult>(
       context,
+      backgroundColor: widget.backgroundColor,
       child: ChatAttachmentDialog(
         controller: widget.controller,
+        isDarkMode: widget.isDark,
+        backgroundColor: widget.backgroundColor,
+        grayColor: widget.grayColor,
       ),
     );
 
@@ -633,6 +654,7 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                         message: message,
                         controller: widget.controller,
                         chat: chat!,
+                        isDarkMode: widget.isDark,
                       );
                     },
                   ),
@@ -682,11 +704,11 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                               : WayaButton(
                                   callback: () => _addAttachment(context),
                                   height: null,
-                                  color: WayaColors.greyColor200,
+                                  color: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
                                   horizontalPadding: 10,
                                   verticalPadding: 10,
                                   centerWidget: WayaAssets.icons.cButtonAttach.svg(
-                                    color: WayaColors.black,
+                                    color: widget.isDark ? Colors.white : WayaColors.black,
                                     height: 18,
                                     width: 18,
                                   ),
@@ -740,7 +762,9 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                     widget.controller._isTyping.value = false;
                                   })();
                                 },
-                                style: WayaTextStyles.labelMedium,
+                                style: WayaTextStyles.labelMedium.copyWith(
+                                  color: widget.isDark ? Colors.white : null,
+                                ),
                                 decoration: InputDecoration(
                                   isDense: true,
                                   contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
@@ -748,11 +772,15 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                     borderSide: BorderSide.none,
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
-                                  fillColor: WayaColors.greyColor200,
+                                  fillColor: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
                                   filled: true,
                                   hintText: "Write a message here",
-                                  hintStyle: WayaTextStyles.hintStyle,
-                                  labelStyle: WayaTextStyles.labelSmall,
+                                  hintStyle: WayaTextStyles.hintStyle.copyWith(
+                                    color: widget.isDark ? Colors.white : null,
+                                  ),
+                                  labelStyle: WayaTextStyles.labelSmall.copyWith(
+                                    color: widget.isDark ? Colors.white : null,
+                                  ),
                                 ),
                                 textInputAction: TextInputAction.newline,
                                 keyboardType: TextInputType.multiline,
@@ -788,11 +816,11 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                   secondChild: WayaButton(
                                     callback: null,
                                     height: null,
-                                    color: WayaColors.greyColor200,
+                                    color: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
                                     horizontalPadding: 10,
                                     verticalPadding: 10,
                                     centerWidget: WayaAssets.icons.cSend.svg(
-                                      color: WayaColors.black,
+                                      color: widget.isDark ? Colors.white : WayaColors.black,
                                       height: 18,
                                       width: 18,
                                     ),
@@ -829,11 +857,11 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                       firstChild: WayaButton(
                                         callback: _recordVoiceNote,
                                         height: null,
-                                        color: WayaColors.greyColor200,
+                                        color: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
                                         horizontalPadding: 10,
                                         verticalPadding: 10,
                                         centerWidget: WayaAssets.icons.cButtonVoicenote.svg(
-                                          color: WayaColors.black,
+                                          color: widget.isDark ? Colors.white : WayaColors.black,
                                           height: 18,
                                           width: 18,
                                         ),
@@ -841,11 +869,11 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                       secondChild: WayaButton(
                                         callback: widget.controller.stopRecording,
                                         height: null,
-                                        color: WayaColors.greyColor200,
+                                        color: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
                                         horizontalPadding: 10,
                                         verticalPadding: 10,
                                         centerWidget: WayaAssets.icons.cStop.svg(
-                                          color: WayaColors.black,
+                                          color: widget.isDark ? Colors.white : WayaColors.black,
                                           height: 18,
                                           width: 18,
                                         ),
