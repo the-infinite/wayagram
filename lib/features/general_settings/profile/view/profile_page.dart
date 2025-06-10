@@ -39,7 +39,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         if (data == null) return const SizedBox();
 
         //? If this user is the one currently logged in.
-        if (widget.id == ConversationState.self.id) {
+        if (data.$1.id == ConversationState.self.id) {
           return MyProfilePage(
             data: data,
             source: widget.source,
