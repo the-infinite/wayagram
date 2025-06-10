@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
@@ -222,9 +223,17 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             DateTime.now().isAfter(DateTime.parse("${args['endDate']}")) ?
             WayaButton(
               callback: !viewModel.isLoading
-                  ? ()  async{
-                await ref.read(createPollVotingProvider.notifier).
-                requestSettlement(context, args['id']);
+                  ? ()  {
+                  debugPrint('DASHBOARD POLLID ${args['id']} ');
+                ref.read(credentialInputProvider.notifier)
+                    .onSubmitPayoutPin(
+                        () => WayaNav.toNamed('/payoutVerification',
+                            arguments: {
+                              "PollId": args['id']
+                            }) );
+
+                // await ref.read(createPollVotingProvider.notifier).
+                // requestSettlement(context, args['id']);
               }
                   : null,
               centerWidget: LoadingState(

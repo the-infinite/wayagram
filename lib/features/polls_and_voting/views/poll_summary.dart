@@ -13,6 +13,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
@@ -20,6 +22,7 @@ import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 import '../../../shared/features/user/models/default.dart';
 import '../../auth/account_creation/vm/successful_setup_vm.dart';
+import '../data/model/account_type_model.dart';
 
 class PollSummary extends ConsumerStatefulWidget {
   static const route = '/poll-summary';
@@ -31,6 +34,14 @@ class PollSummary extends ConsumerStatefulWidget {
 
 class _PollSummaryState extends ConsumerState<PollSummary>  {
 
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(createPollVotingProvider.notifier).fetchAccountType();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -52,10 +63,12 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              //debugPrint('DIALA POLL ==>> ${ConversationState.self.accountType}');
-              debugPrint('DIALA POLL ==>> ${ConversationState.self.accountTypeId}');
 
-              if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
+              //debugPrint('DIALA POLL ==>> ${ConversationState.self.accountType}');
+              debugPrint('DIALA POLL ==>> ${viewModel.accountType }');
+
+             // if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
+              if (viewModel.pollType == 'paid' &&  viewModel.accountType  == 'PERSONAL') {
 
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
@@ -67,7 +80,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                       secondButtonText: 'Cancel',
                       icon: Image.asset('assets/images/cp-shop.png'));
                 });
-              } if(viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.business){
+              //} if(viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.business){
+              } if(viewModel.pollType == 'paid' && viewModel.accountType  == 'BUSINESS'){
                 await ref.read(createPollVotingProvider.notifier).createPoll(
                     context,
                     viewModel.pollTitle.text,
@@ -81,7 +95,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.pollDescription.text,
                 );
                 //poll.reset();
-              }if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.business){
+             // }if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.business){
+              }if(viewModel.pollType == 'free' && viewModel.accountType  == 'BUSINESS'){
                 await ref.read(createPollVotingProvider.notifier).createFreePoll(
                     context,
                     viewModel.pollTitle.text,
@@ -96,7 +111,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                 );
                 //poll.reset();
               }
-              if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.personal){
+              //if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.personal){
+              if(viewModel.pollType == 'free' && viewModel.accountType  == 'PERSONAL'){
                 await ref.read(createPollVotingProvider.notifier).createFreePoll(
                     context,
                     viewModel.pollTitle.text,

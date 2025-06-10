@@ -181,6 +181,25 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     }
   }
 
+  Future<void> verifyPayout(
+      {required VoidCallback onSuccess,
+        required String code,
+        required String email}) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final response =
+      await _authRepository.verifyPayout(email, code);
+      if (response.success) {
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<void> resendOtp() async {
     try {
       final email = ref.watch(personalFirstStepProvider).email.text;
