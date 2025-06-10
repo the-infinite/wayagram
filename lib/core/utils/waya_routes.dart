@@ -74,6 +74,7 @@ import 'package:wayagram/features/pages/view/search_group_and_page.dart';
 import 'package:wayagram/features/pages/view/search_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
+import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
@@ -280,6 +281,7 @@ class WayaAppRoutes {
     PageSetting.route: () => PageSetting(),
     SearchGroupAndPage.route: () => SearchGroupAndPage(),
     SearchGroup.route: () => SearchGroup(),
+    PayoutVerification.route: () => PayoutVerification(),
     SearchTransaction.route: () => SearchTransaction(),
     UpcomingContestDetails.route: () => UpcomingContestDetails(),
     CreateProfile.route: () => CreateProfile(),
