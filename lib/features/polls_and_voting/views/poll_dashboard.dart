@@ -90,7 +90,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
           children: [
             const Gap(10),
             Text(
-              'Dashboard',
+              'Poll and voting Dashboard',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
