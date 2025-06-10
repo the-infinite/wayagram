@@ -89,8 +89,12 @@ class EventDoc extends BaseModel<EventDoc> {
   final String privacyOption;
   final String version;
   final bool isDeleted;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  int get engagementCount => noOfAttendees;
+
+  double get earnings => totalRevenue.toDouble();
 
   EventDoc(
       {required this.id,
@@ -144,14 +148,11 @@ class EventDoc extends BaseModel<EventDoc> {
         privacyOption: json["privacyOption"],
         version: json["_v"],
         isDeleted: json["isDeleted"],
-        createdAt: json["createdAt"],
-        updatedAt: json["updatedAt"],
-        ticketSalesStartDate: json["ticketSalesStartDate"] != null
-            ? DateTime.parse(json["ticketSalesStartDate"])
-            : null,
-        ticketSalesEndDate: json["ticketSalesEndDate"] != null
-            ? DateTime.parse(json["ticketSalesEndDate"])
-            : null);
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
+        ticketSalesStartDate:
+            json["ticketSalesStartDate"] != null ? DateTime.parse(json["ticketSalesStartDate"]) : null,
+        ticketSalesEndDate: json["ticketSalesEndDate"] != null ? DateTime.parse(json["ticketSalesEndDate"]) : null);
   }
 
   @override

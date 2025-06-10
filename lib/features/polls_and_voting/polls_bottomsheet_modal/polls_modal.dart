@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 
@@ -476,6 +477,201 @@ class _PollPinEntryBottomSheetState extends ConsumerState<PollPinEntryBottomShee
                         }
                         // _submitPin,
                         );
+                  } else {
+                    return _buildKeypadButton(
+                      child: Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),
+                      onPressed: () => _addDigit('${index + 1}'),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildKeypadButton({required Widget child, required VoidCallback onPressed}) {
+    return Material(
+      color: Colors.transparent,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
+      child: InkWell(
+        customBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
+        onTap: onPressed,
+        child: Container(
+          alignment: Alignment.center,
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+
+class PinEntryBottomSheet2 extends ConsumerStatefulWidget {
+  final String pollId;
+
+  const PinEntryBottomSheet2(
+      {super.key, required this.pollId});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _PinEntryBottomSheet2State();
+}
+
+class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
+  String _pin = '';
+  final int _pinLength = 4;
+
+  void _addDigit(String digit) {
+    if (_pin.length < _pinLength) {
+      setState(() {
+        _pin += digit;
+      });
+    }
+  }
+
+  void _removeDigit() {
+    if (_pin.isNotEmpty) {
+      setState(() {
+        _pin = _pin.substring(0, _pin.length - 1);
+      });
+    }
+  }
+
+  // void _submitPin() {
+  //   if (_pin.length == _pinLength) {
+  //
+  //     WayaNav.goBack();
+  //
+  //      WayaUtils.showModalSheet(
+  //       context,
+  //       child: DonationGenerosityModal(),
+  //     );
+  //
+  //
+  //
+  //   }
+  // }
+
+  void _submitPin() async {
+    if (_pin.length == _pinLength) {
+      var isPass = await ref.read(donationVmProvider.notifier).verifyWalletPin(_pin, context);
+       debugPrint('PINENTRY POLLID ==>> ${widget.pollId}');
+      if (isPass) {
+
+        ref.read(createPollVotingProvider.notifier).
+        requestSettlement(context, widget.pollId);
+
+
+      } else {
+        WayaNav.goBack();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Invalid pin',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  //final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
+
+  @override
+  Widget build(BuildContext context) {
+    //debugPrint('DARLINGTON AMOUNT ${widget.amount}');
+    //final viewModel = ref.watch(donationVmProvider.notifier);
+    return SafeArea(
+      child: Container(
+        height: 490.h,
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Enter your PIN',
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+            GridView.builder(
+              itemCount: _pinLength,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 1.5,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 12,
+              ),
+              itemBuilder: (context, index) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.grey[300]!,
+                    width: 1,
+                  ),
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: index < _pin.length
+                      ? Text("*",
+                      style: TextStyle(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ))
+                      : null,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Expanded(
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.7,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: 12,
+                itemBuilder: (context, index) {
+                  if (index == 9) {
+                    return _buildKeypadButton(
+                      child: const Icon(Icons.backspace, color: Colors.black54),
+                      onPressed: _removeDigit,
+                    );
+                  } else if (index == 10) {
+                    return _buildKeypadButton(
+                      child: Text('0', style: TextStyle(fontSize: 20.sp)),
+                      onPressed: () => _addDigit('0'),
+                    );
+                  } else if (index == 11) {
+                    return _buildKeypadButton(
+                        child: const Icon(Icons.arrow_forward, color: Colors.black54),
+                        onPressed: () {
+                          //final userId = _wayaLocalDataSource.getUserId();
+                          if (_pin.length == _pinLength) {
+                            // viewModel.submitPins(context);
+                            // viewModel.verifyWalletPin(_pin);
+                            //WayaNav.goBack();
+                            _submitPin();
+                          }
+                        }
+                      // _submitPin,
+                    );
                   } else {
                     return _buildKeypadButton(
                       child: Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),

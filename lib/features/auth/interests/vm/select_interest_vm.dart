@@ -16,9 +16,7 @@ class SelectedInterest {
   SelectedInterest({required this.category, required this.interest});
 
   SelectedInterest copyWith({String? category, List<String>? interest}) {
-    return SelectedInterest(
-        category: category ?? this.category,
-        interest: interest ?? this.interest);
+    return SelectedInterest(category: category ?? this.category, interest: interest ?? this.interest);
   }
 }
 
@@ -30,21 +28,23 @@ class States {
   final List<UserInterest> userInterests;
   final List<String> prevSelected;
 
-  States(
-      {this.isLoading = false,
-      this.interests = const [],
-      this.selected = const [],
-      this.prevSelected = const [],
-      this.userInterests = const [],
-      this.isPostingInterest = false});
+  States({
+    this.isLoading = false,
+    this.interests = const [],
+    this.selected = const [],
+    this.prevSelected = const [],
+    this.userInterests = const [],
+    this.isPostingInterest = false,
+  });
 
-  States copyWith(
-      {bool? isLoading,
-      List<RestructuredCategory>? interests,
-      bool? isPostingInterest,
-      List<UserInterest>? userInterests,
-      List<String>? prevSelected,
-      List<String>? selected}) {
+  States copyWith({
+    bool? isLoading,
+    List<RestructuredCategory>? interests,
+    bool? isPostingInterest,
+    List<UserInterest>? userInterests,
+    List<String>? prevSelected,
+    List<String>? selected,
+  }) {
     return States(
         isLoading: isLoading ?? this.isLoading,
         userInterests: userInterests ?? this.userInterests,
@@ -53,6 +53,9 @@ class States {
         prevSelected: prevSelected ?? this.prevSelected,
         interests: interests ?? this.interests);
   }
+
+  List<UserInterest> get selectedCategories =>
+      userInterests.where((interest) => selected.contains(interest.interest.id)).toList();
 }
 
 class SelectInterestVm extends StateNotifier<States> {
@@ -67,10 +70,8 @@ class SelectInterestVm extends StateNotifier<States> {
 
       List<RestructuredCategory>? allInterests;
       if (response.success) {
-        InterestsResponseModel responseModel =
-            InterestsResponseModel.fromJson(response.data);
-        List<RestructuredCategory> data =
-            restructureCategoriesRefined(responseModel.data);
+        InterestsResponseModel responseModel = InterestsResponseModel.fromJson(response.data);
+        List<RestructuredCategory> data = restructureCategoriesRefined(responseModel.data);
         state = state.copyWith(interests: data);
         allInterests = data;
       }
@@ -89,17 +90,15 @@ class SelectInterestVm extends StateNotifier<States> {
 
   Future<void> getUserInterest() async {
     try {
-      final response = await _repository.getSelectedInterests(
-          userId: ConversationState.self.id);
+      final response = await _repository.getSelectedInterests(userId: ConversationState.self.id);
 
       if (response.success) {
-        SelectedInterestsResponseModel responseModel =
-            SelectedInterestsResponseModel.fromJson(response.data);
+        SelectedInterestsResponseModel responseModel = SelectedInterestsResponseModel.fromJson(response.data);
         state = state.copyWith(userInterests: responseModel.data);
         state = state.copyWith(
-            prevSelected:
-                responseModel.data.map((el) => el.interest.id).toList(), selected: responseModel.data.map((el) => el.interest.id).toList());
-            
+            prevSelected: responseModel.data.map((el) => el.interest.id).toList(),
+            selected: responseModel.data.map((el) => el.interest.id).toList());
+
         debugPrint(response.data.toString());
       }
     } catch (error) {
@@ -112,16 +111,12 @@ class SelectInterestVm extends StateNotifier<States> {
       state = state.copyWith(isPostingInterest: true);
       List<String> interests = [];
 
-      
+      if (state.prevSelected.isNotEmpty) {
+        interests = List.from(state.prevSelected);
+      }
 
-    if (state.prevSelected.isNotEmpty) {
-      interests = List.from(state.prevSelected);
-    }
-
-   
-    final combinedInterests = {...state.selected, ...interests}.toList();
-      final response =
-          await _repository.selectInterest(combinedInterests);
+      final combinedInterests = {...state.selected, ...interests}.toList();
+      final response = await _repository.selectInterest(combinedInterests);
       if (response.success) {
         if (isSettingsScreen == true) {
           return WayaSnackBar.showToast("Interests updated successfully");
@@ -161,7 +156,6 @@ class SelectInterestVm extends StateNotifier<States> {
   }
 }
 
-final selectInterestProvider =
-    StateNotifierProvider<SelectInterestVm, States>((ref) {
+final selectInterestProvider = StateNotifierProvider<SelectInterestVm, States>((ref) {
   return SelectInterestVm(AuthRepository(), ref);
 });

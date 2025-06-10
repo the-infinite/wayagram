@@ -34,6 +34,7 @@ import 'package:wayagram/features/general_settings/edit_interest/edit_interest.d
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
 import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
 import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
+import 'package:wayagram/features/general_settings/post_settings/post_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -74,6 +75,7 @@ import 'package:wayagram/features/pages/view/search_group_and_page.dart';
 import 'package:wayagram/features/pages/view/search_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
+import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
@@ -233,6 +235,7 @@ class WayaAppRoutes {
     ProfilePage.route: () => ProfilePage(
           id: WayaNav.search['id'].toString(),
           source: WayaNav.search['source'].toString(),
+          username: WayaNav.search['u'],
         ),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
@@ -279,6 +282,7 @@ class WayaAppRoutes {
     PageSetting.route: () => PageSetting(),
     SearchGroupAndPage.route: () => SearchGroupAndPage(),
     SearchGroup.route: () => SearchGroup(),
+    PayoutVerification.route: () => PayoutVerification(),
     SearchTransaction.route: () => SearchTransaction(),
     UpcomingContestDetails.route: () => UpcomingContestDetails(),
     CreateProfile.route: () => CreateProfile(),
@@ -392,6 +396,7 @@ class WayaAppRoutes {
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
     EventSettingsPage.route: () => EventSettingsPage(),
+    PostSettingsPage.route: () => PostSettingsPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
     UserInteraction.route: () => UserInteraction(),
@@ -443,8 +448,8 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getProfileRoute(String id, [String source = 'any']) =>
-      "${ProfilePage.route}?id=$id&source=$source";
+  static String getProfileRoute(String id, [String source = 'any', String? username,]) =>
+      "${ProfilePage.route}?${username != null ? 'u=$username' : 'id=$id&source=$source'}";
 
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.

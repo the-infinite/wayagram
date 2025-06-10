@@ -46,6 +46,8 @@ class ReferralVm extends StateNotifier<ReferralState> {
     }
     var list = state.referralListCopy.where((dispute) {
       String name = dispute.referredUser?.displayName ?? "";
+    //  String phone = dispute.referredUser?.displayName ?? "";
+      //String email = dispute.referredUser?.displayName ?? "";
       if (name.toLowerCase().contains(filterString)) {
         return true;
       }

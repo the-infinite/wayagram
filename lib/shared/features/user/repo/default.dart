@@ -38,6 +38,10 @@ class UserRepository extends BaseRepository {
     return get("$serviceUrl/client/users/all/user-by-email?email=$email");
   }
 
+  Future<WayaRequestResponse> getUserByUsername(String username) {
+    return get("$serviceUrl/client/profiles/usernames/$username");
+  }
+
   Future<WayaRequestResponse> getUserByPhone(String phone) {
     return get("$serviceUrl/client/users/all/user-by-phone?phoneNumber=$phone");
   }
