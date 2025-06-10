@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -46,7 +47,8 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
         ] else ...[
           const Gap(15),
           if (viewModel.singleEvent!.userId == ConversationState.self.id)
-            GridView(
+          ...[
+   GridView(
               shrinkWrap: true,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -66,6 +68,30 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                 )
               ],
             ),
+            Gap(10.h),
+
+            InkWell(
+              child: Container(
+                height: 70.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: wayaTheme.colorScheme.customPrimary.withOpacity(0.4)),
+              child: Align(alignment: Alignment.centerRight,
+              
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+               // spacing: 3,
+                children: [
+                    Text("Request Payout"),
+                    Icon(Icons.navigate_next, size: 30, color: wayaTheme.colorScheme.greyColor400,)
+                ],
+              ),),
+              ),
+              
+            )
+          ],
+         
           const Gap(15),
           AboutEvent(
               title: 'Title of Event',

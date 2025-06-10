@@ -34,6 +34,7 @@ import 'package:wayagram/features/general_settings/edit_interest/edit_interest.d
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
 import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
 import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
+import 'package:wayagram/features/general_settings/post_settings/post_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -43,6 +44,7 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/general_settings/quotation/quotation_settings_page.dart';
 import 'package:wayagram/features/general_settings/reset_pin_page/reset_pin.dart';
+import 'package:wayagram/features/general_settings/reset_pin_page/verify_transaction_identity.dart';
 import 'package:wayagram/features/general_settings/reset_pin_page/verify_your_identity_page.dart';
 import 'package:wayagram/features/general_settings/shop/shop_setting_page.dart';
 import 'package:wayagram/features/group/view/add_group_member.dart';
@@ -395,6 +397,7 @@ class WayaAppRoutes {
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
     EventSettingsPage.route: () => EventSettingsPage(),
+    PostSettingsPage.route: () => PostSettingsPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
     UserInteraction.route: () => UserInteraction(),
@@ -435,6 +438,7 @@ class WayaAppRoutes {
         ),
     FavoritesProducts.route: () => FavoritesProducts(),
         TopSellingList.route: () => TopSellingList(),
+        VerifyTransactionIdentity.route:() => VerifyTransactionIdentity(),
     TwoFactorAuth.route: () =>
         TwoFactorAuth(email: WayaNav.search["email"].toString())
   };
