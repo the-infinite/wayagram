@@ -31,7 +31,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return WayaFutureSubscriber(
-      future: UserResource.getUserDetails(widget.id, true),
+      future: widget.username != null
+          ? UserResource.getByUsername(widget.username!)
+          : UserResource.getUserDetails(widget.id, true),
       builder: (context, data) {
         //? When this is undefined...
         if (data == null) return const SizedBox();
