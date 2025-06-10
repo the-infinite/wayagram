@@ -166,15 +166,17 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
           //? Since it is real, first, the document file itself.
           else
             GestureDetector(
-              onTap: () async {
-                final result = await WayaNavigationHelper.toImageDetailsScreen(
-                  [widget.image],
-                  null,
-                );
+              onTap: widget.message?.dto != null
+                  ? null
+                  : () async {
+                      final result = await WayaNavigationHelper.toImageDetailsScreen(
+                        [widget.image],
+                        null,
+                      );
 
-                //? Do nothing.
-                if (result == null) return;
-              },
+                      //? Do nothing.
+                      if (result == null) return;
+                    },
               child: ClipPath(
                 clipBehavior: Clip.antiAlias,
                 clipper: ShapeBorderClipper(

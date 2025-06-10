@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/account_security/account_security.dart';
+import 'package:wayagram/features/general_settings/chat_settings/view.dart';
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
@@ -35,8 +36,7 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -92,8 +92,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(
-                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //
@@ -121,8 +120,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Set Transaction PIN',
                 iconPath: 'password',
-                onTap: () => WayaNav.toNamed(TransactionPinView.route,
-                    arguments: "account-setting"),
+                onTap: () => WayaNav.toNamed(TransactionPinView.route, arguments: "account-setting"),
               ),
               /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
@@ -168,6 +166,11 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Chat Settings',
+                iconPath: 'chat2',
+                onTap: () => WayaNav.to(const ChatSettingsPage()),
+              ),
               GeneralSettingsOptionModel(
                 title: 'Friends & Followers',
                 iconPath: 'users_group',
