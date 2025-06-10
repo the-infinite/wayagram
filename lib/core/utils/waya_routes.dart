@@ -34,6 +34,7 @@ import 'package:wayagram/features/general_settings/edit_interest/edit_interest.d
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
 import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
 import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
+import 'package:wayagram/features/general_settings/post_settings/post_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -395,6 +396,7 @@ class WayaAppRoutes {
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
     EventSettingsPage.route: () => EventSettingsPage(),
+    PostSettingsPage.route: () => PostSettingsPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
     UserInteraction.route: () => UserInteraction(),
