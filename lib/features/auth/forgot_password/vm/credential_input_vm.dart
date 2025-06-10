@@ -103,6 +103,34 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     }
   }
 
+  /**
+   WayaNav.toNamed(TransactionPinView.route,
+                         
+   */
+
+  Future<void> onToTransactionPin({VoidCallback? onSuccess}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _authRepository.resendOtp(
+        email: '${ConversationState.self.email}',
+        purpose: 'Transaction-Pin',
+      );
+
+      if (response.data["statusCode"] == 200) {
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message: " Otp has been sent to ${ConversationState.self.email}");
+        if (onSuccess != null) {
+          onSuccess();
+        }
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<void> onSubmitPayoutPin(VoidCallback onSuccess) async {
     try {
       state = state.copyWith(isLoading: true);

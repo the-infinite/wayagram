@@ -7,6 +7,8 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/helpers/package.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
+import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/account_security/account_security.dart';
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
@@ -20,6 +22,7 @@ import 'package:wayagram/features/general_settings/notifications/view/default.da
 
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/general_settings/quotation/quotation_settings_page.dart';
+import 'package:wayagram/features/general_settings/reset_pin_page/verify_transaction_identity.dart';
 import 'package:wayagram/features/general_settings/shop/shop_setting_page.dart';
 import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
@@ -41,6 +44,7 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
+  late final credentialNotifier = ref.read(credentialInputProvider.notifier);
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -122,8 +126,14 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Set Transaction PIN',
                 iconPath: 'password',
-                onTap: () => WayaNav.toNamed(TransactionPinView.route,
-                    arguments: "account-setting"),
+                onTap: () => {
+                  WayaNav.toNamed(VerifyTransactionIdentity.route,
+                      arguments: "account-setting")
+
+                  /**
+                   
+                   */
+                },
               ),
               /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
