@@ -332,7 +332,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     label: "State",
                     hintText: 'Select State',
                     items:
-                        ref.read(contestNotifierProvider.notifier).ugtStates(),
+                        ref.read(contestNotifierProvider.notifier).ugtStatesExcludedAllState(),
                     onSelected: (value) {
                       debugPrint(" heree $value");
                       selectedState.value = value.first.label;

@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class WayaBackButton extends StatelessWidget {
@@ -45,6 +46,31 @@ class WayaBackButton extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class WayaStatefulButton extends StatelessWidget {
+  final bool isSelected;
+  final VoidCallback callback;
+  final String text;
+
+  // Construct.
+  const WayaStatefulButton({super.key, required this.isSelected, required this.callback, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return WayaButton(
+      callback: callback,
+      border: Border.all(color: isSelected ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300),
+      horizontalPadding: 8.w,
+      color: isSelected ? wayaTheme.colorScheme.primaryBrown50 : wayaTheme.colorScheme.transparent,
+      radius: 10.r,
+      height: 40.h,
+      text: text,
+      textColor: WayaTextStyles.hintStyle.color,
+      textStyle: WayaTextStyles.hintStyle,
     );
   }
 }

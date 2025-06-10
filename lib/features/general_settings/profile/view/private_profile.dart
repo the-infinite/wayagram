@@ -10,6 +10,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
@@ -32,8 +33,10 @@ import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 import 'package:wayagram/shared/features/profile/widget/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 class MyProfilePage extends ConsumerStatefulWidget {
   final CachedUserDataTuple data;
@@ -63,8 +66,9 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   late final pollsNotifier = ref.read(userPollsProvider(widget.data.$1.id).notifier);
   late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
+  late final interestsNotifier = ref.read(selectInterestProvider.notifier);
   final paginationController = ValueNotifier<bool>(false);
-  final searchManager = ValueNotifier<String?>(null);
+  final searchManager = ValueNotifier<BaseFilterModel?>(null);
   final followNotifier = myFollowProvider;
   final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
@@ -78,6 +82,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
         WayaNav.onChange = () {
           _tabController.close();
         };
+        await interestsNotifier.getUserInterest();
+        await ShopResource.getShopCategories();
         await followNotifier.getFollowersOf();
         await followNotifier.getUsersFollowing();
       },
@@ -177,7 +183,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   void _shareProfile() async {
     //? Share the post.
     final result = await Share.share(
-      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
+      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id, 'profile', widget.data.$2.username)),
       subject: 'Share Profile',
     );
 
@@ -185,13 +191,15 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     if (result.status == ShareResultStatus.success) return;
   }
 
-  void _triggerSearch() async {
+  void _triggerSearch(States interestState) async {
     final result = await WayaUtils.showModalSheet(
       context,
       isDismissible: false,
       child: SearchProfileModal(
         searchManager: searchManager,
         searchController: searchController,
+        interests: interestState,
+        page: _pageController.value,
       ),
     );
 
@@ -205,6 +213,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
+    final interestState = ref.watch(selectInterestProvider);
     final postState = ref.watch(userPostsProvider);
     final likedPostState = ref.watch(userLikedPostsProvider);
     final commentedPostState = ref.watch(userCommentedPostsProvider);
@@ -237,7 +246,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                   icon: WayaAssets.icons.genSet.search.svg(
                     fit: BoxFit.none,
                   ),
-                  onPressed: _triggerSearch,
+                  onPressed: () => _triggerSearch(interestState),
                 ),
 
                 //? Share

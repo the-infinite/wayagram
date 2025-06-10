@@ -107,6 +107,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
             (prod.deliveryOptions == 'Delivery' &&
                 arg.cartItem.deliveryDate != null)) ??
         false;
+    final isAddedDeliveryDateForBothOrderType = arg?.cartItem.products.any(
+            (prod) =>
+                (arg.cartItem.deliveryDate != null) ||
+                (prod.deliveryOptions == 'Delivery' &&
+                    arg.cartItem.deliveryDate != null)) ??
+        false;
     // final pickUpindex = arg?.cartItem.products
     //     .indexWhere((prod) => prod.deliveryOptions == 'Pickup');
     // debugPrint(pickUpindex);
@@ -302,7 +308,9 @@ class _CheckoutState extends ConsumerState<Checkout> {
               ),
             ),
           ),
-          if ((isBothDeliveryOption == true && selectedOption == 'Delivery') ||
+          if ((isBothDeliveryOption == true &&
+                  selectedOption == 'Delivery' &&
+                  isAddedDeliveryDateForBothOrderType) ||
               isAddedDeliveryDate) ...[
             const Gap(8),
             Align(
@@ -353,7 +361,9 @@ class _CheckoutState extends ConsumerState<Checkout> {
             ),
           ),
           const Gap(25),
-          if ((isBothDeliveryOption == true && selectedOption == 'Delivery') ||
+          if ((isBothDeliveryOption == true &&
+                  selectedOption == 'Delivery' &&
+                  isAddedDeliveryDateForBothOrderType) ||
               isAddedDeliveryDate) ...[
             Align(
               alignment: Alignment.center,

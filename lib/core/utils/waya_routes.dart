@@ -34,6 +34,7 @@ import 'package:wayagram/features/general_settings/edit_interest/edit_interest.d
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
 import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
 import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
+import 'package:wayagram/features/general_settings/post_settings/post_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -128,6 +129,7 @@ import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_leaderboard_contest.dart';
@@ -234,6 +236,7 @@ class WayaAppRoutes {
     ProfilePage.route: () => ProfilePage(
           id: WayaNav.search['id'].toString(),
           source: WayaNav.search['source'].toString(),
+          username: WayaNav.search['u'],
         ),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
@@ -255,6 +258,7 @@ class WayaAppRoutes {
     EditContestantProfile.route: () => EditContestantProfile(),
     ViewSingleContestantData.route: () => ViewSingleContestantData(),
     ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
+    AllStateContest.route: () => AllStateContest(),
     ContestProfilePage.route: () => ContestProfilePage(
           id: WayaNav.search['id'].toString(),
           contest: WayaNav.search['contest'].toString(),
@@ -394,6 +398,7 @@ class WayaAppRoutes {
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
     EventSettingsPage.route: () => EventSettingsPage(),
+    PostSettingsPage.route: () => PostSettingsPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
     UserInteraction.route: () => UserInteraction(),
@@ -445,8 +450,8 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getProfileRoute(String id, [String source = 'any']) =>
-      "${ProfilePage.route}?id=$id&source=$source";
+  static String getProfileRoute(String id, [String source = 'any', String? username,]) =>
+      "${ProfilePage.route}?${username != null ? 'u=$username' : 'id=$id&source=$source'}";
 
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.

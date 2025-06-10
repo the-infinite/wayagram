@@ -79,6 +79,9 @@ class PollModel {
     required this.endDate,
   });
 
+  int get engagementCount => voteCount;
+  double? get earnings => feePerVote == null ? null : (double.tryParse(feePerVote.toString().replaceAll(",", "").replaceAll(".00", "")) ?? 0) * voteCount;
+
   factory PollModel.fromJson(Map<String, dynamic> json) => _$PollModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$PollModelToJson(this);

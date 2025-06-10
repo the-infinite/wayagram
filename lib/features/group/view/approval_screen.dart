@@ -132,7 +132,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                                   SizedBox(
                                     width: 68.w,
                                     child: WayaButton(
-                                      callback: () async => await request.approveRequest(context, '${group?.id}'),
+                                      callback: () async => await request.approveRequest(context, '${group.id}'),
                                       text: 'Approve',
                                       textStyle: TextStyle().wayaCopyWith(
                                         color: wayaTheme.colorScheme.success,
@@ -149,7 +149,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                                   SizedBox(
                                     width: 68.w,
                                     child: WayaButton(
-                                      callback: () async => await request.rejectRequest(context, '${group?.id}'),
+                                      callback: () async => await request.rejectRequest(context, '${group.id}'),
                                       text: 'Decline',
                                       textStyle: TextStyle().wayaCopyWith(
                                         color: wayaTheme.colorScheme.success,
