@@ -180,6 +180,25 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     }
   }
 
+    Future<void> verifySetTransactionPin(
+      {required VoidCallback onSuccess,
+      required String code,
+      required String email}) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final response =
+          await _authRepository.verifySetPin(VerifyOtp(email: email, otp: code));
+      if (response.success) {
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<void> verifyPayout(
       {required VoidCallback onSuccess,
         required String code,

@@ -70,6 +70,11 @@ class TransactionPinVm extends StateNotifier<void> {
     }
   }
 
+  void handleClearField() {
+    ref.read(pinProvider.notifier).state = "";
+    ref.read(confirmPinProvider.notifier).state = "";
+  }
+
   void handleLongPressBackspace() {
     ref.read(pinProvider.notifier).state = '';
     ref.read(confirmPinProvider.notifier).state = '';

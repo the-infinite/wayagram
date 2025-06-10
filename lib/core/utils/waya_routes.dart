@@ -44,6 +44,7 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
 import 'package:wayagram/features/general_settings/quotation/quotation_settings_page.dart';
 import 'package:wayagram/features/general_settings/reset_pin_page/reset_pin.dart';
+import 'package:wayagram/features/general_settings/reset_pin_page/verify_transaction_identity.dart';
 import 'package:wayagram/features/general_settings/reset_pin_page/verify_your_identity_page.dart';
 import 'package:wayagram/features/general_settings/shop/shop_setting_page.dart';
 import 'package:wayagram/features/group/view/add_group_member.dart';
@@ -437,6 +438,7 @@ class WayaAppRoutes {
         ),
     FavoritesProducts.route: () => FavoritesProducts(),
         TopSellingList.route: () => TopSellingList(),
+        VerifyTransactionIdentity.route:() => VerifyTransactionIdentity(),
     TwoFactorAuth.route: () =>
         TwoFactorAuth(email: WayaNav.search["email"].toString())
   };

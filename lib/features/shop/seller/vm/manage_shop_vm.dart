@@ -181,7 +181,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
   Future<PaginatedResult<Order>?> getOrders({required String shopId}) async {
     try {
-      final response = await _orderRepository.getSellerOrders(shopId, 1);
+      final response = await _orderRepository.getSellerOrders(shopId: shopId, page:  1);
       List<Order> orders = [];
       bool hasNextPage = false;
       if (response.success) {
