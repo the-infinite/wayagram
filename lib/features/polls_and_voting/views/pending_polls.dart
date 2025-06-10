@@ -46,7 +46,7 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
 
     return viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any pending polls"):
     SizedBox(
-      height: 503.h,
+      height: 478.h,
       child: ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,

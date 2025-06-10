@@ -19,7 +19,6 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
@@ -64,7 +63,7 @@ class _SearchState extends ConsumerState<SearchView> {
       //ref.read(createGroupProvider.notifier).getRecommendedGroups();
       ref.read(createPageProvider.notifier).getAllPages();
       ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
-       ref.read(createGroupProvider.notifier).getRecommendedGroups();
+       ref.read(createGroupProvider.notifier).getAllGroups();
       //> fetch upcoming events
       final upcomingEvents = await ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1, limit: 1000);
       if (upcomingEvents != null) {
@@ -103,7 +102,7 @@ class _SearchState extends ConsumerState<SearchView> {
     final state = ref.watch(servicesProvider);
     final pageState = ref.watch(createPageProvider);
     final pollState = ref.watch(createPollVotingProvider);
-    //final groupState = ref.read(createGroupProvider);
+    final groupState = ref.read(createGroupProvider);
 
     final query = searchController.text.trim();
 
@@ -159,16 +158,11 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-     //? Group
-    final filteredGroups = GroupsCache.instance.data.where((group) {
-      return group.name.toLowerCase().contains(query.trim().toLowerCase());
-    }).toList();
-
-    // final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
-    //   groupState.recommendedGroupDocs ?? [],
-    //   ['question', 'description'],
-    //   query,
-    // );
+    final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
+      groupState.getAllGroups ?? [],
+      ['name', 'description',],
+      query,
+    );
 
     final serviceData = {
       'Post': filteredPosts,
@@ -205,7 +199,7 @@ class _SearchState extends ConsumerState<SearchView> {
           prefixIcon: Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
           controller: searchController,
           hintText: 'Search hashtags, accounts, comments, users, etc.',
-          maxLength: 10,
+          maxLength: 40,
           counterText: '',
         ),
       ),

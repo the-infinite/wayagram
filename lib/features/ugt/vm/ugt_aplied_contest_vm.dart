@@ -45,18 +45,19 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
           _localDataSource.getUserId().toString(), isFirst ? 1 : state.page);
       state = state.copyWith(isLoading: false);
       //  List<AppliedContestModel> contestList = [];
-     
+
       //?on success
       if (response.success) {
-       
         AppliedContest responseModel = AppliedContest.fromJson(response.data);
         //  contestList = responseModel.data?.docs??[];
         //? get wether page is last page or not
         state = state.copyWith(
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         //?to differentiate if it is first page or not
+
         if (isFirst) {
-         
+          state = state.copyWith(listAppliedContest: [], page: 1);
+
           state = state.copyWith(
               listAppliedContest: responseModel.data?.docs ?? [], page: 1);
         } else {
@@ -67,7 +68,6 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
         }
         //? increase the page either way
         state = state.copyWith(page: state.page + 1);
-      
       }
 
       // return contestList;

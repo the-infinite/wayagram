@@ -1,3 +1,4 @@
+import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart'
     as contestant;
@@ -16,12 +17,15 @@ class VoterDetailState {
   final bool isLastPage;
 
   final String createPostId;
+  final String selectedState;
   final int? pendingPostCount;
   final String? contestId;
   final Wallet? data;
   final List<contestant.MyContestContestantModel> myContestList;
   final List<contestant.MyContestContestantModel> myFullContestantList;
+  final List<contestant.MyContestContestantModel> selectedStateContestants;
   final List<Stage> stageList;
+  final List<State> listState;
   final List<ApplicantContestModel> myContestApplicantList;
   final List<ApplicantContestModel> myFilteredContestApplicantList;
   final List<contestant.MyContestContestantModel> myContestListCopy;
@@ -38,9 +42,12 @@ class VoterDetailState {
     this.ismakePaymentLoading = false,
     this.data,
     this.createPostId = "",
+    this.selectedState = "",
     this.pendingPostCount = 0,
     this.contestId = "",
     this.myPostList = const [],
+    this.listState = const [],
+    this.selectedStateContestants = const [],
     this.myApprovePostList = const [],
     this.myContestApplicantList = const [],
     this.myFullContestantList = const [],
@@ -63,11 +70,13 @@ class VoterDetailState {
     bool? isActive,
     Wallet? data,
     String? createPostId,
+    String? selectedState,
     int? pendingPostCount,
     String? contestId,
     List<UgtAllPostContestModel>? myPostList,
     List<UgtAllPostContestModel>? myApprovePostList,
     List<Stage>? stageList,
+    List<State>? listState,
     List<MyFilterModel>? filterList,
     List<ApplicantContestModel>? myContestApplicantList,
     List<ApplicantContestModel>? myFilteredContestApplicantList,
@@ -75,6 +84,7 @@ class VoterDetailState {
     List<VoterListModel>? userVotersList,
     List<contestant.MyContestContestantModel>? myContestList,
     List<contestant.MyContestContestantModel>? myContestListCopy,
+    List<contestant.MyContestContestantModel>? selectedStateContestants,
     List<contestant.MyContestContestantModel>? myFullContestantList,
   }) =>
       VoterDetailState(
@@ -82,10 +92,13 @@ class VoterDetailState {
         page: page ?? this.page,
         isLastPage: isLastPage ?? this.isLastPage,
         isActive: isActive ?? this.isActive,
+        selectedState: selectedState ?? this.selectedState,
         data: data ?? this.data,
         myPostList: myPostList ?? this.myPostList,
         myApprovePostList: myApprovePostList ?? this.myApprovePostList,
         stageList: stageList ?? this.stageList,
+        listState: listState ?? this.listState,
+        selectedStateContestants: selectedStateContestants ?? this.selectedStateContestants,
         userVotersList: userVotersList ?? this.userVotersList,
         filterList: filterList ?? this.filterList,
         myContestApplicantList:

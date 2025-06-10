@@ -57,7 +57,7 @@ class _SearchTransactionState extends ConsumerState<SearchTransaction> {
     // Filter Transaction
     final List<TransactionHistoryModelDocs> filteredTransaction =
     WayaUtils.strictSearch<TransactionHistoryModelDocs>(state.docs!, ['description','status', 'amount', 'id',
-        'transactionId',], query);
+        'transactionId', 'purpose', 'type'], query);
 
     return WayaScaffold(
       appBar: AppBar(

@@ -13,6 +13,7 @@ import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart'
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/views/seller_shop/seller_shop.dart';
+import 'package:wayagram/features/shop/views/favorites_product.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'package:gap/gap.dart';
 
@@ -46,31 +47,31 @@ class _WayaShopState extends ConsumerState<WayaShop>
           arguments: 0, preventDuplicates: false),
       title: 'Shop',
       appBarTrailing: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 3,
-            children: [
-              InkWell(
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  //
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.customPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all(6),
-                  child: SvgPicture.asset(
-                    WayaAssets.icons.mSmallHeart.path,
-                    fit: BoxFit.cover,
-                    width: 18,
-                    height: 18,
-                    color: wayaTheme.colorScheme.white,
-                  ),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 3,
+          children: [
+            InkWell(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                WayaNav.toNamed(FavoritesProducts.route);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: wayaTheme.colorScheme.customPrimary,
+                  shape: BoxShape.circle,
+                ),
+                padding: EdgeInsets.all(6),
+                child: SvgPicture.asset(
+                  WayaAssets.icons.mSmallHeart.path,
+                  fit: BoxFit.cover,
+                  width: 18,
+                  height: 18,
+                  color: wayaTheme.colorScheme.white,
                 ),
               ),
-              WayaCartIcon(),
-            ]),
+            ),
+            WayaCartIcon(),
+          ]),
       body: Column(
         children: [
           const Gap(10),

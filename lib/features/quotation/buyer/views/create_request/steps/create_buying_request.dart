@@ -399,8 +399,11 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 //? For distance ranges.
                 Text(
                   "Distance Range",
-                  style: TextStyle()
-                      .wayaCopyWith(color: wayaTheme.colorScheme.black, fontWeight: FontWeight.w500, fontSize: 14.sp),
+                  style: TextStyle().wayaCopyWith(
+                    color: wayaTheme.colorScheme.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp,
+                  ),
                 ),
 
                 // Some space.

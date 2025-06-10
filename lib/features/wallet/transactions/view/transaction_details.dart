@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
-//import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
@@ -17,6 +18,8 @@ import 'package:wayagram/shared/components/loading_dialog.dart';
 import 'package:wayagram/features/wallet/mixin/wallet_mixin.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
+
+import '../../../../core/service/repos/transactions/transaction_history_model.dart';
 
 class TransactionDetailsScreen extends ConsumerStatefulWidget {
   static const route = '/transaction-history';
@@ -53,7 +56,10 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
   }
 
   // Function to generate and download/share PDF
-  Future<void> generateTransactionPdf(BuildContext context, List<TransactionHistoryModelDocs> transactions) async {
+  Future<void> generateTransactionPdf(
+    BuildContext context,
+    List<TransactionDetail> transactions,
+  ) async {
     // Create a PDF document
     final pdf = pw.Document();
 
@@ -66,7 +72,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
           pw.Header(
             level: 0,
             child: pw.Text(
-              'Transaction History',
+              'Transaction Details',
               style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
             ),
           ),
@@ -133,11 +139,184 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
     // Trigger the PDF share/download dialog
     await Printing.sharePdf(
       bytes: await pdf.save(),
-      filename: 'transaction_history.pdf',
+      filename: 'pr_${transactions.first.id.replaceAll('-', '')}.pdf',
     );
   }
 
-  Future<void> generatePdf(List<TransactionHistoryModelDocs> transactions) async {
+  Future<void> generateTransactionPdfTwo(
+    BuildContext context,
+    List<TransactionDetail> transactions,
+  ) async {
+    final state = ref.read(transactionVmProvider);
+    // Create a PDF document
+    final pdf = pw.Document();
+
+    // Add a page to the PDF
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        margin: pw.EdgeInsets.all(15),
+        build: (pw.Context context) => [
+          pw.Header(
+            level: 0,
+            child: pw.Text(
+              'Transaction Details',
+              style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+            ),
+          ),
+          pw.SizedBox(height: 20),
+          // Table for transaction data
+          pw.Column(
+            mainAxisSize: pw.MainAxisSize.min,
+            children: [
+              pw.Text(
+                'Transaction Receipt',
+                style: pw.TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: pw.FontWeight.bold,
+                  //color: pw.Theme.of(context).primaryColor,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                '₦${state.transaction?.netAmount ?? "0"}',
+                style: pw.TextStyle(
+                  fontSize: 24.sp,
+                  color: PdfColor(0.9, 0.1, 0.2),
+                  //pw.wayaTheme.colorScheme.success,
+                  //fontWeight: pw.Font.ttf,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              buildPdfDetailRowTwo(
+                label: 'Transaction Id',
+                value: state.transaction?.transactionId ?? "",
+              ),
+              buildPdfDetailRowTwo(
+                label: 'Transaction Category',
+                value: state.transaction?.purpose ?? "",
+                //valueColor: wayaTheme.colorScheme.primary200,
+              ),
+              buildPdfDetailRowTwo(
+                label: 'Description',
+                value: state.transaction?.description ?? "",
+              ),
+              buildPdfDetailRowTwo(
+                label: 'Transaction Type',
+                value: state.transaction?.type ?? "",
+                //valueColor: wayaTheme.colorScheme.success,
+              ),
+              buildPdfDetailRowTwo(
+                label: 'Date',
+                value: WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
+              ),
+              buildPdfDetailRowTwo(
+                label: 'Time',
+                value: DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
+              ),
+              buildPdfDetailRowTwo(
+                label: 'Reference Number',
+                value: shortenReference(state.transaction?.referenceId ?? ""),
+              ),
+              buildPdfDetailRowTwo(
+                label: 'Transaction Status',
+                value: state.transaction?.status ?? "",
+                //valueColor: PdfColor.fromHex('0xff0F973D')
+                //valueColor: wayaTheme.colorScheme.success,
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+
+    // Trigger the PDF share/download dialog
+    await Printing.sharePdf(
+      bytes: await pdf.save(),
+      filename: 'pr_${transactions.first.id.replaceAll('-', '')}.pdf',
+    );
+  }
+
+// Function to create a PDF row similar to _buildDetailRow
+  pw.Widget buildPdfDetailRowTwo({
+    required String label,
+    required String value,
+    PdfColor? valueColor,
+    //pw.Widget? trailing,
+  }) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 12),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          // Label
+          pw.Text(
+            label,
+            style: pw.TextStyle(
+              fontSize: 14,
+              color: PdfColors.black,
+            ),
+          ),
+          // Value and optional trailing
+          pw.Row(
+            children: [
+              pw.Text(
+                value,
+                style: pw.TextStyle(
+                  fontSize: 14,
+                  color: valueColor ?? PdfColors.black,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              // if (trailing != null) ...[
+              //   pw.SizedBox(width: 4),
+              //   trailing,
+              // ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+// Example usage in a PDF document
+  /*Future<void> generatePdfSecond() async {
+    final pdf = pw.Document();
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            children: [
+              // Example rows
+              buildPdfDetailRowTwo(
+                label: 'Name',
+                value: 'John Doe',
+                valueColor: PdfColors.blue,
+              ),
+              buildPdfDetailRowTwo(
+                label: 'Email',
+                value: 'john.doe@example.com',
+                trailing: pw.Icon(
+                  const pw.IconData(0xe853), // Example icon (e.g., email icon)
+                  size: 14,
+                  color: PdfColors.black,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    // Save or share the PDF
+    await Printing.sharePdf(
+      bytes: await pdf.save(),
+      filename: 'example.pdf',
+    );
+  }*/
+
+  Future<void> generatePdf(List<TransactionDetail> transactions) async {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -169,9 +348,16 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
       ),
     );
 
+    await Printing.sharePdf(
+      bytes: await pdf.save(),
+      filename: 'pr_${transactions.first.id.replaceAll('-', '')}.pdf',
+    );
+
     // final directory = await getApplicationDocumentsDirectory();
-    // final file = File(join(directory.path, 'transaction_history.pdf'));
+    // final file = File(path.join(directory.path, 'pr_${transactions.first.id.replaceAll('-', '')}.pdf'));
     // await file.writeAsBytes(await pdf.save());
+
+    //return file;
 
     // Share or save the file
     // You can use the 'share_plus' package to share the file
@@ -221,7 +407,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
     );
   }
 
-  Widget _buildReceiptContent() {
+  Widget _buildReceiptContent(BuildContext context) {
     final state = ref.read(transactionVmProvider);
     final wayaTheme = Theme.of(context);
 
@@ -423,32 +609,62 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                       ),
                     ),
                   ),
+                  SizedBox(height: 15),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        shareReceipt(screenshotController, _buildReceiptContent());
+                    child: PopupMenuButton(
+                      position: PopupMenuPosition.under,
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem<int>(
+                            value: 0,
+                            onTap: () async {
+                              //final file = await generateTransactionPdf(context, [state.transaction!]);
+                              await generateTransactionPdfTwo(context, [state.transaction!]);
+                            },
+                            child: WayaActionNav(
+                              context: context,
+                              asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                              text: "  Share as PDF",
+                              color: wayaTheme.colorScheme.customBlack,
+                            ),
+                          ),
+                          PopupMenuItem<int>(
+                            value: 1,
+                            onTap: () async {
+                              shareReceipt(screenshotController, _buildReceiptContent(context));
+                            },
+                            child: WayaActionNav(
+                              context: context,
+                              asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                              text: "  Share as Image",
+                              color: wayaTheme.colorScheme.customBlack,
+                            ),
+                          ),
+                        ];
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: wayaTheme.primaryColor,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: wayaTheme.primaryColor,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.share, size: 20, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text(
-                            'Share Receipt',
-                            style: TextStyle(fontSize: 16.sp),
-                          ),
-                        ],
+                        width: double.infinity,
+                        height: 50.h,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.share, size: 20, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              'Share Receipt',
+                              style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                  SizedBox(height: 8),
                   if (state.transaction?.status.toLowerCase() == "pending") ...[
                     const SizedBox(height: 16),
                     Padding(

@@ -16,6 +16,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/account_type_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_response.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
 
@@ -714,12 +715,14 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
       }
     } catch (e) {
+
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
         WayaDebugEventModule.polls,
         WayaDebugHelpers.getStackTrace(e),
       );
+
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -768,7 +771,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         );
 
         _logger.i(response.data['data']);
-      } else if (response.data['responseCode'] == 1644) {
+      } else if (response.data['responseCode'] == 1620) {
         WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
       }
     } catch (e) {
@@ -782,6 +785,25 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> fetchAccountType() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getAccountType();
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        AccountTypeModel responseModel = AccountTypeModel.fromJson(response.data);
+        state = state.copyWith(accountType: responseModel.data?[0].name);
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
 
   Future<void> getActivePolls(int page) async {
     try {
@@ -885,9 +907,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.requestSettlement(pollId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
+        WayaNav.removeUntilNamed(BottomView.route, arguments: 0);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Request was sent successfully!'),
+            content: Text('Payout request was sent successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -904,6 +927,25 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> getAllRequestPayout(int page) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getAllRequestPayout(page);
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
 
 
   Future<PaginatedResult<Docs>?> getAllPolls({required int page}) async {

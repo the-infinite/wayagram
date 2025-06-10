@@ -14,7 +14,10 @@ import 'package:wayagram/shared/features/user/widget/social.dart';
 
 class EventInvite extends ConsumerStatefulWidget {
   static const route = "/event-invite";
-  const EventInvite({super.key});
+  final String eventId;
+  final String eventTitle;
+  const EventInvite(
+      {super.key, required this.eventId, required this.eventTitle});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EventInviteState();
@@ -22,6 +25,7 @@ class EventInvite extends ConsumerStatefulWidget {
 
 class _EventInviteState extends ConsumerState<EventInvite> {
   late final notifier = ref.read(eventVmProvider.notifier);
+  bool isLoading = false;
 
   void searhUsers(BuildContext context) async {
     final result = await WayaUtils.showModalSheet(
@@ -46,6 +50,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
         child: WayaScaffold(
             title: "Invite User",
             isScrollable: false,
+            isLoading: isLoading,
             body: Stack(
               children: [
                 SingleChildScrollView(
@@ -91,8 +96,16 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     child: WayaButton(
-                      callback: () {
-                        WayaNav.goBack();
+                      callback: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await notifier.inviteToEvent(
+                            eventTitle: widget.eventTitle,
+                            eventId: widget.eventId);
+                            setState(() {
+                          isLoading = false;
+                        });
                       },
                       text: "Invite",
                     ),

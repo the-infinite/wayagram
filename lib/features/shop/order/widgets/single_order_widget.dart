@@ -5,6 +5,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
@@ -88,7 +89,8 @@ class SingleOrderWidget extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
+                   
+                        Text(
                       WayaHelpers.formatPrice(
                           double.parse(order.total).toInt()),
                       style: TextStyle().wayaCopyWith(
@@ -96,6 +98,16 @@ class SingleOrderWidget extends ConsumerWidget {
                               ? wayaTheme.colorScheme.success
                               : wayaTheme.colorScheme.error700,
                           fontSize: 13.sp),
+                    ),
+                 
+                         Text(
+                      order.status,
+                      style: wayaTheme.textTheme.descriptionStyle.copyWith(
+                          color: order.status == "pending"
+                              ? wayaTheme.colorScheme.pending
+                              : wayaTheme.colorScheme.success,
+                          fontSize: 13.sp
+                          ),
                     ),
                     const Gap(8),
                     Text(

@@ -45,6 +45,10 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/discount/all?page=$page');
   }
 
+  Future<WayaRequestResponse> fetchFavorites() {
+    return get('$serviceUrl/favorites/all');
+  }
+
   Future<WayaRequestResponse> getProducts({required int page, int limit = 20}) {
     return get('$serviceUrl/products/get?page=$page');
   }
@@ -58,8 +62,8 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/products/get?id=$id');
   }
 
- //
-Future<WayaRequestResponse> getBanner() {
+  //
+  Future<WayaRequestResponse> getBanner() {
     return get("$serviceUrl/banners/all");
   }
 
@@ -93,8 +97,8 @@ Future<WayaRequestResponse> getBanner() {
   }
 
   Future<WayaRequestResponse> addToFavorite(
-      {required String productId, required String shopId}) {
-    return post("$serviceUrl/favorites/add/$shopId", {"productId": productId});
+      {required String productId, required String userId}) {
+    return post("$serviceUrl/favorites/add/$userId", {"productId": productId});
   }
 
   ///
@@ -133,6 +137,11 @@ Future<WayaRequestResponse> getBanner() {
   }
 
   //
+  Future<WayaRequestResponse> getTopSellingProducts() {
+    return get('$serviceUrl/products/most-sold');
+  }
+
+  //
   Future<WayaRequestResponse> getShopMetrics({required String shopId}) {
     return get('$serviceUrl/orders/shop-metrics/$shopId');
   }
@@ -149,12 +158,15 @@ Future<WayaRequestResponse> getBanner() {
       "makeProductPostsPublic": makeProductPostsPublic
     });
   }
-    Future<WayaRequestResponse> updateQuotationSettings(
-      bool receiveQuotationRequests, bool makeRequestsPublic, bool displayQuotationRequestsInFeed) {
+
+  Future<WayaRequestResponse> updateQuotationSettings(
+      bool receiveQuotationRequests,
+      bool makeRequestsPublic,
+      bool displayQuotationRequestsInFeed) {
     return patch('$serviceUrl/user-shop/setting', {
-     "receiveQuotationRequests": receiveQuotationRequests,
-    "makeRequestsPublic": makeRequestsPublic,
-    "displayQuotationRequestsInFeed": displayQuotationRequestsInFeed,
+      "receiveQuotationRequests": receiveQuotationRequests,
+      "makeRequestsPublic": makeRequestsPublic,
+      "displayQuotationRequestsInFeed": displayQuotationRequestsInFeed,
     });
   }
 }

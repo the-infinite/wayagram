@@ -1,18 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/referral/data/referral_state.dart';
 import 'package:wayagram/features/referral/data/repo/referral_repo.dart';
+import 'package:wayagram/features/referral/model/referral_amount_model.dart';
 import 'package:wayagram/features/referral/model/referral_count_model.dart';
 import 'package:wayagram/features/referral/model/referral_model.dart';
 import '../../../core/data/local_data_source.dart';
 
 class ReferralVm extends StateNotifier<ReferralState> {
   final ReferralRepo _referralRepository;
-  final WayaLocalDataSource _localDataSource;
-//this is ok
 
-  ReferralVm(this._referralRepository, this._localDataSource)
+  ReferralVm(this._referralRepository)
       : super(ReferralState());
+
 
   Future<void> getReferralCount() async {
     final response =
@@ -20,7 +21,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
     if (response.success == true) {
       ReferralCountModel responseModel =
           ReferralCountModel.fromJson(response.data);
-      state = state.copyWith(count: responseModel.data);
+      state = state.copyWith(count: responseModel.data?.totalReferrals ?? 0);
     } else {}
   }
 
@@ -28,14 +29,14 @@ class ReferralVm extends StateNotifier<ReferralState> {
     final response =
         await _referralRepository.getReferralEarned(getLoggedInUserId() ?? "");
     if (response.success == true) {
-      ReferralCountModel responseModel =
-          ReferralCountModel.fromJson(response.data);
-      state = state.copyWith(count: responseModel.data);
+      ReferralAmountModel responseModel =
+          ReferralAmountModel.fromJson(response.data);
+      state = state.copyWith(count: responseModel.data?.totalAmountEarned ?? 0);
     } else {}
   }
 
   String? getLoggedInUserId() {
-    return _localDataSource.getUserId().toString();
+    return ConversationState.profile.id;
   }
 
   void filterList(String filterString) {
@@ -44,12 +45,15 @@ class ReferralVm extends StateNotifier<ReferralState> {
       return;
     }
     var list = state.referralListCopy.where((dispute) {
-      String name = dispute.referredUser?.displayName??"";
-      if (name.contains(filterString)) {
+      String name = dispute.referredUser?.displayName ?? "";
+    //  String phone = dispute.referredUser?.displayName ?? "";
+      //String email = dispute.referredUser?.displayName ?? "";
+      if (name.toLowerCase().contains(filterString)) {
         return true;
       }
       return false;
     }).toList();
+   // print("object $list");
     state = state.copyWith(referralList: [...list]);
   }
 
@@ -113,7 +117,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
 
 final referralVm = StateNotifierProvider<ReferralVm, ReferralState>(
   (ref) {
-    return ReferralVm(ReferralRepo(), WayaLocalDataSource());
+    return ReferralVm(ReferralRepo());
   },
 );
 

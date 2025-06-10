@@ -60,12 +60,12 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
   late final userFollowProvider = userFollowersProvider(widget.data.$1.id);
   late final userPostsProvider = otherUserPostsProvider(widget.data.$1.id);
   late final postNotifier = ref.read(userPostsProvider.notifier);
-  late final eventNotifier = ref.read(userEventsProvider.notifier);
-  late final groupsNotifier = ref.read(userGroupsProvider.notifier);
-  late final pagesNotifier = ref.read(userPagesProvider.notifier);
   late final followNotifier = ref.read(userFollowProvider.notifier);
-  late final pollsNotifier = ref.read(userPollsProvider.notifier);
-  late final donationsNotifier = ref.read(userDonationsProvider.notifier);
+  late final eventNotifier = ref.read(userEventsProvider(widget.data.$1.id).notifier);
+  late final groupsNotifier = ref.read(userGroupsProvider(widget.data.$1.id).notifier);
+  late final pagesNotifier = ref.read(userPagesProvider(widget.data.$1.id).notifier);
+  late final pollsNotifier = ref.read(userPollsProvider(widget.data.$1.id).notifier);
+  late final donationsNotifier = ref.read(userDonationsProvider(widget.data.$1.id).notifier);
   late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
 
@@ -166,7 +166,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
   void _shareProfile() async {
     final result = await Share.share(
-      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
+      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id, 'profile', widget.data.$2.username)),
       subject: 'Share Profile',
     );
 
@@ -195,12 +195,12 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final postState = ref.watch(userPostsProvider);
-    final eventState = ref.watch(userEventsProvider);
-    final groupsState = ref.watch(userGroupsProvider);
-    final pagesState = ref.watch(userPagesProvider);
+    final eventState = ref.watch(userEventsProvider(widget.data.$1.id));
+    final groupsState = ref.watch(userGroupsProvider(widget.data.$1.id));
+    final pagesState = ref.watch(userPagesProvider(widget.data.$1.id));
     final followState = ref.watch(userFollowProvider);
-    final pollsState = ref.watch(userPollsProvider);
-    final donationsState = ref.watch(userDonationsProvider);
+    final pollsState = ref.watch(userPollsProvider(widget.data.$1.id));
+    final donationsState = ref.watch(userDonationsProvider(widget.data.$1.id));
     final productsState = ref.watch(userProductsProvider(widget.data.$1.id));
     final conversationState = ref.watch(conversationProvider);
     final user = widget.data.$1;
@@ -393,13 +393,13 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
         body: PopScope(
           onPopInvokedWithResult: (isPopping, _) {
             if (!isPopping) return;
-            postNotifier.reset();
-            eventNotifier.reset();
-            groupsNotifier.reset();
-            pagesNotifier.reset();
-            pollsNotifier.reset();
-            donationsNotifier.reset();
-            if (widget.source != 'profile') followNotifier.reset();
+            // postNotifier.reset();
+            // eventNotifier.reset();
+            // groupsNotifier.reset();
+            // pagesNotifier.reset();
+            // pollsNotifier.reset();
+            // donationsNotifier.reset();
+            // if (widget.source != 'profile') followNotifier.reset();
           },
           child: ValueListenableBuilder(
             valueListenable: _pageController,
@@ -409,14 +409,17 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
               final filteredPolls = pollsState.polls(null);
               final filteredEvents = eventState.events(null);
               final filteredProducts = productsState.products(null);
+              final filteredGroups = groupsState.groups(null);
+              final filteredPages = pagesState.pages(null);
+              final filteredDonations = donationsState.donations(null);
 
               //? Is this empty?
               final isEmpty = switch (selectedPage) {
                 0 => filteredPosts.isEmpty && postState.hasLoaded,
                 2 => filteredPolls.isEmpty && pollsState.hasLoaded,
-                3 => donationsState.donations.isEmpty && donationsState.hasLoaded,
-                4 => groupsState.groups.isEmpty && groupsState.hasLoaded,
-                5 => pagesState.pages.isEmpty && pagesState.hasLoaded,
+                3 => filteredDonations.isEmpty && donationsState.hasLoaded,
+                4 => filteredGroups.isEmpty && groupsState.hasLoaded,
+                5 => filteredPages.isEmpty && pagesState.hasLoaded,
                 6 => filteredEvents.isEmpty && eventState.hasLoaded,
                 7 => filteredProducts.isEmpty && productsState.hasLoaded,
                 _ => true,
@@ -891,9 +894,9 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                       )
                     else if (selectedPage == 3)
                       ...List.generate(
-                        donationsState.donations.length,
+                        filteredDonations.length,
                         (index) {
-                          final donation = donationsState.donations[index];
+                          final donation = filteredDonations[index];
                           int daysLeft = donation.expirationDate.difference(donation.startDate).inDays;
                           int amountRaised = double.parse(donation.amountRaised!).toInt();
                           int targetedAmount = double.parse(donation.targetAmount!).toInt();
@@ -937,22 +940,22 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                       )
                     else if (selectedPage == 4)
                       ...List.generate(
-                        groupsState.groups.length,
+                        filteredGroups.length,
                         (index) => Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: SingleGroupWidget(
-                            group: groupsState.groups[index],
+                            group: filteredGroups[index],
                             index: index,
                           ),
                         ),
                       )
                     else if (selectedPage == 5)
                       ...List.generate(
-                        pagesState.pages.length,
+                        filteredPages.length,
                         (index) => Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.w),
                           child: SinglePageWidget(
-                            page: pagesState.pages[index],
+                            page: filteredPages[index],
                             index: index,
                           ),
                         ),

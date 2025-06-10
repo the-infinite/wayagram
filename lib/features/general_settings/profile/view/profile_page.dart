@@ -10,14 +10,16 @@ import 'private_profile.dart';
 import 'public_profile.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
-  static const route = '/profile-page';
+  static const route = '/p';
   final String id;
+  final String? username;
   final String source;
 
   // Construct.
   const ProfilePage({
     super.key,
     required this.id,
+    required this.username,
     required this.source,
   });
 
@@ -29,13 +31,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return WayaFutureSubscriber(
-      future: UserResource.getUserDetails(widget.id, true),
+      future: widget.username != null
+          ? UserResource.getByUsername(widget.username!)
+          : UserResource.getUserDetails(widget.id, true),
       builder: (context, data) {
         //? When this is undefined...
         if (data == null) return const SizedBox();
 
         //? If this user is the one currently logged in.
-        if (widget.id == ConversationState.self.id) {
+        if (data.$1.id == ConversationState.self.id) {
           return MyProfilePage(
             data: data,
             source: widget.source,

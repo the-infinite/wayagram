@@ -14,6 +14,8 @@ class ShopState {
   final ShopMetricsData? sellerMetrics;
   final List<ReviewData> reviews;
   final List<Product> wayaDealProducts;
+  final List<Product> topSelling;
+
 
   ShopState(
       {this.categories = const [],
@@ -21,6 +23,7 @@ class ShopState {
       this.selectedCategoryId = const [],
       this.products = const [],
       this.wayaDealProducts = const [],
+      this.topSelling = const [],
       this.searchQuery = '',
       this.sellerMetrics,
       this.reviews = const [],
@@ -36,6 +39,7 @@ class ShopState {
       String? searchQuery,
       ShopMetricsData? sellerMetrics,
       List<ReviewData>? reviews,
+      List<Product>? topSelling,
       bool? isReviewing,
       int? totalNoOfCategoryPages}) {
     return ShopState(
@@ -49,6 +53,7 @@ class ShopState {
         products: products ?? this.products,
         wayaDealProducts: wayaDealProducts ?? this.wayaDealProducts,
         sellerMetrics: sellerMetrics ?? this.sellerMetrics,
+        topSelling: topSelling ?? this.topSelling,
         isLoading: isLoading ?? this.isLoading);
   }
 }

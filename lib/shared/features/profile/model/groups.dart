@@ -4,7 +4,7 @@ import 'package:wayagram/shared/model/base_model.dart';
 part 'groups.g.dart';
 
 @JsonSerializable()
-class GroupModel extends BaseModel<GroupModel>{
+class GroupModel extends BaseModel<GroupModel> {
   final String id;
   final String name;
   final String? ownerId;
@@ -19,6 +19,8 @@ class GroupModel extends BaseModel<GroupModel>{
   final DateTime? deletedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
+
+  int get engagementCount => memberCount;
 
   GroupModel({
     required this.id,

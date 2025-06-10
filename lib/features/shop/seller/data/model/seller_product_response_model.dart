@@ -44,7 +44,8 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) {
     var productList = json['data'] as List;
-    List<SellerProduct> productItems = productList.map((i) => SellerProduct.fromJson(i)).toList();
+    List<SellerProduct> productItems =
+        productList.map((i) => SellerProduct.fromJson(i)).toList();
 
     return Data(
       products: productItems,
@@ -60,7 +61,7 @@ class Data {
   }
 }
 
-class SellerProduct  extends BaseModel<SellerProduct>{
+class SellerProduct extends BaseModel<SellerProduct> {
   final String id;
   final String categoryId;
   final String? discountTypeId;
@@ -93,6 +94,7 @@ class SellerProduct  extends BaseModel<SellerProduct>{
   final dynamic dealStatus;
   final dynamic shopRating;
   final String? vendorId;
+  final String? state;
 
   SellerProduct(
       {required this.id,
@@ -126,6 +128,7 @@ class SellerProduct  extends BaseModel<SellerProduct>{
       required this.updatedAt,
       required this.isDeleted,
       this.vendorId,
+      this.state,
       this.shopRating});
 
   factory SellerProduct.fromJson(Map<String, dynamic> json) {
@@ -139,7 +142,8 @@ class SellerProduct  extends BaseModel<SellerProduct>{
         name: json['name'] ?? '',
         description: json['description'] ?? '',
         price: json['price'],
-        images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+        images:
+            (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
         height: json['height'],
         width: json['width'],
         color: json['color'] ?? '',
@@ -164,6 +168,7 @@ class SellerProduct  extends BaseModel<SellerProduct>{
         createdAt: DateTime.parse(json['createdAt'] ?? ''),
         updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
         vendorId: json['vendorId'] ?? '',
+        state: json['state'] ?? '',
         shopRating: json['shopRating']);
   }
 
@@ -200,11 +205,12 @@ class SellerProduct  extends BaseModel<SellerProduct>{
       'updatedAt': updatedAt.toIso8601String(),
       'isDeleted': isDeleted,
       'shopRating': shopRating,
-      'vendorId': vendorId
+      'vendorId': vendorId,
+      'state': state
     };
   }
 
-    @override
+  @override
   Map<String, dynamic> toMap() => {
         'id': id,
         'categoryId': categoryId,

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
+import 'package:wayagram/features/shop/views/favorites_product.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
@@ -16,6 +20,7 @@ import 'package:wayagram/features/shop/widgets/card_loading_state.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
+import 'package:flutter_screenutil/src/size_extension.dart';
 
 class AllSellerOrders extends ConsumerStatefulWidget {
   static const route = '/seller-orders';
@@ -28,6 +33,7 @@ class AllSellerOrders extends ConsumerStatefulWidget {
 class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
   late TextEditingController searchController;
   List<SalesMetric> orders = orderMetrics;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -49,10 +55,9 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
     super.dispose();
   }
 
- 
   @override
   Widget build(BuildContext context) {
-     final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
     final shopState = ref.watch(shopVmProvider);
 
     if (shopState.sellerMetrics != null) {
@@ -80,83 +85,160 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
         return metric;
       }).toList();
     }
+
+    final List<String> _tabs = [
+      "Pending Orders",
+       "Paid Orders",
+      "Delivered Orders",
+     
+    ];
+
     return WayaScaffold(
         isLoading: false,
         isScrollable: false,
         title: 'Orders',
-        appBarTrailing: WayaCartIcon(),
+        appBarTrailing: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 3,
+            children: [
+              InkWell(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  WayaNav.toNamed(FavoritesProducts.route);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: EdgeInsets.all(6),
+                  child: SvgPicture.asset(
+                    WayaAssets.icons.mSmallHeart.path,
+                    fit: BoxFit.cover,
+                    width: 18,
+                    height: 18,
+                    color: wayaTheme.colorScheme.white,
+                  ),
+                ),
+              ),
+              WayaCartIcon(),
+            ]),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-                  Text("Orders", style: wayaTheme.textTheme.titleLarge),
-          const Gap(3),
-          Text(
-            'View and Manage your orders',
-            style: wayaTheme.textTheme.hintStyle,
-          ),
-          const Gap(20),
-          FilterWidget(
-            hintText: 'Search Order by ID, shop name, token etc',
-            search: searchController,
-          ),
-          const Gap(15),
-          GridView.builder(
-              itemCount: 3,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: orders.length,
-                  mainAxisSpacing: 0,
-                  childAspectRatio: 1.22,
-                  crossAxisSpacing: 8),
-              itemBuilder: (context, index) {
-                return InventoryWidget(
-                    metrics: orders[index].metrics,
-                    color: orders[index].color!,
-                    title: orders[index].title);
-              }),
-          const Gap(20),
-            Expanded(
-            child: PaginatedDataView<Order>(
-                uniqueKey: 'seller-orders',
-                // trailingWidget:
-                //     _buildTrailing(context: context, orders: orders),
-                emptyState: EmptyState(
-                    assetImage:
-                        WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
-                    message: "No Order Yet"),
-                loadingState: CardLoadingState(
-                  count: 6,
-                ),
-                fetchData: ref.read(sellerOrdersVmProvider.notifier).getOrders,
-                result: (data, s) {
-                  final filteredOrder = WayaUtils.search<Order>(
-                      data,
-                      [
-                        'id',
-                        'pickupAddress',
-                        'deliveryAddress',
-                        'shopName',
-                        'deliveryToken',
-                        'deliveryType'
-                      ],
-                      searchController.text);
-                  return ListView.builder(
-                      itemCount: filteredOrder.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return SingleOrderWidget(
-                          isSeller: true,
-                          order: filteredOrder[index],
-                        );
+            Text("Orders", style: wayaTheme.textTheme.titleLarge),
+            const Gap(3),
+            Text(
+              'View and Manage your orders',
+              style: wayaTheme.textTheme.hintStyle,
+            ),
+            const Gap(20),
+         
+          
+            GridView.builder(
+                itemCount: 3,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: orders.length,
+                    mainAxisSpacing: 0,
+                    childAspectRatio: 1.22,
+                    crossAxisSpacing: 8),
+                itemBuilder: (context, index) {
+                  return InventoryWidget(
+                      metrics: orders[index].metrics,
+                      color: orders[index].color!,
+                      title: orders[index].title);
+                }),
+              const Gap(10),
+                 //? filter orders
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 1.0, vertical: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(_tabs.length, (index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndex = index;
                       });
-                }))
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 6.0, vertical: 12.0),
+                      decoration: BoxDecoration(
+                        color: _selectedIndex == index
+                            ? wayaTheme.colorScheme.primary50
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(6.0),
+                        border: Border.all(
+                          color: _selectedIndex == index
+                              ? Colors.transparent
+                              : wayaTheme.colorScheme.secondaryColor,
+                        ),
+                      ),
+                      child: Text(
+                        _tabs[index],
+                        style: TextStyle(
+                            color: _selectedIndex == index
+                                ? wayaTheme.colorScheme.customPrimary
+                                : Colors.black,
+                            fontWeight: _selectedIndex == index
+                                ? FontWeight.bold
+                                : FontWeight.bold,
+                            fontSize: 12.sp),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+             const Gap(15),
+              FilterWidget(
+              hintText: 'Search Order by ID, shop name, token etc',
+              search: searchController,
+            ),
+           
+            const Gap(20),
+            Expanded(
+                child: PaginatedDataView<Order>(
+                    uniqueKey: 'seller-orders',
+                    // trailingWidget:
+                    //     _buildTrailing(context: context, orders: orders),
+                    emptyState: EmptyState(
+                        assetImage: WayaAssets.images.wallet.searchDocu
+                            .image(scale: 1.5),
+                        message: "No Order Yet"),
+                    loadingState: CardLoadingState(
+                      count: 6,
+                    ),
+                    fetchData:
+                        ref.read(sellerOrdersVmProvider.notifier).getOrders,
+                    result: (data, s) {
+                      final filteredOrder = WayaUtils.search<Order>(
+                          data,
+                          [
+                            'id',
+                            'pickupAddress',
+                            'deliveryAddress',
+                            'shopName',
+                            'deliveryToken',
+                            'deliveryType'
+                          ],
+                          searchController.text);
+                      return ListView.builder(
+                          itemCount: filteredOrder.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return SingleOrderWidget(
+                              isSeller: true,
+                              order: filteredOrder[index],
+                            );
+                          });
+                    }))
           ],
-        )
-                
-                );
+        ));
   }
-
- 
 }

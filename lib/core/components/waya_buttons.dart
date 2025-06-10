@@ -8,10 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class WayaBackButton extends StatelessWidget {
@@ -44,6 +46,31 @@ class WayaBackButton extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class WayaStatefulButton extends StatelessWidget {
+  final bool isSelected;
+  final VoidCallback callback;
+  final String text;
+
+  // Construct.
+  const WayaStatefulButton({super.key, required this.isSelected, required this.callback, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return WayaButton(
+      callback: callback,
+      border: Border.all(color: isSelected ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300),
+      horizontalPadding: 8.w,
+      color: isSelected ? wayaTheme.colorScheme.primaryBrown50 : wayaTheme.colorScheme.transparent,
+      radius: 10.r,
+      height: 40.h,
+      text: text,
+      textColor: WayaTextStyles.hintStyle.color,
+      textStyle: WayaTextStyles.hintStyle,
     );
   }
 }
@@ -213,6 +240,7 @@ class WayaActionNav extends StatelessWidget {
 class WayaTabButton extends StatelessWidget {
   final bool isSelected;
   final bool isLongerTab;
+  final int? count;
   final String text;
   final VoidCallback onTap;
 
@@ -224,8 +252,9 @@ class WayaTabButton extends StatelessWidget {
     required this.isSelected,
     required this.text,
     required this.onTap,
-    this.width,
     this.isLongerTab = false,
+    this.count,
+    this.width,
     this.end,
   });
 
@@ -272,6 +301,27 @@ class WayaTabButton extends StatelessWidget {
                 ),
               ),
 
+              //? Finally, the other thing.
+              if (count != null)
+                ClipPath(
+                  clipper: ShapeBorderClipper(
+                    shape: StadiumBorder(),
+                  ),
+                  child: ColoredBox(
+                    color: isSelected ? theme.colorScheme.primary : theme.colorScheme.scaffoldColor,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Text(
+                        WayaValueHelper.formatNumber(count!),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: isSelected ? theme.colorScheme.white : theme.colorScheme.greyColor500,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
               //? Put the thing here if needed.
               if (end != null) end!,
             ],
@@ -290,11 +340,15 @@ class WayaCheckButton extends StatelessWidget {
   final bool hasBackground;
   final bool isExpanded;
   final bool isClickable;
+  final double? verticalPadding;
+  final double? horizontalPadding;
 
   const WayaCheckButton({
     super.key,
     required this.isSelected,
     required this.text,
+    this.verticalPadding,
+    this.horizontalPadding,
     this.onTap,
     this.isClickable = true,
     this.isExpanded = true,
@@ -308,7 +362,12 @@ class WayaCheckButton extends StatelessWidget {
 
     // The real widget.
     final contents = Container(
-      padding: EdgeInsets.only(top: 7.h, bottom: 7.h, left: 15.w),
+      padding: EdgeInsets.only(
+        top: verticalPadding ?? 7.h,
+        bottom: verticalPadding ?? 7.h,
+        left: horizontalPadding ?? 15.w,
+        // right: horizontalPadding ?? 0,
+      ),
       decoration: hasBackground
           ? BoxDecoration(
               color: isSelected
@@ -317,7 +376,8 @@ class WayaCheckButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(2000.r),
               border: Border.all(
                 color: isSelected ? theme.colorScheme.customPrimary : theme.colorScheme.greyColor300,
-              ))
+              ),
+            )
           : null,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -425,6 +485,9 @@ class WayaExpandedTabButton extends StatefulWidget {
   final String text;
   final ExpandedTabController controller;
   final double? width;
+  final double? verticalPadding;
+  final double? horizontalPadding;
+  final Offset? offset;
   final List<WayaExpandedTab> tabs;
 
   //? This is fine.
@@ -434,6 +497,9 @@ class WayaExpandedTabButton extends StatefulWidget {
     required this.text,
     required this.tabs,
     required this.controller,
+    this.offset,
+    this.verticalPadding,
+    this.horizontalPadding,
     this.width,
   }) {
     controller._widget = this;
@@ -464,7 +530,7 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
     return Expanded(
       child: PopupMenuButton(
         position: PopupMenuPosition.under,
-        offset: Offset(0, 5),
+        offset: widget.offset ?? const Offset(0, 5),
         padding: const EdgeInsets.symmetric(vertical: 15),
         shape: RoundedRectangleBorder(
           side: BorderSide(color: theme.colorScheme.greyColor300, width: 1),
@@ -481,10 +547,12 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
               value: tab.text,
               onTap: () => _do(tab),
               child: WayaCheckButton(
+                verticalPadding: widget.verticalPadding,
+                horizontalPadding: widget.horizontalPadding,
                 isSelected: tab.isSelected,
-                isClickable: false,
                 text: tab.text,
                 fontSize: fontSize,
+                isClickable: false,
               ),
             );
           },

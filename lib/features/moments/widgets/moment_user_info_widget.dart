@@ -109,11 +109,11 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                         momentId: widget.moment.id),
                   );
 
-                    widget.continues();
-
+                  widget.continues();
+                  print("dwefwefew ---- $response");
                   // if (response) {
                   if (response == false) {
-                  //  print("fwefewfw $response");
+                    //  print("fwefewfw $response");
                     return WayaSnackBar.showToast(
                         "You already submit a report");
                   }
@@ -125,7 +125,6 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
 
                   // }
 
-                
                   // }
                 },
                 child: SvgPicture.asset(
