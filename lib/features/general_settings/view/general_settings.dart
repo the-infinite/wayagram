@@ -12,6 +12,7 @@ import 'package:wayagram/features/general_settings/account_security/account_secu
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
+import 'package:wayagram/features/general_settings/post_settings/post_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
@@ -208,9 +209,38 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
             ],
           ),
-          /*  GeneralSettingsOptionTile(
+          GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
+                title: 'Post Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.csPost.path,
+                onTap: () => WayaNav.toNamed(PostSettingsPage.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Live chat',
+                iconPath: 'chat',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Wayayagram Live',
+                // iconPath: 'chat',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.chat.path,
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Synchronization settings',
+                iconPath: 'chat',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Call settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.chat.path,
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              /*  GeneralSettingsOptionModel(
                 title: 'Page Settings',
                 isRealPath: true,
                 iconPath: WayaAssets.icons.mPages.path,
@@ -222,9 +252,9 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: WayaAssets.icons.mGroup.path,
                 onTap: () => WayaNav.toNamed(GroupSettingPage.route),
               ),
-             
+              */
             ],
-          ), */
+          ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(

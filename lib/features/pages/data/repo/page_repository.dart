@@ -290,4 +290,10 @@ class PageRepository extends BaseRepository {
     final payload = {"isPublic": isPublic, "everyoneCanComment": everyoneCanComment};
     return patch("$serviceUrl/pages/update-setting/$pageId", payload);
   }
+    Future<WayaRequestResponse> getPostSettings() {
+    return get("$serviceUrl/post-settings/");
+  }
+    Future<WayaRequestResponse> updatePostSettings( bool isPublic ) async {
+    return patch("$serviceUrl/post-settings/update", {"publicity": isPublic});
+  }
 }
