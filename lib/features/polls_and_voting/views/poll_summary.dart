@@ -13,16 +13,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
-import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-import '../../../shared/features/user/models/default.dart';
 import '../../auth/account_creation/vm/successful_setup_vm.dart';
-import '../data/model/account_type_model.dart';
+
 
 class PollSummary extends ConsumerStatefulWidget {
   static const route = '/poll-summary';
