@@ -34,6 +34,7 @@ class CreatePollVotingState {
 
   final String moneyGenerated;
   final String voteCount;
+  final String? accountType;
   final String numberOfPeopleVoted;
   final String startDate;
   final String endDate;
@@ -72,6 +73,7 @@ class CreatePollVotingState {
     this.pollType = '',
     this.startDate = '',
     this.endDate = '',
+    this.accountType = '',
     this.startDateString = '',
     this.endDateString = '',
     this.dateIsoFormat = '',
@@ -123,6 +125,7 @@ class CreatePollVotingState {
     List<DocType>? uploadedDocuments,
     String? moneyGenerated,
     String? voteCount,
+    String? accountType,
     String? numberOfPeopleVoted,
     String? startDate,
     String? startDateString,
@@ -184,6 +187,7 @@ class CreatePollVotingState {
         pollDashboardModelDocs:
             pollDashboardModelDocs ?? this.pollDashboardModelDocs,
         votes: votes ?? this.votes,
+        accountType: accountType ?? this.accountType,
         castVoteModel: castVoteModel ?? this.castVoteModel,
         uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
         choices: choices ?? this.choices,
