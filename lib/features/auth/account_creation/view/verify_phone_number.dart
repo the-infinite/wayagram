@@ -11,7 +11,6 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
-import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 import 'package:wayagram/features/general_settings/reset_pin_page/verify_transaction_identity.dart';
 
 class VerifyPhoneNumber extends ConsumerWidget {
