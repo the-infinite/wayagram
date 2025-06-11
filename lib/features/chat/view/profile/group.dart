@@ -12,6 +12,7 @@ import 'package:wayagram/features/chat/modals/group/leave.dart';
 import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/group/report.dart';
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/profile/chat_media.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
@@ -36,6 +37,7 @@ class GroupChatProfilePage extends StatefulWidget {
 
 class _GroupChatProfilePageState extends State<GroupChatProfilePage> {
   late final notifier = widget.ref.read(conversationProvider.notifier);
+  late final chatNotifier = widget.ref.read(chatProvider(widget.chat.id).notifier);
   final tabController = ValueNotifier(0);
   final clearLoader = ValueNotifier(false);
 
@@ -234,6 +236,7 @@ class _GroupChatProfilePageState extends State<GroupChatProfilePage> {
                 child: ClearChatModal(
                   chat: widget.chat,
                   notifier: notifier,
+                  chatNotifier: chatNotifier,
                 ),
               ),
               text: "Clear Chat",

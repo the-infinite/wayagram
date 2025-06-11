@@ -12,6 +12,7 @@ import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/profile/chat_media.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
@@ -46,6 +47,7 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
   Widget build(BuildContext context) {
     //? First, we obtain all things needed to build this widget.
     final notifier = widget.ref.read(conversationProvider.notifier);
+    final chatNotifier = widget.ref.read(chatProvider(widget.chat.id).notifier);
     final user = widget.chat.other.userData!;
     final profile = widget.chat.other.profileData!;
     final state = widget.ref.watch(conversationProvider);
@@ -239,6 +241,7 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
               child: ClearChatModal(
                 chat: widget.chat,
                 notifier: notifier,
+                chatNotifier: chatNotifier,
               ),
             ),
             text: "Clear Chat",

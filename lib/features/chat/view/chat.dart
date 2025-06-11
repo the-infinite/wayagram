@@ -95,7 +95,8 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
       valueListenable: ChatSettingsNotifier.instance,
       builder: (context, redraws, _) => Consumer(
         builder: (context, ref, _) {
-          final state = ref.watch(chatProvider(widget.chatId));
+          final provider = chatProvider(widget.chatId);
+          final state = ref.watch(provider);
           final config = ChatSettingsNotifier.instance;
           final backgroundColor = config.isDarkMode ? Color(0xFF121212) : null;
           final grayTextColor = config.isDarkMode ? WayaColors.greyColor300 : WayaColors.greyColor500;
@@ -307,7 +308,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                     children: [
                       //? First, the divider.
                       Divider(color: WayaColors.greyColor200, height: 1),
-
+              
                       //? Second, the chat messages.
                       if (state.messages.isEmpty && state.hasLoaded)
                         Expanded(
@@ -321,22 +322,23 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                 width: 70,
                                 fit: BoxFit.cover,
                               ),
-
+              
                               // Some space.
                               const Gap(20),
-
+              
                               //* Some text
                               Text(
                                 "Send the first message",
                                 style: WayaTextStyles.titleLarge.copyWith(
+                                  color: config.isDarkMode ? Colors.white : null,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 24.sp,
                                 ),
                               ),
-
+              
                               // Some space.
                               const Gap(10),
-
+              
                               //* Some text
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -346,7 +348,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                       : "Start the conversation with ${chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User"}",
                                   maxLines: 3,
                                   textAlign: TextAlign.center,
-                                  style: WayaTextStyles.hintStyle,
+                                  style: WayaTextStyles.hintStyle.copyWith(
+                                    color: grayTextColor,
+                                  ),
                                 ),
                               ),
                             ],
@@ -381,7 +385,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                             ),
                           ),
                         ),
-
+              
                       //? Third, the chat input widget... probably?
                       ChatInputWidget(
                         controller: inputController,
