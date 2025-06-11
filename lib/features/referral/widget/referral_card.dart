@@ -57,7 +57,7 @@ class ReferralCard extends StatelessWidget {
                     style: WayaTextStyles.bodyBold,
                   ),
                   Text(
-                    "Date Signed In: ${convertToUsableDateNew(model.createdAt ?? "")}",
+                    "Date Signed up: ${convertToUsableDateNew(model.createdAt ?? "")}",
                     style: WayaTextStyles.hintStyleBold,
                   ),
                 ],
@@ -73,7 +73,7 @@ class ReferralCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                model.isEligible ?? false ? "Active" : "Deactivated",
+                model.isEligible == true ? "Eligible" : "Not Eligible",
                 style: WayaTextStyles.hintStyleSemiBold.copyWith(
                   color: model.isEligible ?? false
                       ? Colors.green[700]
