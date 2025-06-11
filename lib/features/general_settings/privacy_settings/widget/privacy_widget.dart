@@ -11,18 +11,20 @@ class PrivacyWidget extends StatelessWidget {
   final String title;
   final String value;
   final bool showSwitch;
-
   final ValueNotifier<bool>? switchValue;
   final ValueNotifier<String>? whoCanContactMe;
   final Function(bool)? onSwitchChanged;
-  const PrivacyWidget(
-      {required this.title,
-      required this.value,
-      required this.showSwitch,
-      this.whoCanContactMe,
-      this.onSwitchChanged,
-      required this.switchValue,
-      super.key});
+
+  // Construct.
+  const PrivacyWidget({
+    required this.title,
+    required this.value,
+    required this.showSwitch,
+    required this.switchValue,
+    this.whoCanContactMe,
+    this.onSwitchChanged,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +47,16 @@ class PrivacyWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title,
-                          style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                              color: wayaTheme.colorScheme.greyColor900)),
+                          style: WayaTextStyles.hintStyleBold.wayaCopyWith(color: wayaTheme.colorScheme.greyColor900)),
                       SizedBox(
-                          width: context.width * 0.5,
-                          child: Text(value,
-                              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                                  color: wayaTheme.colorScheme.greyColor500))),
+                        width: context.width * 0.5,
+                        child: Text(
+                          value,
+                          style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                            color: wayaTheme.colorScheme.greyColor500,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -64,11 +69,8 @@ class PrivacyWidget extends StatelessWidget {
                           children: [
                             Text(whoCanContactMe?.value ?? "",
                                 style: WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(
-                                        color: wayaTheme
-                                            .colorScheme.greyColor500)),
-                            Icon(Icons.arrow_forward_ios,
-                                color: wayaTheme.colorScheme.greyColor400),
+                                    .wayaCopyWith(color: wayaTheme.colorScheme.greyColor500)),
+                            Icon(Icons.arrow_forward_ios, color: wayaTheme.colorScheme.greyColor400),
                           ],
                         )
                       : CupertinoSwitch(

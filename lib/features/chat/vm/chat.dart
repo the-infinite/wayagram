@@ -221,7 +221,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
         //? Now update the UI with our changes...
         // state = state.copyWith(messages: [...conversation], isLoading: false);
       }
-    } catch (_) {
+    } catch (e) {
+      debugPrint('$e');
+
+      //? This is fine.
       final found = state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
 
       //? Now, replace this.

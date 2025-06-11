@@ -11,7 +11,7 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
-import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
+import 'package:wayagram/features/general_settings/reset_pin_page/verify_transaction_identity.dart';
 
 class VerifyPhoneNumber extends ConsumerWidget {
   final Function goToNextTab;
@@ -143,7 +143,8 @@ class VerifyPhoneNumber extends ConsumerWidget {
               ? () {
                   final code = ref.watch(verifyAccountProvider).inputCode;
                   viewModel.verifyPhone(
-                      onSuccess: () => WayaNav.to(const TransactionPinView()),
+                      onSuccess: () =>
+                          WayaNav.toNamed(VerifyTransactionIdentity.route),
                       code: code);
                 }
               : null,
@@ -159,7 +160,7 @@ class VerifyPhoneNumber extends ConsumerWidget {
         Align(
           alignment: Alignment.center,
           child: TextButton(
-              onPressed: () => WayaNav.to(const TransactionPinView()),
+              onPressed: () => WayaNav.toNamed(VerifyTransactionIdentity.route),
               child: Text(
                 "Skip for now",
                 style: wayaTheme.textTheme.descriptionStyle.copyWith(
