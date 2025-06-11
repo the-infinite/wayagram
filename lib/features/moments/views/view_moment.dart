@@ -444,7 +444,8 @@ class __TextMomentState extends State<_TextMoment> {
         recognizer: TapGestureRecognizer()
           ..onTap = () {
             // Handle URL tap
-            final uri = Uri.tryParse(url.startsWith('http') ? url : 'https://$url');
+            final uri =
+                Uri.tryParse(url.startsWith('http') ? url : 'https://$url');
             if (uri != null) {
               launchUrl(uri);
             }
@@ -483,6 +484,7 @@ class __TextMomentState extends State<_TextMoment> {
     );
   }
 }
+
 class _MediaMomentWidget extends StatefulWidget {
   final WidgetRef ref;
   final MomentData moment;
@@ -534,6 +536,8 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+
+    print("dwfewfewf ${widget.moment.content}");
     return Stack(
       fit: StackFit.expand,
       children: [
