@@ -77,6 +77,7 @@ import 'package:wayagram/features/pages/view/search_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
@@ -281,6 +282,7 @@ class WayaAppRoutes {
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
     PageSetting.route: () => PageSetting(),
+    PollRequestPayout.route: () => PollRequestPayout(),
     SearchGroupAndPage.route: () => SearchGroupAndPage(),
     SearchGroup.route: () => SearchGroup(),
     PayoutVerification.route: () => PayoutVerification(),
