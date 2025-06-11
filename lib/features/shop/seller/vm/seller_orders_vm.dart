@@ -44,10 +44,10 @@ class SellerOrdersVm extends StateNotifier<SellerOrdersState> {
     state = state.copyWith(shopId: id);
   }
 
-  Future<PaginatedResult<Order>?> getOrders({required int page}) async {
+  Future<PaginatedResult<Order>?> getPendingOrders({required int page}) async {
     try {
       final response =
-          await _orderRepository.getSellerOrders(state.shopId, page);
+          await _orderRepository.getSellerOrders(shopId: state.shopId, page: page, status: "pending");
       List<Order> orders = [];
       bool hasNextPage = false;
       if (response.success) {
@@ -61,7 +61,48 @@ class SellerOrdersVm extends StateNotifier<SellerOrdersState> {
       return null;
     } finally {}
   }
+
+    Future<PaginatedResult<Order>?> getCompletedOrders({required int page}) async {
+    try {
+      final response =
+          await _orderRepository.getSellerOrders(shopId: state.shopId, page: page, status: "completed");
+      List<Order> orders = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
+        orders = ordersResponse.data.docs;
+        hasNextPage = ordersResponse.data.hasNextPage;
+      }
+      return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    } finally {}
+  }
+
+    Future<PaginatedResult<Order>?> getCancelledOrders({required int page}) async {
+    try {
+      final response =
+          await _orderRepository.getSellerOrders(shopId: state.shopId, page: page, status:"cancelled");
+      List<Order> orders = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
+        orders = ordersResponse.data.docs;
+        hasNextPage = ordersResponse.data.hasNextPage;
+      }
+      return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    } finally {}
+  }
+
+
+
 }
+
+
 
 final sellerOrdersVmProvider =
     StateNotifierProvider<SellerOrdersVm, SellerOrdersState>((ref) {

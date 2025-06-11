@@ -14,6 +14,7 @@ import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/create_poll.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
+import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
 
 class _CreateActionButton extends StatelessWidget {
   final String icon;
@@ -189,7 +190,8 @@ class CreateSheet extends ConsumerWidget {
               _CreateActionButton(
                 icon: WayaAssets.icons.csEvent.path,
                 title: "Events",
-                description: "Bring people together with public or private event",
+                description:
+                    "Bring people together with public or private event",
                 callback: () {
                   WayaNav.toNamed(AddEvent.route);
                 },
@@ -202,7 +204,9 @@ class CreateSheet extends ConsumerWidget {
                 icon: WayaAssets.icons.csPage.path,
                 title: "Auctions",
                 description: "Auction items privately or publicly",
-                callback: () {},
+                callback: () {
+                  WayaNav.toNamed(CreateRequest.route);
+                },
               ),
 
               //> Moment --
@@ -220,7 +224,10 @@ class CreateSheet extends ConsumerWidget {
                 icon: WayaAssets.icons.csEvent.path,
                 title: "Go Live",
                 description: "Share a post or write what is on your mind",
-                callback: () {},
+                callback: () {
+                  WayaNav.goBack();
+                  WayaNavigationHelper.showComingSoonModal(false);
+                },
               ),
             ],
           )

@@ -116,6 +116,11 @@ class PollAndVotingRepository extends BaseRepository {
         "$serviceUrl/client/polls?limit=100&page=1&orderBy=createdAt&orderDirection=DESC");
   }
 
+  Future<WayaRequestResponse> getPollPayoutRequest() {
+    return get(
+        "$serviceUrl/client/polls/all/payouts?limit=10&page=1");
+  }
+
   Future<WayaRequestResponse> getSinglePollById({required String id}) {
     return get("$serviceUrl/client/polls/$id");
   }

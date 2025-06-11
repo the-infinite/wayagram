@@ -12,11 +12,17 @@ import 'package:wayagram/features/chat/widget/chat/input.dart';
 
 class ChatAttachmentDialog extends StatelessWidget {
   final ChatInputController controller;
+  final bool isDarkMode;
+  final Color? backgroundColor;
+  final Color? grayColor;
 
   // Construct.
   const ChatAttachmentDialog({
     super.key,
     required this.controller,
+    this.isDarkMode = false,
+    this.backgroundColor,
+    this.grayColor,
   });
 
   // This is fine.
@@ -40,6 +46,7 @@ class ChatAttachmentDialog extends StatelessWidget {
                 Text(
                   "Attachment Menu",
                   style: WayaTextStyles.titleLarge.copyWith(
+                    color: isDarkMode ? Colors.white : null,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -50,10 +57,10 @@ class ChatAttachmentDialog extends StatelessWidget {
                   style: IconButton.styleFrom(
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: const EdgeInsets.all(2),
-                    backgroundColor: WayaColors.greyColor200,
+                    backgroundColor: isDarkMode ? WayaColors.darkGrey : WayaColors.greyColor200,
                   ),
                   icon: WayaAssets.icons.actonDismiss.svg(
-                    color: WayaColors.black,
+                    color: isDarkMode ? WayaColors.white : WayaColors.black,
                   ),
                 ),
               ],
@@ -72,6 +79,8 @@ class ChatAttachmentDialog extends StatelessWidget {
                   icon: WayaAssets.icons.cAttachCamera.path,
                   title: "Camera",
                   description: "Send a video or photo from camera",
+                  titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
+                  textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
                   callback: () async {
                     //? If it is not...
                     try {
@@ -101,6 +110,8 @@ class ChatAttachmentDialog extends StatelessWidget {
                   icon: WayaAssets.icons.cAttachGallery.path,
                   title: "Media",
                   description: "Share photos and videos",
+                  titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
+                  textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
                   callback: () async {
                     //? If it is not...
                     try {
@@ -126,6 +137,8 @@ class ChatAttachmentDialog extends StatelessWidget {
                   icon: WayaAssets.icons.cAttachDocument.path,
                   title: "Documents",
                   description: "Share a document or file",
+                  titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
+                  textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
                   callback: () async {
                     //? If it is not...
                     try {
@@ -169,6 +182,8 @@ class ChatAttachmentDialog extends StatelessWidget {
                   icon: WayaAssets.icons.cAttachAudio.path,
                   title: "Audio",
                   description: "Share a song or audio",
+                  titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
+                  textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
                   callback: () async {
                     //? If it is not...
                     try {
@@ -199,16 +214,20 @@ class ChatAttachmentDialog extends StatelessWidget {
                 //   icon: WayaAssets.icons.cAttachLocation.path,
                 //   title: "Location",
                 //   description: "Share your location to your friends",
+                //   titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
+                //   textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
                 //   callback: () {},
                 // ),
 
                 // This is fine.
-                WayaActionButton(
-                  icon: WayaAssets.icons.cAttachContact.path,
-                  title: "Contacts",
-                  description: "Share a contact or a friend",
-                  callback: () {},
-                ),
+                // WayaActionButton(
+                //   icon: WayaAssets.icons.cAttachContact.path,
+                //   title: "Contacts",
+                //   description: "Share a contact or a friend",
+                //   titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
+                //   textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
+                //   callback: () {},
+                // ),
               ],
             ),
           ],

@@ -147,6 +147,7 @@ class WayaChatSocketArgs {
       'chatId': chatId,
       'eventUid': eventUid,
       'senderId': senderId,
+      'timestamp': timestamp,
       if (messageId != null) 'messageId': messageId,
       if (content != null) 'content': content,
       if (action != null) 'action': action,

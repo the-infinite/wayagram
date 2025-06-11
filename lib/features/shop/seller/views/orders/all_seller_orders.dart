@@ -88,9 +88,8 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
 
     final List<String> _tabs = [
       "Pending Orders",
-       "Paid Orders",
-      "Delivered Orders",
-     
+      "Completed Orders",
+      "Cancelled Orders",
     ];
 
     return WayaScaffold(
@@ -133,8 +132,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
               style: wayaTheme.textTheme.hintStyle,
             ),
             const Gap(20),
-         
-          
+
             GridView.builder(
                 itemCount: 3,
                 physics: const NeverScrollableScrollPhysics(),
@@ -150,8 +148,8 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                       color: orders[index].color!,
                       title: orders[index].title);
                 }),
-              const Gap(10),
-                 //? filter orders
+            const Gap(10),
+            //? filter orders
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 1.0, vertical: 10.0),
@@ -194,50 +192,65 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                 }),
               ),
             ),
-             const Gap(15),
-              FilterWidget(
+            const Gap(15),
+            FilterWidget(
               hintText: 'Search Order by ID, shop name, token etc',
               search: searchController,
             ),
-           
-            const Gap(20),
+
+            const Gap(15),
             Expanded(
-                child: PaginatedDataView<Order>(
-                    uniqueKey: 'seller-orders',
-                    // trailingWidget:
-                    //     _buildTrailing(context: context, orders: orders),
-                    emptyState: EmptyState(
-                        assetImage: WayaAssets.images.wallet.searchDocu
-                            .image(scale: 1.5),
-                        message: "No Order Yet"),
-                    loadingState: CardLoadingState(
-                      count: 6,
-                    ),
-                    fetchData:
-                        ref.read(sellerOrdersVmProvider.notifier).getOrders,
-                    result: (data, s) {
-                      final filteredOrder = WayaUtils.search<Order>(
-                          data,
-                          [
-                            'id',
-                            'pickupAddress',
-                            'deliveryAddress',
-                            'shopName',
-                            'deliveryToken',
-                            'deliveryType'
-                          ],
-                          searchController.text);
-                      return ListView.builder(
-                          itemCount: filteredOrder.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return SingleOrderWidget(
-                              isSeller: true,
-                              order: filteredOrder[index],
-                            );
-                          });
-                    }))
+                child: KeyedSubtree(
+                    key: ValueKey(_selectedIndex),
+                    child: PaginatedDataView<Order>(
+                        uniqueKey: _selectedIndex == 0
+                            ? 'seller-pending-orders'
+                            : _selectedIndex == 1
+                                ? 'seller-completed-orders'
+                                : 'seller-cancelled-orders',
+                        // trailingWidget:
+                        //     _buildTrailing(context: context, orders: orders),
+                        emptyState: EmptyState(
+                            assetImage: WayaAssets.images.wallet.searchDocu
+                                .image(scale: 1.5),
+                            message: "No Order Yet"),
+                        loadingState: CardLoadingState(
+                          count: 6,
+                        ),
+                        fetchData: _selectedIndex == 0
+                            ? ref
+                                .read(sellerOrdersVmProvider.notifier)
+                                .getPendingOrders
+                            : _selectedIndex == 1
+                                ? ref
+                                    .read(sellerOrdersVmProvider.notifier)
+                                    .getCompletedOrders
+                                : ref
+                                    .read(sellerOrdersVmProvider.notifier)
+                                    .getCancelledOrders,
+                        result: (data, s) {
+                          final filteredOrder = WayaUtils.search<Order>(
+                              data,
+                              [
+                                'id',
+                                'pickupAddress',
+                                'deliveryAddress',
+                                'shopName',
+                                'deliveryToken',
+                                'deliveryType'
+                              ],
+                              searchController.text);
+                          return ListView.builder(
+                              itemCount: filteredOrder.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return SingleOrderWidget(
+                                  isSeller: true,
+                                  order: filteredOrder[index],
+                                );
+                              });
+                        })))
           ],
         ));
   }

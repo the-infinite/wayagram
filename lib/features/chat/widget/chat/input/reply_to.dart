@@ -12,6 +12,7 @@ class ChatReplyToWidget extends StatefulWidget {
   final MessageModel message;
   final ChatInputController controller;
   final bool interactive;
+  final bool isDarkMode;
   final ChatModel chat;
 
   // Construct.
@@ -21,6 +22,7 @@ class ChatReplyToWidget extends StatefulWidget {
     required this.controller,
     required this.chat,
     this.interactive = true,
+    this.isDarkMode = false,
   });
 
   @override
@@ -92,9 +94,7 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                             ? "Edit message"
                             : widget.message.senderId == user.id
                                 ? "You"
-                                : other.userData?.fullname ??
-                                    other.chatUser?.displayName ??
-                                    "WayaGram User",
+                                : other.userData?.fullname ?? other.chatUser?.displayName ?? "WayaGram User",
                         style: WayaTextStyles.titleMedium.copyWith(
                           color: widget.message.senderId == user.id ? WayaColors.primary : WayaColors.primary600,
                         ),
@@ -111,7 +111,7 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                             padding: const EdgeInsets.all(2),
                           ),
                           icon: WayaAssets.icons.cMultiplyCircle.svg(
-                            color: WayaColors.greyColor400,
+                            color: widget.isDarkMode ? WayaColors.cardBorderColor200 : WayaColors.greyColor400,
                           ),
                         ),
                     ],
@@ -123,7 +123,7 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                     maxLines: 5,
                     style: WayaTextStyles.labelMedium.copyWith(
                       fontSize: 15.sp,
-                      color: Colors.black,
+                      color: widget.isDarkMode ? Colors.white : Colors.black,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),

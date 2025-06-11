@@ -25,6 +25,11 @@ class AuthRepository extends BaseRepository {
     return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
   }
 
+    Future<WayaRequestResponse> verifySetPin(VerifyOtp payload) {
+    final data = {...payload.toJson(), "purpose": "Transaction-Pin"};
+    return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
+  }
+
   Future<WayaRequestResponse> verifyPayout(String email, String otp) {
     final payload = {
       "email": email,

@@ -79,6 +79,10 @@ class ChatRepository extends BaseRepository {
     return delete("$serviceUrl/client/chat/delete/$id");
   }
 
+  Future<WayaRequestResponse> deleteMessages(String chatId) {
+    return delete("$serviceUrl/client/message/all/$chatId");
+  }
+
   Future<WayaRequestResponse> getArchivedChats([int limit = 100, int page = 1, bool archived = true]) {
     return get("$serviceUrl/client/chat/user/all?limit=$limit&page=$page&archived=$archived");
   }
