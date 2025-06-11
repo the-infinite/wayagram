@@ -213,45 +213,194 @@ class PollPayoutDocs {
       this.id, 
       this.pollId, 
       this.status, 
+      this.settledAt, 
       this.userId, 
       this.createdAt, 
-      this.updatedAt,});
+      this.updatedAt, 
+      this.poll,});
 
   PollPayoutDocs.fromJson(dynamic json) {
     id = json['id'];
     pollId = json['pollId'];
     status = json['status'];
+    settledAt = json['settledAt'];
     userId = json['userId'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    poll = json['poll'] != null ? Poll.fromJson(json['poll']) : null;
   }
   String? id;
   String? pollId;
   String? status;
+  dynamic settledAt;
   String? userId;
   String? createdAt;
   String? updatedAt;
+  Poll? poll;
   PollPayoutDocs copyWith({  String? id,
   String? pollId,
   String? status,
+  dynamic settledAt,
   String? userId,
   String? createdAt,
   String? updatedAt,
+  Poll? poll,
 }) => PollPayoutDocs(  id: id ?? this.id,
   pollId: pollId ?? this.pollId,
   status: status ?? this.status,
+  settledAt: settledAt ?? this.settledAt,
   userId: userId ?? this.userId,
   createdAt: createdAt ?? this.createdAt,
   updatedAt: updatedAt ?? this.updatedAt,
+  poll: poll ?? this.poll,
 );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['pollId'] = pollId;
     map['status'] = status;
+    map['settledAt'] = settledAt;
     map['userId'] = userId;
     map['createdAt'] = createdAt;
     map['updatedAt'] = updatedAt;
+    if (poll != null) {
+      map['poll'] = poll?.toJson();
+    }
+    return map;
+  }
+
+}
+
+Poll pollFromJson(String str) => Poll.fromJson(json.decode(str));
+String pollToJson(Poll data) => json.encode(data.toJson());
+class Poll {
+  Poll({
+      this.id, 
+      this.categories, 
+      this.creatorId, 
+      this.isSettled, 
+      this.question, 
+      this.description, 
+      this.url, 
+      this.startDate, 
+      this.endDate, 
+      this.maxVotesPerUser, 
+      this.pollType, 
+      this.status, 
+      this.pollStatus, 
+      this.feePerVote, 
+      this.voteCount, 
+      this.numberOfVoters, 
+      this.amountGenerated, 
+      this.createdAt, 
+      this.updatedAt, 
+      this.deletedAt,});
+
+  Poll.fromJson(dynamic json) {
+    id = json['id'];
+    categories = json['categories'] != null ? json['categories'].cast<String>() : [];
+    creatorId = json['creatorId'];
+    isSettled = json['isSettled'];
+    question = json['question'];
+    description = json['description'];
+    url = json['url'];
+    startDate = json['startDate'];
+    endDate = json['endDate'];
+    maxVotesPerUser = json['maxVotesPerUser'];
+    pollType = json['pollType'];
+    status = json['status'];
+    pollStatus = json['pollStatus'];
+    feePerVote = json['feePerVote'];
+    voteCount = json['voteCount'];
+    numberOfVoters = json['numberOfVoters'];
+    amountGenerated = json['amountGenerated'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    deletedAt = json['deletedAt'];
+  }
+  String? id;
+  List<String>? categories;
+  String? creatorId;
+  bool? isSettled;
+  String? question;
+  String? description;
+  String? url;
+  String? startDate;
+  String? endDate;
+  num? maxVotesPerUser;
+  String? pollType;
+  String? status;
+  String? pollStatus;
+  String? feePerVote;
+  num? voteCount;
+  num? numberOfVoters;
+  String? amountGenerated;
+  String? createdAt;
+  String? updatedAt;
+  dynamic deletedAt;
+Poll copyWith({  String? id,
+  List<String>? categories,
+  String? creatorId,
+  bool? isSettled,
+  String? question,
+  String? description,
+  String? url,
+  String? startDate,
+  String? endDate,
+  num? maxVotesPerUser,
+  String? pollType,
+  String? status,
+  String? pollStatus,
+  String? feePerVote,
+  num? voteCount,
+  num? numberOfVoters,
+  String? amountGenerated,
+  String? createdAt,
+  String? updatedAt,
+  dynamic deletedAt,
+}) => Poll(  id: id ?? this.id,
+  categories: categories ?? this.categories,
+  creatorId: creatorId ?? this.creatorId,
+  isSettled: isSettled ?? this.isSettled,
+  question: question ?? this.question,
+  description: description ?? this.description,
+  url: url ?? this.url,
+  startDate: startDate ?? this.startDate,
+  endDate: endDate ?? this.endDate,
+  maxVotesPerUser: maxVotesPerUser ?? this.maxVotesPerUser,
+  pollType: pollType ?? this.pollType,
+  status: status ?? this.status,
+  pollStatus: pollStatus ?? this.pollStatus,
+  feePerVote: feePerVote ?? this.feePerVote,
+  voteCount: voteCount ?? this.voteCount,
+  numberOfVoters: numberOfVoters ?? this.numberOfVoters,
+  amountGenerated: amountGenerated ?? this.amountGenerated,
+  createdAt: createdAt ?? this.createdAt,
+  updatedAt: updatedAt ?? this.updatedAt,
+  deletedAt: deletedAt ?? this.deletedAt,
+);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['categories'] = categories;
+    map['creatorId'] = creatorId;
+    map['isSettled'] = isSettled;
+    map['question'] = question;
+    map['description'] = description;
+    map['url'] = url;
+    map['startDate'] = startDate;
+    map['endDate'] = endDate;
+    map['maxVotesPerUser'] = maxVotesPerUser;
+    map['pollType'] = pollType;
+    map['status'] = status;
+    map['pollStatus'] = pollStatus;
+    map['feePerVote'] = feePerVote;
+    map['voteCount'] = voteCount;
+    map['numberOfVoters'] = numberOfVoters;
+    map['amountGenerated'] = amountGenerated;
+    map['createdAt'] = createdAt;
+    map['updatedAt'] = updatedAt;
+    map['deletedAt'] = deletedAt;
     return map;
   }
 

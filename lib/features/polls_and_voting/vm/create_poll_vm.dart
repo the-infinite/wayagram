@@ -908,7 +908,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.requestSettlement(pollId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
-        WayaNav.removeUntilNamed(BottomView.route, arguments: 0);
+        WayaNav.toNamed('/pollRequestPayout');
+        //WayaNav.removeUntilNamed(BottomView.route, arguments: 0);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Payout request was sent successfully!'),

@@ -130,7 +130,8 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
                       style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
-                          color: widget.status == 'Pending'? WayaColors.pendingColor2: widget.status == 'Approved'? WayaColors.success: WayaColors.error ),
+                          color: widget.status == 'Pending'? WayaColors.pendingColor2:
+                          widget.status == 'Approved'? WayaColors.success: WayaColors.error ),
                     ),
                   ),
 
