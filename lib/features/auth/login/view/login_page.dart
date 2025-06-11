@@ -50,28 +50,25 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
                     color: wayaTheme.colorScheme.greyColor600,
                   )),
               Gap(Get.height * 0.02),
-              TabBar(
-                controller: _tabController,
-                onTap: (value) {
-                  _pageController.animateToPage(value, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                },
-                indicatorSize: TabBarIndicatorSize.tab,
-                tabs: [
-                  Tab(text: 'Personal Account'),
-                  Tab(text: 'Business Account'),
-                ],
-                dividerColor: wayaTheme.colorScheme.greyColor200,
-                dividerHeight: 0.9,
-                indicatorColor: wayaTheme.colorScheme.primary,
-              ),
+              // TabBar(
+              //   controller: _tabController,
+              //   onTap: (value) {
+              //     _pageController.animateToPage(value, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+              //   },
+              //   indicatorSize: TabBarIndicatorSize.tab,
+              //   tabs: [
+              //     Tab(text: 'Personal Account'),
+              //     Tab(text: 'Business Account'),
+              //   ],
+              //   dividerColor: wayaTheme.colorScheme.greyColor200,
+              //   dividerHeight: 0.9,
+              //   indicatorColor: wayaTheme.colorScheme.primary,
+              // ),
+              //BusinessAccountView()
               Gap(20),
               SizedBox(
                 height: Get.height * 0.8,
-                child: PageView(
-                  physics: NeverScrollableScrollPhysics(),
-                  controller: _pageController,
-                  children: [PersonalAccountView(), BusinessAccountView()],
-                ),
+                child: PersonalAccountView()
               ),
              Gap(50),
             ],
