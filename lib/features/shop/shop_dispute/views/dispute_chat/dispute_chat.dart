@@ -20,7 +20,6 @@ import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
-import 'package:wayagram/features/chat/widget/chat/bubbles/typing.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
@@ -346,14 +345,6 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                         controller: inputController,
                         isLast: index == state.messages.length - 1,
                       ),
-                      child: state.typing
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                PersonalTypingIndicator(),
-                              ],
-                            )
-                          : null,
                     ),
                   ),
 

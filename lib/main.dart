@@ -30,6 +30,7 @@ import 'package:wayagram/features/auth/login/view/login_cover_page.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/chat_settings/vm.dart';
 import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
 import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
@@ -138,6 +139,9 @@ void main() async {
 
   //? Fifth, configure our visibility detector.
   VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 50);
+
+  //? Sixth, load the chat settings into memory so we can update this correctly.
+  ChatSettingsNotifier.instance.reload();
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
