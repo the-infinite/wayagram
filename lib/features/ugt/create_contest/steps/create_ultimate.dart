@@ -323,13 +323,14 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaTextFormField(
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.emailAddress,
                   controller: notifier.winnerPrize,
+                  line: 6,
                   hintText: "Enter Winner's Award",
-                  inputFormatters: [
+                 /*  inputFormatters: [
                     CurrencyTextInputFormatter.currency(
                         name: 'NGN', symbol: 'NGN', locale: 'en_NG')
-                  ],
+                  ], */
                   label: "Winner's Award",
                   borderColor:
                       formState.hasError && notifier.winnerPrize.text.isEmpty
