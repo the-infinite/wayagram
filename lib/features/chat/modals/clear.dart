@@ -6,17 +6,20 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 
 class ClearChatModal extends StatefulWidget {
   final ChatModel chat;
   final ConversationVm notifier;
+  final ChatNotifier chatNotifier;
 
   // Construct.
   const ClearChatModal({
     super.key,
     required this.chat,
     required this.notifier,
+    required this.chatNotifier,
   });
 
   @override
@@ -66,6 +69,7 @@ class _ClearChatModalState extends State<ClearChatModal> {
 
               //? The result of your efforts is needed for this much.
               if (result) {
+                await widget.chatNotifier.getMessages(true);
                 WayaNav.goBack();
                 WayaSnackBar.showToast("You have cleared the messages in this chat successfully");
               }

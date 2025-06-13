@@ -15,11 +15,17 @@ final _controllers = <String, MessageController>{};
 class ChatNotifier extends StateNotifier<ChatState> {
   final repo = MessageRepository();
   final shopDisputeRepo = ShopDisputeRepository();
+  final _typingList = <String, bool>{};
+  final typingNotifier = ValueNotifier(0);
 
   ChatNotifier(super.state);
 
   /// A helper function used to retrieve the
   bool get isActive => state.isActive;
+
+  /// A helper function used to retrieve the list of users that are currently#
+  /// typing.
+  Iterable<String> get usersTyping => _typingList.keys;
 
   /// Helper function used to get or create and then get a message controller for
   /// a chat using the ID of the chat.
@@ -100,10 +106,18 @@ class ChatNotifier extends StateNotifier<ChatState> {
     return result;
   }
 
-  /// A helper function used to set whether or not the other user is not
-  /// currently typing in at the moment.
-  void setTyping(bool value) {
-    state = state.copyWith(typing: value);
+  /// A helper function used to add a user to the list of people that are currently
+  /// typing in this chat.
+  void startTyping(String userId) {
+    _typingList[userId] = true;
+    typingNotifier.value = typingNotifier.value + 1;
+  }
+
+  /// A helper function used to remove a user from the list of people that are
+  /// currently typing in this chat.
+  void stopTyping(String userId) {
+    _typingList.remove(userId);
+    typingNotifier.value = typingNotifier.value - 1;
   }
 
   /// A helper function used to get the updated state of a SINGLE message.
