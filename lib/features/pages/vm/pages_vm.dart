@@ -1050,9 +1050,9 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<bool> updatePostSettings(bool isPublic) async {
+  Future<bool> updatePostSettings(bool isOldPublic, bool isNewPublic) async {
     try {
-      final response = await _pageRepository.updatePostSettings(isPublic);
+      final response = await _pageRepository.updatePostSettings(isOldPublic, isNewPublic);
 
       //? If this is fine.
       if (response.success) {
@@ -1072,16 +1072,16 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<bool> getPostSettings() async {
+  Future<(bool, bool)> getPostSettings() async {
     try {
       // API call
 
       final response = await _pageRepository.getPostSettings();
 
       if (response.success) {
-        return response.data["data"]["publicity"] ?? false;
+        return (response.data["data"]["oldPostprivacy"]=="public", response.data["data"]["newPostprivacy"] == "public");
       }
-      return false;
+      return (false, false);
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -1090,7 +1090,7 @@ class PageVm extends StateNotifier<PageState> {
         WayaDebugHelpers.getStackTrace(e),
       );
     } finally {}
-    return false;
+    return (false, false);
   }
 }
 
