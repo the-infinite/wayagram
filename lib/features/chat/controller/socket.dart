@@ -307,7 +307,7 @@ class WayaSocketController {
         if (args.senderId == ConversationState.self.id) return;
 
         // This is fine.
-        chatNotifier.setTyping(true);
+        chatNotifier.startTyping(args.senderId);
       },
     );
 
@@ -322,7 +322,7 @@ class WayaSocketController {
         if (args.senderId == ConversationState.self.id) return;
 
         // This is fine.
-        chatNotifier.setTyping(false);
+        chatNotifier.stopTyping(args.senderId);
       },
     );
 

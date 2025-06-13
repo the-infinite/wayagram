@@ -10,6 +10,8 @@ import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
@@ -333,7 +335,7 @@ class ChatInputController {
   }
 
   /// A helper used to get the current widget reference.
-  WidgetRef? get ref  => _ref;
+  WidgetRef? get ref => _ref;
 
   /// A helper used to get the chat that is currently being controlled by this
   /// controller.
@@ -537,6 +539,9 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
   @override
   Widget build(BuildContext context) {
+    //? This is fine.
+    final theme = Theme.of(context);
+
     //? For each time this gets constructed, notify the controller that the focus
     //? listener might have changed.
     widget.controller._focusNode = widget.focusNode;
@@ -642,6 +647,75 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
                 //? All is good and fine.
                 else ...[
+                  //? First, the typing indicator.
+                  ValueListenableBuilder(
+                    valueListenable: widget.notifier.typingNotifier,
+                    builder: (context, redraws, _) {
+                      //? The users typing.
+                      final usersTyping = widget.notifier.usersTyping;
+
+                      //? If there are no users typing....
+                      if (usersTyping.isEmpty) {
+                        return const SizedBox();
+                      }
+
+                      //? Since there are people typing.
+                      //? First, build the text.
+                      String text = "${chat!.other.userData!.fullname} is typing";
+
+                      //? If exactly two users are typing...
+                      if (usersTyping.length == 2) {
+                        final first = chat.find(usersTyping.first)!;
+                        final last = chat.find(usersTyping.last)!;
+
+                        //? Now, let's look for others.
+                        text = "${first.userData!.fullname} and ${last.userData!.fullname} are typing";
+                      }
+
+                      //? If this has three people exactly...
+                      if (usersTyping.length == 3) {
+                        final first = chat.find(usersTyping.elementAt(0))!.userData;
+                        final second = chat.find(usersTyping.elementAt(1))!.userData;
+                        final last = chat.find(usersTyping.elementAt(2))!.userData;
+
+                        //? Now, build it.
+                        text = "${first?.fullname}, ${second?.fullname} and ${last?.fullname} are typing";
+                      }
+
+                      //? If this has more than 3 users...
+                      if (usersTyping.length > 3) {
+                        final first = chat.find(usersTyping.elementAt(0))!.userData;
+                        final second = chat.find(usersTyping.elementAt(1))!.userData;
+                        final last = chat.find(usersTyping.elementAt(2))!.userData;
+
+                        //? Now, build it.
+                        text =
+                            "${first?.fullname}, ${second?.fullname}, ${last?.fullname} and ${usersTyping.length - 3} others are typing";
+                      }
+
+                      //? Show the user the pill containing who is typing.
+                      return IntrinsicWidth(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20.w),
+                          padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary50,
+                            borderRadius: BorderRadius.circular(100000.r),
+                          ),
+                          child: Text(
+                            text,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodyBold.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontSize: 13.sp,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+
                   //? Second, the reply to ..
                   ValueListenableBuilder(
                     valueListenable: widget.controller._replyTo,

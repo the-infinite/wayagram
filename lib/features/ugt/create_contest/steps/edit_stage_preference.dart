@@ -499,8 +499,8 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       return 'Winner Price is required';
                     }
                     String value = _contestController
-                            .contestPrizeWinnerTextController.text
-                            .contains("NGN")
+                        .contestPrizeWinnerTextController.text;
+                    /*   .contains("NGN")
                         ? _contestController
                             .contestPrizeWinnerTextController.text
                             .replaceAll("NGN", "")
@@ -513,7 +513,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
 
                     if (int.parse(value) <= 0) {
                       return 'Amount must be greater than zero';
-                    }
+                    } */
 
                     return null;
                   }, builder: (formState) {
@@ -521,13 +521,14 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.emailAddress,
                           controller: _contestController
                               .contestPrizeWinnerTextController,
-                          inputFormatters: [
+                          line: 6,
+                          /*    inputFormatters: [
                             CurrencyTextInputFormatter.currency(
                                 name: 'NGN', symbol: 'NGN', locale: 'en_NG')
-                          ],
+                          ], */
                           hintText: "Enter Winners price",
                           label: "Prize for the Winner? ",
                           borderColor: formState.hasError

@@ -93,6 +93,11 @@ class ChatModel {
     return allOthers.first;
   }
 
+  /// Helper used to find a giving user.
+  ChatMember? find(String userId) {
+    return chatMembers.where((user) => user.userId == userId).firstOrNull;
+  }
+
   /// Helper function  used to return the user that is currently using the app.
   ChatMember get self {
     return chatMembers.where((user) => user.userId == ConversationState.self.id).first;
