@@ -18,6 +18,7 @@ enum MessageType {
 
   @JsonValue("missed_call")
   missedCall._("missed_call");
+
   final String value;
   const MessageType._(this.value);
 }
@@ -220,7 +221,7 @@ class MessageModel {
       mediaUrl: mediaUrl,
       messageType: messageType,
       edited: edited,
-      dto: dto,
+      dto: isError ? dto : null,
       originalMessageId: replyTo?.id ?? originalMessageId,
       originalMessage: replyTo ?? originalMessage,
       momentId: momentId,

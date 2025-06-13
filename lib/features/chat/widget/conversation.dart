@@ -13,6 +13,7 @@ import 'package:wayagram/features/chat/modals/delete.dart';
 import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
+import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -302,6 +303,9 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   Widget build(BuildContext context) {
     final chat = wayaChatsCache.getCachedData(widget.chatId)!;
     final isMine = chat.lastMessage?.senderId == ConversationState.self.id;
+    final isDeleted = chat.lastMessage?.myStatus?.status == MessageStatusCode.deleted ||
+        (chat.lastMessage?.isDeleted ?? false) ||
+        (chat.lastMessage?.isDeletedBySender ?? false);
     final unread = chat.unreadCount;
     final userStatus = chat.other.chatUser?.onlineStatus;
 
@@ -353,11 +357,14 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                     //? For the message content...
                     if (chat.lastMessage != null)
                       Text(
-                        "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
+                        isDeleted
+                            ? "This message was deleted"
+                            : "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
                         maxLines: 1,
                         style: WayaTextStyles.titleMedium.copyWith(
                           fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
                           overflow: TextOverflow.ellipsis,
+                          fontStyle: isDeleted ? FontStyle.italic : null,
                           color: unread < 1 ? WayaColors.greyColor400 : WayaColors.greyColor500,
                           fontSize: 14.sp,
                         ),
@@ -389,7 +396,9 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                   const Gap(2),
 
                   // This is fine.
-                  if (chat.self.isMuted)
+                  if (isDeleted)
+                    const SizedBox.shrink()
+                  else if (chat.self.isMuted)
                     WayaAssets.icons.cProfileUnmute.svg(
                       height: 16.sp,
                       width: 16.sp,

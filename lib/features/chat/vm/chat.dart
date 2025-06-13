@@ -212,6 +212,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
           _controllers[result.id] = controller;
           _controllers.remove(messageId);
           state.messages[found] = result;
+
+          //? Update state.
+          state = state.copyWith();
         }
 
         // Notify everyone of it.
@@ -336,6 +339,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? If this went well...
     if (response.success) {
+      //? Update the conversation here.
+
       // Notify everyone of it.
       if (action == MessageDeleteAction.deleteForEveryone) {
         WayaSocketController.instance.emit(WayaChatSocketArgs.deleteMessage(state.chat!.id, id));
