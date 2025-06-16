@@ -322,16 +322,29 @@ class PageRepository extends BaseRepository {
     return patch("$serviceUrl/pages/update-setting/$pageId", payload);
   }
 
+//Post general settings
   Future<WayaRequestResponse> getPostSettings() {
     return get("$serviceUrl/post-settings/");
   }
 
   Future<WayaRequestResponse> updatePostSettings(
-      bool oldPostprivacy, bool newPostprivacy) async {
-    print("newPostprivacy: ${newPostprivacy ? "public" : "private"}");
+      bool oldPostPrivacy, bool newPostPrivacy) async {
     return patch("$serviceUrl/post-settings/update", {
-      "oldPostprivacy": oldPostprivacy ? "public" : "private",
-      "newPostprivacy": newPostprivacy ? "public" : "private"
+      "oldPostprivacy": oldPostPrivacy ? "public" : "private",
+      "newPostprivacy": newPostPrivacy ? "public" : "private"
     });
+  }
+
+  //Page general settings
+  Future<WayaRequestResponse> updatePageGeneralSettings(
+      bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
+    return patch("$serviceUrl/user/page-settings", {
+      "allowFollow": isEveryOneAllowFollow ? "everyone" : "friends",
+      "allowComments": isEveryOneAllowComment ? "everyone" : "friends"
+    });
+  }
+
+  Future<WayaRequestResponse> getPageGeneralSettings() {
+    return get("$serviceUrl/user/page-settings");
   }
 }

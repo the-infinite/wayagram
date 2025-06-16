@@ -12,6 +12,8 @@ import 'package:wayagram/features/general_settings/account_security/account_secu
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
+import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
+import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
 import 'package:wayagram/features/general_settings/post_settings/post_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -240,7 +242,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: WayaAssets.icons.chat.path,
                 onTap: () => WayaNavigationHelper.showComingSoonModal(false),
               ),
-              /*  GeneralSettingsOptionModel(
+               GeneralSettingsOptionModel(
                 title: 'Page Settings',
                 isRealPath: true,
                 iconPath: WayaAssets.icons.mPages.path,
@@ -252,7 +254,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: WayaAssets.icons.mGroup.path,
                 onTap: () => WayaNav.toNamed(GroupSettingPage.route),
               ),
-              */
+             
             ],
           ),
           GeneralSettingsOptionTile(
