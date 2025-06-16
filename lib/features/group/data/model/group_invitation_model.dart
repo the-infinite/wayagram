@@ -5,7 +5,7 @@ class GroupInvitationModel {
   GroupInvitationModel({
       this.message, 
       this.status, 
-      this.statusCode, 
+      this.statusCode,
       this.data,});
 
   GroupInvitationModel.fromJson(dynamic json) {
@@ -246,7 +246,8 @@ class GroupInvitationModelDocs {
       this.reviewedAt, 
       this.reviewedBy, 
       this.createdAt, 
-      this.updatedAt,});
+      this.updatedAt,
+      this.group,});
 
   GroupInvitationModelDocs.fromJson(dynamic json) {
     id = json['id'];
@@ -260,6 +261,7 @@ class GroupInvitationModelDocs {
     updatedAt = json['updatedAt'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    group = json['group'] != null ? Group.fromJson(json['group']) : null;
   }
   String? id;
   String? groupId;
@@ -270,6 +272,7 @@ class GroupInvitationModelDocs {
   String? reviewedBy;
   String? createdAt;
   String? updatedAt;
+  Group? group;
   GroupInvitationModelDocs copyWith({  String? id,
   String? groupId,
   String? userId,
@@ -279,6 +282,7 @@ class GroupInvitationModelDocs {
   String? reviewedBy,
   String? createdAt,
   String? updatedAt,
+  Group? group,
 }) => GroupInvitationModelDocs(  id: id ?? this.id,
   groupId: groupId ?? this.groupId,
   userId: userId ?? this.userId,
@@ -288,6 +292,7 @@ class GroupInvitationModelDocs {
   reviewedBy: reviewedBy ?? this.reviewedBy,
   createdAt: createdAt ?? this.createdAt,
   updatedAt: updatedAt ?? this.updatedAt,
+  group: group ?? this.group,
 );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -298,6 +303,134 @@ class GroupInvitationModelDocs {
     map['message'] = message;
     map['reviewedAt'] = reviewedAt;
     map['reviewedBy'] = reviewedBy;
+    map['createdAt'] = createdAt;
+    map['updatedAt'] = updatedAt;
+    map['created_at'] = createdAt;
+    map['updated_at'] = updatedAt;
+    if (group != null) {
+      map['group'] = group?.toJson();
+    }
+    return map;
+  }
+
+}
+
+Group groupFromJson(String str) => Group.fromJson(json.decode(str));
+String groupToJson(Group data) => json.encode(data.toJson());
+class Group {
+  Group({
+      this.id, 
+      this.name, 
+      this.ownerId, 
+      this.memberCount, 
+      this.description, 
+      this.isOpen, 
+      this.categories, 
+      this.url, 
+      this.isPrivate, 
+      this.coverImage, 
+      this.profileImage, 
+      this.hashtags, 
+      this.deletedAt, 
+      this.createdAt, 
+      this.updatedAt,});
+
+  Group.fromJson(dynamic json) {
+    id = json['id'];
+    name = json['name'];
+    ownerId = json['ownerId'];
+    memberCount = json['memberCount'];
+    description = json['description'];
+    isOpen = json['isOpen'];
+    categories = json['categories'];
+    // if (json['categories'] != null) {
+    //   categories = [];
+    //   json['categories'].forEach((v) {
+    //     categories?.add(Dynamic.fromJson(v));
+    //   });
+    // }
+    url = json['url'];
+    isPrivate = json['isPrivate'];
+    coverImage = json['coverImage'];
+    profileImage = json['profileImage'];
+    hashtags = json['hashtags'];
+    // if (json['hashtags'] != null) {
+    //   hashtags = [];
+    //   json['hashtags'].forEach((v) {
+    //     hashtags?.add(Dynamic.fromJson(v));
+    //   });
+    // }
+    deletedAt = json['deletedAt'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+  String? id;
+  String? name;
+  String? ownerId;
+  num? memberCount;
+  String? description;
+  bool? isOpen;
+  List<dynamic>? categories;
+  String? url;
+  bool? isPrivate;
+  String? coverImage;
+  String? profileImage;
+  List<dynamic>? hashtags;
+  dynamic deletedAt;
+  String? createdAt;
+  String? updatedAt;
+Group copyWith({  String? id,
+  String? name,
+  String? ownerId,
+  num? memberCount,
+  String? description,
+  bool? isOpen,
+  List<dynamic>? categories,
+  String? url,
+  bool? isPrivate,
+  String? coverImage,
+  String? profileImage,
+  List<dynamic>? hashtags,
+  dynamic deletedAt,
+  String? createdAt,
+  String? updatedAt,
+}) => Group(  id: id ?? this.id,
+  name: name ?? this.name,
+  ownerId: ownerId ?? this.ownerId,
+  memberCount: memberCount ?? this.memberCount,
+  description: description ?? this.description,
+  isOpen: isOpen ?? this.isOpen,
+  categories: categories ?? this.categories,
+  url: url ?? this.url,
+  isPrivate: isPrivate ?? this.isPrivate,
+  coverImage: coverImage ?? this.coverImage,
+  profileImage: profileImage ?? this.profileImage,
+  hashtags: hashtags ?? this.hashtags,
+  deletedAt: deletedAt ?? this.deletedAt,
+  createdAt: createdAt ?? this.createdAt,
+  updatedAt: updatedAt ?? this.updatedAt,
+);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['name'] = name;
+    map['ownerId'] = ownerId;
+    map['memberCount'] = memberCount;
+    map['description'] = description;
+    map['isOpen'] = isOpen;
+    if (categories != null) {
+      map['categories'] = categories?.map((v) => v.toJson()).toList();
+    }
+    map['url'] = url;
+    map['isPrivate'] = isPrivate;
+    map['coverImage'] = coverImage;
+    map['profileImage'] = profileImage;
+    if (hashtags != null) {
+      map['hashtags'] = hashtags?.map((v) => v.toJson()).toList();
+    }
+    map['deletedAt'] = deletedAt;
     map['createdAt'] = createdAt;
     map['updatedAt'] = updatedAt;
     map['created_at'] = createdAt;

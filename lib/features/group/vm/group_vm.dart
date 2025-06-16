@@ -401,6 +401,7 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.approveJoinRequest(invitationId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
+        getGroupInvitation();
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Invitation approved successfully!'),
@@ -427,6 +428,7 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.rejectGroupInvitation(invitationId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
+        getGroupInvitation();
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Invitation declined successfully!'),

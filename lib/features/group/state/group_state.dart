@@ -15,6 +15,7 @@ class GroupState {
   final TextEditingController groupName;
   final TextEditingController groupDescription;
   final TextEditingController username;
+  final TextEditingController email;
   final TextEditingController content;
   late final File? image;
   final bool? hasNextPage;
@@ -52,6 +53,7 @@ class GroupState {
     TextEditingController? groupDescription,
     TextEditingController? username,
     TextEditingController? content,
+    TextEditingController? email,
     this.allPostData,
     this.foundUserId,
     this.hasNextPage = true,
@@ -82,13 +84,15 @@ class GroupState {
   })  : groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
         username = username ?? TextEditingController(),
-        content = content ?? TextEditingController();
+        content = content ?? TextEditingController(),
+        email = email ?? TextEditingController();
 
   GroupState copyWith({
     TextEditingController? groupName,
     TextEditingController? groupDescription,
     TextEditingController? username,
     TextEditingController? content,
+    TextEditingController? email,
     bool? hasNextPage,
     List<Select>? categories,
     List<JoinRequestDocs>? docs,
@@ -123,6 +127,7 @@ class GroupState {
       groupDescription: groupDescription ?? this.groupDescription,
       username: username ?? this.username,
       content: content ?? this.content,
+      email: email ?? this.email,
       postCount: postCount ?? this.postCount,
       foundUserId: foundUserId ?? this.foundUserId,
       docs: docs ?? this.docs,
