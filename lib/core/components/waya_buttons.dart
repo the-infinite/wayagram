@@ -92,6 +92,7 @@ class WayaButton extends StatelessWidget {
     this.horizontalPadding = 6,
     this.verticalPadding = 0,
     this.height = 48,
+    this.width,
     this.isDisabled,
     this.fontSize,
     this.shape = BoxShape.rectangle,
@@ -114,6 +115,7 @@ class WayaButton extends StatelessWidget {
   final double horizontalPadding;
   final double verticalPadding;
   final double? height;
+  final double? width;
   final double? fontSize;
 
   @override
@@ -134,6 +136,7 @@ class WayaButton extends StatelessWidget {
             },
       child: Container(
         height: height,
+        width: width,
         padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
         decoration: BoxDecoration(
           shape: shape,

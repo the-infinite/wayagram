@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/vm/default.dart';
 import 'package:wayagram/features/notifications/widgets/notification_widget.dart';
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 class AllNotifications extends ConsumerWidget {
   final List<NotificationModel> data;
@@ -15,7 +17,18 @@ class AllNotifications extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notify = ref.watch(notificationProvider.notifier);
+    final notify = ref.read(notificationProvider.notifier);
+
+    if (data.isEmpty) {
+      return Expanded(
+        child: Center(
+          child: EmptyState(
+            assetImage: WayaAssets.icons.emptyState.svg(),
+            message: "Nothing to show yet",
+          ),
+        ),
+      );
+    }
 
     // Return this one.
     return RefreshIndicator(
