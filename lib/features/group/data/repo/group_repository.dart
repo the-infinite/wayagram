@@ -137,9 +137,23 @@ class GroupRepository extends BaseRepository {
     return post("$serviceUrl/groups/join-requests/approve/$requestId", payload, showErrors: true);
   }
 
+  Future<WayaRequestResponse> acceptGroupInvitation(String invitationId) {
+    final payload = {};
+    return post("$serviceUrl/groups/invitations/accept/$invitationId", payload, showErrors: true);
+  }
+
   Future<WayaRequestResponse> rejectJoinRequest(String requestId) {
     final payload = {};
     return post("$serviceUrl/groups/join-requests/reject/$requestId", payload, showErrors: true);
+  }
+
+  Future<WayaRequestResponse> rejectGroupInvitation(String invitationId) {
+    final payload = {};
+    return post("$serviceUrl/groups/invitations/reject/$invitationId", payload, showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getGroupInvitation() {
+    return get("$serviceUrl/groups/invitations");
   }
 
   Future<WayaRequestResponse> inviteUserToGroup(String groupId, String role, targetId) {
@@ -190,4 +204,19 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> checkJoinGroupRequest(groupId) {
     return get("$serviceUrl/groups/check-join/$groupId");
   }
+
+  // Group general settings
+    Future<WayaRequestResponse> updateGroupGeneralSettings(
+      bool allowJoin, bool approveJoinRequest) async {
+    return patch("$serviceUrl/user/group-settings", {
+      "allowJoin": allowJoin,
+      "approveJoinRequest": approveJoinRequest
+    });
+  }
+
+  Future<WayaRequestResponse> getGroupGeneralSettings() {
+    return get("$serviceUrl/user/group-settings");
+  }
 }
+
+ 
