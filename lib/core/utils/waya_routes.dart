@@ -51,12 +51,14 @@ import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
 import 'package:wayagram/features/group/view/create_group_post.dart';
+import 'package:wayagram/features/group/view/edit_group_member.dart';
 import 'package:wayagram/features/group/view/group_setting.dart';
 import 'package:wayagram/features/group/view/group_suggestion.dart';
 import 'package:wayagram/features/group/view/groups.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
+import 'package:wayagram/features/group/view/user_group_invitation.dart';
 import 'package:wayagram/features/group/view/view_full_media.dart';
 import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/moments/views/media_moment.dart';
@@ -370,6 +372,7 @@ class WayaAppRoutes {
     AddGroupMember.route: () =>
         AddGroupMember(id: WayaNav.search['id'].toString()),
     SearchView.route: () => SearchView(),
+    EditGroupMemberInfo.route: () => EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
     SinglePollScreen.route: () => SinglePollScreen(),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
@@ -398,6 +401,7 @@ class WayaAppRoutes {
     ShopSettingPage.route: () => ShopSettingPage(),
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
+    UserGroupInvitation.route: () => UserGroupInvitation(),
     EventSettingsPage.route: () => EventSettingsPage(),
     PostSettingsPage.route: () => PostSettingsPage(),
     UserAction.route: () => UserAction(),
