@@ -16,6 +16,7 @@ import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/group_category_model.dart';
+import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
@@ -334,6 +335,47 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
     }
   }
+      Future<bool> updateGroupGeneralSettings(bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
+    try {
+      final response = await _groupRepository.updateGroupGeneralSettings(isEveryOneAllowFollow, isEveryOneAllowComment);
+
+      //? If this is fine.
+      if (response.success) {
+        return true;
+      }
+
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.posts,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return false;
+  }
+    Future<(bool, bool)> getGroupGeneralSettings() async {
+    try {
+      // API call
+
+      final response = await _groupRepository.getGroupGeneralSettings();
+
+      if (response.success) {
+        return (response.data["data"]["allowJoin"]==true, response.data["data"]["approveJoinRequest"] == true);
+      }
+      return (false, false);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+    return (false, false);
+  }
 
   void prefillFunc(GroupModel group) {
     state = state.copyWith(
@@ -394,6 +436,60 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
+  Future<void> acceptGroupInvitation(ctx, String invitationId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.approveJoinRequest(invitationId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        getGroupInvitation();
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Invitation approved successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> rejectGroupInvitation(ctx, String invitationId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.rejectGroupInvitation(invitationId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        getGroupInvitation();
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Invitation declined successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<bool> inviteUserToGroup(ctx, String groupId, String role, String targetId) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -418,6 +514,25 @@ class GroupVm extends StateNotifier<GroupState> {
     }
 
     return false;
+  }
+
+  Future<void> getGroupInvitation() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getGroupInvitation();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        GroupInvitationModel responseModel = GroupInvitationModel.fromJson(response.data);
+        state = state.copyWith(groupInvitationModelDocs: responseModel.data?.docs);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
   }
 
   Future<void> getGroupSinglePosts(String groupId) async {

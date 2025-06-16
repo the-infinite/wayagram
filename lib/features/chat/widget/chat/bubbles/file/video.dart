@@ -186,6 +186,7 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                   widget.video,
                   controller: controller,
                   controls: widget.interactive ? WayaVideoControls.message : WayaVideoControls.content,
+                  canFocus: widget.message?.dto == null,
                 ),
               ),
             ),

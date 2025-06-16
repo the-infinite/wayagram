@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 
-class TransactionWidget extends StatelessWidget {
+class TransactionWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final String purpose;
   final String transactionType;
   final String amount;
   final String date;
-  const TransactionWidget({super.key,
-   required this.onTap, required this.purpose,
-    required this.transactionType, required this.amount,
-    required this.date});
+  const TransactionWidget(
+      {super.key,
+      required this.onTap,
+      required this.purpose,
+      required this.transactionType,
+      required this.amount,
+      required this.date});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -28,7 +34,6 @@ class TransactionWidget extends StatelessWidget {
         border: Border.all(color: Theme.of(context).colorScheme.greyColor100),
       ),
       child: ListTile(
-
         onTap: onTap,
         tileColor: wayaTheme.colorScheme.cardBackgroudColor,
         leading: Container(
@@ -47,71 +52,82 @@ class TransactionWidget extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     fontFamily: WayaConstants.fontFamily,
                     fontSize: 14.sp,
-                    color: wayaTheme.colorScheme.greyColor700
-                )),
+                    color: wayaTheme.colorScheme.greyColor700)),
             const Spacer(),
-            transactionType == 'FUNDING' || transactionType == 'REFUND'?
-            Text(
-              "+₦${amount.toString()}",
-              style: wayaTheme.textTheme.bodyMedium!
-                  .copyWith(color: wayaTheme.colorScheme.success,
-                fontWeight: FontWeight.w400,
-                fontFamily: WayaConstants.fontFamily,
-                fontSize: 12.sp,),
-            ):
-            Text(
-              "-₦${amount.toString()}",
-              style: wayaTheme.textTheme.bodyMedium!
-                  .copyWith(color: WayaColors.error,
-                fontWeight: FontWeight.w400,
-                fontFamily: WayaConstants.fontFamily,
-                fontSize: 12.sp,),
-            )
+            transactionType == 'FUNDING' || transactionType == 'REFUND'
+                ? Text(
+                    ref.watch(hideShowBalanceProvider)
+                        ? "xxxxxx"
+                        : "+₦${amount.toString()}",
+                    style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                      color: wayaTheme.colorScheme.success,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: WayaConstants.fontFamily,
+                      fontSize: 12.sp,
+                    ),
+                  )
+                : Text(
+                    //  "-₦${amount.toString()}",
+                    ref.watch(hideShowBalanceProvider)
+                        ? "xxxxxx"
+                        : "-₦${amount.toString()}",
+                    style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                      color: WayaColors.error,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: WayaConstants.fontFamily,
+                      fontSize: 12.sp,
+                    ),
+                  )
           ],
         ),
         subtitle: Row(
           children: [
-            transactionType == 'FUNDING' || transactionType == 'REFUND'?
-            Container(
-              decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.success50,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.center,
-              height: 17.h,
-              width: 48.w,
-              child: Text('Credit',
-                style: wayaTheme.textTheme.labelSmall!
-                    .copyWith(color: wayaTheme.colorScheme.success,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: WayaConstants.fontFamily,
-                  fontSize: 12.sp,
-                ),
-              ),
-            ):
-            Container(
-              decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.error50,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.center,
-              height: 17.h,
-              width: 48.w,
-              child: Text('Debit',
-                style: wayaTheme.textTheme.labelSmall!
-                    .copyWith(color: wayaTheme.colorScheme.error,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: WayaConstants.fontFamily,
-                  fontSize: 12.sp,
-                ),
-              ),
-            ),
+            transactionType == 'FUNDING' || transactionType == 'REFUND'
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.success50,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    alignment: Alignment.center,
+                    height: 17.h,
+                    width: 48.w,
+                    child: Text(
+                      'Credit',
+                      style: wayaTheme.textTheme.labelSmall!.copyWith(
+                        color: wayaTheme.colorScheme.success,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: WayaConstants.fontFamily,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.error50,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    alignment: Alignment.center,
+                    height: 17.h,
+                    width: 48.w,
+                    child: Text(
+                      'Debit',
+                      style: wayaTheme.textTheme.labelSmall!.copyWith(
+                        color: wayaTheme.colorScheme.error,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: WayaConstants.fontFamily,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ),
             const Spacer(),
-            Text(date,
-              style: TextStyle(color: wayaTheme.colorScheme.greyColor500,
+            Text(
+              date,
+              style: TextStyle(
+                color: wayaTheme.colorScheme.greyColor500,
                 fontWeight: FontWeight.w400,
                 fontFamily: WayaConstants.fontFamily,
-                fontSize: 12.sp,),
+                fontSize: 12.sp,
+              ),
             )
           ],
         ),

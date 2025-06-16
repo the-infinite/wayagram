@@ -11,7 +11,6 @@ class ChatState {
   final bool hasNextPage;
   final int totalCount;
   final int totalPages;
-  final bool typing;
   final bool isActive;
 
   // This is fine.
@@ -25,7 +24,6 @@ class ChatState {
     required this.totalPages,
     required this.hasNextPage,
     required this.page,
-    required this.typing,
     required this.isActive,
   });
 
@@ -41,8 +39,7 @@ class ChatState {
     hasNextPage: true,
     page: 1,
     isActive: false,
-    typing: false,
-  );
+   );
 
   /// A helper function used to copy the contents of this chat's internal state
   /// and then pass it around.
@@ -55,7 +52,6 @@ class ChatState {
     bool? hasNextPage,
     int? totalCount,
     int? totalPages,
-    bool? typing,
     bool? isActive,
   }) {
     return ChatState(
@@ -68,7 +64,6 @@ class ChatState {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       page: page ?? this.page,
-      typing: typing ?? this.typing,
       isActive: isActive ?? this.isActive,
     );
   }

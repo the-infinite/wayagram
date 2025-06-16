@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
@@ -13,13 +14,14 @@ import 'package:wayagram/features/chat/modals/delete.dart';
 import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
+import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/shared/cache/chat.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
-class ConversationWidget extends StatefulWidget {
+class ConversationWidget extends ConsumerStatefulWidget {
   final String chatId;
   final ChatNotifier notifier;
   final ConversationVm conversationNotifier;
@@ -39,10 +41,10 @@ class ConversationWidget extends StatefulWidget {
   });
 
   @override
-  State<ConversationWidget> createState() => _ConversationWidgetState();
+  ConsumerState<ConversationWidget> createState() => _ConversationWidgetState();
 }
 
-class _ConversationWidgetState extends State<ConversationWidget> {
+class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
   /// Helper function used to navigate to the current chat screen.
   void _toChat() async {
     final chat = wayaChatsCache.getCachedData(widget.chatId)!;
@@ -301,7 +303,12 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   @override
   Widget build(BuildContext context) {
     final chat = wayaChatsCache.getCachedData(widget.chatId)!;
+    final consumerState = ref.watch(conversationProvider);
     final isMine = chat.lastMessage?.senderId == ConversationState.self.id;
+    final isDeleted = chat.lastMessage?.myStatus?.status == MessageStatusCode.deleted ||
+        (chat.lastMessage?.isDeleted ?? false) ||
+        (chat.lastMessage?.isDeletedBySender ?? false);
+    final isBlocked = chat.chatType == ChatType.personal && consumerState.isBlocked(chat.other.userId);
     final unread = chat.unreadCount;
     final userStatus = chat.other.chatUser?.onlineStatus;
 
@@ -353,11 +360,16 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                     //? For the message content...
                     if (chat.lastMessage != null)
                       Text(
-                        "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
+                        isBlocked
+                            ? "This user was blocked"
+                            : isDeleted
+                                ? "This message was deleted"
+                                : "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
                         maxLines: 1,
                         style: WayaTextStyles.titleMedium.copyWith(
                           fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
                           overflow: TextOverflow.ellipsis,
+                          fontStyle: isBlocked || isDeleted ? FontStyle.italic : null,
                           color: unread < 1 ? WayaColors.greyColor400 : WayaColors.greyColor500,
                           fontSize: 14.sp,
                         ),
@@ -389,7 +401,9 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                   const Gap(2),
 
                   // This is fine.
-                  if (chat.self.isMuted)
+                  if (isBlocked || isDeleted)
+                    const SizedBox.shrink()
+                  else if (chat.self.isMuted)
                     WayaAssets.icons.cProfileUnmute.svg(
                       height: 16.sp,
                       width: 16.sp,

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
+import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
@@ -14,6 +15,7 @@ class GroupState {
   final TextEditingController groupName;
   final TextEditingController groupDescription;
   final TextEditingController username;
+  final TextEditingController email;
   final TextEditingController content;
   late final File? image;
   final bool? hasNextPage;
@@ -29,6 +31,7 @@ class GroupState {
   List<EventDoc>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
   List<GroupModel>? recommendedGroupDocs;
+  List<GroupInvitationModelDocs>? groupInvitationModelDocs;
   List<PostModel>? getAllPost;
   List<PostModel>? groupPostdocs;
   List<PostModel>? groupPopularPostdocs;
@@ -50,6 +53,7 @@ class GroupState {
     TextEditingController? groupDescription,
     TextEditingController? username,
     TextEditingController? content,
+    TextEditingController? email,
     this.allPostData,
     this.foundUserId,
     this.hasNextPage = true,
@@ -69,6 +73,7 @@ class GroupState {
     this.categories = const [],
     this.groupPopularPostdocs = const [],
     this.docs = const [],
+    this.groupInvitationModelDocs = const [],
     this.groupPostdocs = const [],
     this.allGroupMemberDocs = const [],
     this.getAllGroups = const [],
@@ -79,19 +84,22 @@ class GroupState {
   })  : groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
         username = username ?? TextEditingController(),
-        content = content ?? TextEditingController();
+        content = content ?? TextEditingController(),
+        email = email ?? TextEditingController();
 
   GroupState copyWith({
     TextEditingController? groupName,
     TextEditingController? groupDescription,
     TextEditingController? username,
     TextEditingController? content,
+    TextEditingController? email,
     bool? hasNextPage,
     List<Select>? categories,
     List<JoinRequestDocs>? docs,
     List<GroupModel>? getAllGroups,
     List<EventDoc>? fetchAllEventDocs,
     List<PostModel>? groupPopularPostdocs,
+    List<GroupInvitationModelDocs>? groupInvitationModelDocs,
     List<AllGroupMemberDocs>? allGroupMemberDocs,
     List<GroupModel>? recommendedGroupDocs,
     List<PostModel>? groupPostdocs,
@@ -119,6 +127,7 @@ class GroupState {
       groupDescription: groupDescription ?? this.groupDescription,
       username: username ?? this.username,
       content: content ?? this.content,
+      email: email ?? this.email,
       postCount: postCount ?? this.postCount,
       foundUserId: foundUserId ?? this.foundUserId,
       docs: docs ?? this.docs,
@@ -126,6 +135,7 @@ class GroupState {
       categories: categories ?? this.categories,
       groupPopularPostdocs: groupPopularPostdocs ?? this.groupPopularPostdocs,
       getAllPost: getAllPost ?? this.getAllPost,
+      groupInvitationModelDocs: groupInvitationModelDocs ?? this.groupInvitationModelDocs,
       getAllGroups: getAllGroups ?? this.getAllGroups,
       fetchAllEventDocs: fetchAllEventDocs ?? this.fetchAllEventDocs,
       allGroupMemberDocs: allGroupMemberDocs ?? this.allGroupMemberDocs,

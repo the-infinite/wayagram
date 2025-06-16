@@ -190,7 +190,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                                         //* When the user joined
                                         Text(
-                                          formatTimeAgo('${postData.createdAt}'),
+                                          WayaDateHelper.getSocialTimeAgo(postData.createdAt),
                                           style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                             fontSize: 14.sp,
                                             fontWeight: FontWeight.w400,

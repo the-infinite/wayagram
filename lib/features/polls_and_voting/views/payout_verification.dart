@@ -226,8 +226,6 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
             callback: !viewModelState.isLoading
                 ? () {
               final code = ref.watch(verifyAccountProvider).inputCode;
-              debugPrint('DARLINGTON Code ==> $code');
-              debugPrint('DARLINGTON POLLID ==> ${ args['PollId']}');
               viewModel.verifyPayout(
                   onSuccess: () =>  WayaUtils.showModalSheet(
                     context,
@@ -235,32 +233,6 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                   ),
                   code: code,
                   email: '${ConversationState.self.email}');
-
-           /*   if (args != null) {
-                ProfileEditType type = args['type'] as ProfileEditType;
-                if (type == ProfileEditType.email) {
-
-                  WayaNav.replaceNamed(
-                    EditNamePage.route,
-                    arguments: ProfileEditArguments(
-                        editType: ProfileEditType.email,
-                        initialValue: args['initial'],
-                        code: code),
-                  );
-                } else {
-                  WayaNav.replaceNamed(EditNamePage.route,
-                      arguments: ProfileEditArguments(
-                          editType: ProfileEditType.phone,
-                          initialValue: args['initial'],
-                          code: code));
-                }
-
-                return;
-              }*/
-
-
-              // WayaNav.replaceNamed('/reset-pin-page',
-              //     arguments: {'code': code});
             }
                 : null,
             centerWidget: LoadingState(

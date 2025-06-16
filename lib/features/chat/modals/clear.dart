@@ -1,0 +1,99 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
+
+class ClearChatModal extends StatefulWidget {
+  final ChatModel chat;
+  final ConversationVm notifier;
+  final ChatNotifier chatNotifier;
+
+  // Construct.
+  const ClearChatModal({
+    super.key,
+    required this.chat,
+    required this.notifier,
+    required this.chatNotifier,
+  });
+
+  @override
+  State<ClearChatModal> createState() => _ClearChatModalState();
+}
+
+class _ClearChatModalState extends State<ClearChatModal> {
+  final loadingController = ValueNotifier(false);
+
+  //? This is fine.
+  @override
+  void dispose() {
+    loadingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //? The things required to build it.
+    final wayaTheme = Theme.of(context);
+
+    //? The components.
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          //? The hint next.
+          Text(
+            maxLines: 3,
+            textAlign: TextAlign.center,
+            "Are you sure you want to clear this conversation?",
+            style: wayaTheme.textTheme.hintStyle.copyWith(
+              fontSize: 16.sp,
+            ),
+          ),
+
+          // Some space.
+          const Gap(30),
+
+          //? The button to submit the report.
+          WayaProgressiveButton(
+            callback: () async {
+              //? Get the result.
+              final result = await widget.notifier.clearChat(widget.chat.id);
+
+              //? The result of your efforts is needed for this much.
+              if (result) {
+                await widget.chatNotifier.getMessages(true);
+                WayaNav.goBack();
+                WayaSnackBar.showToast("You have cleared the messages in this chat successfully");
+              }
+            },
+            notifier: loadingController,
+            text: "Yes",
+          ),
+
+          // Some space.
+          const Gap(10),
+
+          //? The button to navigate backward.
+          WayaButton(
+            callback: () => WayaNav.goBack(),
+            textColor: wayaTheme.colorScheme.greyColor500,
+            color: wayaTheme.colorScheme.transparent,
+            border: Border.all(
+              color: wayaTheme.colorScheme.greyColor500,
+              width: 1,
+            ),
+            text: 'Cancel',
+          )
+        ],
+      ),
+    );
+  }
+}

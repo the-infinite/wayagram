@@ -17,13 +17,16 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late PageController _pageController;
+  //late PageController _pageController;
+
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
-    _pageController = PageController();
+    //_pageController = PageController();
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +84,7 @@ class _LoginPageState extends ConsumerState<LoginPage> with SingleTickerProvider
   @override
   void dispose() {
     _tabController.dispose();
+    //_pageController.dispose();
     super.dispose();
   }
 }

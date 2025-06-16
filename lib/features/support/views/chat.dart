@@ -11,7 +11,6 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
-import 'package:wayagram/features/chat/widget/chat/bubbles/typing.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/support/vm/chat.dart';
 
@@ -165,14 +164,6 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                       controller: inputController,
                       isLast: index == state.messages.length - 1,
                     ),
-                    child: state.typing
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              PersonalTypingIndicator(),
-                            ],
-                          )
-                        : null,
                   ),
                 ),
 

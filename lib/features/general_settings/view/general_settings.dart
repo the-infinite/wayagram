@@ -8,12 +8,14 @@ import 'package:wayagram/core/helpers/package.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
-import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/account_security/account_security.dart';
+import 'package:wayagram/features/general_settings/chat_settings/view.dart';
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
+import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
+import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
 import 'package:wayagram/features/general_settings/post_settings/post_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -39,8 +41,7 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -97,8 +98,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(
-                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //
@@ -126,14 +126,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Set Transaction PIN',
                 iconPath: 'password',
-                onTap: () => {
-                  WayaNav.toNamed(VerifyTransactionIdentity.route,
-                      arguments: "account-setting")
-
-                  /**
-                   
-                   */
-                },
+                onTap: () => {WayaNav.toNamed(VerifyTransactionIdentity.route, arguments: "account-setting"),},
               ),
               /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
@@ -179,6 +172,11 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Chat Settings',
+                iconPath: 'chat2',
+                onTap: () => WayaNav.to(const ChatSettingsPage()),
+              ),
               GeneralSettingsOptionModel(
                 title: 'Friends & Followers',
                 iconPath: 'users_group',
@@ -250,7 +248,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: WayaAssets.icons.chat.path,
                 onTap: () => WayaNavigationHelper.showComingSoonModal(false),
               ),
-              /*  GeneralSettingsOptionModel(
+               GeneralSettingsOptionModel(
                 title: 'Page Settings',
                 isRealPath: true,
                 iconPath: WayaAssets.icons.mPages.path,
@@ -262,7 +260,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: WayaAssets.icons.mGroup.path,
                 onTap: () => WayaNav.toNamed(GroupSettingPage.route),
               ),
-              */
+             
             ],
           ),
           GeneralSettingsOptionTile(

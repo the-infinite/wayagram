@@ -73,7 +73,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? Parse the conversations as they are in the response object...
       final docs = (data['docs'] as List)
           .map((doc) => ChatModel.fromJson(doc))
-          .where((chat) => (chat.latestMessageId != null && chat.chatType != ChatType.group) || chat.chatType == ChatType.group)
+          .where((chat) =>
+              (chat.latestMessageId != null && chat.chatType != ChatType.group) || chat.chatType == ChatType.group)
           .toList();
 
       //? First, we check each of the members in each conversation...
@@ -435,6 +436,20 @@ class ConversationVm extends StateNotifier<ConversationState> {
       return muteOrUnmuteUserEndpoint(id, dateConversion(value.first.label));
     }, false);
     return false;
+  }
+
+  /// Helper function used to clear all the messages in a chat.
+  Future<bool> clearChat(String id) async {
+    //? This is fine.
+    final response = await repo.deleteMessages(id);
+
+    //? If this went well, remove it from the list of chats.
+    if (response.success) {
+      await getChatDetails(id);
+    }
+
+    //? Return whether or not this is true.
+    return response.success;
   }
 
   /// Helper function used to select what date corresponds with a give.
