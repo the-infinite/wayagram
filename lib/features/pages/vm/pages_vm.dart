@@ -1050,6 +1050,49 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
+    Future<bool> updatePageGeneralSettings(bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
+    try {
+      final response = await _pageRepository.updatePageGeneralSettings(isEveryOneAllowFollow, isEveryOneAllowComment);
+
+      //? If this is fine.
+      if (response.success) {
+        return true;
+      }
+
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.posts,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return false;
+  }
+    Future<(bool, bool)> getPageGeneralSettings() async {
+    try {
+      // API call
+
+      final response = await _pageRepository.getPageGeneralSettings();
+
+      if (response.success) {
+        return (response.data["data"]["allowComments"]=="everyone", response.data["data"]["allowFollow"] == "everyone");
+      }
+      return (false, false);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+    return (false, false);
+  }
+
+
   Future<bool> updatePostSettings(bool isOldPublic, bool isNewPublic) async {
     try {
       final response = await _pageRepository.updatePostSettings(isOldPublic, isNewPublic);
