@@ -261,49 +261,71 @@ class WayaUtils {
   static List<T> strictSearch<T extends BaseModel<T>>(
     List<T> data,
     List<String> accessorKeys,
-    String searchTerm,
-  ) {
+    String searchTerm, {
+    List<List<String>>? combinedFields,
+  }) {
     if (searchTerm.isEmpty) {
       return [];
     }
 
+    final lowerSearchTerm = searchTerm.toLowerCase();
+
     final filteredData = data.where((item) {
       final map = item.toMap();
-      return accessorKeys.any((key) {
+
+      final hasMatchInIndividualFields = accessorKeys.any((key) {
         final value = map[key];
-
-        if (value is String) {
-          return value.toLowerCase().contains(searchTerm.toLowerCase());
-        } else if (value is List<String>) {
-          return value.any((element) =>
-              element.toLowerCase().contains(searchTerm.toLowerCase()));
-        }
-
-        return false;
+        return _checkValueMatch(value, lowerSearchTerm);
       });
+
+      if (hasMatchInIndividualFields) return true;
+
+      if (combinedFields != null) {
+        for (final fieldGroup in combinedFields) {
+          final combinedValue = fieldGroup.map((key) {
+            final value = map[key];
+            return value is String ? value : '';
+          }).join(' ');
+
+          if (combinedValue.toLowerCase().contains(lowerSearchTerm)) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     }).toList();
 
-    return filteredData.isNotEmpty ? filteredData : [];
+    return filteredData;
+  }
+
+  static bool _checkValueMatch(dynamic value, String lowerSearchTerm) {
+    if (value is String) {
+      return value.toLowerCase().contains(lowerSearchTerm);
+    } else if (value is List<String>) {
+      return value
+          .any((element) => element.toLowerCase().contains(lowerSearchTerm));
+    }
+    return false;
   }
 
   static String timeLeftUntil(String isoDate) {
-  final targetDate = DateTime.parse(isoDate).toUtc();
-  final now = DateTime.now().toUtc();
-  final difference = targetDate.difference(now);
+    final targetDate = DateTime.parse(isoDate).toUtc();
+    final now = DateTime.now().toUtc();
+    final difference = targetDate.difference(now);
 
-  if (difference.isNegative) {
-    return 'Expired';
+    if (difference.isNegative) {
+      return 'Expired';
+    }
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} left';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} left';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} left';
+    } else {
+      return '${difference.inSeconds} second${difference.inSeconds == 1 ? '' : 's'} left';
+    }
   }
-
-  if (difference.inDays > 0) {
-    return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} left';
-  } else if (difference.inHours > 0) {
-    return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} left';
-  } else if (difference.inMinutes > 0) {
-    return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} left';
-  } else {
-    return '${difference.inSeconds} second${difference.inSeconds == 1 ? '' : 's'} left';
-  }
-}
-
 }

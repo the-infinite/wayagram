@@ -159,7 +159,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  WayaNav.toNamed(WayaAppRoutes.getGroupDetailsPage(postData.groupId!));
+                                  WayaNav.toNamed(WayaAppRoutes.getGroupDetailsPage(postData.groupId ?? ''));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +182,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                       children: [
                                         //* The user's name.
                                         Text(
-                                          postData.group!.name,
+                                          postData.group?.name ?? '',
                                           style: wayaTheme.textTheme.bodyBold.copyWith(
                                             fontSize: 16.sp,
                                           ),
@@ -206,7 +206,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(postData.pageId!));
+                                  WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(postData.pageId?? ''));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,7 +229,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                       children: [
                                         //* The user's name.
                                         Text(
-                                          postData.page!.name,
+                                          postData.page?.name ?? '',
                                           style: wayaTheme.textTheme.bodyBold.copyWith(
                                             fontSize: 16.sp,
                                           ),
@@ -257,11 +257,11 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     //? The user's image.
-                                    ChatProfilePicture(
-                                      user: postData.user!,
-                                      radius: 20,
-                                      showActive: false,
-                                    ),
+                                    // ChatProfilePicture(
+                                    //   user: postData.user!,
+                                    //   radius: 20,
+                                    //   showActive: false,
+                                    // ),
 
                                     // Space.
                                     SizedBox(width: 10.w),
@@ -274,7 +274,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                       children: [
                                         //* The user's name.
                                         Text(
-                                          postData.user!.fullname,
+                                          postData.user?.fullname ?? '',
                                           style: wayaTheme.textTheme.bodyBold.copyWith(
                                             fontSize: 16.sp,
                                           ),
@@ -345,7 +345,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                           WayaNav.toNamed(WayaAppRoutes.getEditPostScreen(
                                               postData.id,
                                               postData.content,
-                                              postData.privacy,
+                                              postData.privacy ?? '  ',
                                               postData.media.isEmpty ? '' : jsonEncode(postData.media)));
                                         },
                                         child: WayaActionNav(
