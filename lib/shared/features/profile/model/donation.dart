@@ -52,6 +52,10 @@ class DonationModel {
     required this.updatedAt,
   });
 
+  int get engagementCount => donationCount ?? 0;
+
+  double get earnings => double.tryParse(amountRaised.toString().replaceAll(",", "").replaceAll(".00", "")) ?? 0;
+
   factory DonationModel.fromJson(Map<String, dynamic> json) => _$DonationModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$DonationModelToJson(this);

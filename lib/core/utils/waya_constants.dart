@@ -4,7 +4,7 @@ class WayaConstants {
   static const baseUrl = 'https://services.wayagram.ng/';
   static const webUrl = 'https://wayagram.ng/';
   static const fontFamily = 'SFProDisplay';
-  static const isProduction = false;
+  static const isProduction = true;
   static const shopLogo = "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1742170216/m-shop_jcpp32.svg";
 }
 

@@ -1,13 +1,19 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 
 class PollAndVotingRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
+  static const accountServiceUrl = WayaServiceUri.account;
 
   Future<WayaRequestResponse> createPoll(dynamic data) {
     return post('$serviceUrl/client/polls', data,
         formdata: true, showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getAccountType() async {
+    return get('$accountServiceUrl/client/account-types');
   }
 
   Future<WayaRequestResponse> requestSettlement(String pollId) {
@@ -108,6 +114,11 @@ class PollAndVotingRepository extends BaseRepository {
   Future<WayaRequestResponse> getAllFeedPolls() {
     return get(
         "$serviceUrl/client/polls?limit=100&page=1&orderBy=createdAt&orderDirection=DESC");
+  }
+
+  Future<WayaRequestResponse> getPollPayoutRequest() {
+    return get(
+        "$serviceUrl/client/polls/all/payouts?limit=10&page=1");
   }
 
   Future<WayaRequestResponse> getSinglePollById({required String id}) {

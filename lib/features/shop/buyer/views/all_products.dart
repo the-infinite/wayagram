@@ -13,6 +13,7 @@ import 'package:wayagram/features/shop/seller/data/model/product_response_model.
 import 'package:wayagram/features/shop/seller/data/model/shop_banner_response.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
+import 'package:wayagram/features/shop/views/top_selling_list.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
@@ -46,7 +47,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
           .read(shopVmProvider.notifier)
           .getAllWayaDealProducts(page: 1, limit: 20);
       await ref.read(addProductProvider('filter').notifier).getAllDiscounts(1);
-
+      await ref.read(shopVmProvider.notifier).topSelling();
       final banners = await ref.read(shopVmProvider.notifier).getShopBanner();
       if (banners != null) {
         setState(() {
@@ -108,6 +109,19 @@ class _AllProductsState extends ConsumerState<AllProducts> {
         ],
         searchController.text);
 
+    final searchFilteredTopSellingProducts = WayaUtils.search<Product>(
+        state.topSelling,
+        [
+          'id',
+          'deliveryAddress',
+          'name',
+          'options',
+          'condition',
+          'materialType',
+          'description'
+        ],
+        searchController.text);
+
     // category filter
     final categoriesFilteredProducts = searchFilteredProducts.where((prod) {
       if (categories.isNotEmpty && !categories.contains(prod.categoryId)) {
@@ -134,6 +148,17 @@ class _AllProductsState extends ConsumerState<AllProducts> {
       return prod.wayagramDeal == null;
     }).toList();
 
+    final categoriesFilteredTopProducts =
+        searchFilteredTopSellingProducts.where((prod) {
+      if (categories.isNotEmpty && !categories.contains(prod.categoryId)) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+
+    final topProducts = categoriesFilteredTopProducts;
+
     return Expanded(
         child: RefreshIndicator(
             onRefresh: () async {
@@ -144,7 +169,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
               await ref
                   .read(shopVmProvider.notifier)
                   .getAllWayaDealProducts(page: 1, limit: 20);
-
+              await ref.read(shopVmProvider.notifier).topSelling();
               final banners =
                   await ref.read(shopVmProvider.notifier).getShopBanner();
               if (banners != null) {
@@ -213,6 +238,19 @@ class _AllProductsState extends ConsumerState<AllProducts> {
                     ),
                     const Gap(20),
                   ],
+                  const Gap(20),
+                  GroupedWidgetHeader(
+                    onTap: () {
+                      WayaNav.toNamed(TopSellingList.route);
+                    },
+                    subTitle: 'Explore Categories & Best Offers',
+                    title: 'Top Selling',
+                  ),
+                  const Gap(10),
+                  state.isLoading
+                      ? _recommendedProductLoadingState(context: context)
+                      : ProductsGrid(products: topProducts),
+                  const Gap(25),
                   GroupedWidgetHeader(
                     onTap: () {
                       WayaNav.toNamed(ProductsViewPage.route,

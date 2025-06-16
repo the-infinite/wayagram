@@ -16,7 +16,7 @@ class GroupRepository extends BaseRepository {
       "name": groupName,
       "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
-      //"isOpen": false, // this defaults to true if it is not inserted
+      "isOpen": groupType, // this defaults to true if it is not inserted
       "coverImage": coverImage,
       "profileImage": profileImage,
       "categories": [category]
@@ -137,9 +137,23 @@ class GroupRepository extends BaseRepository {
     return post("$serviceUrl/groups/join-requests/approve/$requestId", payload, showErrors: true);
   }
 
+  Future<WayaRequestResponse> acceptGroupInvitation(String invitationId) {
+    final payload = {};
+    return post("$serviceUrl/groups/invitations/accept/$invitationId", payload, showErrors: true);
+  }
+
   Future<WayaRequestResponse> rejectJoinRequest(String requestId) {
     final payload = {};
     return post("$serviceUrl/groups/join-requests/reject/$requestId", payload, showErrors: true);
+  }
+
+  Future<WayaRequestResponse> rejectGroupInvitation(String invitationId) {
+    final payload = {};
+    return post("$serviceUrl/groups/invitations/reject/$invitationId", payload, showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getGroupInvitation() {
+    return get("$serviceUrl/groups/invitations");
   }
 
   Future<WayaRequestResponse> inviteUserToGroup(String groupId, String role, targetId) {
@@ -149,7 +163,7 @@ class GroupRepository extends BaseRepository {
 
 
   // recommended groups
-  Future<WayaRequestResponse> recommendedGroup({int? page = 1, int? limit = 10}) {
+  Future<WayaRequestResponse> recommendedGroup({int? page = 1, int? limit = 40}) {
     return get("$serviceUrl/groups/recommended?page=$page&limit=$limit");
   }
 

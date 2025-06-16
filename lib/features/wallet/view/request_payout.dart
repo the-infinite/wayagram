@@ -32,7 +32,8 @@ class _RequestPayoutState extends ConsumerState<RequestPayout> {
       isLoading: viewModel.isLoading!,
       backgroundColor: WayaColors.greyColor50,
       isScrollable: false,
-      title: 'Request Payout',
+      //title: 'Request Payout',
+      title: 'Payout Method',
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -38,6 +38,36 @@ class UserResource {
     return _getOrSave(id);
   }
 
+  static Future<CachedUserDataTuple?> getByUsername(String username) async {
+    final profile = await UserProfile().select().username.equals(username).toSingle();
+    final now = DateTime.now();
+
+    //? Retrieve the user's details by username.
+    if (profile == null) {
+      await logger.init;
+      return _getFromNetworkByUsername(username);
+    }
+
+    //? Since we found what we are looking for.
+    final details = await UserDetail().select().id.equals(profile.userId!).toSingle();
+
+    //? If this has expired...
+    if (((details?.synced_at?.difference(now).abs().inDays ?? 100) > 14) ||
+        ((profile.synced_at?.difference(now).abs().inDays ?? 100) > 14)) {
+      await logger.init;
+      return _getFromNetwork(profile.userId!);
+    }
+
+    //? Then you can return this tuple.
+    userCache[profile.userId!] = (
+      UserDetailsModel.fromJson(details!.toMap(forJson: true)),
+      SocialProfileModel.fromJson(profile.toMap(forJson: true))
+    );
+
+    //? Then we return the needful.
+    return userCache[profile.userId!];
+  }
+
   static Future<SocialProfileModel?> getSocialProfile(String id) async {
     return (await getUserDetails(id))?.$2;
   }
@@ -61,6 +91,25 @@ class UserResource {
     return result;
   }
 
+  static Future<CachedUserDataTuple?> _getFromNetworkByUsername(String username) async {
+    final response = await repo.getUserByUsername(username);
+
+    //? If it failed, return nothing.
+    if (!response.success) {
+      return null;
+    }
+
+    //? Retrieve this too.
+    final data = response.data['data']['userdata'];
+    final result = (UserDetailsModel.fromJson(data['user']), SocialProfileModel.fromJson(data['profile']));
+
+    //? Cache this.
+    await _save(result.$1.id, result);
+
+    //? Return this.
+    return result;
+  }
+
   static Future<CachedUserDataTuple?> _getOrSave(String id) async {
     final details = await UserDetail().select().id.equals(id).toSingle();
     final profile = await UserProfile().select().userId.equals(id).toSingle();
@@ -74,7 +123,10 @@ class UserResource {
     }
 
     //? Cache this here.
-    userCache[id] = (UserDetailsModel.fromJson(details!.toMap(forJson: true)), SocialProfileModel.fromJson(profile!.toMap(forJson: true)));
+    userCache[id] = (
+      UserDetailsModel.fromJson(details!.toMap(forJson: true)),
+      SocialProfileModel.fromJson(profile!.toMap(forJson: true))
+    );
 
     //? Return what we just cached.
     return userCache[id];

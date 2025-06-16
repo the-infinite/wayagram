@@ -166,7 +166,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
   void _shareProfile() async {
     final result = await Share.share(
-      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
+      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id, 'profile', widget.data.$2.username)),
       subject: 'Share Profile',
     );
 

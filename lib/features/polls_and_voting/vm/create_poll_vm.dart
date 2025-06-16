@@ -16,7 +16,9 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/account_type_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_response.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/get_all_payout_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
 
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
@@ -785,6 +787,25 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
+  Future<void> fetchAccountType() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getAccountType();
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        AccountTypeModel responseModel = AccountTypeModel.fromJson(response.data);
+        state = state.copyWith(accountType: responseModel.data?[0].name);
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
+
   Future<void> getActivePolls(int page) async {
     try {
       // API call
@@ -887,9 +908,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.requestSettlement(pollId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
+        WayaNav.toNamed('/pollRequestPayout');
+        //WayaNav.removeUntilNamed(BottomView.route, arguments: 0);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Request was sent successfully!'),
+            content: Text('Payout request was sent successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -1060,6 +1083,25 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         WayaDebugHelpers.getStackTrace(e),
       );
     } finally {}
+  }
+
+  Future<void> getPollPayoutRequest() async {
+    try {
+      final response = await _pollAndVotingRepository.getPollPayoutRequest();
+
+      if (response.success) {
+        GetAllPayoutModel responseModel = GetAllPayoutModel.fromJson(response.data);
+
+        state = state.copyWith(pollPayoutDocs: responseModel.data?.docs,);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.polls,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
   }
 
   Future<void> getFeedPolls() async {

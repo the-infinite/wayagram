@@ -5,6 +5,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/cast_vote_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/get_all_payout_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_all_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
@@ -27,6 +28,7 @@ class CreatePollVotingState {
   final List<Choice> choices;
   final List<SingleDashboardVotes>? votes;
   final List<Select> pollTypes;
+  final List<PollPayoutDocs> pollPayoutDocs;
   final VoteUrlData? voteUrlData;
   final List<PollDashboardModelDocs> pollDashboardModelDocs;
   final List<PollDashboardChoices> pollDashboardChoices;
@@ -34,6 +36,7 @@ class CreatePollVotingState {
 
   final String moneyGenerated;
   final String voteCount;
+  final String? accountType;
   final String numberOfPeopleVoted;
   final String startDate;
   final String endDate;
@@ -41,6 +44,7 @@ class CreatePollVotingState {
   final String endDateString;
   final String pollType;
   final String pollTypeId;
+  final String pollStatus;
   File? candidateImage;
   final String dateIsoFormat;
   final bool isFocused;
@@ -70,8 +74,10 @@ class CreatePollVotingState {
     this.moneyGenerated = '',
     this.numberOfPeopleVoted = '',
     this.pollType = '',
+    this.pollStatus = '',
     this.startDate = '',
     this.endDate = '',
+    this.accountType = '',
     this.startDateString = '',
     this.endDateString = '',
     this.dateIsoFormat = '',
@@ -82,6 +88,7 @@ class CreatePollVotingState {
     this.candidateImage,
     this.voteUrlData,
     this.choices = const [],
+    this.pollPayoutDocs = const [],
     this.pollDashboardModelDocs = const [],
     this.pollDashboardChoices = const [],
     this.fetchAllPols = const [],
@@ -123,9 +130,11 @@ class CreatePollVotingState {
     List<DocType>? uploadedDocuments,
     String? moneyGenerated,
     String? voteCount,
+    String? accountType,
     String? numberOfPeopleVoted,
     String? startDate,
     String? startDateString,
+    String? pollStatus,
     String? endDateString,
     String? dateIsoFormat,
     String? endDate,
@@ -136,6 +145,7 @@ class CreatePollVotingState {
     bool? isFocused,
     bool? isLoading,
     bool? isLoadingPollWithStatus,
+    List<PollPayoutDocs>? pollPayoutDocs,
     List<Docs>? fetchAllPols,
     List<Docs>? activePolls,
     List<GetPollData>? getPollModel,
@@ -167,6 +177,7 @@ class CreatePollVotingState {
         secondChoiceDescription:
             secondChoiceDescription ?? this.secondChoiceDescription,
         pollType: pollType ?? this.pollType,
+        pollPayoutDocs: pollPayoutDocs ?? this.pollPayoutDocs,
         startDate: startDate ?? this.startDate,
         endDate: endDate ?? this.endDate,
         startDateString: startDateString ?? this.startDateString,
@@ -175,6 +186,7 @@ class CreatePollVotingState {
         dateIsoFormat: dateIsoFormat ?? this.dateIsoFormat,
         isFocused: isFocused ?? this.isFocused,
         isLoading: isLoading ?? this.isLoading,
+        pollStatus: pollStatus ?? this.pollStatus,
         isLoadingPollWithStatus:
             isLoadingPollWithStatus ?? this.isLoadingPollWithStatus,
         fetchAllPols: fetchAllPols ?? this.fetchAllPols,
@@ -184,6 +196,7 @@ class CreatePollVotingState {
         pollDashboardModelDocs:
             pollDashboardModelDocs ?? this.pollDashboardModelDocs,
         votes: votes ?? this.votes,
+        accountType: accountType ?? this.accountType,
         castVoteModel: castVoteModel ?? this.castVoteModel,
         uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
         choices: choices ?? this.choices,

@@ -28,7 +28,7 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
   );
 
   int page = 1;
-  int limit = 10;
+  int limit = 40;
   bool hasNextPage = true;
   final ScrollController _scrollController = ScrollController();
   bool isLoadingMore = false;

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,14 +14,16 @@ import 'polls_for_you.dart';
 
 class PollAndVoting extends ConsumerStatefulWidget {
   static const route = '/poll-and-voting';
-  const PollAndVoting({super.key,});
+  const PollAndVoting({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollAndVotingState();
 }
 
-class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTickerProviderStateMixin {
-
+class _PollAndVotingState extends ConsumerState<PollAndVoting>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
@@ -30,120 +31,138 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
 
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
-        title: "Polls and Votes",
-        isLoading: viewModel.isLoading,
-        isScrollable: false,
-        onTapBackButton: (){
-          args == 'poll'?  WayaNav.offNamed(BottomView.route, arguments: 0): WayaNav.offNamed(BottomView.route, arguments: 0);
-        },
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Gap(10),
-            Row(
-              children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'Polls For You',
-                  onTap: () => setState(() => _selectedIndex = 0),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'My Polls',
-                  onTap: () => setState(() => _selectedIndex = 1),
+      title: "Polls and Votes",
+      isLoading: viewModel.isLoading,
+      isScrollable: false,
+      onTapBackButton: () {
+        args == 'poll'
+            ? WayaNav.offNamed(BottomView.route, arguments: 0)
+            : WayaNav.offNamed(BottomView.route, arguments: 0);
+      },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Gap(10),
+          Row(
+            children: [
+              WayaTabButton(
+                isSelected: _selectedIndex == 0,
+                text: 'Polls For You',
+                onTap: () => setState(() => _selectedIndex = 0),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 1,
+                text: 'My Polls',
+                onTap: () => setState(() => _selectedIndex = 1),
+              ),
+            ],
+          ),
+          const Gap(20),
+          _selectedIndex == 0
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Polls For you",
+                        style: wayaTheme.textTheme.titleLarge),
+                    const Gap(3),
+                    Text(
+                      'Here are recommended polls for you',
+                      style: wayaTheme.textTheme.hintStyle,
+                    ),
+                    const Gap(10),
+                    WayaButton(
+                      centerWidget: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Create Poll",
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.customPrimary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.sp),
+                          ),
+                          const Gap(8),
+                          Icon(
+                            Icons.add,
+                            size: 28,
+                            color: wayaTheme.colorScheme.customPrimary,
+                          ),
+                        ],
+                      ),
+                      callback: () {
+                        WayaNav.toNamed('/create-poll');
+                      },
+                      color: wayaTheme.colorScheme.primary50,
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("My Polls", style: wayaTheme.textTheme.titleLarge),
+                    const Gap(3),
+                    Text(
+                      'Manage and create polls',
+                      style: wayaTheme.textTheme.hintStyle,
+                    ),
+                    const Gap(10),
+                    WayaButton(
+                      centerWidget: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Gap(8),
+                          Text(
+                            "Create Poll",
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.customPrimary,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16.sp),
+                          ),
+                          const Gap(8),
+                          Icon(
+                            Icons.add,
+                            size: 28,
+                            color: wayaTheme.colorScheme.customPrimary,
+                          ),
+                        ],
+                      ),
+                      callback: () {
+                        WayaNav.toNamed('/create-poll');
+                      },
+                      color: wayaTheme.colorScheme.primary50,
+                    ),
+                  ],
                 ),
 
-              ],
+          const Gap(25),
+          _selectedIndex == 0 ? PollsForYou() : MyPollsTwo()
+          //MyPolls(),
+        ],
+      ),
+      floatingActionButton: SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () => WayaNav.toNamed('/create-poll'),
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
             ),
-            const Gap(20),
-            _selectedIndex == 0 ?
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Polls For you", style: wayaTheme.textTheme.titleLarge),
-                const Gap(3),
-                Text(
-                  'Here are recommended polls for you',
-                  style: wayaTheme.textTheme.hintStyle,
-                ),
-                const Gap(10),
-                WayaButton(
-                  centerWidget: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-
-                      Text(
-                        "Create Poll",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
-                      ),
-                      const Gap(8),
-                      Icon(
-                        Icons.add,
-                        size: 28,
-                        color: wayaTheme.colorScheme.customPrimary,
-                      ),
-
-                    ],
-                  ),
-                  callback: () {
-                    WayaNav.toNamed('/create-poll');
-                  },
-                  color: wayaTheme.colorScheme.primary50,
-                ),
-              ],
-            ) :
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("My Polls", style: wayaTheme.textTheme.titleLarge),
-                const Gap(3),
-                Text(
-                  'Manage and create polls',
-                  style: wayaTheme.textTheme.hintStyle,
-                ),
-                const Gap(10),
-                WayaButton(
-                  centerWidget: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-
-
-                      const Gap(8),
-                      Text(
-                        "Create Poll",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
-                      ),
-                      const Gap(8),
-                      Icon(
-                        Icons.add,
-                        size: 28,
-                        color: wayaTheme.colorScheme.customPrimary,
-                      ),
-                    ],
-                  ),
-                  callback: () {
-                    WayaNav.toNamed('/create-poll');
-
-                  },
-                  color: wayaTheme.colorScheme.primary50,
-                ),
-              ],
-            ),
-
-            const Gap(25),
-            _selectedIndex == 0 ? PollsForYou() : MyPollsTwo()
-            //MyPolls(),
-
-          ],
-        ) );
+          ),
+        ),
+      ),
+    );
   }
 }
+
+//

@@ -7,17 +7,19 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/block.dart';
+import 'package:wayagram/features/chat/modals/clear.dart';
 import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/profile/chat_media.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
-class PersonalChatProfilePage extends StatelessWidget {
+class PersonalChatProfilePage extends StatefulWidget {
   final ChatModel chat;
   final WidgetRef ref;
 
@@ -29,12 +31,26 @@ class PersonalChatProfilePage extends StatelessWidget {
   });
 
   @override
+  State<PersonalChatProfilePage> createState() => _PersonalChatProfilePageState();
+}
+
+class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
+  final clearLoader = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    clearLoader.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //? First, we obtain all things needed to build this widget.
-    final notifier = ref.read(conversationProvider.notifier);
-    final user = chat.other.userData!;
-    final profile = chat.other.profileData!;
-    final state = ref.watch(conversationProvider);
+    final notifier = widget.ref.read(conversationProvider.notifier);
+    final chatNotifier = widget.ref.read(chatProvider(widget.chat.id).notifier);
+    final user = widget.chat.other.userData!;
+    final profile = widget.chat.other.profileData!;
+    final state = widget.ref.watch(conversationProvider);
     final theme = Theme.of(context);
 
     //? Now, build and return the widget.
@@ -58,8 +74,8 @@ class PersonalChatProfilePage extends StatelessWidget {
               user: user,
               radius: 40.r,
               showActive: false,
-              chat: chat,
-              canMove: chat.other.chatUser!.canSeeProfilePicture,
+              chat: widget.chat,
+              canMove: widget.chat.other.chatUser!.canSeeProfilePicture,
             ),
           ),
 
@@ -113,8 +129,8 @@ class PersonalChatProfilePage extends StatelessWidget {
               ProfileActionButton(
                 onTap: () {
                   //? This is muted.
-                  if (chat.self.isMuted) {
-                    notifier.muteOrUnmuteGroup(chat.id, null);
+                  if (widget.chat.self.isMuted) {
+                    notifier.muteOrUnmuteGroup(widget.chat.id, null);
                   }
 
                   //? Then mute
@@ -122,15 +138,17 @@ class PersonalChatProfilePage extends StatelessWidget {
                     WayaUtils.showModalSheet(
                       context,
                       child: MuteChatGroupModal(
-                        chat: chat,
+                        chat: widget.chat,
                         notifier: notifier,
                       ),
                     );
                   }
                 },
-                icon: chat.self.isMuted ? WayaAssets.icons.cProfileUnmute.path : WayaAssets.icons.cProfileMute.path,
-                isBad: !chat.self.isMuted,
-                text: chat.self.isMuted ? "Unmute" : "Mute",
+                icon: widget.chat.self.isMuted
+                    ? WayaAssets.icons.cProfileUnmute.path
+                    : WayaAssets.icons.cProfileMute.path,
+                isBad: !widget.chat.self.isMuted,
+                text: widget.chat.self.isMuted ? "Unmute" : "Mute",
               ),
 
               //* Next, report a user.
@@ -140,7 +158,7 @@ class PersonalChatProfilePage extends StatelessWidget {
                     context,
                     child: ReportChatPage(
                       statuses: pageReport,
-                      userId: chat.other.userData!.id,
+                      userId: widget.chat.other.userData!.id,
                     ),
                   );
 
@@ -158,14 +176,14 @@ class PersonalChatProfilePage extends StatelessWidget {
 
               //* Finally, to block/unblock a user.
               ProfileActionButton(
-                onTap: state.isBlocked(chat.other.userId)
+                onTap: state.isBlocked(widget.chat.other.userId)
                     ? () async {
                         final result = await WayaUtils.showModalSheet<bool?>(
                           context,
                           child: UnblockUserDialog(
-                            user: chat.other.userData!,
-                            profile: chat.other.profileData!,
-                            ref: ref,
+                            user: widget.chat.other.userData!,
+                            profile: widget.chat.other.profileData!,
+                            ref: widget.ref,
                           ),
                         );
 
@@ -181,9 +199,9 @@ class PersonalChatProfilePage extends StatelessWidget {
                         final result = await WayaUtils.showModalSheet<bool?>(
                           context,
                           child: BlockUserDialog(
-                            user: chat.other.userData!,
-                            profile: chat.other.profileData!,
-                            ref: ref,
+                            user: widget.chat.other.userData!,
+                            profile: widget.chat.other.profileData!,
+                            ref: widget.ref,
                           ),
                         );
 
@@ -196,10 +214,48 @@ class PersonalChatProfilePage extends StatelessWidget {
                         }
                       },
                 icon: WayaAssets.icons.cProfileBlock.path,
-                isBad: !state.isBlocked(chat.other.userId),
-                text: state.isBlocked(chat.other.userId) ? "Unblock" : "Block",
+                isBad: !state.isBlocked(widget.chat.other.userId),
+                text: state.isBlocked(widget.chat.other.userId) ? "Unblock" : "Block",
               )
             ],
+          ),
+
+          // Some more space.
+          Gap(30.h),
+
+          //? Next, the section for media shared in the messages.
+          Text(
+            "Chat Settings",
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.greyColor300,
+            ),
+          ),
+
+          // Some space.
+          Gap(5.h),
+
+          //? First, a button for clearing all the messages off in a chat.
+          WayaProgressiveButton(
+            callback: () => WayaUtils.showModalSheet(
+              context,
+              child: ClearChatModal(
+                chat: widget.chat,
+                notifier: notifier,
+                chatNotifier: chatNotifier,
+              ),
+            ),
+            text: "Clear Chat",
+            color: theme.colorScheme.error50,
+            textColor: theme.colorScheme.error,
+            leadingIcon: WayaAssets.images.pages.delete.svg(
+              height: 18.sp,
+              width: 18.sp,
+              colorFilter: ColorFilter.mode(
+                theme.colorScheme.error,
+                BlendMode.srcIn,
+              ),
+            ),
+            notifier: clearLoader,
           ),
 
           // Some more space.
@@ -218,8 +274,8 @@ class PersonalChatProfilePage extends StatelessWidget {
 
           //? The component for media.
           ChatMediaWidget(
-            chat: chat,
-            ref: ref,
+            chat: widget.chat,
+            ref: widget.ref,
           ),
         ],
       ),

@@ -19,14 +19,19 @@ class Moment extends ConsumerStatefulWidget {
 }
 
 class _MomentViewState extends ConsumerState<Moment> {
-      final previewKey = GlobalKey();
+  final previewKey = GlobalKey();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final MomentData? args =
-          ModalRoute.of(context)?.settings.arguments as MomentData?;
+      final dynamic args =
+          ModalRoute.of(context)?.settings.arguments as dynamic;
       if (args != null) {
-        ref.read(momentVmProvider.notifier).initializeEditMoment(args);
+        if (args is MomentData) {
+          ref.read(momentVmProvider.notifier).initializeEditMoment(args);
+        } else {
+          //? for getting text moment
+          ref.read(momentVmProvider.notifier).updateText(args['content']);
+        }
       }
     });
     super.initState();
@@ -84,8 +89,11 @@ class _MomentViewState extends ConsumerState<Moment> {
                 ),
               ),
               Expanded(
-                  child:
-                      textMoment(context: context, ref: ref, status: status, previewKey: previewKey)),
+                  child: textMoment(
+                      context: context,
+                      ref: ref,
+                      status: status,
+                      previewKey: previewKey)),
               if (status.text.isEmpty) ...[
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -130,9 +138,9 @@ class _MomentViewState extends ConsumerState<Moment> {
   Widget textMoment(
       {required BuildContext context,
       required WidgetRef ref,
-      required MomentState status, required GlobalKey<State<StatefulWidget>> previewKey}) {
+      required MomentState status,
+      required GlobalKey<State<StatefulWidget>> previewKey}) {
     final wayaTheme = Theme.of(context);
-
 
     return GestureDetector(
         onTap: () {
