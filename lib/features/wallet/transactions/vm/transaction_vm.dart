@@ -127,7 +127,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       } */
 
       //? Make GET request
-       await _transactionRepository.getTransactionForExport();
+      await _transactionRepository.getTransactionForExport();
     } catch (e) {
       state = state.copyWith(error: 'Error: $e');
     }
@@ -262,6 +262,9 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     }
   }
 }
+
+final hideShowBalanceProvider =
+    StateProvider<bool>((ref) => WayaLocalDataSource().getShowHideBalance());
 
 final transactionVmProvider =
     StateNotifierProvider<TransactionVm, TransactionHistoryState>((ref) {

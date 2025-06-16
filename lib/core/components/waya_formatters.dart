@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 
 import '../../../../core/components/components.dart';
 
-class WayaAmountFormatter extends StatefulWidget {
+class WayaAmountFormatter extends StatefulHookConsumerWidget {
   final double amount;
 
   final TextStyle? textStyle;
@@ -27,13 +32,16 @@ class WayaAmountFormatter extends StatefulWidget {
   });
 
   @override
-  State<WayaAmountFormatter> createState() => _WayaAmountFormatterState();
+  ConsumerState<WayaAmountFormatter> createState() =>
+      _WayaAmountFormatterState();
 }
 
-class _WayaAmountFormatterState extends State<WayaAmountFormatter> {
-  final ValueNotifier<bool> _showAmountNotifer = ValueNotifier<bool>(false);
+class _WayaAmountFormatterState extends ConsumerState<WayaAmountFormatter> {
   @override
   Widget build(BuildContext context) {
+    final localData = WayaLocalDataSource();
+
+    final showAmount = useState<bool>(localData.getShowHideBalance());
     final wayaTheme = Theme.of(context);
     final formatter = NumberFormat.currency(
       symbol: '',
@@ -43,56 +51,59 @@ class _WayaAmountFormatterState extends State<WayaAmountFormatter> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ValueListenableBuilder(
-            valueListenable: _showAmountNotifer,
-            builder: (context, value, _) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  WayaRichText(
-                    title1: value ? 'xxxx' : formatter.format(widget.amount),
-                    title2: value ? '' : '.00',
-                    style1: wayaTheme.textTheme.headlineLarge
-                        ?.wayaCopyWith(color: widget.balanceColor ?? wayaTheme.colorScheme.onPrimary),
-                    style2: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
-                      color: widget.koboValueColor ?? wayaTheme.colorScheme.white50,
-                    ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            WayaRichText(
+              title1:
+                  showAmount.value ? 'xxxx' : formatter.format(widget.amount),
+              title2: showAmount.value ? '' : '.00',
+              style1: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
+                  color:
+                      widget.balanceColor ?? wayaTheme.colorScheme.onPrimary),
+              style2: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
+                color: widget.koboValueColor ?? wayaTheme.colorScheme.white50,
+              ),
+            ),
+            Text(
+              'NGN',
+              style: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
+                  color: widget.koboValueColor ?? wayaTheme.colorScheme.white50,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 19.sp),
+            ),
+            SizedBox(width: 5.w),
+            InkWell(
+              onTap: () {
+                localData.saveShowHideBalance(!showAmount.value);
+                _toggleAmount(showAmount);
+              },
+              child: Container(
+                  padding: EdgeInsets.all(3.71),
+                  decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
+                    color: widget.color?.withOpacity(0.2) ??
+                        wayaTheme.colorScheme.white50,
+                    shape: BoxShape.circle,
                   ),
-                  Text(
-                    'NGN',
-                    style: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
-                        color: widget.koboValueColor ?? wayaTheme.colorScheme.white50,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 19.sp),
-                  ),
-                  SizedBox(width: 5.w),
-                  InkWell(
-                    onTap: () {
-                      _toggleAmount();
-                    },
-                    child: Container(
-                        padding: EdgeInsets.all(3.71),
-                        decoration: BoxDecoration(
-                          // ignore: deprecated_member_use
-                          color: widget.color?.withOpacity(0.2) ?? wayaTheme.colorScheme.white50,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          _showAmountNotifer.value ? Icons.visibility_off_rounded : Icons.visibility_rounded,
-                          size: 17,
-                          color: widget.color ?? wayaTheme.colorScheme.onPrimary,
-                        )),
-                  )
-                ],
-              );
-            }),
+                  child: Icon(
+                    showAmount.value
+                        ? Icons.visibility_off_rounded
+                        : Icons.visibility_rounded,
+                    size: 17,
+                    color: widget.color ?? wayaTheme.colorScheme.onPrimary,
+                  )),
+            )
+          ],
+        )
       ],
     );
   }
 
-  void _toggleAmount() {
-    _showAmountNotifer.value = !_showAmountNotifer.value;
+  void _toggleAmount(ValueNotifier<bool> showAmount) {
+    showAmount.value = !showAmount.value;
+    ref.read(hideShowBalanceProvider.notifier).state = showAmount.value;
   }
 }
 
@@ -128,8 +139,12 @@ class TextAmountFormatter extends StatelessWidget {
       decimalDigits: decimalDegit ?? 2,
     );
 
-    return Text(inFlow == null ? formatter.format(amount) : "${inFlow == true ? '+' : '- '}${formatter.format(amount)}",
-        textAlign: align, style: textStyle ?? wayaTheme.textTheme.headlineLarge);
+    return Text(
+        inFlow == null
+            ? formatter.format(amount)
+            : "${inFlow == true ? '+' : '- '}${formatter.format(amount)}",
+        textAlign: align,
+        style: textStyle ?? wayaTheme.textTheme.headlineLarge);
   }
 }
 
