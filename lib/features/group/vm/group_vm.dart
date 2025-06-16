@@ -335,6 +335,47 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
     }
   }
+      Future<bool> updateGroupGeneralSettings(bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
+    try {
+      final response = await _groupRepository.updateGroupGeneralSettings(isEveryOneAllowFollow, isEveryOneAllowComment);
+
+      //? If this is fine.
+      if (response.success) {
+        return true;
+      }
+
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.posts,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return false;
+  }
+    Future<(bool, bool)> getGroupGeneralSettings() async {
+    try {
+      // API call
+
+      final response = await _groupRepository.getGroupGeneralSettings();
+
+      if (response.success) {
+        return (response.data["data"]["allowJoin"]==true, response.data["data"]["approveJoinRequest"] == true);
+      }
+      return (false, false);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+    return (false, false);
+  }
 
   void prefillFunc(GroupModel group) {
     state = state.copyWith(
