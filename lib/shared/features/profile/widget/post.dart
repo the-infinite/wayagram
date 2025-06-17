@@ -27,7 +27,6 @@ import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/vm/default.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
-import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class WayaPostWidget extends StatefulWidget {
   final PostModel data;

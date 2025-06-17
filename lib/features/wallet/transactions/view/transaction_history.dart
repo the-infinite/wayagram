@@ -52,7 +52,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
           final viewModel = ref.read(transactionVmProvider);
           if (viewModel.docs != null) {
             docs = viewModel.docs!;
-            hasNextPage = viewModel.hasNextPage ?? false;
+            hasNextPage = viewModel.hasNextPage;
           }
         });
       }

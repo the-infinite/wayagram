@@ -7,7 +7,6 @@ import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
-import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 
 class BottomBarItem {
   final String icon;
