@@ -88,7 +88,7 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                         arguments: {
                           'email': group?.user?.email,
                           'id': group?.userId,
-                          'groupId': widget.groupId
+                          'groupId': widget.groupId,
                         }),
                     child: Container(
                       margin: EdgeInsets.only(bottom: 15),
