@@ -439,13 +439,13 @@ class GroupVm extends StateNotifier<GroupState> {
   Future<void> acceptGroupInvitation(ctx, String invitationId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.approveJoinRequest(invitationId);
+      final response = await _groupRepository.acceptGroupInvitation(invitationId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
         getGroupInvitation();
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Invitation approved successfully!'),
+            content: Text('Invitation accepted successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -515,6 +515,33 @@ class GroupVm extends StateNotifier<GroupState> {
 
     return false;
   }
+
+  Future<bool> updateTeamMember(ctx,String role,  String groupId, String memberId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.updateTeamMember( role,groupId, memberId);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        getGroupMembers(groupId);
+      } else {
+        WayaNav.goBack();
+      }
+
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+
+    return false;
+  }
+
 
   Future<void> getGroupInvitation() async {
     try {

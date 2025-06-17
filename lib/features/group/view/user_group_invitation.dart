@@ -41,6 +41,9 @@ class _UserGroupInvitationState extends ConsumerState<UserGroupInvitation>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
     return WayaScaffold(
+      onRefresh: () async{
+        await ref.read(createGroupProvider.notifier).getGroupInvitation();
+      },
       backgroundColor: Theme.of(context).colorScheme.greyColor50,
       isLoading: viewModel.isLoading,
       isScrollable: false,
