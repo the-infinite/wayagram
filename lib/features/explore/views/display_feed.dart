@@ -39,8 +39,6 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(exploreVmProvider);
 
-    print("wefwef length ${state.posts.length}");
-
     //? Return the view.
     return PopScope(
       onPopInvokedWithResult: (isPopping, _) {

@@ -84,7 +84,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                       await showCustomDialog(
                         context,
                         'Success!',
-                        '${viewModel.username.text} has been added as a ${viewModel.roleType}. You can now collaborate seamlessly and manage the page together.',
+                        '${viewModel.username.text} has been added as a ${viewModel.roleType}. You can now collaborate seamlessly and manage the group together.',
                       );
                       notifier.reset();
                       WayaNav.goBack();

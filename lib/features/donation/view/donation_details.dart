@@ -24,12 +24,10 @@ class DonationDetails extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _DonationDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DonationDetailsState();
 }
 
-class _DonationDetailsState extends ConsumerState<DonationDetails>
-    with SingleTickerProviderStateMixin {
+class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -50,19 +48,15 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
       isLoading: viewModel.isLoading,
       isScrollable: true,
       appBarTrailing: DonationAction(
-          donationId: args['id'],
-          isUser: ConversationState.self.id == args['organizerId'],
-          donation: args['donation']),
+          donationId: args['id'], isUser: ConversationState.self.id == args['organizerId'], donation: args['donation']),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '${args['title']}',
-            style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.black,
-                fontSize: 24.sp,
-                fontWeight: FontWeight.w700),
+            style: TextStyle()
+                .wayaCopyWith(color: wayaTheme.colorScheme.black, fontSize: 24.sp, fontWeight: FontWeight.w700),
           ),
           Gap(10),
           WayaImage(
@@ -75,8 +69,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
             topLeft:
                 "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
             bottomLeft: "${args['donationCount']} Donations",
-            bottomRight:
-                "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day' : 'days'} left",
+            bottomRight: "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day' : 'days'} left",
             range: args['ratioLeft'],
             //range: args['donationCount'] == '0' ? 0.0 : 0.4
           ),
@@ -84,18 +77,12 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
           Row(
             children: [
               Expanded(
-                child: _detailCard(
-                    WayaHelpers.formatPrice(
-                        int.parse('${args['amountRaised']}')),
-                    'Amount Raised',
+                child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised']}')), 'Amount Raised',
                     wayaTheme.colorScheme.success50),
               ),
               Gap(10),
               Expanded(
-                child: _detailCard(
-                    WayaHelpers.formatPrice(
-                        int.parse('${args['targetAmount']}')),
-                    'Target Amount',
+                child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['targetAmount']}')), 'Target Amount',
                     wayaTheme.colorScheme.pendingColor),
               )
             ],
@@ -103,10 +90,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
           Gap(20),
           Text(
             "Donation Information",
-            style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor400,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400),
+            style: TextStyle()
+                .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 12.sp, fontWeight: FontWeight.w400),
           ),
           Gap(20),
           _reviewText('Cause Title', '${args['title']}'),
@@ -136,29 +121,24 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                   children: [
                     SvgPicture.asset(
                       'assets/images/share.svg',
-                      colorFilter: ColorFilter.mode(
-                          wayaTheme.colorScheme.primary300, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(wayaTheme.colorScheme.primary300, BlendMode.srcIn),
                     ),
                     const Gap(10),
                     Text(
                       "Share Invite",
                       style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customPrimary,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16.sp),
+                          color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                     ),
                   ],
                 ),
                 border: Border.all(
-                    width: 1, color: wayaTheme.colorScheme.primary500),
-                callback: () {
-                  Share.share(
-                    WayaValueHelper.getShareableUrl(
-                        WayaAppRoutes.getDonationDetailsPage('${args['id']}')),
-                    subject: 'Share Donation',
-                  );
-                  // Share.share('${args['url']}', subject: 'Share Options');
-                },
+                  width: 1,
+                  color: wayaTheme.colorScheme.primary500,
+                ),
+                callback: () => Share.share(
+                  WayaValueHelper.getShareableUrl(WayaAppRoutes.getDonationDetailsPage('${args['id']}')),
+                  subject: 'Share Donation',
+                ),
                 color: wayaTheme.colorScheme.white,
               ),
             ),
@@ -166,67 +146,23 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
             SizedBox(
               width: context.width * 0.45,
               child: WayaButton(
-                  text: 'Donate',
-                  color: wayaTheme.colorScheme.primary500,
-                  textStyle: TextStyle(color: wayaTheme.colorScheme.white),
-                  callback: () {
-                    /* if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
-                  WayaUtils.showNotice(
-                      context: context,
-                      title: "Update KYC Information ",
-                      message: 'You must complete KYC verification before you can donate.',
-                      onPress: () {
-                        WayaNav.goBack();
-                        WayaNav.toNamed('/kycUpdate', arguments: {
-                          'kyc': '${viewModel.kycStatus}'
-                        });
-                      },
-                      buttonText: 'Update KYC',
-                      secondButtonText: 'Cancel',
-                      icon: Image.asset('assets/images/cp-shop.png'));
-                } else if (ConversationState.self.accountType == UserAccountType.personal) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    WayaUtils.showNotice(
-                        context: context,
-                        title: "You don't have a Business Account",
-                        message: 'Please upgrade to a business account to create a donation post',
-                        onPress: () {
-                          WayaNav.goBack();
-                          WayaNav.toNamed(UpgradeToBusiness.route);
-                        },
-                        buttonText: 'Upgrade to Business',
-                        secondButtonText: 'Cancel',
-                        icon: Image.asset('assets/images/cp-shop.png'));
-                  });
-                } else{
-                  WayaUtils.showModalSheet(
-                    context,
-                    child: DonationModal(
-                        amountRaised: '${args['amountRaised']}',
-                        targetAmount: '${args['targetAmount']}',
-                        title: '${args['title']}',
-                        minimumDonationAmount: '${args['minimumDonationAmount']}',
-                        campaignId: '${args['id']}',
-                        privacy: '${args['privacy']}',
-                        daysLeft: '${args['daysLeft']}',
-                        donationCount: '${args['donationCount']}'
-                    ),
-                  );
-                }*/
-                    WayaUtils.showModalSheet(
-                      context,
-                      child: DonationModal(
-                          amountRaised: '${args['amountRaised']}',
-                          targetAmount: '${args['targetAmount']}',
-                          title: '${args['title']}',
-                          minimumDonationAmount:
-                              '${args['minimumDonationAmount']}',
-                          campaignId: '${args['id']}',
-                          privacy: '${args['privacy']}',
-                          daysLeft: '${args['daysLeft']}',
-                          donationCount: '${args['donationCount']}'),
-                    );
-                  }),
+                text: 'Donate',
+                color: wayaTheme.colorScheme.primary500,
+                textStyle: TextStyle(color: wayaTheme.colorScheme.white),
+                callback: () => WayaUtils.showModalSheet(
+                  context,
+                  child: DonationModal(
+                    amountRaised: '${args['amountRaised']}',
+                    targetAmount: '${args['targetAmount']}',
+                    title: '${args['title']}',
+                    minimumDonationAmount: '${args['minimumDonationAmount']}',
+                    campaignId: '${args['id']}',
+                    privacy: '${args['privacy']}',
+                    daysLeft: '${args['daysLeft']}',
+                    donationCount: '${args['donationCount']}',
+                  ),
+                ),
+              ),
             )
           ],
         ),
@@ -238,8 +174,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
     return Container(
       width: 122.w,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
-      decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -249,9 +184,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
             child: Text(
               name,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.greyColor500),
+                  fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
             ),
           ),
           const Gap(10),
@@ -260,9 +193,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
             child: Text(
               number,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.black),
+                  fontSize: 24.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.black),
             ),
           ),
         ],
@@ -277,16 +208,14 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
         Text(
           title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.greyColor500),
+              fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
         ),
         Text(
           subTitle,
-          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.black),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
         ),
       ],
     );
@@ -299,11 +228,7 @@ class DonationAction extends StatelessWidget {
   final dynamic donation;
 
   // Construct.
-  const DonationAction(
-      {super.key,
-      required this.donationId,
-      required this.isUser,
-      required this.donation});
+  const DonationAction({super.key, required this.donationId, required this.isUser, required this.donation});
 
   @override
   Widget build(BuildContext context) {

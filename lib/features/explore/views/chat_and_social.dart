@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/explore/search/search.dart';
+import 'package:wayagram/features/explore/views/chat_notifications/chat.dart';
 import 'package:wayagram/features/explore/widgets/tabbed_feed.dart';
 import 'package:wayagram/features/explore/bottom_sheet/create_sheet.dart';
 
@@ -41,12 +39,23 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
         padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 15.w,
           children: [
-            GestureDetector(
-              onTap: () => WayaNav.toNamed(SearchView.route),
-              child: SvgPicture.asset(WayaAssets.icons.searchIconFeed.path),
+            Material(
+              shape: CircleBorder(),
+              child: Padding(
+                padding: const EdgeInsets.all(3),
+                child: InkWell(
+                  onTap: () => WayaNav.toNamed(WayaSocialNotificationsScreen.route),
+                  child: WayaAssets.icons.notifications.svg(
+                    height: 24,
+                    width: 24,
+                  ),
+                ),
+              ),
             ),
-            const Gap(6),
+
+            //? This one.
             WayaDp(
               onTap: () => WayaNav.toNamed('/general-settings'),
               radius: 18,

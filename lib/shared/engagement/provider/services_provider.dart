@@ -88,12 +88,12 @@ class ServicesProvider extends StateNotifier<States> {
   final Ref ref;
   final EventRepository _eventRepository;
   final PageRepository _pageRepository;
-    final  _exploreRepository = ExploreRepository.instance;
+  final _exploreRepository = ExploreRepository.instance;
   final PollAndVotingRepository _pollAndVotingRepository;
   final WayaSecureDataSource _secureDataSource;
 
   ServicesProvider(this._pollAndVotingRepository, this._pageRepository,
-      this._secureDataSource, this._eventRepository,  this.ref)
+      this._secureDataSource, this._eventRepository, this.ref)
       : super(States());
 
   Future<void> getEvents() async {
@@ -216,14 +216,25 @@ class ServicesProvider extends StateNotifier<States> {
   //// Posts
   Future<void> getPosts() async {
     try {
-      final response = await _exploreRepository.getFeeds(1, 2000);
+      final response = await _exploreRepository.getFeeds(1, 200);
       if (response.success) {
-        PostResponseModel responseModel =
-            PostResponseModel.fromJson(response.data);
-        // final userInterests = ref.watch(selectInterestProvider).userInterests;
-        final List<PostModel> allPosts = responseModel.data.docs;
+        final data = response.data['data'];
+ 
+      
+        //originalPostId
+        final posts = data['docs'] as List;
+        final recent = await Future.wait(posts.map((e) async {
+         
+          return PostModel.fromJson(e);
+        }));
 
-        wayaPostCache.cacheAll(responseModel.data.docs);
+          
+
+       
+
+        //? Fetch the posts.
+        final result = [...state.topPosts];
+        result.addAll(recent);
 
         // // Map user interests to categories and scores
         // Map<String, int> interestMap = {
@@ -274,7 +285,7 @@ class ServicesProvider extends StateNotifier<States> {
         // }
 
         // Update state
-        state = state.copyWith(topPosts: allPosts);
+        state = state.copyWith(topPosts: result);
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -580,5 +591,5 @@ class ServicesProvider extends StateNotifier<States> {
 
 final servicesProvider = StateNotifierProvider<ServicesProvider, States>((ref) {
   return ServicesProvider(PollAndVotingRepository(), PageRepository(),
-      WayaSecureDataSource(), EventRepository() , ref);
+      WayaSecureDataSource(), EventRepository(), ref);
 });

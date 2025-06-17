@@ -140,16 +140,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
 
                           Text("${poll.question?.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
                           const Gap(3),
-                          /* if (poll.choices != null)
-                            ...poll.choices!.map(
-                              (e) => poll.description == null ? Container() :Text(
-                                '${poll.description?.capitalizeFirst}',
-                                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: Theme.of(context).colorScheme.greyColor500),
-                              ),
-                            ),*/
+
                           if (poll.description != null)
                             Text(
                               '${poll.description?.capitalizeFirst}',

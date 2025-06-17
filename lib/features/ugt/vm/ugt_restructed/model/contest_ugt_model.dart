@@ -151,7 +151,7 @@ class Stage {
   String entryType;
   int entryAmount;
   int numberOfPostPerWeek;
-  int priceOfTheWinner;
+  String priceOfTheWinner;
   DateTime startDate;
   DateTime endDate;
   bool approveBeforeLive;
@@ -173,7 +173,7 @@ class Stage {
       entryType: json['entryType'] ?? '',
       entryAmount: json['entryAmount'] ?? 0,
       numberOfPostPerWeek: json['numberOfPostPerWeek'] ?? 0,
-      priceOfTheWinner: json['priceOfTheWinner'] ?? 0,
+      priceOfTheWinner: json['priceOfTheWinner'] ?? '',
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
       approveBeforeLive: json['approveBeforeLive'] ?? false,

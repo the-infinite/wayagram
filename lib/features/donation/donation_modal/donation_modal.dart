@@ -26,16 +26,19 @@ class DonationModal extends ConsumerStatefulWidget {
   final String daysLeft;
   final String donationCount;
   final String minimumDonationAmount;
-  const DonationModal(
-      {super.key,
-      required this.amountRaised,
-      required this.targetAmount,
-      required this.title,
-      required this.campaignId,
-      required this.privacy,
-      required this.minimumDonationAmount,
-      required this.daysLeft,
-      required this.donationCount});
+
+  //
+  const DonationModal({
+    super.key,
+    required this.amountRaised,
+    required this.targetAmount,
+    required this.title,
+    required this.campaignId,
+    required this.privacy,
+    required this.minimumDonationAmount,
+    required this.daysLeft,
+    required this.donationCount,
+  });
 
   @override
   ConsumerState<DonationModal> createState() => _DonationModalState();
@@ -272,8 +275,12 @@ class DonationPinEntryBottomSheet extends ConsumerStatefulWidget {
   final String amount;
   final String campaignId;
   final String campaignTitle;
-  const DonationPinEntryBottomSheet(
-      {super.key, required this.amount, required this.campaignId, required this.campaignTitle});
+  const DonationPinEntryBottomSheet({
+    super.key,
+    required this.amount,
+    required this.campaignId,
+    required this.campaignTitle,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DonationPinEntryBottomSheetState();
@@ -322,15 +329,12 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
         //WayaNav.goBack();
         debugPrint('DOANTION AMOUNT ${widget.amount}');
         await ref.watch(donationVmProvider.notifier).makeDonation(
-            widget.campaignId,
-            int.parse(widget.amount),
-            //widget.amount,
-            widget.campaignTitle,
-            context);
-        WayaUtils.showModalSheet(
-          context,
-          child: DonationGenerosityModal(campaignId: widget.campaignId),
-        );
+              widget.campaignId,
+              int.parse(widget.amount),
+              //widget.amount,
+              widget.campaignTitle,
+              context,
+            );
       } else {
         WayaNav.goBack();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -599,9 +603,7 @@ class _DonationUnSuccessfulModalState extends ConsumerState<DonationUnSuccessful
 
 class DonationGenerosityModal extends ConsumerStatefulWidget {
   final String campaignId;
-  const DonationGenerosityModal({
-    super.key, required this.campaignId
-  });
+  const DonationGenerosityModal({super.key, required this.campaignId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DonationGenerosityModalState();
@@ -661,7 +663,6 @@ class _DonationGenerosityModalState extends ConsumerState<DonationGenerosityModa
                   subject: 'Share Invite',
                 );
                 //Share.share(widget);
-
               },
               text: "Share Invite to Other",
               textColor: WayaColors.black,

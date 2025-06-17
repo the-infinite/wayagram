@@ -159,7 +159,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
 
                 return ManageDonationWidget(
                   text:  "Donate",
-                  amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
+                  amountRaised: donation.showRaised == true  ? WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')) : '',
                   targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
                   title: donation.title?.capitalizeFirst,
                   image: donation.imageURL,
