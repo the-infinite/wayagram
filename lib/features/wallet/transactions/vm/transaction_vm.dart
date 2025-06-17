@@ -25,6 +25,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       {int? page = 1,
       int? limit = 10,
       bool? hasNextPage,
+      bool isFirst = false,
       String? filters}) async {
     try {
       // API call
@@ -36,6 +37,11 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
+        if (isFirst) {
+          state = state.copyWith(
+            docs: [],
+          );
+        }
         TransactionHistoryModel responseModel =
             TransactionHistoryModel.fromJson(response.data);
         debugPrint(
@@ -181,61 +187,44 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
   Future<void> loadInitialData() async {
     try {
-      getTransaction(limit: 10, page: state.page);
+      final list = await getTransaction2(limit: 10, page: 1);
+
+      state = state.copyWith(transactionModel: list);
 
       if (mounted) {
-        state = state.copyWith(isFirstLoad: false);
-
-        // Update transactions with initial data
-
-        if (state.docs != null) {
-          state = state.copyWith(
-            docs: state.docs,
-            //  hasNextPage: state.hasNextPage ?? false
-          );
-          //  docs = viewModel.docs!;
-          //hasNextPage = viewModel.hasNextPage ?? false;
-        }
+        state = state.copyWith(isFirstLoad: false, page: 1);
       }
     } catch (e) {
       log('Error loading initial data: $e');
       if (mounted) {
         state = state.copyWith(isFirstLoad: false);
-        /*  setState(() {
-          isFirstLoad = false;
-        }); */
       }
     }
   }
 
   Future<void> loadMoreData() async {
-    if (!state.hasNextPage! || state.isLoadingMore!) return;
+    if (!state.hasNextPage || state.isLoadingMore) return;
 
     state = state.copyWith(isLoadingMore: true);
-    /*  setState(() {
-      isLoadingMore = true;
-    }); */
 
     try {
-      state = state.copyWith(page: state.page! + 1);
+      state = state.copyWith(page: state.page + 1);
       // page++;
 
-      getTransaction(limit: 10, page: state.page!);
+      final list = await getTransaction2(limit: 10, page: state.page);
 
       if (mounted) {
-        //  final viewModel = ref.read(transactionVmProvider);
+        // final viewModel = ref.read(transactionVmProvider);
         //final newTransactions = viewModel.docs ?? [];
         //final newTransactions = viewModel.transactions ?? [];
-
-        if (state.docs!.isNotEmpty) {
+        if (list.isNotEmpty) {
           // Filter out duplicates
-          final existingIds = state.docs!.map((t) => t.id).toSet();
-          final uniqueNewTransactions = state.docs!
+          final existingIds = list.map((t) => t.id).toSet();
+          final uniqueNewTransactions = list
               .where((transaction) => !existingIds.contains(transaction.id))
               .toList();
-          state = state.copyWith(
-              docs: [...state.docs!, ...uniqueNewTransactions],
-              hasNextPage: uniqueNewTransactions.length >= 10);
+
+          state = state.copyWith(transactionModel: list);
 
           /*  setState(() {
             docs.addAll(uniqueNewTransactions);
@@ -243,25 +232,69 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
           }); */
         } else {
           state = state.copyWith(hasNextPage: false);
-          /*  setState(() {
-            hasNextPage = false;
-          }); */
         }
       }
     } catch (e) {
       log('Error loading more transactions: $e');
-      state = state.copyWith(page: state.page! - 1);
       // page--;
+      state = state.copyWith(page: state.page - 1);
     } finally {
       if (mounted) {
         state = state.copyWith(isLoadingMore: false);
-        /*  setState(() {
-          isLoadingMore = false;
-        }); */
       }
     }
   }
+
+  Future<List<TransactionHistoryModelDocs>> getTransaction2(
+      {int? page = 1,
+      int? limit = 10,
+      bool? hasNextPage,
+      bool isFirst = false,
+      String? filters}) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _transactionRepository.getUserTransactions(
+          page: page, limit: limit, filters: filters);
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        TransactionHistoryModel responseModel =
+            TransactionHistoryModel.fromJson(response.data);
+        debugPrint(
+            'DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
+        state = state.copyWith(
+            isLoading: false,
+            //  docs: responseModel.data?.docs,
+            totalCreditTransaction: responseModel
+                        .data?.totalCreditTransaction ==
+                    null
+                ? 0
+                : double.parse('${responseModel.data?.totalCreditTransaction}'),
+            totalDebitTransaction: responseModel.data?.totalDebitTransaction ==
+                    null
+                ? 0
+                : double.parse('${responseModel.data?.totalDebitTransaction}'),
+            hasNextPage: responseModel.data?.hasNextPage);
+
+        return responseModel.data?.docs ?? [];
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+    return [];
+  }
+  void setModelList(List<TransactionHistoryModelDocs> list){
+
+    state = state.copyWith(transactionModel: list);
+
 }
+}
+
+
+
 
 final hideShowBalanceProvider =
     StateProvider<bool>((ref) => WayaLocalDataSource().getShowHideBalance());

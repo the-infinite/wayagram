@@ -36,8 +36,8 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
     final notifier = ref.watch(referralVm.notifier);
     final shareService = ref.watch(shareProvider);
     final wayaTheme = Theme.of(context);
-    String url =
-        WayaAppRoutes.getProfileRoute(ConversationState.profile.userId ?? "");
+    String url = WayaAppRoutes.getAccountCreationScreen(
+        ConversationState.profile.referenceCode ?? "");
     useEffect(() {
       Future.delayed(Duration(seconds: 1), () {
         notifier.getAllUserReferrals(true);
@@ -122,8 +122,8 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
                     ),
                     GestureDetector(
                         onTap: () {
-                          shareService.copyLink(
-                              ConversationState.profile.referenceCode ?? "");
+                          shareService
+                              .copyLink(WayaValueHelper.getShareableUrl(url));
                           WayaSnackBar.showToast("Copied");
                         },
                         child: Icon(Icons.copy, color: wayaTheme.primaryColor)),
