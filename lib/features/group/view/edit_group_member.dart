@@ -52,7 +52,8 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
   @override
   Widget build(BuildContext context) {
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-    print('GROUPID EDIT==>>> ${args['id']}');
+    print('Member id==>>> ${args['id']}');
+    print('GROUP ID ==>>> ${args['groupId']}');
     final viewModel = ref.watch(groupProvider);
 
     final wayaTheme = Theme.of(context);
@@ -81,26 +82,19 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
         )
             : WayaButton(
           callback: () async {
-            if (viewModel.foundUserId == null) {
-              await WayaUtils.showModalSheet(
-                context,
-                child: WayaErrorDialog(title: "You must select the user you wish to add"),
-              );
-              return;
-            }
 
             if (_formKey.currentState!.validate()) {
               //? If this went well.
               if (await notifier.updateTeamMember(
                 context,
                 viewModel.roleType,
+                args['groupId'],
                 args['id'],
-                widget.id,
               )) {
                 await showCustomDialog(
                   context,
                   'Success!',
-                  '${viewModel.username.text} has been added as a ${viewModel.roleType}. You can now collaborate seamlessly and manage the page together.',
+                  'Your role has been edited as ${viewModel.roleType}. You can now collaborate seamlessly and manage the group together.',
                 );
                 notifier.reset();
                 WayaNav.goBack();

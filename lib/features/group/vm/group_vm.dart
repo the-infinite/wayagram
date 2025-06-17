@@ -522,6 +522,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.updateTeamMember( role,groupId, memberId);
       state = state.copyWith(isLoading: false);
+      debugPrint('EDIT MEMBER ${response.data.toString()}');
       if (response.success) {
         getGroupMembers(groupId);
       } else {
