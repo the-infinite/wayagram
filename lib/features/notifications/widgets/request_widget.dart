@@ -68,13 +68,22 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         NotificationMessageType.followRequest => WayaAssets.icons.notifNewFollower.path,
                         NotificationMessageType.poll => WayaAssets.icons.notifPollResults.path,
                         NotificationMessageType.creditAlert ||
-                        NotificationMessageType.debitAlert => WayaAssets.icons.notifTransaction.path,
-                        NotificationMessageType.groupInvite => WayaAssets.icons.notifGroupRequest.path,
+                        NotificationMessageType.debitAlert ||
+                        NotificationMessageType.getQuotation =>
+                          WayaAssets.icons.notifTransaction.path,
+                        NotificationMessageType.groupInvite ||
+                        NotificationMessageType.groups ||
+                        NotificationMessageType.pages =>
+                          WayaAssets.icons.notifGroupRequest.path,
                         NotificationMessageType.calls => WayaAssets.icons.notifCall.path,
                         NotificationMessageType.like => WayaAssets.icons.notifLike.path,
                         NotificationMessageType.share => WayaAssets.icons.notifShare.path,
                         NotificationMessageType.view => WayaAssets.icons.notifView.path,
                         NotificationMessageType.liveStream => WayaAssets.icons.notifLivestream.path,
+                        NotificationMessageType.uncategorized => WayaAssets.icons.notifications.path,
+                        NotificationMessageType.supportNotification ||
+                        NotificationMessageType.disputeNotification =>
+                          WayaAssets.icons.cAttachContact.path,
                       },
                       height: 22,
                       width: 22,
