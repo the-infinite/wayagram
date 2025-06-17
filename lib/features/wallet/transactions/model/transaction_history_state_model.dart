@@ -2,7 +2,7 @@ import 'package:wayagram/core/service/repos/transactions/transaction_history_mod
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 
 class TransactionHistoryState {
-  final int? page;
+  final int page;
   final bool? isLoading;
   final bool? isLoadingSingle;
   final bool? isVerifying;
@@ -12,11 +12,12 @@ class TransactionHistoryState {
   final String? filePath;
 
 
-  final bool? hasNextPage;
-  final bool? isLoadingMore;
+  final bool hasNextPage;
+  final bool isLoadingMore;
   final List<TransactionDetail>? transactions;
   final TransactionDetail? transaction;
   List<TransactionHistoryModelDocs>? docs;
+  List<TransactionHistoryModelDocs> transactionModel;
   final double totalCreditTransaction;
   final double totalDebitTransaction;
 
@@ -28,10 +29,11 @@ class TransactionHistoryState {
     this.isLoadingSingle = false,
     this.isVerifying = false,
     this.verified = false,
-    this.isFirstLoad = false,
+    this.isFirstLoad = true,
     this.isLoadingMore = false,
     this.hasNextPage = true,
     this.docs = const [],
+    this.transactionModel = const [],
     this.transactions,
     this.transaction,
     this.totalCreditTransaction = 0.0,
@@ -52,6 +54,7 @@ class TransactionHistoryState {
       List<TransactionDetail>? transactions,
       TransactionDetail? transaction,
       List<TransactionHistoryModelDocs>? docs,
+      List<TransactionHistoryModelDocs>? transactionModel,
       double? totalCreditTransaction,
       double? totalDebitTransaction}) {
     return TransactionHistoryState(
@@ -69,6 +72,7 @@ class TransactionHistoryState {
         transactions: transactions ?? this.transactions,
         transaction: transaction ?? this.transaction,
         docs: docs ?? this.docs,
+        transactionModel: transactionModel ?? this.transactionModel,
         totalCreditTransaction:
             totalCreditTransaction ?? this.totalCreditTransaction,
         totalDebitTransaction:
