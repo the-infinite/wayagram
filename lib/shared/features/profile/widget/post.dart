@@ -422,7 +422,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                         //? For the post description.
                         WayaCollapsibleText(
-                          removeHashtags('${postData.content.capitalizeFirst}'),
+                          removeHashtags('${postData.content}'.capitalizeFirst!),
                           maxLines: 2,
                           fontSize: 14.sp,
                           style: wayaTheme.textTheme.bodyMedium!.copyWith(
