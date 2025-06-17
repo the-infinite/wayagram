@@ -193,7 +193,7 @@ class ContestAppliedCard extends StatelessWidget {
                       AboutUgtWidget(
                           title: "Prize",
                           content:
-                              "₦ ${formatMoney(post.contest?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                              "${post.contest?.winnerPrize}"),
                     ],
                   ),
                   Column(

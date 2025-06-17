@@ -88,7 +88,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       'entryType': 'FREE',
       'entryAmount': 2000,
       'numberOfPostPerWeek': 1,
-      'priceOfTheWinner': 100,
+      'priceOfTheWinner': "100",
       'startDate': "2025, 1, 10",
       'endDate': "2025, 1, 14",
       'approveBeforeLive': true,
