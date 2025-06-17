@@ -52,7 +52,8 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
   @override
   Widget build(BuildContext context) {
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-    print('GROUPID EDIT==>>> ${args['id']}');
+    print('Member id==>>> ${args['id']}');
+    print('GROUP ID ==>>> ${args['groupId']}');
     final viewModel = ref.watch(groupProvider);
 
     final wayaTheme = Theme.of(context);
@@ -81,26 +82,19 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
         )
             : WayaButton(
           callback: () async {
-            if (viewModel.foundUserId == null) {
-              await WayaUtils.showModalSheet(
-                context,
-                child: WayaErrorDialog(title: "You must select the user you wish to add"),
-              );
-              return;
-            }
 
             if (_formKey.currentState!.validate()) {
               //? If this went well.
-              if (await notifier.inviteUserToGroup(
+              if (await notifier.updateTeamMember(
                 context,
-                widget.id,
                 viewModel.roleType,
-                viewModel.foundUserId!,
+                args['groupId'],
+                args['id'],
               )) {
                 await showCustomDialog(
                   context,
                   'Success!',
-                  '${viewModel.username.text} has been added as a ${viewModel.roleType}. You can now collaborate seamlessly and manage the page together.',
+                  'Your role has been edited as ${viewModel.roleType}. You can now collaborate seamlessly and manage the group together.',
                 );
                 notifier.reset();
                 WayaNav.goBack();
@@ -129,18 +123,28 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
             ),
           ),
           const Gap(30),
+          Container(
+            height: 50.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              //color: wayaTheme.colorScheme.greyColor300,
+              border: Border.all(color: wayaTheme.colorScheme.greyColor300),
+              borderRadius: BorderRadius.circular(4)
+            ),
+            child: Center(child: Text('${args['email']}')),
+          ),
           Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  WayaTextFormField(
+                  /*WayaTextFormField(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                     prefixIcon: Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
                     controller: viewModel.email,
                     hintText: '',
-                  ),
+                  ),*/
 
                   const Gap(20),
                   FormField<String>(validator: (value) {

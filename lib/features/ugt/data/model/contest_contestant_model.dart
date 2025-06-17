@@ -275,7 +275,7 @@ class Stage {
   final String? entryAmount;
   final String? voteCountToQualify;
   final String? numberOfPostPerWeek;
-  final int? priceOfTheWinner;
+  final dynamic priceOfTheWinner;
   final String? startDate;
   final String? endDate;
   final bool? approveBeforeLive;
@@ -292,7 +292,7 @@ class Stage {
     String? entryAmount,
     String? voteCountToQualify,
     String? numberOfPostPerWeek,
-    int? priceOfTheWinner,
+    dynamic priceOfTheWinner,
     String? startDate,
     String? endDate,
     bool? approveBeforeLive,

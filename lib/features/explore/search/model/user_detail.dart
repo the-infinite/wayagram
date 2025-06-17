@@ -153,6 +153,7 @@ class UserDetails extends BaseModel<UserDetails> {
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
+       
       };
 }
 

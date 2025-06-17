@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 
-class TransactionWidget extends StatelessWidget {
+class TransactionWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final String purpose;
   final String transactionType;
@@ -20,9 +22,9 @@ class TransactionWidget extends StatelessWidget {
       required this.date});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-   
+
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -54,7 +56,9 @@ class TransactionWidget extends StatelessWidget {
             const Spacer(),
             transactionType == 'FUNDING' || transactionType == 'REFUND'
                 ? Text(
-                    "+₦${amount.toString()}",
+                    ref.watch(hideShowBalanceProvider)
+                        ? "xxxxxx"
+                        : "+₦${amount.toString()}",
                     style: wayaTheme.textTheme.bodyMedium!.copyWith(
                       color: wayaTheme.colorScheme.success,
                       fontWeight: FontWeight.w400,
@@ -63,7 +67,10 @@ class TransactionWidget extends StatelessWidget {
                     ),
                   )
                 : Text(
-                    "-₦${amount.toString()}",
+                    //  "-₦${amount.toString()}",
+                    ref.watch(hideShowBalanceProvider)
+                        ? "xxxxxx"
+                        : "-₦${amount.toString()}",
                     style: wayaTheme.textTheme.bodyMedium!.copyWith(
                       color: WayaColors.error,
                       fontWeight: FontWeight.w400,

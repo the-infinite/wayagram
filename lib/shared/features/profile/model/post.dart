@@ -17,11 +17,11 @@ class PostModel extends BaseModel<PostModel> {
   final String content;
   final List<String> media;
   final List<String> hashtags;
-  final String sourceType;
+  final String? sourceType;
   final String? linkedServiceId;
-  final String privacy;
+  final String? privacy;
   final String? url;
-  final String status;
+  final String? status;
   final int likeCount;
   final int commentCount;
   final int shareCount;
