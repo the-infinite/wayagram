@@ -449,6 +449,7 @@ class GroupVm extends StateNotifier<GroupState> {
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
+
         );
       }
     } catch (e) {
