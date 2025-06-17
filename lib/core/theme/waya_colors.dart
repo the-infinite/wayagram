@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class WayaColors {
   //! This class is not constructable.
   WayaColors._();
-  
 
   static const primary200 = Color(0xffFF9873);
   static const primary300 = Color(0xffFF8458);
@@ -12,7 +11,7 @@ class WayaColors {
   static const customPrimary = Color(0xffFF632C);
   static const primary75 = Color(0xffFFCFBE);
   static const primaryBrown50 = Color(0xffFBF1F1);
-  static const primary = Color(0xffFF652E);
+  static const primary = Color(0xFFE85C2A);
   static const primary600 = Color(0xffB54821);
   static const primary700 = Color(0xff8C3819);
   static const onPrimary = Color(0xffFFFFFF);
@@ -24,14 +23,13 @@ class WayaColors {
   static const error500 = Color(0xffCB1A14);
   static const error700 = Color(0xff9E0A05);
 
-  // 
-static const Color pending50 = Color(0xffFFF9C4);
-static const Color pending = Color(0xffFBC02D);
+  //
+  static const Color pending50 = Color(0xffFFF9C4);
+  static const Color pending = Color(0xffFBC02D);
 
   //
-static const Color info50 = Color(0xffE3F2FD);
-static const Color info = Color(0xff0288D1);
-
+  static const Color info50 = Color(0xffE3F2FD);
+  static const Color info = Color(0xff0288D1);
 
   //
   static const success50 = Color(0xffE7F6EC);

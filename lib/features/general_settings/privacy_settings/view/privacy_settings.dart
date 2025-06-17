@@ -52,8 +52,7 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
           readReceipt.value = value.canSeeReadReceipt ?? false;
           lastSeen.value = value.canSeeLastSeen ?? false;
           showOnline.value = value.canSeeOnlineStatus ?? false;
-          whoCanContactme.value =
-              value.everyoneCanContactMe == true ? "Everyone" : "Friends";
+          whoCanContactme.value = value.everyoneCanContactMe == true ? "Everyone" : "Friends";
           //videoCallPermission.value = value.ci ?? false;
         }
       });
@@ -92,8 +91,7 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                         canSeeReadReceipt: readReceipt.value,
                         canSeeProfilePicture: true,
                         canSeeProfileDescription: true,
-                        everyoneCanContactMe:
-                            whoCanContactme.value == "Everyone"),
+                        everyoneCanContactMe: whoCanContactme.value == "Everyone"),
                   );
                 }, false);
               },
@@ -117,31 +115,30 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                         canSeeReadReceipt: value,
                         canSeeProfilePicture: true,
                         canSeeProfileDescription: true,
-                        everyoneCanContactMe:
-                            whoCanContactme.value == "Everyone"),
+                        everyoneCanContactMe: whoCanContactme.value == "Everyone"),
                   );
                 },
                 showSwitch: true,
                 switchValue: readReceipt),
             Gap(10),
             PrivacyWidget(
-                title: "Last Seen Visibility",
-                value: "Control who can view your last active status.",
-                showSwitch: true,
-                onSwitchChanged: (value) {
-                  //? updating the state
-                  viewModelNotifier.updateChatSettings(
-                    PrivacySettingsDto(
-                        canSeeOnlineStatus: showOnline.value,
-                        canSeeLastSeen: value,
-                        canSeeReadReceipt: readReceipt.value,
-                        canSeeProfilePicture: true,
-                        canSeeProfileDescription: true,
-                        everyoneCanContactMe:
-                            whoCanContactme.value == "Everyone"),
-                  );
-                },
-                switchValue: lastSeen),
+              title: "Last Seen Visibility",
+              value: "Control who can view your last active status.",
+              showSwitch: true,
+              onSwitchChanged: (value) {
+                //? updating the state
+                viewModelNotifier.updateChatSettings(
+                  PrivacySettingsDto(
+                      canSeeOnlineStatus: showOnline.value,
+                      canSeeLastSeen: value,
+                      canSeeReadReceipt: readReceipt.value,
+                      canSeeProfilePicture: true,
+                      canSeeProfileDescription: true,
+                      everyoneCanContactMe: whoCanContactme.value == "Everyone"),
+                );
+              },
+              switchValue: lastSeen,
+            ),
             Gap(10),
             GestureDetector(
               onTap: () {

@@ -21,8 +21,7 @@ class EditStagePreference extends StatefulHookConsumerWidget {
   const EditStagePreference({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _EditStagePreferenceState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _EditStagePreferenceState();
 }
 
 class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
@@ -31,33 +30,28 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
 
   @override
   Widget build(BuildContext context) {
-    StagePrefModel model = ref.read(stateContactProvider.notifier).state[
-        _contestController
-            .selectedIndex]; /* state.firstWhere((value) {
+    StagePrefModel model = ref.read(stateContactProvider.notifier).state[_contestController
+        .selectedIndex]; /* state.firstWhere((value) {
         debugPrint("${value.toJson()}");
       return _contestController.selectedIndex == value.id;
     }); */
     final entryType = useState(model.entryType ?? "Paid");
     final startDate = useState(model.startDate ?? "");
     final endDate = useState(model.endDate ?? "");
-    final priceForWinner = useState(
-        _contestController.contestPrizeWinnerTextController.text.trim().isEmpty
+    final priceForWinner = useState(_contestController.contestPrizeWinnerTextController.text.trim().isEmpty
+        ? "No"
+        : _contestController.contestPrizeWinnerTextController.text == "0"
             ? "No"
-            : _contestController.contestPrizeWinnerTextController.text == "0"
-                ? "No"
-                : "Yes");
+            : "Yes");
     final isSwitched = useState(model.reviewApprovePost ?? false);
     useEffect(() {
       _contestController.contestStageNameTextController.text =
           model.stageName == "Stage name" ? "" : model.stageName ?? "";
       _contestController.entryAmountController.text = model.entryAmount ?? "";
-      _contestController.contestNumberPostsPerWeekTextController.text =
-          model.numPostPerWeek ?? "";
-      _contestController.contestPrizeWinnerTextController.text =
-          model.priceWinner ?? "";
+      _contestController.contestNumberPostsPerWeekTextController.text = model.numPostPerWeek ?? "";
+      _contestController.contestPrizeWinnerTextController.text = model.priceWinner ?? "";
 
-      _contestController.contestvoteCountToQualifyTextController.text =
-          model.priceWinner ?? "";
+      _contestController.contestvoteCountToQualifyTextController.text = model.priceWinner ?? "";
       return null;
     }, []);
     //  final priceWinner = useState(model.priceWinner ?? "");
@@ -79,8 +73,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
             child: Column(
               children: [
                 FormField<String>(validator: (value) {
-                  if (_contestController
-                      .contestStageNameTextController.text.isEmpty) {
+                  if (_contestController.contestStageNameTextController.text.isEmpty) {
                     return 'Contest title is required';
                   }
 
@@ -90,12 +83,10 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaTextFormField(
-                        controller:
-                            _contestController.contestStageNameTextController,
+                        controller: _contestController.contestStageNameTextController,
                         hintText: "Qualification Stage",
                         label: "Stage Name ",
-                        borderColor: formState.hasError &&
-                                viewModel.amountPerVote.text.isEmpty
+                        borderColor: formState.hasError && viewModel.amountPerVote.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                       ),
@@ -104,9 +95,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -134,9 +123,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                         value: entryType.value,
                         label: "Entry Type ",
                         hintText: 'Choose entry type',
-                        items: ref
-                            .read(contestNotifierProvider.notifier)
-                            .ugtPaymentType(),
+                        items: ref.read(contestNotifierProvider.notifier).ugtPaymentType(),
                         onSelected: (value) {
                           if (value.first.label.toLowerCase() == "free") {
                             _contestController.entryAmountController.text = "0";
@@ -151,9 +138,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -165,8 +150,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       return 'Entry Amount is required';
                     }
 
-                    String value = _contestController.entryAmountController.text
-                            .contains("NGN")
+                    String value = _contestController.entryAmountController.text.contains("NGN")
                         ? _contestController.entryAmountController.text
                             .replaceAll("NGN", "")
                             .replaceAll(",", "")
@@ -191,21 +175,16 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           isReadOnly: entryType.value.toLowerCase() == "free",
                           label: "Entry Amount",
                           inputFormatters: [
-                            CurrencyTextInputFormatter.currency(
-                                name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                            CurrencyTextInputFormatter.currency(name: 'NGN', symbol: 'NGN', locale: 'en_NG')
                           ],
-                          borderColor: formState.hasError
-                              ? wayaTheme.colorScheme.error
-                              : null,
+                          borderColor: formState.hasError ? wayaTheme.colorScheme.error : null,
                         ),
                         if (formState.hasError)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12.sp),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -229,44 +208,31 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
 
                           //? if is the first stage, then the start date is the contest start date
                           if (_contestController.selectedIndex == 0) {
-                            firstDate = convertToUsableDate(
-                                viewModel.contestTimelineStartDate);
-                            lastDate = convertToUsableDate(
-                                viewModel.contestTimelineEndDate);
+                            firstDate = convertToUsableDate(viewModel.contestTimelineStartDate);
+                            lastDate = convertToUsableDate(viewModel.contestTimelineEndDate);
                           } else {
                             //? if not the first stage, then the start date is the end date of the previous stage
                             int newIndex = _contestController.selectedIndex - 1;
-                            StagePrefModel model = ref
-                                .read(stateContactProvider.notifier)
-                                .state[newIndex];
+                            StagePrefModel model = ref.read(stateContactProvider.notifier).state[newIndex];
 
-                            firstDate = convertToUsableDate(
-                                model.endDate ?? "2025-1-1");
-                            lastDate = convertToUsableDate(
-                                viewModel.contestTimelineEndDate);
+                            firstDate = convertToUsableDate(model.endDate ?? "2025-1-1");
+                            lastDate = convertToUsableDate(viewModel.contestTimelineEndDate);
                           }
 
                           startDate.value = await ref
                                   .read(contestNotifierProvider.notifier)
-                                  .showDatePickerMain(context,
-                                      firstDate: firstDate,
-                                      lastDate: lastDate) ??
+                                  .showDatePickerMain(context, firstDate: firstDate, lastDate: lastDate) ??
                               "";
                         },
                         child: AbsorbPointer(
                           child: WayaSelectField<String>(
                             height: 0.3,
-                            value: startDate.value.isEmpty
-                                ? 'DD/MM/YYYY'
-                                : startDate.value,
+                            value: startDate.value.isEmpty ? 'DD/MM/YYYY' : startDate.value,
                             label: "Start Date",
                             hintText: 'Select Start Date',
-                            items: ref
-                                .read(contestNotifierProvider.notifier)
-                                .ugtDurationType(),
-                            onSelected: (value) => ref
-                                .read(contestNotifierProvider.notifier)
-                                .updateDurationType(value.first.label),
+                            items: ref.read(contestNotifierProvider.notifier).ugtDurationType(),
+                            onSelected: (value) =>
+                                ref.read(contestNotifierProvider.notifier).updateDurationType(value.first.label),
                             uniqueKey: 'contest-state',
                           ),
                         ),
@@ -276,9 +242,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -306,42 +270,30 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           //? if is the first stage, then the start date is the contest start date
                           if (_contestController.selectedIndex == 0) {
                             firstDate = convertToUsableDate(startDate.value);
-                            lastDate = convertToUsableDate(
-                                viewModel.contestTimelineEndDate);
+                            lastDate = convertToUsableDate(viewModel.contestTimelineEndDate);
                           } else {
                             //? if not the first stage, then the start date is the end date of the previous stage
                             int newIndex = _contestController.selectedIndex - 1;
-                            StagePrefModel model = ref
-                                .read(stateContactProvider.notifier)
-                                .state[newIndex];
+                            StagePrefModel model = ref.read(stateContactProvider.notifier).state[newIndex];
 
-                            firstDate = convertToUsableDate(
-                                model.endDate ?? "2025-1-1");
-                            lastDate = convertToUsableDate(
-                                viewModel.contestTimelineEndDate);
+                            firstDate = convertToUsableDate(model.endDate ?? "2025-1-1");
+                            lastDate = convertToUsableDate(viewModel.contestTimelineEndDate);
                           }
 
                           endDate.value = await ref
                                   .read(contestNotifierProvider.notifier)
-                                  .showDatePickerMain(context,
-                                      firstDate: firstDate,
-                                      lastDate: lastDate) ??
+                                  .showDatePickerMain(context, firstDate: firstDate, lastDate: lastDate) ??
                               "";
                         },
                         child: AbsorbPointer(
                           child: WayaSelectField<String>(
                             height: 0.3,
-                            value: endDate.value.isEmpty
-                                ? 'DD/MM/YYYY'
-                                : endDate.value,
+                            value: endDate.value.isEmpty ? 'DD/MM/YYYY' : endDate.value,
                             label: "End Date",
                             hintText: 'Select End Date',
-                            items: ref
-                                .read(contestNotifierProvider.notifier)
-                                .ugtDurationType(),
-                            onSelected: (value) => ref
-                                .read(contestNotifierProvider.notifier)
-                                .updateDurationType(value.first.label),
+                            items: ref.read(contestNotifierProvider.notifier).ugtDurationType(),
+                            onSelected: (value) =>
+                                ref.read(contestNotifierProvider.notifier).updateDurationType(value.first.label),
                             uniqueKey: 'End Date',
                           ),
                         ),
@@ -351,9 +303,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -361,8 +311,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 }),
                 const Gap(15),
                 FormField<String>(validator: (value) {
-                  if (_contestController
-                      .contestNumberPostsPerWeekTextController.text.isEmpty) {
+                  if (_contestController.contestNumberPostsPerWeekTextController.text.isEmpty) {
                     return 'Number of Posts per week required';
                   }
 
@@ -372,31 +321,21 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaTextFormField(
-                        controller: _contestController
-                            .contestNumberPostsPerWeekTextController,
+                        controller: _contestController.contestNumberPostsPerWeekTextController,
                         hintText: "E.g 4",
                         keyboardType: TextInputType.number,
                         label: "Number of Posts per week",
                         borderColor: formState.hasError &&
-                                _contestController
-                                    .contestNumberPostsPerWeekTextController
-                                    .text
-                                    .isEmpty
+                                _contestController.contestNumberPostsPerWeekTextController.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                       ),
-                      if (formState.hasError &&
-                          _contestController
-                              .contestNumberPostsPerWeekTextController
-                              .text
-                              .isEmpty)
+                      if (formState.hasError && _contestController.contestNumberPostsPerWeekTextController.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -404,8 +343,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 }),
                 const Gap(15),
                 FormField<String>(validator: (value) {
-                  if (_contestController
-                      .contestvoteCountToQualifyTextController.text.isEmpty) {
+                  if (_contestController.contestvoteCountToQualifyTextController.text.isEmpty) {
                     return 'Vote Counts to Qualify is required';
                   }
 
@@ -416,30 +354,20 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.number,
-                        controller: _contestController
-                            .contestvoteCountToQualifyTextController,
+                        controller: _contestController.contestvoteCountToQualifyTextController,
                         hintText: "Enter Vote Counts to Qualify",
                         label: "Vote Counts to Qualify",
                         borderColor: formState.hasError &&
-                                _contestController
-                                    .contestvoteCountToQualifyTextController
-                                    .text
-                                    .isEmpty
+                                _contestController.contestvoteCountToQualifyTextController.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                       ),
-                      if (formState.hasError &&
-                          _contestController
-                              .contestvoteCountToQualifyTextController
-                              .text
-                              .isEmpty)
+                      if (formState.hasError && _contestController.contestvoteCountToQualifyTextController.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText ?? "",
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -461,15 +389,11 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                         value: priceForWinner.value,
                         label: "Is there price for the winner",
                         hintText: 'Choose',
-                        items: [
-                          Select(label: "Yes", value: "1"),
-                          Select(label: "No", value: "0")
-                        ],
+                        items: [Select(label: "Yes", value: "1"), Select(label: "No", value: "0")],
                         onSelected: (value) {
                           debugPrint(" i am poo ${value.first.label}");
                           if (value.first.label == "Free") {
-                            _contestController
-                                .contestPrizeWinnerTextController.text = "0";
+                            _contestController.contestPrizeWinnerTextController.text = "0";
                           }
                           priceForWinner.value = value.first.label;
                           /*  ref
@@ -483,9 +407,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -494,13 +416,12 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 const Gap(15),
                 if (priceForWinner.value == "Yes")
                   FormField<String>(validator: (value) {
-                    if (_contestController
-                        .contestPrizeWinnerTextController.text.isEmpty) {
+                    if (_contestController.contestPrizeWinnerTextController.text.isEmpty) {
                       return 'Winner Price is required';
                     }
-                    String value = _contestController
-                            .contestPrizeWinnerTextController.text
-                            .contains("NGN")
+                    // String value = _contestController
+                    //     .contestPrizeWinnerTextController.text;
+                    /*   .contains("NGN")
                         ? _contestController
                             .contestPrizeWinnerTextController.text
                             .replaceAll("NGN", "")
@@ -513,7 +434,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
 
                     if (int.parse(value) <= 0) {
                       return 'Amount must be greater than zero';
-                    }
+                    } */
 
                     return null;
                   }, builder: (formState) {
@@ -521,27 +442,23 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: _contestController
-                              .contestPrizeWinnerTextController,
-                          inputFormatters: [
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _contestController.contestPrizeWinnerTextController,
+                          line: 6,
+                          /*    inputFormatters: [
                             CurrencyTextInputFormatter.currency(
                                 name: 'NGN', symbol: 'NGN', locale: 'en_NG')
-                          ],
+                          ], */
                           hintText: "Enter Winners price",
                           label: "Prize for the Winner? ",
-                          borderColor: formState.hasError
-                              ? wayaTheme.colorScheme.error
-                              : null,
+                          borderColor: formState.hasError ? wayaTheme.colorScheme.error : null,
                         ),
                         if (formState.hasError)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText ?? "Error",
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12.sp),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -626,28 +543,21 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 _contestController.entryAmountController.text = "0";
               }
               if (_formKey.currentState!.validate()) {
-                ref.read(stateContactProvider.notifier).state = ref
-                    .read(stateContactProvider)
-                    .where((i) => _contestController.selectedIndex != i.id)
-                    .toList();
+                ref.read(stateContactProvider.notifier).state =
+                    ref.read(stateContactProvider).where((i) => _contestController.selectedIndex != i.id).toList();
                 ref.read(stateContactProvider.notifier).state.insert(
                     _contestController.selectedIndex,
                     StagePrefModel(
                         id: _contestController.selectedIndex,
                         endDate: endDate.value,
-                        stageName: _contestController
-                            .contestStageNameTextController.text,
+                        stageName: _contestController.contestStageNameTextController.text,
                         startDate: startDate.value,
-                        priceWinner: _contestController
-                            .contestPrizeWinnerTextController.text,
+                        priceWinner: _contestController.contestPrizeWinnerTextController.text,
                         entryType: entryType.value,
                         reviewApprovePost: isSwitched.value,
-                        voteCountToQualify: _contestController
-                            .contestvoteCountToQualifyTextController.text,
-                        entryAmount:
-                            _contestController.entryAmountController.text,
-                        numPostPerWeek: _contestController
-                            .contestNumberPostsPerWeekTextController.text));
+                        voteCountToQualify: _contestController.contestvoteCountToQualifyTextController.text,
+                        entryAmount: _contestController.entryAmountController.text,
+                        numPostPerWeek: _contestController.contestNumberPostsPerWeekTextController.text));
                 WayaNav.goBack();
               }
               /*  if (_formKey.currentState!.validate()) {
@@ -679,8 +589,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               text: 'Go Back',
               color: wayaTheme.colorScheme.greyColor300,
               textColor: wayaTheme.colorScheme.customBlack,
-              border: Border.all(
-                  width: 1, color: wayaTheme.colorScheme.greyColor300),
+              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
                 WayaNav.goBack();
               })

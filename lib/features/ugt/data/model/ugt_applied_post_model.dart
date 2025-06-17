@@ -266,7 +266,7 @@ class Stage {
   final dynamic entryAmount;
   final dynamic voteCountToQualify;
   final dynamic numberOfPostPerWeek;
-  final int? priceOfTheWinner;
+  final dynamic priceOfTheWinner;
   final bool? isActive;
   final String? startDate;
   final String? endDate;

@@ -109,6 +109,7 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
       desc: "No User added yet",
       title: "Blocked Users",
       buttonText: "",
+      showButtonBusiness: false,
       hideButton: false,
       onTap: () {},
     );

@@ -1,131 +1,96 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:uuid/uuid.dart';
-import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/components/waya_buttons.dart';
+import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
+
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/post/vm/comment.dart';
 
 class GroupSettingPage extends StatefulHookConsumerWidget {
   static const route = '/group-general-Setting';
-  const GroupSettingPage({super.key});
 
+  const GroupSettingPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PageSettingState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _UgtHomeState();
 }
 
-class _PageSettingState extends ConsumerState<GroupSettingPage>
-    with SingleTickerProviderStateMixin {
+class _UgtHomeState extends ConsumerState<GroupSettingPage> {
   @override
   Widget build(BuildContext context) {
-    //get pageid
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createGroupProvider);
-    final viewModel2 = ref.watch(wayaSelectFieldViewModelProvider(Uuid().v4()));
-    final pageNotifier = ref.read(createPageProvider.notifier);
+    //? store state of the switch
+    final groupNotifier = ref.read(createGroupProvider.notifier);
 
-    final followPermisson = useState("Everyone");
-    final canJoinGroup = useState(false);
-    final lastSeen = useState(false);
+    final approveJoinBeforeJoining = useState(false);
+    final allowJoin = useState(false);
 
-    /// Everyone, invited followers, restricted followers
-    ///For comments we have: Admins only, Everyone, followers
+//? get user settings to update the UI Once
     useEffect(() {
-      // bool isPublic = args["isPublic"] ?? false;
-      //  bool isCommentPermission = args["commentPermission"] ?? false;
-
-      // followPermisson.value = isPublic ? "Everyone" : "Friends";
-      //canJoinGroup.value = canJoinGroup ? "Everyone" : "Friends";
+      groupNotifier.getGroupGeneralSettings().then((value) {
+        allowJoin.value = value.$1;
+        approveJoinBeforeJoining.value = value.$2;
+      });
 
       return null;
     }, []);
-
     return WayaScaffold(
-      backgroundColor: Theme.of(context).colorScheme.greyColor50,
-      isLoading: viewModel.isLoading,
-      isScrollable: false,
-      title: 'Page Settings',
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Gap(20),
-          Text(
-            "Page Permission Settings",
-            style: wayaTheme.textTheme.hintStyle,
-          ),
-          Gap(20),
-          GestureDetector(
-            onTap: () {
-              viewModel2.selectValue(context, "Who Can join Me", [
-                Select(label: "Everyone", value: "1"),
-                Select(label: "Friends", value: "2"),
-              ], (value) {
-                //? set the state
-                followPermisson.value = value.first.label;
-                //? updating the state
-                pageNotifier.updatePageSetting(
-                    context,
-                    followPermisson.value == "Everyone",
-                    canJoinGroup.value,
-                    args["pageId"]);
-              }, false);
-            },
-            child: PrivacyWidget(
-                title: "Who can join",
-                value:
-                    "Allow anyone to join without restrictions for a more inclusive community",
-                showSwitch: false,
-                whoCanContactMe: followPermisson,
-                switchValue: lastSeen),
-          ),
-          Gap(10),
-          PrivacyWidget(
-              title: "Approve before joining",
-              value: "Allow users to join group without approval",
-              onSwitchChanged: (value) {
-                //? update the state
-                pageNotifier.updatePageSetting(
-                    context,
-                    followPermisson.value == "Everyone",
-                    canJoinGroup.value,
-                    args["pageId"]);
-              },
-              showSwitch: true,
-              switchValue: canJoinGroup),
-          Gap(10),
-        ],
+      isLoading: false,
+      isScrollable: true,
+      title: "Group Settings",
+      backgroundColor: WayaColors.scaffoldColor,
+      appBar: AppBar(
+        backgroundColor: WayaColors.white,
+        title: Text("Group Settings"),
+        leading: WayaBackButton(
+            //onTap: onTapBackButton,
+            ),
       ),
-    );
-  }
-
-  Widget accessType(title, subTitle, chk, onPressed) {
-    final wayaTheme = Theme.of(context);
-    return Container(
-      height: 88.h,
-      padding:
-          EdgeInsets.only(left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12), color: Colors.white),
-      child: ListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text(title, style: wayaTheme.textTheme.titleSmall),
-        subtitle: Text(
-          subTitle,
-          style: TextStyle().wayaCopyWith(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.greyColor500),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Gap(10),
+            Text("Group Preferences",
+                style: WayaTextStyles.hintStyleBold
+                    .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
+            Gap(20),
+            //? card for each of the switch
+            /* 
+            setting event- on and off for ...let everyone join, approve join request before joining
+             */
+            PrivacyWidget(
+                title: "Allow Join Group",
+                value:
+                    "Allow anyone to join group without restrictions for a more inclusive community",
+                showSwitch: true,
+                onSwitchChanged: (value) {
+                  groupNotifier.updateGroupGeneralSettings(
+                      value, approveJoinBeforeJoining.value);
+                },
+                switchValue: allowJoin),
+            Gap(10),
+            PrivacyWidget(
+                title: "Approve Join Request",
+                value:
+                    "Approve user before allowing user to join the group to ensure quality control",
+                showSwitch: true,
+                onSwitchChanged: (value) {
+                  groupNotifier.updateGroupGeneralSettings(
+                      allowJoin.value, value);
+                },
+                switchValue: approveJoinBeforeJoining),
+            Gap(10),
+          ],
         ),
-        trailing: Switch(value: chk, onChanged: onPressed),
       ),
     );
   }

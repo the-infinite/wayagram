@@ -11,7 +11,6 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/post/vm/comment.dart';
 
 class PostSettingsPage extends StatefulHookConsumerWidget {
   static const route = '/post-setting-page';
@@ -28,13 +27,14 @@ class _UgtHomeState extends ConsumerState<PostSettingsPage> {
     //? store state of the switch
     final pageNotifier = ref.read(createPageProvider.notifier);
 
-    // final oldPost = useState(false);
+    final oldPost = useState(false);
     final newPost = useState(false);
 
 //? get user settings to update the UI Once
     useEffect(() {
       pageNotifier.getPostSettings().then((value) {
-        newPost.value = value;
+        newPost.value = value.$2;
+        oldPost.value = value.$1;
       });
       /*  myFollowProvider.getUserSettings().then((value) {
         if (value != null) {
@@ -71,24 +71,26 @@ class _UgtHomeState extends ConsumerState<PostSettingsPage> {
             /* 
             setting event- on and off for ...let everyone join, approve join request before joining
              */
-            /*   PrivacyWidget(
+            PrivacyWidget(
                 title: "History Post",
-                value: "Make old post Private",
+                value:
+                    "Make my old Post public or private, toggle on to make public",
                 showSwitch: true,
                 onSwitchChanged: (value) {
+                  pageNotifier.updatePostSettings(value, newPost.value);
                   /* notifier.updateEventSettings(
                       letEveryoneJoin: value,
                       approveJoinRequest: approveJoinRequest.value); */
                 },
                 switchValue: oldPost),
-            Gap(10), */
+            Gap(10),
             PrivacyWidget(
-                title: "Post",
+                title: "New Post",
                 value:
-                    "Make my Post public or private, toggle on to make public",
+                    "Make my new Post public or private, toggle on to make public",
                 showSwitch: true,
                 onSwitchChanged: (value) {
-                  pageNotifier.updatePostSettings(newPost.value);
+                  pageNotifier.updatePostSettings(oldPost.value, value);
                 },
                 switchValue: newPost),
             Gap(10),

@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/widget/chat/input/selected_file.dart';
+import 'package:wayagram/features/general_settings/chat_settings/vm.dart';
 
 class FileMessageWidget extends StatelessWidget {
   final MessageModel data;
@@ -37,7 +38,7 @@ class FileMessageWidget extends StatelessWidget {
           Text(
             data.content!,
             style: WayaTextStyles.bodyMedium.copyWith(
-              fontSize: 15.sp,
+              fontSize: 15.sp * ChatSettingsNotifier.instance.textScale,
               fontWeight: FontWeight.normal,
               color: textColor,
             ),

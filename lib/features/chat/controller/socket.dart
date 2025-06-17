@@ -147,6 +147,7 @@ class WayaChatSocketArgs {
       'chatId': chatId,
       'eventUid': eventUid,
       'senderId': senderId,
+      'timestamp': timestamp,
       if (messageId != null) 'messageId': messageId,
       if (content != null) 'content': content,
       if (action != null) 'action': action,
@@ -306,7 +307,7 @@ class WayaSocketController {
         if (args.senderId == ConversationState.self.id) return;
 
         // This is fine.
-        chatNotifier.setTyping(true);
+        chatNotifier.startTyping(args.senderId);
       },
     );
 
@@ -321,7 +322,7 @@ class WayaSocketController {
         if (args.senderId == ConversationState.self.id) return;
 
         // This is fine.
-        chatNotifier.setTyping(false);
+        chatNotifier.stopTyping(args.senderId);
       },
     );
 
