@@ -297,7 +297,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     child: AboutUgtWidget(
                         title: "Prize",
                         content:
-                            "₦${formatMoney(widget.post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                            "${widget.post.winnerPrize}"),
                     //  const Gap(30),
                   )
                 ],
