@@ -91,11 +91,11 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
 
             if (_formKey.currentState!.validate()) {
               //? If this went well.
-              if (await notifier.inviteUserToGroup(
+              if (await notifier.updateTeamMember(
                 context,
-                widget.id,
                 viewModel.roleType,
-                viewModel.foundUserId!,
+                args['id'],
+                widget.id,
               )) {
                 await showCustomDialog(
                   context,
@@ -129,18 +129,28 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
             ),
           ),
           const Gap(30),
+          Container(
+            height: 50.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              //color: wayaTheme.colorScheme.greyColor300,
+              border: Border.all(color: wayaTheme.colorScheme.greyColor300),
+              borderRadius: BorderRadius.circular(4)
+            ),
+            child: Center(child: Text('${args['email']}')),
+          ),
           Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  WayaTextFormField(
+                  /*WayaTextFormField(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                     prefixIcon: Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
                     controller: viewModel.email,
                     hintText: '',
-                  ),
+                  ),*/
 
                   const Gap(20),
                   FormField<String>(validator: (value) {

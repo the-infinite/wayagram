@@ -58,6 +58,7 @@ import 'package:wayagram/features/group/view/group_suggestion.dart';
 import 'package:wayagram/features/group/view/groups.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
+import 'package:wayagram/features/group/view/single_group_invitation.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/group/view/user_group_invitation.dart';
 import 'package:wayagram/features/group/view/view_full_media.dart';
@@ -403,6 +404,7 @@ class WayaAppRoutes {
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
     UserGroupInvitation.route: () => UserGroupInvitation(),
+    SingleGroupInvitation.route: () => SingleGroupInvitation(id:WayaNav.search['id'].toString()),
     EventSettingsPage.route: () => EventSettingsPage(),
     PostSettingsPage.route: () => PostSettingsPage(),
     UserAction.route: () => UserAction(),
@@ -493,6 +495,10 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to take you a
   /// single group by its ID.
   static String getGroupDetailsPage(String id) => "${PublicGroup.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single group invitation by its ID.
+  static String getGroupInvitationPage(String id) => "${SingleGroupInvitation.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single group's members by its ID.
