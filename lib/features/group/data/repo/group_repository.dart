@@ -147,6 +147,7 @@ class GroupRepository extends BaseRepository {
     final payload = {
       "role": role
     };
+
     return put("$serviceUrl/groups/$groupId/members/$memberId", payload, showErrors: true);
   }
 
