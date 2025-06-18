@@ -17,7 +17,8 @@ class AdminTransactionHistory extends StatefulHookConsumerWidget {
   const AdminTransactionHistory({super.key});
 
   @override
-  ConsumerState<AdminTransactionHistory> createState() => _ManageStateContestState();
+  ConsumerState<AdminTransactionHistory> createState() =>
+      _ManageStateContestState();
 }
 
 class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
@@ -128,7 +129,8 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String title, String value, Widget widget) {
+  Widget _buildStatCard(
+      BuildContext context, String title, String value, Widget widget) {
     final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
@@ -146,12 +148,15 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title, textAlign: TextAlign.start, style: WayaTextStyles.hintStyleBold),
+                Text(title,
+                    textAlign: TextAlign.start,
+                    style: WayaTextStyles.hintStyleBold),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
                     decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.primary500, // Background color
+                      color:
+                          wayaTheme.colorScheme.primary500, // Background color
                       shape: BoxShape.circle, // Makes the container circular
                       border: Border.all(
                         color: Colors.white, // Optional: Border color
@@ -172,10 +177,11 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: WayaAssets.images.uEmptystate.image(),
-        desc: "There are no contestant for this contes yet",
-        title: "No Contestestant yet",
+        desc: "Transaction history is empty",
+        title: "No Transaction History",
         buttonText: "Host a Contest",
-        hideButton: true,
+        showButtonBusiness: true,
+        hideButton: false,
         onTap: () {});
   }
 
