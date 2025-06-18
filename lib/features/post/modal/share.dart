@@ -111,8 +111,10 @@ class SharePostModal extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
-                          WayaNav.toNamed(Moment.route,
-                              arguments: {"content": post.url});
+                          WayaNav.toNamed(Moment.route, arguments: {
+                            "content": WayaValueHelper.getShareableUrl(
+                                WayaAppRoutes.getSinglePostScreen(post.id)),
+                          });
                           // WayaNav.goBack(
                           //   result: ShareResult(
                           //     "moment",
