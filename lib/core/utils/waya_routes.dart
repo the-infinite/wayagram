@@ -90,6 +90,7 @@ import 'package:wayagram/features/polls_and_voting/views/poll_summary.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/views/share_voting_link.dart';
 import 'package:wayagram/features/post/view/edit_post.dart';
+import 'package:wayagram/features/post/view/single_post.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
 import 'package:wayagram/features/promotion/views/promotion_detail.dart';
@@ -372,7 +373,8 @@ class WayaAppRoutes {
     AddGroupMember.route: () =>
         AddGroupMember(id: WayaNav.search['id'].toString()),
     SearchView.route: () => SearchView(),
-    EditGroupMemberInfo.route: () => EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
+    EditGroupMemberInfo.route: () =>
+        EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
     SinglePollScreen.route: () => SinglePollScreen(),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
@@ -443,10 +445,11 @@ class WayaAppRoutes {
           eventTitle: WayaNav.search["title"].toString(),
         ),
     FavoritesProducts.route: () => FavoritesProducts(),
-        TopSellingList.route: () => TopSellingList(),
-        VerifyTransactionIdentity.route:() => VerifyTransactionIdentity(),
+    TopSellingList.route: () => TopSellingList(),
+    VerifyTransactionIdentity.route: () => VerifyTransactionIdentity(),
     TwoFactorAuth.route: () =>
-        TwoFactorAuth(email: WayaNav.search["email"].toString())
+        TwoFactorAuth(email: WayaNav.search["email"].toString()),
+     SinglePost.route: () => SinglePost(postId:  WayaNav.search["postId"].toString() ) 
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -456,7 +459,11 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getProfileRoute(String id, [String source = 'any', String? username,]) =>
+  static String getProfileRoute(
+    String id, [
+    String source = 'any',
+    String? username,
+  ]) =>
       "${ProfilePage.route}?${username != null ? 'u=$username' : 'id=$id&source=$source'}";
 
   /// Helper function that is used to get the route to the details of a single
@@ -597,8 +604,11 @@ class WayaAppRoutes {
   static String getEventInviteScreen(String id, String title) =>
       "${EventInvite.route}?id=$id&title=$title";
 
+  static String getSinglePostScreen(String postId) =>
+      "${SinglePost.route}?postId=$postId";
+
   static String get2FaScreen(
-    String email, 
+    String email,
   ) =>
       "${TwoFactorAuth.route}?email=$email";
 
