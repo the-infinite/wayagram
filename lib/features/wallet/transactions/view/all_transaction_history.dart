@@ -10,7 +10,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/transactions/components/export_transaction.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
-import 'package:wayagram/features/wallet/transactions/view/transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 import 'package:wayagram/features/wallet/widget/transaction_widget.dart';
 

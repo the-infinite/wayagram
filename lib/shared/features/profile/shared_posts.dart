@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 import 'package:gap/gap.dart';
@@ -23,7 +24,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // ref.read(servicesProvider.notifier).getEngagedPost();
-      ref.read(servicesProvider.notifier).getPosts();
+      ref.read(exploreVmProvider.notifier).getUserFeeds();
       ref.read(servicesProvider.notifier).fetchPostsByCategory();
     });
     super.initState();
@@ -33,6 +34,9 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(servicesProvider);
+    final exploreNotifier = ref.watch(exploreVmProvider);
+
+  //  print("some --------------------------------- ${exploreNotifier.posts.length}");
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,10 +63,13 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
             if (category.hasNextPage)
               WayaButton(
                 callback: () {
-                  ref.read(servicesProvider.notifier).loadMorePosts(category.categoryName);
+                  ref
+                      .read(servicesProvider.notifier)
+                      .loadMorePosts(category.categoryName);
                 },
                 text: 'See More Post',
-                border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor200),
+                border: Border.all(
+                    width: 1, color: wayaTheme.colorScheme.greyColor200),
                 height: 36,
                 color: wayaTheme.colorScheme.transparent,
                 textColor: wayaTheme.colorScheme.customPrimary,
@@ -71,7 +78,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
         ],
 
         //? Just if there are some top rated posts to show.
-        if (state.topPosts.isNotEmpty) ...[
+        if (exploreNotifier.posts.isNotEmpty) ...[
           Text(
             "Recommended Posts",
             style: widget.isExpanded
@@ -86,9 +93,11 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.isExpanded ? state.topPosts.length : min(state.topPosts.length, 3),
+            itemCount: widget.isExpanded
+                ? exploreNotifier.posts.length
+                : min(exploreNotifier.posts.length, 3),
             itemBuilder: (context, index) => WayaPostWidget(
-              data: state.topPosts[index],
+              data: exploreNotifier.posts[index],
               index: index,
             ),
           ),

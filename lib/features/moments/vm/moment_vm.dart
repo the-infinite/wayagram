@@ -391,7 +391,7 @@ class MomentVm extends StateNotifier<MomentState> {
       if (state.selectedFile != null) {
         final publicUrl = await WayaFileRepository.instance.uploadFile(
           selectedAsset!,
-          "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
+          "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}",
         );
         // //> get preview
         // final preview = await generateVideoPreview(publicUrl ?? '');

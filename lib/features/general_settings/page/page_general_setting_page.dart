@@ -11,7 +11,6 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/post/vm/comment.dart';
 
 class PageGeneralSetting extends StatefulHookConsumerWidget {
   static const route = '/page-general-Setting';

@@ -24,6 +24,7 @@ import 'package:wayagram/features/event/views/event_invite.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/explore/views/chat_and_social.dart';
+import 'package:wayagram/features/explore/views/chat_notifications/chat.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/account_security/account_security.dart';
@@ -57,6 +58,7 @@ import 'package:wayagram/features/group/view/group_suggestion.dart';
 import 'package:wayagram/features/group/view/groups.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
+import 'package:wayagram/features/group/view/single_group_invitation.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/group/view/user_group_invitation.dart';
 import 'package:wayagram/features/group/view/view_full_media.dart';
@@ -90,6 +92,7 @@ import 'package:wayagram/features/polls_and_voting/views/poll_summary.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/views/share_voting_link.dart';
 import 'package:wayagram/features/post/view/edit_post.dart';
+import 'package:wayagram/features/post/view/single_post.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
 import 'package:wayagram/features/promotion/views/promotion_detail.dart';
@@ -269,7 +272,7 @@ class WayaAppRoutes {
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
-
+    WayaSocialNotificationsScreen.route: () => WayaSocialNotificationsScreen(),
     ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
     AdminTransactionHistory.route: () => AdminTransactionHistory(),
     ContestSettingContent.route: () => ContestSettingContent(),
@@ -372,7 +375,8 @@ class WayaAppRoutes {
     AddGroupMember.route: () =>
         AddGroupMember(id: WayaNav.search['id'].toString()),
     SearchView.route: () => SearchView(),
-    EditGroupMemberInfo.route: () => EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
+    EditGroupMemberInfo.route: () =>
+        EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
     SinglePollScreen.route: () => SinglePollScreen(),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
@@ -402,6 +406,7 @@ class WayaAppRoutes {
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
     UserGroupInvitation.route: () => UserGroupInvitation(),
+    SingleGroupInvitation.route: () => SingleGroupInvitation(id:WayaNav.search['id'].toString()),
     EventSettingsPage.route: () => EventSettingsPage(),
     PostSettingsPage.route: () => PostSettingsPage(),
     UserAction.route: () => UserAction(),
@@ -443,10 +448,11 @@ class WayaAppRoutes {
           eventTitle: WayaNav.search["title"].toString(),
         ),
     FavoritesProducts.route: () => FavoritesProducts(),
-        TopSellingList.route: () => TopSellingList(),
-        VerifyTransactionIdentity.route:() => VerifyTransactionIdentity(),
+    TopSellingList.route: () => TopSellingList(),
+    VerifyTransactionIdentity.route: () => VerifyTransactionIdentity(),
     TwoFactorAuth.route: () =>
-        TwoFactorAuth(email: WayaNav.search["email"].toString())
+        TwoFactorAuth(email: WayaNav.search["email"].toString()),
+     SinglePost.route: () => SinglePost(postId:  WayaNav.search["postId"].toString() ) 
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -456,7 +462,11 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getProfileRoute(String id, [String source = 'any', String? username,]) =>
+  static String getProfileRoute(
+    String id, [
+    String source = 'any',
+    String? username,
+  ]) =>
       "${ProfilePage.route}?${username != null ? 'u=$username' : 'id=$id&source=$source'}";
 
   /// Helper function that is used to get the route to the details of a single
@@ -492,6 +502,10 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to take you a
   /// single group by its ID.
   static String getGroupDetailsPage(String id) => "${PublicGroup.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single group invitation by its ID.
+  static String getGroupInvitationPage(String id) => "${SingleGroupInvitation.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single group's members by its ID.
@@ -597,8 +611,11 @@ class WayaAppRoutes {
   static String getEventInviteScreen(String id, String title) =>
       "${EventInvite.route}?id=$id&title=$title";
 
+  static String getSinglePostScreen(String postId) =>
+      "${SinglePost.route}?postId=$postId";
+
   static String get2FaScreen(
-    String email, 
+    String email,
   ) =>
       "${TwoFactorAuth.route}?email=$email";
 

@@ -87,7 +87,8 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                     onTap: ()=> WayaNav.toNamed('/groups/members/edit',
                         arguments: {
                           'email': group?.user?.email,
-                          'id': group?.user?.id
+                          'id': group?.userId,
+                          'groupId': widget.groupId
                         }),
                     child: Container(
                       margin: EdgeInsets.only(bottom: 15),

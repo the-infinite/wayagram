@@ -180,15 +180,15 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     }
   }
 
-    Future<void> verifySetTransactionPin(
+  Future<void> verifySetTransactionPin(
       {required VoidCallback onSuccess,
       required String code,
       required String email}) async {
     state = state.copyWith(isLoading: true);
 
     try {
-      final response =
-          await _authRepository.verifySetPin(VerifyOtp(email: email, otp: code));
+      final response = await _authRepository
+          .verifySetPin(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
       }
@@ -201,13 +201,12 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
   Future<void> verifyPayout(
       {required VoidCallback onSuccess,
-        required String code,
-        required String email}) async {
+      required String code,
+      required String email}) async {
     state = state.copyWith(isLoading: true);
 
     try {
-      final response =
-      await _authRepository.verifyPayout(email, code);
+      final response = await _authRepository.verifyPayout(email, code);
       if (response.success) {
         onSuccess();
       }
@@ -332,7 +331,9 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     try {
       state.isFromLogin
           ? await ref.read(loginVmProvider.notifier).loginVerification(
-              email: decodedEmail, code: code, purpose: state.isResend ? "2FA" : null)
+              email: decodedEmail,
+              code: code,
+              purpose: state.isResend ? "2FA" : null)
           : await update2Fa(code: code, email: decodedEmail);
     } catch (e) {
       _logger.e(e.toString());

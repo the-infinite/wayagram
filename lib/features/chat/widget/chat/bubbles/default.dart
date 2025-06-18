@@ -14,6 +14,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/file.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/voice.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
@@ -548,8 +549,8 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
 
 class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   OverlayEntry? _entry;
-  late final notifier = ref.watch(chatProvider(widget.chat?.id ?? widget.data.chatId).notifier);
-  late final messageController = notifier.getController(widget.data);
+  late final notifier = ref.read(chatProvider(widget.chat?.id ?? widget.data.chatId).notifier);
+  late final conversationNotifier = ref.read(conversationProvider.notifier);
 
   /// This is the message we are replying to.
   void _replyTo() {
@@ -723,11 +724,14 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                 //* Fifth, delete this message for me.
                 if (widget.data.dto == null)
                   WayaButton(
-                    callback: () {
+                    callback: () async {
                       widget.controller.clearFocus();
 
-                      // Delete this message.
-                      notifier.deleteMessage(widget.data.id, MessageDeleteAction.deleteForMe);
+                      //? Delete this message.
+                      await notifier.deleteMessage(widget.data.id, MessageDeleteAction.deleteForMe);
+
+                      //? Finally, refetch the conversation.
+                      conversationNotifier.getChatDetails(widget.data.chatId);
                     },
                     height: null,
                     alignment: Alignment.centerLeft,
@@ -768,6 +772,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                       notifier.deleteMessage(widget.data.id, MessageDeleteAction.deleteForEveryone).then(
                         (success) {
                           if (success) {
+                            conversationNotifier.getChatDetails(widget.data.chatId);
                             widget.controller.setText(widget.data.content ?? '');
                           }
                         },
@@ -929,7 +934,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
     // Insert this overlay.
     Overlay.of(context).insert(_entry!);
-    widget.controller.setFocus(messageController.data);
+    widget.controller.setFocus(messageController!.data);
 
     // Update this lad.
     setState(() {
@@ -1015,92 +1020,100 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   @override
   Widget build(BuildContext context) {
     final user = ConversationState.self;
+    final messageController = notifier.getController(widget.data);
+
+    //? If this has been deleted.
+    if (messageController == null) {
+      return const SizedBox();
+    }
+
+    //? If these do not match...
+    if (widget.data.id != messageController.data.id) {
+      return const SizedBox();
+    }
 
     //? Our other option.
-    return PopScope(
-      onPopInvokedWithResult: (isRemoved, _) {
-        if (isRemoved) widget.controller.clearFocus();
-      },
-      child: VisibilityDetector(
-        key: Key('waya-msg-${widget.data.id}'),
-        onVisibilityChanged: (info) {
-          if (info.visibleFraction >= 0.15) _checkStatusAndNotify();
+    return ValueListenableBuilder(
+      valueListenable: messageController,
+      builder: (context, redraws, _) => PopScope(
+        onPopInvokedWithResult: (isRemoved, _) {
+          if (isRemoved) widget.controller.clearFocus();
         },
-        child: Opacity(
-          opacity: _entry == null ? 1 : 0,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              //? The date separator.
-              if (widget.interactive && !WayaDateHelper.isSameDay(widget.data.createdAt, widget.previousDate))
-                WayaTextStrip(
-                  WayaDateHelper.getSocialDate(widget.data.createdAt),
-                  backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
-                  style: WayaTextStyles.bodyMedium.copyWith(
-                    fontSize: 14.sp,
-                    color: widget.grayColor,
+        child: VisibilityDetector(
+          key: Key('waya-msg-${widget.data.id}'),
+          onVisibilityChanged: (info) {
+            if (info.visibleFraction >= 0.15) _checkStatusAndNotify();
+          },
+          child: Opacity(
+            opacity: _entry == null ? 1 : 0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //? The date separator.
+                if (widget.interactive && !WayaDateHelper.isSameDay(widget.data.createdAt, widget.previousDate))
+                  WayaTextStrip(
+                    WayaDateHelper.getSocialDate(widget.data.createdAt),
+                    backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
+                    style: WayaTextStyles.bodyMedium.copyWith(
+                      fontSize: 14.sp,
+                      color: widget.grayColor,
+                    ),
                   ),
-                ),
 
-              //? This is fine.
-              WayaSwiper(
-                swipeSensitivity: 5,
-                onLongPress: widget.interactive ? _showActions : null,
-                onTap: widget.data.dto != null ? _resendMessage : null,
-                rightSwipeWidget: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //? First, the reply icon.
-                    WayaAssets.icons.cCornerUpLeft.svg(
-                      color: WayaColors.primary,
-                    ),
-
-                    // Some space.
-                    const Gap(5),
-
-                    //? Second, the text for replying.
-                    Text(
-                      "Reply",
-                      style: WayaTextStyles.bodySemiBold.copyWith(
+                //? This is fine.
+                WayaSwiper(
+                  swipeSensitivity: 5,
+                  onLongPress: widget.interactive ? _showActions : null,
+                  onTap: widget.data.dto != null ? _resendMessage : null,
+                  rightSwipeWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //? First, the reply icon.
+                      WayaAssets.icons.cCornerUpLeft.svg(
                         color: WayaColors.primary,
-                        fontSize: 13.sp,
                       ),
-                    ),
-                  ],
+
+                      // Some space.
+                      const Gap(5),
+
+                      //? Second, the text for replying.
+                      Text(
+                        "Reply",
+                        style: WayaTextStyles.bodySemiBold.copyWith(
+                          color: WayaColors.primary,
+                          fontSize: 13.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onVerticalSwipe: widget.interactive ? () => widget.inputFocus.unfocus() : null,
+                  onRightSwipe: widget.interactive ? (details) => _replyTo() : null,
+                  child: widget.data.senderId == user.id
+                      ? _MyBubbleWidget(
+                          data: messageController.data,
+                          chat: widget.chat!,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                          isDark: widget.isDark,
+                          backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
+                          grayColor: widget.grayColor ?? WayaColors.greyColor500,
+                          textScale: widget.textScale ?? 1,
+                        )
+                      : _YourBubbleWidget(
+                          data: messageController.data,
+                          chat: widget.chat!,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                          isDark: widget.isDark,
+                          backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
+                          grayColor: widget.grayColor ?? WayaColors.greyColor500,
+                          textScale: widget.textScale ?? 1,
+                        ),
                 ),
-                onVerticalSwipe: widget.interactive ? () => widget.inputFocus.unfocus() : null,
-                onRightSwipe: widget.interactive ? (details) => _replyTo() : null,
-                child: widget.data.senderId == user.id
-                    ? ValueListenableBuilder(
-                        valueListenable: messageController,
-                        builder: (context, redraws, _) => _MyBubbleWidget(
-                          data: messageController.data,
-                          chat: widget.chat!,
-                          controller: widget.controller,
-                          interactive: widget.interactive,
-                          isDark: widget.isDark,
-                          backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
-                          grayColor: widget.grayColor ?? WayaColors.greyColor500,
-                          textScale: widget.textScale ?? 1,
-                        ),
-                      )
-                    : ValueListenableBuilder(
-                        valueListenable: messageController,
-                        builder: (context, redraws, _) => _YourBubbleWidget(
-                          data: messageController.data,
-                          chat: widget.chat!,
-                          controller: widget.controller,
-                          interactive: widget.interactive,
-                          isDark: widget.isDark,
-                          backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
-                          grayColor: widget.grayColor ?? WayaColors.greyColor500,
-                          textScale: widget.textScale ?? 1,
-                        ),
-                      ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
