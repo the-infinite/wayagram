@@ -327,7 +327,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   controller: notifier.winnerPrize,
                   line: 6,
                   hintText: "Enter Winner's Award",
-                 /*  inputFormatters: [
+                  /*  inputFormatters: [
                     CurrencyTextInputFormatter.currency(
                         name: 'NGN', symbol: 'NGN', locale: 'en_NG')
                   ], */

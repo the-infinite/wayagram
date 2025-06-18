@@ -171,7 +171,7 @@ class _UpcomingContestDetailsState
                   const Gap(20),
                   AboutUgtWidget(
                       title: "Prize",
-                      content: "₦${formatMoney(model?.winnerPrize ?? "")}"),
+                      content: "${model?.winnerPrize}"),
                   /*   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"), */
                 ],
@@ -305,7 +305,7 @@ class _UpcomingContestDetailsState
             AboutUgtWidget(
                 // isFromDetailsPage: true,
                 title: "Prize for Winner",
-                content: "₦${formatMoney(model.priceOfTheWinner.toString())}"),
+                content: "${model.priceOfTheWinner}"),
             const Gap(20),
           ],
         ),

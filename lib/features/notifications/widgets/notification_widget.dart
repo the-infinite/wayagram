@@ -80,13 +80,23 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                             NotificationMessageType.event => WayaAssets.icons.notifUpcomingEvent.path,
                             NotificationMessageType.followRequest => WayaAssets.icons.notifNewFollower.path,
                             NotificationMessageType.poll => WayaAssets.icons.notifPollResults.path,
-                            NotificationMessageType.creditAlert || NotificationMessageType.debitAlert => WayaAssets.icons.notifTransaction.path,
-                            NotificationMessageType.groupInvite => WayaAssets.icons.notifGroupRequest.path,
+                            NotificationMessageType.creditAlert ||
+                            NotificationMessageType.debitAlert ||
+                            NotificationMessageType.getQuotation =>
+                              WayaAssets.icons.notifTransaction.path,
+                            NotificationMessageType.groupInvite ||
+                            NotificationMessageType.groups ||
+                            NotificationMessageType.pages =>
+                              WayaAssets.icons.notifGroupRequest.path,
                             NotificationMessageType.calls => WayaAssets.icons.notifCall.path,
                             NotificationMessageType.like => WayaAssets.icons.notifLike.path,
                             NotificationMessageType.share => WayaAssets.icons.notifShare.path,
                             NotificationMessageType.view => WayaAssets.icons.notifView.path,
                             NotificationMessageType.liveStream => WayaAssets.icons.notifLivestream.path,
+                            NotificationMessageType.uncategorized => WayaAssets.icons.notifications.path,
+                            NotificationMessageType.supportNotification ||
+                            NotificationMessageType.disputeNotification =>
+                              WayaAssets.icons.cAttachContact.path,
                           },
                           height: 22,
                           width: 22,
@@ -115,14 +125,15 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                           //* The notification body.
                           WayaRichText(
                             title1: "${widget.data.message.body}.",
-                            title2: " ${widget.data.notificationAction}.",
+                            title2:
+                                widget.data.notificationAction?.isEmpty ?? true ? "" : widget.data.notificationAction!,
                             style1: wayaTheme.textTheme.mediumDescriptionStyle.copyWith(
                               fontSize: 12.sp,
                             ),
                             style2: WayaTextStyles.smallActiveLinkStyle.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
-                            onTap2: _executeAction,
+                            onTap2: widget.data.notificationAction?.isEmpty ?? true ? null : _executeAction,
                           ),
 
                           // Some space.

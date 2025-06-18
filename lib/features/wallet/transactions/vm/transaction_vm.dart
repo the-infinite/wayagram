@@ -17,21 +17,15 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   final WalletRepository _walletRepository;
   final WayaLocalDataSource _localDataSource;
 
-  TransactionVm(this._transactionRepository, this._walletRepository,
-      this._localDataSource)
+  TransactionVm(this._transactionRepository, this._walletRepository, this._localDataSource)
       : super(TransactionHistoryState()); //
 
   Future<void> getTransaction(
-      {int? page = 1,
-      int? limit = 10,
-      bool? hasNextPage,
-      bool isFirst = false,
-      String? filters}) async {
+      {int? page = 1, int? limit = 10, bool? hasNextPage, bool isFirst = false, String? filters}) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _transactionRepository.getUserTransactions(
-          page: page, limit: limit, filters: filters);
+      final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
@@ -42,20 +36,15 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
             docs: [],
           );
         }
-        TransactionHistoryModel responseModel =
-            TransactionHistoryModel.fromJson(response.data);
-        debugPrint(
-            'DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
+        TransactionHistoryModel responseModel = TransactionHistoryModel.fromJson(response.data);
+        debugPrint('DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
         state = state.copyWith(
             isLoading: false,
             docs: responseModel.data?.docs,
-            totalCreditTransaction: responseModel
-                        .data?.totalCreditTransaction ==
-                    null
+            totalCreditTransaction: responseModel.data?.totalCreditTransaction == null
                 ? 0
                 : double.parse('${responseModel.data?.totalCreditTransaction}'),
-            totalDebitTransaction: responseModel.data?.totalDebitTransaction ==
-                    null
+            totalDebitTransaction: responseModel.data?.totalDebitTransaction == null
                 ? 0
                 : double.parse('${responseModel.data?.totalDebitTransaction}'),
             hasNextPage: responseModel.data?.hasNextPage);
@@ -65,24 +54,17 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     } finally {}
   }
 
-  Future<void> getUserTransactions(
-      {int? page = 1,
-      int? limit = 10,
-      bool? hasNextPage,
-      String? filters}) async {
+  Future<void> getUserTransactions({int? page = 1, int? limit = 10, bool? hasNextPage, String? filters}) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _transactionRepository.getUserTransactions(
-          page: page, limit: limit, filters: filters);
+      final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
       if (response.success) {
         log("${response.data}");
         final transactions = (response.data["data"]["docs"] as List)
             .map((transaction) => TransactionDetail.fromJson(transaction))
             .toList();
-        final totalCreditTransaction =
-            double.parse(response.data["data"]["totalCreditTransaction"]);
-        final totalDebitTransaction =
-            double.parse(response.data["data"]["totalDebitTransaction"]);
+        final totalCreditTransaction = double.parse(response.data["data"]["totalCreditTransaction"]);
+        final totalDebitTransaction = double.parse(response.data["data"]["totalDebitTransaction"]);
         final hasNextPage = response.data["data"]["hasNextPage"];
         state = state.copyWith(
             isLoading: false,
@@ -101,13 +83,11 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   Future<void> getSingleTransactions(String transactionId) async {
     try {
       state = state.copyWith(isLoadingSingle: true);
-      final response =
-          await _transactionRepository.getSingleTransactions(transactionId);
+      final response = await _transactionRepository.getSingleTransactions(transactionId);
       if (response.success) {
         final transaction = TransactionDetail.fromJson(response.data["data"]);
         log("$transaction");
-        state =
-            state.copyWith(isLoadingSingle: false, transaction: transaction);
+        state = state.copyWith(isLoadingSingle: false, transaction: transaction);
       } else {
         state = state.copyWith(isLoadingSingle: false);
       }
@@ -162,18 +142,13 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     return true;
   }
 
-  Future<void> verifyTransaction(
-      String transactionId, String fundingOption) async {
-    final fundingOptionCode =
-        fundingOption.toLowerCase() == "paystack" ? "PS002" : "WQ001";
+  Future<void> verifyTransaction(String transactionId, String fundingOption) async {
+    final fundingOptionCode = fundingOption.toLowerCase() == "paystack" ? "PS002" : "WQ001";
     try {
       final userId = _localDataSource.getUserId();
       state = state.copyWith(isVerifying: true);
       final response = await _walletRepository.verifyWalletFunding(
-          VerifyTransaction(
-              transactionId: transactionId,
-              userId: userId ?? "",
-              fundOptionCode: fundingOptionCode));
+          VerifyTransaction(transactionId: transactionId, userId: userId ?? "", fundOptionCode: fundingOptionCode));
       if (response.success) {
         log("${response.data}");
         state = state.copyWith(isVerifying: false, verified: true);
@@ -220,10 +195,8 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
         if (list.isNotEmpty) {
           // Filter out duplicates
           final existingIds = list.map((t) => t.id).toSet();
-          final uniqueNewTransactions = list
-              .where((transaction) => !existingIds.contains(transaction.id))
-              .toList();
-
+          final uniqueNewTransactions = list.where((transaction) => !existingIds.contains(transaction.id)).toList();
+          uniqueNewTransactions.length;
           state = state.copyWith(transactionModel: list);
 
           /*  setState(() {
@@ -246,35 +219,25 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   }
 
   Future<List<TransactionHistoryModelDocs>> getTransaction2(
-      {int? page = 1,
-      int? limit = 10,
-      bool? hasNextPage,
-      bool isFirst = false,
-      String? filters}) async {
+      {int? page = 1, int? limit = 10, bool? hasNextPage, bool isFirst = false, String? filters}) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _transactionRepository.getUserTransactions(
-          page: page, limit: limit, filters: filters);
+      final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        TransactionHistoryModel responseModel =
-            TransactionHistoryModel.fromJson(response.data);
-        debugPrint(
-            'DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
+        TransactionHistoryModel responseModel = TransactionHistoryModel.fromJson(response.data);
+        debugPrint('DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
         state = state.copyWith(
             isLoading: false,
             //  docs: responseModel.data?.docs,
-            totalCreditTransaction: responseModel
-                        .data?.totalCreditTransaction ==
-                    null
+            totalCreditTransaction: responseModel.data?.totalCreditTransaction == null
                 ? 0
                 : double.parse('${responseModel.data?.totalCreditTransaction}'),
-            totalDebitTransaction: responseModel.data?.totalDebitTransaction ==
-                    null
+            totalDebitTransaction: responseModel.data?.totalDebitTransaction == null
                 ? 0
                 : double.parse('${responseModel.data?.totalDebitTransaction}'),
             hasNextPage: responseModel.data?.hasNextPage);
@@ -286,21 +249,14 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     } finally {}
     return [];
   }
-  void setModelList(List<TransactionHistoryModelDocs> list){
 
+  void setModelList(List<TransactionHistoryModelDocs> list) {
     state = state.copyWith(transactionModel: list);
-
+  }
 }
-}
 
+final hideShowBalanceProvider = StateProvider<bool>((ref) => WayaLocalDataSource().getShowHideBalance());
 
-
-
-final hideShowBalanceProvider =
-    StateProvider<bool>((ref) => WayaLocalDataSource().getShowHideBalance());
-
-final transactionVmProvider =
-    StateNotifierProvider<TransactionVm, TransactionHistoryState>((ref) {
-  return TransactionVm(TransactionRepository(), WalletRepository.instance,
-      WayaLocalDataSource());
+final transactionVmProvider = StateNotifierProvider<TransactionVm, TransactionHistoryState>((ref) {
+  return TransactionVm(TransactionRepository(), WalletRepository.instance, WayaLocalDataSource());
 });

@@ -46,6 +46,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   //final ContestResponse _contestRespons;
   final _logger = getLogger('ContestRepo');
   late TextEditingController title;
+  late TextEditingController maxVote;
 
   late TextEditingController winnerPrize;
   late TextEditingController description;
@@ -60,6 +61,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     //this._contestController,
   ) : super(ContestState()) {
     title = TextEditingController();
+    maxVote = TextEditingController();
     winnerPrize = TextEditingController();
     description = TextEditingController();
     voteCountToQualify = TextEditingController();
@@ -73,6 +75,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   @override
   void dispose() {
     title.dispose();
+    maxVote.dispose();
     winnerPrize.dispose();
     description.dispose();
     voteCountToQualify.dispose();
@@ -88,7 +91,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       'entryType': 'FREE',
       'entryAmount': 2000,
       'numberOfPostPerWeek': 1,
-      'priceOfTheWinner': 100,
+      'priceOfTheWinner': "100",
       'startDate': "2025, 1, 10",
       'endDate': "2025, 1, 14",
       'approveBeforeLive': true,
@@ -136,6 +139,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           },
         )
         .toList();
+
     List<Map<String, dynamic>> mapStageList = stageList.map(
       (model) {
         String stageEndDate = _convertToISO(model.endDate!) ==
@@ -155,13 +159,16 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
               : model.entryAmount,
           "voteCountToQualify": model.voteCountToQualify ?? "",
           "numberOfPostPerWeek": model.numPostPerWeek,
-          "priceOfTheWinner": model.priceWinner/* !.contains("NGN")
+          "maxVote": model.maxVote,
+          "priceOfTheWinner": model
+              .priceWinner /* !.contains("NGN")
               ? int.parse(model.priceWinner!
                   .split(".")
                   .first
                   .substring(3)
                   .replaceAll(",", ""))
-              : int.parse(model.priceWinner ?? "0") */,
+              : int.parse(model.priceWinner ?? "0") */
+          ,
           "startDate": _convertToISO(model.startDate!), // model.startDate,
           "endDate": stageEndDate, // model.endDate,
           "approveBeforeLive": model.reviewApprovePost
@@ -205,9 +212,11 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         // "categoryName": state.categorys,
         "state": state.state,
         //  "numberOfWeeks":numberOfWeeks.text,
-        "winnerPrize": winnerPrize.text/* .contains("NGN")
+        "winnerPrize": winnerPrize
+            .text /* .contains("NGN")
             ? winnerPrize.text.split(".").first.substring(3).replaceAll(",", "")
-            : winnerPrize.text */,
+            : winnerPrize.text */
+        ,
         "description": description.text,
         //  "voteCountToQualify": voteCountToQualify.text,
         "amount": state.amount.text.contains("NGN")
@@ -510,9 +519,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           value: entries.value.id.toString(), label: entries.value.state);
     }).toList();
   }
-  
+
   List<Select> ugtStatesExcludedAllState() {
-    var list= states.asMap().entries.map((entries) {
+    var list = states.asMap().entries.map((entries) {
       return Select(
           value: entries.value.id.toString(), label: entries.value.state);
     }).toList();

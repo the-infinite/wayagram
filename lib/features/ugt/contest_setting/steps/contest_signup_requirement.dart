@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,6 +15,7 @@ import 'package:wayagram/features/ugt/contest_setting/steps/add_new_requirement_
 import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
+import 'package:wayagram/shared/features/browser/activity.dart';
 import '../../../auth/account_creation/view/loading_state.dart';
 
 class ContestSignupRequirement extends StatefulHookConsumerWidget {
@@ -58,6 +60,7 @@ class _ContestSignupRequirementState
     final viewModel1 = ref.watch(stateRequirementProvider);
     final wayaTheme = Theme.of(context);
     final isLoading = useState(false);
+    final acceptedTerms = useState(false);
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
 
     var isEditing = ref.watch(stateIsEditingContestProvider);
@@ -365,12 +368,48 @@ class _ContestSignupRequirementState
           ],
         ),
         const Gap(15),
+        Row(
+          children: [
+            Checkbox(
+              value: acceptedTerms.value,
+              onChanged: (value) {
+                acceptedTerms.value = !acceptedTerms.value;
+              },
+            ),
+            Expanded(
+              child: RichText(
+                textAlign: TextAlign.start,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                        text: "I agree to the ",
+                        style: WayaTextStyles.bodySmall),
+                    TextSpan(
+                      text: "Terms and conditions ",
+                      style: WayaTextStyles.smallActiveLinkStyle,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () async => await WayaNav.to(
+                              transition: Transition.circularReveal,
+                              duration: const Duration(milliseconds: 500),
+                              WayaBrowserView(
+                                name: "Terms and Conditions",
+                                url: "https://wayagram.ng/terms",
+                              ),
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+        const Gap(15),
         WayaButton(
             centerWidget:
                 LoadingState(loading: isLoading.value, text: 'Submit'),
-            callback: !isLoading.value
+            callback: !isLoading.value && acceptedTerms.value 
                 ? () {
-                  /*   if (ref
+                    /*   if (ref
                         .read(stateRequirementProvider.notifier)
                         .state
                         .isEmpty) {
