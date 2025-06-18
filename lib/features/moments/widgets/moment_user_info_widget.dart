@@ -115,7 +115,7 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                   if (response == false) {
                     //  print("fwefewfw $response");
                     return WayaSnackBar.showToast(
-                        "You already submit a report");
+                        "You already submitted a report");
                   }
 
                   if (response == true) {
