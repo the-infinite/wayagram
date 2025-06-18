@@ -9,7 +9,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/group/widget/group_empty_state.dart';
-import 'package:wayagram/features/group/widget/invitation_card.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class UserPageInvitation extends ConsumerStatefulWidget {
