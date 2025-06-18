@@ -91,7 +91,7 @@ class _VerifyIdentityPageState
 
           //? Give it a little bit more space.
           Text(
-            "Enter the 6-digits code sent to your email address",
+            "Enter the 6-digits code sent to your email address before setting your transaction pin",
             maxLines: 3,
             style: WayaTextStyles.hintStyle,
           ),

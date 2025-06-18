@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -47,14 +48,20 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
       isLoading: viewModel.isLoading,
       isScrollable: true,
       title: 'Pages',
-      appBarTrailing: Row(
-        spacing: 12,
-        children: [
-          InkWell(
-              onTap: ()=> WayaNav.toNamed('/searchPage'),
-              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
-          Gap(8)
-        ],
+      appBarTrailing: Padding(
+        padding:  EdgeInsets.only(right: 20.w),
+        child: Row(
+          spacing: 20,
+          children: [
+            InkWell(
+                onTap: ()=> WayaNav.toNamed('/searchPage'),
+                child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
+            Gap(8),
+            InkWell(
+                onTap: ()=> WayaNav.toNamed('/userPageInvitation'),
+                child: WayaAssets.icons.notifGroupRequest.svg(fit: BoxFit.none)),
+          ],
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

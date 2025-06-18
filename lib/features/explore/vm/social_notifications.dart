@@ -44,11 +44,16 @@ class SocialNotificationNotifier extends StateNotifier<SocialNotificationState> 
   }
 
   /// Helper function used to get all notifications.
-  Future<List<NotificationModel>> getUserNotifications([int page = 1]) async {
+  Future<List<NotificationModel>> getUserNotifications([bool reset = true]) async {
     final result = <NotificationModel>[];
 
     //? First, notify this guy that we are loading.
     WayaPreloaderController.instance.show();
+
+    //? Set the page.
+    if (reset) {
+      state = state.copyWith(page: 1);
+    }
 
     //? Now, try to get the notifications and fall back when failed.
     try {
@@ -68,18 +73,28 @@ class SocialNotificationNotifier extends StateNotifier<SocialNotificationState> 
               NotificationMessageType.creditAlert,
               NotificationMessageType.debitAlert,
               NotificationMessageType.donation,
+              NotificationMessageType.uncategorized,
+              NotificationMessageType.disputeNotification,
+              NotificationMessageType.supportNotification,
+              NotificationMessageType.getQuotation,
             ].contains(e.messageType),
           ),
+        );
+
+        //? Notify our listeners that the game has been switched up.
+        state = state.copyWith(
+          notifications: result,
+          page: data.nextPage,
         );
       }
 
       //? Since it failed, we should probably do failure cleanups in the future.
-      else {}
-
-      //? Notify our listeners that the game has been switched up.
-      state = state.copyWith(
-        notifications: result,
-      );
+      else {
+        //? Notify our listeners that the game has been switched up.
+        state = state.copyWith(
+          notifications: result,
+        );
+      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),

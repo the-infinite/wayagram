@@ -70,74 +70,82 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
               itemCount: viewModel.getPageMemberDocs?.length,
               itemBuilder: (_, index) {
                 final page = viewModel.getPageMemberDocs?[index];
-                return Container(
-                  margin: EdgeInsets.only(bottom: 15),
-                  padding: EdgeInsets.only(left: 10),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Gap(10),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
-                        width: 80.w,
-                        decoration: BoxDecoration(
-                          color: wayaTheme.colorScheme.success50,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              page?.role == 'admin' || page?.role == 'owner'
-                                  ? 'assets/images/pages/crown.png'
-                                  : page?.role == 'editor'
-                                      ? 'assets/images/pages/editor.png'
-                                      : 'assets/images/pages/moderator.png',
-                              height: 8.h,
-                            ),
-                            const Gap(5),
-                            const Gap(5),
-                            Text(
-                              "${page?.role?.capitalizeFirst}",
-                              style: TextStyle().wayaCopyWith(
-                                color: page?.role == 'admin' || page?.role == 'owner'
-                                    ? wayaTheme.colorScheme.success
-                                    : WayaColors.primary700,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 11.sp,
+                return InkWell(
+                  onTap: ()=> WayaNav.toNamed('/pages/members/edit',
+                      arguments: {
+                        'email': page?.user?.email,
+                        'id': page?.userId,
+                        'pageId': widget.pageId,
+                      }),
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 15),
+                    padding: EdgeInsets.only(left: 10),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Gap(10),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
+                          width: 80.w,
+                          decoration: BoxDecoration(
+                            color: wayaTheme.colorScheme.success50,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                page?.role == 'admin' || page?.role == 'owner'
+                                    ? 'assets/images/pages/crown.png'
+                                    : page?.role == 'editor'
+                                        ? 'assets/images/pages/editor.png'
+                                        : 'assets/images/pages/moderator.png',
+                                height: 8.h,
                               ),
-                            ),
-                          ],
+                              const Gap(5),
+                              const Gap(5),
+                              Text(
+                                "${page?.role?.capitalizeFirst}",
+                                style: TextStyle().wayaCopyWith(
+                                  color: page?.role == 'admin' || page?.role == 'owner'
+                                      ? wayaTheme.colorScheme.success
+                                      : WayaColors.primary700,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 11.sp,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      //Gap(10),
-                      ListTile(
-                        contentPadding: EdgeInsets.only(left: 0, right: 0, top: 0),
-                        leading: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: WayaColors.greyColor100,
-                            backgroundImage: NetworkImage('${page?.user?.profilePicture}')),
-                        title: Row(
-                          children: [
-                            Text(
-                              '${page?.user?.firstName?.capitalizeFirst} ${page?.user?.lastName?.capitalizeFirst}',
-                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).colorScheme.black),
-                            ),
-                          ],
+                        //Gap(10),
+                        ListTile(
+                          contentPadding: EdgeInsets.only(left: 0, right: 0, top: 0),
+                          leading: CircleAvatar(
+                              radius: 20,
+                              backgroundColor: WayaColors.greyColor100,
+                              backgroundImage: NetworkImage('${page?.user?.profilePicture}')),
+                          title: Row(
+                            children: [
+                              Text(
+                                '${page?.user?.firstName?.capitalizeFirst} ${page?.user?.lastName?.capitalizeFirst}',
+                                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context).colorScheme.black),
+                              ),
+                            ],
+                          ),
+                          subtitle: Text(
+                            '${page?.user?.email}',
+                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context).colorScheme.greyColor500),
+                          ),
                         ),
-                        subtitle: Text(
-                          '${page?.user?.email}',
-                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).colorScheme.greyColor500),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               }),
