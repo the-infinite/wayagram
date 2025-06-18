@@ -11,6 +11,7 @@ class StagePrefModel {
   final String? endDate;
   final String? numPostPerWeek;
   final String? priceWinner;
+  final String? maxVote;
   final String? voteCountToQualify;
   final bool? reviewApprovePost;
 
@@ -21,6 +22,7 @@ class StagePrefModel {
     this.entryAmount = "",
     this.startDate = "",
     this.endDate = "",
+    this.maxVote = "",
     this.numPostPerWeek = "",
     this.priceWinner = "",
     this.voteCountToQualify = "",
