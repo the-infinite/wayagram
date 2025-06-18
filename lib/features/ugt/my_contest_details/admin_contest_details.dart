@@ -16,7 +16,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_contestants.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_post_all.dart';
-import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
@@ -273,7 +272,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                           UpcomingWidgetAdmin(
                               title: "Prize",
                               content:
-                                  "₦${formatMoney(model?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                                  "${model?.winnerPrize}"),
                           const Gap(20),
                           UpcomingWidgetAdmin(title: "Host", content: "Host"),
                         ],

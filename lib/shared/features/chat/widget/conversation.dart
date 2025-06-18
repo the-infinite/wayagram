@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class ConversationFeedWidget extends ConsumerWidget {
@@ -27,14 +30,11 @@ class ConversationFeedWidget extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(
-        isExpanded
-            ? state.conversations.length
-            : min(state.conversations.length, 3),
+        isExpanded ? state.conversations.length : min(state.conversations.length, 3),
         (index) => ConversationWidget(
           index: index,
           chatId: state.conversations[index].id,
-          notifier:
-              ref.read(chatProvider(state.conversations[index].id).notifier),
+          notifier: ref.read(chatProvider(state.conversations[index].id).notifier),
           conversationNotifier: notifier,
           isInteractive: false,
         ),
@@ -47,9 +47,17 @@ class ShareChatsWidget extends ConsumerWidget {
   //? Is this expanded?
   final bool isExpanded;
   final String? url;
+  final String entityId;
+  final PageVm notifier;
 
   //? Is this expanded?
-  const ShareChatsWidget({super.key, this.isExpanded = false, this.url});
+  const ShareChatsWidget({
+    super.key,
+    required this.notifier,
+    required this.entityId,
+    this.isExpanded = false,
+    this.url,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,11 +84,17 @@ class ShareChatsWidget extends ConsumerWidget {
               onTap: () async {
                 //> preload the previous chat
                 chatNotifier.setChat(chat);
+
                 //> prefill the text form field with the link
                 chatController.setText(url ?? '');
 
                 //> on to the chat page
-                WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
+                await WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
+
+                //? Then share.
+                try {
+                  notifier.sharePost(context, postId: entityId);
+                } catch (_) {}
               },
               child: SizedBox(
                 width: 62.w,
@@ -99,10 +113,7 @@ class ShareChatsWidget extends ConsumerWidget {
 
                     //? The name of the chat.
                     Text(
-                      chat.name ??
-                          chat.other.userData?.fullname ??
-                          chat.other.chatUser?.displayName ??
-                          "WayaGram User",
+                      chat.name ?? chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User",
                       textAlign: TextAlign.center,
                       style: WayaTextStyles.titleMedium.copyWith(
                         fontSize: 14.sp,

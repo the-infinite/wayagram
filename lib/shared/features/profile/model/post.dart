@@ -13,10 +13,10 @@ class PostModel extends BaseModel<PostModel> {
   final List<String>? categories;
   final String? groupId;
   final String? pageId;
-  final String contentType;
-  final String content;
+  final dynamic contentType;
+  final dynamic content;
   final List<String> media;
-  final List<String> hashtags;
+  final List<dynamic> hashtags;
   final String? sourceType;
   final String? linkedServiceId;
   final String? privacy;
@@ -101,9 +101,9 @@ class PostModel extends BaseModel<PostModel> {
     String? originalPostId,
     DateTime? createdAt,
     DateTime? updatedAt,
-    UserDetailsModel? user,
-    PageModel? page,
-    GroupModel? group,
+    dynamic user,
+    dynamic page,
+    dynamic group,
     bool? isLiked,
     PostModel? originalPost,
   }) {
