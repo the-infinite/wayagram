@@ -592,7 +592,10 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
           ref
               .read(contestNotifierProvider.notifier)
               .requestPayout(context, widget.id);
+        }else if (widget.module == PayoutModule.event) {
+         //TODO event payout method
         }
+
       } else {
         WayaNav.goBack();
         ScaffoldMessenger.of(context).showSnackBar(

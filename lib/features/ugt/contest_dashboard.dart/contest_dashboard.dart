@@ -263,7 +263,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             ),
             const Gap(10),
             // DateTime.now().isAfter(DateTime.parse(model?.endDate)) ?
-            if (!DateTime.now().isAfter(
+            if (DateTime.now().isAfter(
                 DateTime.parse(model?.endDate ?? "2096-01-01T00:00:00.000Z")))
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
