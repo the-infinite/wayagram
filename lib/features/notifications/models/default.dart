@@ -173,7 +173,7 @@ class NotificationModel {
 
       // Retrieve each key.
       for (final key in messageData?.keys ?? []) {
-        json["message"]["body"] = json["message"]["body"].toString().replaceAll("{{$key}}", messageData![key]);
+        json["message"]["body"] = json["message"]["body"].toString().replaceAll("{{$key}}", messageData![key].toString());
       }
     }
 
