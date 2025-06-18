@@ -63,8 +63,12 @@ class ChatRepository extends BaseRepository {
     });
   }
 
-  Future<WayaRequestResponse> reportUser(String targetUserId, String reason) {
-    return post("$serviceUrlGraph/reports/create", {"targetUserId": targetUserId, "reason": reason});
+  Future<WayaRequestResponse> reportUser(String targetUserId, String reason, [String? comment]) {
+    return post("$serviceUrlGraph/reports/create", {
+      "targetUserId": targetUserId,
+      "reason": reason,
+      if (comment?.isNotEmpty ?? false) "comment": comment,
+    });
   }
 
   Future<WayaRequestResponse> archiveOrUnarchiveChat(String id) {

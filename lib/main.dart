@@ -21,7 +21,7 @@ import 'package:wayagram/core/helpers/package.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/theme/vm/theme_vm.dart';
-import 'package:wayagram/core/utils/task.dart';
+//import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
@@ -129,7 +129,7 @@ void main() async {
   await GetStorage.init();
   await PushNotifications.init();
   WayaSnackBar.setUpSnackBarUI();
-  await TaskScheduler.init();
+  //await TaskScheduler.init();
 
   //? Get the incoming
   String path = await getUserData() ?? "/";

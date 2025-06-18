@@ -33,6 +33,12 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   // This is fine.
   @override
   Widget build(BuildContext context) {
+    //? If this is not a request, hide it.
+    if (!widget.data.isRequest) {
+      return const SizedBox.shrink();
+    }
+
+    //? Return this.
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

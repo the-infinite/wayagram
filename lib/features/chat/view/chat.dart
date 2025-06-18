@@ -308,7 +308,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                     children: [
                       //? First, the divider.
                       Divider(color: WayaColors.greyColor200, height: 1),
-              
+
                       //? Second, the chat messages.
                       if (state.messages.isEmpty && state.hasLoaded)
                         Expanded(
@@ -322,10 +322,10 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                 width: 70,
                                 fit: BoxFit.cover,
                               ),
-              
+
                               // Some space.
                               const Gap(20),
-              
+
                               //* Some text
                               Text(
                                 "Send the first message",
@@ -335,10 +335,10 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                   fontSize: 24.sp,
                                 ),
                               ),
-              
+
                               // Some space.
                               const Gap(10),
-              
+
                               //* Some text
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -385,7 +385,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                             ),
                           ),
                         ),
-              
+
                       //? Third, the chat input widget... probably?
                       ChatInputWidget(
                         controller: inputController,
