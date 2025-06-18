@@ -123,7 +123,7 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
                     GestureDetector(
                         onTap: () {
                           shareService
-                              .copyLink(WayaValueHelper.getShareableUrl(url));
+                              .copyLink(ConversationState.profile.referenceCode ?? "");
                           WayaSnackBar.showToast("Copied");
                         },
                         child: Icon(Icons.copy, color: wayaTheme.primaryColor)),

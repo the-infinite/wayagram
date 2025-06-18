@@ -85,6 +85,8 @@ class ContestController extends GetxController {
   ///Edit stage
   TextEditingController contestStageNameTextController =
       TextEditingController();
+   TextEditingController contestMaxVoteTextController =
+      TextEditingController();
   TextEditingController contestEntryTypeStageTextController =
       TextEditingController();
   TextEditingController contestSelectStartDateStage2TextController =
