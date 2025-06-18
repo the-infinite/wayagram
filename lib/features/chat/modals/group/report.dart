@@ -31,10 +31,10 @@ class _ReportChatGroupModalState extends State<ReportChatGroupModal> {
   final indexNotifier = ValueNotifier(0);
   static const defaults = [
     "Spam or misleading content",
-    "Inappropriate content",
-    "Fraudulent activity",
-    "Violates terms and conditions",
-    "Other",
+    "Inappropriate_Content",
+    "Fraudulent_activity",
+    "Violates_terms_and_conditions",
+    "other"
   ];
 
   //? This is fine.

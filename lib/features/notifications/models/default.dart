@@ -1,8 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-// @sekani50 @Darlington885 Don't comment out the lines of code that use Json Serializable
-// just run the flutter gen command.
-
 part 'default.g.dart';
 
 enum NotificationPriority {
@@ -51,6 +48,12 @@ enum NotificationMessageType {
   @JsonValue('donations')
   donation,
 
+  @JsonValue('groups')
+  groups,
+
+  @JsonValue('pages')
+  pages,
+
   @JsonValue('events')
   event,
 
@@ -68,6 +71,19 @@ enum NotificationMessageType {
 
   @JsonValue('debit_alert')
   debitAlert,
+
+  @JsonValue('quotation')
+  getQuotation,
+
+  @JsonValue('others')
+  uncategorized,
+
+  // The ones for support.
+  @JsonValue('support')
+  supportNotification,
+
+  @JsonValue('dispute')
+  disputeNotification,
 }
 
 @JsonSerializable()
@@ -106,6 +122,14 @@ class NotificationMessage {
   factory NotificationMessage.fromJson(Map<String, dynamic> data) => _$NotificationMessageFromJson(data);
 
   Map<String, dynamic> toJson() => _$NotificationMessageToJson(this);
+
+  // The section for data getters.
+  String get groupId => data?['groupId'];
+  String get pageId => data?['pageId'];
+  String get invitationId => data?['invitationId'];
+  String get transactionId => data?['transactionId'];
+  String get requestId => data?['requestId'];
+  String get orderId => data?['orderId'];
 }
 
 @JsonSerializable()
@@ -159,8 +183,14 @@ class NotificationModel {
 
   Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
 
+  bool get isRequest => [
+        NotificationMessageType.groupInvite,
+        NotificationMessageType.getQuotation,
+        NotificationMessageType.followRequest,
+      ].contains(messageType);
+
   //? This is fine.
-  String get notificationAction => switch (messageType) {
+  String? get notificationAction => switch (messageType) {
         NotificationMessageType.chat => "Tap to open the chat and reply",
         NotificationMessageType.comment => "Tap to view comment",
         NotificationMessageType.donation => "Tap to view details",
@@ -171,13 +201,20 @@ class NotificationModel {
         NotificationMessageType.share => "Tap to view what was shared",
         NotificationMessageType.view => "Tap to view the profile of your viewer",
         NotificationMessageType.liveStream => "Tap to join the livestream",
+        NotificationMessageType.groups => "Tap to view group summary",
+        NotificationMessageType.pages => "Tap to view page summary",
         NotificationMessageType.creditAlert ||
         NotificationMessageType.debitAlert =>
           "Tap to view transaction details in your wallet",
+        NotificationMessageType.getQuotation => "Tap to view order details",
 
         // For requests.
-        NotificationMessageType.groupInvite => "Tap to view group summary",
+        NotificationMessageType.groupInvite => "Tap to view group invitation",
         NotificationMessageType.followRequest => "Tap to view follow request",
-        // NotificationMessageType.friendRequest => "Tap to view friend request",
+
+        // For support notifications.
+        NotificationMessageType.supportNotification => "Tap to view support conversation",
+        NotificationMessageType.disputeNotification => "Tap to view dispute conversation",
+        NotificationMessageType.uncategorized => null,
       };
 }

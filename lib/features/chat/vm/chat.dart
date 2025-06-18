@@ -11,6 +11,7 @@ import 'package:wayagram/features/chat/state/chat.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repository.dart';
 
 final _controllers = <String, MessageController>{};
+final _removed = <String, int>{};
 
 class ChatNotifier extends StateNotifier<ChatState> {
   final repo = MessageRepository();
@@ -29,7 +30,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// Helper function used to get or create and then get a message controller for
   /// a chat using the ID of the chat.
-  MessageController getController(MessageModel message) {
+  MessageController? getController(MessageModel message) {
+    if (_removed.containsKey(message.id)) {
+      return null;
+    }
+
     final id = message.id;
     var found = _controllers[id];
 
@@ -142,7 +147,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? You can go ahead to update the value of this message in its controller.
       else {
-        controller.updateData(result);
+        controller?.updateData(result);
       }
 
       //? Return this result.
@@ -208,9 +213,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
         //? Now, replace this.
         if (found != -1) {
           final controller = getController(state.messages[found]);
-          controller.updateData(result.copyWith(false, message.originalMessage), result.id);
-          _controllers[result.id] = controller;
-          _controllers.remove(messageId);
+          if (controller != null) {
+            controller.updateData(result.copyWith(false, message.originalMessage), result.id);
+            _controllers[result.id] = controller;
+            _controllers.remove(messageId);
+          }
           state.messages[found] = result;
 
           //? Update state.
@@ -232,7 +239,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         if (found != -1) {
           final controller = getController(state.messages[found]);
           final result = state.messages[found];
-          controller.updateData(result.copyWith(true, message.originalMessage));
+          controller?.updateData(result.copyWith(true, message.originalMessage));
         }
 
         //? Now update the UI with our changes...
@@ -248,7 +255,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
       if (found != -1) {
         final controller = getController(state.messages[found]);
         final result = state.messages[found];
-        controller.updateData(result.copyWith(true, message.originalMessage));
+        controller?.updateData(result.copyWith(true, message.originalMessage));
       }
     }
 
@@ -291,11 +298,15 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? Now, replace this.
     if (found != -1) {
       final controller = getController(state.messages[found]);
-      controller.setRemoved(true);
       conversation.removeAt(found);
 
       //? Now update the UI with our changes...
       state = state.copyWith(messages: conversation);
+
+      //? After that, dispose of this controller.
+      controller?.setRemoved(true);
+      _removed[id] = 1;
+      _controllers.remove(id);
     }
   }
 

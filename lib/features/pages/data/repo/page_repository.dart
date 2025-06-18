@@ -267,6 +267,32 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/team-members/$pageId");
   }
 
+  Future<WayaRequestResponse> getPageInvitation() {
+    return get("$serviceUrl/pages/user/invitations");
+  }
+
+  Future<WayaRequestResponse> acceptPageInvitation(String invitationId) {
+    final payload = {};
+
+    return post("$serviceUrl/pages/invitations/$invitationId/accept", payload,
+        showErrors: true);
+  }
+
+  Future<WayaRequestResponse> rejectPageInvitation(String invitationId) {
+    final payload = {};
+
+    return post("$serviceUrl/pages/invitations/$invitationId/reject", payload,
+        showErrors: true);
+  }
+
+  Future<WayaRequestResponse> inviteUserToPage(
+      String role, String pageId, String memberId) {
+    final payload = {"role": role};
+
+    return post("$serviceUrl/pages/$pageId/team-members/$memberId", payload,
+        showErrors: true);
+  }
+
   Future<WayaRequestResponse> updateTeamMember(
       String role, String pageId, String memberId) {
     final payload = {"role": role};

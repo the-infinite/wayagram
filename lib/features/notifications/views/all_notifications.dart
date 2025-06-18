@@ -20,12 +20,10 @@ class AllNotifications extends ConsumerWidget {
     final notify = ref.read(notificationProvider.notifier);
 
     if (data.isEmpty) {
-      return Expanded(
-        child: Center(
-          child: EmptyState(
-            assetImage: WayaAssets.icons.emptyState.svg(),
-            message: "Nothing to show yet",
-          ),
+      return Center(
+        child: EmptyState(
+          assetImage: WayaAssets.icons.emptyState.svg(),
+          message: "Nothing to show yet",
         ),
       );
     }

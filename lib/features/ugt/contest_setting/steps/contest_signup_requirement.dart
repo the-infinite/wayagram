@@ -11,7 +11,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/add_new_requirement_modal.dart';
 import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';

@@ -9,7 +9,7 @@ class NotificationRepository extends BaseRepository {
 
   NotificationRepository._();
 
-  Future<WayaRequestResponse> getUserNotifications([int page = 0, int limit = 20]) {
+  Future<WayaRequestResponse> getUserNotifications([int page = 0, int limit = 200]) {
     return get("$serviceUrl/users/notifications?page=$page&offset=$page&limit=$limit");
   }
 
