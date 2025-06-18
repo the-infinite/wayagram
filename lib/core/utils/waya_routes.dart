@@ -72,14 +72,17 @@ import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/pages/view/create_page_post.dart';
+import 'package:wayagram/features/pages/view/edit_page_member.dart';
 import 'package:wayagram/features/pages/view/page_follower.dart';
 import 'package:wayagram/features/pages/view/page_settings.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/pages/view/public_page.dart';
 import 'package:wayagram/features/pages/view/search_group_and_page.dart';
 import 'package:wayagram/features/pages/view/search_page.dart';
+import 'package:wayagram/features/pages/view/single_page_invitation.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
+import 'package:wayagram/features/pages/view/user_page_invitation.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
@@ -375,6 +378,7 @@ class WayaAppRoutes {
         AddGroupMember(id: WayaNav.search['id'].toString()),
     SearchView.route: () => SearchView(),
     EditGroupMemberInfo.route: () => EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
+    EditPageMemberInfo.route: () => EditPageMemberInfo(id: WayaNav.search['id'].toString()),
     SinglePollScreen.route: () => SinglePollScreen(),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
@@ -403,8 +407,10 @@ class WayaAppRoutes {
     ShopSettingPage.route: () => ShopSettingPage(),
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
-    UserGroupInvitation.route: () => UserGroupInvitation(),
+    UserPageInvitation.route: () => UserPageInvitation(),
+    SinglePageInvitation.route: () => SinglePageInvitation(id:WayaNav.search['id'].toString()),
     SingleGroupInvitation.route: () => SingleGroupInvitation(id:WayaNav.search['id'].toString()),
+   UserGroupInvitation.route: () => UserGroupInvitation(),
     EventSettingsPage.route: () => EventSettingsPage(),
     PostSettingsPage.route: () => PostSettingsPage(),
     UserAction.route: () => UserAction(),
@@ -498,7 +504,11 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single group invitation by its ID.
-  static String getGroupInvitationPage(String id) => "${SingleGroupInvitation.route}?id=$id";
+  static String getGroupInvitation(String id) => "${SingleGroupInvitation.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single page invitation by its ID.
+  static String getPageInvitation(String id) => "${SinglePageInvitation.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single group's members by its ID.

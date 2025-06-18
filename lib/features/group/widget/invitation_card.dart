@@ -7,7 +7,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
 
 class InvitationCard extends StatelessWidget {
   const InvitationCard({
@@ -15,11 +14,15 @@ class InvitationCard extends StatelessWidget {
     required this.group,
     required this.wayaTheme,
     required this.ref,
+    required this.accept,
+    required this.reject
   });
 
   final GroupInvitationModelDocs group;
   final ThemeData wayaTheme;
   final WidgetRef ref;
+  final VoidCallback accept;
+  final VoidCallback reject;
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +44,7 @@ class InvitationCard extends StatelessWidget {
                 radius: 20,
                 backgroundColor: WayaColors.greyColor100,
                 backgroundImage: group.group?.profileImage == null
-                    ? AssetImage(
-                  '',
-                )
+                    ? AssetImage("assets/placeholder.jpg")
                     : NetworkImage(
                   '${group.group?.profileImage}',
                 ),
@@ -77,7 +78,7 @@ class InvitationCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: () => ref.read(createGroupProvider.notifier).rejectGroupInvitation(context, '${group.id}'),
+                      onTap: () => reject,
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -89,7 +90,7 @@ class InvitationCard extends StatelessWidget {
                     ),
                     SizedBox(width: 10,),
                     InkWell(
-                      onTap: () => ref.read(createGroupProvider.notifier).acceptGroupInvitation(context, '${group.id}'),
+                      onTap: () => accept,
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
