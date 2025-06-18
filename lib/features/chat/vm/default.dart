@@ -337,8 +337,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
   }
 
   /// Helper function used to report a user as the case may be.
-  Future<bool> reportUser(String id, String reason) async {
-    final response = await repo.reportUser(id, reason);
+  Future<bool> reportUser(String id, String reason, [String? comment]) async {
+    final response = await repo.reportUser(id, reason, comment);
 
     //? Return whether or not this is true.
     return response.success;

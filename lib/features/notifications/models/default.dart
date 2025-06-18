@@ -183,6 +183,12 @@ class NotificationModel {
 
   Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
 
+  bool get isRequest => [
+        NotificationMessageType.groupInvite,
+        NotificationMessageType.getQuotation,
+        NotificationMessageType.followRequest,
+      ].contains(messageType);
+
   //? This is fine.
   String? get notificationAction => switch (messageType) {
         NotificationMessageType.chat => "Tap to open the chat and reply",

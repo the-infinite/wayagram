@@ -48,10 +48,7 @@ class WayaPostWidget extends StatefulWidget {
 }
 
 class _WayaPostWidgetState extends State<WayaPostWidget> {
-  // late final videoControllers =
-  //     widget.data.media.map((_) => WayaVideoController()).toList();
   final pageController = PageController(initialPage: 0);
-
   late final List<WayaVideoController> videoControllers;
 
   @override
@@ -205,7 +202,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(postData.pageId?? ''));
+                                  WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(postData.pageId ?? ''));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,7 +1,6 @@
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/state/filter_notification.dart';
 
-
 class NotificationState {
   final bool isLoading;
   final bool requestsOnly;
@@ -57,18 +56,13 @@ class NotificationState {
   /// notifications after considering the
   List<NotificationModel> get currentNotifications {
     //? The first pass is filtering by notification type.
-    var aggregate = requestsOnly
-        ? notifications.where(
-            (notif) => [
-              NotificationMessageType.groupInvite,
-              NotificationMessageType.followRequest,
-            ].contains(notif.messageType),
-          )
-        : notifications;
-    
+    var aggregate = requestsOnly ? notifications.where((notif) => notif.isRequest) : notifications;
+
     //? If we are filtering by notification search query, do the needful.
-    if(searchQuery.trim().isNotEmpty) {
-        aggregate = aggregate.where((notif) => notif.message.body.toLowerCase().contains(searchQuery) || notif.message.subject.toLowerCase().contains(searchQuery));
+    if (searchQuery.trim().isNotEmpty) {
+      aggregate = aggregate.where((notif) =>
+          notif.message.body.toLowerCase().contains(searchQuery) ||
+          notif.message.subject.toLowerCase().contains(searchQuery));
     }
 
     //? The second pass is to take away wallet notifications.
@@ -83,7 +77,8 @@ class NotificationState {
 
     //? Fourth, filter out marketplace notifications.
     if (filters.isApplied && !filters.showMarketplaceNotifications) {
-      aggregate = aggregate.where((notif) => [NotificationMessageType.creditAlert, NotificationMessageType.debitAlert].contains(notif.messageType));
+      aggregate = aggregate.where((notif) =>
+          [NotificationMessageType.creditAlert, NotificationMessageType.debitAlert].contains(notif.messageType));
     }
 
     //? Fifth, filter out polling notifications.
@@ -93,7 +88,8 @@ class NotificationState {
 
     //? Sixth, filter out event notifications.
     if (filters.isApplied && !filters.showQuotationNotifications) {
-      aggregate = aggregate.where((notif) => [NotificationMessageType.creditAlert, NotificationMessageType.debitAlert].contains(notif.messageType));
+      aggregate = aggregate.where((notif) =>
+          [NotificationMessageType.creditAlert, NotificationMessageType.debitAlert].contains(notif.messageType));
     }
 
     //? Seventh, filter out University Got Talent notifications.
@@ -103,7 +99,8 @@ class NotificationState {
 
     //? Eighth, filter out wallet notifications.
     if (filters.isApplied && !filters.showWalletNotifications) {
-      aggregate = aggregate.where((notif) => [NotificationMessageType.creditAlert, NotificationMessageType.debitAlert].contains(notif.messageType));
+      aggregate = aggregate.where((notif) =>
+          [NotificationMessageType.creditAlert, NotificationMessageType.debitAlert].contains(notif.messageType));
     }
 
     // This is fine.
