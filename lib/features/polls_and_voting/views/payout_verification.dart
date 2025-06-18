@@ -15,6 +15,7 @@ import 'package:wayagram/features/general_settings/profile/data/model/profile_ed
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 
 import '../../../core/utils/waya_utils.dart';
+enum PayoutModule { polls, contest, donation, event }
 
 class PayoutVerification extends ConsumerStatefulWidget {
   static const route = '/payoutVerification';
@@ -229,7 +230,7 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
               viewModel.verifyPayout(
                   onSuccess: () =>  WayaUtils.showModalSheet(
                     context,
-                    child: PinEntryBottomSheet2(pollId: '${args['PollId']}'),
+                    child: PinEntryBottomSheet2(id: '${args['id']}', module: args['Module']as PayoutModule,),
                   ),
                   code: code,
                   email: '${ConversationState.self.email}');

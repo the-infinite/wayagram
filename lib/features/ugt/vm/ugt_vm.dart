@@ -6,10 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
+import 'package:wayagram/core/helpers/debug.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
@@ -416,6 +419,33 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       WayaNav.removeUntilNamed(AdminContestDetails.route);
     } else {
       WayaSnackBar.showToast(response.data["message"]);
+    }
+  }
+
+    Future<void> requestPayout(ctx, String contestId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _contestRepository.requestPayout(contestId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        WayaNav.toNamed('/admin-transaction-page');
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Payout request was sent successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 
