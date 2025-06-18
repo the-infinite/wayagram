@@ -12,17 +12,11 @@ class DummyData {
     Select(label: 'Admin', value: 'Admin'),
     Select(label: 'Moderator', value: 'Moderator'),
     Select(label: 'Editor', value: 'Editor'),
-    // RoleModel(
-    //     roleType: "Admin",
-    //     image: 'assets/images/pages/crown2.png',
-    // ),
-    // RoleModel(
-    //   roleType: "Moderator",
-    //   image: 'assets/images/pages/moderator.png',
-    // ),
-    // RoleModel(
-    //   roleType: "Editor",
-    //   image: 'assets/images/pages/crown.png',
-    // ),
+  ];
+
+  static List<Select> pageRole = [
+    Select(label: 'Admin', value: 'Admin'),
+    Select(label: 'Editor', value: 'Editor'),
+
   ];
 }

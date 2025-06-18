@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
+import 'package:wayagram/features/pages/data/model/page_invitation_model.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
@@ -21,6 +23,7 @@ class PageState {
   final List<GetAllPostDocs>? getAllPagePost;
   final List<CommentModel>? comments;
   final List<PageFollowerDocs>? pageFollowerDocs;
+  List<PageInvitationModelDocs>? pageInvitationModelDocs;
   final num? postCount;
   final GetAllPost? allPostData;
   List<PageModel>? recommendedPages;
@@ -58,6 +61,7 @@ class PageState {
     this.comments = const [],
     this.pageFollowerDocs = const [],
     this.pagePopularPostDocs = const [],
+    this.pageInvitationModelDocs = const [],
     this.getAllPost = const [],
     this.docs = const [],
     this.allPageModelDocs = const [],
@@ -83,6 +87,7 @@ class PageState {
     List<PostImage>? images,
     List<GetAllPostDocs>? getAllPagePost,
     List<PostModel>? fetchAllPostData,
+    List<PageInvitationModelDocs>? pageInvitationModelDocs,
     List<PostModel>? getAllPost,
     List<PageModel>? recommendedPages,
     List<PageModel>? allPageModelDocs,
@@ -109,6 +114,7 @@ class PageState {
       content: content ?? this.content,
       images: images ?? this.images,
       data: data ?? this.data,
+      pageInvitationModelDocs: pageInvitationModelDocs ?? this.pageInvitationModelDocs,
       pageFollowerDocs: pageFollowerDocs ?? this.pageFollowerDocs,
       postCount: postCount ?? this.postCount,
       recommendedPages: recommendedPages ?? this.recommendedPages,

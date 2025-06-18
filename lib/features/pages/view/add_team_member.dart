@@ -82,7 +82,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
 
                         if (_formKey.currentState!.validate()) {
                           //? If this goes well.
-                          if (await notifier.updateTeamMember(
+                          if (await notifier.inviteTeamMember(
                             context,
                             viewModel.roleType,
                             widget.id,
@@ -158,7 +158,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                           value: viewModel.roleType.capitalizeFirst,
                           uniqueKey: 'role-type',
                           hintText: 'Choose User\'s Role',
-                          items: DummyData.roleList,
+                          items: DummyData.pageRole,
                           onSelected: (value) {
                             notifier.selectRoleType(value.first.value);
                           },
@@ -202,7 +202,8 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                         const Gap(15),
                       ],
                     )
-                  : viewModel.roleType == 'moderator'
+                  :
+        /*  viewModel.roleType == 'moderator'
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -220,7 +221,8 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                             const Gap(15),
                           ],
                         )
-                      : viewModel.roleType == 'editor'
+                      : */
+          viewModel.roleType == 'editor'
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
