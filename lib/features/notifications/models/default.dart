@@ -127,7 +127,13 @@ class NotificationMessage {
   // The section for data getters.
   String? get groupId => data?['groupId'];
   String? get pageId => data?['pageId'];
+  String? get commentId => data?['commentId'];
+  String? get donationId => data?['donationId'];
+  String? get eventId => data?['eventId'];
+  String? get pollId => data?['pollId'];
+  String? get postId => data?['postId'];
   String? get chatId => data?['chatId'];
+  String? get bidId => data?['bidId'];
   String? get followerId => data?['followerId'];
   String? get followingId => data?['followingId'];
   String? get invitationId => data?['invitationId'];

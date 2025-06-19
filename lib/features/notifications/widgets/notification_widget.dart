@@ -68,6 +68,62 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
       return widget.data.message.chatId != null;
     }
 
+    //? If this is for comments
+    if (widget.data.messageType == NotificationMessageType.comment) {
+      return widget.data.message.commentId != null && widget.data.message.postId != null;
+    }
+
+    //? If this is for post...
+    if ([
+      NotificationMessageType.share,
+      NotificationMessageType.like,
+    ].contains(widget.data.messageType)) {
+      return widget.data.message.postId != null;
+    }
+
+    //? If this is for donations...
+    if (widget.data.messageType == NotificationMessageType.donation) {
+      return widget.data.message.donationId != null;
+    }
+
+    //? If this is for an event...
+    if (widget.data.messageType == NotificationMessageType.event) {
+      return widget.data.message.eventId != null;
+    }
+
+    //? If this is for a poll.
+    if (widget.data.messageType == NotificationMessageType.poll) {
+      return widget.data.message.pollId != null;
+    }
+
+    //? If this is a credit or debit alert...
+    if ([
+      NotificationMessageType.debitAlert,
+      NotificationMessageType.creditAlert,
+    ].contains(widget.data.messageType)) {
+      return widget.data.message.transactionId != null;
+    }
+
+    //? If this is a quotation notification.
+    if (widget.data.messageType == NotificationMessageType.getQuotation) {
+      return widget.data.message.requestId != null || widget.data.message.bidId != null;
+    }
+
+    //? If this is for a group notification.
+    if (widget.data.messageType == NotificationMessageType.groupInvite) {
+      return widget.data.message.invitationId != null;
+    }
+
+    //? If this is for a group notification.
+    if (widget.data.messageType == NotificationMessageType.groups) {
+      return widget.data.message.groupId != null;
+    }
+
+    //? If this is for a page invitation.
+    if (widget.data.messageType == NotificationMessageType.pages) {
+      return widget.data.message.pageId != null;
+    }
+
     // This is fine.
     return true;
   }
@@ -82,6 +138,17 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
   /// Utility function used to execute the action on this notification.
   void _executeAction() async {
     final chatId = widget.data.message.chatId;
+    final commentId = widget.data.message.commentId;
+    final postId = widget.data.message.postId;
+    final donationId = widget.data.message.donationId;
+    final eventId = widget.data.message.eventId;
+    final pollId = widget.data.message.pollId;
+    final transactionId = widget.data.message.transactionId;
+    final requestId = widget.data.message.requestId;
+    final bidId = widget.data.message.bidId;
+    final groupId = widget.data.message.groupId;
+    final invitationId = widget.data.message.invitationId;
+    final pageId = widget.data.message.pageId;
 
     //? If this in any way involves a chat...
     if (chatId != null) {
@@ -100,6 +167,59 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
         chatNotifier.getArchivedChats(true);
       });
       WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chatId));
+    }
+
+    //? If comment ID is not undefined.
+    if (commentId != null && postId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getCommentDetailsScreen(commentId, postId));
+    }
+
+    //? If this is for a post...
+    if (postId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getSinglePostScreen(postId));
+    }
+
+    //? If this is for a donation post...
+    if (donationId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getDonationDetailsPage(donationId));
+    }
+
+    //? If this is for an event...
+    if (eventId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(eventId));
+    }
+
+    //? If this is for a poll.
+    if (pollId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getPollDetailsPage(pollId));
+    }
+
+    //? If this is for a poll.
+    if (transactionId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getWalletDetailsPage(transactionId));
+    }
+
+    //? If this is for a quotation...
+    if (bidId != null && requestId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bidId, requestId));
+    }
+    if (requestId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(requestId));
+    }
+
+    //? If this is for a group invitation notification...
+    if (groupId != null && invitationId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getGroupInvitation(invitationId));
+    }
+
+    //? If this is for a group...
+    if (groupId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getGroupDetailsPage(groupId));
+    }
+
+    //? If this is for a page invitation...
+    if (pageId != null && invitationId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getPageInvitation(invitationId));
     }
   }
 

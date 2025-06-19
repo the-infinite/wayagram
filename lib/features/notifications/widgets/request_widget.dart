@@ -29,6 +29,20 @@ class RequestCardWidget extends StatefulWidget {
 class _RequestCardWidgetState extends State<RequestCardWidget> {
   FollowStatusModel? _follow;
 
+  Future<void> _getStatus() async {
+    //? If this is a follow request.
+    if (widget.data.messageType == NotificationMessageType.followRequest) {
+      debugPrint("Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
+      final follow = await myFollowProvider.getFollowStatus(widget.data.id);
+
+      if (mounted) {
+        setState(() {
+          _follow = follow;
+        });
+      }
+    }
+  }
+
   bool get showActions {
     //? Only show the action button when this is not yet followed.
     if (widget.data.messageType == NotificationMessageType.followRequest) {
@@ -42,23 +56,39 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) async {
-        //? If this is a follow request.
-        if (widget.data.messageType == NotificationMessageType.followRequest) {
-          debugPrint("Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
-          _follow = await myFollowProvider.getFollowStatus(widget.data.id);
-        }
-      },
+      (_) => _getStatus(),
     );
 
     super.initState();
   }
 
   /// Utility function used to redirect the user to the notification details screen.
-  void _acceptRequest() {}
+  void _acceptRequest() async {
+    final followerId = widget.data.message.followerId;
+    final followingId = widget.data.message.followingId;
+
+    //? If this is for a follow request...
+    if (followerId != null && followingId != null) {
+      await myFollowProvider.handleFollowRequest(followerId, followingId, FollowAction.accept);
+
+      //? If this user is following you now....
+      await _getStatus();
+    }
+  }
 
   /// Utility function used to execute the action on this notification.
-  void _rejectRequest() {}
+  void _rejectRequest() async {
+    final followerId = widget.data.message.followerId;
+    final followingId = widget.data.message.followingId;
+
+    //? If this is for a follow request...
+    if (followerId != null && followingId != null) {
+      await myFollowProvider.handleFollowRequest(followerId, followingId, FollowAction.reject);
+
+      //? If this user is following you now....
+      await _getStatus();
+    }
+  }
 
   // This is fine.
   @override
