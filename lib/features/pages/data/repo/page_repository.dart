@@ -207,6 +207,7 @@ class PageRepository extends BaseRepository {
     bool pageType,
     String coverImage,
     String profileImage,
+      String category
   ) {
     final payload = {
       "name": pageName,
@@ -214,10 +215,16 @@ class PageRepository extends BaseRepository {
       "isPublic":
           pageType, //Optional field, if you leave it blank it defaults to false
       "coverImage": coverImage,
-      "profileImage": profileImage
+      "isOpen": pageType,
+      "profileImage": profileImage,
+      "categories": [category]
     };
 
     return post("$serviceUrl/pages", payload, showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getUserCategory() {
+    return get("$serviceUrl/interests/categories");
   }
 
   Future<WayaRequestResponse> getAllPosts({int? limit = 200}) async {
@@ -265,6 +272,32 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getPageMembers(String pageId) {
     return get("$serviceUrl/pages/team-members/$pageId");
+  }
+
+  Future<WayaRequestResponse> getPageInvitation() {
+    return get("$serviceUrl/pages/user/invitations");
+  }
+
+  Future<WayaRequestResponse> acceptPageInvitation(String invitationId) {
+    final payload = {};
+
+    return post("$serviceUrl/pages/invitations/$invitationId/accept", payload,
+        showErrors: true);
+  }
+
+  Future<WayaRequestResponse> rejectPageInvitation(String invitationId) {
+    final payload = {};
+
+    return post("$serviceUrl/pages/invitations/$invitationId/reject", payload,
+        showErrors: true);
+  }
+
+  Future<WayaRequestResponse> inviteUserToPage(
+      String role, String pageId, String memberId) {
+    final payload = {"role": role};
+
+    return post("$serviceUrl/pages/$pageId/team-members/$memberId", payload,
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> updateTeamMember(

@@ -142,6 +142,15 @@ class GroupRepository extends BaseRepository {
     return post("$serviceUrl/groups/invitations/accept/$invitationId", payload, showErrors: true);
   }
 
+
+  Future<WayaRequestResponse> updateTeamMember(String role, String groupId, String memberId) {
+    final payload = {
+      "role": role
+    };
+
+    return put("$serviceUrl/groups/$groupId/members/$memberId", payload, showErrors: true);
+  }
+
   Future<WayaRequestResponse> rejectJoinRequest(String requestId) {
     final payload = {};
     return post("$serviceUrl/groups/join-requests/reject/$requestId", payload, showErrors: true);

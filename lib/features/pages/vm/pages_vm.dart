@@ -6,16 +6,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/group/data/model/group_category_model.dart';
+import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
+import 'package:wayagram/features/pages/data/model/page_invitation_model.dart';
 import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
@@ -91,6 +96,29 @@ class PageVm extends StateNotifier<PageState> {
 
   void setText(String text) {
     state.content.text = text;
+  }
+
+  void selectCategory(Select value) {
+    state = state.copyWith(category: value.value);
+  }
+
+  Future<void> fetchCategory() async {
+    try {
+      final response = await _pageRepository.getUserCategory();
+
+      if (response.success) {
+        GroupCategoryModel responseModel =
+        GroupCategoryModel.fromJson(response.data);
+
+        final List<Select>? categories = responseModel.data?.map((val) {
+          return Select(
+              label: '${val.name?.capitalizeFirst}', value: '${val.id}');
+        }).toList();
+        state = state.copyWith(categories: categories);
+      }
+    } catch (e) {
+      _logger.e(e);
+    }
   }
 
   Future<void> unsavePost(BuildContext context, String postId) async {
@@ -979,6 +1007,104 @@ class PageVm extends StateNotifier<PageState> {
       );
     } finally {}
   }
+
+  Future<void> getPageInvitation() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getPageInvitation();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageInvitationModel responseModel = PageInvitationModel.fromJson(response.data);
+        state = state.copyWith(pageInvitationModelDocs: responseModel.data?.docs);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
+  Future<void> acceptPageInvitation(ctx, String invitationId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.acceptPageInvitation(invitationId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        getPageInvitation();
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Invitation accepted successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> rejectPageInvitation(ctx, String invitationId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.rejectPageInvitation(invitationId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        getPageInvitation();
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Invitation declined successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<bool> inviteTeamMember(
+      BuildContext ctx, String role, String pageId, String memberId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =
+      await _pageRepository.inviteUserToPage(role, pageId, memberId);
+      state = state.copyWith(isLoading: false);
+      getPageMember(pageId);
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+
+    return false;
+  }
+
 
   Future<bool> updateTeamMember(
       BuildContext ctx, String role, String pageId, String memberId) async {

@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
+import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
@@ -229,7 +230,9 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                     .onSubmitPayoutPin(
                         () => WayaNav.toNamed('/payoutVerification',
                             arguments: {
-                              "PollId": args['id']
+                              "id": args['id'],
+                              "Module":PayoutModule.polls,
+                             
                             }) );
 
                 // await ref.read(createPollVotingProvider.notifier).

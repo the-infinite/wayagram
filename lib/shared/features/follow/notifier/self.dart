@@ -151,6 +151,31 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     return null;
   }
 
+  Future<FollowStatusModel?> handleFollowRequest(String followerId, String followingId, FollowAction action) async {
+    //? This is wonderful.
+    try {
+      // This is fine too.
+      final response = await repo.handleFollowRequest(followerId, followingId, action);
+
+      // If this was fine...
+      if (response.success) {
+        return FollowStatusModel.fromJson(response.data["data"]);
+      }
+
+      //? After getting these posts...
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? This is fine.
+    return null;
+  }
+
   Future<bool> followUser(String id) async {
     //? This is wonderful.
     try {
@@ -216,7 +241,7 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     return false;
   }
 
-    /// Helper function used to update user chat settings
+  /// Helper function used to update user chat settings
   Future<bool> updateUserSettings(UserSettingsDto dto) async {
     final response = await repo.updateUserSettings(dto);
 
@@ -237,7 +262,6 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     //? Return null if empty
     return null;
   }
-
 
   Future<void> getIfEmpty() async {
     //? If this user has not loaded followers yet.

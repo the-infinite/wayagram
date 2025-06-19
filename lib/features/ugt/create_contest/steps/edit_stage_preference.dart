@@ -51,7 +51,13 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
       _contestController.contestNumberPostsPerWeekTextController.text = model.numPostPerWeek ?? "";
       _contestController.contestPrizeWinnerTextController.text = model.priceWinner ?? "";
 
-      _contestController.contestvoteCountToQualifyTextController.text = model.priceWinner ?? "";
+
+      _contestController.contestvoteCountToQualifyTextController.text =
+          model.voteCountToQualify ?? "";
+
+      _contestController.contestMaxVoteTextController.text =
+          model.maxVote ?? "";
+
       return null;
     }, []);
     //  final priceWinner = useState(model.priceWinner ?? "");
@@ -73,8 +79,11 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
             child: Column(
               children: [
                 FormField<String>(validator: (value) {
-                  if (_contestController.contestStageNameTextController.text.isEmpty) {
-                    return 'Contest title is required';
+
+                  if (_contestController
+                      .contestStageNameTextController.text.isEmpty) {
+                    return 'Stage name is required';
+
                   }
 
                   return null;
@@ -311,7 +320,50 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 }),
                 const Gap(15),
                 FormField<String>(validator: (value) {
-                  if (_contestController.contestNumberPostsPerWeekTextController.text.isEmpty) {
+
+                  if (_contestController
+                      .contestMaxVoteTextController.text.isEmpty) {
+                    return 'Maximum vote per person is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        controller:
+                            _contestController.contestMaxVoteTextController,
+                        hintText: "Enter Maximum Vote per Person",
+                        keyboardType: TextInputType.number,
+                        label: "Maximum Vote per Person",
+                        //label: contestViewModel?.title,
+                        borderColor: formState.hasError &&
+                                _contestController
+                                    .contestMaxVoteTextController.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                      ),
+                      if (formState.hasError &&
+                          _contestController
+                              .contestMaxVoteTextController.text.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText ?? "",
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(15),
+                FormField<String>(validator: (value) {
+                  if (_contestController
+                      .contestNumberPostsPerWeekTextController.text.isEmpty) {
+
                     return 'Number of Posts per week required';
                   }
 
@@ -396,9 +448,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             _contestController.contestPrizeWinnerTextController.text = "0";
                           }
                           priceForWinner.value = value.first.label;
-                          /*  ref
-                              .read(contestNotifierProvider.notifier)
-                              .updateEntryType(value.first.label); */
+                         
                         },
                         uniqueKey: 'contest-state',
                       ),
@@ -505,12 +555,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               ],
             ),
           ),
-          /* WayaTextFormField(
-            controller: TextEditingController(),
-            hintText: "0 NGN",
-            label: "Prize Amount",
-          ),
-          const Gap(15),*/
+         
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -552,7 +597,12 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                         endDate: endDate.value,
                         stageName: _contestController.contestStageNameTextController.text,
                         startDate: startDate.value,
-                        priceWinner: _contestController.contestPrizeWinnerTextController.text,
+
+                        priceWinner: _contestController
+                            .contestPrizeWinnerTextController.text,
+                        maxVote: _contestController
+                            .contestMaxVoteTextController.text,
+
                         entryType: entryType.value,
                         reviewApprovePost: isSwitched.value,
                         voteCountToQualify: _contestController.contestvoteCountToQualifyTextController.text,

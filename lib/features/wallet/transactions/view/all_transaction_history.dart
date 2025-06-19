@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/transactions/components/export_transaction.dart';
-import 'package:wayagram/features/wallet/transactions/view/transaction_history.dart';
+import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
+import 'package:wayagram/features/wallet/widget/transaction_widget.dart';
 
 enum DateFilter { thisWeek, thisMonth, lastSixMonths, thisYear, customRange }
 
@@ -28,6 +31,8 @@ class AllTransactionHistory extends ConsumerStatefulWidget {
 
 class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
   DateFilter selectedFilter = DateFilter.thisWeek;
+  final ScrollController _scrollController = ScrollController();
+  bool isLoadingMore = false;
 
   String _getFilterName(DateFilter filter) {
     switch (filter) {
@@ -79,9 +84,27 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
       appliedFilter =
           "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(const Duration(days: 365)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
     }
-    await ref.read(transactionVmProvider.notifier)
-        .getTransaction(filters: appliedFilter);
+    var list = await ref.read(transactionVmProvider.notifier).getTransaction2(
+        filters: appliedFilter, isFirst: true, page: 1, limit: 10);
+
+    ref.read(transactionVmProvider.notifier).setModelList(list);
     //.fetchTransactions(filters: appliedFilter);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(transactionVmProvider.notifier).loadInitialData();
+    });
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      ref.read(transactionVmProvider.notifier).loadMoreData();
+    }
   }
 
   @override
@@ -96,8 +119,8 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
         leading: const BackButton(color: Colors.black),
         title: Text(
           'All Transactions',
-          style:
-              TextStyle(color: wayaTheme.colorScheme.customBlack, fontSize: 16.sp),
+          style: TextStyle(
+              color: wayaTheme.colorScheme.customBlack, fontSize: 16.sp),
         ),
         actions: [
           IconButton(
@@ -106,7 +129,6 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
               WayaNav.toNamed('/searchTransaction');
             },
           ),
-
           IconButton(
             icon: Icon(Icons.text_snippet_outlined,
                 color: wayaTheme.colorScheme.customBlack),
@@ -149,7 +171,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
               ),
             ),
             itemBuilder: (context) => [
-               PopupMenuItem(
+              PopupMenuItem(
                 enabled: false,
                 height: 40,
                 child: Column(
@@ -201,7 +223,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
           const SizedBox(height: 16),
 
           // Quick Overview
-           Text(
+          Text(
             'Quick Overview',
             style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
           ),
@@ -230,7 +252,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
           // Transaction History Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children:  [
+            children: [
               Text(
                 'Transaction History',
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
@@ -240,7 +262,44 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
           const SizedBox(height: 16),
 
           // Transactions List
-          Expanded(child: TransactionHistory()),
+          // Expanded(child: TransactionHistory()),
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: state.transactionModel.length,
+                    itemBuilder: (_, index) {
+                      final trans = state.transactionModel[index];
+                      String dateTimeString = "${trans.createdAt}";
+                      DateTime dateTime =
+                          DateTime.parse(dateTimeString).toLocal();
+                      return TransactionWidget(
+                        onTap: () => WayaNav.toNamed(
+                            TransactionDetailsScreen.route,
+                            arguments: trans.id),
+                        purpose: '${trans.purpose?.capitalizeFirst}',
+                        transactionType: '${trans.type}',
+                        amount: trans.amount.toString(),
+                        date:
+                            '${ref.read(createPollVotingProvider.notifier).formatDt2(trans.updatedAt)},${DateFormat.jm().format(dateTime)}',
+                      );
+                    },
+                  ),
+                ),
+                if (isLoadingMore)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: wayaTheme.colorScheme.primary600,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -271,7 +330,7 @@ class _OverviewCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style:  TextStyle(
+            style: TextStyle(
               color: Colors.grey,
               fontSize: 12.sp,
             ),
@@ -279,7 +338,7 @@ class _OverviewCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             NumberFormat.currency(symbol: '₦', decimalDigits: 2).format(amount),
-            style:  TextStyle(
+            style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -289,4 +348,3 @@ class _OverviewCard extends StatelessWidget {
     );
   }
 }
-

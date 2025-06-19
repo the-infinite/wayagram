@@ -5,7 +5,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
 import 'package:wayagram/shared/model/base_model.dart';
@@ -468,7 +467,7 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                   color: theme.colorScheme.greyColor500,
                   width: 1,
                 ),
-                text: 'Cancel',
+                text: 'Clear Filters',
               )
             ],
           ),

@@ -20,7 +20,6 @@ import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
-import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
@@ -297,7 +296,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     child: AboutUgtWidget(
                         title: "Prize",
                         content:
-                            "₦${formatMoney(widget.post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                            "${widget.post.winnerPrize}"),
                     //  const Gap(30),
                   )
                 ],

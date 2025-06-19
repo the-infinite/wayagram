@@ -17,39 +17,34 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   final WalletRepository _walletRepository;
   final WayaLocalDataSource _localDataSource;
 
-  TransactionVm(this._transactionRepository, this._walletRepository,
-      this._localDataSource)
+  TransactionVm(this._transactionRepository, this._walletRepository, this._localDataSource)
       : super(TransactionHistoryState()); //
 
   Future<void> getTransaction(
-      {int? page = 1,
-      int? limit = 10,
-      bool? hasNextPage,
-      String? filters}) async {
+      {int? page = 1, int? limit = 10, bool? hasNextPage, bool isFirst = false, String? filters}) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _transactionRepository.getUserTransactions(
-          page: page, limit: limit, filters: filters);
+      final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        TransactionHistoryModel responseModel =
-            TransactionHistoryModel.fromJson(response.data);
-        debugPrint(
-            'DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
+        if (isFirst) {
+          state = state.copyWith(
+            docs: [],
+          );
+        }
+        TransactionHistoryModel responseModel = TransactionHistoryModel.fromJson(response.data);
+        debugPrint('DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
         state = state.copyWith(
             isLoading: false,
             docs: responseModel.data?.docs,
-            totalCreditTransaction: responseModel
-                        .data?.totalCreditTransaction ==
-                    null
+            totalCreditTransaction: responseModel.data?.totalCreditTransaction == null
                 ? 0
                 : double.parse('${responseModel.data?.totalCreditTransaction}'),
-            totalDebitTransaction: responseModel.data?.totalDebitTransaction ==
-                    null
+            totalDebitTransaction: responseModel.data?.totalDebitTransaction == null
                 ? 0
                 : double.parse('${responseModel.data?.totalDebitTransaction}'),
             hasNextPage: responseModel.data?.hasNextPage);
@@ -59,24 +54,17 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     } finally {}
   }
 
-  Future<void> getUserTransactions(
-      {int? page = 1,
-      int? limit = 10,
-      bool? hasNextPage,
-      String? filters}) async {
+  Future<void> getUserTransactions({int? page = 1, int? limit = 10, bool? hasNextPage, String? filters}) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _transactionRepository.getUserTransactions(
-          page: page, limit: limit, filters: filters);
+      final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
       if (response.success) {
         log("${response.data}");
         final transactions = (response.data["data"]["docs"] as List)
             .map((transaction) => TransactionDetail.fromJson(transaction))
             .toList();
-        final totalCreditTransaction =
-            double.parse(response.data["data"]["totalCreditTransaction"]);
-        final totalDebitTransaction =
-            double.parse(response.data["data"]["totalDebitTransaction"]);
+        final totalCreditTransaction = double.parse(response.data["data"]["totalCreditTransaction"]);
+        final totalDebitTransaction = double.parse(response.data["data"]["totalDebitTransaction"]);
         final hasNextPage = response.data["data"]["hasNextPage"];
         state = state.copyWith(
             isLoading: false,
@@ -95,13 +83,11 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   Future<void> getSingleTransactions(String transactionId) async {
     try {
       state = state.copyWith(isLoadingSingle: true);
-      final response =
-          await _transactionRepository.getSingleTransactions(transactionId);
+      final response = await _transactionRepository.getSingleTransactions(transactionId);
       if (response.success) {
         final transaction = TransactionDetail.fromJson(response.data["data"]);
         log("$transaction");
-        state =
-            state.copyWith(isLoadingSingle: false, transaction: transaction);
+        state = state.copyWith(isLoadingSingle: false, transaction: transaction);
       } else {
         state = state.copyWith(isLoadingSingle: false);
       }
@@ -156,18 +142,13 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     return true;
   }
 
-  Future<void> verifyTransaction(
-      String transactionId, String fundingOption) async {
-    final fundingOptionCode =
-        fundingOption.toLowerCase() == "paystack" ? "PS002" : "WQ001";
+  Future<void> verifyTransaction(String transactionId, String fundingOption) async {
+    final fundingOptionCode = fundingOption.toLowerCase() == "paystack" ? "PS002" : "WQ001";
     try {
       final userId = _localDataSource.getUserId();
       state = state.copyWith(isVerifying: true);
       final response = await _walletRepository.verifyWalletFunding(
-          VerifyTransaction(
-              transactionId: transactionId,
-              userId: userId ?? "",
-              fundOptionCode: fundingOptionCode));
+          VerifyTransaction(transactionId: transactionId, userId: userId ?? "", fundOptionCode: fundingOptionCode));
       if (response.success) {
         log("${response.data}");
         state = state.copyWith(isVerifying: false, verified: true);
@@ -181,61 +162,42 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
   Future<void> loadInitialData() async {
     try {
-      getTransaction(limit: 10, page: state.page);
+      final list = await getTransaction2(limit: 10, page: 1);
+
+      state = state.copyWith(transactionModel: list);
 
       if (mounted) {
-        state = state.copyWith(isFirstLoad: false);
-
-        // Update transactions with initial data
-
-        if (state.docs != null) {
-          state = state.copyWith(
-            docs: state.docs,
-            //  hasNextPage: state.hasNextPage ?? false
-          );
-          //  docs = viewModel.docs!;
-          //hasNextPage = viewModel.hasNextPage ?? false;
-        }
+        state = state.copyWith(isFirstLoad: false, page: 1);
       }
     } catch (e) {
       log('Error loading initial data: $e');
       if (mounted) {
         state = state.copyWith(isFirstLoad: false);
-        /*  setState(() {
-          isFirstLoad = false;
-        }); */
       }
     }
   }
 
   Future<void> loadMoreData() async {
-    if (!state.hasNextPage! || state.isLoadingMore!) return;
+    if (!state.hasNextPage || state.isLoadingMore) return;
 
     state = state.copyWith(isLoadingMore: true);
-    /*  setState(() {
-      isLoadingMore = true;
-    }); */
 
     try {
-      state = state.copyWith(page: state.page! + 1);
+      state = state.copyWith(page: state.page + 1);
       // page++;
 
-      getTransaction(limit: 10, page: state.page!);
+      final list = await getTransaction2(limit: 10, page: state.page);
 
       if (mounted) {
-        //  final viewModel = ref.read(transactionVmProvider);
+        // final viewModel = ref.read(transactionVmProvider);
         //final newTransactions = viewModel.docs ?? [];
         //final newTransactions = viewModel.transactions ?? [];
-
-        if (state.docs!.isNotEmpty) {
+        if (list.isNotEmpty) {
           // Filter out duplicates
-          final existingIds = state.docs!.map((t) => t.id).toSet();
-          final uniqueNewTransactions = state.docs!
-              .where((transaction) => !existingIds.contains(transaction.id))
-              .toList();
-          state = state.copyWith(
-              docs: [...state.docs!, ...uniqueNewTransactions],
-              hasNextPage: uniqueNewTransactions.length >= 10);
+          final existingIds = list.map((t) => t.id).toSet();
+          final uniqueNewTransactions = list.where((transaction) => !existingIds.contains(transaction.id)).toList();
+          uniqueNewTransactions.length;
+          state = state.copyWith(transactionModel: list);
 
           /*  setState(() {
             docs.addAll(uniqueNewTransactions);
@@ -243,31 +205,58 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
           }); */
         } else {
           state = state.copyWith(hasNextPage: false);
-          /*  setState(() {
-            hasNextPage = false;
-          }); */
         }
       }
     } catch (e) {
       log('Error loading more transactions: $e');
-      state = state.copyWith(page: state.page! - 1);
       // page--;
+      state = state.copyWith(page: state.page - 1);
     } finally {
       if (mounted) {
         state = state.copyWith(isLoadingMore: false);
-        /*  setState(() {
-          isLoadingMore = false;
-        }); */
       }
     }
   }
+
+  Future<List<TransactionHistoryModelDocs>> getTransaction2(
+      {int? page = 1, int? limit = 10, bool? hasNextPage, bool isFirst = false, String? filters}) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        TransactionHistoryModel responseModel = TransactionHistoryModel.fromJson(response.data);
+        debugPrint('DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
+        state = state.copyWith(
+            isLoading: false,
+            //  docs: responseModel.data?.docs,
+            totalCreditTransaction: responseModel.data?.totalCreditTransaction == null
+                ? 0
+                : double.parse('${responseModel.data?.totalCreditTransaction}'),
+            totalDebitTransaction: responseModel.data?.totalDebitTransaction == null
+                ? 0
+                : double.parse('${responseModel.data?.totalDebitTransaction}'),
+            hasNextPage: responseModel.data?.hasNextPage);
+
+        return responseModel.data?.docs ?? [];
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+    return [];
+  }
+
+  void setModelList(List<TransactionHistoryModelDocs> list) {
+    state = state.copyWith(transactionModel: list);
+  }
 }
 
-final hideShowBalanceProvider =
-    StateProvider<bool>((ref) => WayaLocalDataSource().getShowHideBalance());
+final hideShowBalanceProvider = StateProvider<bool>((ref) => WayaLocalDataSource().getShowHideBalance());
 
-final transactionVmProvider =
-    StateNotifierProvider<TransactionVm, TransactionHistoryState>((ref) {
-  return TransactionVm(TransactionRepository(), WalletRepository.instance,
-      WayaLocalDataSource());
+final transactionVmProvider = StateNotifierProvider<TransactionVm, TransactionHistoryState>((ref) {
+  return TransactionVm(TransactionRepository(), WalletRepository.instance, WayaLocalDataSource());
 });

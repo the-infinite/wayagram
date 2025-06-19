@@ -6,7 +6,10 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
+import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 
 class RequestCardWidget extends StatefulWidget {
   final NotificationModel data;
@@ -24,6 +27,33 @@ class RequestCardWidget extends StatefulWidget {
 }
 
 class _RequestCardWidgetState extends State<RequestCardWidget> {
+  FollowStatusModel? _follow;
+
+  bool get showActions {
+    //? Only show the action button when this is not yet followed.
+    if (widget.data.messageType == NotificationMessageType.followRequest) {
+      return _follow?.status == FollowRelationship.none;
+    }
+
+    // This is fine.
+    return true;
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        //? If this is a follow request.
+        if (widget.data.messageType == NotificationMessageType.followRequest) {
+          debugPrint("Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
+          _follow = await myFollowProvider.getFollowStatus(widget.data.id);
+        }
+      },
+    );
+
+    super.initState();
+  }
+
   /// Utility function used to redirect the user to the notification details screen.
   void _acceptRequest() {}
 
@@ -33,6 +63,12 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   // This is fine.
   @override
   Widget build(BuildContext context) {
+    //? If this is not a request, hide it.
+    if (!widget.data.isRequest) {
+      return const SizedBox.shrink();
+    }
+
+    //? Return this.
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,13 +104,22 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         NotificationMessageType.followRequest => WayaAssets.icons.notifNewFollower.path,
                         NotificationMessageType.poll => WayaAssets.icons.notifPollResults.path,
                         NotificationMessageType.creditAlert ||
-                        NotificationMessageType.debitAlert => WayaAssets.icons.notifTransaction.path,
-                        NotificationMessageType.groupInvite => WayaAssets.icons.notifGroupRequest.path,
+                        NotificationMessageType.debitAlert ||
+                        NotificationMessageType.getQuotation =>
+                          WayaAssets.icons.notifTransaction.path,
+                        NotificationMessageType.groupInvite ||
+                        NotificationMessageType.groups ||
+                        NotificationMessageType.pages =>
+                          WayaAssets.icons.notifGroupRequest.path,
                         NotificationMessageType.calls => WayaAssets.icons.notifCall.path,
                         NotificationMessageType.like => WayaAssets.icons.notifLike.path,
                         NotificationMessageType.share => WayaAssets.icons.notifShare.path,
                         NotificationMessageType.view => WayaAssets.icons.notifView.path,
                         NotificationMessageType.liveStream => WayaAssets.icons.notifLivestream.path,
+                        NotificationMessageType.uncategorized => WayaAssets.icons.notifications.path,
+                        NotificationMessageType.supportNotification ||
+                        NotificationMessageType.disputeNotification =>
+                          WayaAssets.icons.cAttachContact.path,
                       },
                       height: 22,
                       width: 22,
@@ -120,42 +165,45 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         ),
                       ),
 
-                      // Some space.
-                      const Gap(9),
+                      //? If the actions are supposed to be visible.
+                      if (showActions) ...[
+                        // Some space.
+                        const Gap(9),
 
-                      //* Now for the buttons that would be used to accept or reject
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // Accept invite button.
-                          WayaButton(
-                            text: "Accept invite",
-                            textColor: WayaColors.white,
-                            callback: _acceptRequest,
-                            color: WayaColors.primary500,
-                            height: null,
-                            verticalPadding: 8,
-                            horizontalPadding: 12,
-                          ),
-
-                          // Some space.
-                          const Gap(10),
-
-                          // Accept invite button.
-                          WayaButton(
-                            text: "Decline",
-                            textColor: WayaColors.customBlack,
-                            callback: _rejectRequest,
-                            color: WayaColors.transparent,
-                            height: null,
-                            verticalPadding: 8,
-                            horizontalPadding: 12,
-                            border: Border.all(
-                              color: WayaColors.greyColor500,
+                        //* Now for the buttons that would be used to accept or reject
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            // Accept invite button.
+                            WayaButton(
+                              text: "Accept invite",
+                              textColor: WayaColors.white,
+                              callback: _acceptRequest,
+                              color: WayaColors.primary500,
+                              height: null,
+                              verticalPadding: 8,
+                              horizontalPadding: 12,
                             ),
-                          ),
-                        ],
-                      ),
+
+                            // Some space.
+                            const Gap(10),
+
+                            // Accept invite button.
+                            WayaButton(
+                              text: "Decline",
+                              textColor: WayaColors.customBlack,
+                              callback: _rejectRequest,
+                              color: WayaColors.transparent,
+                              height: null,
+                              verticalPadding: 8,
+                              horizontalPadding: 12,
+                              border: Border.all(
+                                color: WayaColors.greyColor500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),

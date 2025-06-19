@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
+import 'package:wayagram/features/pages/data/model/page_invitation_model.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 
+import '../../../core/data/model/model.dart';
 import '../../post/model/share_model.dart';
 
 class PageState {
@@ -21,7 +23,10 @@ class PageState {
   final List<GetAllPostDocs>? getAllPagePost;
   final List<CommentModel>? comments;
   final List<PageFollowerDocs>? pageFollowerDocs;
+  List<PageInvitationModelDocs>? pageInvitationModelDocs;
   final num? postCount;
+  final String category;
+  final List<Select> categories;
   final GetAllPost? allPostData;
   List<PageModel>? recommendedPages;
   List<PageModel>? allPageModelDocs;
@@ -58,8 +63,11 @@ class PageState {
     this.comments = const [],
     this.pageFollowerDocs = const [],
     this.pagePopularPostDocs = const [],
+    this.pageInvitationModelDocs = const [],
     this.getAllPost = const [],
     this.docs = const [],
+    this.category = '',
+    this.categories = const [],
     this.allPageModelDocs = const [],
     this.getPageMemberDocs = const [],
     this.recommendedPages = const [],
@@ -83,12 +91,15 @@ class PageState {
     List<PostImage>? images,
     List<GetAllPostDocs>? getAllPagePost,
     List<PostModel>? fetchAllPostData,
+    List<PageInvitationModelDocs>? pageInvitationModelDocs,
     List<PostModel>? getAllPost,
     List<PageModel>? recommendedPages,
     List<PageModel>? allPageModelDocs,
     List<GetPageMemberDocs>? getPageMemberDocs,
     List<PostModel>? pagePopularPostDocs,
     List<CommentModel>? comments,
+    List<Select>? categories,
+    String? category,
     List<dynamic>? docs,
     MediaUploadData? data,
     num? postCount,
@@ -109,6 +120,9 @@ class PageState {
       content: content ?? this.content,
       images: images ?? this.images,
       data: data ?? this.data,
+      category: category ?? this.category,
+      categories: categories ?? this.categories,
+      pageInvitationModelDocs: pageInvitationModelDocs ?? this.pageInvitationModelDocs,
       pageFollowerDocs: pageFollowerDocs ?? this.pageFollowerDocs,
       postCount: postCount ?? this.postCount,
       recommendedPages: recommendedPages ?? this.recommendedPages,

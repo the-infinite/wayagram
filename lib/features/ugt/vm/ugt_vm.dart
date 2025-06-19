@@ -6,10 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
+import 'package:wayagram/core/helpers/debug.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
@@ -46,6 +49,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   //final ContestResponse _contestRespons;
   final _logger = getLogger('ContestRepo');
   late TextEditingController title;
+  late TextEditingController maxVote;
 
   late TextEditingController winnerPrize;
   late TextEditingController description;
@@ -60,6 +64,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     //this._contestController,
   ) : super(ContestState()) {
     title = TextEditingController();
+    maxVote = TextEditingController();
     winnerPrize = TextEditingController();
     description = TextEditingController();
     voteCountToQualify = TextEditingController();
@@ -73,6 +78,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   @override
   void dispose() {
     title.dispose();
+    maxVote.dispose();
     winnerPrize.dispose();
     description.dispose();
     voteCountToQualify.dispose();
@@ -88,7 +94,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       'entryType': 'FREE',
       'entryAmount': 2000,
       'numberOfPostPerWeek': 1,
-      'priceOfTheWinner': 100,
+      'priceOfTheWinner': "100",
       'startDate': "2025, 1, 10",
       'endDate': "2025, 1, 14",
       'approveBeforeLive': true,
@@ -136,6 +142,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           },
         )
         .toList();
+
     List<Map<String, dynamic>> mapStageList = stageList.map(
       (model) {
         String stageEndDate = _convertToISO(model.endDate!) ==
@@ -155,13 +162,16 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
               : model.entryAmount,
           "voteCountToQualify": model.voteCountToQualify ?? "",
           "numberOfPostPerWeek": model.numPostPerWeek,
-          "priceOfTheWinner": model.priceWinner/* !.contains("NGN")
+          "maxVote": model.maxVote,
+          "priceOfTheWinner": model
+              .priceWinner /* !.contains("NGN")
               ? int.parse(model.priceWinner!
                   .split(".")
                   .first
                   .substring(3)
                   .replaceAll(",", ""))
-              : int.parse(model.priceWinner ?? "0") */,
+              : int.parse(model.priceWinner ?? "0") */
+          ,
           "startDate": _convertToISO(model.startDate!), // model.startDate,
           "endDate": stageEndDate, // model.endDate,
           "approveBeforeLive": model.reviewApprovePost
@@ -205,9 +215,11 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         // "categoryName": state.categorys,
         "state": state.state,
         //  "numberOfWeeks":numberOfWeeks.text,
-        "winnerPrize": winnerPrize.text/* .contains("NGN")
+        "winnerPrize": winnerPrize
+            .text /* .contains("NGN")
             ? winnerPrize.text.split(".").first.substring(3).replaceAll(",", "")
-            : winnerPrize.text */,
+            : winnerPrize.text */
+        ,
         "description": description.text,
         //  "voteCountToQualify": voteCountToQualify.text,
         "amount": state.amount.text.contains("NGN")
@@ -410,6 +422,33 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     }
   }
 
+    Future<void> requestPayout(ctx, String contestId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _contestRepository.requestPayout(contestId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        WayaNav.toNamed('/admin-transaction-page');
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Payout request was sent successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await pickerDialog(context, firtDate: DateTime.now());
@@ -510,9 +549,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           value: entries.value.id.toString(), label: entries.value.state);
     }).toList();
   }
-  
+
   List<Select> ugtStatesExcludedAllState() {
-    var list= states.asMap().entries.map((entries) {
+    var list = states.asMap().entries.map((entries) {
       return Select(
           value: entries.value.id.toString(), label: entries.value.state);
     }).toList();
