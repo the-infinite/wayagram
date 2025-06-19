@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:wayagram/features/chat/model/message.dart';
 
 part 'default.g.dart';
 
@@ -124,12 +125,15 @@ class NotificationMessage {
   Map<String, dynamic> toJson() => _$NotificationMessageToJson(this);
 
   // The section for data getters.
-  String get groupId => data?['groupId'];
-  String get pageId => data?['pageId'];
-  String get invitationId => data?['invitationId'];
-  String get transactionId => data?['transactionId'];
-  String get requestId => data?['requestId'];
-  String get orderId => data?['orderId'];
+  String? get groupId => data?['groupId'];
+  String? get pageId => data?['pageId'];
+  String? get chatId => data?['chatId'];
+  String? get followerId => data?['followerId'];
+  String? get followingId => data?['followingId'];
+  String? get invitationId => data?['invitationId'];
+  String? get transactionId => data?['transactionId'];
+  String? get requestId => data?['requestId'];
+  String? get orderId => data?['orderId'];
 }
 
 @JsonSerializable()
@@ -171,9 +175,19 @@ class NotificationModel {
     if (data["message"]?["data"] != null) {
       final messageData = data["message"]!["data"] as Map<String, dynamic>?;
 
-      // Retrieve each key.
-      for (final key in messageData?.keys ?? []) {
-        json["message"]["body"] = json["message"]["body"].toString().replaceAll("{{$key}}", messageData![key].toString());
+      //? If the body is absolutely null and this is a chat...
+      if (json['messageType'] == 'chats' &&
+          json['message']['body'].toString() == 'null' &&
+          (messageData?.isNotEmpty ?? false)) {
+        final message = MessageModel.fromJson(messageData!);
+        json['message']['body'] = message.contentDescription;
+      }
+
+      //? Else, retrieve each key.
+      else {
+        for (final key in messageData?.keys ?? []) {
+          json["message"]["body"] = json["message"]["body"].toString().replaceAll("{{$key}}", messageData![key]);
+        }
       }
     }
 

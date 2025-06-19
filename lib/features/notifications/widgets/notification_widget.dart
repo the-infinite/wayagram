@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
@@ -8,9 +9,17 @@ import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
+import 'package:wayagram/shared/cache/chat.dart';
+import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 
-class NotificationCardWidget extends StatefulWidget {
+class NotificationCardWidget extends ConsumerStatefulWidget {
   final NotificationModel data;
   final int index;
 
@@ -22,10 +31,62 @@ class NotificationCardWidget extends StatefulWidget {
   });
 
   @override
-  State<NotificationCardWidget> createState() => _NotificationCardWidgetState();
+  ConsumerState<NotificationCardWidget> createState() => _NotificationCardWidgetState();
 }
 
-class _NotificationCardWidgetState extends State<NotificationCardWidget> {
+class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget> {
+  late final chatNotifier = ref.read(conversationProvider.notifier);
+  FollowStatusModel? _follow;
+  ChatModel? _chat;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        //? If this is a follow request.
+        if (widget.data.messageType == NotificationMessageType.followRequest) {
+          debugPrint("Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
+          final follow = await myFollowProvider.getFollowStatus(widget.data.id);
+
+          //? If mounted...
+          if (mounted) {
+            setState(() => _follow = follow);
+          }
+        }
+
+        //? If this is a chat notification.
+        if (widget.data.messageType == NotificationMessageType.chat) {
+          final id = widget.data.message.chatId.toString();
+          final chat = chatNotifier.getChat(id) ?? await chatNotifier.getChatDetails(id);
+
+          //? Then run the update.
+          if (mounted) {
+            setState(() {
+              _chat = chat;
+            });
+          }
+        }
+      },
+    );
+
+    super.initState();
+  }
+
+  bool get showActions {
+    //? Only show the action button when this is not yet followed.
+    if (widget.data.messageType == NotificationMessageType.followRequest) {
+      return _follow?.status == FollowRelationship.none;
+    }
+
+    //? Show the chat.
+    if (widget.data.messageType == NotificationMessageType.chat) {
+      return _chat != null;
+    }
+
+    // This is fine.
+    return true;
+  }
+
   /// Utility function used to redirect the user to the notification details screen.
   void _toNotificationDetails() {}
 
@@ -34,7 +95,21 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
   void _showMarkAction() {}
 
   /// Utility function used to execute the action on this notification.
-  void _executeAction() {}
+  void _executeAction() {
+    //? If this in any way involves a chat...
+    if (_chat != null) {
+      final chat = wayaChatsCache.getCachedData(_chat!.id);
+      final messagingNotifier = ref.read(chatProvider(_chat!.id).notifier);
+      chatNotifier.dismissOverlay();
+      messagingNotifier.setChat(chat ?? _chat!);
+      messagingNotifier.markAllAsRead().then((result) {
+        if (!result) return;
+        chatNotifier.getChats(true);
+        chatNotifier.getArchivedChats(true);
+      });
+      WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(_chat!.id));
+    }
+  }
 
   // This is fine.
   @override
@@ -125,8 +200,9 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                           //* The notification body.
                           WayaRichText(
                             title1: "${widget.data.message.body}.",
-                            title2:
-                                widget.data.notificationAction?.isEmpty ?? true ? "" : widget.data.notificationAction!,
+                            title2: !showActions || (widget.data.notificationAction?.isEmpty ?? true)
+                                ? null
+                                : widget.data.notificationAction!,
                             style1: wayaTheme.textTheme.mediumDescriptionStyle.copyWith(
                               fontSize: 12.sp,
                             ),
