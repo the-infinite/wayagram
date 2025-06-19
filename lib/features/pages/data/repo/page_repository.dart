@@ -207,6 +207,7 @@ class PageRepository extends BaseRepository {
     bool pageType,
     String coverImage,
     String profileImage,
+      String category
   ) {
     final payload = {
       "name": pageName,
@@ -214,10 +215,16 @@ class PageRepository extends BaseRepository {
       "isPublic":
           pageType, //Optional field, if you leave it blank it defaults to false
       "coverImage": coverImage,
-      "profileImage": profileImage
+      "isOpen": pageType,
+      "profileImage": profileImage,
+      "categories": [category]
     };
 
     return post("$serviceUrl/pages", payload, showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getUserCategory() {
+    return get("$serviceUrl/interests/categories");
   }
 
   Future<WayaRequestResponse> getAllPosts({int? limit = 200}) async {
