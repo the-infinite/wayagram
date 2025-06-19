@@ -13,6 +13,15 @@ class ContestRepo extends BaseRepository {
   //
   //   return post('$serviceUrl/contests/create',payLoad.toJson());
   // }
+    Future<WayaRequestResponse> requestPayout(String contestId) {
+    return post('$serviceUrl2/contest-payout', {"contestId": contestId}, formdata: false);
+  }
+
+    Future<WayaRequestResponse> fetchTransactionHistory() {
+    return get(
+        '$serviceUrl2/contest-payout/get-transactions');
+  }
+
 
   Future<WayaRequestResponse> createContest(payLoad) {
     return post('$serviceUrl2/contests/create', payLoad, formdata: false);
