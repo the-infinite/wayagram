@@ -112,6 +112,7 @@ class WayaChatSocketArgs {
       eventUid: WayaValueHelper.createUid(),
       timestamp: DateTime.now().millisecondsSinceEpoch,
       command: "join",
+      action: "join",
       chatId: chatId,
       senderId: ConversationState.self.id,
       isSynced: isSynced,
@@ -373,13 +374,18 @@ class WayaSocketController {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.messageId == null) return;
-
         // This is fine.
         await chatNotifier.markAllAsRead();
 
         // This is fine.
+        await updateChats();
+      },
+    );
+
+    //? Finally, listen for when a new conversation is started.
+    socket.on(
+      "join",
+      (data) async {
         await updateChats();
       },
     );
