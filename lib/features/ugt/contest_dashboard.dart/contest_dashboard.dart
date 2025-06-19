@@ -13,7 +13,9 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/pdf/contestant_pdf.dart';
@@ -29,7 +31,8 @@ class DashboardContestPage extends StatefulHookConsumerWidget {
   const DashboardContestPage({super.key});
 
   @override
-  ConsumerState<DashboardContestPage> createState() => _DashboardContestPageState();
+  ConsumerState<DashboardContestPage> createState() =>
+      _DashboardContestPageState();
 }
 
 class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
@@ -85,7 +88,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
       isLoading: false,
       isScrollable: true,
       onRefresh: () {
-        ref.read(votersContestNotifier.notifier).fetchAllContestApplicant(model?.id ?? "");
+        ref
+            .read(votersContestNotifier.notifier)
+            .fetchAllContestApplicant(model?.id ?? "");
         dashboardNotifier.fetchTotalContestant(model?.id ?? "");
         return dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
       },
@@ -105,11 +110,12 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text("Dashboard",
-                        style: wayaTheme.textTheme.displaySmall!.wayaCopyWith(fontWeight: FontWeight.w700)),
+                        style: wayaTheme.textTheme.displaySmall!
+                            .wayaCopyWith(fontWeight: FontWeight.w700)),
                     const Gap(5),
                     Text("Manage your contest activity",
-                        style:
-                            wayaTheme.textTheme.hintStyle.wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w400)),
+                        style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                            fontSize: 16.sp, fontWeight: FontWeight.w400)),
                   ],
                 ),
                 PopupMenuButton(
@@ -124,7 +130,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                               context: context,
                               onTap: () {
                                 WayaNav.goBack();
-                                dashboardNotifier.fetchTotalEarnings(model?.id ?? "", e.text.toLowerCase());
+                                dashboardNotifier.fetchTotalEarnings(
+                                    model?.id ?? "", e.text.toLowerCase());
                                 selectPresentTap(e);
                               },
                               asset: WayaAssets.icons.mComments.svg(
@@ -141,7 +148,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   child: Container(
                     //  margin: EdgeInsets.only(right: 20.w),
                     width: 130.w,
-                    padding: REdgeInsets.symmetric(vertical: 8.dg, horizontal: 12.dg),
+                    padding: REdgeInsets.symmetric(
+                        vertical: 8.dg, horizontal: 12.dg),
                     decoration: BoxDecoration(
                       color: wayaTheme.colorScheme.greyColor100,
                       border: Border.all(
@@ -182,7 +190,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (ConversationState.self.accountType == UserAccountType.business)
+                if (ConversationState.self.accountType ==
+                    UserAccountType.business)
                   SizedBox(
                     width: context.width / 2.5,
                     child: WayaButton(
@@ -192,8 +201,11 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         text: "Edit contest details",
                         callback: () async {
                           // invalidateUGTVm(ref);
-                          ref.read(stateIsEditingContestProvider.notifier).state = true;
-                          ref.read(selectedContestProvider.notifier).state = model;
+                          ref
+                              .read(stateIsEditingContestProvider.notifier)
+                              .state = true;
+                          ref.read(selectedContestProvider.notifier).state =
+                              model;
                           WayaNav.toNamed('/create-contest');
                         }),
                   ),
@@ -208,7 +220,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   child: Container(
                     //  margin: EdgeInsets.only(right: 20.w),
                     width: 130.w,
-                    padding: REdgeInsets.symmetric(vertical: 8.dg, horizontal: 12.dg),
+                    padding: REdgeInsets.symmetric(
+                        vertical: 8.dg, horizontal: 12.dg),
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: wayaTheme.colorScheme.primary600,
@@ -244,15 +257,88 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               onTap: () {
                 WayaNav.toNamed('/admin-transaction-page');
               },
-              child: _buildStatCard2(context, "Revenue Generated", "₦${dashboardVm.revenueGenerated}"),
+              child: _buildStatCard2(context, "Revenue Generated",
+                  "₦${dashboardVm.revenueGenerated}"),
             ),
+            const Gap(10),
+            // DateTime.now().isAfter(DateTime.parse(model?.endDate)) ?
+            if (DateTime.now().isAfter(
+                DateTime.parse(model?.endDate ?? "2096-01-01T00:00:00.000Z")))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (ConversationState.self.accountType ==
+                      UserAccountType.business)
+                    SizedBox(
+                      width: context.width / 2.5,
+                      child: WayaButton(
+                          horizontalPadding: 10,
+                          fontSize: 14.sp,
+                          height: 42,
+                          text: "Request Payout",
+                          callback: () async {
+                            ref
+                                .read(credentialInputProvider.notifier)
+                                .onSubmitPayoutPin(() => WayaNav.toNamed(
+                                        '/payoutVerification',
+                                        arguments: {
+                                          "id": model?.id ?? "",
+                                          "Module": PayoutModule.contest,
+                                        }));
+                          }),
+                    ),
+                  Gap(10),
+                  GestureDetector(
+                    onTap: () {
+                      WayaNav.toNamed('/admin-transaction-page');
+                    },
+                    child: Container(
+                      //  margin: EdgeInsets.only(right: 20.w),
+                      width: 130.w,
+                      padding: REdgeInsets.symmetric(
+                          vertical: 8.dg, horizontal: 12.dg),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: wayaTheme.colorScheme.primary600,
+                          width: 1.5,
+                        ),
+                        color: wayaTheme.colorScheme.white,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          /*   WayaAssets.icons.export.svg(
+                          width: 18,
+                          height: 18,
+                          fit: BoxFit.scaleDown,
+                          color: wayaTheme.colorScheme.primary600,
+                        ),
+                        Gap(8), */
+                          Text(
+                            'Payout History',
+                            style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                              color: wayaTheme.colorScheme.primary600,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
             const Gap(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard(context, "Number of participants", "${dashboardVm.totalContestants}"),
+                _buildStatCard(context, "Number of participants",
+                    "${dashboardVm.totalContestants}"),
                 //  _buildStatCard("Votes per contestant", "120"),
-                _buildStatCard(context, "Contest Stage", model?.contestSettings?.stages?.length.toString() ?? "0"),
+                _buildStatCard(context, "Contest Stage",
+                    model?.contestSettings?.stages?.length.toString() ?? "0"),
               ],
             ),
 
@@ -278,15 +364,20 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                     children: [
                       Text(
                         "Contest time remaining",
-                        style: TextStyle(color: wayaTheme.colorScheme.greyColor500, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.greyColor500,
+                            fontWeight: FontWeight.bold),
                       ),
-                      Icon(Icons.timelapse_outlined, color: wayaTheme.primaryColor),
+                      Icon(Icons.timelapse_outlined,
+                          color: wayaTheme.primaryColor),
                     ],
                   ),
                   Gap(10),
                   Text(
                     "${remainingTime.inDays}days  :   ${remainingTime.inHours.remainder(24)}hrs  :  ${remainingTime.inMinutes.remainder(60)}mins  :  ${remainingTime.inSeconds.remainder(60)}sec",
-                    style: TextStyle(color: wayaTheme.primaryColor, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: wayaTheme.primaryColor,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -378,12 +469,15 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       onTap: () {
                         WayaNav.toNamed('/contest-active-disqualify');
                       },
-                      child: _buildSectionTitle("Manage contestants", seeAll: true)),
+                      child: _buildSectionTitle("Manage contestants",
+                          seeAll: true)),
                   ListView.builder(
                     // controller: _scrollController,
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: viewModel.myFullContestantList.length > 6 ? 6 : viewModel.myFullContestantList.length,
+                    itemCount: viewModel.myFullContestantList.length > 6
+                        ? 6
+                        : viewModel.myFullContestantList.length,
                     itemBuilder: (context, index) {
                       if (viewModel.isLoading!) {
                         return Center(child: CircularProgressIndicator());
@@ -394,7 +488,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         onTap: () {
                           WayaNav.toNamed('/contest-active-disqualify');
                         },
-                        child: _buildProfileItem(context, post.contestApplicant?.fullName ?? "", true),
+                        child: _buildProfileItem(context,
+                            post.contestApplicant?.fullName ?? "", true),
                       );
                     },
                   ),
@@ -434,7 +529,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                     // controller: _scrollController,
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: viewModel.listState.length > 6 ? 6 : viewModel.listState.length,
+                    itemCount: viewModel.listState.length > 6
+                        ? 6
+                        : viewModel.listState.length,
                     itemBuilder: (context, index) {
                       if (viewModel.isLoading!) {
                         return Center(child: CircularProgressIndicator());
@@ -486,28 +583,33 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       onTap: () {
                         WayaNav.toNamed('/manage-application-contest');
                       },
-                      child: _buildSectionTitle("Submitted Applications", seeAll: true)),
+                      child: _buildSectionTitle("Submitted Applications",
+                          seeAll: true)),
                   Gap(10),
                   ListView.builder(
                     // controller: _scrollController,
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: viewModel.myFilteredContestApplicantList.length > 6
-                        ? 6
-                        : viewModel.myFilteredContestApplicantList.length,
+                    itemCount:
+                        viewModel.myFilteredContestApplicantList.length > 6
+                            ? 6
+                            : viewModel.myFilteredContestApplicantList.length,
                     itemBuilder: (context, index) {
                       if (viewModel.isLoading!) {
                         return Center(child: CircularProgressIndicator());
                       }
 
-                      final post = viewModel.myFilteredContestApplicantList[index];
+                      final post =
+                          viewModel.myFilteredContestApplicantList[index];
                       return GestureDetector(
                         onTap: () {
-                          ref.read(selectedApplicantProfile.notifier).state = post;
+                          ref.read(selectedApplicantProfile.notifier).state =
+                              post;
 
                           WayaNav.toNamed('/view-contestant-single-data');
                         },
-                        child: _buildProfileItem(context, post.fullName ?? "", false),
+                        child: _buildProfileItem(
+                            context, post.fullName ?? "", false),
                       );
                     },
                   ),
@@ -548,13 +650,16 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(e.stageName ?? "", style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(e.stageName ?? "",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         Switch(
                             value: e.isActive ?? false,
                             onChanged: (bool value) {
                               debugPrint("map ${e.toString()}");
-                              notifier.startStageContest(
-                                  e.stageName ?? "", {"contestId": model?.id ?? "", "stageName": e.stageName ?? ""});
+                              notifier.startStageContest(e.stageName ?? "", {
+                                "contestId": model?.id ?? "",
+                                "stageName": e.stageName ?? ""
+                              });
                             }),
                       ],
                     );
@@ -585,7 +690,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(title, textAlign: TextAlign.center, style: WayaTextStyles.hintStyleBold),
+            Text(title,
+                textAlign: TextAlign.center,
+                style: WayaTextStyles.hintStyleBold),
             Gap(10),
             Text(value, style: WayaTextStyles.headlineMedium),
           ],
@@ -619,7 +726,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             Container(
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: wayaTheme.primaryColor, // Background color for the checkmark
+                color: wayaTheme
+                    .primaryColor, // Background color for the checkmark
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -648,7 +756,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(title, textAlign: TextAlign.center, style: WayaTextStyles.hintStyleBold),
+          Text(title,
+              textAlign: TextAlign.center, style: WayaTextStyles.hintStyleBold),
           Gap(5),
           Row(
             children: [
@@ -664,41 +773,56 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     );
   }
 
-  Widget _buildSectionTitle(String title, {bool seeAll = false, seeStatistic = false}) {
+  Widget _buildSectionTitle(String title,
+      {bool seeAll = false, seeStatistic = false}) {
     final wayaTheme = Theme.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          Text(title,
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           if (seeAll)
             Row(
               children: [
-                Text("See all", style: TextStyle(color: wayaTheme.primaryColor, fontWeight: FontWeight.bold)),
+                Text("See all",
+                    style: TextStyle(
+                        color: wayaTheme.primaryColor,
+                        fontWeight: FontWeight.bold)),
                 Gap(10),
-                Icon(Icons.arrow_forward_ios, size: 18, color: wayaTheme.primaryColor)
+                Icon(Icons.arrow_forward_ios,
+                    size: 18, color: wayaTheme.primaryColor)
               ],
             ),
           if (!seeAll && !seeStatistic)
             Row(
-              children: [Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black), Gap(10)],
+              children: [
+                Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
+                Gap(10)
+              ],
             ),
           if (seeStatistic)
             Row(
-              children: [Icon(Icons.leaderboard_outlined, size: 18, color: wayaTheme.primaryColor), Gap(10)],
+              children: [
+                Icon(Icons.leaderboard_outlined,
+                    size: 18, color: wayaTheme.primaryColor),
+                Gap(10)
+              ],
             )
         ],
       ),
     );
   }
 
-  Widget _buildLeaderboardItem(BuildContext context, String votes, String rank, String name, Color color) {
+  Widget _buildLeaderboardItem(BuildContext context, String votes, String rank,
+      String name, Color color) {
     final wayaTheme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(12),
       margin: EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
+      decoration:
+          BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -706,16 +830,22 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             children: [
               SizedBox(
                   width: context.width * 0.3,
-                  child: Text(votes, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold))),
+                  child: Text(votes,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontWeight: FontWeight.bold))),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: wayaTheme.colorScheme.greyColor100, // Background color
 
-                  borderRadius: BorderRadius.circular(10), // Optional: for rounded corners
+                  borderRadius: BorderRadius.circular(
+                      10), // Optional: for rounded corners
                 ),
                 child: Center(
-                  child: Text(rank, style: TextStyle(fontWeight: FontWeight.bold, color: wayaTheme.primaryColor)),
+                  child: Text(rank,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: wayaTheme.primaryColor)),
                 ),
               ),
             ],
@@ -741,15 +871,23 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(name, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 16.sp)),
+          Text(name,
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16.sp)),
           Text(isprofile ? "View profile" : "View application",
-              style: TextStyle(color: wayaTheme.primaryColor, fontWeight: FontWeight.w600, fontSize: 14.sp)),
+              style: TextStyle(
+                  color: wayaTheme.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp)),
         ],
       ),
     );
   }
 
-  Widget _buildProfileItem2(BuildContext context, String name, String numberContestant) {
+  Widget _buildProfileItem2(
+      BuildContext context, String name, String numberContestant) {
     final wayaTheme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -759,9 +897,16 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(name, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 16.sp)),
+          Text(name,
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16.sp)),
           Text("$numberContestant contestants",
-              style: TextStyle(color: wayaTheme.primaryColor, fontWeight: FontWeight.w600, fontSize: 14.sp)),
+              style: TextStyle(
+                  color: wayaTheme.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp)),
         ],
       ),
     );
@@ -770,7 +915,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
   void selectPresentTap(MyFilterModel e) {
     var list = filterList.map((user) {
       if (user == e) {
-        return MyFilterModel(text: user.text, isActive: true); // Change isActive to false
+        return MyFilterModel(
+            text: user.text, isActive: true); // Change isActive to false
       }
       return MyFilterModel(text: user.text, isActive: false);
     }).toList();

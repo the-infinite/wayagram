@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 class WayaRichText extends StatelessWidget {
   final String title1;
-  final String title2;
+  final String? title2;
   final TextStyle? style1;
   final TextStyle? style2;
   final List<InlineSpan>? texts;
@@ -45,15 +45,18 @@ class WayaRichText extends StatelessWidget {
                   style: style1 ??
                       wayaTheme.textTheme.hintStyle
                           .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.black)),
-              TextSpan(
-                text: title2,
-                style: style2 ??
-                    wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                      color: wayaTheme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                recognizer: TapGestureRecognizer()..onTap = onTap2,
-              ),
+
+              //? If this is visible.
+              if (title2 != null)
+                TextSpan(
+                  text: title2,
+                  style: style2 ??
+                      wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                        color: wayaTheme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                  recognizer: TapGestureRecognizer()..onTap = onTap2,
+                ),
             ],
       ),
     );
