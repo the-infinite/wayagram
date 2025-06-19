@@ -222,6 +222,7 @@ class PageNotifier extends ValueNotifier<int> {
     bool pageType,
     String coverImage,
     String profileImage,
+      String category
   ) async {
     final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage));
     final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage));
@@ -233,7 +234,7 @@ class PageNotifier extends ValueNotifier<int> {
     }
 
     try {
-      final response = await repo.createPage(pageName, pageDesc, pageType, coverImageUrl, profileImageUrl);
+      final response = await repo.createPage(pageName, pageDesc, pageType, coverImageUrl, profileImageUrl, category);
 
       //? If this was fine...
       if (response.success) {
