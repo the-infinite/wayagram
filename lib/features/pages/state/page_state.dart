@@ -11,6 +11,7 @@ import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 
+import '../../../core/data/model/model.dart';
 import '../../post/model/share_model.dart';
 
 class PageState {
@@ -22,9 +23,11 @@ class PageState {
   final List<PostModel>? getAllPost;
   final List<GetAllPostDocs>? getAllPagePost;
   final List<CommentModel>? comments;
+  final List<Select> categories;
   final List<PageFollowerDocs>? pageFollowerDocs;
   List<PageInvitationModelDocs>? pageInvitationModelDocs;
   final num? postCount;
+  final String category;
   final GetAllPost? allPostData;
   List<PageModel>? recommendedPages;
   List<PageModel>? allPageModelDocs;
@@ -68,6 +71,8 @@ class PageState {
     this.getPageMemberDocs = const [],
     this.recommendedPages = const [],
     this.getAllPagePost = const [],
+    this.category = '',
+    this.categories = const [],
     this.data,
     this.allPostData,
     this.shareModelData,
@@ -83,6 +88,7 @@ class PageState {
     TextEditingController? username,
     String? foundUserId,
     String? roleType,
+    List<Select>? categories,
     List<PageFollowerDocs>? pageFollowerDocs,
     List<PostImage>? images,
     List<GetAllPostDocs>? getAllPagePost,
@@ -97,6 +103,7 @@ class PageState {
     List<dynamic>? docs,
     MediaUploadData? data,
     num? postCount,
+    String? category,
     ShareModelData? shareModelData,
     GetAllPost? allPostData,
     bool? isFocused,
@@ -114,6 +121,8 @@ class PageState {
       content: content ?? this.content,
       images: images ?? this.images,
       data: data ?? this.data,
+      category: category ?? this.category,
+      categories: categories ?? this.categories,
       pageInvitationModelDocs: pageInvitationModelDocs ?? this.pageInvitationModelDocs,
       pageFollowerDocs: pageFollowerDocs ?? this.pageFollowerDocs,
       postCount: postCount ?? this.postCount,
