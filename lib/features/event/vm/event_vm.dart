@@ -361,7 +361,7 @@ class EventVm extends StateNotifier<EventState> {
 
     //? This is fine.
     if (response.success) {
-        return EventSettingResponse.fromJson(response.data['data']);
+      return EventSettingResponse.fromJson(response.data['data']);
     }
 
     //? Return null if empty
@@ -412,8 +412,10 @@ class EventVm extends StateNotifier<EventState> {
       final response = await _eventRepository.getSingleEvent(id);
 
       if (response.success) {
+        print("fwefwfw, eventId- $id , ${response.data}");
         SingleEventResponse eventResponse =
             SingleEventResponse.fromJson(response.data);
+        print("ewfwef fetching event");
         state = state.copyWith(singleEvent: eventResponse.data);
         return eventResponse.data;
       }

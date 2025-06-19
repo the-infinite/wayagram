@@ -49,6 +49,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
           notifier.getAttendees(page: 1, id: widget.id);
         } catch (_) {}
         final event = await notifier.getSingleEvent(widget.id);
+    
         final provider = ref.read(eventEngagementProvider.notifier);
 
         //? If this is fine.
