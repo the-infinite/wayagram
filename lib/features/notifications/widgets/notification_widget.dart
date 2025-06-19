@@ -5,12 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_rich_text.dart';
-import 'package:wayagram/core/helpers/date.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -37,7 +36,6 @@ class NotificationCardWidget extends ConsumerStatefulWidget {
 class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget> {
   late final chatNotifier = ref.read(conversationProvider.notifier);
   FollowStatusModel? _follow;
-  ChatModel? _chat;
 
   @override
   void initState() {
@@ -51,19 +49,6 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
           //? If mounted...
           if (mounted) {
             setState(() => _follow = follow);
-          }
-        }
-
-        //? If this is a chat notification.
-        if (widget.data.messageType == NotificationMessageType.chat) {
-          final id = widget.data.message.chatId.toString();
-          final chat = chatNotifier.getChat(id) ?? await chatNotifier.getChatDetails(id);
-
-          //? Then run the update.
-          if (mounted) {
-            setState(() {
-              _chat = chat;
-            });
           }
         }
       },
@@ -80,7 +65,7 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
 
     //? Show the chat.
     if (widget.data.messageType == NotificationMessageType.chat) {
-      return _chat != null;
+      return widget.data.message.chatId != null;
     }
 
     // This is fine.
@@ -95,19 +80,26 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
   void _showMarkAction() {}
 
   /// Utility function used to execute the action on this notification.
-  void _executeAction() {
+  void _executeAction() async {
+    final chatId = widget.data.message.chatId;
+
     //? If this in any way involves a chat...
-    if (_chat != null) {
-      final chat = wayaChatsCache.getCachedData(_chat!.id);
-      final messagingNotifier = ref.read(chatProvider(_chat!.id).notifier);
+    if (chatId != null) {
+      final chat = wayaChatsCache.getCachedData(chatId) ?? await chatNotifier.getChatDetails(chatId);
+
+      if (chat == null) {
+        WayaSnackBar.showToast("This chat has been deleted");
+        return;
+      }
+      final messagingNotifier = ref.read(chatProvider(chatId).notifier);
       chatNotifier.dismissOverlay();
-      messagingNotifier.setChat(chat ?? _chat!);
+      messagingNotifier.setChat(chat);
       messagingNotifier.markAllAsRead().then((result) {
         if (!result) return;
         chatNotifier.getChats(true);
         chatNotifier.getArchivedChats(true);
       });
-      WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(_chat!.id));
+      WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chatId));
     }
   }
 

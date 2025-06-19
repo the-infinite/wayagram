@@ -176,9 +176,7 @@ class NotificationModel {
       final messageData = data["message"]!["data"] as Map<String, dynamic>?;
 
       //? If the body is absolutely null and this is a chat...
-      if (json['messageType'] == 'chats' &&
-          json['message']['body'].toString() == 'null' &&
-          (messageData?.isNotEmpty ?? false)) {
+      if (json['messageType'] == 'chats' && (messageData?.isNotEmpty ?? false)) {
         final message = MessageModel.fromJson(messageData!);
         json['message']['body'] = message.contentDescription;
       }
@@ -186,7 +184,8 @@ class NotificationModel {
       //? Else, retrieve each key.
       else {
         for (final key in messageData?.keys ?? []) {
-          json["message"]["body"] = json["message"]["body"].toString().replaceAll("{{$key}}", messageData![key]);
+          json["message"]["body"] =
+              json["message"]["body"].toString().replaceAll("{{$key}}", messageData![key].toString());
         }
       }
     }
