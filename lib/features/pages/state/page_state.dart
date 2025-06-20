@@ -27,7 +27,6 @@ class PageState {
   List<PageInvitationModelDocs>? pageInvitationModelDocs;
   final num? postCount;
   final String category;
-  final List<Select> categories;
   final GetAllPost? allPostData;
   List<PageModel>? recommendedPages;
   List<PageModel>? allPageModelDocs;
@@ -73,8 +72,6 @@ class PageState {
     this.getPageMemberDocs = const [],
     this.recommendedPages = const [],
     this.getAllPagePost = const [],
-    this.category = '',
-    this.categories = const [],
     this.data,
     this.allPostData,
     this.shareModelData,
@@ -102,12 +99,10 @@ class PageState {
     List<GetPageMemberDocs>? getPageMemberDocs,
     List<PostModel>? pagePopularPostDocs,
     List<CommentModel>? comments,
-    List<Select>? categories,
     String? category,
     List<dynamic>? docs,
     MediaUploadData? data,
     num? postCount,
-    String? category,
     ShareModelData? shareModelData,
     GetAllPost? allPostData,
     bool? isFocused,
