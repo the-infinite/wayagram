@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -318,6 +318,7 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                   }),
                 ],
               )),
+          const Gap(20),
           Text('Page Type',
               style: TextStyle(
                 fontSize: 12.sp,

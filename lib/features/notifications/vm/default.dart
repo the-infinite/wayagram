@@ -121,7 +121,7 @@ class NotificationVm extends StateNotifier<NotificationState> {
         WayaDebugEventModule.notifications,
         WayaDebugHelpers.getStackTrace(e),
       );
-      _logger.log(Level.error, e);
+      _logger.e(e, stackTrace: WayaDebugHelpers.getStackTrace(e));
     }
 
     //? Now hide the preloader.

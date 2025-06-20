@@ -53,7 +53,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
 
 
       _contestController.contestvoteCountToQualifyTextController.text =
-          model.priceWinner ?? "";
+          model.voteCountToQualify ?? "";
 
       _contestController.contestMaxVoteTextController.text =
           model.maxVote ?? "";
@@ -448,9 +448,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             _contestController.contestPrizeWinnerTextController.text = "0";
                           }
                           priceForWinner.value = value.first.label;
-                          /*  ref
-                              .read(contestNotifierProvider.notifier)
-                              .updateEntryType(value.first.label); */
+                         
                         },
                         uniqueKey: 'contest-state',
                       ),
@@ -557,12 +555,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               ],
             ),
           ),
-          /* WayaTextFormField(
-            controller: TextEditingController(),
-            hintText: "0 NGN",
-            label: "Prize Amount",
-          ),
-          const Gap(15),*/
+         
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

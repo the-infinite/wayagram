@@ -179,7 +179,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
               ),
               pw.SizedBox(height: 20),
               pw.Text(
-                '₦${state.transaction?.netAmount ?? "0"}',
+                'NGN${state.transaction?.netAmount ?? "0"}',
                 style: pw.TextStyle(
                   fontSize: 24.sp,
                   color: PdfColor(0.9, 0.1, 0.2),
@@ -427,7 +427,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
           ),
           const SizedBox(height: 20),
           Text(
-            '₦${state.transaction?.netAmount ?? "0"}',
+            'NGN${state.transaction?.netAmount ?? "0"}',
             style: TextStyle(
               fontSize: 24.sp,
               color: wayaTheme.colorScheme.success,
@@ -518,7 +518,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '+ ₦${state.transaction?.netAmount ?? "0"}',
+                          '+ NGN${state.transaction?.netAmount ?? "0"}',
                           style: TextStyle(
                             fontSize: 24.sp,
                             color: wayaTheme.colorScheme.success,

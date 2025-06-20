@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
 import 'package:wayagram/features/pages/data/model/page_invitation_model.dart';
@@ -67,12 +66,12 @@ class PageState {
     this.pageInvitationModelDocs = const [],
     this.getAllPost = const [],
     this.docs = const [],
+    this.category = '',
+    this.categories = const [],
     this.allPageModelDocs = const [],
     this.getPageMemberDocs = const [],
     this.recommendedPages = const [],
     this.getAllPagePost = const [],
-    this.category = '',
-    this.categories = const [],
     this.data,
     this.allPostData,
     this.shareModelData,
@@ -100,10 +99,10 @@ class PageState {
     List<GetPageMemberDocs>? getPageMemberDocs,
     List<PostModel>? pagePopularPostDocs,
     List<CommentModel>? comments,
+    String? category,
     List<dynamic>? docs,
     MediaUploadData? data,
     num? postCount,
-    String? category,
     ShareModelData? shareModelData,
     GetAllPost? allPostData,
     bool? isFocused,

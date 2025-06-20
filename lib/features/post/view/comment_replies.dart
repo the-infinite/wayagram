@@ -18,12 +18,14 @@ class WayaCommentRepliesScreen extends ConsumerStatefulWidget {
   static const route = "/post/comments/replies";
   final CommentModel comment;
   final PostModel post;
+  final String title;
 
   // Construct.
   const WayaCommentRepliesScreen({
     super.key,
     required this.comment,
     required this.post,
+    this.title = "Replies",
   });
 
   @override
@@ -88,7 +90,7 @@ class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScr
       child: WayaScaffold(
         isLoading: false,
         isScrollable: false,
-        title: 'Replies',
+        title: widget.title,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,

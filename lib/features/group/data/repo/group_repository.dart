@@ -11,12 +11,12 @@ class GroupRepository extends BaseRepository {
   GroupRepository._();
 
   Future<WayaRequestResponse> createGroup(
-      String groupName, String groupDesc, bool groupType, String coverImage, String profileImage, String category) {
+      String groupName, String groupDesc, bool groupType, String coverImage, String profileImage, String category, bool isOpen) {
     final payload = {
       "name": groupName,
       "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
-      "isOpen": groupType, // this defaults to true if it is not inserted
+      "isOpen": isOpen, // this defaults to true if it is not inserted
       "coverImage": coverImage,
       "profileImage": profileImage,
       "categories": [category]
