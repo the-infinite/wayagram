@@ -5,11 +5,13 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/about_event.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 
 class EventDetailWidget extends ConsumerStatefulWidget {
@@ -46,9 +48,8 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
           )
         ] else ...[
           const Gap(15),
-          if (viewModel.singleEvent!.userId == ConversationState.self.id)
-          ...[
-   GridView(
+          if (viewModel.singleEvent!.userId == ConversationState.self.id) ...[
+            GridView(
               shrinkWrap: true,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -69,29 +70,8 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
               ],
             ),
             Gap(10.h),
-
-            InkWell(
-              child: Container(
-                height: 70.h,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: wayaTheme.colorScheme.customPrimary.withOpacity(0.4)),
-              child: Align(alignment: Alignment.centerRight,
-              
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-               // spacing: 3,
-                children: [
-                    Text("Request Payout"),
-                    Icon(Icons.navigate_next, size: 30, color: wayaTheme.colorScheme.greyColor400,)
-                ],
-              ),),
-              ),
-              
-            )
           ],
-         
+
           const Gap(15),
           AboutEvent(
               title: 'Title of Event',

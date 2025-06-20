@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
@@ -592,10 +593,12 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
           ref
               .read(contestNotifierProvider.notifier)
               .requestPayout(context, widget.id);
-        }else if (widget.module == PayoutModule.event) {
-         //TODO event payout method
+        } else if (widget.module == PayoutModule.event) {
+          //TODO event payout method
+          ref
+              .read(eventVmProvider.notifier)
+              .requestForEventPayout(context, widget.id);
         }
-
       } else {
         WayaNav.goBack();
         ScaffoldMessenger.of(context).showSnackBar(
