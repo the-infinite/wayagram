@@ -22,8 +22,8 @@ class FollowRepository extends BaseRepository {
     return httpClient.getHttp("$serviceUri/follow/status/$id");
   }
 
-  Future<WayaRequestResponse> getSuggestedFriends() {
-    return httpClient.getHttp("$serviceUri/follow/suggestions");
+  Future<WayaRequestResponse> getSuggestedFriends(int page, int limit) {
+    return httpClient.getHttp("$serviceUri/follow/suggestions?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> followUser(String id) {
