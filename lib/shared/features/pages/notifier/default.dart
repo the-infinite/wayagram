@@ -222,7 +222,7 @@ class PageNotifier extends ValueNotifier<int> {
     bool pageType,
     String coverImage,
     String profileImage,
-      String category
+      String category,
   ) async {
     final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage));
     final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage));
