@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -14,34 +12,40 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 
 class PollReview extends ConsumerStatefulWidget {
   static const route = '/poll-review';
-  const PollReview({super.key,});
+
+  final String id;
+  final PayoutModule module;
+  final PayoutReviewModel model;
+
+  const PollReview(
+      {super.key, required this.id, required this.module, required this.model});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollReviewState();
 }
 
-class _PollReviewState extends ConsumerState<PollReview>  {
-
+class _PollReviewState extends ConsumerState<PollReview> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    /*  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
       ref.read(createPollVotingProvider.notifier).getDashboard(args['id']);
-    });
+    }); */
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return WayaScaffold(
         isLoading: viewModel.isLoading,
@@ -56,7 +60,7 @@ class _PollReviewState extends ConsumerState<PollReview>  {
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.black ),
+                  color: Theme.of(context).colorScheme.black),
             ),
 
             const Gap(5),
@@ -68,54 +72,60 @@ class _PollReviewState extends ConsumerState<PollReview>  {
             //       color: Theme.of(context).colorScheme.greyColor500 ),
             // ),
 
-
             const Gap(5),
             FittedBox(
               fit: BoxFit.fitWidth,
               child: Row(
                 children: [
-                  pollCard(viewModel.voteCount,  'Total Amount'),
+                  pollCard('₦${formatMoney(widget.model.amount ?? "0")}',
+                      'Total Amount'),
                   const Gap(5),
-                  pollCard(viewModel.numberOfPeopleVoted,  'Wayagram Commission'),
+                  pollCard('₦${formatMoney(widget.model.comission ?? "0")}',
+                      'Wayagram Commission'),
                   const Gap(5),
-                  pollCard('₦${viewModel.moneyGenerated}',  'Payout Due Amount'),
-                ],),
+                  pollCard('₦${formatMoney(widget.model.amountDue ?? "0")}',
+                      'Payout Due Amount'),
+                ],
+              ),
             ),
 
-            const Gap(20),
-            DateTime.now().isAfter(DateTime.parse("${args['endDate']}")) ?
+            const Gap(50),
             WayaButton(
               callback: !viewModel.isLoading
-                  ? ()  {
-              }
+                  ? () {
+                      WayaUtils.showModalSheet(
+                        context,
+                        child: PinEntryBottomSheet2(
+                            id: widget.id, module: widget.module),
+                      );
+                    }
                   : null,
-              centerWidget: LoadingState(
-                  loading: viewModel.isLoading, text: 'Continue'),
-            ):
-            Container(),
+              centerWidget:
+                  LoadingState(loading: viewModel.isLoading, text: 'Continue'),
+            ),
           ],
-        ) );
+        ));
   }
 
-  pollCard(number, name){
+  pollCard(number, name) {
     return Container(
       width: 122.w,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
-      decoration:
-      BoxDecoration(color: Color(0xffFFF0EB), borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: Color(0xffFFF0EB), borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           FittedBox(
             fit: BoxFit.fitWidth,
-            child:  Text(
+            child: Text(
               name,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 12.sp,
                   fontFamily: WayaConstants.fontFamily,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.greyColor500 ),
+                  color: Theme.of(context).colorScheme.greyColor500),
             ),
           ),
           const Gap(10),
@@ -125,16 +135,10 @@ class _PollReviewState extends ConsumerState<PollReview>  {
                 fontSize: 24.sp,
                 fontFamily: WayaConstants.fontFamily,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.black ),
+                color: Theme.of(context).colorScheme.black),
           ),
-
-
         ],
       ),
     );
   }
-
-
-
-
 }

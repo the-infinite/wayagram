@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
+import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 
@@ -24,15 +36,104 @@ class AdminTransactionHistory extends StatefulHookConsumerWidget {
 class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
   @override
   Widget build(BuildContext context) {
-    //final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
     final dashboardVm = ref.read(ugtAdminDashboardVm);
+    final notifier = ref.read(ugtAdminDashboardVm.notifier);
     //final viewModel = ref.watch(votersContestNotifier);
-    //var model = ref.watch(selectedContestProvider);
+    var model = ref.watch(selectedContestProvider);
+    useEffect(() {
+      notifier.fetchUserTransaction(model?.id ?? "");
+
+      return null;
+    }, []);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
       title: "Transaction History",
       backgroundColor: Colors.white,
+      floatingActionButton: DateTime.now().isAfter(
+              DateTime.parse(model?.endDate ?? "2096-01-01T00:00:00.000Z"))
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Gap(40),
+                if (ConversationState.self.accountType ==
+                    UserAccountType.business)
+                  SizedBox(
+                    width: context.width / 2.8,
+                    child: WayaButton(
+                        horizontalPadding: 10,
+                        fontSize: 14.sp,
+                        height: 45.h,
+                        text: "Request Payout",
+                        callback: () async {
+                          ref
+                              .read(credentialInputProvider.notifier)
+                              .onSubmitPayoutPin(() => WayaNav.toNamed(
+                                      '/payoutVerification',
+                                      arguments: {
+                                        "id": model?.id ?? "",
+                                        "Module": PayoutModule.contest,
+                                        "Model": PayoutReviewModel(
+                                            comission: dashboardVm
+                                                .totalCommission
+                                                .toString(),
+                                            amount: dashboardVm.revenueGenerated
+                                                    ?.toString() ??
+                                                '0',
+                                            amountDue: dashboardVm
+                                                    .revenueGenerated
+                                                    ?.toString() ??
+                                                '0',
+                                            endDate: model?.endDate ?? "")
+                                      }));
+                        }),
+                  ),
+                Gap(10),
+                GestureDetector(
+                  onTap: () {
+                    WayaNav.toNamed(UgtPayoutHistory.route);
+                    //  WayaNav.toNamed('/admin-transaction-page');
+                  },
+                  child: Container(
+                    //  margin: EdgeInsets.only(right: 20.w),
+                    width: 130.w,
+                    height: 45.h,
+                    padding: REdgeInsets.symmetric(
+                        vertical: 8.dg, horizontal: 12.dg),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: wayaTheme.colorScheme.primary600,
+                        width: 1.5,
+                      ),
+                      color: wayaTheme.colorScheme.white,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        /*   WayaAssets.icons.export.svg(
+                          width: 18,
+                          height: 18,
+                          fit: BoxFit.scaleDown,
+                          color: wayaTheme.colorScheme.primary600,
+                        ),
+                        Gap(8), */
+                        Text(
+                          'Payout History',
+                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary600,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Container(),
       body: SingleChildScrollView(
         //  padding: EdgeInsets.all(),
         child: Column(
@@ -81,19 +182,18 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /*  _buildStatCard(
+                _buildStatCard(
                     context,
-                    "Number of\n States",
-                    "10",
+                    "Revenue\nGenerated",
+                    "₦${formatMoney(dashboardVm.revenueGenerated?.toString() ?? '0')}",
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
-                    )), */
-
+                    )),
                 _buildStatCard(
                     context,
-                    "Revenue Generated",
-                    "₦${dashboardVm.revenueGenerated}",
+                    "Total\nCommissions",
+                    "₦${formatMoney(dashboardVm.totalCommission?.toString() ?? '0')}",
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
@@ -103,20 +203,22 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
 
             SizedBox(height: 20),
 
-            if (dashboardVm.transactionList.isEmpty) emptyWidget(),
+            if (dashboardVm.contestTransactionHistoryList.isEmpty)
+              emptyWidget(),
 
-            if (dashboardVm.transactionList.isNotEmpty)
+            if (dashboardVm.contestTransactionHistoryList.isNotEmpty)
               ListView.builder(
                 // controller: _scrollController,
                 shrinkWrap: true,
-                itemCount: dashboardVm.transactionList.length,
+                itemCount: dashboardVm.contestTransactionHistoryList.length,
                 itemBuilder: (context, index) {
-                  final post = dashboardVm.transactionList[index];
+                  final post = dashboardVm.contestTransactionHistoryList[index];
                   return GestureDetector(
                     onTap: () {},
                     child: UgtHistoryCard(
                       model: post,
                       position: index + 1,
+                      isPayout: false,
                     ),
                   );
                 },

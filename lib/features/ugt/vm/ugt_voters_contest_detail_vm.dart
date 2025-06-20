@@ -331,14 +331,16 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           myContestListCopy: [],
         ); */
 
+        print("here 1");
+
         ContestContestantModelMean responseModel =
             ContestContestantModelMean.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
-
+        print("here 2");
         MyContestContestantModel? model;
-
+        print("here 3");
         contestList.sort((a, b) => b.votes!.compareTo(a.votes!));
-
+        print("here 4");
         //? this may not contain what i am looking for that y i am using try here
         try {
           model = contestList.firstWhere(
@@ -347,6 +349,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           debugPrint(e.toString());
         }
 
+        print("here 5");
         // createPostId = ;
         final myContestantList = contestList.where((e) {
           print("ErrorOLODO ${e.status?.toLowerCase()}");
