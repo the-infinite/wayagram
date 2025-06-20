@@ -94,7 +94,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
 
     //? Fetch the data of this page.
     if (page.ownerId == ConversationState.self.id) {
-      return PrivatePage(page: page);
+      return PrivatePage(page: page,);
     }
 
     //? Return the Scaffolded screen here.

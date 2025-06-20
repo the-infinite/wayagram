@@ -86,6 +86,7 @@ import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/pages/view/user_page_invitation.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
 import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
@@ -96,6 +97,7 @@ import 'package:wayagram/features/polls_and_voting/views/poll_summary.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/views/share_voting_link.dart';
 import 'package:wayagram/features/post/view/edit_post.dart';
+import 'package:wayagram/features/post/view/full_comment_details.dart';
 import 'package:wayagram/features/post/view/single_post.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
@@ -290,6 +292,7 @@ class WayaAppRoutes {
     AddChoices.route: () => AddChoices(),
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
+    PollReview.route: () => PollReview(),
     PageSetting.route: () => PageSetting(),
     PollRequestPayout.route: () => PollRequestPayout(),
     SearchGroupAndPage.route: () => SearchGroupAndPage(),
@@ -464,7 +467,12 @@ class WayaAppRoutes {
         TwoFactorAuth(email: WayaNav.search["email"].toString()),
     SinglePost.route: () =>
         SinglePost(postId: WayaNav.search["postId"].toString()),
-        EventDashboard.route: () => EventDashboard(id:  WayaNav.search["id"].toString() )
+        EventDashboard.route: () => EventDashboard(id:  WayaNav.search["id"].toString() ),
+    CommentDetailsScreen.route: () => CommentDetailsScreen(
+          id: WayaNav.search["id"].toString(),
+          postId: WayaNav.search["post"].toString(),
+          source: WayaNav.search["id"].toString(),
+        ),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -571,8 +579,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
-  static String getPollDetailsPage(String id) =>
-      "${PollAndVoting.route}?id=$id";
+  static String getPollDetailsPage(String id) => "${SinglePollScreen.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
@@ -586,8 +593,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
-  static String getDonationDetailsPage(String id) =>
-      "${Donations.route}?id=$id";
+  static String getDonationDetailsPage(String id) => "${DonationDetails.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single bid's details screen.
@@ -631,6 +637,9 @@ class WayaAppRoutes {
 
   static String getSinglePostScreen(String postId) =>
       "${SinglePost.route}?postId=$postId";
+
+  static String getCommentDetailsScreen(String id, String postId, [String? source]) =>
+      "${CommentDetailsScreen.route}?id=$id&post=$postId&source=$source";
 
   static String get2FaScreen(
     String email,

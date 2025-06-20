@@ -35,21 +35,19 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
   final _formKey = GlobalKey<FormState>();
   late bool sel = widget.page.isPublic;
   late bool sel2 = !sel;
-  File? _selectedImage; // Holds the selected image
+  File? _profileImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
 
   late String? editProfileImage = widget.page.profileImage;
   late String? editCoverImage = widget.page.coverImage;
 
-  // late String? editCoverImage = widget.page.profileImage;
-  // late String? image = widget.page.coverImage;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _profileImage = File(pickedFile.path);
       });
     }
   }
@@ -102,7 +100,7 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                 viewModel.pageName.text,
                 viewModel.pageDescription.text,
                 sel ? true : false,
-                _selectedImage == null ? editProfileImage! : (_selectedImage as File).path,
+                _profileImage == null ? editProfileImage! : (_profileImage as File).path,
                 _coverImage == null ? editCoverImage! : (_coverImage as File).path,
                 widget.page.id,
               );
@@ -123,168 +121,75 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         /* Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Stack(
-                    children: [
-                      // Banner Container
-                      Container(
-                        width: double.infinity,
-                        height: 200, // Banner height
-                        decoration: BoxDecoration(
-                          color: WayaColors.primaryBrown50,
-                          borderRadius: BorderRadius.circular(0),
-                          image: _selectedImage != null
-                              ? DecorationImage(
-                                  image: FileImage(_selectedImage!),
-                                  fit: BoxFit.cover,
-                                )
-                              : image != null
-                                  ? DecorationImage(
-                                      image: NetworkImage(image!),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : DecorationImage(
-                                      image: NetworkImage(
-                                        WayaAssets.images.pages.imagePlaceholder.path,
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                        ),
-                      ),
-
-                      // Upload Icon Button
-                      Positioned(
-                        top: 140,
-                        right: 10,
-                        child: IconButton(
-                          onPressed: _pickImage,
-                          icon: Image.asset(
-                            'assets/images/pages/cam.png',
-                            height: 14.h,
-                          ),
-                          padding: EdgeInsets.all(10),
-                          constraints: BoxConstraints(),
-                          color: WayaColors.greyColor600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Gap(15),
-                ],
-              ),
-              Positioned(
-                left: 16.w,
-                bottom: -20.h,
-                child: GestureDetector(
-                  onTap: _pickCoverImage,
-                  child: Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: wayaTheme.colorScheme.greyColor200,
-                        backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
-                        child: _coverImage == null
-                            ? Icon(
-                                Icons.person,
-                                color: wayaTheme.colorScheme.greyColor600,
-                              )
-                            : editCoverImage != null
-                                ? CircleAvatar(
-                                    radius: 20,
-                                    backgroundColor: wayaTheme.colorScheme.greyColor200,
-                                    backgroundImage: NetworkImage(editCoverImage!),
-                                  )
-                                : null,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),*/
-
           Stack(
             clipBehavior: Clip.none,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Stack(
-                    children: [
-                      // Banner Container
-                      Container(
-                        width: double.infinity,
-                        height: 200, // Banner height
-                        decoration: BoxDecoration(
-                          color: WayaColors.primaryBrown50,
-                          borderRadius: BorderRadius.circular(0),
-                          image: _selectedImage != null
-                              ? DecorationImage(
-                            image: FileImage(_selectedImage!),
-                            fit: BoxFit.cover,
-                          )
-                              : editProfileImage != null
-                              ? DecorationImage(
-                            image: NetworkImage(editProfileImage!),
-                            fit: BoxFit.cover,
-                          )
-                              : DecorationImage(
-                            image: NetworkImage(
-                              WayaAssets.images.pages.imagePlaceholder.path,
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-
-                      // Upload Icon Button
-                      Positioned(
-                        top: 140,
-                        right: 10,
-                        child: IconButton(
-                          onPressed: _pickImage,
-                          icon: Image.asset(
-                            'assets/images/pages/cam.png',
-                            height: 14.h,
-                          ),
-                          padding: EdgeInsets.all(10),
-                          constraints: BoxConstraints(),
-                          color: WayaColors.greyColor600,
-                        ),
-                      ),
-                    ],
+              Container(
+                width: double.infinity,
+                height: 200, // Banner height
+                decoration: BoxDecoration(
+                  color: WayaColors.primaryBrown50,
+                  borderRadius: BorderRadius.circular(0),
+                  image: _coverImage != null
+                      ? DecorationImage(
+                    image: FileImage(_coverImage!),
+                    fit: BoxFit.cover,
+                  )
+                      : editCoverImage != null
+                      ? DecorationImage(
+                    image: NetworkImage(editCoverImage!),
+                    fit: BoxFit.cover,
+                  )
+                      : DecorationImage(
+                    image: NetworkImage(WayaAssets.images.pages.imagePlaceholder.path),
+                    fit: BoxFit.cover,
                   ),
-                  Gap(15),
-                ],
+                ),
               ),
+
+              // Upload Icon Button
+              Positioned(
+                top: 140,
+                right: 10,
+                child: IconButton(
+                  onPressed: _pickCoverImage,
+                  icon: Image.asset(
+                    'assets/images/pages/cam.png',
+                    height: 14.h,
+                  ),
+                  padding: EdgeInsets.all(10),
+                  constraints: BoxConstraints(),
+                  color: WayaColors.greyColor600, // Background overlay
+                ),
+              ),
+
               Positioned(
                 left: 16.w,
                 bottom: -20.h,
                 child: GestureDetector(
-                  onTap: _pickCoverImage,
+                  onTap: _pickImage,
                   child: Stack(
                     children: [
                       CircleAvatar(
                         radius: 20,
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
                         backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
-                        child: _coverImage == null
-                            ? Icon(
-                          Icons.person,
-                          color: wayaTheme.colorScheme.greyColor600,
-                        )
-                            : editCoverImage != null
+                        child: _profileImage != null
                             ? CircleAvatar(
                           radius: 20,
                           backgroundColor: wayaTheme.colorScheme.greyColor200,
-                          backgroundImage: NetworkImage(editCoverImage!),
+                          backgroundImage: FileImage(_profileImage!),
                         )
-                            : null,
+                            : editProfileImage != null
+                            ? CircleAvatar(
+                          radius: 20,
+                          backgroundColor: wayaTheme.colorScheme.greyColor200,
+                          backgroundImage: NetworkImage(editProfileImage!),
+                        )
+                            : Icon(
+                          Icons.person,
+                          color: wayaTheme.colorScheme.greyColor600,
+                        ),
                       ),
                     ],
                   ),
@@ -292,6 +197,7 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
               ),
             ],
           ),
+
           const Gap(30),
           Padding(
             padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),

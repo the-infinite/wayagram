@@ -22,11 +22,11 @@ class PageState {
   final List<PostModel>? getAllPost;
   final List<GetAllPostDocs>? getAllPagePost;
   final List<CommentModel>? comments;
+  final List<Select> categories;
   final List<PageFollowerDocs>? pageFollowerDocs;
   List<PageInvitationModelDocs>? pageInvitationModelDocs;
   final num? postCount;
   final String category;
-  final List<Select> categories;
   final GetAllPost? allPostData;
   List<PageModel>? recommendedPages;
   List<PageModel>? allPageModelDocs;
@@ -87,6 +87,7 @@ class PageState {
     TextEditingController? username,
     String? foundUserId,
     String? roleType,
+    List<Select>? categories,
     List<PageFollowerDocs>? pageFollowerDocs,
     List<PostImage>? images,
     List<GetAllPostDocs>? getAllPagePost,
@@ -98,7 +99,6 @@ class PageState {
     List<GetPageMemberDocs>? getPageMemberDocs,
     List<PostModel>? pagePopularPostDocs,
     List<CommentModel>? comments,
-    List<Select>? categories,
     String? category,
     List<dynamic>? docs,
     MediaUploadData? data,
