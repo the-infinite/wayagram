@@ -22,6 +22,10 @@ class FollowRepository extends BaseRepository {
     return httpClient.getHttp("$serviceUri/follow/status/$id");
   }
 
+  Future<WayaRequestResponse> getSuggestedFriends() {
+    return httpClient.getHttp("$serviceUri/follow/suggestions");
+  }
+
   Future<WayaRequestResponse> followUser(String id) {
     return httpClient.postHttp("$serviceUri/follow/$id", null);
   }
@@ -32,7 +36,7 @@ class FollowRepository extends BaseRepository {
       {
         "followerId": followerId,
         "followingId": followingId,
-        "action": action.value, 
+        "action": action.value,
       },
     );
   }

@@ -17,7 +17,6 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/data/model/group_category_model.dart';
-import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
 import 'package:wayagram/features/pages/data/model/page_invitation_model.dart';
