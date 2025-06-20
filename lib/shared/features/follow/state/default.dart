@@ -1,6 +1,5 @@
 import 'package:wayagram/shared/features/follow/model/default.dart';
-
-typedef SuggestionModel = FollowModel;
+import 'package:wayagram/shared/features/follow/model/suggestion.dart';
 
 class FollowState {
   // Shared.
@@ -96,7 +95,7 @@ class FollowState {
     hasLoadedSuggestions: false,
     isLoadingSuggestions: false,
     suggestionsHasNextPage: true,
-    suggestionsNextPage: 1,
+    suggestionsNextPage: 0,
     suggestionsPage: 0,
     suggestionsTotalSize: 0,
     suggestionsTotalPages: 0,

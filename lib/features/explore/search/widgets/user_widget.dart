@@ -109,13 +109,17 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                           title: Row(
                             children: [
                               //? The fullname of the user in question.
-                              Text(
-                                _userInfo!.$1.fullname,
-                                style: theme.textTheme.bodyMedium,
+                              Expanded(
+                                child: Text(
+                                  _userInfo!.$1.fullname,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodyMedium,
+                                ),
                               ),
 
                               // Infinite space.
-                              Spacer(),
+                              SizedBox(width: 10.w),
 
                               //? Only show this when the user in question is not
                               //? the current user.
