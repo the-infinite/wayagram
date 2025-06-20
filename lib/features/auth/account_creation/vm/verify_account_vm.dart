@@ -11,6 +11,7 @@ import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/account_security/account_security.dart';
 
 class VerifyAccountState {
   bool isEditing;
@@ -316,7 +317,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
           await _authRepository.toggle2Fa(code: code, purpose: "2FA");
 
       if (response.success) {
-        WayaNav.goBack();
+        WayaNav.replaceNamed(AccountSecurity.route);
       }
     } catch (e) {
       _logger.e(e.toString());

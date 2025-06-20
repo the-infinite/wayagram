@@ -37,6 +37,20 @@ class EventRepository extends BaseRepository {
         "$serviceUrl/events/get-event?eventstatus=$status&status=active&page=$page&limit=$limit");
   }
 
+      Future<WayaRequestResponse> requestForEventPayout(String eventId) {
+    return post('$serviceUrl/events-transactions', {"eventId": eventId}, formdata: false);
+  }
+
+
+        Future<WayaRequestResponse> getPayoutTransactions(String eventId) {
+    return get('$serviceUrl/events-transactions/get-transactions?eventId=$eventId');
+  }
+
+  ///events-transactions/get-payouts
+          Future<WayaRequestResponse> getPayouts(String eventId) {
+    return get('$serviceUrl/events-transactions/get-payouts?eventId=$eventId');
+  }
+
   Future<WayaRequestResponse> editEvent(
       UpdateEventRequestModel payload, String id) {
     return patch("$serviceUrl/events/edit-event/$id", payload.toJson(),

@@ -12,9 +12,12 @@ import 'package:wayagram/features/auth/account_creation/view/loading_state.dart'
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_edit_type_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
 
 import '../../../core/utils/waya_utils.dart';
+
 enum PayoutModule { polls, contest, donation, event }
 
 class PayoutVerification extends ConsumerStatefulWidget {
@@ -60,7 +63,7 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
     _timer?.cancel();
     _timer = Timer.periodic(
       Duration(seconds: 1),
-          (timer) {
+      (timer) {
         if (countDown > 0) {
           setState(() {
             countDown = countDown - 1;
@@ -150,73 +153,73 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
             alignment: Alignment.center,
             child: viewModelState.isResend
 
-            //? What to show when the user can resend this.
+                //? What to show when the user can resend this.
                 ? GestureDetector(
-              onTap: () {
-                if (!viewModelState.isLoading) {
-                  setState(() {
-                    countDown = 60;
-                  });
-                  startCountdown();
-                  if (args != null) {
-                    ProfileEditType type =
-                    args['type'] as ProfileEditType;
-                    if (type == ProfileEditType.email) {
-                      ref.read(verifyAccountProvider.notifier).requestOtp(
-                          purpose: "CHANGE_OF_EMAIL",
-                          email: args['initial']);
-                    } else {
-                      ref.read(verifyAccountProvider.notifier).requestOtp(
-                          purpose: "CHANGE_OF_PHONE",
-                          phone: "234${args['initial']}");
-                    }
-                  } else {
-                    ref
-                        .read(verifyAccountProvider.notifier)
-                        .requestEmailOtp();
-                  }
-                   viewModel.resendOtp();
-                }
-              },
-              child: Container(
-                width: 110,
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.primary75,
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                child: Text(
-                  "Resend OTP",
-                  style: WayaTextStyles.smallActiveLinkStyle,
-                ),
-              ),
-            )
+                    onTap: () {
+                      if (!viewModelState.isLoading) {
+                        setState(() {
+                          countDown = 60;
+                        });
+                        startCountdown();
+                        if (args != null) {
+                          ProfileEditType type =
+                              args['type'] as ProfileEditType;
+                          if (type == ProfileEditType.email) {
+                            ref.read(verifyAccountProvider.notifier).requestOtp(
+                                purpose: "CHANGE_OF_EMAIL",
+                                email: args['initial']);
+                          } else {
+                            ref.read(verifyAccountProvider.notifier).requestOtp(
+                                purpose: "CHANGE_OF_PHONE",
+                                phone: "234${args['initial']}");
+                          }
+                        } else {
+                          ref
+                              .read(verifyAccountProvider.notifier)
+                              .requestEmailOtp();
+                        }
+                        viewModel.resendOtp();
+                      }
+                    },
+                    child: Container(
+                      width: 110,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          color: wayaTheme.colorScheme.primary75,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Text(
+                        "Resend OTP",
+                        style: WayaTextStyles.smallActiveLinkStyle,
+                      ),
+                    ),
+                  )
                 : Container(
-              width: 200,
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.primary75,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8),
-                ),
-              ),
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Didn't get any code? ",
-                      style: WayaTextStyles.bodySmall,
+                    width: 200,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.primary75,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
                     ),
-                    TextSpan(
-                      text:
-                      "Resend ${countDown ~/ 60}:${(countDown % 60).toString().padLeft(2, '0')}",
-                      style: WayaTextStyles.smallActiveLinkStyle,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Didn't get any code? ",
+                            style: WayaTextStyles.bodySmall,
+                          ),
+                          TextSpan(
+                            text:
+                                "Resend ${countDown ~/ 60}:${(countDown % 60).toString().padLeft(2, '0')}",
+                            style: WayaTextStyles.smallActiveLinkStyle,
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ),
 
           // Some space.
@@ -226,15 +229,20 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
           WayaButton(
             callback: !viewModelState.isLoading
                 ? () {
-              final code = ref.watch(verifyAccountProvider).inputCode;
-              viewModel.verifyPayout(
-                  onSuccess: () =>  WayaUtils.showModalSheet(
-                    context,
-                    child: PinEntryBottomSheet2(id: '${args['id']}', module: args['Module']as PayoutModule,),
-                  ),
-                  code: code,
-                  email: '${ConversationState.self.email}');
-            }
+                    final code = ref.watch(verifyAccountProvider).inputCode;
+                    viewModel.verifyPayout(
+                        onSuccess: () => WayaUtils.showModalSheet(
+                              context,
+                              child: PollReview(
+                                  id: '${args['id']}',
+                                  module: args['Module'] as PayoutModule,
+                                  model: args['Model'] as PayoutReviewModel),
+                            ),
+                        /* 
+                  ), */
+                        code: code,
+                        email: '${ConversationState.self.email}');
+                  }
                 : null,
             centerWidget: LoadingState(
               loading: viewModelState.isLoading,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -13,6 +14,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/kyc/vm/kyc_vm.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 class AccountSecurity extends ConsumerStatefulWidget {
   static const route = "/account-security";
@@ -27,30 +29,42 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
   late final notifier = ref.read(verifyAccountProvider.notifier);
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+  UserDetailsModel? user;
 
   Future<void> _refreshData() async {
     await ref.read(kycVmProvider.notifier).getMyKYC();
-    await ref.read(profileVmProvider.notifier).getUserData();
+    final data = await ref.read(profileVmProvider.notifier).getUserData();
+
+    if (data != null) {
+      setState(() {
+        user = data;
+      });
+    }
   }
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await _refreshData();
-    });
+    _refreshData();
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _refreshData();
-  }
+
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(kycVmProvider);
     final theme = Theme.of(context);
+
+    if (user == null) {
+      return Container(
+        color: theme.colorScheme.white,
+        width: context.width,
+        height: context.height,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return WayaScaffold(
       title: "Account Security",
@@ -120,7 +134,7 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
                           style: theme.textTheme.bodySemiBold,
                         ),
                         Text(
-                            ConversationState.self.twoFactorEnabled == false
+                            user?.twoFactorEnabled == false
                                 ? 'Disabled'
                                 : 'Enabled',
                             style: theme.textTheme.bodySemiBold.copyWith(
