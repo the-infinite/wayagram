@@ -6,7 +6,10 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
+import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 
 class RequestCardWidget extends StatefulWidget {
   final NotificationModel data;
@@ -24,11 +27,68 @@ class RequestCardWidget extends StatefulWidget {
 }
 
 class _RequestCardWidgetState extends State<RequestCardWidget> {
+  FollowStatusModel? _follow;
+
+  Future<void> _getStatus() async {
+    //? If this is a follow request.
+    if (widget.data.messageType == NotificationMessageType.followRequest) {
+      debugPrint("Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
+      final follow = await myFollowProvider.getFollowStatus(widget.data.id);
+
+      if (mounted) {
+        setState(() {
+          _follow = follow;
+        });
+      }
+    }
+  }
+
+  bool get showActions {
+    //? Only show the action button when this is not yet followed.
+    if (widget.data.messageType == NotificationMessageType.followRequest) {
+      return _follow?.status == FollowRelationship.none;
+    }
+
+    // This is fine.
+    return true;
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _getStatus(),
+    );
+
+    super.initState();
+  }
+
   /// Utility function used to redirect the user to the notification details screen.
-  void _acceptRequest() {}
+  void _acceptRequest() async {
+    final followerId = widget.data.message.followerId;
+    final followingId = widget.data.message.followingId;
+
+    //? If this is for a follow request...
+    if (followerId != null && followingId != null) {
+      await myFollowProvider.handleFollowRequest(followerId, followingId, FollowAction.accept);
+
+      //? If this user is following you now....
+      await _getStatus();
+    }
+  }
 
   /// Utility function used to execute the action on this notification.
-  void _rejectRequest() {}
+  void _rejectRequest() async {
+    final followerId = widget.data.message.followerId;
+    final followingId = widget.data.message.followingId;
+
+    //? If this is for a follow request...
+    if (followerId != null && followingId != null) {
+      await myFollowProvider.handleFollowRequest(followerId, followingId, FollowAction.reject);
+
+      //? If this user is following you now....
+      await _getStatus();
+    }
+  }
 
   // This is fine.
   @override
@@ -135,42 +195,45 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         ),
                       ),
 
-                      // Some space.
-                      const Gap(9),
+                      //? If the actions are supposed to be visible.
+                      if (showActions) ...[
+                        // Some space.
+                        const Gap(9),
 
-                      //* Now for the buttons that would be used to accept or reject
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // Accept invite button.
-                          WayaButton(
-                            text: "Accept invite",
-                            textColor: WayaColors.white,
-                            callback: _acceptRequest,
-                            color: WayaColors.primary500,
-                            height: null,
-                            verticalPadding: 8,
-                            horizontalPadding: 12,
-                          ),
-
-                          // Some space.
-                          const Gap(10),
-
-                          // Accept invite button.
-                          WayaButton(
-                            text: "Decline",
-                            textColor: WayaColors.customBlack,
-                            callback: _rejectRequest,
-                            color: WayaColors.transparent,
-                            height: null,
-                            verticalPadding: 8,
-                            horizontalPadding: 12,
-                            border: Border.all(
-                              color: WayaColors.greyColor500,
+                        //* Now for the buttons that would be used to accept or reject
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            // Accept invite button.
+                            WayaButton(
+                              text: "Accept invite",
+                              textColor: WayaColors.white,
+                              callback: _acceptRequest,
+                              color: WayaColors.primary500,
+                              height: null,
+                              verticalPadding: 8,
+                              horizontalPadding: 12,
                             ),
-                          ),
-                        ],
-                      ),
+
+                            // Some space.
+                            const Gap(10),
+
+                            // Accept invite button.
+                            WayaButton(
+                              text: "Decline",
+                              textColor: WayaColors.customBlack,
+                              callback: _rejectRequest,
+                              color: WayaColors.transparent,
+                              height: null,
+                              verticalPadding: 8,
+                              horizontalPadding: 12,
+                              border: Border.all(
+                                color: WayaColors.greyColor500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),

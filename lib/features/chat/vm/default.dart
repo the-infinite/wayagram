@@ -8,6 +8,7 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/default.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
@@ -166,8 +167,16 @@ class ConversationVm extends StateNotifier<ConversationState> {
     //? Try getting all chats.
     getChats();
 
+    //? Get this chat.
+    final chat = await getChatDetails(response.data['data']['id']);
+
+    //? If this is not null.
+    if (chat != null) {
+      WayaSocketController.instance.emit(WayaChatSocketArgs.join(chat.id));
+    }
+
     //? Now, return this.
-    return getChatDetails(response.data['data']['id']);
+    return chat;
   }
 
   /// Helper function used to retrieve all of the details of just one conversation.

@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_rich_text.dart';
-import 'package:wayagram/core/helpers/date.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
+import 'package:wayagram/shared/cache/chat.dart';
+import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 
-class NotificationCardWidget extends StatefulWidget {
+class NotificationCardWidget extends ConsumerStatefulWidget {
   final NotificationModel data;
   final int index;
 
@@ -22,10 +30,104 @@ class NotificationCardWidget extends StatefulWidget {
   });
 
   @override
-  State<NotificationCardWidget> createState() => _NotificationCardWidgetState();
+  ConsumerState<NotificationCardWidget> createState() => _NotificationCardWidgetState();
 }
 
-class _NotificationCardWidgetState extends State<NotificationCardWidget> {
+class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget> {
+  late final chatNotifier = ref.read(conversationProvider.notifier);
+  FollowStatusModel? _follow;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        //? If this is a follow request.
+        if (widget.data.messageType == NotificationMessageType.followRequest) {
+          debugPrint("Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
+          final follow = await myFollowProvider.getFollowStatus(widget.data.id);
+
+          //? If mounted...
+          if (mounted) {
+            setState(() => _follow = follow);
+          }
+        }
+      },
+    );
+
+    super.initState();
+  }
+
+  bool get showActions {
+    //? Only show the action button when this is not yet followed.
+    if (widget.data.messageType == NotificationMessageType.followRequest) {
+      return _follow?.status == FollowRelationship.none;
+    }
+
+    //? Show the chat.
+    if (widget.data.messageType == NotificationMessageType.chat) {
+      return widget.data.message.chatId != null;
+    }
+
+    //? If this is for comments
+    if (widget.data.messageType == NotificationMessageType.comment) {
+      return widget.data.message.commentId != null && widget.data.message.postId != null;
+    }
+
+    //? If this is for post...
+    if ([
+      NotificationMessageType.share,
+      NotificationMessageType.like,
+    ].contains(widget.data.messageType)) {
+      return widget.data.message.postId != null;
+    }
+
+    //? If this is for donations...
+    if (widget.data.messageType == NotificationMessageType.donation) {
+      return widget.data.message.donationId != null;
+    }
+
+    //? If this is for an event...
+    if (widget.data.messageType == NotificationMessageType.event) {
+      return widget.data.message.eventId != null;
+    }
+
+    //? If this is for a poll.
+    if (widget.data.messageType == NotificationMessageType.poll) {
+      return widget.data.message.pollId != null;
+    }
+
+    //? If this is a credit or debit alert...
+    if ([
+      NotificationMessageType.debitAlert,
+      NotificationMessageType.creditAlert,
+    ].contains(widget.data.messageType)) {
+      return widget.data.message.transactionId != null;
+    }
+
+    //? If this is a quotation notification.
+    if (widget.data.messageType == NotificationMessageType.getQuotation) {
+      return widget.data.message.requestId != null || widget.data.message.bidId != null;
+    }
+
+    //? If this is for a group notification.
+    if (widget.data.messageType == NotificationMessageType.groupInvite) {
+      return widget.data.message.invitationId != null;
+    }
+
+    //? If this is for a group notification.
+    if (widget.data.messageType == NotificationMessageType.groups) {
+      return widget.data.message.groupId != null;
+    }
+
+    //? If this is for a page invitation.
+    if (widget.data.messageType == NotificationMessageType.pages) {
+      return widget.data.message.pageId != null;
+    }
+
+    // This is fine.
+    return true;
+  }
+
   /// Utility function used to redirect the user to the notification details screen.
   void _toNotificationDetails() {}
 
@@ -34,7 +136,92 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
   void _showMarkAction() {}
 
   /// Utility function used to execute the action on this notification.
-  void _executeAction() {}
+  void _executeAction() async {
+    final chatId = widget.data.message.chatId;
+    final commentId = widget.data.message.commentId;
+    final postId = widget.data.message.postId;
+    final donationId = widget.data.message.donationId;
+    final eventId = widget.data.message.eventId;
+    final pollId = widget.data.message.pollId;
+    final transactionId = widget.data.message.transactionId;
+    final requestId = widget.data.message.requestId;
+    final bidId = widget.data.message.bidId;
+    final groupId = widget.data.message.groupId;
+    final invitationId = widget.data.message.invitationId;
+    final pageId = widget.data.message.pageId;
+
+    //? If this in any way involves a chat...
+    if (chatId != null) {
+      final chat = wayaChatsCache.getCachedData(chatId) ?? await chatNotifier.getChatDetails(chatId);
+
+      if (chat == null) {
+        WayaSnackBar.showToast("This chat has been deleted");
+        return;
+      }
+      final messagingNotifier = ref.read(chatProvider(chatId).notifier);
+      chatNotifier.dismissOverlay();
+      messagingNotifier.setChat(chat);
+      messagingNotifier.markAllAsRead().then((result) {
+        if (!result) return;
+        chatNotifier.getChats(true);
+        chatNotifier.getArchivedChats(true);
+      });
+      WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chatId));
+    }
+
+    //? If comment ID is not undefined.
+    if (commentId != null && postId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getCommentDetailsScreen(commentId, postId));
+    }
+
+    //? If this is for a post...
+    if (postId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getSinglePostScreen(postId));
+    }
+
+    //? If this is for a donation post...
+    if (donationId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getDonationDetailsPage(donationId));
+    }
+
+    //? If this is for an event...
+    if (eventId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(eventId));
+    }
+
+    //? If this is for a poll.
+    if (pollId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getPollDetailsPage(pollId));
+    }
+
+    //? If this is for a poll.
+    if (transactionId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getWalletDetailsPage(transactionId));
+    }
+
+    //? If this is for a quotation...
+    if (bidId != null && requestId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bidId, requestId));
+    }
+    if (requestId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(requestId));
+    }
+
+    //? If this is for a group invitation notification...
+    if (groupId != null && invitationId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getGroupInvitation(invitationId));
+    }
+
+    //? If this is for a group...
+    if (groupId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getGroupDetailsPage(groupId));
+    }
+
+    //? If this is for a page invitation...
+    if (pageId != null && invitationId != null) {
+      WayaNav.toNamed(WayaAppRoutes.getPageInvitation(invitationId));
+    }
+  }
 
   // This is fine.
   @override
@@ -125,8 +312,9 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                           //* The notification body.
                           WayaRichText(
                             title1: "${widget.data.message.body}.",
-                            title2:
-                                widget.data.notificationAction?.isEmpty ?? true ? "" : widget.data.notificationAction!,
+                            title2: !showActions || (widget.data.notificationAction?.isEmpty ?? true)
+                                ? null
+                                : widget.data.notificationAction!,
                             style1: wayaTheme.textTheme.mediumDescriptionStyle.copyWith(
                               fontSize: 12.sp,
                             ),

@@ -95,6 +95,7 @@ import 'package:wayagram/features/polls_and_voting/views/poll_summary.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/views/share_voting_link.dart';
 import 'package:wayagram/features/post/view/edit_post.dart';
+import 'package:wayagram/features/post/view/full_comment_details.dart';
 import 'package:wayagram/features/post/view/single_post.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
@@ -450,7 +451,12 @@ class WayaAppRoutes {
     TopSellingList.route: () => TopSellingList(),
     VerifyTransactionIdentity.route: () => VerifyTransactionIdentity(),
     TwoFactorAuth.route: () => TwoFactorAuth(email: WayaNav.search["email"].toString()),
-    SinglePost.route: () => SinglePost(postId: WayaNav.search["postId"].toString())
+    SinglePost.route: () => SinglePost(postId: WayaNav.search["postId"].toString()),
+    CommentDetailsScreen.route: () => CommentDetailsScreen(
+          id: WayaNav.search["id"].toString(),
+          postId: WayaNav.search["post"].toString(),
+          source: WayaNav.search["id"].toString(),
+        ),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -593,6 +599,9 @@ class WayaAppRoutes {
   static String getEventInviteScreen(String id, String title) => "${EventInvite.route}?id=$id&title=$title";
 
   static String getSinglePostScreen(String postId) => "${SinglePost.route}?postId=$postId";
+
+  static String getCommentDetailsScreen(String id, String postId, [String? source]) =>
+      "${CommentDetailsScreen.route}?id=$id&post=$postId&source=$source";
 
   static String get2FaScreen(
     String email,
