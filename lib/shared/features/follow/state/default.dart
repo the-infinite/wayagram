@@ -1,5 +1,7 @@
 import 'package:wayagram/shared/features/follow/model/default.dart';
 
+typedef SuggestionModel = FollowModel;
+
 class FollowState {
   // Shared.
   final int limit;
@@ -25,6 +27,16 @@ class FollowState {
   final int followingTotalPages;
   final List<FollowModel> following;
 
+  // For suggested friends.
+  final List<SuggestionModel> suggestions;
+  final bool hasLoadedSuggestions;
+  final bool isLoadingSuggestions;
+  final bool suggestionsHasNextPage;
+  final int? suggestionsNextPage;
+  final int suggestionsPage;
+  final int suggestionsTotalSize;
+  final int suggestionsTotalPages;
+
   FollowState({
     // Shared.
     required this.limit,
@@ -49,6 +61,16 @@ class FollowState {
     required this.followingTotalSize,
     required this.followingTotalPages,
     required this.following,
+
+    // For suggestions.
+    required this.suggestions,
+    required this.hasLoadedSuggestions,
+    required this.isLoadingSuggestions,
+    required this.suggestionsHasNextPage,
+    required this.suggestionsNextPage,
+    required this.suggestionsPage,
+    required this.suggestionsTotalSize,
+    required this.suggestionsTotalPages,
   });
 
   static final initial = FollowState(
@@ -70,6 +92,14 @@ class FollowState {
     followingTotalSize: 0,
     followingTotalPages: 0,
     following: [],
+    suggestions: [],
+    hasLoadedSuggestions: false,
+    isLoadingSuggestions: false,
+    suggestionsHasNextPage: true,
+    suggestionsNextPage: 1,
+    suggestionsPage: 0,
+    suggestionsTotalSize: 0,
+    suggestionsTotalPages: 0,
   );
 
   List<String> get friends {
@@ -127,6 +157,14 @@ class FollowState {
     int? followingTotalSize,
     int? followingTotalPages,
     List<FollowModel>? following,
+    List<SuggestionModel>? suggestions,
+    bool? hasLoadedSuggestions,
+    bool? isLoadingSuggestions,
+    bool? suggestionsHasNextPage,
+    int? suggestionsNextPage,
+    int? suggestionsPage,
+    int? suggestionsTotalSize,
+    int? suggestionsTotalPages,
   }) {
     return FollowState(
       limit: limit ?? this.limit,
@@ -147,6 +185,14 @@ class FollowState {
       followingTotalSize: followingTotalSize ?? this.followingTotalSize,
       followingTotalPages: followingTotalPages ?? this.followingTotalPages,
       following: following ?? this.following,
+      suggestions: suggestions ?? this.suggestions,
+      hasLoadedSuggestions: hasLoadedSuggestions ?? this.hasLoadedSuggestions,
+      isLoadingSuggestions: isLoadingSuggestions ?? this.isLoadingSuggestions,
+      suggestionsHasNextPage: suggestionsHasNextPage ?? this.suggestionsHasNextPage,
+      suggestionsNextPage: suggestionsNextPage ?? this.suggestionsNextPage,
+      suggestionsPage: suggestionsPage ?? this.suggestionsPage,
+      suggestionsTotalSize: suggestionsTotalSize ?? this.suggestionsTotalSize,
+      suggestionsTotalPages: suggestionsTotalPages ?? this.suggestionsTotalPages,
     );
   }
 }
