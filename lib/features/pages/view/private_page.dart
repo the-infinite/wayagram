@@ -11,6 +11,10 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
+import 'package:wayagram/features/promotion/views/promote.dart';
+import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'edit_page_info.dart';
 import 'page_post.dart';
@@ -35,11 +39,15 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
   late final pageProvider = singlePageProvider("page-${widget.page.id}");
   late final notifier = ref.read(pageProvider.notifier);
   int _selectedIndex = 0;
+  PageModel? _thisPage;
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(pageProvider);
+
+    //? Return this component.
+    final page = wayaPageCache.getCachedData(widget.page.id) ?? _thisPage;
 
     //? Our component.
     return WayaScaffold(
@@ -89,6 +97,27 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                     color: wayaTheme.colorScheme.customBlack,
                   ),
                 ),
+                if (widget.page.ownerId == ConversationState.self.id)
+                  PopupMenuItem<int>(
+                    value: 0,
+                    onTap: () {
+                      WayaNav.goBack();
+                      WayaNav.toNamed(Promote.route, arguments: {
+                        "contentId": widget.page.id,
+                        "contentType": PromotionServiceType.page.name,
+                        "data": page
+                      });
+                    },
+                    child: WayaActionNav(
+                      context: context,
+                      asset: SvgPicture.asset(
+                        WayaAssets.icons.mFire.path,
+                        height: 20,
+                      ),
+                      text: "Promote Page",
+                      color: wayaTheme.colorScheme.customBlack,
+                    ),
+                  ),
                 PopupMenuItem<int>(
                   value: 1,
                   onTap: () async {

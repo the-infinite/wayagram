@@ -318,6 +318,7 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                   }),
                 ],
               )),
+          const Gap(20),
           Text('Page Type',
               style: TextStyle(
                 fontSize: 12.sp,

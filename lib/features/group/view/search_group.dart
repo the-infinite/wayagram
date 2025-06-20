@@ -53,7 +53,6 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
     });
 
     return WayaScaffold(
-      //isLoading: viewModel.isLoading,
       appBar: AppBar(
         leading: WayaBackButton(onTap: () => WayaNav.goBack()),
         title: WayaTextFormField(

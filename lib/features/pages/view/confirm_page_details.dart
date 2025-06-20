@@ -37,7 +37,6 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
     final viewModel = ref.watch(createPageProvider);
     final viewModel2 = ref.watch(createPageProvider.notifier);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
-    //final type  = ModalRoute.of(context)?.settings.arguments as String?;
     return WayaScaffold(
       title: "Confirm Details",
       isLoading: viewModel.isLoading,
@@ -54,7 +53,8 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                 args['type'] == 'Public Page' ? true : false,
                 (args['image'] as File).path,
                 (args['coverImage'] as File).path,
-                  viewModel.category
+                  viewModel.category,
+                //args['type'] == 'Public Page' ? false : true,
               );
               viewModel2.reset();
               WayaNav.goBack();
