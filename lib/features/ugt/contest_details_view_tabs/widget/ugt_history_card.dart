@@ -12,11 +12,13 @@ import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_detail
 class UgtHistoryCard extends ConsumerWidget {
   final ContestTransactionModel model;
   final int position;
+  final bool isPayout;
 
   // Construct.
   const UgtHistoryCard({
     required this.model,
     required this.position,
+    required this.isPayout,
     super.key,
   });
 
@@ -47,16 +49,16 @@ class UgtHistoryCard extends ConsumerWidget {
             title: Row(
               children: [
                 CircleAvatar(
-                  radius: 25, // You can adjust the size
+                  radius: 20, // You can adjust the size
                   backgroundColor: wayaTheme
                       .colorScheme.primary500, // Circle background color
                   child: Center(
                     child: Text(
                       model.type?.toUpperCase().substring(0, 1) ??
-                          "CO", // Initial
+                          "PA", // Initial
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -81,11 +83,19 @@ class UgtHistoryCard extends ConsumerWidget {
                       .copyWith(color: wayaTheme.colorScheme.greyColor400),
                 ),
                 //  Gap(5),
-                Text(
-                  "Commission :₦${formatMoney(model.commission?.toString() ?? '0')}",
-                  style: wayaTheme.textTheme.hintStyle
-                      .copyWith(color: wayaTheme.colorScheme.greyColor400),
-                ),
+                if (!isPayout)
+                  Text(
+                    "Commission :₦${formatMoney(model.commission?.toString() ?? '0')}",
+                    style: wayaTheme.textTheme.hintStyle
+                        .copyWith(color: wayaTheme.colorScheme.greyColor400),
+                  ),
+
+                if (isPayout)
+                  Text(
+                    "Status  : ${model.status?.toUpperCase() ?? 'N/A'}",
+                    style: wayaTheme.textTheme.hintStyle
+                        .copyWith(color: wayaTheme.colorScheme.greyColor400),
+                  ),
               ],
             ),
           ),

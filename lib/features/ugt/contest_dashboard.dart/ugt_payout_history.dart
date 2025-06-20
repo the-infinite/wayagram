@@ -19,8 +19,7 @@ class UgtPayoutHistory extends StatefulHookConsumerWidget {
   const UgtPayoutHistory({super.key});
 
   @override
-  ConsumerState<UgtPayoutHistory> createState() =>
-      _ManageStateContestState();
+  ConsumerState<UgtPayoutHistory> createState() => _ManageStateContestState();
 }
 
 class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
@@ -41,7 +40,6 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
       isScrollable: true,
       title: "Payout History",
       backgroundColor: Colors.white,
-    
       body: SingleChildScrollView(
         //  padding: EdgeInsets.all(),
         child: Column(
@@ -53,11 +51,10 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Overview", style: WayaTextStyles.bodyExtraMedium),
-               
               ],
             ),
             const Gap(20),
-            Row(
+            /*   Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildStatCard(
@@ -77,24 +74,24 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
                       color: Colors.white,
                     )),
               ],
-            ),
+            ), */
 
             SizedBox(height: 20),
 
-            if (dashboardVm.contestTransactionHistoryList.isEmpty)
-              emptyWidget(),
+            if (dashboardVm.contestPayoutHistoryList.isEmpty) emptyWidget(),
 
-            if (dashboardVm.contestTransactionHistoryList.isNotEmpty)
+            if (dashboardVm.contestPayoutHistoryList.isNotEmpty)
               ListView.builder(
                 // controller: _scrollController,
                 shrinkWrap: true,
-                itemCount: dashboardVm.contestTransactionHistoryList.length,
+                itemCount: dashboardVm.contestPayoutHistoryList.length,
                 itemBuilder: (context, index) {
-                  final post = dashboardVm.contestTransactionHistoryList[index];
+                  final post = dashboardVm.contestPayoutHistoryList[index];
                   return GestureDetector(
                     onTap: () {},
                     child: UgtHistoryCard(
                       model: post,
+                      isPayout: true,
                       position: index + 1,
                     ),
                   );

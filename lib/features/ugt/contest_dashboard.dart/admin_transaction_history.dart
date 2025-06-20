@@ -12,6 +12,7 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
@@ -50,7 +51,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
       isScrollable: true,
       title: "Transaction History",
       backgroundColor: Colors.white,
-      floatingActionButton: !DateTime.now().isAfter(
+      floatingActionButton: DateTime.now().isAfter(
               DateTime.parse(model?.endDate ?? "2096-01-01T00:00:00.000Z"))
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,6 +74,11 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                       arguments: {
                                         "id": model?.id ?? "",
                                         "Module": PayoutModule.contest,
+                                        "Model": PayoutReviewModel(
+                                            comission: "10",
+                                            amount: "20",
+                                            amountDue: "20",
+                                            endDate: model?.endDate ?? "")
                                       }));
                         }),
                   ),
@@ -205,6 +211,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                     child: UgtHistoryCard(
                       model: post,
                       position: index + 1,
+                      isPayout: false,
                     ),
                   );
                 },

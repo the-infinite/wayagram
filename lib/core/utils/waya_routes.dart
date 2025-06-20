@@ -83,6 +83,7 @@ import 'package:wayagram/features/pages/view/single_page_invitation.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/pages/view/user_page_invitation.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
@@ -291,7 +292,11 @@ class WayaAppRoutes {
     AddChoices.route: () => AddChoices(),
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
-    PollReview.route: () => PollReview(),
+    PollReview.route: () => PollReview(
+      id: WayaNav.search['id'].toString(),
+      module: WayaNav.search['Module'] as PayoutModule,
+      model: WayaNav.search['Model'] as PayoutReviewModel,
+    ),
     PageSetting.route: () => PageSetting(),
     PollRequestPayout.route: () => PollRequestPayout(),
     SearchGroupAndPage.route: () => SearchGroupAndPage(),
