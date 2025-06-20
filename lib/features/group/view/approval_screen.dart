@@ -129,7 +129,32 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  SizedBox(
+
+                                  InkWell(
+                                    onTap: () => request.approveRequest(context, '${group.id}'),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(color: wayaTheme.colorScheme.success)
+                                      ),
+                                      child: Icon(Icons.check, color: wayaTheme.colorScheme.success,
+                                      ),
+                                    ),
+                                  ),
+                                  Gap(10),
+                                  InkWell(
+                                    onTap: () => request.rejectRequest(context, '${group.id}'),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(color: wayaTheme.colorScheme.error)
+                                      ),
+                                      child: Icon(Icons.close, color: wayaTheme.colorScheme.error,
+                                      ),
+                                    ),
+                                  ),
+
+                                 /* SizedBox(
                                     width: 68.w,
                                     child: WayaButton(
                                       callback: () async => await request.approveRequest(context, '${group.id}'),
@@ -145,7 +170,6 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                                       textColor: wayaTheme.colorScheme.success,
                                     ),
                                   ),
-                                  Gap(10),
                                   SizedBox(
                                     width: 68.w,
                                     child: WayaButton(
@@ -161,7 +185,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                                       color: WayaColors.error50,
                                       textColor: wayaTheme.colorScheme.error,
                                     ),
-                                  ),
+                                  ),*/
                                 ],
                               ),
                             ),

@@ -85,6 +85,7 @@ import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/pages/view/user_page_invitation.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
 import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
@@ -288,6 +289,7 @@ class WayaAppRoutes {
     AddChoices.route: () => AddChoices(),
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
+    PollReview.route: () => PollReview(),
     PageSetting.route: () => PageSetting(),
     PollRequestPayout.route: () => PollRequestPayout(),
     SearchGroupAndPage.route: () => SearchGroupAndPage(),
@@ -547,7 +549,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
-  static String getPollDetailsPage(String id) => "${PollAndVoting.route}?id=$id";
+  static String getPollDetailsPage(String id) => "${SinglePollScreen.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
@@ -559,7 +561,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
-  static String getDonationDetailsPage(String id) => "${Donations.route}?id=$id";
+  static String getDonationDetailsPage(String id) => "${DonationDetails.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single bid's details screen.

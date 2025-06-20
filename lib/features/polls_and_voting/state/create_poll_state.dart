@@ -34,6 +34,10 @@ class CreatePollVotingState {
   final List<PollDashboardChoices> pollDashboardChoices;
   List<SinglePollModelDocs> singlePollDocs;
 
+
+  final String totalAmount;
+  final String wayaCommission;
+  final String dueAmount;
   final String moneyGenerated;
   final String voteCount;
   final String? accountType;
@@ -70,6 +74,9 @@ class CreatePollVotingState {
     TextEditingController? secondChoice,
     TextEditingController? firstChoiceDescription,
     TextEditingController? secondChoiceDescription,
+    this.totalAmount = '',
+    this.wayaCommission = '',
+    this.dueAmount = '',
     this.voteCount = '',
     this.moneyGenerated = '',
     this.numberOfPeopleVoted = '',
@@ -128,6 +135,9 @@ class CreatePollVotingState {
     TextEditingController? firstChoiceDescription,
     TextEditingController? secondChoiceDescription,
     List<DocType>? uploadedDocuments,
+    String? totalAmount,
+    String? wayaCommission,
+    String? dueAmount,
     String? moneyGenerated,
     String? voteCount,
     String? accountType,
@@ -180,6 +190,9 @@ class CreatePollVotingState {
         pollPayoutDocs: pollPayoutDocs ?? this.pollPayoutDocs,
         startDate: startDate ?? this.startDate,
         endDate: endDate ?? this.endDate,
+        totalAmount: totalAmount ?? this.totalAmount,
+        wayaCommission: wayaCommission ?? this.wayaCommission,
+        dueAmount: dueAmount ?? this.dueAmount,
         startDateString: startDateString ?? this.startDateString,
         endDateString: endDateString ?? this.endDateString,
         candidateImage: candidateImage ?? this.candidateImage,
