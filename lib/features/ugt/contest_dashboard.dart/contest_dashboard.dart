@@ -19,6 +19,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/pdf/contestant_pdf.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 
@@ -278,20 +279,22 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           height: 42,
                           text: "Request Payout",
                           callback: () async {
-                            ref
+
+                              WayaNav.toNamed('/admin-transaction-page');
+                            /* ref
                                 .read(credentialInputProvider.notifier)
                                 .onSubmitPayoutPin(() => WayaNav.toNamed(
                                         '/payoutVerification',
                                         arguments: {
                                           "id": model?.id ?? "",
                                           "Module": PayoutModule.contest,
-                                        }));
+                                        })); */
                           }),
                     ),
                   Gap(10),
                   GestureDetector(
                     onTap: () {
-                      WayaNav.toNamed('/admin-transaction-page');
+                      WayaNav.toNamed(UgtPayoutHistory.route);
                     },
                     child: Container(
                       //  margin: EdgeInsets.only(right: 20.w),
@@ -552,15 +555,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       );
                     },
                   ),
-                  /*   _buildProfileItem(context, "Obubra Imengie", true),
-                  Gap(10),
-                  _buildProfileItem(context, "Oluchi Obiano", true),
-                  Gap(10),
-                  _buildProfileItem(context, "Sadiya Wakil", true),
-                  Gap(10),
-                  _buildProfileItem(context, "Ibrahim Ahmad", true),
-                  Gap(10),
-                  _buildProfileItem(context, "Ibrahim Nasiru", true), */
+                
                 ],
               ),
             ),

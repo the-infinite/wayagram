@@ -5,10 +5,12 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/ugt/data/model/contest_transaction_model.dart';
 import 'package:wayagram/features/ugt/data/model/contestant_transaction_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 
 class UgtHistoryCard extends ConsumerWidget {
-  final Transaction model;
+  final ContestTransactionModel model;
   final int position;
 
   // Construct.
@@ -39,39 +41,52 @@ class UgtHistoryCard extends ConsumerWidget {
             leading: Text(
               "$position",
               overflow: TextOverflow.ellipsis,
-              style: wayaTheme.textTheme.bodyMedium!.copyWith(color: wayaTheme.colorScheme.black),
+              style: wayaTheme.textTheme.bodyMedium!
+                  .copyWith(color: wayaTheme.colorScheme.black),
             ),
             title: Row(
               children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(45), // Adjust the radius as needed
-                    child: WayaImage(
-                      imageUrl: "",
-                      height: 45,
-                      width: 45,
-                      fit: BoxFit.cover,
-                      radius: BorderRadius.circular(45),
-                    )
-
-                    /*    Image.network(
-                    contestantData.profilePhoto ?? "",
-                    height: 45,
-                    width: 45,
-                    fit: BoxFit
-                        .cover, // Ensures the image covers the area properly
-                  ), */
+                CircleAvatar(
+                  radius: 25, // You can adjust the size
+                  backgroundColor: wayaTheme
+                      .colorScheme.primary500, // Circle background color
+                  child: Center(
+                    child: Text(
+                      model.type?.toUpperCase().substring(0, 1) ??
+                          "CO", // Initial
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                  ),
+                ),
                 Gap(10),
                 Text(
-                  model.purpose ?? "",
+                  model.type ?? "",
                   overflow: TextOverflow.ellipsis,
-                  style: wayaTheme.textTheme.bodyMedium!.copyWith(color: wayaTheme.colorScheme.black),
+                  style: wayaTheme.textTheme.bodyMedium!
+                      .copyWith(color: wayaTheme.colorScheme.black),
                 ),
               ],
             ),
-            trailing: Text(
-              "₦${model.amount}",
-              style: wayaTheme.textTheme.hintStyle.copyWith(color: wayaTheme.colorScheme.greyColor400),
+            trailing: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  "Amount       :₦${formatMoney(model.totalAmount?.toString() ?? '0')}",
+                  style: wayaTheme.textTheme.hintStyle
+                      .copyWith(color: wayaTheme.colorScheme.greyColor400),
+                ),
+                //  Gap(5),
+                Text(
+                  "Commission :₦${formatMoney(model.commission?.toString() ?? '0')}",
+                  style: wayaTheme.textTheme.hintStyle
+                      .copyWith(color: wayaTheme.colorScheme.greyColor400),
+                ),
+              ],
             ),
           ),
           // const Gap(10)

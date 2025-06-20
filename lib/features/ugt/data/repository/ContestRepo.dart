@@ -13,15 +13,19 @@ class ContestRepo extends BaseRepository {
   //
   //   return post('$serviceUrl/contests/create',payLoad.toJson());
   // }
-    Future<WayaRequestResponse> requestPayout(String contestId) {
-    return post('$serviceUrl2/contest-payout', {"contestId": contestId}, formdata: false);
+  Future<WayaRequestResponse> requestPayout(String contestId) {
+    return post('$serviceUrl2/contest-payout', {"contestId": contestId},
+        formdata: false);
   }
 
-    Future<WayaRequestResponse> fetchTransactionHistory() {
+  Future<WayaRequestResponse> fetchTransactionHistory(String contestId) {
     return get(
-        '$serviceUrl2/contest-payout/get-transactions');
+        '$serviceUrl2/contest-payout/get-transactions?contestId=$contestId');
   }
 
+  Future<WayaRequestResponse> fetchPayoutHistory(String contestId) {
+    return get('$serviceUrl2/contest-payout/get-payouts?contestId=$contestId');
+  }
 
   Future<WayaRequestResponse> createContest(payLoad) {
     return post('$serviceUrl2/contests/create', payLoad, formdata: false);
@@ -144,10 +148,10 @@ class ContestRepo extends BaseRepository {
     return patch('$serviceUrl2/profile/accept-stage', payLoad, formdata: false);
   }
 
-    Future<WayaRequestResponse> acceptPaidStageContest(payLoad) {
-    return patch('$serviceUrl2/profile/pay-for-satge', payLoad, formdata: false);
+  Future<WayaRequestResponse> acceptPaidStageContest(payLoad) {
+    return patch('$serviceUrl2/profile/pay-for-satge', payLoad,
+        formdata: false);
   }
- 
 
   Future<WayaRequestResponse> fetchAllTotalEarningContest(
       String contestId, String filter) {
