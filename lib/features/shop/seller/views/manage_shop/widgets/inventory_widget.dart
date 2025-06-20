@@ -44,7 +44,7 @@ class InventoryWidget extends StatelessWidget {
             style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
               color: wayaTheme.colorScheme.greyColor400,
               fontSize: titlefontSize,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const Gap(10),
