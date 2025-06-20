@@ -208,6 +208,8 @@ class PageRepository extends BaseRepository {
     String coverImage,
     String profileImage,
       String category,
+    String category
+
   ) {
     final payload = {
       "name": pageName,
@@ -289,6 +291,10 @@ class PageRepository extends BaseRepository {
 
     return post("$serviceUrl/pages/invitations/$invitationId/reject", payload,
         showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getUserCategory() {
+    return get("$serviceUrl/interests/categories");
   }
 
   Future<WayaRequestResponse> inviteUserToPage(
