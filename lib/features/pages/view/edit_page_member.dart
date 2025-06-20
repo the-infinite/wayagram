@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/data/model/role_type.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class EditPageMemberInfo extends ConsumerStatefulWidget {
   final String id;
@@ -67,7 +68,7 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
 
             if (_formKey.currentState!.validate()) {
               //? If this went well.
-              if (await notifier.updateTeamMember(
+              if (await ref.read(createPageProvider.notifier).updateTeamMember(
                 context,
                 viewModel.roleType,
                 args['pageId'],

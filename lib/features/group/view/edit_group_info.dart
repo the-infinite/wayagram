@@ -30,7 +30,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
   late final groupProvider = singleGroupProvider("group-${widget.group.id}");
   late final notifier = ref.read(groupProvider.notifier);
   final valueController = ValueNotifier(false);
-  late String? image = widget.group.profileImage;
+  late String? editProfileImage = widget.group.profileImage;
   late String? editCoverImage = widget.group.coverImage;
   final _formKey = GlobalKey<FormState>();
 
@@ -109,7 +109,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                 viewModel.groupName.text,
                 viewModel.groupDescription.text,
                 sel ? false : true,
-                _selectedImage == null ? image! : (_selectedImage as File).path,
+                _selectedImage == null ? editProfileImage! : (_selectedImage as File).path,
                 _coverImage == null ? editCoverImage! : (_coverImage as File).path,
                 widget.group.id,
               );
@@ -159,7 +159,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                 top: 140,
                 right: 10,
                 child: IconButton(
-                  onPressed: _pickImage,
+                  onPressed: _pickCoverImage,
                   icon: Image.asset(
                     'assets/images/pages/cam.png',
                     height: 14.h,
@@ -174,7 +174,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                 left: 16.w,
                 bottom: -20.h,
                 child: GestureDetector(
-                  onTap: _pickCoverImage,
+                  onTap: _pickImage,
                   child: Stack(
                     children: [
                       CircleAvatar(
@@ -187,11 +187,11 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                                 backgroundColor: wayaTheme.colorScheme.greyColor200,
                                 backgroundImage: FileImage(_selectedImage!),
                               )
-                            : image != null
+                            : editProfileImage != null
                                 ? CircleAvatar(
                                     radius: 20,
                                     backgroundColor: wayaTheme.colorScheme.greyColor200,
-                                    backgroundImage: NetworkImage(image!),
+                                    backgroundImage: NetworkImage(editProfileImage!),
                                   )
                                 : Icon(
                                     Icons.person,

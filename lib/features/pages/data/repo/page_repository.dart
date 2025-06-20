@@ -207,15 +207,16 @@ class PageRepository extends BaseRepository {
     bool pageType,
     String coverImage,
     String profileImage,
-      String category
+      String category,
+    String category
+
   ) {
     final payload = {
       "name": pageName,
       "description": pageDesc,
-      "isPublic":
-          pageType, //Optional field, if you leave it blank it defaults to false
+      "isPublic": pageType, //Optional field, if you leave it blank it defaults to false
       "coverImage": coverImage,
-      "isOpen": pageType,
+      // "isOpen": isOpen,
       "profileImage": profileImage,
       "categories": [category]
     };
@@ -290,6 +291,10 @@ class PageRepository extends BaseRepository {
 
     return post("$serviceUrl/pages/invitations/$invitationId/reject", payload,
         showErrors: true);
+  }
+
+  Future<WayaRequestResponse> getUserCategory() {
+    return get("$serviceUrl/interests/categories");
   }
 
   Future<WayaRequestResponse> inviteUserToPage(

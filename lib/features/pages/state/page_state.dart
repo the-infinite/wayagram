@@ -22,6 +22,7 @@ class PageState {
   final List<PostModel>? getAllPost;
   final List<GetAllPostDocs>? getAllPagePost;
   final List<CommentModel>? comments;
+  final List<Select> categories;
   final List<PageFollowerDocs>? pageFollowerDocs;
   List<PageInvitationModelDocs>? pageInvitationModelDocs;
   final num? postCount;
@@ -72,6 +73,8 @@ class PageState {
     this.getPageMemberDocs = const [],
     this.recommendedPages = const [],
     this.getAllPagePost = const [],
+    this.category = '',
+    this.categories = const [],
     this.data,
     this.allPostData,
     this.shareModelData,
@@ -87,6 +90,7 @@ class PageState {
     TextEditingController? username,
     String? foundUserId,
     String? roleType,
+    List<Select>? categories,
     List<PageFollowerDocs>? pageFollowerDocs,
     List<PostImage>? images,
     List<GetAllPostDocs>? getAllPagePost,
@@ -103,6 +107,7 @@ class PageState {
     List<dynamic>? docs,
     MediaUploadData? data,
     num? postCount,
+    String? category,
     ShareModelData? shareModelData,
     GetAllPost? allPostData,
     bool? isFocused,
