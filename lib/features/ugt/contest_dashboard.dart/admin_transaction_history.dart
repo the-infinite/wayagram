@@ -75,9 +75,16 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                         "id": model?.id ?? "",
                                         "Module": PayoutModule.contest,
                                         "Model": PayoutReviewModel(
-                                            comission: "10",
-                                            amount: "20",
-                                            amountDue: "20",
+                                            comission: dashboardVm
+                                                .totalCommission
+                                                .toString(),
+                                            amount: dashboardVm.revenueGenerated
+                                                    ?.toString() ??
+                                                '0',
+                                            amountDue: dashboardVm
+                                                    .revenueGenerated
+                                                    ?.toString() ??
+                                                '0',
                                             endDate: model?.endDate ?? "")
                                       }));
                         }),
