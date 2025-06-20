@@ -575,7 +575,8 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
-  static String getWalletDetailsPage(String id) => "${BankTransferScreen.route}?id=$id";
+  static String getWalletDetailsPage(String id) =>
+      "${BankTransferScreen.route}?id=$id";
 
   /// Helper function used to generate the route tha tis supposed to take you to
   /// a single order's details screen.

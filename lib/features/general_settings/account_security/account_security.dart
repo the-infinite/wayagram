@@ -35,6 +35,9 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await _refreshData();
+    });
     super.initState();
   }
 

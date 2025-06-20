@@ -284,7 +284,8 @@ class Product extends BaseModel<Product> {
         condition: condition ?? this.condition,
         wayagramDeal: wayagramDeal ?? this.wayagramDeal,
         dealStatus: dealStatus ?? this.dealStatus,
-        wayagramDealRejectedReason: wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
+        wayagramDealRejectedReason:
+            wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
         approve: approve ?? this.approve,
         deliveryCharge: deliveryCharge ?? this.deliveryCharge,
         options: options ?? this.options,

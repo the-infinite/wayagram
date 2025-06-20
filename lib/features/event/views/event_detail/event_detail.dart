@@ -18,6 +18,7 @@ import 'package:wayagram/features/event/views/event_detail/event_detail_widget.d
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
