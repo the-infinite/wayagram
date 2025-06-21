@@ -17,9 +17,11 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/data/model/group_category_model.dart';
+import 'package:wayagram/features/group/data/model/media_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
 import 'package:wayagram/features/pages/data/model/page_invitation_model.dart';
+import 'package:wayagram/features/pages/data/model/page_media_model.dart';
 import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
@@ -1102,6 +1104,25 @@ class PageVm extends StateNotifier<PageState> {
     }
 
     return false;
+  }
+
+  Future<void> getPageMedia(String pageId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getPageMedia(pageId);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageMediaModel responseModel = PageMediaModel.fromJson(response.data);
+        state = state.copyWith(pageMediaModelDocs: responseModel.data?.docs);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
   }
 
 
