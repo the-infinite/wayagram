@@ -270,9 +270,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                               content: model?.categoryName ?? ""),
                           const Gap(20),
                           UpcomingWidgetAdmin(
-                              title: "Prize",
-                              content:
-                                  "${model?.winnerPrize}"),
+                              title: "Prize", content: "${model?.winnerPrize}"),
                           const Gap(20),
                           UpcomingWidgetAdmin(title: "Host", content: "Host"),
                         ],
@@ -314,6 +312,29 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     text: "View Profile",
                     textColor: wayaTheme.colorScheme.customPrimary,
                   ),
+                //? if user is not a host, has not registered for a contest, and not giving access to be a host
+                //? and registration is open
+                if (viewModelNotifier.getLoggedInUserId() != model?.profileId &&
+                    !canViewDashboard &&
+                    viewModel.createPostId.trim().isEmpty &&
+                    isTodayInRange(model?.participationStartDate ?? "",
+                        model?.participationEndDate ?? ""))
+                  WayaButton(
+                    callback: () {
+                      try {
+                        ref.read(selectedContestProvider.notifier).state =
+                            model;
+
+                        WayaNav.toNamed("/upcoming-contest-details");
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                    color: wayaTheme.colorScheme.primary50,
+                    text: "Contest Registration",
+                    textColor: wayaTheme.colorScheme.customPrimary,
+                  ),
+
                 /*  Text("View Full Details",
                     style: wayaTheme.textTheme.bodyMedium
                         ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),

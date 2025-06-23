@@ -8,6 +8,7 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 
@@ -161,11 +162,25 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     isLoading.value = false;
 
     if (response.success) {
-      WayaSnackBar.showToast(
+      WayaUtils.showModalSheetUgt(
+        context,
+        child: SuccessfulModal(
+            title: "Contest Registered Successfully",
+            subtitle:
+                "Your application has been sent for review. You will be notified once the review is complete. Once notified,Please go to Applied Contest Section under 'My Contest' to view your application status, and create a profile.",
+            showCopyLink: false,
+            buttonText: null,
+            onShareTap: () async {},
+            onTap: (_, __) {
+              // WayaNav.removeUntilNamed("/ugt-home");
+              WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
+            }),
+      );
+      /*  WayaSnackBar.showToast(
           "Application sent, Your Application is under review");
       Future.delayed(Duration(seconds: 1), () {
         WayaNav.removeAllUntil(UgtHome(), "/ugt-home");
-      });
+      }); */
     } else {
       WayaSnackBar.showToast(response.data["message"]);
     }
