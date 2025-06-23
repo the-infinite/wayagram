@@ -208,6 +208,10 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/pages", payload, showErrors: true);
   }
 
+  Future<WayaRequestResponse> getPageMedia(String pageId, [int page = 1, int limit = 15]) {
+    return get("$serviceUrl/posts/posts/media?status=active&orderBy=popularityScore&orderDirection=DESC&privacy=public&pageId=$pageId");
+  }
+
   Future<WayaRequestResponse> getUserCategory() {
     return get("$serviceUrl/interests/categories");
   }

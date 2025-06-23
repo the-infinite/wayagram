@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/group/widget/group_empty_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class TeamPage extends ConsumerStatefulWidget {
@@ -63,6 +64,7 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
             color: wayaTheme.colorScheme.primary50,
           ),
           const Gap(8),
+          viewModel.getPageMemberDocs!.isEmpty ? GroupPageEmptyState(text: 'No media yet'):
           ListView.builder(
               padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),

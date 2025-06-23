@@ -141,11 +141,13 @@ class PostModel extends BaseModel<PostModel> {
     );
   }
 
-  factory PostModel.fromJson(Map<String, dynamic> json) => _$PostModelFromJson(json);
+  factory PostModel.fromJson(Map<String, dynamic> json) =>
+      _$PostModelFromJson(json);
   Map<String, dynamic> toJson() => _$PostModelToJson(this);
 
+//? Using this for search implementation, pls don't remove
   @override
-  Map<String, dynamic> toMap() => toJson();
+  Map<String, dynamic> toMap() => {'hashtags': hashtags};
 }
 
 @JsonSerializable()
@@ -166,7 +168,8 @@ class BookmarkModel extends BaseModel<BookmarkModel> {
     required this.updatedAt,
   });
 
-  factory BookmarkModel.fromJson(Map<String, dynamic> json) => _$BookmarkModelFromJson(json);
+  factory BookmarkModel.fromJson(Map<String, dynamic> json) =>
+      _$BookmarkModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$BookmarkModelToJson(this);
 

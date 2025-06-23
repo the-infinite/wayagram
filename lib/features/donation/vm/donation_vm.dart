@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -22,6 +23,7 @@ import 'package:wayagram/features/donation/model/kyc_model.dart';
 import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_commission_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
@@ -43,6 +45,10 @@ class DonationVm extends StateNotifier<DonationState> {
 
   void reset() {
     state = DonationState();
+  }
+
+  void toggleTerm(bool? value) {
+    state = state.copyWith(isAgreeToTerm: value!);
   }
 
   void updateAmountRaised(bool value) {
@@ -127,6 +133,30 @@ class DonationVm extends StateNotifier<DonationState> {
       _logger.e(e);
     }
   }
+
+  Future<void> getPayoutCommission() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getPayoutCommission();
+      state = state.copyWith(isLoading: false);
+
+      if (response.success) {
+        PayoutCommissionModel responseModel =
+        PayoutCommissionModel.fromJson(response.data);
+        state = state.copyWith(commission: responseModel.data?.docs?[1].rate);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.polls,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
 
   Future<void> fetchDonationBasedOnCategory(String categoryName) async {
     try {

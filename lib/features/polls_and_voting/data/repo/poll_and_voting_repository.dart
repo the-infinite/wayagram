@@ -6,6 +6,7 @@ import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.d
 class PollAndVotingRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
   static const accountServiceUrl = WayaServiceUri.account;
+  static const walletServiceUrl = WayaServiceUri.wallet;
 
   Future<WayaRequestResponse> createPoll(dynamic data) {
     return post('$serviceUrl/client/polls', data,
@@ -96,6 +97,11 @@ class PollAndVotingRepository extends BaseRepository {
   Future<WayaRequestResponse> getDashboard(String pollId) {
     return get(
         "$serviceUrl/client/polls?orderBy=createdAt&orderDirection=DESC&id=$pollId");
+  }
+
+  Future<WayaRequestResponse> getPayoutCommission() {
+    return get(
+        "$walletServiceUrl/client/commission/commission-rates");
   }
 
   Future<WayaRequestResponse> getAllPollsById(String id) {
