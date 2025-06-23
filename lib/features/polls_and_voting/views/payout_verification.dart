@@ -15,8 +15,6 @@ import 'package:wayagram/features/general_settings/profile/data/model/profile_ed
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
 
-import '../../../core/utils/waya_utils.dart';
-
 enum PayoutModule { polls, contest, donation, event }
 
 class PayoutVerification extends ConsumerStatefulWidget {
@@ -27,8 +25,7 @@ class PayoutVerification extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PayoutVerificationState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PayoutVerificationState();
 }
 
 class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
@@ -44,12 +41,11 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
       if (args != null) {
         ProfileEditType type = args['type'] as ProfileEditType;
         if (type == ProfileEditType.email) {
+          ref.read(verifyAccountProvider.notifier).requestOtp(purpose: "CHANGE_OF_EMAIL", email: args['initial']);
+        } else {
           ref
               .read(verifyAccountProvider.notifier)
-              .requestOtp(purpose: "CHANGE_OF_EMAIL", email: args['initial']);
-        } else {
-          ref.read(verifyAccountProvider.notifier).requestOtp(
-              purpose: "CHANGE_OF_PHONE", phone: "234${args['initial']}");
+              .requestOtp(purpose: "CHANGE_OF_PHONE", phone: "234${args['initial']}");
         }
       }
 
@@ -161,21 +157,18 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                         });
                         startCountdown();
                         if (args != null) {
-                          ProfileEditType type =
-                              args['type'] as ProfileEditType;
+                          ProfileEditType type = args['type'] as ProfileEditType;
                           if (type == ProfileEditType.email) {
-                            ref.read(verifyAccountProvider.notifier).requestOtp(
-                                purpose: "CHANGE_OF_EMAIL",
-                                email: args['initial']);
+                            ref
+                                .read(verifyAccountProvider.notifier)
+                                .requestOtp(purpose: "CHANGE_OF_EMAIL", email: args['initial']);
                           } else {
-                            ref.read(verifyAccountProvider.notifier).requestOtp(
-                                purpose: "CHANGE_OF_PHONE",
-                                phone: "234${args['initial']}");
+                            ref
+                                .read(verifyAccountProvider.notifier)
+                                .requestOtp(purpose: "CHANGE_OF_PHONE", phone: "234${args['initial']}");
                           }
                         } else {
-                          ref
-                              .read(verifyAccountProvider.notifier)
-                              .requestEmailOtp();
+                          ref.read(verifyAccountProvider.notifier).requestEmailOtp();
                         }
                         viewModel.resendOtp();
                       }
@@ -185,8 +178,7 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                          color: wayaTheme.colorScheme.primary75,
-                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                          color: wayaTheme.colorScheme.primary75, borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Text(
                         "Resend OTP",
                         style: WayaTextStyles.smallActiveLinkStyle,
@@ -211,8 +203,7 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                             style: WayaTextStyles.bodySmall,
                           ),
                           TextSpan(
-                            text:
-                                "Resend ${countDown ~/ 60}:${(countDown % 60).toString().padLeft(2, '0')}",
+                            text: "Resend ${countDown ~/ 60}:${(countDown % 60).toString().padLeft(2, '0')}",
                             style: WayaTextStyles.smallActiveLinkStyle,
                           ),
                         ],
@@ -230,13 +221,12 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                 ? () {
                     final code = ref.watch(verifyAccountProvider).inputCode;
                     viewModel.verifyPayout(
-                      onSuccess: (){
-                        WayaNav.to(PollReview(
-                            id: '${args['id']}',
-                            module: args['Module'] as PayoutModule,
-                            model: args['Model'] as PayoutReviewModel));
-                      },
-
+                        onSuccess: () {
+                          WayaNav.to(PollReview(
+                              id: '${args['id']}',
+                              module: args['Module'] as PayoutModule,
+                              model: args['Model'] as PayoutReviewModel));
+                        },
                         code: code,
                         email: '${ConversationState.self.email}');
                   }
