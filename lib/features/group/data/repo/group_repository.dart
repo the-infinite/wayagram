@@ -1,7 +1,6 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 
 class GroupRepository extends BaseRepository {
   static const serviceUrl = WayaServiceUri.graph;
@@ -120,11 +119,16 @@ class GroupRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> joinRequest(String groupId) {
-    return get("$serviceUrl/groups/join-requests/$groupId?rstatus=pending&userId=${ConversationState.self.id}", showErrors: true);
+    return get("$serviceUrl/groups/join-requests/$groupId?rstatus=pending", showErrors: true);
+    //return get("$serviceUrl/groups/join-requests/$groupId?rstatus=pending&userId=${ConversationState.self.id}", showErrors: true);
   }
 
   Future<WayaRequestResponse> getJoinedGroup([int page = 1, int limit = 15]) {
     return get("$serviceUrl/groups/joined-groups?page=$page&orderBy=createdAt&orderDirection=DESC&limit=$limit");
+  }
+
+  Future<WayaRequestResponse> getGroupMedia(String groupId,[int page = 1, int limit = 15]) {
+    return get("$serviceUrl/posts/posts/media?status=active&orderBy=popularityScore&orderDirection=DESC&privacy=public&groupId=$groupId");
   }
 
   Future<WayaRequestResponse> reportGroup(String groupId, String reason) {

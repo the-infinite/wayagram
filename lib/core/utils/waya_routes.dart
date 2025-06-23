@@ -84,6 +84,7 @@ import 'package:wayagram/features/pages/view/single_page_invitation.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/pages/view/user_page_invitation.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
@@ -146,6 +147,7 @@ import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disq
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_leaderboard_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/view_single_contestant_data.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
@@ -278,6 +280,7 @@ class WayaAppRoutes {
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
+    UgtPayoutHistory.route: () => UgtPayoutHistory(),
     WayaSocialNotificationsScreen.route: () => WayaSocialNotificationsScreen(),
     ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
     AdminTransactionHistory.route: () => AdminTransactionHistory(),
@@ -292,7 +295,11 @@ class WayaAppRoutes {
     AddChoices.route: () => AddChoices(),
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
-    PollReview.route: () => PollReview(),
+    PollReview.route: () => PollReview(
+      id: WayaNav.search['id'].toString(),
+      module: WayaNav.search['Module'] as PayoutModule,
+      model: WayaNav.search['Model'] as PayoutReviewModel,
+    ),
     PageSetting.route: () => PageSetting(),
     PollRequestPayout.route: () => PollRequestPayout(),
     SearchGroupAndPage.route: () => SearchGroupAndPage(),

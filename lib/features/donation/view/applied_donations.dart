@@ -42,13 +42,11 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    //final wayaTheme = Theme.of(context);
-    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
     
     return
       viewModel.appliedDonationDocs?.isEmpty ?? true ? DonationEmptyState()
           :SizedBox(
-        height: 560.h,
+        height: 530.h,
             child: ListView.builder(
                     physics: const AlwaysScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -98,127 +96,6 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
                     }
                 ),
           );
-   /* return Column(
-      children: [
-        Expanded(
-          child: PaginatedDataView<AllDonationDocs>(
-              uniqueKey: 'applied-donations',
-              loadingState: SizedBox(
-                  height: context.height * 0.4,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  )),
-              emptyState: ActivityLogsEmptyState(text: 'There is no applied donations yet'),
-              fetchData: ref.read(donationVmProvider.notifier).getDonatedDonation,
-              result: (data, s) {
-                return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: viewModel.appliedDonationDocs?.length,
-                    itemBuilder: (context, index){
-                      final donation = viewModel.appliedDonationDocs?[index];
-                      int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
-                      int amountRaised = double.parse('${donation?.amountRaised}').toInt();
-
-                      int targetedAmount = double.parse('${donation?.targetAmount}').toInt();
-
-                      double ratioLeft = amountRaised / targetedAmount;
-
-                      return ManageDonationWidget(
-                        text:  "Donate",
-                        amountRaised:  WayaHelpers.formatPrice(int.parse('${donation?.amountRaised?.replaceAll('.00', '')}')),
-                        targetAmount: WayaHelpers.formatPrice(int.parse('${donation?.targetAmount?.replaceAll('.00', '')}')),
-                        title: donation?.title?.capitalizeFirst,
-                        image: donation?.imageURL,
-                        dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
-                        donationCount: donation?.donationCount,
-                        rangeRatio: ratioLeft,
-                        onTap: (){
-                          WayaNav.toNamed('/donationDetails',
-                              arguments: {
-                                'title':'${donation?.title?.capitalizeFirst}',
-                                'image':'${donation?.imageURL}',
-                                'amountRaised': '${donation?.amountRaised?.replaceAll('.00', '')}',
-                                'targetAmount': '${donation?.targetAmount?.replaceAll('.00', '')}',
-                                'desc': '${donation?.description}',
-                                'solution': '${donation?.solution}',
-                                'impact': '${donation?.impact}',
-                                'url': '${donation?.url}',
-                                'minimumDonationAmount':'${donation?.minimumDonationAmount}',
-                                'daysLeft':'$daysLeft',
-                                'privacy':'${donation?.privacy}',
-                                'id': '${donation?.id}',
-                                'donationCount': '${donation?.donationCount}'
-
-                              });
-                        },
-                        buttonWidth: 60.0,
-                      );
-                    }
-                );
-              }),
-        ),
-      ],
-    );*/
-
-  /*  return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        filteredMyDonations.isEmpty ? ActivityLogsEmptyState(text: 'There is no applied donations yet'):
-        SizedBox(
-          height: Platform.isAndroid ? 560 : 460,
-          child: ListView.builder(
-              //physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: filteredMyDonations.length,
-              itemBuilder: (context, index) {
-                final donation = filteredMyDonations[index];
-                int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
-
-                int amountRaised = double.parse('${donation.amountRaised}').toInt();
-
-                int targetedAmount = double.parse('${donation.targetAmount}').toInt();
-
-                double ratioLeft = amountRaised / targetedAmount;
-                return AppliedDonationWidget(
-                    onTap: ()async{
-                      await WayaUtils.showModalSheet(context,
-                          child: ApplicationStatus(
-                            causeTitle: '${donation.title?.capitalizeFirst}',
-                            solution: '${donation.solution}',
-                            desc: '${donation.description}',
-                            startDate: ref.read(createPollVotingProvider.notifier).formatDonationDate('${donation.startDate}'),
-                            endDate: ref.read(createPollVotingProvider.notifier).formatDonationDate('${donation.expirationDate}'),
-                            targetAmount:'${donation.targetAmount?.replaceAll('.00', '')}',
-                            amountRaised: '${donation.amountRaised?.replaceAll('.00', '')}',
-                            status: donation.status == 'pending_approval'?'Pending':donation.status =='approved'?'Accepted':'Rejected',
-                            privacy: '${donation.privacy}',
-                            showRaised: donation.showRaised == true?'YES':'NO',
-                            url: '${donation.url}',
-                            image: '${donation.imageURL}',
-                            id: '${donation.id}',
-                            donationCount: donation.donationCount,
-                            daysLeft: daysLeft,
-                            impact: '${donation.impact}',
-                            minimumDonationAmount: '${donation.minimumDonationAmount}',
-                            ratioLeft: ratioLeft,
-                          ));
-                    },
-                    privacy: '${donation.privacy?.capitalizeFirst}',
-                    title: '${donation.title}',
-                    status: donation.status == 'pending_approval'?'Pending':donation.status =='approved'?'Accepted':'Rejected',
-                    image: '${donation.imageURL}',
-                    targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
-                    startDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.startDate}'),
-                    endDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.expirationDate}'),
-                    color:donation.status == 'pending_approval'? WayaColors.pendingColor: donation.status =='approved'? WayaColors.success50: WayaColors.error50,
-                    textColor:donation.status == 'pending_approval'? WayaColors.pendingColor2 :donation.status =='approved'? WayaColors.success: WayaColors.error,
-                  );
-
-              }),
-        ),
-      ],
-    );*/
   }
 }
 
@@ -234,7 +111,7 @@ class DonationEmptyState extends StatelessWidget {
         child: EmptyState(
             hasButton: false,
             onTap: () {
-              //WayaNav.toNamed(CreatePost.route);
+
             },
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,

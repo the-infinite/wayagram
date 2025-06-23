@@ -167,7 +167,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   donationCount: donation.donationCount,
                   rangeRatio: ratioLeft,
                   onTap: (){
-                    debugPrint('MY RATIO $ratioLeft');
+                    debugPrint('MY RATIO $daysLeft');
                     WayaNav.toNamed('/donationDetails',
                         arguments: {
                           'title':'${donation.title?.capitalizeFirst}',
@@ -268,21 +268,15 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                     children: [
                       WayaButton(
                         callback: () {
-
-
-                          ref.read(donationVmProvider.notifier)
-                              .updateSelectedCategory(donation);
+                          ref.read(donationVmProvider.notifier).updateSelectedCategory(donation);
                           ref.read(donationVmProvider.notifier).fetchDonationBasedOnCategory(donation.label);
-
                           },
                         border: Border.all(
-                            color:
-                            viewModel.selected.contains(donation.value)
+                            color: viewModel.selected.contains(donation.value)
                              ? wayaTheme.colorScheme.primary50 :
                             wayaTheme.colorScheme.greyColor300),
                         horizontalPadding: 8,
-                        color:
-                        viewModel.selected.contains(donation.value)
+                        color: viewModel.selected.contains(donation.value)
                          ? wayaTheme.colorScheme.primary50 :
                         wayaTheme.colorScheme.transparent,
                         radius: 10,

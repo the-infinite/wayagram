@@ -143,7 +143,7 @@ class _VerifyAccountState extends ConsumerState<VerifyAccount> {
                             countDown = 60;
                           });
                           startCountdown();
-                         viewModel.resendOtp();
+                         viewModel.resend2faOtp(email: widget.email);
                         }
                       },
                       child: Container(
