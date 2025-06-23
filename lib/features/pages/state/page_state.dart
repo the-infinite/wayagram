@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
 import 'package:wayagram/features/pages/data/model/page_invitation_model.dart';
+import 'package:wayagram/features/pages/data/model/page_media_model.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
@@ -22,11 +23,12 @@ class PageState {
   final List<PostModel>? getAllPost;
   final List<GetAllPostDocs>? getAllPagePost;
   final List<CommentModel>? comments;
+  final List<Select> categories;
   final List<PageFollowerDocs>? pageFollowerDocs;
   List<PageInvitationModelDocs>? pageInvitationModelDocs;
+  List<PageMediaModelDocs>? pageMediaModelDocs;
   final num? postCount;
   final String category;
-  final List<Select> categories;
   final GetAllPost? allPostData;
   List<PageModel>? recommendedPages;
   List<PageModel>? allPageModelDocs;
@@ -61,6 +63,7 @@ class PageState {
     this.images = const [],
     this.fetchAllPostData = const [],
     this.comments = const [],
+    this.pageMediaModelDocs = const [],
     this.pageFollowerDocs = const [],
     this.pagePopularPostDocs = const [],
     this.pageInvitationModelDocs = const [],
@@ -87,10 +90,12 @@ class PageState {
     TextEditingController? username,
     String? foundUserId,
     String? roleType,
+    List<Select>? categories,
     List<PageFollowerDocs>? pageFollowerDocs,
     List<PostImage>? images,
     List<GetAllPostDocs>? getAllPagePost,
     List<PostModel>? fetchAllPostData,
+    List<PageMediaModelDocs>? pageMediaModelDocs,
     List<PageInvitationModelDocs>? pageInvitationModelDocs,
     List<PostModel>? getAllPost,
     List<PageModel>? recommendedPages,
@@ -98,7 +103,6 @@ class PageState {
     List<GetPageMemberDocs>? getPageMemberDocs,
     List<PostModel>? pagePopularPostDocs,
     List<CommentModel>? comments,
-    List<Select>? categories,
     String? category,
     List<dynamic>? docs,
     MediaUploadData? data,
@@ -122,6 +126,7 @@ class PageState {
       data: data ?? this.data,
       category: category ?? this.category,
       categories: categories ?? this.categories,
+      pageMediaModelDocs: pageMediaModelDocs ?? this.pageMediaModelDocs,
       pageInvitationModelDocs: pageInvitationModelDocs ?? this.pageInvitationModelDocs,
       pageFollowerDocs: pageFollowerDocs ?? this.pageFollowerDocs,
       postCount: postCount ?? this.postCount,

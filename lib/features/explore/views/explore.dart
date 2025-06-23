@@ -7,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
@@ -21,12 +22,15 @@ import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
+import 'package:wayagram/shared/features/location/vm/default.dart';
+import 'package:wayagram/shared/features/follow/widget/default.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
 import 'package:wayagram/shared/features/profile/view/donations.dart';
@@ -45,6 +49,8 @@ class Explore extends ConsumerStatefulWidget {
 }
 
 class _ExploreState extends ConsumerState<Explore> {
+  final suggestedFriendsHandler = WayaObservableScrollController();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -52,12 +58,13 @@ class _ExploreState extends ConsumerState<Explore> {
       //ref.read(successfulSetupVmProvider.notifier).getUserData();
       //>
 
-      // ref.read(regionsProvider.notifier).getCurrentCountry();
-      // ref.read(selectInterestProvider.notifier).getUserInterest();
-      // ref.read(shopVmProvider.notifier).allCategories(1);
-      // ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
-      // ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
-      // ref.read(cartVmProvider.notifier).loadCart();
+      ref.read(regionsProvider.notifier).getCurrentCountry();
+      ref.read(selectInterestProvider.notifier).getUserInterest();
+      ref.read(shopVmProvider.notifier).allCategories(1);
+      ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
+      ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
+       ref.read(exploreVmProvider.notifier).getUserFeeds();
+      ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
   }
@@ -134,8 +141,7 @@ class _ExploreState extends ConsumerState<Explore> {
           SharedMoments(),
           const Gap(25),
           GroupedWidgetHeader(
-            onTap: () =>
-                WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
+            onTap: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
             subTitle: 'Have a buy request, just create a quote',
             title: 'Get Quotation',
           ),
@@ -174,8 +180,7 @@ class _ExploreState extends ConsumerState<Explore> {
           //? For the next section.
           GroupedWidgetHeader(
               onTap: () {
-                WayaNav.toNamed(BottomView.route,
-                    arguments: 1, preventDuplicates: false);
+                WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
               },
               subTitle: 'Explore Categories & Best Offers',
               title: 'Shop'),
@@ -183,9 +188,7 @@ class _ExploreState extends ConsumerState<Explore> {
           CategoriesFilterWidget(setCategory: (value) {
             ref.read(shopVmProvider.notifier).setCategory(value);
             for (String categoryId in value) {
-              ref
-                  .read(productEngagementProvider.notifier)
-                  .addCategory(categoryId, ProductPoint.searchPoint.value);
+              ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
             }
           }),
           const Gap(25),
@@ -198,12 +201,16 @@ class _ExploreState extends ConsumerState<Explore> {
           const Gap(25),
           GroupedWidgetHeader(
             onTap: () => WayaNav.toNamed(DisplayFeed.route),
-            subTitle:
-                'Explore content based on your interests and interactions.',
+            subTitle: 'Explore content based on your interests and interactions.',
             title: 'Discover',
           ),
           const Gap(25),
           SharedPosts(),
+          const Gap(25),
+          SharedSuggestedFriendsWidget(
+            isExpanded: false,
+            handler: suggestedFriendsHandler,
+          ),
           const Gap(25),
           GroupedWidgetHeader(
             onTap: () => WayaNav.toNamed(Donations.route),
@@ -306,8 +313,7 @@ class _ExploreState extends ConsumerState<Explore> {
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () =>
-              WayaUtils.showModalSheet(context, child: CreateSheet()),
+          callback: () => WayaUtils.showModalSheet(context, child: CreateSheet()),
           height: 50,
           centerWidget: Center(
             child: Icon(

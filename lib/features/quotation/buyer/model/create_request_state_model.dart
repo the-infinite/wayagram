@@ -14,13 +14,8 @@ class CreateRequestState {
   final TextEditingController deliveryAddress;
   final TextEditingController deliveryPrice;
   final TextEditingController quantity;
-  final TextEditingController minDistance;
-  final TextEditingController maxDistance;
   final TextEditingController bidStartingAmount;
   final TextEditingController maxBidAmount;
-  final double rangeStart;
-  final double rangeEnd;
-
   final bool vendorSeeBuyRequest;
   final bool skipAddress;
   final bool includeDeliveryFee;
@@ -56,8 +51,6 @@ class CreateRequestState {
     TextEditingController? pricePerUnit,
     TextEditingController? deliveryAddress,
     TextEditingController? deliveryPrice,
-    this.rangeStart = 0.1,
-    this.rangeEnd = 0.7,
     this.productCategory = '',
     this.productColor = '',
     this.productCondition = '',
@@ -95,8 +88,6 @@ class CreateRequestState {
         deliveryAddress = deliveryAddress ?? TextEditingController(),
         deliveryPrice = deliveryPrice ?? TextEditingController(),
         quantity = quantity ?? TextEditingController(),
-        minDistance = minDistance ?? TextEditingController(),
-        maxDistance = maxDistance ?? TextEditingController(),
         bidStartingAmount = bidStartingAmount ?? TextEditingController(),
         maxBidAmount = maxBidAmount ?? TextEditingController();
 
@@ -107,14 +98,10 @@ class CreateRequestState {
     ValueNotifier<TimeOfDay?>? startTime,
     ValueNotifier<TimeOfDay?>? endTime,
     ValueNotifier<DateTime?>? bidDate,
-    double? rangeStart,
-    double? rangeEnd,
     TextEditingController? pricePerUnit,
     TextEditingController? deliveryAddress,
     TextEditingController? deliveryPrice,
     TextEditingController? quantity,
-    TextEditingController? minDistance,
-    TextEditingController? maxDistance,
     TextEditingController? bidStartingAmount,
     TextEditingController? maxBidAmount,
     String? productCategory,
@@ -142,8 +129,6 @@ class CreateRequestState {
     File? productImage,
   }) {
     return CreateRequestState(
-      rangeEnd: rangeEnd ?? this.rangeEnd,
-      rangeStart: rangeStart ?? this.rangeStart,
       productName: productName ?? this.productName,
       brandName: brandName ?? this.brandName,
       productDescription: productDescription ?? this.productDescription,
@@ -162,8 +147,6 @@ class CreateRequestState {
       biddingStartTime: biddingStartTime ?? this.biddingStartTime,
       productType: productType ?? this.productType,
       quantity: quantity ?? this.quantity,
-      minDistance: minDistance ?? this.minDistance,
-      maxDistance: maxDistance ?? this.maxDistance,
       bidStartingAmount: bidStartingAmount ?? this.bidStartingAmount,
       maxBidAmount: maxBidAmount ?? this.maxBidAmount,
       pickUpOption: pickUpOption ?? this.pickUpOption,

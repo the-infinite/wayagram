@@ -4,12 +4,15 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/bottom_sheets/share/social_share.dart';
 import 'package:wayagram/features/event/data/model/event_setting_response.dart';
 import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
+import 'package:wayagram/features/event/data/model/payout_response_model.dart';
+import 'package:wayagram/features/event/data/model/transaction_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -132,6 +135,71 @@ class EventVm extends StateNotifier<EventState> {
       isUserEvent: null,
       attendees: [],
     );
+  }
+
+  Future<List<Payout>?> getEventPayouts({required String eventId}) async {
+    try {
+      final response = await _eventRepository.getPayouts(eventId);
+      List<Payout> payout = [];
+      if (response.success) {
+        PayoutResponse payoutResponse = PayoutResponse.fromJson(response.data);
+
+        payout = payoutResponse.data.docs;
+      }
+      return payout;
+    } catch (e) {
+      debugPrint(e.toString());
+
+      return null;
+    }
+  }
+
+  Future<List<TransactionDoc>?> getEventTransactions(
+      {required String eventId}) async {
+    try {
+      final response = await _eventRepository.getPayoutTransactions(eventId);
+      List<TransactionDoc> transactions = [];
+      if (response.success) {
+        TransactionPayoutResponse payoutResponse =
+            TransactionPayoutResponse.fromJson(response.data);
+
+        transactions = payoutResponse.data.docs;
+      }
+
+      return transactions;
+    } catch (e) {
+      debugPrint(e.toString());
+
+      return null;
+    }
+  }
+
+  Future<void> requestForEventPayout(ctx, String eventId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _eventRepository.requestForEventPayout(eventId);
+      state = state.copyWith(isLoading: false);
+      WayaNav.goBack();
+      if (response.success && ctx.mounted) {
+        WayaNav.replaceNamed(WayaAppRoutes.getSingleEventDashboard(eventId));
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Payout request was sent successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.events,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   Future<PaginatedResult<EventDoc>?> getUserEvents({required int page}) async {
@@ -361,7 +429,7 @@ class EventVm extends StateNotifier<EventState> {
 
     //? This is fine.
     if (response.success) {
-        return EventSettingResponse.fromJson(response.data['data']);
+      return EventSettingResponse.fromJson(response.data['data']);
     }
 
     //? Return null if empty
@@ -412,8 +480,10 @@ class EventVm extends StateNotifier<EventState> {
       final response = await _eventRepository.getSingleEvent(id);
 
       if (response.success) {
+        print("fwefwfw, eventId- $id , ${response.data}");
         SingleEventResponse eventResponse =
             SingleEventResponse.fromJson(response.data);
+        print("ewfwef fetching event");
         state = state.copyWith(singleEvent: eventResponse.data);
         return eventResponse.data;
       }

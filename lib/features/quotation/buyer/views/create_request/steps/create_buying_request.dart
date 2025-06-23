@@ -6,7 +6,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/shared/features/location/vm/default.dart';
 
@@ -39,7 +38,6 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createRequestProvider);
     final regionsData = ref.watch(regionsProvider);
-    final labels = RangeLabels(values.start.toString(), values.end.toString());
 
     //? The components.
     return PopScope(
@@ -410,126 +408,126 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 const Gap(10),
 
                 //? Our range controls.
-                RangeSlider(
-                  values: values,
-                  min: viewModel.rangeStart,
-                  max: viewModel.rangeEnd,
-                  divisions: 10,
-                  labels: labels,
-                  onChanged: (newValues) {
-                    setState(() {
-                      values = newValues;
-                    });
-                  },
-                ),
+                // RangeSlider(
+                //   values: values,
+                //   min: viewModel.rangeStart,
+                //   max: viewModel.rangeEnd,
+                //   divisions: 10,
+                //   labels: labels,
+                //   onChanged: (newValues) {
+                //     setState(() {
+                //       values = newValues;
+                //     });
+                //   },
+                // ),
 
                 //? Distance controls
-                Row(
-                  spacing: 10,
-                  children: [
-                    //? Minimum distance.
-                    Expanded(
-                      child: FormField<String>(
-                        validator: (value) {
-                          if (viewModel.minDistance.text.isEmpty) {
-                            return 'Min Distance is required';
-                          }
-                          return null;
-                        },
-                        builder: (formState) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              WayaTextFormField(
-                                keyboardType: TextInputType.number,
-                                controller: viewModel.minDistance,
-                                hintText: 'Min Distance',
-                                borderColor: formState.hasError && viewModel.minDistance.text.isEmpty
-                                    ? wayaTheme.colorScheme.error
-                                    : null,
-                                label: '',
-                                onChanged: (value) {
-                                  debounce(
-                                    () {
-                                      notifier.setRangeStart(double.tryParse(value.trim().replaceAll(',', '')) ?? 0.1);
-                                    },
-                                    key: 'quotation-range-start',
-                                    delay: const Duration(milliseconds: 800),
-                                  );
-                                },
-                                suffixIcon: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                  child: Text("Km", style: wayaTheme.textTheme.hintStyle),
-                                ),
-                              ),
+                // Row(
+                //   spacing: 10,
+                //   children: [
+                //? Minimum distance.
+                //     Expanded(
+                //       child: FormField<String>(
+                //         validator: (value) {
+                //           if (viewModel.minDistance.text.isEmpty) {
+                //             return 'Min Distance is required';
+                //           }
+                //           return null;
+                //         },
+                //         builder: (formState) {
+                //           return Column(
+                //             crossAxisAlignment: CrossAxisAlignment.start,
+                //             children: [
+                //               WayaTextFormField(
+                //                 keyboardType: TextInputType.number,
+                //                 controller: viewModel.minDistance,
+                //                 hintText: 'Min Distance',
+                //                 borderColor: formState.hasError && viewModel.minDistance.text.isEmpty
+                //                     ? wayaTheme.colorScheme.error
+                //                     : null,
+                //                 label: '',
+                //                 onChanged: (value) {
+                //                   debounce(
+                //                     () {
+                //                       notifier.setRangeStart(double.tryParse(value.trim().replaceAll(',', '')) ?? 0.1);
+                //                     },
+                //                     key: 'quotation-range-start',
+                //                     delay: const Duration(milliseconds: 800),
+                //                   );
+                //                 },
+                //                 suffixIcon: Padding(
+                //                   padding: EdgeInsets.symmetric(vertical: 15),
+                //                   child: Text("Km", style: wayaTheme.textTheme.hintStyle),
+                //                 ),
+                //               ),
 
-                              // Error.
-                              if (formState.hasError && viewModel.minDistance.text.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
-                                  ),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
+                //               // Error.
+                //               if (formState.hasError && viewModel.minDistance.text.isEmpty)
+                //                 Padding(
+                //                   padding: const EdgeInsets.only(top: 5),
+                //                   child: Text(
+                //                     formState.errorText!,
+                //                     style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                //                   ),
+                //                 ),
+                //             ],
+                //           );
+                //         },
+                //       ),
+                //     ),
 
-                    //? Maximum distance.
-                    Expanded(
-                      child: FormField<String>(
-                        validator: (value) {
-                          if (viewModel.minDistance.text.isEmpty) {
-                            return 'Max Distance is required';
-                          }
-                          return null;
-                        },
-                        builder: (formState) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              WayaTextFormField(
-                                keyboardType: TextInputType.number,
-                                controller: viewModel.maxDistance,
-                                hintText: 'Max Distance',
-                                borderColor: formState.hasError && viewModel.maxDistance.text.isEmpty
-                                    ? wayaTheme.colorScheme.error
-                                    : null,
-                                label: '',
-                                suffixIcon: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                  child: Text("Km", style: wayaTheme.textTheme.hintStyle),
-                                ),
-                                onChanged: (value) {
-                                  debounce(
-                                    () {
-                                      notifier.setRangeEnd(double.tryParse(value.trim().replaceAll(',', '')) ?? 0.7);
-                                    },
-                                    key: 'quotation-range-start',
-                                    delay: const Duration(milliseconds: 800),
-                                  );
-                                },
-                              ),
+                //? Maximum distance.
+                //     Expanded(
+                //       child: FormField<String>(
+                //         validator: (value) {
+                //           if (viewModel.minDistance.text.isEmpty) {
+                //             return 'Max Distance is required';
+                //           }
+                //           return null;
+                //         },
+                //         builder: (formState) {
+                //           return Column(
+                //             crossAxisAlignment: CrossAxisAlignment.start,
+                //             children: [
+                //               WayaTextFormField(
+                //                 keyboardType: TextInputType.number,
+                //                 controller: viewModel.maxDistance,
+                //                 hintText: 'Max Distance',
+                //                 borderColor: formState.hasError && viewModel.maxDistance.text.isEmpty
+                //                     ? wayaTheme.colorScheme.error
+                //                     : null,
+                //                 label: '',
+                //                 suffixIcon: Padding(
+                //                   padding: EdgeInsets.symmetric(vertical: 15),
+                //                   child: Text("Km", style: wayaTheme.textTheme.hintStyle),
+                //                 ),
+                //                 onChanged: (value) {
+                //                   debounce(
+                //                     () {
+                //                       notifier.setRangeEnd(double.tryParse(value.trim().replaceAll(',', '')) ?? 0.7);
+                //                     },
+                //                     key: 'quotation-range-start',
+                //                     delay: const Duration(milliseconds: 800),
+                //                   );
+                //                 },
+                //               ),
 
-                              // Error.
-                              if (formState.hasError && viewModel.maxDistance.text.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
-                                  ),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                //               // Error.
+                //               if (formState.hasError && viewModel.maxDistance.text.isEmpty)
+                //                 Padding(
+                //                   padding: const EdgeInsets.only(top: 5),
+                //                   child: Text(
+                //                     formState.errorText!,
+                //                     style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                //                   ),
+                //                 ),
+                //             ],
+                //           );
+                //         },
+                //       ),
+                //     ),
+                //   ],
+                // ),
 
                 // Some space.
                 const Gap(10),
@@ -565,9 +563,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 WayaButton(
                   callback: () async {
                     if (_formKey.currentState!.validate()) {
-                      debugPrint(viewModel.minDistance.text);
                       widget.gotoNextTab();
-                      debugPrint('=>>>>> ${viewModel.productCategory}');
                     }
                   },
                   text: 'Setup Pricing & Delivery',

@@ -13,7 +13,6 @@ import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dar
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_edit_type_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
-import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
 
 import '../../../core/utils/waya_utils.dart';
@@ -231,15 +230,13 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                 ? () {
                     final code = ref.watch(verifyAccountProvider).inputCode;
                     viewModel.verifyPayout(
-                        onSuccess: () => WayaUtils.showModalSheet(
-                              context,
-                              child: PollReview(
-                                  id: '${args['id']}',
-                                  module: args['Module'] as PayoutModule,
-                                  model: args['Model'] as PayoutReviewModel),
-                            ),
-                        /* 
-                  ), */
+                      onSuccess: (){
+                        WayaNav.to(PollReview(
+                            id: '${args['id']}',
+                            module: args['Module'] as PayoutModule,
+                            model: args['Model'] as PayoutReviewModel));
+                      },
+
                         code: code,
                         email: '${ConversationState.self.email}');
                   }

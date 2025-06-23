@@ -24,6 +24,7 @@ class DonationState{
     final String category;
     final String? kycStatus;
     final String kycMessage;
+    final String commission;
     final String privacyOption;
     final Object? accountType;
     final String startDate;
@@ -40,6 +41,7 @@ class DonationState{
     final List<Select> categories;
 
     final bool isLoading;
+    final bool isAgreeToTerm;
     final bool showAmountRaised;
     final bool showNumberOfDonors;
 
@@ -64,6 +66,7 @@ class DonationState{
       this.categories = const [],
       this.image,
       this.startDate = '',
+      this.commission = '',
       this.category = '',
       this.accountType,
       this.kycStatus = '',
@@ -73,6 +76,7 @@ class DonationState{
       this.startDateString = '',
       this.endDateString = '',
       this.isLoading = false,
+      this.isAgreeToTerm = false,
       this.showAmountRaised = false,
       this.showNumberOfDonors = false,
       this.createDonationResponse,
@@ -110,6 +114,7 @@ class DonationState{
       String? category,
       String? startDate,
       String? endDate,
+      String? commission,
       String? startDateString,
       String? kycStatus,
       String? kycMessage,
@@ -118,6 +123,7 @@ class DonationState{
       bool? isLoading,
       bool? isPublic,
       bool? isPrivate,
+      bool? isAgreeToTerm,
       bool? showAmountRaised,
       bool? showNumberOfDonors,
       CreateDonationResponse? createDonationResponse,
@@ -144,9 +150,11 @@ class DonationState{
       startDate: startDate ?? this.startDate,
       selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
       endDate: endDate ?? this.endDate,
+      commission: commission ?? this.commission,
       startDateString: startDateString ?? this.startDateString,
       endDateString: endDateString ?? this.endDateString,
       isLoading: isLoading ?? this.isLoading,
+      isAgreeToTerm: isAgreeToTerm ?? this.isAgreeToTerm,
       showAmountRaised: showAmountRaised ?? this.showAmountRaised,
       showNumberOfDonors: showNumberOfDonors ?? this.showNumberOfDonors,
       allDonationDocs: allDonationDocs ?? this.allDonationDocs,

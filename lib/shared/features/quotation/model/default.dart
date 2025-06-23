@@ -106,8 +106,6 @@ class BuyRequestModel {
   final DateTime bidStart;
   final DateTime bidEnd;
   final String deliveryDetails;
-  final int minDistance;
-  final int maxDistance;
   final String stateOfPurchase;
   final String lga;
   final bool vendorsCanSeeBidFromAnyDistance;
@@ -135,8 +133,6 @@ class BuyRequestModel {
     required this.bidStart,
     required this.bidEnd,
     required this.deliveryDetails,
-    required this.minDistance,
-    required this.maxDistance,
     required this.stateOfPurchase,
     required this.lga,
     required this.vendorsCanSeeBidFromAnyDistance,
@@ -175,8 +171,6 @@ class BuyRequestModel {
     DateTime? bidStart,
     DateTime? bidEnd,
     String? deliveryDetails,
-    int? minDistance,
-    int? maxDistance,
     String? stateOfPurchase,
     String? lga,
     bool? vendorsCanSeeBidFromAnyDistance,
@@ -203,8 +197,6 @@ class BuyRequestModel {
       bidStart: bidStart ?? this.bidStart,
       bidEnd: bidEnd ?? this.bidEnd,
       deliveryDetails: deliveryDetails ?? this.deliveryDetails,
-      minDistance: minDistance ?? this.minDistance,
-      maxDistance: maxDistance ?? this.maxDistance,
       stateOfPurchase: stateOfPurchase ?? this.stateOfPurchase,
       lga: lga ?? this.lga,
       vendorsCanSeeBidFromAnyDistance: vendorsCanSeeBidFromAnyDistance ?? this.vendorsCanSeeBidFromAnyDistance,

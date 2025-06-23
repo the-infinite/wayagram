@@ -328,40 +328,6 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
 
                 }),
           ),
-       /*   Expanded(
-      child: PaginatedDataView<MyDonationDocs>(
-      uniqueKey: 'Hosted-donations',
-      loadingState: SizedBox(
-      height: context.height * 0.4,
-      child: Center(
-      child: CircularProgressIndicator(),
-      )),
-      emptyState:DonationEmptyState(),
-      fetchData: ref.read(donationVmProvider.notifier).getApprovedDonation,
-      result: (data, s ) {
-      return ListView.builder(
-      //physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: viewModel.myDonationDocs?.length,
-      itemBuilder: (context, index){
-      final donation = viewModel.myDonationDocs?[index];
-      int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
-      return ManageDonationWidget(
-      text:  "Donate",
-      amountRaised: donation?.amountRaised,
-      targetAmount: donation?.targetAmount,
-      title: donation?.title?.capitalizeFirst,
-      image: donation?.imageURL,
-      dayLeft: '$daysLeft',
-      onTap: (){
-      WayaNav.toNamed('/donationDetails');
-      },
-      buttonWidth: 60.0,
-      );
-      }
-      );
-      },),
-      );*/
         ],
       ),
     );
