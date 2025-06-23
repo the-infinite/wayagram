@@ -40,18 +40,23 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      //? Now, let the timer keep ticking.
-      final result = await notifier.getBuyRequest(widget.id);
-      if (result != null) requestState.value = result;
-
-      //? Now, listen to this periodically.
-      _timer = Timer.periodic(const Duration(seconds: 7), (timer) async {
-        //? Update this guy in the list.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        //? Now, let the timer keep ticking.
         final result = await notifier.getBuyRequest(widget.id);
         if (result != null) requestState.value = result;
-      });
-    });
+
+        //? Now, listen to this periodically.
+        _timer = Timer.periodic(
+          const Duration(seconds: 7),
+          (timer) async {
+            //? Update this guy in the list.
+            final result = await notifier.getBuyRequest(widget.id);
+            if (result != null) requestState.value = result;
+          },
+        );
+      },
+    );
     super.initState();
   }
 
