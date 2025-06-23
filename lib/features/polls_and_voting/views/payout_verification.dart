@@ -13,7 +13,6 @@ import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dar
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_edit_type_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
-import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
 
 import '../../../core/utils/waya_utils.dart';

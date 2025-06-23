@@ -374,6 +374,9 @@ class WayaSocketController {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
 
+        //? Ban this user from triggering infinite refreshes.
+        if (args.senderId == ConversationState.self.id) return;
+
         // This is fine.
         await chatNotifier.markAllAsRead();
 

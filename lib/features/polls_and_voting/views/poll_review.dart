@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
@@ -30,10 +33,19 @@ class PollReview extends ConsumerStatefulWidget {
 }
 
 class _PollReviewState extends ConsumerState<PollReview> {
+  @override
+  void initState() {
+    super.initState();
+    /*  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+      ref.read(createPollVotingProvider.notifier).getDashboard(args['id']);
+    }); */
+  }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return WayaScaffold(
         isLoading: viewModel.isLoading,
@@ -52,6 +64,13 @@ class _PollReviewState extends ConsumerState<PollReview> {
             ),
 
             const Gap(5),
+            // Text(
+            //   'Poll',
+            //   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+            //       fontSize: 14.sp,
+            //       fontWeight: FontWeight.w400,
+            //       color: Theme.of(context).colorScheme.greyColor500 ),
+            // ),
 
             Row(
               children: [
@@ -66,7 +85,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
               ],
             ),
 
-            const Gap(150),
+            const Gap(50),
             WayaButton(
               callback: !viewModel.isLoading
                   ? () {
