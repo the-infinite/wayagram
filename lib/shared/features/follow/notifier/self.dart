@@ -139,14 +139,14 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
         suggestionsTotalPages: null,
         suggestionsTotalSize: null,
         isLoadingSuggestions: false,
-        hasLoadedSuggestions: false,
       );
     }
 
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getSuggestedFriends(state.suggestionsNextPage ?? state.suggestionsPage, state.limit);
+      final page = state.suggestionsNextPage ?? state.suggestionsPage;
+      final response = await repo.getSuggestedFriends(page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -161,7 +161,7 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
         }
 
         //? Now, add these to what we have here.
-        result.addAll(docs);
+        result.addAll(docs.where((suggestion) => !result.any((match) => match.id == suggestion.id)));
 
         //? This is fine.
         state = state.copyWith(
@@ -169,8 +169,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
           suggestionsTotalSize: data['total'],
           suggestionsTotalPages: ((data['total'] / data['limit']) as double).ceil(),
           suggestionsHasNextPage: data['hasNextPage'],
-          suggestionsPage: int.tryParse(data['offset'].toString()) ?? 0,
-          suggestionsNextPage: (int.tryParse(data['offset'].toString()) ?? 1) + 1,
+          suggestionsPage: page,
+          suggestionsNextPage: page + 1,
           hasLoadedSuggestions: true,
         );
       }
