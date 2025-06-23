@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/donation/view/create_donation/step/create_new_donation.dart';
 import 'package:wayagram/features/donation/view/create_donation/step/review_donation.dart';
+import 'package:wayagram/features/donation/vm/donation_vm.dart';
 
 class CreateDonation extends ConsumerStatefulWidget {
   static const route = '/createDonation';
@@ -46,7 +47,6 @@ class _CreateDonationState extends ConsumerState<CreateDonation> with SingleTick
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
-          //CreateBuyingRequest(gotoNextTab: _goToNextTab, gotoPreviousTab: _goToPreviousTab,),
          CreateNewDonation(
             gotoNextTab: _goToNextTab,
             gotoPreviousTab: _goToPreviousTab,

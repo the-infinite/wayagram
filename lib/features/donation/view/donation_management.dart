@@ -10,8 +10,12 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
+import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
 import '../../../shared/features/user/models/default.dart';
@@ -28,6 +32,15 @@ class DonationManagement extends ConsumerStatefulWidget {
 
 class _DonationManagementState extends ConsumerState<DonationManagement> with SingleTickerProviderStateMixin {
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dynamic args = ModalRoute.of(context)?.settings.arguments;
+      ref.read(donationVmProvider.notifier).getPayoutCommission();
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +48,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
     final wayaTheme = Theme.of(context);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
     return WayaScaffold(
-      title: "Manage Donation",
+      title: "Donation Dashboard",
       isLoading: viewModel.isLoading,
       isScrollable: true,
       body: Column(
@@ -87,7 +100,30 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
           _reviewText('Impact Statement', '${args['impact']}'),
         ],
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: args['daysLeft'] == 0 ? WayaButton(
+        callback: !viewModel.isLoading
+            ? () {
+
+          final percentage = '${(double.parse(viewModel.commission) / 100) * num.parse('${args['amountRaised']}')}';
+          final amountDue = int.parse('${args['amountRaised']}') - double.parse(percentage);
+
+          ref.read(credentialInputProvider.notifier)
+              .onSubmitPayoutPin(() => WayaNav.toNamed(
+              '/payoutVerification',
+              arguments: {
+                "id": args['id'],
+                "Module": PayoutModule.donation,
+                "Model": PayoutReviewModel(
+                    comission: percentage,
+                    amount: '${args['amountRaised']}',
+                    amountDue: '$amountDue',
+                    endDate: args['endDate'])
+              }));
+        }
+            : null,
+        centerWidget: LoadingState(
+            loading: viewModel.isLoading, text: 'Request Payout'),
+      ): Container(
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
         decoration: BoxDecoration(

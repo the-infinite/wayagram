@@ -39,18 +39,19 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final viewModel2 = ref.watch(widget.provider);
+    final viewModel = ref.watch(widget.provider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Gap(20.h),
         Text(
           'Latest post',
           style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w500,
-            color: WayaColors.greyColor700,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w400,
+            color: WayaColors.greyColor600,
             fontFamily: WayaConstants.fontFamily,
           ),
         ),
@@ -59,15 +60,15 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
         Gap(10.h),
 
         //? Return this is fine.
-        if (viewModel2.getAllPost?.isEmpty ?? true)
+        if (viewModel.getAllPost?.isEmpty ?? true)
           PostEmptyState()
         else
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel2.getAllPost?.length ?? 0,
+            itemCount: viewModel.getAllPost?.length ?? 0,
             itemBuilder: (_, index) => WayaPostWidget(
-              data: viewModel2.getAllPost![index],
+              data: viewModel.getAllPost![index],
               index: index,
             ),
           ),

@@ -50,11 +50,6 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
     final chat = wayaChatsCache.getCachedData(widget.chatId)!;
     widget.conversationNotifier.dismissOverlay();
     widget.notifier.setChat((await widget.conversationNotifier.getChatDetails(chat.id)) ?? chat);
-    widget.notifier.markAllAsRead().then((result) {
-      if (!result) return;
-      widget.conversationNotifier.getChats(true);
-      widget.conversationNotifier.getArchivedChats(true);
-    });
     WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
   }
 

@@ -12,6 +12,7 @@ import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/general_settings/chat_settings/vm.dart';
@@ -33,7 +34,8 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 }
 
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
-  late final notifier = ref.watch(chatProvider(widget.chatId).notifier);
+  late final notifier = ref.read(chatProvider(widget.chatId).notifier);
+  late final conversationNotifier = ref.read(conversationProvider.notifier);
   final focusNode = FocusNode();
   final handler = WayaObservableScrollController();
   bool _initialized = false;
@@ -42,6 +44,11 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
+        notifier.markAllAsRead().then((result) {
+          if (!result) return;
+          conversationNotifier.getChats(true);
+          conversationNotifier.getArchivedChats(true);
+        });
         ChatInputController.instance.setRef(ref);
         notifier.getMessages(true);
       },

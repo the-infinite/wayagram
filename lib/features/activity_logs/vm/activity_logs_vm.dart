@@ -48,19 +48,19 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     try{
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getAccountActivity(page);
-      List<AccountActivityDocs>? fetchLoginHistoryDocs = [];
+      List<AccountActivityDocs>? fetchAccountActivityHistoryDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
         AccountActivityModel responseModel = AccountActivityModel.fromJson(response.data);
-        fetchLoginHistoryDocs = responseModel.data?.docs;
+        fetchAccountActivityHistoryDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(accountActivityDocs: fetchLoginHistoryDocs);
-        state = state.copyWith(accountActivityDocs: responseModel.data?.docs);
+        state = state.copyWith(accountActivityDocs: fetchAccountActivityHistoryDocs);
+        state = state.copyWith(accountActivityDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchLoginHistoryDocs!);
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchAccountActivityHistoryDocs!);
     }catch (e){
       _logger.e(e);
     }finally {
@@ -81,8 +81,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
         fetchDonationDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(donationDocs: fetchDonationDocs);
-        state = state.copyWith(donationDocs: responseModel.data?.docs);
+        state = state.copyWith(donationDocs: responseModel.data?.docs,
+            donationDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -108,7 +108,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchPageDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(pageDocs: fetchPageDocs);
-        state = state.copyWith(pageDocs: responseModel.data?.docs);
+        state = state.copyWith(pageDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -134,7 +134,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchGroupDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(groupDocs: fetchGroupDocs);
-        state = state.copyWith(groupDocs: responseModel.data?.docs);
+        state = state.copyWith(groupDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -160,7 +160,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchSocialDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(socialDocs: fetchSocialDocs);
-        state = state.copyWith(socialDocs: responseModel.data?.docs);
+        state = state.copyWith(socialDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -186,7 +186,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchUgtDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(ugtDocs: fetchUgtDocs);
-        state = state.copyWith(ugtDocs: responseModel.data?.docs);
+        state = state.copyWith(ugtDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -212,7 +212,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchEventDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(ugtDocs: fetchEventDocs);
-        state = state.copyWith(ugtDocs: responseModel.data?.docs);
+        state = state.copyWith(ugtDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -237,8 +237,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
         fetchShopDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(ugtDocs: fetchShopDocs);
-        state = state.copyWith(ugtDocs: responseModel.data?.docs);
+        state = state.copyWith(shopDocs: fetchShopDocs);
+        state = state.copyWith(shopDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -264,7 +264,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchPollDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(pollDocs: fetchPollDocs);
-        state = state.copyWith(pollDocs: responseModel.data?.docs);
+        state = state.copyWith(pollDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -290,7 +290,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchWalletDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(walletDocs: fetchWalletDocs);
-        state = state.copyWith(walletDocs: responseModel.data?.docs);
+        state = state.copyWith(walletDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -316,7 +316,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchQuotationDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(quotationDocs: fetchQuotationDocs);
-        state = state.copyWith(quotationDocs: responseModel.data?.docs);
+        state = state.copyWith(quotationDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }

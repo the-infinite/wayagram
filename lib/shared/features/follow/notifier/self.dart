@@ -3,6 +3,7 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/model/suggestion.dart';
 import 'package:wayagram/shared/features/follow/repo/default.dart';
 import 'package:wayagram/shared/features/follow/state/default.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
@@ -126,6 +127,67 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     return result;
   }
 
+  Future<List<SuggestionModel>> getFollowSuggestions([bool reset = false]) async {
+    final result = <SuggestionModel>[];
+
+    //? If this is a request that resets everything.
+    if (reset) {
+      state = state.copyWith(
+        suggestionsNextPage: 0,
+        suggestionsPage: 0,
+        suggestionsHasNextPage: true,
+        suggestionsTotalPages: null,
+        suggestionsTotalSize: null,
+        isLoadingSuggestions: false,
+      );
+    }
+
+    //? This is wonderful.
+    try {
+      // This is fine too.
+      final page = state.suggestionsNextPage ?? state.suggestionsPage;
+      final response = await repo.getSuggestedFriends(page, state.limit);
+
+      // If this was fine...
+      if (response.success) {
+        final data = response.data["data"];
+
+        //? Parse the posts as they are in the response object...
+        final docs = (data['docs'] as List).map((doc) => SuggestionModel.fromJson(doc));
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.suggestionsHasNextPage) {
+          result.addAll(state.suggestions);
+        }
+
+        //? Now, add these to what we have here.
+        result.addAll(docs.where((suggestion) => !result.any((match) => match.id == suggestion.id)));
+
+        //? This is fine.
+        state = state.copyWith(
+          suggestions: result,
+          suggestionsTotalSize: data['total'],
+          suggestionsTotalPages: ((data['total'] / data['limit']) as double).ceil(),
+          suggestionsHasNextPage: data['hasNextPage'],
+          suggestionsPage: page,
+          suggestionsNextPage: page + 1,
+          hasLoadedSuggestions: true,
+        );
+      }
+
+      //? After getting these posts...
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return result;
+  }
+
   Future<FollowStatusModel?> getFollowStatus(String id) async {
     //? This is wonderful.
     try {
@@ -184,7 +246,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       // If this was fine...
       if (response.success) {
-        await getUsersFollowing();
+        getUsersFollowing();
+        getFollowSuggestions(true);
         otherUserMoments.getAllMoments();
         return true;
       }
@@ -222,6 +285,7 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
         //? This is fine.
         otherUserMoments.getAllMoments();
+        getFollowSuggestions(true);
 
         //? Return here.
         return true;
@@ -264,6 +328,9 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
   }
 
   Future<void> getIfEmpty() async {
+    //? If this has no suggested friends yet.
+    if (state.suggestions.isEmpty) await getFollowSuggestions();
+
     //? If this user has not loaded followers yet.
     if (state.followers.isEmpty) await getFollowersOf();
 

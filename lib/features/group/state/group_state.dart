@@ -5,6 +5,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
+import 'package:wayagram/features/group/data/model/media_model.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
@@ -24,7 +25,8 @@ class GroupState {
   String? coverImage;
   String? name;
   String? desc;
-  List<JoinRequestDocs>? docs;
+  List<JoinRequestDocs>? joinRequestDocs;
+  List<MediaModelDocs>? mediaModelDocs;
   GetAllPost? allPostData;
   final List<Select> categories;
   List<GroupModel>? getAllGroups;
@@ -72,7 +74,8 @@ class GroupState {
     this.category = '',
     this.categories = const [],
     this.groupPopularPostdocs = const [],
-    this.docs = const [],
+    this.mediaModelDocs = const [],
+    this.joinRequestDocs = const [],
     this.groupInvitationModelDocs = const [],
     this.groupPostdocs = const [],
     this.allGroupMemberDocs = const [],
@@ -95,7 +98,7 @@ class GroupState {
     TextEditingController? email,
     bool? hasNextPage,
     List<Select>? categories,
-    List<JoinRequestDocs>? docs,
+    List<JoinRequestDocs>? joinRequestDocs,
     List<GroupModel>? getAllGroups,
     List<EventDoc>? fetchAllEventDocs,
     List<PostModel>? groupPopularPostdocs,
@@ -105,6 +108,7 @@ class GroupState {
     List<PostModel>? groupPostdocs,
     int? postCount,
     List<PostModel>? getAllPost,
+    List<MediaModelDocs>? mediaModelDocs,
     bool? isReportingGroup,
     bool? isFocused,
     bool? isLoading,
@@ -130,9 +134,10 @@ class GroupState {
       email: email ?? this.email,
       postCount: postCount ?? this.postCount,
       foundUserId: foundUserId ?? this.foundUserId,
-      docs: docs ?? this.docs,
+      joinRequestDocs: joinRequestDocs ?? this.joinRequestDocs,
       category: category ?? this.category,
       categories: categories ?? this.categories,
+      mediaModelDocs: mediaModelDocs ?? this.mediaModelDocs,
       groupPopularPostdocs: groupPopularPostdocs ?? this.groupPopularPostdocs,
       getAllPost: getAllPost ?? this.getAllPost,
       groupInvitationModelDocs: groupInvitationModelDocs ?? this.groupInvitationModelDocs,
