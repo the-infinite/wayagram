@@ -7,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
@@ -21,12 +22,14 @@ import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
+import 'package:wayagram/shared/features/location/vm/default.dart';
 import 'package:wayagram/shared/features/follow/widget/default.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
@@ -55,12 +58,13 @@ class _ExploreState extends ConsumerState<Explore> {
       //ref.read(successfulSetupVmProvider.notifier).getUserData();
       //>
 
-      // ref.read(regionsProvider.notifier).getCurrentCountry();
-      // ref.read(selectInterestProvider.notifier).getUserInterest();
-      // ref.read(shopVmProvider.notifier).allCategories(1);
-      // ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
-      // ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
-      // ref.read(cartVmProvider.notifier).loadCart();
+      ref.read(regionsProvider.notifier).getCurrentCountry();
+      ref.read(selectInterestProvider.notifier).getUserInterest();
+      ref.read(shopVmProvider.notifier).allCategories(1);
+      ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
+      ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
+       ref.read(exploreVmProvider.notifier).getUserFeeds();
+      ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
   }

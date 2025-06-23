@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
+import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/explore/widgets/polls_card.dart';
@@ -101,6 +102,7 @@ class _SearchState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final exploreNotifier = ref.watch(exploreVmProvider);
     final state = ref.watch(servicesProvider);
     final pageState = ref.watch(createPageProvider);
     final pollState = ref.watch(createPollVotingProvider);
@@ -122,11 +124,11 @@ class _SearchState extends ConsumerState<SearchView> {
     }
 
     //? Searching posts.
-    final List<PostModel> filteredPosts =
-        WayaUtils.strictSearch<PostModel>(state.topPosts, ['hashtags'], query);
+    final List<PostModel> filteredPosts = WayaUtils.strictSearch<PostModel>(
+        exploreNotifier.posts, ['hashtags'], query);
     final history = storage.getSearchHistory();
 
-    //? Moments
+    // //? Moments
     final List<MomentData> filteredMoments = WayaUtils.strictSearch<MomentData>(
       moments,
       ['caption', 'content'],
@@ -156,7 +158,7 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-    //? Pages
+    // //? Pages
     final List<PageModel> filteredPages = WayaUtils.strictSearch<PageModel>(
       pageState.recommendedPages ?? [],
       ['name', 'description'],
