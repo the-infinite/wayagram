@@ -1,13 +1,17 @@
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
@@ -41,7 +45,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
-    // final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return WayaScaffold(
         isLoading: viewModel.isLoading,
@@ -68,21 +72,17 @@ class _PollReviewState extends ConsumerState<PollReview> {
             //       color: Theme.of(context).colorScheme.greyColor500 ),
             // ),
 
-            const Gap(5),
-            FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Row(
-                children: [
-                  pollCard('₦${formatMoney(widget.model.amount ?? "0")}',
-                      'Total Amount'),
-                  const Gap(5),
-                  pollCard('₦${formatMoney(widget.model.comission ?? "0")}',
-                      'Wayagram Commission'),
-                  const Gap(5),
-                  pollCard('₦${formatMoney(widget.model.amountDue ?? "0")}',
-                      'Payout Due Amount'),
-                ],
-              ),
+            Row(
+              children: [
+                pollCard('₦${formatMoney(widget.model.amount ?? "0")}',
+                    'Total Amount'),
+                const Gap(5),
+                pollCard('₦${formatMoney('${widget.model.comission}' ?? "0")}',
+                    'Wayagram Commission'),
+                const Gap(5),
+                pollCard('₦${formatMoney(widget.model.amountDue ?? "0")}',
+                    'Payout Due Amount'),
+              ],
             ),
 
             const Gap(50),
@@ -104,36 +104,39 @@ class _PollReviewState extends ConsumerState<PollReview> {
   }
 
   pollCard(number, name) {
-    return Container(
-      width: 122.w,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
-      decoration: BoxDecoration(
-          color: Color(0xffFFF0EB), borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          FittedBox(
-            fit: BoxFit.fitWidth,
-            child: Text(
-              name,
-              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12.sp,
-                  fontFamily: WayaConstants.fontFamily,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.greyColor500),
+    return Expanded(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.25, // 25% of screen width
+        height: MediaQuery.of(context).size.width * 0.35,
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
+        decoration: BoxDecoration(
+            color: Color(0xffFFF0EB), borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                name,
+                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 12.sp,
+                    fontFamily: WayaConstants.fontFamily,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.greyColor500),
+              ),
             ),
-          ),
-          const Gap(10),
-          Text(
-            number,
-            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 24.sp,
-                fontFamily: WayaConstants.fontFamily,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.black),
-          ),
-        ],
+            const Gap(10),
+            Text(
+              number,
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24.sp,
+                  fontFamily: WayaConstants.fontFamily,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.black),
+            ),
+          ],
+        ),
       ),
     );
   }

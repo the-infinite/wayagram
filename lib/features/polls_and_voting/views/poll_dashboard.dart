@@ -27,12 +27,14 @@ class PollDashboard extends ConsumerStatefulWidget {
 }
 
 class _PollDashboardState extends ConsumerState<PollDashboard> {
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
       ref.read(createPollVotingProvider.notifier).getDashboard(args['id']);
+      ref.read(createPollVotingProvider.notifier).getPayoutCommission();
       _startCountdown(context);
     });
   }
@@ -252,23 +254,24 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
                 ? WayaButton(
                     callback: !viewModel.isLoading
                         ? () {
-                            debugPrint('DASHBOARD POLLID ${args['id']} ');
-                            ref
-                                .read(credentialInputProvider.notifier)
+
+                            final percentage = '${(double.parse('${viewModel.commission}') / 100) * num.parse(viewModel.moneyGenerated)}';
+                            final amountDue = int.parse(viewModel.moneyGenerated) - double.parse(percentage);
+
+                            debugPrint('DASHBOARD AMOUNT DUE $amountDue ');
+                            ref.read(credentialInputProvider.notifier)
                                 .onSubmitPayoutPin(() => WayaNav.toNamed(
                                         '/payoutVerification',
                                         arguments: {
                                           "id": args['id'],
                                           "Module": PayoutModule.polls,
                                           "Model": PayoutReviewModel(
-                                              comission: "20",
-                                              amount: "30",
-                                              amountDue: "50",
+                                              comission: percentage,
+                                              amount: viewModel.moneyGenerated,
+                                              amountDue: '$amountDue',
                                               endDate: args['endDate'])
                                         }));
 
-                            // await ref.read(createPollVotingProvider.notifier).
-                            // requestSettlement(context, args['id']);
                           }
                         : null,
                     centerWidget: LoadingState(

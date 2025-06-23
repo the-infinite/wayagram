@@ -230,15 +230,13 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                 ? () {
                     final code = ref.watch(verifyAccountProvider).inputCode;
                     viewModel.verifyPayout(
-                        onSuccess: () => WayaUtils.showModalSheet(
-                              context,
-                              child: PollReview(
-                                  id: '${args['id']}',
-                                  module: args['Module'] as PayoutModule,
-                                  model: args['Model'] as PayoutReviewModel),
-                            ),
-                        /* 
-                  ), */
+                      onSuccess: (){
+                        WayaNav.to(PollReview(
+                            id: '${args['id']}',
+                            module: args['Module'] as PayoutModule,
+                            model: args['Model'] as PayoutReviewModel));
+                      },
+
                         code: code,
                         email: '${ConversationState.self.email}');
                   }

@@ -1,9 +1,11 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 
 class DonationRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
+  static const walletServiceUrl = WayaServiceUri.wallet;
 
   Future<WayaRequestResponse> donate(
       String campaignId, int amount, String message) {
@@ -13,6 +15,11 @@ class DonationRepository extends BaseRepository {
       "message": message
     };
     return post("$serviceUrl/client/donations/donate/$campaignId", payload);
+  }
+
+  Future<WayaRequestResponse> getPayoutCommission() {
+    return get(
+        "$walletServiceUrl/client/commission/commission-rates");
   }
 
   Future<WayaRequestResponse> getSingleDonation(String donationId) {
