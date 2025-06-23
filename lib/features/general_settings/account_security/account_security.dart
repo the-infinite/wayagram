@@ -34,7 +34,6 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
   Future<void> _refreshData() async {
     await ref.read(kycVmProvider.notifier).getMyKYC();
     final data = await ref.read(profileVmProvider.notifier).getUserData();
-
     if (data != null) {
       setState(() {
         user = data;
@@ -43,18 +42,18 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
   }
 
   @override
-  void initState() {
-    _refreshData();
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _refreshData();
+    });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(kycVmProvider);
     final theme = Theme.of(context);
-
     if (user == null) {
       return Container(
         color: theme.colorScheme.white,
@@ -119,7 +118,7 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
                       Uri.encodeComponent(ConversationState.self.email ?? '');
                   notifier.resend2faOtp(
                       email: ConversationState.self.email ?? '');
-                  WayaNav.toNamed(WayaAppRoutes.get2FaScreen(email),
+                  WayaNav.replaceNamed(WayaAppRoutes.get2FaScreen(email),
                       arguments: "resend");
                 },
                 child: Row(
