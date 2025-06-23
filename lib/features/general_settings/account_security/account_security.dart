@@ -34,7 +34,7 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
   Future<void> _refreshData() async {
     await ref.read(kycVmProvider.notifier).getMyKYC();
     final data = await ref.read(profileVmProvider.notifier).getUserData();
-
+    print("ewgegerg $data");
     if (data != null) {
       setState(() {
         user = data;
@@ -48,23 +48,21 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(kycVmProvider);
     final theme = Theme.of(context);
-
-    if (user == null) {
-      return Container(
-        color: theme.colorScheme.white,
-        width: context.width,
-        height: context.height,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
+    print(user);
+    // if (user == null) {
+    //   return Container(
+    //     color: theme.colorScheme.white,
+    //     width: context.width,
+    //     height: context.height,
+    //     child: Center(
+    //       child: CircularProgressIndicator(),
+    //     ),
+    //   );
+    // }
 
     return WayaScaffold(
       title: "Account Security",
@@ -134,7 +132,7 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
                           style: theme.textTheme.bodySemiBold,
                         ),
                         Text(
-                            user?.twoFactorEnabled == false
+                            ConversationState.self.twoFactorEnabled == false
                                 ? 'Disabled'
                                 : 'Enabled',
                             style: theme.textTheme.bodySemiBold.copyWith(
