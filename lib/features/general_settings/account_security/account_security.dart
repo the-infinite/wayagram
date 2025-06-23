@@ -34,7 +34,6 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
   Future<void> _refreshData() async {
     await ref.read(kycVmProvider.notifier).getMyKYC();
     final data = await ref.read(profileVmProvider.notifier).getUserData();
-    print("ewgegerg $data");
     if (data != null) {
       setState(() {
         user = data;
@@ -43,26 +42,28 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
   }
 
   @override
-  void initState() {
-    _refreshData();
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _refreshData();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(kycVmProvider);
     final theme = Theme.of(context);
-    print(user);
-    // if (user == null) {
-    //   return Container(
-    //     color: theme.colorScheme.white,
-    //     width: context.width,
-    //     height: context.height,
-    //     child: Center(
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //   );
-    // }
+    if (user == null) {
+      return Container(
+        color: theme.colorScheme.white,
+        width: context.width,
+        height: context.height,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     return WayaScaffold(
       title: "Account Security",
@@ -117,7 +118,7 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
                       Uri.encodeComponent(ConversationState.self.email ?? '');
                   notifier.resend2faOtp(
                       email: ConversationState.self.email ?? '');
-                  WayaNav.toNamed(WayaAppRoutes.get2FaScreen(email),
+                  WayaNav.replaceNamed(WayaAppRoutes.get2FaScreen(email),
                       arguments: "resend");
                 },
                 child: Row(
@@ -132,7 +133,7 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
                           style: theme.textTheme.bodySemiBold,
                         ),
                         Text(
-                            ConversationState.self.twoFactorEnabled == false
+                            user?.twoFactorEnabled == false
                                 ? 'Disabled'
                                 : 'Enabled',
                             style: theme.textTheme.bodySemiBold.copyWith(
