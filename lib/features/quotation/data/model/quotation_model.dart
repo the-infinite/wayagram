@@ -14,8 +14,6 @@ class CreateBuyerRequest {
   final String bidStart;
   final String bidEnd;
   final String deliveryDetails;
-  final String minDistance;
-  final String maxDistance;
   final String stateOfPurchase;
   final String lga;
   final String vendorsCanSeeBidFromAnyDistance;
@@ -37,8 +35,6 @@ class CreateBuyerRequest {
     required this.bidStart,
     required this.bidEnd,
     required this.deliveryDetails,
-    required this.minDistance,
-    required this.maxDistance,
     required this.stateOfPurchase,
     required this.lga,
     required this.vendorsCanSeeBidFromAnyDistance,
