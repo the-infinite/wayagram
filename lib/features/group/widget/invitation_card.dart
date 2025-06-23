@@ -78,7 +78,7 @@ class InvitationCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     InkWell(
-                      onTap: () => reject,
+                      onTap: reject,
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -90,7 +90,7 @@ class InvitationCard extends StatelessWidget {
                     ),
                     SizedBox(width: 10,),
                     InkWell(
-                      onTap: () => accept,
+                      onTap: accept,
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,

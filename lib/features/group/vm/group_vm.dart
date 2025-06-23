@@ -19,6 +19,7 @@ import 'package:wayagram/features/group/data/model/group_category_model.dart';
 import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
+import 'package:wayagram/features/group/data/model/media_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/groups.dart';
@@ -384,12 +385,13 @@ class GroupVm extends StateNotifier<GroupState> {
     );
   }
 
-  Future<void> approveRequest(ctx, String requestId) async {
+  Future<void> approveRequest(ctx, String requestId, String groupId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.approveJoinRequest(requestId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
+        getJoinRequest(groupId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Request approved successfully!'),
@@ -410,12 +412,13 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> rejectRequest(ctx, String requestId) async {
+  Future<void> rejectRequest(ctx, String requestId, String groupId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.rejectJoinRequest(requestId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
+        getJoinRequest(groupId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Request declined successfully!'),
@@ -542,6 +545,25 @@ class GroupVm extends StateNotifier<GroupState> {
     }
 
     return false;
+  }
+
+  Future<void> getGroupMedia(String groupId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getGroupMedia(groupId);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        MediaModel responseModel = MediaModel.fromJson(response.data);
+        state = state.copyWith(mediaModelDocs: responseModel.data?.docs);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
   }
 
 
@@ -808,7 +830,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         JoinRequestModel responseModel = JoinRequestModel.fromJson(response.data);
-        state = state.copyWith(docs: responseModel.data?.docs);
+        state = state.copyWith(joinRequestDocs: responseModel.data?.docs);
       } else {
         debugPrint('Error: Status code ${response.statusCode}');
       }
