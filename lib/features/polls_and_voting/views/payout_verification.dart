@@ -237,7 +237,6 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                             model: args['Model'] as PayoutReviewModel));
                       },
 
-
                         code: code,
                         email: '${ConversationState.self.email}');
                   }
