@@ -65,6 +65,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           title = 'Get Quotation';
         }
       });
+      ref.read(activityLogsVmProvider.notifier).getPollActivity(1);
     });
 
   }
@@ -567,7 +568,51 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                 ),
               ),
               Gap(10),
-              Expanded(
+
+              Expanded(child:
+              viewModel.pollDocs.isEmpty ?
+              ActivityLogsEmptyState(text: 'You don\'t have Poll Logs yet',)
+                  :ListView.builder(
+                  padding: EdgeInsets.only(bottom: 80.h, top: 0),
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: dates.length,
+                  itemBuilder: (context, i){
+                    debugPrint('my DATE ${dates[i]}');
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            )),
+                        Gap(10),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                          itemCount: viewModel.pollDocs.length,
+                          itemBuilder: (context, index){
+                            final pollsLog = viewModel.pollDocs[index];
+                            String dateTimeString = "${pollsLog.createdAt}";
+                            DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
+                            if(viewModel.pollDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                              return ActivityCardWidget(
+                                title: '${pollsLog.description}',
+                                subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(pollsLog.createdAt)}, '
+                                    '${DateFormat.jm().format(dateTime)}',);
+                            }
+                          },
+                        )
+                      ],
+                    );
+                  }),),
+
+             /* Expanded(
                 child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'poll-logs',
                     loadingState: SizedBox(
@@ -594,11 +639,13 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                             shrinkWrap: true,
                             itemCount: dates.length,
                             itemBuilder: (context, i){
+                              debugPrint('my DATE ${dates[i]}');
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pollDocs[i].createdAt.toString().split('T')[0])}',
+                                   '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
+                                     // '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pollDocs[i].createdAt.toString().split('T')[0])}',
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -630,7 +677,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                             }),
                       );
                     }),
-              ),
+              ),*/
             ],
           );
         }else if(args['name'] == 'pages'){
@@ -899,7 +946,57 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                 ),
               ),
               Gap(10),
-              Expanded(
+
+              Expanded(child:  ListView.builder(
+                  padding: EdgeInsets.only(bottom: 80.h, top: 0),
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: dates.length,
+                  itemBuilder: (context, i){
+                    for(int i = 0; i < viewModel.donationDocs.length; i++){
+                      if(!dates.contains(viewModel.donationDocs[i].createdAt.toString().split('T')[0])){
+                        dates.add(viewModel.donationDocs[i].createdAt.toString().split('T')[0]);
+                        viewModel.donationDocs.add(viewModel.donationDocs[i]);
+                      }
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.donationDocs[i].createdAt.toString().split('T')[0])}',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            )),
+                        Gap(10),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                          itemCount: viewModel.donationDocs.length,
+                          itemBuilder: (context, index){
+                            final donationLog = viewModel.donationDocs[index];
+                            String dateTimeString = "${donationLog.createdAt}";
+                            DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
+                            if(viewModel.donationDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                              return ActivityCardWidget(
+                                title: '${donationLog.description}',
+                                subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(donationLog.createdAt)}, '
+                                    '${DateFormat.jm().format(dateTime)}',
+                              );
+                            }else{
+                              return Text('idiot me');
+                            }
+                          },
+                        )
+                      ],
+                    );
+                  }),),
+
+              /// donation
+           /*   Expanded(
                 child: PaginatedDataView<DonationDocs>(
                     uniqueKey: 'donation-logs',
                     loadingState: SizedBox(
@@ -926,6 +1023,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                             shrinkWrap: true,
                             itemCount: dates.length,
                             itemBuilder: (context, i){
+
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -963,7 +1061,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                             }),
                       );
                     }),
-              ),
+              ),*/
             ],
           );
         }else if(args['name'] == 'ugt'){

@@ -15,6 +15,7 @@ class GroupModel extends BaseModel<GroupModel> {
   final String? url;
   final bool isPrivate;
   final String? coverImage;
+  final String? mutedAt;
   final String? profileImage;
   final DateTime? deletedAt;
   final DateTime createdAt;
@@ -33,6 +34,7 @@ class GroupModel extends BaseModel<GroupModel> {
     required this.categories,
     required this.isPrivate,
     required this.coverImage,
+    required this.mutedAt,
     required this.profileImage,
     required this.deletedAt,
     required this.createdAt,
