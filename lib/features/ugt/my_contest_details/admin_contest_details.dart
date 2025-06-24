@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_contestants.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_post_all.dart';
@@ -21,6 +22,7 @@ import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
+import 'package:wayagram/shared/share/share_gen_modal.dart';
 
 class AdminContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-manage-contest-details';
@@ -108,14 +110,22 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           children: [
             GestureDetector(
                 onTap: () async {
-                  //  print(model?.id ?? id);
-                  await Share.share(
+                  await WayaUtils.showModalSheet<ShareResult>(
+                    WayaNav.context,
+                    child: ShareGenModal(
+                      link: WayaValueHelper.getShareableUrl(
+                          WayaAppRoutes.getContestDetailRoute(
+                              myContestId.value)),
+                      pageNotifier: ref.read(createPageProvider.notifier),
+                    ),
+                  );
+                  /*   await Share.share(
                     WayaValueHelper.getShareableUrl(
                         WayaAppRoutes.getContestDetailRoute(myContestId.value)),
                     subject: "Share Contest",
 
-                    // https://staging.wayagram.ng/contest-profile-page?id=acabf193-dd12-48c5-9030-157efa4c012a&contestId=10c8c1b5-f720-4633-a14e-646313230192
-                  );
+                    
+                  ); */
                 },
                 child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none)),
             const Gap(20),
