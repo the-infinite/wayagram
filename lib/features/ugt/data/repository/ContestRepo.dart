@@ -58,6 +58,10 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/application/$userId/appliedContest?page=$page');
   }
 
+    Future<WayaRequestResponse> fetchAppliedSingleContest(String userId, String contestId) {
+    return get('$serviceUrl2/application/$userId/appliedContest?contestId=$contestId');
+  }
+
   Future<WayaRequestResponse> fetchFollowedVoteContest(String userId) {
     return get('$serviceUrl2/contests/contest-follow-vote/$userId');
   }

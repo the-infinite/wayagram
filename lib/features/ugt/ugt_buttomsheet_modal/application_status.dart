@@ -22,8 +22,9 @@ import '../../../core/utils/waya_navigation.dart';
 import 'custom_modal_contest.dart';
 
 class ApplicationStatus extends StatefulHookConsumerWidget {
-  final AppliedContestModel? post;
-  const ApplicationStatus(this.post, {super.key});
+  final AppliedContestModel? post1;
+  final String? contestId;
+  const ApplicationStatus(this.post1, this.contestId, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -36,16 +37,33 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
     final wayaTheme = Theme.of(context);
     final hasProfile = useState(false);
     final hasPaid = useState(false);
+    final appliedContestModel = useState(widget.post1);
+
     useEffect(() {
+      if (widget.post1 != null) {
+        appliedContestModel.value = widget.post1!;
+      } else {
+        ref
+            .read(appliedContestProvider.notifier)
+            .fetchSingleAppliedContest(widget.contestId ?? "")
+            .then((value) {
+          if (value != null) {
+            appliedContestModel.value = value;
+          }
+        });
+      }
+
       ref.read(postProvider.notifier).fetchSingleContest(
-            contestId: widget.post?.contestId ?? "",
+            contestId: appliedContestModel.value?.contestId ?? "",
             ref: ref,
           );
-      if (widget.post?.status?.toLowerCase() == "approved") {
+      if (appliedContestModel.value?.status?.toLowerCase() == "approved") {
         ref
             .read(postProvider.notifier)
             .fetchSingleContestantDetails(
-                ref, widget.post?.contestId ?? "", widget.post?.userId ?? "")
+                ref,
+                appliedContestModel.value?.contestId ?? "",
+                appliedContestModel.value?.userId ?? "")
             .then((model) {
           if (model != null) {
             if (model.data?.totalDocs == 1) {
@@ -92,13 +110,15 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 UpcomingWidget(
-                    title: "Name", content: widget.post?.fullName ?? ""),
+                    title: "Name",
+                    content: appliedContestModel.value?.fullName ?? ""),
                 // const Gap(20),
                 UpcomingWidget(title: "University", content: "University"),
                 //  const Gap(20),
                 UpcomingWidget(
                     title: "Entry Type",
-                    content: widget.post?.contest?.entryType ?? ""),
+                    content:
+                        appliedContestModel.value?.contest?.entryType ?? ""),
                 /*   const Gap(20),
                 UpcomingWidget(
                     title: "Duration",
@@ -112,15 +132,17 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
               children: [
                 UpcomingWidget(
                     title: "Talent\nCategory",
-                    content: formatDate(widget.post?.contest?.startDate ?? "")),
+                    content: formatDate(
+                        appliedContestModel.value?.contest?.startDate ?? "")),
                 //  const Gap(20),
                 UpcomingWidget(
                     title: "Submission\nDate",
-                    content: formatDate(widget.post?.createdAt ?? "")),
+                    content:
+                        formatDate(appliedContestModel.value?.createdAt ?? "")),
                 //   const Gap(20),
                 UpcomingWidget(
                   title: "Application\nStatus",
-                  content: widget.post?.status ?? "",
+                  content: appliedContestModel.value?.status ?? "",
                   status: true,
                 ),
                 /*   const Gap(20),
@@ -130,7 +152,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
               ],
             ),
             const Gap(20),
-            if (widget.post?.status == "REJECTED")
+            if (appliedContestModel.value?.status == "REJECTED")
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -139,12 +161,12 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       style: wayaTheme.textTheme.bodyMedium),
                   const Gap(10),
                   Text(
-                      widget.post?.rejectionReason ??
+                      appliedContestModel.value?.rejectionReason ??
                           "We regret to inform you that your application has been rejected due to insufficient originality in your proposed act. We encourage you to explore more unique ideas and reapply in the future!",
                       style: wayaTheme.textTheme.bodyMedium),
                 ],
               ),
-            if (widget.post?.status == "REJECTED")
+            if (appliedContestModel.value?.status == "REJECTED")
               Column(
                 children: [
                   Row(
@@ -155,25 +177,31 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                           title: "Start Date",
                           isFromDetailsPage: true,
                           content: formatDate(
-                              widget.post?.contest?.startDate ?? "")),
+                              appliedContestModel.value?.contest?.startDate ??
+                                  "")),
                       const Gap(20),
                       UpcomingWidget(
                           title: "End Date",
                           isFromDetailsPage: true,
-                          content:
-                              formatDate(widget.post?.contest?.endDate ?? "")),
+                          content: formatDate(
+                              appliedContestModel.value?.contest?.endDate ??
+                                  "")),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Entry Type",
                           isFromDetailsPage: true,
-                          content: widget.post?.contest?.entryType ?? ""),
+                          content:
+                              appliedContestModel.value?.contest?.entryType ??
+                                  ""),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Duration",
                           isFromDetailsPage: true,
                           content: getRealDateDiffBtwDate(
-                              widget.post?.contest?.startDate ?? "",
-                              widget.post?.contest?.endDate ?? "")),
+                              appliedContestModel.value?.contest?.startDate ??
+                                  "",
+                              appliedContestModel.value?.contest?.endDate ??
+                                  "")),
                     ],
                   ),
                   const Gap(10),
@@ -185,17 +213,22 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       UpcomingWidget(
                           title: "Total Stages",
                           isFromDetailsPage: true,
-                          content: widget.post?.contest?.multipleStages ?? ""),
+                          content: appliedContestModel
+                                  .value?.contest?.multipleStages ??
+                              ""),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Category",
                           isFromDetailsPage: true,
-                          content: widget.post?.categoryName ?? ""),
+                          content:
+                              appliedContestModel.value?.categoryName ?? ""),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Prize",
                           isFromDetailsPage: true,
-                          content: widget.post?.contest?.winnerPrize ?? ""),
+                          content:
+                              appliedContestModel.value?.contest?.winnerPrize ??
+                                  ""),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Host",
@@ -210,22 +243,24 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
             WayaButton(
               callback: () async {
                 //? check if users request has been approved
-                if (widget.post?.status?.toLowerCase() == "approved") {
+                if (appliedContestModel.value?.status?.toLowerCase() ==
+                    "approved") {
                   if (hasProfile.value) {
                     WayaNav.toNamed("/upcoming-manage-contest-details");
                     return;
                   }
                   //? check if contest is free
-                  if (widget.post?.contest?.entryType?.toLowerCase() ==
+                  if (appliedContestModel.value?.contest?.entryType
+                          ?.toLowerCase() ==
                       "free") {
                     ref.read(selectedAppliedContestProvider.notifier).state =
-                        widget.post;
+                        appliedContestModel.value;
                     WayaNav.goBack();
                     WayaNav.toNamed("/create-profile-contest1");
                   } else {
                     //? User has already paid for a contest
                     ref.read(selectedAppliedContestProvider.notifier).state =
-                        widget.post;
+                        appliedContestModel.value;
                     if (hasPaid.value) {
                       WayaNav.goBack();
                       WayaNav.toNamed("/create-profile-contest1");
@@ -240,9 +275,10 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       context,
                       child: AvailableBalanceModal(
                         voteCount: "0",
-                        model: widget.post,
-                        voteFee:
-                            widget.post?.contest?.amount?.toString() ?? "0",
+                        model: appliedContestModel.value,
+                        voteFee: appliedContestModel.value?.contest?.amount
+                                ?.toString() ??
+                            "0",
                         // model: widget.model,
                         votingLink: "",
                         onTap: () {
@@ -258,8 +294,11 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                 }
               },
               //? first checking if contest is approved or not
-              text: widget.post?.status?.toLowerCase() == "approved"
-                  ? widget.post?.contest?.entryType?.toLowerCase() == "free"
+              text: appliedContestModel.value?.status?.toLowerCase() ==
+                      "approved"
+                  ? appliedContestModel.value?.contest?.entryType
+                              ?.toLowerCase() ==
+                          "free"
                       //? if it free and has profile details
                       ? hasProfile.value
                           ? "View Contest Details"
@@ -270,7 +309,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                           //?checking if user has paid for the contest
                           : hasPaid.value
                               ? "Continue"
-                              : "Pay ₦${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
+                              : "Pay ₦${formatMoney(appliedContestModel.value?.contest?.amount?.toString() ?? "0")} to continue"
                   : "View Contest Details",
             ),
             const Gap(10),
