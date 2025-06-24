@@ -69,13 +69,15 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
 
           ),
 
-        /*  Gap(20),
+          Gap(20),
           accessType(
-              "Require Join Approval",
-              "Manually approve requests to join and maintain control over access", viewModel.requireApproval,
-                  (value) => ref.read(createGroupProvider.notifier).updateRequireApproval(value)),*/
-
-
+              "Mute Group",
+              "Manually disable members from commenting, liking,sharing and reposting on this group", viewModel.muteAndUnMute,
+                  (value) {
+                    ref.read(createGroupProvider.notifier).toggleMute(value);
+                    ref.read(createGroupProvider.notifier).muteAndUnMuteGroup(context, value, args['groupId']);
+                  })
+            ,
         ],
       ),
     );

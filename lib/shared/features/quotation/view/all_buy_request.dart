@@ -41,6 +41,19 @@ class _AllBuyRequestsScreenState extends ConsumerState<_AllBuyRequestsScreen> {
   late final provider = widget.isSelf ? userQuotationsProvider : othersQuotationsProvider;
   late final notifier = ref.read(provider.notifier);
   final handler = WayaObservableScrollController();
+  late final _value = ref.read(provider).isSyncingRequests;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => notifier.setSyncingState(true));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    notifier.setSyncingState(_value);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

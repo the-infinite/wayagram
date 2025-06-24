@@ -352,7 +352,24 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     final response = await _contestRepository.createProfile(map);
     isLoading.value = false;
     if (response.success) {
-      WayaNav.goBack();
+     // WayaNav.goBack();
+      WayaUtils.showModalSheetUgt(
+          context,
+          child: SuccessfulModal(
+              title: "Contest Profile created Successfully",
+              subtitle:
+                  "Your contest profile is now live and visible to the public. Make sure to go to your Profile page to Enter the First stage of the Contest",
+              showCopyLink: false,
+              buttonText: null,
+              onShareTap: () async {
+                
+                
+              },
+              onTap: (_, __) {
+                // WayaNav.removeUntilNamed("/ugt-home");
+                WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
+              }),
+        );
     } else {
       WayaSnackBar.showToast(response.data["message"]);
     }

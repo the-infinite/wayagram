@@ -45,17 +45,26 @@ class GroupRepository extends BaseRepository {
     return post("$serviceUrl/posts", payload, showErrors: true);
   }
 
+
+  Future<WayaRequestResponse> muteAndUnMuteGroup(bool mute, String groupId) {
+    final payload = {
+      "mute": mute
+    };
+    return patch("$serviceUrl/groups/mute/$groupId", payload);
+  }
+
+
   Future<WayaRequestResponse> getUserCategory() {
     return get("$serviceUrl/interests/categories");
   }
 
   Future<WayaRequestResponse> editGroup(
-      String groupName, String groupDesc, bool groupType, String coverImage, String profileImage, groupId) {
+      String groupName, String groupDesc, bool groupType, String coverImage, String profileImage, groupId, bool isOpen) {
     final payload = {
       "name": groupName,
       "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
-      //"isOpen": false, // this defaults to true if it is not inserted
+      "isOpen": isOpen, // this defaults to true if it is not inserted
       "coverImage": coverImage,
       "profileImage": profileImage
     };

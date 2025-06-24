@@ -19,8 +19,10 @@ import 'package:wayagram/shared/components/engagement_range.dart';
 
 class DonationDetails extends ConsumerStatefulWidget {
   static const route = '/donationDetails';
+  final String id;
   const DonationDetails({
     super.key,
+    required this.id
   });
 
   @override
