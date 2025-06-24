@@ -113,13 +113,14 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                     onTap: () {
                       WayaNav.goBack();
 
+                    ref.read(createGroupProvider.notifier).muteAndUnMuteGroup(context, group.mutedAt == null ? true : false, widget.id);
                     },
                     child: WayaActionNav(
                       context: context,
-                      asset: SvgPicture.asset(
+                      asset: group.mutedAt == null ?  SvgPicture.asset(
                         'assets/images/pages/mute.svg',
                         height: 20,
-                      ),
+                      ): Icon(Icons.notifications_off),
                       text: "  Mute Group",
                       color: wayaTheme.colorScheme.customBlack,
                     ),

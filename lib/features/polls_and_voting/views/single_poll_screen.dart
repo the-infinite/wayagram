@@ -17,7 +17,8 @@ import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class SinglePollScreen extends ConsumerStatefulWidget {
   static const route = '/singlePollScreen';
-  const SinglePollScreen({super.key,});
+  final String id;
+  const SinglePollScreen({super.key, required this.id});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SinglePollScreenState();

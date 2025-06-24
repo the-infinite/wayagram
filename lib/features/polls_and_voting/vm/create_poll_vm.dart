@@ -1070,8 +1070,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         state = state.copyWith(
             pollDashboardChoices: responseModel.data?.docs?[0].choices,
             voteCount: responseModel.data?.docs?[0].voteCount.toString(),
-            moneyGenerated: '1200',
-            //responseModel.data?.docs?[0].amountGenerated,
+            moneyGenerated: responseModel.data?.docs?[0].amountGenerated,
             numberOfPeopleVoted:
                 responseModel.data?.docs?[0].numberOfVoters.toString());
       } else {
