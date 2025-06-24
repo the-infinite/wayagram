@@ -35,8 +35,6 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
     viewModel.brandName.clear();
     viewModel.productDescription.clear();
     viewModel.quantity.clear();
-    viewModel.minDistance.clear();
-    viewModel.maxDistance.clear();
     viewModel.bidStartingAmount.clear();
     viewModel.maxBidAmount.clear();
     viewModel.deliveryAddress.clear();
@@ -147,12 +145,6 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutProduct(
-                title: 'Quantity',
-                content: viewModel.quantity.text,
-              ),
-            ),
-            Expanded(
               flex: 2,
               child: AboutProduct(
                 title: 'State of Purchase',
@@ -177,14 +169,14 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           children: [
             Expanded(
               child: AboutProduct(
-                title: 'Min Distance',
-                content: '${viewModel.minDistance.text} km',
+                title: 'Product Condition',
+                content: viewModel.productCondition,
               ),
             ),
             Expanded(
               child: AboutProduct(
-                title: 'Product Condition',
-                content: viewModel.productCondition,
+                title: 'Quantity',
+                content: viewModel.quantity.text,
               ),
             ),
           ],
@@ -331,8 +323,6 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
               bidStart: startTime.toIso8601String(),
               bidEnd: endTime.toIso8601String(),
               deliveryDetails: '----',
-              minDistance: viewModel.minDistance.text.trim(),
-              maxDistance: viewModel.maxDistance.text.trim(),
               stateOfPurchase: viewModel.stateOfPurchase,
               lga: viewModel.lga,
               vendorsCanSeeBidFromAnyDistance: '${viewModel.vendorSeeBuyRequest}',
