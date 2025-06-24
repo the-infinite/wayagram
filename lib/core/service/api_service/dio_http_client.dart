@@ -12,6 +12,7 @@ import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/service/api_service/dio_exceptions.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_storage_interface.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
 typedef WayaDownloadListener = void Function(double done, int totalSize);
@@ -149,8 +150,7 @@ class DioHttpClient implements WayaHttpClientInterface {
                 ? Options(
                     headers: {
                       Headers.acceptHeader: "*/*",
-                      Headers.contentTypeHeader:
-                          "multipart/form-data; boundary=${(body as FormData).boundary}"
+                      Headers.contentTypeHeader: "multipart/form-data; boundary=${(body as FormData).boundary}"
                     },
                   )
                 : null,
@@ -188,8 +188,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     return completer.future;
   }
 
-  Future<WayaRequestResponse> downloadHttp(
-      String url, String outputPath, WayaDownloadListener onData) async {
+  Future<WayaRequestResponse> downloadHttp(String url, String outputPath, WayaDownloadListener onData) async {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
       repeat: (repeater) async {
@@ -202,7 +201,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             options: Options(
               headers: {
                 HttpHeaders.acceptEncodingHeader: '*',
-               },
+              },
             ),
             onReceiveProgress: (count, total) {
               if (total != -1) {
@@ -379,8 +378,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     return completer.future;
   }
 
-  Future<WayaRequestResponse> _makeRequest(
-      Future<Response> future, RequestRepeater repeater,
+  Future<WayaRequestResponse> _makeRequest(Future<Response> future, RequestRepeater repeater,
       [bool showErrors = false]) async {
     try {
       final response = await future;
@@ -395,9 +393,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       if (e.response != null) {
         var message = 'An unknown error occurred';
 
-        if (e.response?.statusCode == 401 ||
-            (e.response?.data is Map &&
-                e.response?.data['statusCode'] == 401)) {
+        if (e.response?.statusCode == 401 || (e.response?.data is Map && e.response?.data['statusCode'] == 401)) {
           //> use refresh token to generate a new auth token
           bool success = await refreshToken();
 
@@ -409,13 +405,17 @@ class DioHttpClient implements WayaHttpClientInterface {
 
           //? Since it failed, probably redirect the user to the login screen.
           else {
-            if (!_signedOut) {
+            final token = await secureDataSource.getToken();
+
+            //? Always clear session data when something fails.
+            if (token != null && !_signedOut) {
+              await secureDataSource.deleteAll();
+              await WayaFastStorageService().deleteAll();
               _signedOut = true;
               await WayaUtils.showModalSheet(
                 WayaNav.context,
                 child: WayaErrorDialog(
-                  title:
-                      "Your session has expired. To continue, please log in to your account.",
+                  title: "Your session has expired. To continue, please log in to your account.",
                 ),
               );
               await WayaNav.removeUntilNamed(LoginCoverPage.route);
@@ -432,9 +432,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         _logger.e('statusCode: ${e.response?.statusCode}');
 
         try {
-          message = e.response?.data['errors'] != null
-              ? e.response?.data['errors'][0]
-              : e.response?.data['message'];
+          message = e.response?.data['errors'] != null ? e.response?.data['errors'][0] : e.response?.data['message'];
           _logger.e('errors: ${e.response?.data['errors']}');
         } catch (_) {}
         _logger.e('message: $message, ${e.response?.data}');
@@ -447,8 +445,7 @@ class DioHttpClient implements WayaHttpClientInterface {
           }
 
           // Now continue.
-          WayaUtils.showModalSheet(WayaNav.context,
-              child: WayaErrorDialog(title: message));
+          WayaUtils.showModalSheet(WayaNav.context, child: WayaErrorDialog(title: message));
         }
 
         //? If this is in the staging environment.
@@ -519,8 +516,7 @@ class DioHttpClient implements WayaHttpClientInterface {
                   : 'application/json'),
       'accept': '*/*',
       'connection': 'keep-alive',
-      if (isAuth)
-        'Authorization': 'Bearer ${await secureDataSource.getToken()}',
+      if (isAuth) 'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 
