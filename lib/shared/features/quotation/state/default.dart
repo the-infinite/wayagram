@@ -49,6 +49,7 @@ class QuotationsState {
 
   // For requests.
   final bool isLoadingRequests;
+  final bool isSyncingRequests;
   final int requestPage;
   final int requestPages;
   final int totalRequests;
@@ -80,6 +81,7 @@ class QuotationsState {
     required this.bids,
     required this.bidRequests,
     required this.bidStatus,
+    required this.isSyncingRequests,
     required this.isLoadingRequests,
     required this.requestPage,
     required this.requestPages,
@@ -117,6 +119,7 @@ class QuotationsState {
     totalRequests: 0,
     hasNextRequest: false,
     requests: [],
+    isSyncingRequests: false,
     requestStatus: null,
     overview: null,
     hasLoadedOrders: false,
@@ -135,7 +138,7 @@ class QuotationsState {
     isLoadingRequests: false,
     hasLoadedBids: false,
     hasLoadedRequests: false,
-    limit: 15,
+    limit: 100,
     bidPage: 1,
     bidPages: 1,
     totalBids: 0,
@@ -145,6 +148,7 @@ class QuotationsState {
     bidStatus: null,
     requestPage: 1,
     requestPages: 1,
+    isSyncingRequests: true,
     totalRequests: 0,
     hasNextRequest: false,
     requests: [],
@@ -163,6 +167,7 @@ class QuotationsState {
   QuotationsState copyWith({
     bool? isUser,
     bool? isLoadingBids,
+    bool? isSyncingRequests,
     bool? isLoadingRequests,
     bool? hasLoadedBids,
     bool? hasLoadedRequests,
@@ -192,6 +197,7 @@ class QuotationsState {
   }) {
     return QuotationsState(
       isLoadingBids: isLoadingBids ?? this.isLoadingBids,
+      isSyncingRequests: isSyncingRequests ?? this.isSyncingRequests,
       isLoadingRequests: isLoadingRequests ?? this.isLoadingRequests,
       isUser: isUser ?? this.isUser,
       hasLoadedBids: hasLoadedBids ?? this.hasLoadedBids,
