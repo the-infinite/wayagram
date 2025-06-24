@@ -41,6 +41,7 @@ class GroupState {
   final String? foundUserId;
   final bool isReportingGroup;
   final bool isFocused;
+  final bool muteAndUnMute;
   final bool isLoading;
   final bool isPrivate;
   final bool openToEveryone;
@@ -62,6 +63,7 @@ class GroupState {
     this.isFocused = false,
     this.isPrivate = false,
     this.isLoading = false,
+    this.muteAndUnMute = false,
     this.openToEveryone = false,
     this.requireApproval = false,
     this.isReportingGroup = false,
@@ -114,6 +116,7 @@ class GroupState {
     bool? isLoading,
     bool? joinGroupLoading,
     bool? openToEveryone,
+    bool? muteAndUnMute,
     bool? isPrivate,
     bool? requireApproval,
     String? foundUserId,
@@ -149,6 +152,7 @@ class GroupState {
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
       isPrivate: isPrivate ?? this.isPrivate,
+      muteAndUnMute: muteAndUnMute ?? this.muteAndUnMute,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       isReportingGroup: isReportingGroup ?? this.isReportingGroup,
       openToEveryone: openToEveryone ?? this.openToEveryone,

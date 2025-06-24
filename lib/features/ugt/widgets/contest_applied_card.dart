@@ -231,7 +231,7 @@ class ContestAppliedCard extends StatelessWidget {
                   } else {
                     WayaUtils.showModalSheetUgt(
                       context,
-                      child: ApplicationStatus(post),
+                      child: ApplicationStatus(post,  post.contestId),
                     );
                   }
                 },

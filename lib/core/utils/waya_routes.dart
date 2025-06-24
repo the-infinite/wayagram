@@ -391,10 +391,10 @@ class WayaAppRoutes {
         EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
     EditPageMemberInfo.route: () =>
         EditPageMemberInfo(id: WayaNav.search['id'].toString()),
-    SinglePollScreen.route: () => SinglePollScreen(),
+    SinglePollScreen.route: () => SinglePollScreen(id: WayaNav.search['id'].toString()),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
-    DonationDetails.route: () => DonationDetails(),
+    DonationDetails.route: () => DonationDetails(id: WayaNav.search['id'].toString()),
     CreateDonation.route: () => CreateDonation(),
     DonationManagement.route: () => DonationManagement(),
     SeeAllDonations.route: () => SeeAllDonations(),

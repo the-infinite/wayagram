@@ -79,6 +79,37 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
       isLoading = false;
     }
   }
+
+  // Simulate fetching paginated posts
+  Future<AppliedContestModel?> fetchSingleAppliedContest(
+      String contestId) async {
+    try {
+      //?start loading
+
+      final response = await _contestRepository.fetchAppliedSingleContest(
+          _localDataSource.getUserId().toString(), contestId);
+
+      //?on success
+
+      if (response.success) {
+        AppliedContest responseModel = AppliedContest.fromJson(response.data);
+
+        if (responseModel.data?.docs?.isNotEmpty == true) {
+          print("dude ww: ${responseModel.data?.docs?.first.fullName}");
+          return responseModel.data?.docs?.first;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+
+      // return contestList;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+    return null;
+  }
 }
 
 //? My notifier

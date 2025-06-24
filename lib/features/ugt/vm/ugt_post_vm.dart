@@ -84,6 +84,10 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
       return null;
     }
   }
+
+
+
+
   //> generate video preview
   Future<File?> generateVideoPreview(String videoPath) async {
     final thumb = await VideoThumbnail.thumbnailFile(

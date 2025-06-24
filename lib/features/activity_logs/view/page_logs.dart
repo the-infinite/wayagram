@@ -116,6 +116,7 @@ class _PageLogsState extends ConsumerState<PageLogs > {
                         shrinkWrap: true,
                         itemCount: dates.length,
                         itemBuilder: (context, i) {
+
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
