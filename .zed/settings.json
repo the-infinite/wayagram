@@ -1,0 +1,16 @@
+{
+  "lsp": {
+    "dart": {
+      "binary": {
+        "path": ".fvm/versions/3.27.2/bin/dart",
+        "arguments": ["language-server", "--protocol=lsp"]
+      }
+    }
+  },
+  "dap": {
+    "dart": {
+      "binary": "fvm",
+      "args": ["flutter", "run", "--debug"]
+    }
+  }
+}

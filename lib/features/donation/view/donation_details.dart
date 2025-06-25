@@ -10,7 +10,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
@@ -34,7 +33,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      ref.read(donationVmProvider.notifier).getSingleDonation('${args['id']}');
+      //ref.read(donationVmProvider.notifier).getSingleDonation('${args['id']}');
+      ref.read(donationVmProvider.notifier).getOneDonation('${args['id']}');
     });
     super.initState();
   }
@@ -49,8 +49,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
       title: "Donation Details",
       isLoading: viewModel.isLoading,
       isScrollable: true,
-      appBarTrailing: DonationAction(
-          donationId: args['id'], isUser: ConversationState.self.id == args['organizerId'], donation: args['donation']),
+      // appBarTrailing: DonationAction(
+      //     donationId: args['id'] ?? widget.id, isUser: ConversationState.self.id == args['organizerId'], donation: args['donation']),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,22 +69,22 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
           Gap(10),
           EngagementRange(
             topLeft:
-                "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
-            bottomLeft: "${args['donationCount']} Donations",
+                "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}'))}",
+            bottomLeft: "${args['donationCount'] ??  viewModel.singleDonationDocs.first.donationCount} Donations",
             bottomRight: "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day' : 'days'} left",
-            range: args['ratioLeft'],
+            range: args['ratioLeft'] ?? '',
             //range: args['donationCount'] == '0' ? 0.0 : 0.4
           ),
           Gap(10),
           Row(
             children: [
               Expanded(
-                child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised']}')), 'Amount Raised',
+                child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised ?? viewModel.singleDonationDocs.first.amountRaised}')), 'Amount Raised',
                     wayaTheme.colorScheme.success50),
               ),
               Gap(10),
               Expanded(
-                child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['targetAmount']}')), 'Target Amount',
+                child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}')), 'Target Amount',
                     wayaTheme.colorScheme.pendingColor),
               )
             ],
@@ -96,13 +96,13 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                 .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 12.sp, fontWeight: FontWeight.w400),
           ),
           Gap(20),
-          _reviewText('Cause Title', '${args['title']}'),
+          _reviewText('Cause Title', '${args['title'] ?? viewModel.singleDonationDocs.first.title}'),
           Gap(10),
-          _reviewText('Cause  Description', '${args['desc']}'),
+          _reviewText('Cause  Description', '${args['desc'] ??  viewModel.singleDonationDocs.first.description}'),
           Gap(10),
-          _reviewText('Proposed Solution', '${args['solution']}'),
+          _reviewText('Proposed Solution', '${args['solution'] ?? viewModel.singleDonationDocs.first.solution}'),
           Gap(10),
-          _reviewText('Impact Statement', '${args['impact']}'),
+          _reviewText('Impact Statement', '${args['impact'] ?? viewModel.singleDonationDocs.first.impact}'),
         ],
       ),
       bottomNavigationBar: Container(
@@ -138,7 +138,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                   color: wayaTheme.colorScheme.primary500,
                 ),
                 callback: () => Share.share(
-                  WayaValueHelper.getShareableUrl(WayaAppRoutes.getDonationDetailsPage('${args['id']}')),
+                  WayaValueHelper.getShareableUrl(WayaAppRoutes.getDonationDetailsPage('${args['id'] ??  viewModel.singleDonationDocs.first.id}')),
                   subject: 'Share Donation',
                 ),
                 color: wayaTheme.colorScheme.white,
@@ -154,14 +154,14 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                 callback: () => WayaUtils.showModalSheet(
                   context,
                   child: DonationModal(
-                    amountRaised: '${args['amountRaised']}',
-                    targetAmount: '${args['targetAmount']}',
-                    title: '${args['title']}',
-                    minimumDonationAmount: '${args['minimumDonationAmount']}',
-                    campaignId: '${args['id']}',
-                    privacy: '${args['privacy']}',
-                    daysLeft: '${args['daysLeft']}',
-                    donationCount: '${args['donationCount']}',
+                    amountRaised: '${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised}',
+                    targetAmount: '${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}',
+                    title: '${args['title'] ?? viewModel.singleDonationDocs.first.title}',
+                    minimumDonationAmount: '${args['minimumDonationAmount'] ?? viewModel.singleDonationDocs.first.amountRaised}',
+                    campaignId: '${args['id'] ?? viewModel.singleDonationDocs.first.id}',
+                    privacy: '${args['privacy'] ?? viewModel.singleDonationDocs.first.privacy}',
+                    daysLeft: '${args['daysLeft'] ?? viewModel.singleDonationDocs.first.createdAt}',
+                    donationCount: '${args['donationCount'] ?? viewModel.singleDonationDocs.first.donationCount}',
                   ),
                 ),
               ),

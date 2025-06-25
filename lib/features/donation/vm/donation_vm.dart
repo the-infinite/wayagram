@@ -551,6 +551,19 @@ class DonationVm extends StateNotifier<DonationState> {
     }
   }
 
+  Future<void> getOneDonation(String id) async {
+    try {
+      final response = await _donationRepository.getSingleCampaign(id);
+      if (response.success) {
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        state = state.copyWith(singleDonationDocs: responseModel.data?.docs);
+      } else {}
+
+    }  catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
   Future<bool?> updateDonationSettings({bool notifyFriends = false, bool makeDonationsPublic = false}) async {
     try {
       // debugPrint(productId);
