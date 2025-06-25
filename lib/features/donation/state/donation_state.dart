@@ -21,6 +21,7 @@ class DonationState{
     final MultipartFile? image;
     final List<String>? selectedCategoryId;
     final List<String> selected;
+    final List<MyDonationDocs> singleDonationDocs;
     final String category;
     final String? kycStatus;
     final String kycMessage;
@@ -34,7 +35,7 @@ class DonationState{
     final CreateDonationResponse? createDonationResponse;
     List<AllDonationDocs>? allDonationDocs;
     List<AppliedDonationDocs>? appliedDonationDocs;
-    List<MyDonationDocs>? myDonationDocs;
+    List<MyDonationDocs> myDonationDocs;
     List<MyDonationDocs>? approvedDonations;
     List<MyDonationDocs>? pendingDonations;
     List<MyDonationDocs>? rejectedDonations;
@@ -65,6 +66,7 @@ class DonationState{
       this.donationImage = const [],
       this.categories = const [],
       this.image,
+      this.singleDonationDocs = const [],
       this.startDate = '',
       this.commission = '',
       this.category = '',
@@ -106,6 +108,7 @@ class DonationState{
       List<AllDonationDocs>? allDonationDocs,
       List<AppliedDonationDocs>? appliedDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
+      List<MyDonationDocs>? singleDonationDocs,
       List<MyDonationDocs>? approvedDonations,
       List<MyDonationDocs>? rejectedDonations,
       List<DocType>? donationImage,
@@ -145,6 +148,7 @@ class DonationState{
       categories: categories ?? this.categories,
       selected: selected ?? this.selected,
       image: image ?? this.image,
+      singleDonationDocs: singleDonationDocs ?? this.singleDonationDocs,
       privacyOption: privacyOption ?? this.privacyOption,
       accountType: accountType ?? this.accountType,
       startDate: startDate ?? this.startDate,
