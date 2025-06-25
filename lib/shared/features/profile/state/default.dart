@@ -102,8 +102,8 @@ class PostState {
     //? If the filter has any text you can use to search inside of it...
     if (filter.search?.isNotEmpty ?? false) {
       filtered = filtered.where((post) =>
-          post.content.toLowerCase().contains(filter.search!) ||
-          post.hashtags.any((tag) => tag.toLowerCase().contains(filter.search!)));
+          post.content.toString().toLowerCase().contains(filter.search!) ||
+          post.hashtags.map((e) => e.toString()).any((tag) => tag.toLowerCase().contains(filter.search!)));
     }
 
     //? Now, we filter into the
@@ -238,8 +238,8 @@ class SavedPostState {
     //? If the filter has any text you can use to search inside of it...
     if (filter.search?.isNotEmpty ?? false) {
       filtered = filtered.where((post) =>
-          post.content.toLowerCase().contains(filter.search!) ||
-          post.hashtags.any((tag) => tag.toLowerCase().contains(filter.search!)));
+          post.content.toString().toLowerCase().contains(filter.search!) ||
+          post.hashtags.map((e) => e.toString()).any((tag) => tag.toLowerCase().contains(filter.search!)));
     }
 
     //? Now, we filter into the

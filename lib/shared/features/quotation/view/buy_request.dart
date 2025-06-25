@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -84,11 +85,22 @@ class SharedOthersBuyRequestsWidget extends ConsumerStatefulWidget {
 class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyRequestsWidget> {
   late final notifier = ref.read(othersQuotationsProvider.notifier);
 
+  Timer? _timer;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //? Only fetch the requests if they have not been loaded yet.
       notifier.getBuyRequestsIfNotLoaded();
+
+      //? This is fine.
+      _timer ??= Timer.periodic(
+        const Duration(seconds: 7),
+        (timer) async {
+          debugPrint("Reloading quotations order");
+          await notifier.reloadQuotationsOrder();
+        },
+      );
     });
     super.initState();
   }
@@ -101,6 +113,12 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
       notifier.getBuyRequestsIfNotLoaded();
     });
     super.reassemble();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
