@@ -155,7 +155,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
 
           GroupedWidgetHeader(
               onTap: () {
-                //WayaNav.toNamed('/seeAllApprovedDonations');
+                WayaNav.toNamed('/seeAllLiveDonations');
               },
               subTitle: 'See and manage all your live donations',
               title: 'Live Donations'),
