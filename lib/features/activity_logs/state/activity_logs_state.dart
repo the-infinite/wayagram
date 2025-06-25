@@ -185,7 +185,7 @@ class ActivityLogsState {
   }
 
   List<DonationDocs> filterDonationDocs(DateTime start, DateTime end) {
-    Iterable<DonationDocs> result = <DonationDocs>[];
+    Iterable<DonationDocs> result = donationDocs;
 
     //? First, we want to only include things that have their start date before
     result = result.where((donation) {

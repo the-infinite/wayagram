@@ -134,7 +134,7 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
                 return SingleChildScrollView(
                   child: filteredDonations.isEmpty
                       ? ActivityLogsEmptyState(
-                          text: 'You don\'t have Donation for this week yet',
+                          text: 'You don\'t have donation logs for ${_filterBy.name.toLowerCase()} yet',
                         )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
