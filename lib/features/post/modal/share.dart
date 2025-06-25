@@ -71,11 +71,14 @@ class SharePostModal extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
-                          final result = await pageNotifier.bookmarkPost(context, postId: post.id);
+                          final result = await pageNotifier
+                              .bookmarkPost(context, postId: post.id);
                           WayaNav.goBack(
                             result: ShareResult(
                               "save",
-                              result ? ShareResultStatus.success : ShareResultStatus.dismissed,
+                              result
+                                  ? ShareResultStatus.success
+                                  : ShareResultStatus.dismissed,
                             ),
                           );
                         },
@@ -108,7 +111,10 @@ class SharePostModal extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
-                          WayaNav.toNamed(Moment.route, arguments: {"content": post.url});
+                          WayaNav.toNamed(Moment.route, arguments: {
+                            "content": WayaValueHelper.getShareableUrl(
+                                WayaAppRoutes.getSinglePostScreen(post.id))
+                          });
                           // WayaNav.goBack(
                           //   result: ShareResult(
                           //     "moment",
@@ -148,11 +154,15 @@ class SharePostModal extends StatelessWidget {
                           if (post.url != null) {
                             await WayaUtils.copyText(post.url!);
                             WayaSnackBar.showToast("Copied ${post.url}");
-                            WayaNav.goBack(result: ShareResult("copy", ShareResultStatus.success));
+                            WayaNav.goBack(
+                                result: ShareResult(
+                                    "copy", ShareResultStatus.success));
 
                             return;
                           }
-                          WayaNav.goBack(result: ShareResult("copy", ShareResultStatus.dismissed));
+                          WayaNav.goBack(
+                              result: ShareResult(
+                                  "copy", ShareResultStatus.dismissed));
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -182,11 +192,14 @@ class SharePostModal extends StatelessWidget {
                     //? The fifth option, is to share outward.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => Share.share('${post.url}', subject: 'Share Post URL').then(
+                        onTap: () async => Share.share('${post.url}',
+                                subject: 'Share Post URL')
+                            .then(
                           (value) {
                             if (value.status == ShareResultStatus.success) {
                               // Share the post.
-                              pageNotifier.sharePost(context, postId: post.originalPostId ?? post.id);
+                              pageNotifier.sharePost(context,
+                                  postId: post.originalPostId ?? post.id);
 
                               // Now stop.
                               return;
@@ -236,7 +249,8 @@ class SharePostModal extends StatelessWidget {
 
               //? Then, to share the post.
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
                 child: ShareChatsWidget(
                   url: post.url,
                   notifier: pageNotifier,

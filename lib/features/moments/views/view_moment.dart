@@ -537,7 +537,7 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    print("dwfewfewf ${widget.moment.content}");
+  
     return Stack(
       fit: StackFit.expand,
       children: [
