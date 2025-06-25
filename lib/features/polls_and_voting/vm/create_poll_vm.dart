@@ -19,6 +19,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/account_type_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_response.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_all_payout_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/payout_commission_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
 
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
@@ -1069,9 +1070,33 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         state = state.copyWith(
             pollDashboardChoices: responseModel.data?.docs?[0].choices,
             voteCount: responseModel.data?.docs?[0].voteCount.toString(),
-            moneyGenerated: responseModel.data?.docs?[0].amountGenerated,
+            moneyGenerated: '1200',
+            //responseModel.data?.docs?[0].amountGenerated,
             numberOfPeopleVoted:
                 responseModel.data?.docs?[0].numberOfVoters.toString());
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.polls,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
+  Future<void> getPayoutCommission() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getPayoutCommission();
+      state = state.copyWith(isLoading: false);
+
+      if (response.success) {
+        PayoutCommissionModel responseModel =
+            PayoutCommissionModel.fromJson(response.data);
+        state = state.copyWith(commission: responseModel.data?.docs?[2].rate);
       } else {
         state = state.copyWith(isLoading: false);
       }

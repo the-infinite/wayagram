@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/ugt/data/model/contest_transaction_model.dart';
 
 import 'package:wayagram/features/ugt/data/model/contestant_count_model.dart';
 import 'package:wayagram/features/ugt/data/model/contestant_transaction_model.dart';
@@ -14,10 +15,12 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
 
   Future<void> fetchTotalEarnings(String id, String filter) async {
     try {
-      final response = await _contestRepository.fetchAllTotalEarningContest(id, filter);
+      final response =
+          await _contestRepository.fetchAllTotalEarningContest(id, filter);
 
       if (response.success) {
-        ContestantTransactionModel responseModel = ContestantTransactionModel.fromJson(response.data);
+        ContestantTransactionModel responseModel =
+            ContestantTransactionModel.fromJson(response.data);
         //  contestList = responseModel.data;
 
         state = state.copyWith(
@@ -34,10 +37,12 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
       final response = await _contestRepository.fetchAllTotalContest(id);
 
       if (response.success) {
-        ContestantCountModel responseModel = ContestantCountModel.fromJson(response.data);
+        ContestantCountModel responseModel =
+            ContestantCountModel.fromJson(response.data);
         //  contestList = responseModel.data;
 
-        state = state.copyWith(totalContestants: responseModel.data?.totalContestants ?? 0);
+        state = state.copyWith(
+            totalContestants: responseModel.data?.totalContestants ?? 0);
       }
     } catch (e) {
       //debugPrint(e.toString());
@@ -56,9 +61,50 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
       //debugPrint(e.toString());
     } finally {}
   }
+
+  Future<void> fetchUserTransaction(String contestId) async {
+    try {
+      final response =
+          await _contestRepository.fetchTransactionHistory(contestId);
+
+      if (response.success) {
+        ContestTransactionModelBase responseModel =
+            ContestTransactionModelBase.fromJson(response.data);
+
+        state = state.copyWith(
+            contestTransactionHistoryList: responseModel.data?.docs ?? []);
+        int totalCommission = 0;
+        for (var model in responseModel.data?.docs ?? []) {
+          totalCommission += int.tryParse(model.commission ?? '') ?? 0;
+        }
+        state = state.copyWith(totalCommission: totalCommission);
+      }
+    } catch (e) {
+      //debugPrint(e.toString());
+    } finally {}
+  }
+
+    Future<void> fetchUserPayoutTransaction(String contestId) async {
+    try {
+      final response =
+          await _contestRepository.fetchPayoutHistory(contestId);
+
+      if (response.success) {
+        ContestTransactionModelBase responseModel =
+            ContestTransactionModelBase.fromJson(response.data);
+
+        state = state.copyWith(
+            contestPayoutHistoryList: responseModel.data?.docs ?? []);
+       
+      }
+    } catch (e) {
+      //debugPrint(e.toString());
+    } finally {}
+  }
 }
 
-final ugtAdminDashboardVm = StateNotifierProvider<UgtAdminDashboardVm, UgtDashboardState>(
+final ugtAdminDashboardVm =
+    StateNotifierProvider<UgtAdminDashboardVm, UgtDashboardState>(
   (ref) {
     return UgtAdminDashboardVm(ContestRepo());
   },

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,11 +8,13 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
+import 'package:wayagram/shared/features/browser/activity.dart';
 
 class CreateNewDonation extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -264,40 +267,6 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     ],
                   );
                 }),
-               /* const Gap(20),
-                FormField<String>(validator: (value) {
-                  if (viewModel.category.isEmpty) {
-                    return 'Category is required';
-                  }
-
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaSelectField<String>(
-                          height: 0.3,
-                          label: "Category",
-                          value: viewModel.category.capitalizeFirst,
-                          uniqueKey: 'category-type',
-                          hintText: 'Select Category',
-                          items: ref.read(donationVmProvider.notifier).donationCategory,
-                          onSelected: (value) => ref
-                              .read(donationVmProvider.notifier)
-                              .selectDonationCategory(value.first.value)),
-                      if (formState.hasError && viewModel.category.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
-                          ),
-                        ),
-                    ],
-                  );
-                }),*/
                 const Gap(20),
                 FormField<String>(validator: (value) {
                   if (viewModel.category.isEmpty) {
@@ -439,45 +408,6 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                       fontSize: 14.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
                 ),
                 const Gap(10),
-                /* Row(children: [
-                  InkWell(
-                    splashFactory: NoSplash.splashFactory,
-                    splashColor: Colors.transparent,
-                    onTap: (){
-                      setState(() {
-                        public = true;
-                        private = false;
-                      });
-                    },
-                    child: public ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
-                  ),
-                  const Gap(6),
-                  Text("Public",
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).colorScheme.black),),
-
-                  const Gap(80),
-                  InkWell(
-                    splashFactory: NoSplash.splashFactory,
-                    splashColor: Colors.transparent,
-                    onTap: (){
-
-                      setState(() {
-                        public = false;
-                        private = true;
-                      });
-                    },
-                    child: private ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
-                  ),
-                  const Gap(6),
-                  Text("Private",
-                      style:  Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).colorScheme.black),),
-                ],),*/
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -510,8 +440,44 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     )),
                   ],
                 ),
-                const Gap(20),
+                const Gap(15),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: viewModel.isAgreeToTerm,
+                      onChanged: (value) {
+                        ref.read(donationVmProvider.notifier).toggleTerm(value);
+                      },
+                    ),
+                    Expanded(
+                      child: RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: "I agree to the ",
+                                style: WayaTextStyles.bodySmall),
+                            TextSpan(
+                              text: "Terms and conditions ",
+                              style: WayaTextStyles.smallActiveLinkStyle,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async => await WayaNav.to(
+                                  transition: Transition.circularReveal,
+                                  duration: const Duration(milliseconds: 500),
+                                  WayaBrowserView(
+                                    name: "Terms and Conditions",
+                                    url: "https://wayagram.ng/terms",
+                                  ),
+                                ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
                 WayaButton(
+                    isDisabled: !viewModel.isAgreeToTerm,
                     callback: () async {
                       if (_formKey.currentState!.validate()) {
                         widget.gotoNextTab();

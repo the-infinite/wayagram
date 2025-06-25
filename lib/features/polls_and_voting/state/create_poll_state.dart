@@ -48,6 +48,7 @@ class CreatePollVotingState {
   final String endDateString;
   final String pollType;
   final String pollTypeId;
+  final String? commission;
   final String pollStatus;
   File? candidateImage;
   final String dateIsoFormat;
@@ -89,6 +90,7 @@ class CreatePollVotingState {
     this.endDateString = '',
     this.dateIsoFormat = '',
     this.pollTypeId = '',
+    this.commission = '',
     this.isFocused = false,
     this.isLoading = false,
     this.isLoadingPollWithStatus = false,
@@ -140,6 +142,7 @@ class CreatePollVotingState {
     String? dueAmount,
     String? moneyGenerated,
     String? voteCount,
+    String? commission,
     String? accountType,
     String? numberOfPeopleVoted,
     String? startDate,
@@ -200,6 +203,7 @@ class CreatePollVotingState {
         isFocused: isFocused ?? this.isFocused,
         isLoading: isLoading ?? this.isLoading,
         pollStatus: pollStatus ?? this.pollStatus,
+        commission: commission ?? this.commission,
         isLoadingPollWithStatus:
             isLoadingPollWithStatus ?? this.isLoadingPollWithStatus,
         fetchAllPols: fetchAllPols ?? this.fetchAllPols,

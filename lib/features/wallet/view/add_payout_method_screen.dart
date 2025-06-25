@@ -165,17 +165,19 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                       ],
                     );
                   }),
-                  const Gap(180),
+                  const Gap(140),
                    WayaButton(
                      callback: (){
-                       WayaUtils.showModalSheet(
-                         context,
-                         child: PayoutModal(
-                           name: viewModel.acctName.text,
-                           bankName: viewModel.bank!.label,
-                           bankCode: viewModel.bank!.value,
-                         ),
-                       );
+                       if (_formKey.currentState!.validate()) {
+                         WayaUtils.showModalSheet(
+                           context,
+                           child: PayoutModal(
+                             name: viewModel.acctName.text,
+                             bankName: viewModel.bank!.label,
+                             bankCode: viewModel.bank!.value,
+                           ),
+                         );
+                       }
                      },
                     text: 'Add Payout',
                     isLoading: viewModel.isLoading!,
