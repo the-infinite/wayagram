@@ -36,7 +36,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final dynamic args = ModalRoute.of(context)?.settings.arguments;
+      //final dynamic args = ModalRoute.of(context)?.settings.arguments;
       ref.read(donationVmProvider.notifier).getPayoutCommission();
 
     });

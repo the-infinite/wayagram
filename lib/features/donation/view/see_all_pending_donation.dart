@@ -46,7 +46,7 @@ class _SeeAllDonationsState extends ConsumerState<SeeAllDonations> with SingleTi
 
     // Filter the myDonations
     final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
-      viewModel.myDonationDocs!,
+      viewModel.myDonationDocs,
       [
         'title',
       ],
@@ -62,7 +62,7 @@ class _SeeAllDonationsState extends ConsumerState<SeeAllDonations> with SingleTi
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            viewModel.myDonationDocs!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
+            viewModel.myDonationDocs.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
             Expanded(
               child: ListView.builder(
                 //physics: const NeverScrollableScrollPhysics(),

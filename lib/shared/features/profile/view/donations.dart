@@ -27,9 +27,8 @@ class _DonationsFeedWidget extends ConsumerState<DonationsFeedWidget> {
   Widget build(BuildContext context) {
     final state = ref.watch(donationVmProvider);
 
-    List<MyDonationDocs>? myDonations = widget.isExpanded
-        ? state.myDonationDocs
-        : state.myDonationDocs!.sublist(0, min(state.myDonationDocs!.length, 2));
+    List<MyDonationDocs>? myDonations =
+        widget.isExpanded ? state.myDonationDocs : state.myDonationDocs.sublist(0, min(state.myDonationDocs.length, 2));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -38,7 +37,7 @@ class _DonationsFeedWidget extends ConsumerState<DonationsFeedWidget> {
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: myDonations!.length,
+          itemCount: myDonations.length,
           itemBuilder: (context, index) {
             final donation = myDonations[index];
             return DonationWidget(donation: donation);

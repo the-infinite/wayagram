@@ -1,17 +1,13 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
@@ -45,7 +41,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return WayaScaffold(
         isLoading: viewModel.isLoading,
@@ -77,7 +73,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
                 pollCard('₦${formatMoney(widget.model.amount ?? "0")}',
                     'Total Amount'),
                 const Gap(5),
-                pollCard('₦${formatMoney('${widget.model.comission}' ?? "0")}',
+                pollCard('₦${formatMoney('${widget.model.comission}')}',
                     'Wayagram Commission'),
                 const Gap(5),
                 pollCard('₦${formatMoney(widget.model.amountDue ?? "0")}',

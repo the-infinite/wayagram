@@ -77,7 +77,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
 
     // Filter the myDonations
     final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
-      viewModel.myDonationDocs!,
+      viewModel.myDonationDocs,
       [
         'title',
       ],
@@ -275,7 +275,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               subTitle: 'See and manage all your pending donations',
               title: 'Pending Donations'),
           const Gap(10),
-          viewModel.myDonationDocs!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
+          viewModel.myDonationDocs.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
           SizedBox(
             height: Platform.isAndroid ? 300 : 460,
             child: ListView.builder(
