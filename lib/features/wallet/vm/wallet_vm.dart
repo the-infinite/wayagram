@@ -274,7 +274,7 @@ class WalletVm extends StateNotifier<WalletState> {
         BankModel responseModel = BankModel.fromJson(response.data);
 
         final List<Select>? banksList = responseModel.data?.map((val) {
-          return Select(label: '${val.institutionName}', value: '${val.institutionCode}');
+          return Select(label: '${val.name}', value: '${val.code}');
         }).toList();
         state = state.copyWith(banks: banksList);
       }

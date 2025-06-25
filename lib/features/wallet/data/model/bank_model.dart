@@ -55,24 +55,42 @@ Data dataFromJson(String str) => Data.fromJson(json.decode(str));
 String dataToJson(Data data) => json.encode(data.toJson());
 class Data {
   Data({
-      this.institutionCode, 
-      this.institutionName,});
+      this.code, 
+      this.name, 
+      this.id, 
+      this.status, 
+      this.requestStatus,});
 
   Data.fromJson(dynamic json) {
-    institutionCode = json['institutionCode'];
-    institutionName = json['institutionName'];
+    code = json['Code'];
+    name = json['Name'];
+    id = json['ID'];
+    status = json['Status'];
+    requestStatus = json['RequestStatus'];
   }
-  String? institutionCode;
-  String? institutionName;
-Data copyWith({  String? institutionCode,
-  String? institutionName,
-}) => Data(  institutionCode: institutionCode ?? this.institutionCode,
-  institutionName: institutionName ?? this.institutionName,
+  String? code;
+  String? name;
+  String? id;
+  bool? status;
+  bool? requestStatus;
+Data copyWith({  String? code,
+  String? name,
+  String? id,
+  bool? status,
+  bool? requestStatus,
+}) => Data(  code: code ?? this.code,
+  name: name ?? this.name,
+  id: id ?? this.id,
+  status: status ?? this.status,
+  requestStatus: requestStatus ?? this.requestStatus,
 );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['institutionCode'] = institutionCode;
-    map['institutionName'] = institutionName;
+    map['Code'] = code;
+    map['Name'] = name;
+    map['ID'] = id;
+    map['Status'] = status;
+    map['RequestStatus'] = requestStatus;
     return map;
   }
 
