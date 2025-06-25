@@ -70,8 +70,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   final controller = ValueNotifier<String?>(/*poll.selectedChoice */ null);
                   int hoursLeft =
                       DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  //   int daysLeft =
-                  //       DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inDays;
 
                   DateTime expirationDate = DateTime.parse("${poll.endDate}");
                   DateTime currentDate = DateTime.now(); // Get current date and time
