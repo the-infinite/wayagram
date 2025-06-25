@@ -157,7 +157,6 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text('${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                            //'${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.shopDocs[i].createdAt.toString().split('T')[0])}',
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                               fontFamily: WayaConstants.fontFamily,
@@ -275,7 +274,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text('${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                            // '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.walletDocs[i].createdAt.toString().split('T')[0])}',
+                              
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                               fontFamily: WayaConstants.fontFamily,
@@ -392,7 +391,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text('${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                            // '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.eventDocs[i].createdAt.toString().split('T')[0])}',
+             
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                               fontFamily: WayaConstants.fontFamily,
@@ -509,7 +508,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text('${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                            //'${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.socialDocs[i].createdAt.toString().split('T')[0])}',
+                                  
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                               fontFamily: WayaConstants.fontFamily,
@@ -789,7 +788,6 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text('${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                            //'${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pageDocs[i].createdAt.toString().split('T')[0])}',
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                               fontFamily: WayaConstants.fontFamily,

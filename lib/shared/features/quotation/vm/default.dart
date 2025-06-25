@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/cache/quotation.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/repo/default.dart';
 import 'package:wayagram/shared/features/quotation/state/default.dart';
@@ -60,6 +61,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? This is fine.
         result.addAll(docs);
+        wayaQuotationsCache.cacheAll(docs);
 
         //? Update state.
         state = state.copyWith(
@@ -87,6 +89,71 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     }
 
     //? Return this collated result.
+    return result;
+  }
+
+  /// Helper function used to keep fetching quotation orders over and over again.
+  /// Used to ensure that the vendor always sees the latest bids that are
+  /// available to them.
+  Future<List<BuyRequestModel>> reloadQuotationsOrder() async {
+    final result = <BuyRequestModel>[];
+
+    //? This is fine.
+    if (state.isLoadingRequests) {
+      return state.requests;
+    }
+
+    if (state.isUser ||
+        ConversationState.self.accountType != UserAccountType.business ||
+        !ShopResource.hasSelectedShop) {
+      return state.requests;
+    }
+
+    try {
+      //? Now, we are loading bro.
+      state = state.copyWith(isLoadingRequests: true);
+
+      //? This is fine.
+      final response = await repo.getAllAvailableQuotation(state.limit, 1);
+
+      //? This is fine.
+      if (response.success) {
+        //? The data.
+        final data = response.data['data'];
+
+        //? Parse the conversations as they are in the response object...
+        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
+
+        //? This is fine.
+        result.addAll(docs);
+        wayaQuotationsCache.cacheAll(docs);
+
+        //? Update state.
+        state = state.copyWith(
+          hasLoadedRequests: true,
+          requests: result,
+          totalRequests: data['totalDocs'],
+          requestPages: data['totalPages'],
+          hasNextRequest: data['hasNextPage'],
+          requestPage: int.tryParse(data['nextPage'].toString()) ?? 1,
+          isLoadingRequests: false,
+        );
+      }
+
+      //? Since it failed.
+      else {
+        state = state.copyWith(isLoadingRequests: false);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return this as is.
     return result;
   }
 
@@ -182,6 +249,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
           state = state.copyWith(
             requests: [...previous],
           );
+          wayaQuotationsCache.cache(id, doc);
         }
 
         //? Return the document.
@@ -648,6 +716,11 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   /// ID.
   QuotationBidModel? getBid(String id) {
     return state.bids.where((bid) => bid.id == id).firstOrNull;
+  }
+
+  /// Helper function used to update th current syncing state of this notifier.
+  void setSyncingState(bool value) {
+    state = state.copyWith(isSyncingRequests: value);
   }
 
   /// Helper function used to reset the state of this quotations notifier back

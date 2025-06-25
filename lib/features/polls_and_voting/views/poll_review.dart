@@ -21,8 +21,7 @@ class PollReview extends ConsumerStatefulWidget {
   final PayoutModule module;
   final PayoutReviewModel model;
 
-  const PollReview(
-      {super.key, required this.id, required this.module, required this.model});
+  const PollReview({super.key, required this.id, required this.module, required this.model});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollReviewState();
@@ -54,9 +53,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
             Text(
               'Poll and voting Payout Review',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.black),
+                  fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
             ),
 
             const Gap(5),
@@ -70,14 +67,12 @@ class _PollReviewState extends ConsumerState<PollReview> {
 
             Row(
               children: [
-                pollCard('₦${formatMoney(widget.model.amount ?? "0")}',
-                    'Total Amount'),
+                pollCard('₦${formatMoney(widget.model.amount ?? "0")}', 'Total Amount'),
                 const Gap(5),
                 pollCard('₦${formatMoney('${widget.model.comission}')}',
                     'Wayagram Commission'),
                 const Gap(5),
-                pollCard('₦${formatMoney(widget.model.amountDue ?? "0")}',
-                    'Payout Due Amount'),
+                pollCard('₦${formatMoney(widget.model.amountDue ?? "0")}', 'Payout Due Amount'),
               ],
             ),
 
@@ -87,13 +82,11 @@ class _PollReviewState extends ConsumerState<PollReview> {
                   ? () {
                       WayaUtils.showModalSheet(
                         context,
-                        child: PinEntryBottomSheet2(
-                            id: widget.id, module: widget.module),
+                        child: PinEntryBottomSheet2(id: widget.id, module: widget.module),
                       );
                     }
                   : null,
-              centerWidget:
-                  LoadingState(loading: viewModel.isLoading, text: 'Continue'),
+              centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Continue'),
             ),
           ],
         ));
@@ -105,8 +98,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
         width: MediaQuery.of(context).size.width * 0.25, // 25% of screen width
         height: MediaQuery.of(context).size.width * 0.35,
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
-        decoration: BoxDecoration(
-            color: Color(0xffFFF0EB), borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(color: Color(0xffFFF0EB), borderRadius: BorderRadius.circular(10)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,

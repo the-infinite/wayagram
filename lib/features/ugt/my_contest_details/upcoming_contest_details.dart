@@ -9,7 +9,11 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart'
+    as appliedContest;
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
+import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
@@ -33,9 +37,22 @@ class _UpcomingContestDetailsState
     var model = ref.watch(selectedContestProvider.notifier).state;
     var viewModel = ref.watch(votersContestNotifier.notifier);
     final hasProfile = useState(false);
+    final appliedContestModel =
+        useState<appliedContest.AppliedContestModel?>(null);
     debugPrint("my value ${model?.hasApplied}");
 
     useEffect(() {
+      print("dude 1");
+      ref
+          .read(appliedContestProvider.notifier)
+          .fetchSingleAppliedContest(model?.id ?? "")
+          .then((value1) {
+        print("dude 2 ${value1?.fullName}");
+        if (value1 != null) {
+          print("dude ${value1.fullName}");
+          appliedContestModel.value = value1;
+        }
+      });
       ref
           .read(postProvider.notifier)
           .fetchSingleContestantDetails(
@@ -170,8 +187,7 @@ class _UpcomingContestDetailsState
                       title: "Category", content: model?.categoryName ?? ""),
                   const Gap(20),
                   AboutUgtWidget(
-                      title: "Prize",
-                      content: "${model?.winnerPrize}"),
+                      title: "Prize", content: "${model?.winnerPrize}"),
                   /*   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"), */
                 ],
@@ -223,8 +239,14 @@ class _UpcomingContestDetailsState
                   callback: () {
                     //? if user has a profile
                     if (hasProfile.value || model?.hasApplied == true) {
-                      ref.read(selectedContestProvider.notifier).state = model;
-                      WayaNav.toNamed('/upcoming-manage-contest-details');
+                      WayaUtils.showModalSheetUgt(
+                        context,
+                        child: ApplicationStatus(
+                            appliedContestModel.value, model?.id),
+                      );
+
+                      /*  ref.read(selectedContestProvider.notifier).state = model;
+                      WayaNav.toNamed('/upcoming-manage-contest-details'); */
                       return;
                     }
 
@@ -241,7 +263,7 @@ class _UpcomingContestDetailsState
                       ? /* hasProfile.value
                           ? "View Contest Details"
                           : */
-                      "View Contest Details"
+                      "Continue Application"
                       : "Register For Contest",
                 ),
               ),
