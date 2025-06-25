@@ -14,6 +14,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/features/polls_and_voting/widgets/poll_radio_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
@@ -59,26 +60,23 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               )),
           emptyState: PollEmptyState(),
           fetchData: ref.read(createPollVotingProvider.notifier).getAllPolls,
-          result: (data, s) {
+          result: (data, index) {
             return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: viewModel.fetchAllPols.length,
                 itemBuilder: (context, index) {
                   final poll = viewModel.fetchAllPols[index];
+                  final controller = ValueNotifier<String?>(/*poll.selectedChoice */ null);
                   int hoursLeft =
                       DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  //   int daysLeft =
-                  //       DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inDays;
 
                   DateTime expirationDate = DateTime.parse("${poll.endDate}");
                   DateTime currentDate = DateTime.now(); // Get current date and time
 
                   return InkWell(
-                    onTap: (){
-                      WayaNav.toNamed('/singlePollScreen',arguments: {
-                        'id':poll.id
-                      });
+                    onTap: () {
+                      WayaNav.toNamed('/singlePollScreen', arguments: {'id': poll.id});
                     },
                     child: Container(
                       margin: EdgeInsets.only(bottom: 40.h),
@@ -93,7 +91,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                 backgroundColor: wayaTheme.colorScheme.greyColor200,
                               ),
                               const Gap(3),
-                              Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
+                              Text('${poll.userData?.firstName?.capitalizeFirst}',
+                                  style: wayaTheme.textTheme.titleLarge),
                               const Gap(3),
                               Text(
                                 ' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
@@ -158,109 +157,70 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                 color: Theme.of(context).colorScheme.greyColor500),
                           ),
                           const Gap(10),
+
                           //[vote(choice)/vote(poll)] * 100
-                          Column(
-                            spacing: 10.h,
-                            children: [
-                              if (poll.choices != null)
-                                ...poll.choices!.map(
-                                  (e) => InkWell(
-                                    onTap: () {
-                                      if (currentDate.isAfter(expirationDate)) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              'The poll has ended.',
-                                              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
-                                            ),
-                                            backgroundColor: WayaColors.primary,
-                                            duration: Duration(seconds: 2),
-                                          ),
-                                        );
-                                      } else if (poll.pollType == 'free') {
-                                        ref.read(createPollVotingProvider.notifier).castFreeVote(
-                                            1, '${e.id}', '${poll.id}', context, '${e.text}', '${poll.url}');
-                                      } else {
-                                        WayaUtils.showModalSheet(
-                                          context,
-                                          child: VoteOptionModal(
-                                            voteFee: '${poll.feePerVote}',
-                                            choiceId: '${e.id}',
-                                            pollId: '${poll.id}',
-                                            candidateName: '${e.text}',
-                                            votingLink: '${poll.url}',
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: WayaInformativeProgressBar(
-                                      title: '${e.text?.capitalizeFirst}',
-                                      text: '${e.text?.capitalizeFirst}',
-                                      subtitle: '',
-                                     // progress: 0,
-                                     progress: viewModel.fetchAllPols[index].voteCount == 0 ? 0 :double.parse(((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
-                                      height: 60.0,
-                                      filledRegion: wayaTheme.colorScheme.customPrimary,
-                                      unfilledRegion: wayaTheme.colorScheme.greyColor200,
-                                      count: e.voteCount!,
-                                      fontSize: 12,
-                                      activeTextColor: wayaTheme.colorScheme.white,
-                                      inactiveTextColor: wayaTheme.colorScheme.primary500,
-                                      imageUrl: e.imageUrl,
+                          AppRadioGroup<String?>(
+                            controller: controller,
+                            optionData: poll.choices?.map((e) => e.id) ?? [],
+                            spacing: 10,
+                            onSelected: (selectedChoice) {
+                              if (selectedChoice == null) return;
+                              final choices = (poll.choices ?? []);
+                              final e = choices.firstWhere((choice) => choice.id == selectedChoice);
+
+                              //? On click activation.
+                              if (currentDate.isAfter(expirationDate)) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'The poll has ended.',
+                                      style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
                                     ),
+                                    backgroundColor: WayaColors.primary,
+                                    duration: Duration(seconds: 2),
                                   ),
-                                  /* (e) =>
-                                      choiceStatisticsSecond(
-                                      e.imageUrl == null,
-                                    e.imageUrl == null ? '':'${e.imageUrl}',
-                                    '${e.text}',
-                                    context,
-                                    true,
-                                    poll.feePerVote,
-                                    e.id,
-                                    e.pollId,
-                                    e.text,
-                                    poll.url,
-                                    (((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!) * 100).toStringAsFixed(2),
-                                    '${e.voteCount}',
-                                    daysLeft,
-                                    () {
-                                      if (currentDate.isAfter(expirationDate)) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                              'The poll has ended.',
-                                              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
-                                            ),
-                                            backgroundColor: WayaColors.primary,
-                                            duration: Duration(seconds: 2),
-                                          ),
-                                        );
-                                      }else if(poll.pollType == 'free'){
-                                        ref.read(createPollVotingProvider.notifier).castFreeVote(
-                                           1,
-                                            '${e.id}',
-                                            '${poll.id}',
-                                            context,
-                                            '${e.text}',
-                                            '${poll.url}');
-                                      }
-                                      else {
-                                        WayaUtils.showModalSheet(
-                                          context,
-                                          child: VoteOptionModal(
-                                            voteFee: '${poll.feePerVote}',
-                                            choiceId: '${e.id}',
-                                            pollId: '${poll.id}',
-                                            candidateName: '${e.text}',
-                                            votingLink: '${poll.url}',
-                                          ),
-                                        );
-                                      }
-                                    }, ((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!)
-                                  ),*/
-                                ),
-                            ],
+                                );
+                              } else if (poll.pollType == 'free') {
+                                ref
+                                    .read(createPollVotingProvider.notifier)
+                                    .castFreeVote(1, '${e.id}', '${poll.id}', context, '${e.text}', '${poll.url}');
+                              } else {
+                                WayaUtils.showModalSheet(
+                                  context,
+                                  child: VoteOptionModal(
+                                    voteFee: '${poll.feePerVote}',
+                                    choiceId: '${e.id}',
+                                    pollId: '${poll.id}',
+                                    candidateName: '${e.text}',
+                                    votingLink: '${poll.url}',
+                                  ),
+                                );
+                              }
+                            },
+                            optionBuilder: (context, choiceId) {
+                              //? Find the choice that corresponds to this option.
+                              final choices = (poll.choices ?? []);
+                              final choice = choices.firstWhere((choice) => choice.id == choiceId);
+
+                              //? Return the component.
+                              return WayaInformativeProgressBar(
+                                title: '${choice.text?.capitalizeFirst}',
+                                text: '${choice.text?.capitalizeFirst}',
+                                subtitle: '',
+                                progress: poll.voteCount == 0
+                                    ? 0
+                                    : double.parse(((choice.voteCount!) / poll.voteCount!).toStringAsFixed(2)),
+                                height: 60.0,
+                                filledRegion: wayaTheme.colorScheme.customPrimary,
+                                unfilledRegion: wayaTheme.colorScheme.greyColor200,
+                                count: choice.voteCount!,
+                                fontSize: 12,
+                                activeTextColor: wayaTheme.colorScheme.white,
+                                inactiveTextColor: wayaTheme.colorScheme.primary500,
+                                imageUrl: choice.imageUrl,
+                              );
+                            },
+                            borderRadius: 20.0,
                           )
                         ],
                       ),

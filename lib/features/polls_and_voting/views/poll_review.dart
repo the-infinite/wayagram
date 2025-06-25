@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,7 +69,8 @@ class _PollReviewState extends ConsumerState<PollReview> {
               children: [
                 pollCard('₦${formatMoney(widget.model.amount ?? "0")}', 'Total Amount'),
                 const Gap(5),
-                pollCard('₦${formatMoney(widget.model.comission ?? "0")}', 'Wayagram Commission'),
+                pollCard('₦${formatMoney('${widget.model.comission}')}',
+                    'Wayagram Commission'),
                 const Gap(5),
                 pollCard('₦${formatMoney(widget.model.amountDue ?? "0")}', 'Payout Due Amount'),
               ],
