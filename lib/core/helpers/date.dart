@@ -7,6 +7,27 @@ class WayaDateHelper {
     return year % 4 == 0 && year % 100 != 0;
   }
 
+  static (DateTime, DateTime) getCurrentWeekBounds([DateTime? reference]) {
+    final now = reference ?? DateTime.now();
+    final firstDay = now.subtract(Duration(days: now.weekday - DateTime.monday));
+    final lastDay = firstDay.add(const Duration(days: 6));
+    return (DateTime(firstDay.year, firstDay.month, firstDay.day), DateTime(lastDay.year, lastDay.month, lastDay.day));
+  }
+
+  static (DateTime, DateTime) getCurrentMonthBounds([DateTime? reference]) {
+    final now = reference ?? DateTime.now();
+    final firstDay = DateTime(now.year, now.month, 1);
+    final lastDay = DateTime(now.year, now.month, getNumberOfDaysInMonth(now.month, now.year));
+    return (firstDay, lastDay);
+  }
+
+  static (DateTime, DateTime) getCurrentYearBounds([DateTime? reference]) {
+    final now = reference ?? DateTime.now();
+    final firstDay = DateTime(now.year, 1, 1);
+    final lastDay = DateTime(now.year, 12, 31);
+    return (firstDay, lastDay);
+  }
+
   static bool isSameDay(DateTime first, DateTime second) {
     return first.year == second.year && first.month == second.month && first.day == second.day;
   }

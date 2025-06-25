@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/activity_logs/data/model/account_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
@@ -13,7 +12,18 @@ import 'package:wayagram/features/activity_logs/data/model/user_actions_model.da
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/visited_pages_model.dart';
 
-class ActivityLogsState{
+enum FilterType {
+  allTime._("All Time"),
+  thisWeek._("This Week"),
+  thisMonth._("This Month"),
+  thisYear._("This Year");
+
+  final String name;
+
+  const FilterType._(this.name);
+}
+
+class ActivityLogsState {
   final TextEditingController title;
   List<LoginHistoryDocs> loginHistoryDocs;
   List<AccountActivityDocs> accountActivityDocs;
@@ -56,7 +66,6 @@ class ActivityLogsState{
 
   ActivityLogsState({
     TextEditingController? title,
-
     this.isLoading = false,
     this.loginHistoryDocs = const [],
     this.cmsDocs = const [],
@@ -94,8 +103,7 @@ class ActivityLogsState{
     this.visitedPagesDocs = const [],
     this.visitedPagesDocs1 = const [],
     this.visitedPagesModel,
-
-  }):   title = title ?? TextEditingController();
+  }) : title = title ?? TextEditingController();
 
   ActivityLogsState copyWith({
     TextEditingController? title,
@@ -136,9 +144,7 @@ class ActivityLogsState{
     List<VisitedPagesDocs>? visitedPagesDocs1,
     VisitedPagesModel? visitedPagesModel,
     bool? isLoading,
-
-
-  }){
+  }) {
     return ActivityLogsState(
       title: title ?? this.title,
       loginHistoryDocs: loginHistoryDocs ?? this.loginHistoryDocs,
@@ -175,8 +181,26 @@ class ActivityLogsState{
       visitedPagesDocs: visitedPagesDocs ?? this.visitedPagesDocs,
       visitedPagesDocs1: visitedPagesDocs1 ?? this.visitedPagesDocs1,
       visitedPagesModel: visitedPagesModel ?? this.visitedPagesModel,
-
     );
   }
-}
 
+  List<DonationDocs> filterDonationDocs(DateTime start, DateTime end) {
+    Iterable<DonationDocs> result = <DonationDocs>[];
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((donation) {
+      final timestamp = DateTime.parse(donation.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((donation) {
+      final timestamp = DateTime.parse(donation.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+}
