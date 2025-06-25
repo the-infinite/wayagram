@@ -170,6 +170,33 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
+  Future<void> verifyAccountName(
+      ctx, {
+        required String acctNumber, required String bankCode
+      }) async {
+    try {
+      final response = await _walletRepository.verifyName(acctNumber, bankCode);
+      if (response.success && ctx.mounted) {
+        state = state.copyWith();
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Payout method deleted successfully!',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+
   Future<void> getSingleRequest({required String id}) async {
     try {
       // API call
