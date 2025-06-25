@@ -107,7 +107,6 @@ import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart'
 import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
-import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
@@ -262,7 +261,6 @@ class WayaAppRoutes {
     CreateShop.route: () => CreateShop(),
     SellerDispute.route: () => SellerDispute(),
     SellerDisputeDetail.route: () => SellerDisputeDetail(),
-    MapScreen.route: () => MapScreen(),
     AddEvidence.route: () => AddEvidence(),
     DisputeChat.route: () => DisputeChat(id: WayaNav.search['id'].toString()),
     UgtGetStarted.route: () => UgtGetStarted(),
@@ -393,10 +391,10 @@ class WayaAppRoutes {
         EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
     EditPageMemberInfo.route: () =>
         EditPageMemberInfo(id: WayaNav.search['id'].toString()),
-    SinglePollScreen.route: () => SinglePollScreen(),
+    SinglePollScreen.route: () => SinglePollScreen(id: WayaNav.search['id'].toString()),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
-    DonationDetails.route: () => DonationDetails(),
+    DonationDetails.route: () => DonationDetails(id: WayaNav.search['id'].toString()),
     CreateDonation.route: () => CreateDonation(),
     DonationManagement.route: () => DonationManagement(),
     SeeAllDonations.route: () => SeeAllDonations(),

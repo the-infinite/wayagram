@@ -78,6 +78,8 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
     final viewModel = ref.watch(groupProvider);
     final wayaTheme = Theme.of(context);
 
+    debugPrint('MY grOUP TYPE is ${widget.group.isPrivate}');
+
     //? Return this page's edit feature.
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -112,6 +114,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                 _selectedImage == null ? editProfileImage! : (_selectedImage as File).path,
                 _coverImage == null ? editCoverImage! : (_coverImage as File).path,
                 widget.group.id,
+                  sel ?  true : false
               );
             }
           },

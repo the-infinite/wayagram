@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
@@ -57,13 +58,13 @@ class _ExploreState extends ConsumerState<Explore> {
       //> need to fetch user data
       //ref.read(successfulSetupVmProvider.notifier).getUserData();
       //>
-
+      ref.read(conversationProvider.notifier).getBlockedUsers();
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();
       ref.read(shopVmProvider.notifier).allCategories(1);
       ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
       ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
-       ref.read(exploreVmProvider.notifier).getUserFeeds();
+      ref.read(exploreVmProvider.notifier).getUserFeeds();
       ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();

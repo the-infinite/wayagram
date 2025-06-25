@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
 import 'package:wayagram/features/quotation/data/model/model.dart';
@@ -159,7 +160,8 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       //? Return this one as is.
       return null;
     } catch (e) {
-      _logger.e(e);
+      debugPrint('${WayaDebugHelpers.getStackTrace(e)}');
+      _logger.e(e, stackTrace: WayaDebugHelpers.getStackTrace(e));
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -179,14 +181,6 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     } else {
       state = state.copyWith(isLoading: false);
     }
-  }
-
-  void setRangeStart(double value) {
-    state = state.copyWith(rangeStart: value);
-  }
-
-  void setRangeEnd(double value) {
-    state = state.copyWith(rangeEnd: value);
   }
 }
 

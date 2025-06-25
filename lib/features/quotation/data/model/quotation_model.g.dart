@@ -18,8 +18,6 @@ CreateBuyerRequest _$CreateBuyerRequestFromJson(Map<String, dynamic> json) =>
       bidStart: json['bidStart'] as String,
       bidEnd: json['bidEnd'] as String,
       deliveryDetails: json['deliveryDetails'] as String,
-      minDistance: json['minDistance'] as String,
-      maxDistance: json['maxDistance'] as String,
       stateOfPurchase: json['stateOfPurchase'] as String,
       lga: json['lga'] as String,
       vendorsCanSeeBidFromAnyDistance:
@@ -44,8 +42,6 @@ Map<String, dynamic> _$CreateBuyerRequestToJson(CreateBuyerRequest instance) =>
       'bidStart': instance.bidStart,
       'bidEnd': instance.bidEnd,
       'deliveryDetails': instance.deliveryDetails,
-      'minDistance': instance.minDistance,
-      'maxDistance': instance.maxDistance,
       'stateOfPurchase': instance.stateOfPurchase,
       'lga': instance.lga,
       'vendorsCanSeeBidFromAnyDistance':

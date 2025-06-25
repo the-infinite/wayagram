@@ -7,6 +7,7 @@ import 'package:wayagram/features/activity_logs/data/model/group_activity_model.
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/search_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_actions_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
@@ -30,8 +31,8 @@ class ActivityLogsState{
   List<PageDocs> walletDocs1;
   List<PageDocs> quotationDocs;
   List<PageDocs> quotationDocs1;
-  List<PageDocs> pollDocs;
-  List<PageDocs> pollDocs1;
+  List<PollsActivityDocs> pollDocs;
+  List<PollsActivityDocs> pollDocs1;
   List<PageDocs> eventDocs;
   List<PageDocs> eventDocs1;
   List<PageDocs> pageDocs;
@@ -107,8 +108,8 @@ class ActivityLogsState{
     List<PageDocs>? shopDocs1,
     List<PageDocs>? quotationDocs,
     List<PageDocs>? quotationDocs1,
-    List<PageDocs>? pollDocs,
-    List<PageDocs>? pollDocs1,
+    List<PollsActivityDocs>? pollDocs,
+    List<PollsActivityDocs>? pollDocs1,
     List<PageDocs>? eventDocs,
     List<PageDocs>? eventDocs1,
     List<PageDocs>? socialDocs,

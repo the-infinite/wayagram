@@ -93,6 +93,10 @@ class GroupVm extends StateNotifier<GroupState> {
     state = state.copyWith(openToEveryone: value);
   }
 
+  void toggleMute(bool value) {
+    state = state.copyWith(muteAndUnMute: value);
+  }
+
   void updateRequireApproval(bool value) {
     state = state.copyWith(requireApproval: value);
   }
@@ -262,6 +266,7 @@ class GroupVm extends StateNotifier<GroupState> {
     String coverImage,
     String profileImage,
     String groupId,
+      bool isOpen
   ) async {
     final coverImageUrl =
         coverImage.startsWith("http") ? coverImage : await WayaFileRepository.instance.uploadFile(File(coverImage));
@@ -272,7 +277,7 @@ class GroupVm extends StateNotifier<GroupState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.editGroup(
-          groupName, groupDesc, groupType, coverImageUrl ?? '', profileImageUrl ?? '', groupId);
+          groupName, groupDesc, groupType, coverImageUrl ?? '', profileImageUrl ?? '', groupId, isOpen);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
@@ -294,6 +299,40 @@ class GroupVm extends StateNotifier<GroupState> {
       else {
         _logger.i('LOGGER  ==>>> ${response.data['error']}');
         debugPrint('Edit group');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> muteAndUnMuteGroup(BuildContext ctx,bool mute, String groupId,) async {
+
+    try {
+      //state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.muteAndUnMuteGroup(mute, groupId);
+      state = state.copyWith(isLoading: false);
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+             mute ? 'Group muted successfully!' :'Group unMuted successfully!',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        debugPrint('Mute group');
         _logger.i(response.data['data']);
       }
     } catch (e) {
@@ -336,6 +375,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
       Future<bool> updateGroupGeneralSettings(bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
     try {
       final response = await _groupRepository.updateGroupGeneralSettings(isEveryOneAllowFollow, isEveryOneAllowComment);

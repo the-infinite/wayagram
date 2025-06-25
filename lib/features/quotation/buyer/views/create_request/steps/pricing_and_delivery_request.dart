@@ -39,7 +39,6 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
     final viewModel = ref.watch(createRequestProvider);
     final regionsData = ref.watch(regionsProvider);
 
-    debugPrint(viewModel.maxDistance.text);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,41 +209,44 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
 
               //? Only show this when the user does not want to skip addresses.
               if (!viewModel.skipAddress && viewModel.pickUpOption == 'delivery') ...[
-                FormField<String>(validator: (value) {
-                  if (viewModel.deliveryAddress.text.isEmpty) {
-                    return 'Delivery address is required';
-                  }
+                FormField<String>(
+                  validator: (value) {
+                    if (viewModel.deliveryAddress.text.isEmpty) {
+                      return 'Delivery address is required';
+                    }
 
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
-                        keyboardType: TextInputType.streetAddress,
-                        controller: viewModel.deliveryAddress,
-                        hintText: 'Enter Delivery Address',
-                        borderColor: formState.hasError && viewModel.deliveryAddress.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
-                        label: 'Delivery Address',
-                        prefixIcon: Icon(
-                          Icons.location_on_outlined,
-                          color: wayaTheme.colorScheme.greyColor300,
-                          size: 24,
-                        ),
-                      ),
-                      if (formState.hasError && viewModel.deliveryAddress.text.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                    return null;
+                  },
+                  builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.streetAddress,
+                          controller: viewModel.deliveryAddress,
+                          hintText: 'Enter Delivery Address',
+                          borderColor: formState.hasError && viewModel.deliveryAddress.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                          label: 'Delivery Address',
+                          prefixIcon: Icon(
+                            Icons.location_on_outlined,
+                            color: wayaTheme.colorScheme.greyColor300,
+                            size: 24,
                           ),
                         ),
-                    ],
-                  );
-                }),
+                        if (formState.hasError && viewModel.deliveryAddress.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
 
                 // Some space.
                 const Gap(10),
