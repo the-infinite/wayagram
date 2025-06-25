@@ -67,6 +67,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                 itemCount: viewModel.fetchAllPols.length,
                 itemBuilder: (context, index) {
                   final poll = viewModel.fetchAllPols[index];
+                  final controller = ValueNotifier<String?>(/*poll.selectedChoice */ null);
                   int hoursLeft =
                       DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
                   //   int daysLeft =
@@ -161,7 +162,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
 
                           //[vote(choice)/vote(poll)] * 100
                           AppRadioGroup<String?>(
-                            controller: ValueNotifier<String?>(null),
+                            controller: controller,
                             optionData: poll.choices?.map((e) => e.id) ?? [],
                             spacing: 10,
                             onSelected: (selectedChoice) {
@@ -197,7 +198,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                   ),
                                 );
                               }
-                              ;
                             },
                             optionBuilder: (context, choiceId) {
                               //? Find the choice that corresponds to this option.
