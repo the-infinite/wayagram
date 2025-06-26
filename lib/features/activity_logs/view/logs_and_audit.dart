@@ -56,9 +56,11 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
           logCard('Groups', WayaAssets.icons.genSet.group.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
             'name': 'groups'
           })),
-          logCard('Donation', WayaAssets.icons.genSet.donation.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
-            'name': 'donation'
-          })),
+          logCard('Donation', WayaAssets.icons.genSet.donation.path,()=>WayaNav.toNamed('/donationLogs'
+          //     ActivityLog.route,  arguments: {
+          //   'name': 'donation'
+          // }
+          )),
           logCard('UGT', WayaAssets.icons.genSet.ugt.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
             'name': 'ugt'
           })),

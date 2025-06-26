@@ -62,8 +62,6 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                          
-
                             WayaNav.toNamed(
                               '/contest-profile-page',
                             );
@@ -113,7 +111,6 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
               Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-              
               if (widget.post.mediaContent != null &&
                   widget.post.mediaContent!.isNotEmpty)
                 MediaCard(
@@ -123,8 +120,6 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                           null,
                           [url],
                         );
-
-                        
                       } else {
                         WayaNav.to(
                           transition: Transition.circularReveal,
@@ -133,7 +128,6 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                             videoUrl: url,
                           ),
                         );
-                      
                       }
                     },
                     mediaUrls: [

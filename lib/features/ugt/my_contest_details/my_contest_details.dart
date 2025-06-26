@@ -179,7 +179,6 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                         },
                       ),
                       const Gap(10),
-                    
                       const Gap(200),
                     ],
                   ),
@@ -206,8 +205,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                                 ref
                                     .read(selectedContestProvider.notifier)
                                     .state = post;
-                                WayaNav.toNamed(
-                                    "/upcoming-manage-contest-details",
+                                WayaNav.toNamed("/contest-details-page",
                                     arguments: {"canViewDashboard": true});
                               },
                               child: ContestCard(

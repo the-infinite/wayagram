@@ -34,7 +34,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
       //ref.read(donationVmProvider.notifier).getSingleDonation('${args['id']}');
-      ref.read(donationVmProvider.notifier).getOneDonation('${args['id']}');
+      ref.read(donationVmProvider.notifier).getOneDonation('${args['id'] ?? widget.id}');
     });
     super.initState();
   }
@@ -56,20 +56,20 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${args['title']}',
+            '${args['title'] ?? viewModel.singleDonationDocs.first.title}',
             style: TextStyle()
                 .wayaCopyWith(color: wayaTheme.colorScheme.black, fontSize: 24.sp, fontWeight: FontWeight.w700),
           ),
           Gap(10),
           WayaImage(
-              imageUrl: '${args['image']}',
+              imageUrl: '${args['image'] ?? viewModel.singleDonationDocs.first.imageURL}',
               height: 180.h,
               width: double.infinity,
               radius: BorderRadius.all(Radius.circular(12))),
           Gap(10),
           EngagementRange(
             topLeft:
-                "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}'))}",
+                "${WayaHelpers.formatPrice(int.parse('${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}'))}",
             bottomLeft: "${args['donationCount'] ??  viewModel.singleDonationDocs.first.donationCount} Donations",
             bottomRight: "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day' : 'days'} left",
             range: args['ratioLeft'] ?? '',

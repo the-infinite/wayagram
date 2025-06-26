@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:video_player/video_player.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -81,8 +82,16 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
 
       //  File tempVideo = File("${tempDir.path}/assets/my_video_thumb.png");
 
-      _videoFile = File(pickedVideoFile?.path ?? "");
+      VideoPlayerController controller =
+          VideoPlayerController.file(File(pickedVideoFile?.path ?? ""));
+      await controller.initialize();
 
+      if (controller.value.duration.inSeconds > 120) {
+        WayaSnackBar.showToast("Please select a video under 2 minutes!");
+        return;
+      }
+
+      _videoFile = File(pickedVideoFile?.path ?? "");
       //var file = await uint8ListToFile(myDat, "my_video_thumb.jpeg");
       _selectedImages.removeWhere((e) => e.type == true);
       setState(() {

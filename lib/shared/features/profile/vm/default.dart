@@ -99,12 +99,12 @@ class CommentedPostNotifier extends StateNotifier<PostState> {
   CommentedPostNotifier(super.state);
 
   /// An API used to fetch all the posts for a given user.
-  Future<List<PostModel>> getCommentedPost() async {
+  Future<List<PostModel>> getCommentedPost(String id) async {
     final result = <PostModel>[];
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchCommentedPost(state.nextPage ?? state.page, state.limit);
+      final response = await exploreRepo.fetchCommentedPost(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -165,12 +165,12 @@ class LikedPostNotifier extends StateNotifier<PostState> {
   LikedPostNotifier(super.state);
 
   /// An API used to fetch all the posts for a given user.
-  Future<List<PostModel>> getLikedPost() async {
+  Future<List<PostModel>> getLikedPost(String id) async {
     final result = <PostModel>[];
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchLikedPosts(state.nextPage ?? state.page, state.limit);
+      final response = await exploreRepo.fetchLikedPosts(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {

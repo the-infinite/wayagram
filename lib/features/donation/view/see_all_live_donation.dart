@@ -58,16 +58,17 @@ class _SeeAllLiveDonationsState extends ConsumerState<SeeAllLiveDonations> with 
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            viewModel.approvedDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have approved donations yet',):
+            //viewModel.approvedDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have approved donations yet',):
+            viewModel.myDonationDocs.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have approved donations yet',):
             Expanded(
               child: ListView.builder(
                   padding: EdgeInsets.only(bottom: 20),
                   shrinkWrap: true,
-                  itemCount:
+                  itemCount:viewModel.myDonationDocs.length,
                   //viewModel.myDonationDocs?.length,
-                  filteredMyDonations.length,
+                  //filteredMyDonations.length,
                   itemBuilder: (context, index) {
-                    final donation = filteredMyDonations[index];
+                    final donation = viewModel.myDonationDocs[index];
                     int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
 
                     int amountRaised = double.parse('${donation.amountRaised}').toInt();

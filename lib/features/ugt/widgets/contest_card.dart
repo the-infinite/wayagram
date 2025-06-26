@@ -85,7 +85,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           onTap: () {
                             ref.read(selectedContestProvider.notifier).state =
                                 widget.post;
-                            WayaNav.toNamed('/upcoming-manage-contest-details');
+                            WayaNav.toNamed('/contest-details-page');
                           },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(
@@ -294,9 +294,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: AboutUgtWidget(
-                        title: "Prize",
-                        content:
-                            "${widget.post.winnerPrize}"),
+                        title: "Prize", content: "${widget.post.winnerPrize}"),
                     //  const Gap(30),
                   )
                 ],
@@ -311,7 +309,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       widget.post.participationStartDate ?? ""));
                   if (widget.isFromHost) {
                     print("i am here nw");
-                    WayaNav.toNamed("/upcoming-manage-contest-details",
+                    WayaNav.toNamed("/contest-details-page",
                         arguments: {"canViewDashboard": true});
                     return;
                   }
@@ -326,7 +324,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   print("i am here ${voteNotifier.getLoggedInUserId()}");
                   if (widget.post.profileId ==
                       voteNotifier.getLoggedInUserId()) {
-                    WayaNav.toNamed('/upcoming-manage-contest-details');
+                    WayaNav.toNamed('/contest-details-page');
                     return;
                   }
 
@@ -355,7 +353,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     print("i am here 2222");
                     ref.read(selectedContestProvider.notifier).state =
                         widget.post;
-                    WayaNav.toNamed('/upcoming-manage-contest-details');
+                    WayaNav.toNamed('/contest-details-page');
                   }
                 },
                 text: widget.post.status == "CLOSED"
@@ -398,7 +396,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         subject: "Share Contest",
 
                         /* Uri.parse(
-                          "http://wayagram.ng/upcoming-manage-contest-details?id=${widget.post.id}") */
+                          "http://wayagram.ng/contest-details-page?id=${widget.post.id}") */
                       );
 
                       if (result.status == ShareResultStatus.success) {

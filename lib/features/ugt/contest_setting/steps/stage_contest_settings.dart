@@ -69,6 +69,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                           id: index++,
                           stageName: e.stageName,
                           entryType: e.entryType,
+                          maxVote: e.maxVote,
                           entryAmount: e.entryAmount.toString(),
                           numPostPerWeek: e.numberOfPostPerWeek.toString(),
                           startDate: e.startDate?.split("T").first ?? "",
