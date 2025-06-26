@@ -11,14 +11,14 @@ class ExploreRepository extends BaseRepository {
     return get("$serviceUrl/posts/users/feed?page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> fetchCommentedPost(int page, [int limit = 20]) {
+  Future<WayaRequestResponse> fetchCommentedPost(String userId, int page, [int limit = 20]) {
     return get(
-        "$serviceUrl/posts/users/feed?hasCommented=true&page=$page&limit=$limit");
+        "$serviceUrl/posts/users/feed?hasCommented=true&userId=$userId&page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> fetchLikedPosts(int page, [int limit = 20]) {
+  Future<WayaRequestResponse> fetchLikedPosts(String userId, int page, [int limit = 20]) {
     return get(
-        "$serviceUrl/posts/users/feed?isLiked=true&page=$page&limit=$limit");
+        "$serviceUrl/posts/users/feed?isLiked=true&userId=$userId&page=$page&limit=$limit");
   }
 
    Future<WayaRequestResponse> fetchReposts(String userId,int page, [int limit = 20]) {

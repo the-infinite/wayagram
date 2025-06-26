@@ -136,12 +136,12 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
     //? If this is for likes
     if (_pageController.value == 2) {
-      await likedPostNotifier.getLikedPost();
+      await likedPostNotifier.getLikedPost(widget.data.$1.id);
     }
 
     //? If this is for comments
     if (_pageController.value == 3) {
-      await commentedPostNotifier.getCommentedPost();
+      await commentedPostNotifier.getCommentedPost(widget.data.$1.id);
     }
 
     //? If this is for bookmarks
