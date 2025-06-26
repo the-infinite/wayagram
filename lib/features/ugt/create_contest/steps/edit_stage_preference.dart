@@ -492,7 +492,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
                           controller: _contestController.contestPrizeWinnerTextController,
                           line: 6,
                           /*    inputFormatters: [

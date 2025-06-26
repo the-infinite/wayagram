@@ -25,7 +25,7 @@ import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 import 'package:wayagram/shared/share/share_gen_modal.dart';
 
 class AdminContestDetails extends StatefulHookConsumerWidget {
-  static const route = '/upcoming-manage-contest-details';
+  static const route = '/contest-details-page';
   final String id;
   const AdminContestDetails({required this.id, super.key});
 
@@ -46,7 +46,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     //  debugPrint("COntest DI $myPassedContestId");
     useEffect(() {
-      //? to change the active post seen on the post page
       // viewModelNotifier.changeActive(true);
       String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
           myPassedContestId;
@@ -74,6 +73,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     var viewModel = ref.watch(votersContestNotifier);
     // var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     var model = ref.watch(selectedContestProvider.notifier).state;
+    print(
+        "COntest DI ${model?.participationStartDate} 1 ${model?.participationEndDate} ${isTodayInRange(model?.participationStartDate ?? "2025-06-19", model?.participationEndDate ?? "2025-06-19")}");
+    //? to change the active post seen on the post page
     final selectedViewIndex = useState(0);
     //? check if app is open with link
     return PopScope(
@@ -325,7 +327,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 //? if user is not a host, has not registered for a contest, and not giving access to be a host
                 //? and registration is open
                 if (viewModelNotifier.getLoggedInUserId() != model?.profileId &&
-                    !canViewDashboard &&
+                    // !canViewDashboard &&
                     viewModel.createPostId.trim().isEmpty &&
                     isTodayInRange(model?.participationStartDate ?? "",
                         model?.participationEndDate ?? ""))
