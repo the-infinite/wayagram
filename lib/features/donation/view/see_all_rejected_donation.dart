@@ -57,7 +57,7 @@ class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonation
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            viewModel.rejectedDonations!.isEmpty
+            viewModel.rejectedDonations.isEmpty
                 ? ActivityLogsEmptyState(
                     text: 'You don\'t have rejected donations yet',
                   )
@@ -65,11 +65,11 @@ class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonation
                     child: ListView.builder(
                         //physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: viewModel.rejectedDonations?.length,
+                        itemCount: viewModel.rejectedDonations.length,
                         //filteredMyDonations.length,
                         itemBuilder: (context, index) {
                           //final donation = filteredMyDonations[index];
-                          final donation = viewModel.rejectedDonations![index];
+                          final donation = viewModel.rejectedDonations[index];
                           int daysLeft = DateTime.parse('${donation.expirationDate}')
                               .difference(DateTime.parse('${donation.startDate}'))
                               .inDays;
