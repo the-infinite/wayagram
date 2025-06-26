@@ -44,7 +44,7 @@ class _UgtDetailsGalleryState extends ConsumerState<UgtDetailsGallery> {
               return GestureDetector(
                 onTap: () {
                   ref.read(selectedContestProvider.notifier).state = post;
-                  WayaNav.toNamed('/upcoming-manage-contest-details');
+                  WayaNav.toNamed('/contest-details-page');
                 },
                 child: ContestCard(
                   post,
@@ -62,7 +62,8 @@ class _UgtDetailsGalleryState extends ConsumerState<UgtDetailsGallery> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: "You don’t have any active contest here. Create a \n contest and have different participant",
+        desc:
+            "You don’t have any active contest here. Create a \n contest and have different participant",
         title: "No Contest Created",
         buttonText: "Host a Contest",
         onTap: () {

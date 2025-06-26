@@ -78,7 +78,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
       notifier.fetchSingleContest(contestId: contestId, ref: ref);
 
       ref.read(postProvider.notifier).fetchSingleContestantDetails(
-          ref, model?.contestId ?? contestId, model?.id ?? id);
+          ref, model?.contestId ?? contestId, model?.profileId ?? id);
 
       //? check if contestant is active before going on to active a page
 
@@ -174,7 +174,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 await Share.share(
                   WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getContestantProfileRoute(
-                    model?.id ?? id,
+                    model?.profileId ?? id,
                     model?.contestId ?? contestId,
                   )),
                   subject: "Share Contestant Profile",

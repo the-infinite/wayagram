@@ -285,7 +285,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           child: SuccessfulModal(
               title: "Contest created Successfully",
               subtitle:
-                  "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
+                  "Your contest details has been sent to the Admin, Once approved, you will receive a notification. Manage or share your contest details from your dashboard.",
               showCopyLink: true,
               buttonText: null,
               onShareTap: () async {
@@ -296,7 +296,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                   subject: "Share Contest",
 
                   /* Uri.parse(
-                          "http://wayagram.ng/upcoming-manage-contest-details?id=${widget.post.id}") */
+                          "http://wayagram.ng/contest-details-page?id=${widget.post.id}") */
                 );
               },
               onTap: (_, __) {
@@ -352,24 +352,21 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     final response = await _contestRepository.createProfile(map);
     isLoading.value = false;
     if (response.success) {
-     // WayaNav.goBack();
+      // WayaNav.goBack();
       WayaUtils.showModalSheetUgt(
-          context,
-          child: SuccessfulModal(
-              title: "Contest Profile created Successfully",
-              subtitle:
-                  "Your contest profile is now live and visible to the public. Make sure to go to your Profile page to Enter the First stage of the Contest",
-              showCopyLink: false,
-              buttonText: null,
-              onShareTap: () async {
-                
-                
-              },
-              onTap: (_, __) {
-                // WayaNav.removeUntilNamed("/ugt-home");
-                WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
-              }),
-        );
+        context,
+        child: SuccessfulModal(
+            title: "Contest Profile created Successfully",
+            subtitle:
+                "Your contest profile is now live and visible to the public. Make sure to go to your Profile page to Enter the First stage of the Contest",
+            showCopyLink: false,
+            buttonText: null,
+            onShareTap: () async {},
+            onTap: (_, __) {
+              // WayaNav.removeUntilNamed("/ugt-home");
+              WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
+            }),
+      );
     } else {
       WayaSnackBar.showToast(response.data["message"]);
     }
@@ -439,7 +436,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     }
   }
 
-    Future<void> requestPayout(ctx, String contestId) async {
+  Future<void> requestPayout(ctx, String contestId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _contestRepository.requestPayout(contestId);
