@@ -23,6 +23,7 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
   final MomentData moment;
   final Function() pause;
   final Function() continues;
+  final FocusNode focusNode;
   final TextEditingController textController;
 
   // Construct.
@@ -33,6 +34,7 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
     required this.continues,
     required this.pause,
     required this.textController,
+    required this.focusNode,
   });
 
   @override
@@ -41,23 +43,46 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
 }
 
 class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
-  late final notifier =
-      ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
-  late final conversationNotifier = ref.read(conversationProvider.notifier);
+  late final notifier;
+  late final conversationNotifier;
 
   Map<String, bool> likedMoments = {};
+  Map<String, String> comment = {};
+  bool _isMounted = false;
 
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
+    notifier = ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
+    conversationNotifier = ref.read(conversationProvider.notifier);
+  }
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    widget.textController.clear();
+    super.dispose();
+  }
+
+  void safeUpdateComment(String value) {
+    if (!_isMounted) return;
+  
+    widget.pause();
+    setState(() {
+      comment.addAll({widget.moment.id: value});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final state = ref.watch(replyMomentVmProvider(widget.uniqueKey));
     final size = MediaQuery.sizeOf(context);
     bool isLiked = likedMoments[widget.moment.id] ?? false;
+    bool isCommentEmpty = comment[widget.moment.id]?.isEmpty == true ||
+        comment[widget.moment.id] == null;
+
+
     //? Now move forward.
     return Container(
       width: size.width,
@@ -70,7 +95,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
             child: SizedBox(
               height: 45,
               child: TextField(
-                controller: widget.textController,
+                focusNode: widget.focusNode,
                 onTap: () {
                   widget.pause();
                 },
@@ -110,8 +135,10 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                   ),
                 ),
                 onChanged: (value) {
+                  if (!_isMounted) return;
+
                   widget.pause();
-                  notifier.updateComment(value.trim());
+                  safeUpdateComment(value);
                 },
               ),
             ),
@@ -123,7 +150,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
           ),
 
           //? If this has any comments...
-          if (state.comment.isNotEmpty)
+          if (!isCommentEmpty)
             SizedBox(
               width: 40,
               height: 40,
@@ -131,6 +158,9 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                 height: 40,
                 radius: 40,
                 callback: () async {
+                  if (!mounted) return;
+                  notifier.isCommented(
+                      true, widget.moment.id, widget.moment.userId);
                   final chat = await conversationNotifier
                       .startChat(ChatType.personal, [widget.moment.userId]);
 
@@ -149,7 +179,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                         type: MessageType.text,
                         originalMessage: null,
                         originalMessageId: null,
-                        content: state.comment,
+                        content: comment[widget.moment.id] ?? '',
                         contacts: null,
                         media: null,
                         momentId: widget.moment.id,
@@ -176,6 +206,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
           else
             GestureDetector(
               onTap: () {
+                if (!mounted) return;
                 setState(() {
                   likedMoments[widget.moment.id] =
                       !(likedMoments[widget.moment.id] ?? false);
@@ -250,25 +281,39 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
   final localStorageService = WayaLocalDataSource();
   final WayaSecureDataSource _secureDataSource;
   final MomentRepository _momentRepository;
-
+  bool _isDisposed = false;
   ReplyMomentVm(this._momentRepository, this._secureDataSource, this.ref)
       : super(ReplyMomentState());
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
 
   void initialize() {
     state = state.copyWith(isLiked: false);
   }
 
   void updateComment(String comment) {
+    if (_isDisposed) return;
+    print("commeting");
     state = state.copyWith(comment: comment);
+    print("commeeeeee ${state.comment}");
   }
 
   void isCommented(bool isComment, String id, String userId) async {
+    if (_isDisposed) return;
     state = state.copyWith(isComment: isComment);
+    print("efwef commenting");
     await postSingleUserMoment(momentId: id, userId: userId);
   }
 
   void toggleLiked(bool liked, String id, String userId) async {
+    if (_isDisposed) return;
     state = state.copyWith(isLiked: liked);
+
+    print("efwef liking");
     await postSingleUserMoment(momentId: id, userId: userId);
   }
 
@@ -276,7 +321,9 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
       {required String momentId, required String userId}) async {
     try {
       final profileId = await _secureDataSource.getUserId();
-      if (profileId == userId) return;
+
+      if (profileId == userId) return debugPrint("working but it's yours");
+
       final response = await _momentRepository.viewMoments(
         profileId: profileId!,
         momentId: momentId,
@@ -285,7 +332,7 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
       );
 
       if (!response.success) return;
-      localStorageService.viewMoment(momentId);
+      //localStorageService.viewMoment(momentId);
       state = state.copyWith();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
