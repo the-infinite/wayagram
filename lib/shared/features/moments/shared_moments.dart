@@ -37,8 +37,8 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
         const Duration(seconds: 7),
         (_) {
            debugPrint("Reloading moments");
-          notifier.getUserMoments(1);
-          otherUserMoments.getAllMoments();
+          // notifier.getUserMoments(1);
+          // otherUserMoments.getAllMoments();
         },
       );
     });

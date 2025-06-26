@@ -43,9 +43,6 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
 }
 
 class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
-  late final notifier;
-  late final conversationNotifier;
-
   Map<String, bool> likedMoments = {};
   Map<String, String> comment = {};
   bool _isMounted = false;
@@ -54,8 +51,6 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
   void initState() {
     super.initState();
     _isMounted = true;
-    notifier = ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
-    conversationNotifier = ref.read(conversationProvider.notifier);
   }
 
   @override
@@ -67,7 +62,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
 
   void safeUpdateComment(String value) {
     if (!_isMounted) return;
-  
+
     widget.pause();
     setState(() {
       comment.addAll({widget.moment.id: value});
@@ -78,10 +73,11 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
+    final notifier = ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
+    final conversationNotifier = ref.read(conversationProvider.notifier);
     bool isLiked = likedMoments[widget.moment.id] ?? false;
     bool isCommentEmpty = comment[widget.moment.id]?.isEmpty == true ||
         comment[widget.moment.id] == null;
-
 
     //? Now move forward.
     return Container(
@@ -211,6 +207,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                   likedMoments[widget.moment.id] =
                       !(likedMoments[widget.moment.id] ?? false);
                 });
+                print("loieerree");
                 notifier.toggleLiked(likedMoments[widget.moment.id]!,
                     widget.moment.id, widget.moment.userId);
               },
@@ -303,32 +300,37 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
   }
 
   void isCommented(bool isComment, String id, String userId) async {
-    if (_isDisposed) return;
+   // if (_isDisposed) return;
     state = state.copyWith(isComment: isComment);
-    print("efwef ------ commenting");
-    await postSingleUserMoment(momentId: id, userId: userId);
+    print("efwef ------ commenting $isComment");
+    await postSingleUserMoment(
+        momentId: id, userId: userId, isComment: true);
   }
 
   void toggleLiked(bool liked, String id, String userId) async {
-    if (_isDisposed) return;
+     print("efwef liking before dispose");
+   // if (_isDisposed) return;
     state = state.copyWith(isLiked: liked);
 
     print("efwef liking");
-    await postSingleUserMoment(momentId: id, userId: userId);
+    await postSingleUserMoment(momentId: id, userId: userId, isLiked: true);
   }
 
   Future<void> postSingleUserMoment(
-      {required String momentId, required String userId}) async {
+      {required String momentId,
+      required String userId,
+      bool? isComment,
+      bool? isLiked}) async {
     try {
       final profileId = await _secureDataSource.getUserId();
 
       if (profileId == userId) return debugPrint("working but it's yours");
-print("efwef ---ewfewfwe--- commenting");
+      print("efwef ---ewfewfwe--- commenting $isComment $isLiked");
       final response = await _momentRepository.viewMoments(
-        profileId: profileId!,
+        // profileId: profileId!,
         momentId: momentId,
-        likeMoment: state.isLiked,
-        comment: state.isComment,
+        likeMoment: isLiked,
+        comment: isComment,
       );
 
       if (!response.success) return;
