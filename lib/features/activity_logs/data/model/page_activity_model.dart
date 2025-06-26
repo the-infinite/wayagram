@@ -213,6 +213,9 @@ class PageDocs {
       this.createdAt, 
       this.updatedAt,});
 
+  DateTime get createdTime => DateTime.parse(createdAt!);
+  DateTime get updatedTime => DateTime.parse(updatedAt!);
+
   PageDocs.fromJson(dynamic json) {
     id = json['id'];
     userId = json['userId'];

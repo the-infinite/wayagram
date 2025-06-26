@@ -256,19 +256,60 @@ class ActivityLogsState {
     Iterable<GroupDocs> result = groupDocs;
 
     //? First, we want to only include things that have their start date before
-    result = result.where((wallet) {
-      final timestamp = DateTime.parse(wallet.createdAt!);
+    result = result.where((group) {
+      final timestamp = DateTime.parse(group.createdAt!);
       return !timestamp.isBefore(start);
     });
 
     //? Second, we want to only include things things that are on or before our
     //? end date.
-    result = result.where((wallet) {
-      final timestamp = DateTime.parse(wallet.createdAt!);
+    result = result.where((group) {
+      final timestamp = DateTime.parse(group.createdAt!);
       return !timestamp.isAfter(end);
     });
 
     // Return this one.
     return result.toList();
   }
+
+  List<PageDocs> filterPageDocs(DateTime start, DateTime end) {
+    Iterable<PageDocs> result = pageDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((page) {
+      final timestamp = DateTime.parse(page.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((page) {
+      final timestamp = DateTime.parse(page.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<PollsActivityDocs> filterPollDocs(DateTime start, DateTime end) {
+    Iterable<PollsActivityDocs> result = pollDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((polls) {
+      final timestamp = DateTime.parse(polls.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((polls) {
+      final timestamp = DateTime.parse(polls.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
 }

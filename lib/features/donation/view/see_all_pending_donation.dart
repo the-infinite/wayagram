@@ -30,7 +30,6 @@ class _SeeAllDonationsState extends ConsumerState<SeeAllDonations> with SingleTi
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(donationVmProvider.notifier).getPendingDonation();
-      //ref.read(donationVmProvider.notifier).getAppliedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
@@ -43,7 +42,6 @@ class _SeeAllDonationsState extends ConsumerState<SeeAllDonations> with SingleTi
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    // final wayaTheme = Theme.of(context);
 
     // Filter the myDonations
     final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
@@ -66,10 +64,8 @@ class _SeeAllDonationsState extends ConsumerState<SeeAllDonations> with SingleTi
             viewModel.myDonationDocs.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
             Expanded(
               child: ListView.builder(
-                //physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: viewModel.pendingDonations?.length,
-                  //filteredMyDonations.length,
                   itemBuilder: (context, index) {
                     final donation = viewModel.pendingDonations?[index];
                     filteredMyDonations[index];
