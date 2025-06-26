@@ -285,7 +285,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           child: SuccessfulModal(
               title: "Contest created Successfully",
               subtitle:
-                  "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
+                  "Your contest details has been sent to the Admin, Once approved, you will receive a notification. Manage or share your contest details from your dashboard.",
               showCopyLink: true,
               buttonText: null,
               onShareTap: () async {
