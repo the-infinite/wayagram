@@ -305,7 +305,7 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
   void isCommented(bool isComment, String id, String userId) async {
     if (_isDisposed) return;
     state = state.copyWith(isComment: isComment);
-    print("efwef commenting");
+    print("efwef ------ commenting");
     await postSingleUserMoment(momentId: id, userId: userId);
   }
 
@@ -323,7 +323,7 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
       final profileId = await _secureDataSource.getUserId();
 
       if (profileId == userId) return debugPrint("working but it's yours");
-
+print("efwef ---ewfewfwe--- commenting");
       final response = await _momentRepository.viewMoments(
         profileId: profileId!,
         momentId: momentId,
@@ -332,7 +332,7 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
       );
 
       if (!response.success) return;
-      //localStorageService.viewMoment(momentId);
+      localStorageService.viewMoment(momentId);
       state = state.copyWith();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

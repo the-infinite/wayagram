@@ -34,8 +34,9 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
 
       //? This is fine.
       _timer = Timer.periodic(
-        const Duration(minutes: 1),
+        const Duration(seconds: 7),
         (_) {
+           debugPrint("Reloading moments");
           notifier.getUserMoments(1);
           otherUserMoments.getAllMoments();
         },
