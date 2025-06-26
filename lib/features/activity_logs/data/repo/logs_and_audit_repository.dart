@@ -5,6 +5,7 @@ import '../../../../core/service/api_service/request_model.dart';
 
 class ActivityLogsRepository extends BaseRepository {
   static const serviceUrl = WayaServiceUri.graph;
+  static const walletServiceUrl = WayaServiceUri.wallet;
 
   Future<WayaRequestResponse> getVisitedPages(int page) {
     return get("$serviceUrl/activity-logs?limit=2&page=$page&logType=visited-pages");
@@ -41,8 +42,9 @@ class ActivityLogsRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getDonationLogs(int page) {
-    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=donation");
+    return get("wayagram-products/api/v1/client/activity-logs?limit=100&page=$page&logType=donation");
   }
+
 
   Future<WayaRequestResponse> getPageLogs(int page) {
     return get("$serviceUrl/activity-logs?limit=10&page=$page&logType=pages");
@@ -73,7 +75,7 @@ class ActivityLogsRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getWalletLogs(int page) {
-    return get("$serviceUrl/client/activity-logs?limit=10&page=$page&logType=wallets");
+    return get("$walletServiceUrl/client/activity-logs?limit=100&page=$page");
   }
 
   Future<WayaRequestResponse> getQuotationLogs(int page) {

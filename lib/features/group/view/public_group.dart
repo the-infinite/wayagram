@@ -112,8 +112,10 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                     value: 0,
                     onTap: () {
                       WayaNav.goBack();
-
-                    ref.read(createGroupProvider.notifier).muteAndUnMuteGroup(context, group.mutedAt == null ? true : false, widget.id);
+                      WayaNav.toNamed('/muteGroup', arguments: {
+                        'groupId': widget.id
+                      });
+                    //ref.read(createGroupProvider.notifier).muteAndUnMuteGroup(context, group.mutedAt == null ? true : false, widget.id);
                     },
                     child: WayaActionNav(
                       context: context,

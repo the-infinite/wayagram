@@ -11,12 +11,14 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/wallet_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_card_widget.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
+import '../state/activity_logs_state.dart';
 import '../widget/activity_image_widget.dart';
 
 class ActivityLog extends ConsumerStatefulWidget {
@@ -68,10 +70,45 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
     });
   }
 
+  FilterType _filterBy = FilterType.allTime;
+
   @override
   Widget build(BuildContext context) {
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+
     final viewModel = ref.watch(activityLogsVmProvider);
+    final month = WayaDateHelper.getCurrentMonthBounds();
+    final year = WayaDateHelper.getCurrentYearBounds();
+    final week = WayaDateHelper.getCurrentWeekBounds();
+
+    //? First, get the boundaries we use to filter
+    final startingBound = switch (_filterBy) {
+      FilterType.thisMonth => month.$1,
+      FilterType.thisWeek => week.$1,
+      FilterType.thisYear => year.$1,
+      _ => null,
+    };
+    final endingBound = switch (_filterBy) {
+      FilterType.thisMonth => month.$2,
+      FilterType.thisWeek => week.$2,
+      FilterType.thisYear => year.$2,
+      _ => null,
+    };
+
+    //? Second, get the filtered donations.
+    final filteredWallet = startingBound == null || endingBound == null
+        ? viewModel.walletActivityDocs
+        : viewModel.filterWalletDocs(startingBound, endingBound);
+
+    //? Log the starting and ending time.
+    if (startingBound != null && endingBound != null) {
+      debugPrint(
+        "Time Bounds: (${WayaDateHelper.getDailyTimestamp(startingBound)}, ${WayaDateHelper.getDailyTimestamp(endingBound)})",
+      );
+    }
+
+
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    //final viewModel = ref.watch(activityLogsVmProvider);
     return WayaScaffold(
         backgroundColor: WayaColors.greyColor50,
         title: "$title    ",
@@ -228,134 +265,125 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   alignment: Alignment.center,
                   width: 102.w,
                   height: 36.h,
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 5, top: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: WayaColors.greyColor300)),
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
                   child: DropdownButton(
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      iconSize: 12,
-                      icon: SvgPicture.asset(
-                        WayaAssets.icons.downArrow.path,
-                      ),
-                      isDense: true,
-                      isExpanded: false,
-                      value: selTransact,
-                      items: lsTransact.map((String ls) {
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
                         return DropdownMenuItem(
                           value: ls,
-                          child: Text(ls,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selTransact = value!;
-                          sortList(selTransact.toLowerCase(),
-                              viewModel.walletDocs, viewModel.walletDocs1);
-                        });
-                      }),
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
                 ),
                 Gap(10),
                 Expanded(
-                  child: PaginatedDataView<PageDocs>(
-                      uniqueKey: 'wallet-logs',
-                      loadingState: SizedBox(
-                          height: context.height * 0.4,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          )),
-                      emptyState: ActivityLogsEmptyState(
-                        text: 'You don\'t have wallet logs yet',
-                      ),
-                      fetchData: ref
-                          .read(activityLogsVmProvider.notifier)
-                          .getWalletLogs,
-                      result: (data, s) {
-                        for (int i = 0; i < viewModel.walletDocs.length; i++) {
-                          if (!dates.contains(viewModel.walletDocs[i].createdAt
-                              .toString()
-                              .split('T')[0])) {
-                            dates.add(viewModel.walletDocs[i].createdAt
-                                .toString()
-                                .split('T')[0]);
-                            viewModel.walletDocs.add(viewModel.walletDocs[i]);
-                          }
-                        }
-                        return SingleChildScrollView(
-                          child: viewModel.walletDocs.isEmpty
-                              ? ActivityLogsEmptyState(
-                                  text:
-                                      'You don\'t have Wallet Logs for this week yet',
-                                )
-                              : ListView.builder(
-                                  padding:
-                                      EdgeInsets.only(bottom: 80.h, top: 0),
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: dates.length,
-                                  itemBuilder: (context, i) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontFamily:
-                                                  WayaConstants.fontFamily,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                            )),
-                                        Gap(10),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const ClampingScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              bottom: 20.h, top: 0),
-                                          itemCount:
-                                              viewModel.walletDocs.length,
-                                          itemBuilder: (context, index) {
-                                            final walletLog =
-                                                viewModel.walletDocs[index];
-                                            String dateTimeString =
-                                                "${walletLog.createdAt}";
-                                            DateTime dateTime =
-                                                DateTime.parse(dateTimeString)
-                                                    .toLocal();
-                                            if (viewModel
-                                                    .walletDocs[index].createdAt
-                                                    .toString()
-                                                    .split('T')[0] ==
-                                                dates[i]) {
-                                              return ActivityCardWidget(
-                                                title:
-                                                    '${walletLog.description}',
-                                                subTitle:
-                                                    '${ref.read(createPollVotingProvider.notifier).formatDt2(walletLog.createdAt)}, '
-                                                    '${DateFormat.jm().format(dateTime)}',
-                                              );
-                                            } else {
-                                              return Container();
-                                            }
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  }),
-                        );
-                      }),
+                  child: PaginatedDataView<WalletActivityDocs>(
+                    uniqueKey: 'Wallet',
+                    loadingState: SizedBox(
+                        height: context.height * 0.4,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Wallet yet',
+                    ),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getWalletLogs,
+                    result: (data, s) {
+                      return SingleChildScrollView(
+                        child: filteredWallet.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have wallet logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredWallet.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredWallet.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredWallet[first];
+                                final next = filteredWallet[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
+
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final wallet = filteredWallet[index];
+                                final dateTimeString = "${wallet.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+                                return ActivityCardWidget(
+                                  title: '${wallet.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(wallet.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             );

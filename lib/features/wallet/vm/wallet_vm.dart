@@ -20,6 +20,7 @@ import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/view/request_payout.dart';
 
 import '../../../core/controller/debug_console.dart';
+import '../../chat/state/default.dart';
 
 class WalletVm extends StateNotifier<WalletState> {
   final _walletRepository = WalletRepository.instance;
@@ -351,12 +352,12 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
     final response = await _walletRepository!.fundWallet(
       FundWallet(
-          userId: user!.id,
+          userId: ConversationState.self.id,
           amount: amount,
           description: decription ?? "Wallet funding",
-          email: user.email ?? "",
+          email: ConversationState.self.email!,
+          //user?.email ?? "diala@gmail.com",
           fundOptionCode: fundOptionCode,
-          //callbackUrl: "https://staging.wayagram.ng"
           callbackUrl: WayaConstants.webUrl
           ),
     );

@@ -11,6 +11,7 @@ import 'package:wayagram/features/activity_logs/data/model/search_log_model.dart
 import 'package:wayagram/features/activity_logs/data/model/user_actions_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/visited_pages_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/wallet_activity_model.dart';
 
 enum FilterType {
   allTime._("All Time"),
@@ -34,6 +35,7 @@ class ActivityLogsState {
   List<PaymentActivityDocs> paymentActivityDocs1;
   List<SearchLogDocs> searchLogDocs;
   List<DonationDocs> donationDocs;
+  List<WalletActivityDocs> walletActivityDocs;
   List<DonationDocs> donationDocs1;
   List<PageDocs> shopDocs;
   List<PageDocs> shopDocs1;
@@ -41,6 +43,15 @@ class ActivityLogsState {
   List<PageDocs> walletDocs1;
   List<PageDocs> quotationDocs;
   List<PageDocs> quotationDocs1;
+
+  final int? totalSize;
+  final int? limit;
+  final int? page;
+  final int? nextPage;
+  final int? totalPages;
+  final bool hasNextPage;
+  final bool? hasPreviousPage;
+
   List<PollsActivityDocs> pollDocs;
   List<PollsActivityDocs> pollDocs1;
   List<PageDocs> eventDocs;
@@ -78,6 +89,7 @@ class ActivityLogsState {
     this.eventDocs1 = const [],
     this.walletDocs = const [],
     this.walletDocs1 = const [],
+    this.walletActivityDocs = const [],
     this.quotationDocs = const [],
     this.quotationDocs1 = const [],
     this.shopDocs = const [],
@@ -103,6 +115,13 @@ class ActivityLogsState {
     this.visitedPagesDocs = const [],
     this.visitedPagesDocs1 = const [],
     this.visitedPagesModel,
+    this.totalSize,
+    this.limit,
+    this.page,
+    this.totalPages,
+    this.hasNextPage = false,
+    this.hasPreviousPage,
+    this.nextPage,
   }) : title = title ?? TextEditingController();
 
   ActivityLogsState copyWith({
@@ -125,6 +144,7 @@ class ActivityLogsState {
     List<CmsDocs>? cmsDocs,
     List<CmsDocs>? cmsDocs1,
     List<DonationDocs>? donationDocs,
+    List<WalletActivityDocs>? walletActivityDocs,
     List<DonationDocs>? donationDocs1,
     List<PageDocs>? pageDocs,
     List<PageDocs>? pageDocs1,
@@ -144,6 +164,13 @@ class ActivityLogsState {
     List<VisitedPagesDocs>? visitedPagesDocs1,
     VisitedPagesModel? visitedPagesModel,
     bool? isLoading,
+    int? totalSize,
+    int? limit,
+    int? page,
+    int? nextPage,
+    int? totalPages,
+    bool? hasNextPage,
+    bool? hasPreviousPage,
   }) {
     return ActivityLogsState(
       title: title ?? this.title,
@@ -168,6 +195,7 @@ class ActivityLogsState {
       pageDocs1: pageDocs1 ?? this.pageDocs1,
       donationDocs: donationDocs ?? this.donationDocs,
       donationDocs1: donationDocs1 ?? this.donationDocs1,
+      walletActivityDocs: walletActivityDocs ?? this.walletActivityDocs,
       accountActivityDocs: accountActivityDocs ?? this.accountActivityDocs,
       accountActivityDocs1: accountActivityDocs1 ?? this.accountActivityDocs1,
       paymentActivityDocs: paymentActivityDocs ?? this.paymentActivityDocs,
@@ -197,6 +225,26 @@ class ActivityLogsState {
     //? end date.
     result = result.where((donation) {
       final timestamp = DateTime.parse(donation.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<WalletActivityDocs> filterWalletDocs(DateTime start, DateTime end) {
+    Iterable<WalletActivityDocs> result = walletActivityDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((wallet) {
+      final timestamp = DateTime.parse(wallet.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((wallet) {
+      final timestamp = DateTime.parse(wallet.createdAt!);
       return !timestamp.isAfter(end);
     });
 

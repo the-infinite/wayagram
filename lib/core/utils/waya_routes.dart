@@ -192,6 +192,7 @@ import '../../features/activity_logs/view/search_log.dart';
 import '../../features/activity_logs/view/user_action.dart';
 import '../../features/activity_logs/view/user_interaction.dart';
 import '../../features/activity_logs/view/visited_page.dart';
+import '../../features/group/view/mute_group.dart';
 import '../../features/group/view/search_group.dart';
 
 class WayaAppRoutes {
@@ -423,11 +424,10 @@ class WayaAppRoutes {
     ShopSettingPage.route: () => ShopSettingPage(),
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
+    MuteGroup.route:() => MuteGroup(),
     UserPageInvitation.route: () => UserPageInvitation(),
-    SinglePageInvitation.route: () =>
-        SinglePageInvitation(id: WayaNav.search['id'].toString()),
-    SingleGroupInvitation.route: () =>
-        SingleGroupInvitation(id: WayaNav.search['id'].toString()),
+    SinglePageInvitation.route: () => SinglePageInvitation(id: WayaNav.search['id'].toString()),
+    SingleGroupInvitation.route: () => SingleGroupInvitation(id: WayaNav.search['id'].toString()),
     UserGroupInvitation.route: () => UserGroupInvitation(),
     EventSettingsPage.route: () => EventSettingsPage(),
     PostSettingsPage.route: () => PostSettingsPage(),

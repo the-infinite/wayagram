@@ -62,7 +62,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
           fetchData: ref.read(createPollVotingProvider.notifier).getAllPolls,
           result: (data, index) {
             return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: viewModel.fetchAllPols.length,
                 itemBuilder: (context, index) {
