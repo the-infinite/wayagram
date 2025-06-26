@@ -225,7 +225,7 @@ class _UpcomingContestDetailsState
 
                       // if (hasProfile.value || model?.hasApplied == true) {
                       ref.read(selectedContestProvider.notifier).state = model;
-                      WayaNav.toNamed('/upcoming-manage-contest-details');
+                      WayaNav.toNamed('/contest-details-page');
                     },
                     text: "View Contest Details",
                   ),
@@ -246,7 +246,7 @@ class _UpcomingContestDetailsState
                       );
 
                       /*  ref.read(selectedContestProvider.notifier).state = model;
-                      WayaNav.toNamed('/upcoming-manage-contest-details'); */
+                      WayaNav.toNamed('/contest-details-page'); */
                       return;
                     }
 

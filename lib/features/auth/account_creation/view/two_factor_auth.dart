@@ -34,10 +34,13 @@ class _TwoFactorAuthState extends ConsumerState<TwoFactorAuth> {
       final arg = ModalRoute.of(context)!.settings.arguments;
 
       if (arg != null) {
+        print("aadadw $arg");
         if (arg == "resend") {
           notifier.updateResend(true);
+
         } else {
           notifier.updateFromLoginState(true);
+        
         }
       }
       startCountdown();
@@ -83,137 +86,136 @@ class _TwoFactorAuthState extends ConsumerState<TwoFactorAuth> {
           notifier.reset();
         },
         child: WayaScaffold(
-          isScrollable: false,
-          body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            //? First, for the page title.
-            Text(
-              "2FA Verification",
-              style: WayaTextStyles.titleLarge,
-            ),
+            isScrollable: false,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //? First, for the page title.
+                Text(
+                  "2FA Verification",
+                  style: WayaTextStyles.titleLarge,
+                ),
 
-            // Some space.
-            const Gap(5),
+                // Some space.
+                const Gap(5),
 
-            //? Give it a little bit more space.
-            Text(
-              "We sent a 6-digits code sent to ${widget.email}",
-              maxLines: 3,
-              style: WayaTextStyles.hintStyle,
-            ),
+                //? Give it a little bit more space.
+                Text(
+                  "We sent a 6-digits code sent to ${widget.email}",
+                  maxLines: 3,
+                  style: WayaTextStyles.hintStyle,
+                ),
 
-            // Some space.
-            const Gap(20),
+                // Some space.
+                const Gap(20),
 
-            //? Next, the OTP code text field.
-            Align(
-              alignment: Alignment.center,
-              child: VerificationCode(
-                textStyle: const TextStyle(fontSize: 20.0),
-                keyboardType: TextInputType.number,
-                underlineColor: wayaTheme.colorScheme.customBlack,
-                fullBorder: true,
-                fillColor: Colors.transparent,
-                itemSize: 42,
-                length: 6,
-                padding: const EdgeInsets.all(8.0),
-                margin: const EdgeInsets.symmetric(horizontal: 3.0),
-                cursorColor: wayaTheme.colorScheme.customPrimary,
-                onCompleted: (String value) {
-                  notifier.onCodeChanged(value);
-                },
-                onEditing: (bool value) {
-                  notifier.onEdited(value);
-                  if (!state.isEditing) {
-                    FocusScope.of(context).unfocus();
-                  }
-                },
-              ),
-            ),
+                //? Next, the OTP code text field.
+                Align(
+                  alignment: Alignment.center,
+                  child: VerificationCode(
+                    textStyle: const TextStyle(fontSize: 20.0),
+                    keyboardType: TextInputType.number,
+                    underlineColor: wayaTheme.colorScheme.customBlack,
+                    fullBorder: true,
+                    fillColor: Colors.transparent,
+                    itemSize: 42,
+                    length: 6,
+                    padding: const EdgeInsets.all(8.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                    cursorColor: wayaTheme.colorScheme.customPrimary,
+                    onCompleted: (String value) {
+                      notifier.onCodeChanged(value);
+                    },
+                    onEditing: (bool value) {
+                      notifier.onEdited(value);
+                      if (!state.isEditing) {
+                        FocusScope.of(context).unfocus();
+                      }
+                    },
+                  ),
+                ),
 
-            // Some space.
-            const Gap(20),
+                // Some space.
+                const Gap(20),
 
-            //? Our button.
-            Align(
-              alignment: Alignment.center,
-              child: countDown == 0
+                //? Our button.
+                Align(
+                  alignment: Alignment.center,
+                  child: countDown == 0
 
-                  //? What to show when the user can resend this.
-                  ? GestureDetector(
-                      onTap: () {
-                        if (!state.isLoading) {
-                          setState(() {
-                            countDown = 60;
-                          });
-                          startCountdown();
-                          final email = Uri.decodeComponent(widget.email);
-                          notifier.resend2faOtp(email: email);
-                        }
-                      },
-                      child: Container(
-                        width: 110,
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.primary75,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: Text(
-                          "Resend OTP",
-                          style: WayaTextStyles.smallActiveLinkStyle,
-                        ),
-                      ),
-                    )
-                  : Container(
-                      width: 220.sp,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: wayaTheme.colorScheme.primary75,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Didn't get any code? ",
-                              style: WayaTextStyles.bodySmall,
-                            ),
-                            TextSpan(
-                              text:
-                                  "Resend ${countDown ~/ 60}:${(countDown % 60).toString().padLeft(2, '0')}",
+                      //? What to show when the user can resend this.
+                      ? GestureDetector(
+                          onTap: () {
+                            if (!state.isLoading) {
+                              setState(() {
+                                countDown = 60;
+                              });
+                              startCountdown();
+                              final email = Uri.decodeComponent(widget.email);
+                              notifier.resend2faOtp(email: email);
+                            }
+                          },
+                          child: Container(
+                            width: 110,
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                                color: wayaTheme.colorScheme.primary75,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8))),
+                            child: Text(
+                              "Resend OTP",
                               style: WayaTextStyles.smallActiveLinkStyle,
                             ),
-                          ],
+                          ),
+                        )
+                      : Container(
+                          width: 220.sp,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: wayaTheme.colorScheme.primary75,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Didn't get any code? ",
+                                  style: WayaTextStyles.bodySmall,
+                                ),
+                                TextSpan(
+                                  text:
+                                      "Resend ${countDown ~/ 60}:${(countDown % 60).toString().padLeft(2, '0')}",
+                                  style: WayaTextStyles.smallActiveLinkStyle,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-            ),
+                ),
 
-            // Some space.
-            const Gap(50),
+                // Some space.
+                const Gap(50),
 
-            // The final button.
-            WayaButton(
-              callback: !state.isLoading
-                  ? () async {
-                      final code = state.inputCode;
-                      notifier.twoFaVerification(
-                          code: code, email: widget.email);
-                    }
-                  : null,
-              centerWidget: LoadingState(
-                loading: state.isLoading,
-                text: 'Verify',
-              ),
-            ),
-          ],
-        ))
-        
-        );
+                // The final button.
+                WayaButton(
+                  callback: !state.isLoading
+                      ? () async {
+                          final code = state.inputCode;
+                          notifier.twoFaVerification(
+                              code: code, email: widget.email);
+                        }
+                      : null,
+                  centerWidget: LoadingState(
+                    loading: state.isLoading,
+                    text: 'Verify',
+                  ),
+                ),
+              ],
+            )));
   }
 }

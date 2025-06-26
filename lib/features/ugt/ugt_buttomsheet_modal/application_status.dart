@@ -246,7 +246,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                 if (appliedContestModel.value?.status?.toLowerCase() ==
                     "approved") {
                   if (hasProfile.value) {
-                    WayaNav.toNamed("/upcoming-manage-contest-details");
+                    WayaNav.toNamed("/contest-details-page");
                     return;
                   }
                   //? check if contest is free
@@ -290,7 +290,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                   }
                 } else {
                   //? contest not approved, could be pending or rejected, can go on to view the contest details
-                  WayaNav.toNamed("/upcoming-manage-contest-details");
+                  WayaNav.toNamed("/contest-details-page");
                 }
               },
               //? first checking if contest is approved or not

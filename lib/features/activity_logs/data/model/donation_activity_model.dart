@@ -1,13 +1,16 @@
 import 'dart:convert';
+
 DonationActivityModel donationActivityModelFromJson(String str) => DonationActivityModel.fromJson(json.decode(str));
 String donationActivityModelToJson(DonationActivityModel data) => json.encode(data.toJson());
+
 class DonationActivityModel {
   DonationActivityModel({
-      this.message, 
-      this.status, 
-      this.statusCode, 
-      this.data, 
-      this.responseCode,});
+    this.message,
+    this.status,
+    this.statusCode,
+    this.data,
+    this.responseCode,
+  });
 
   DonationActivityModel.fromJson(dynamic json) {
     message = json['message'];
@@ -21,17 +24,20 @@ class DonationActivityModel {
   num? statusCode;
   Data? data;
   num? responseCode;
-DonationActivityModel copyWith({  String? message,
-  bool? status,
-  num? statusCode,
-  Data? data,
-  num? responseCode,
-}) => DonationActivityModel(  message: message ?? this.message,
-  status: status ?? this.status,
-  statusCode: statusCode ?? this.statusCode,
-  data: data ?? this.data,
-  responseCode: responseCode ?? this.responseCode,
-);
+  DonationActivityModel copyWith({
+    String? message,
+    bool? status,
+    num? statusCode,
+    Data? data,
+    num? responseCode,
+  }) =>
+      DonationActivityModel(
+        message: message ?? this.message,
+        status: status ?? this.status,
+        statusCode: statusCode ?? this.statusCode,
+        data: data ?? this.data,
+        responseCode: responseCode ?? this.responseCode,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['message'] = message;
@@ -43,24 +49,25 @@ DonationActivityModel copyWith({  String? message,
     map['responseCode'] = responseCode;
     return map;
   }
-
 }
 
 Data dataFromJson(String str) => Data.fromJson(json.decode(str));
 String dataToJson(Data data) => json.encode(data.toJson());
+
 class Data {
   Data({
-      this.docs, 
-      this.totalDocs, 
-      this.limit, 
-      this.page, 
-      this.totalPages, 
-      this.hasNextPage, 
-      this.nextPage, 
-      this.hasPrevPage, 
-      this.prevPage, 
-      this.pagingCounter, 
-      this.metadata,});
+    this.docs,
+    this.totalDocs,
+    this.limit,
+    this.page,
+    this.totalPages,
+    this.hasNextPage,
+    this.nextPage,
+    this.hasPrevPage,
+    this.prevPage,
+    this.pagingCounter,
+    this.metadata,
+  });
 
   Data.fromJson(dynamic json) {
     if (json['docs'] != null) {
@@ -91,29 +98,32 @@ class Data {
   dynamic prevPage;
   num? pagingCounter;
   Metadata? metadata;
-Data copyWith({  List<DonationDocs>? docs,
-  num? totalDocs,
-  num? limit,
-  num? page,
-  num? totalPages,
-  bool? hasNextPage,
-  dynamic nextPage,
-  bool? hasPrevPage,
-  dynamic prevPage,
-  num? pagingCounter,
-  Metadata? metadata,
-}) => Data(  docs: docs ?? this.docs,
-  totalDocs: totalDocs ?? this.totalDocs,
-  limit: limit ?? this.limit,
-  page: page ?? this.page,
-  totalPages: totalPages ?? this.totalPages,
-  hasNextPage: hasNextPage ?? this.hasNextPage,
-  nextPage: nextPage ?? this.nextPage,
-  hasPrevPage: hasPrevPage ?? this.hasPrevPage,
-  prevPage: prevPage ?? this.prevPage,
-  pagingCounter: pagingCounter ?? this.pagingCounter,
-  metadata: metadata ?? this.metadata,
-);
+  Data copyWith({
+    List<DonationDocs>? docs,
+    num? totalDocs,
+    num? limit,
+    num? page,
+    num? totalPages,
+    bool? hasNextPage,
+    dynamic nextPage,
+    bool? hasPrevPage,
+    dynamic prevPage,
+    num? pagingCounter,
+    Metadata? metadata,
+  }) =>
+      Data(
+        docs: docs ?? this.docs,
+        totalDocs: totalDocs ?? this.totalDocs,
+        limit: limit ?? this.limit,
+        page: page ?? this.page,
+        totalPages: totalPages ?? this.totalPages,
+        hasNextPage: hasNextPage ?? this.hasNextPage,
+        nextPage: nextPage ?? this.nextPage,
+        hasPrevPage: hasPrevPage ?? this.hasPrevPage,
+        prevPage: prevPage ?? this.prevPage,
+        pagingCounter: pagingCounter ?? this.pagingCounter,
+        metadata: metadata ?? this.metadata,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (docs != null) {
@@ -133,17 +143,18 @@ Data copyWith({  List<DonationDocs>? docs,
     }
     return map;
   }
-
 }
 
 Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
 String metadataToJson(Metadata data) => json.encode(data.toJson());
+
 class Metadata {
   Metadata({
-      this.offset, 
-      this.searchApplied, 
-      this.searchFields, 
-      this.appliedFilters,});
+    this.offset,
+    this.searchApplied,
+    this.searchFields,
+    this.appliedFilters,
+  });
 
   Metadata.fromJson(dynamic json) {
     offset = json['offset'];
@@ -155,15 +166,18 @@ class Metadata {
   bool? searchApplied;
   List<dynamic>? searchFields;
   AppliedFilters? appliedFilters;
-Metadata copyWith({  num? offset,
-  bool? searchApplied,
-  List<dynamic>? searchFields,
-  AppliedFilters? appliedFilters,
-}) => Metadata(  offset: offset ?? this.offset,
-  searchApplied: searchApplied ?? this.searchApplied,
-  searchFields: searchFields ?? this.searchFields,
-  appliedFilters: appliedFilters ?? this.appliedFilters,
-);
+  Metadata copyWith({
+    num? offset,
+    bool? searchApplied,
+    List<dynamic>? searchFields,
+    AppliedFilters? appliedFilters,
+  }) =>
+      Metadata(
+        offset: offset ?? this.offset,
+        searchApplied: searchApplied ?? this.searchApplied,
+        searchFields: searchFields ?? this.searchFields,
+        appliedFilters: appliedFilters ?? this.appliedFilters,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['offset'] = offset;
@@ -176,15 +190,16 @@ Metadata copyWith({  num? offset,
     }
     return map;
   }
-
 }
 
 AppliedFilters appliedFiltersFromJson(String str) => AppliedFilters.fromJson(json.decode(str));
 String appliedFiltersToJson(AppliedFilters data) => json.encode(data.toJson());
+
 class AppliedFilters {
   AppliedFilters({
-      this.logType, 
-      this.userId,});
+    this.logType,
+    this.userId,
+  });
 
   AppliedFilters.fromJson(dynamic json) {
     logType = json['logType'];
@@ -192,32 +207,39 @@ class AppliedFilters {
   }
   String? logType;
   String? userId;
-AppliedFilters copyWith({  String? logType,
-  String? userId,
-}) => AppliedFilters(  logType: logType ?? this.logType,
-  userId: userId ?? this.userId,
-);
+  AppliedFilters copyWith({
+    String? logType,
+    String? userId,
+  }) =>
+      AppliedFilters(
+        logType: logType ?? this.logType,
+        userId: userId ?? this.userId,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['logType'] = logType;
     map['userId'] = userId;
     return map;
   }
-
 }
 
 DonationDocs docsFromJson(String str) => DonationDocs.fromJson(json.decode(str));
 String docsToJson(DonationDocs data) => json.encode(data.toJson());
+
 class DonationDocs {
   DonationDocs({
-      this.id, 
-      this.userId, 
-      this.logType, 
-      this.description, 
-      this.actionType, 
-      this.metadata, 
-      this.createdAt, 
-      this.updatedAt,});
+    this.id,
+    this.userId,
+    this.logType,
+    this.description,
+    this.actionType,
+    this.metadata,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  DateTime get createdTime => DateTime.parse(createdAt!);
+  DateTime get updatedTime => DateTime.parse(updatedAt!);
 
   DonationDocs.fromJson(dynamic json) {
     id = json['id'];
@@ -237,23 +259,26 @@ class DonationDocs {
   dynamic metadata;
   String? createdAt;
   String? updatedAt;
-  DonationDocs copyWith({  String? id,
-  String? userId,
-  String? logType,
-  String? description,
-  String? actionType,
-  dynamic metadata,
-  String? createdAt,
-  String? updatedAt,
-}) => DonationDocs(  id: id ?? this.id,
-  userId: userId ?? this.userId,
-  logType: logType ?? this.logType,
-  description: description ?? this.description,
-  actionType: actionType ?? this.actionType,
-  metadata: metadata ?? this.metadata,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-);
+  DonationDocs copyWith({
+    String? id,
+    String? userId,
+    String? logType,
+    String? description,
+    String? actionType,
+    dynamic metadata,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      DonationDocs(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        logType: logType ?? this.logType,
+        description: description ?? this.description,
+        actionType: actionType ?? this.actionType,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -266,5 +291,4 @@ class DonationDocs {
     map['updatedAt'] = updatedAt;
     return map;
   }
-
 }

@@ -42,90 +42,106 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
   final textController = TextEditingController();
   final pauseController = ValueNotifier(false);
   late int currentIndex = widget.index ?? 0;
+  final FocusNode _commentFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+
+      currentIndex = widget.index ?? 0;
+ 
+    _pageController = PageController(initialPage: widget.index ?? 0);
     _animationController = AnimationController(
       vsync: this,
     );
   }
 
-  void _startTimer() {
-    if (moments.isEmpty) return;
+void _startTimer() {
+  if (moments.isEmpty) return;
 
-    _animationController.reset();
+  _animationController.reset();
+  
+  //? Set duration based on content type
+  final duration = moments[currentIndex].contentType == 'text' 
+      ? Duration(seconds: 7) 
+      : Duration(seconds: 10);
+  
+  _animationController.duration = duration;
 
-    _animationController.forward(from: 0.0).whenComplete(() {
-      if (mounted && !pauseController.value) {
-        _nextMoment();
-      }
-    });
-  }
-
-  void _nextMoment() async {
-    if (!mounted) return;
-
+  _animationController.forward(from: 0.0).whenComplete(() {
+    if (!mounted || pauseController.value) return;
+    
     if (currentIndex < moments.length - 1) {
-      setState(() {
-        currentIndex++;
-      });
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.ease,
-      );
-      return;
+      //? advance to next moment
+      _nextMoment();
+    } else {
+      //? At last moment - auto-route back after animation completes
+      if (!WayaNav.canPop()) return;
+      if (isMine) {
+        WayaNav.replaceNamed(MyMoments.route);
+      } else {
+        WayaNav.goBack();
+      }
     }
+  });
+}
 
-    //? Since there is nowhere to go to.
-    if (!WayaNav.canPop()) {
-      debugPrint("No more pages, and cannot pop.");
-      return;
-    }
-
-    //? If this is my own moment I am viewing...
+void _nextMoment() async {
+  if (!mounted) return;
+  textController.clear();
+  
+  if (currentIndex < moments.length - 1) {
+    //? Normal navigation between moments
+    setState(() {
+      currentIndex++;
+    });
+    _pageController.jumpToPage(currentIndex);
+  } else {
+    //? At last moment - always route back regardless of animation state
+    if (!WayaNav.canPop()) return;
     if (isMine) {
       WayaNav.replaceNamed(MyMoments.route);
-    }
-
-    //? Since it is not mine, I just go somewhere else.
-    else {
+    } else {
       WayaNav.goBack();
     }
   }
+}
 
-  //? Fair enough, go back to the previous moment.
-  void _previousMoment() {
-    //? If this is actually at an index greater than 0....
-    if (currentIndex > 0) {
-      _pageController.previousPage(
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
-    }
+void _previousMoment() {
+  textController.clear();
+  
+  if (currentIndex > 0) {
+    //? Normal navigation between moments
+    setState(() {
+      currentIndex--;
+    });
+    _pageController.jumpToPage(currentIndex);
+  } else {
+    //? At first moment - always route back regardless of animation state
+    WayaNav.goBack();
+  }
+}
 
-    //? Since it is not mine, I just go somewhere else.
-    else {
-      WayaNav.goBack();
-    }
+void _onPageChanged(int index) {
+  if (!mounted) return;
+
+  //? Update current index immediately
+  setState(() {
+    currentIndex = index;
+  });
+
+  //? Reset UI state
+  _commentFocusNode.unfocus();
+  textController.clear();
+  
+  if (currentIndex < moments.length) {
+    final previousKey = "up-${moments[currentIndex].userId}-$currentIndex";
+    ref.read(replyMomentVmProvider(previousKey).notifier).updateComment('');
   }
 
-  void _onPageChanged(int index) {
-    if (!mounted) return;
-
-    //? This is fine.
-    _animationController.reset();
-    if (index < moments.length) {
-      setState(() {
-        currentIndex = index;
-      });
-      _startTimer();
-    }
-
-    //? Then we can just do it like this.
-    else {
-      _pageController.jumpToPage(moments.length - 1);
-    }
-  }
+  _animationController.reset();
+  _startTimer();
+}
 
   void pauseAnimation([bool hideControls = true]) {
     if (!_animationController.isAnimating) return;
@@ -150,6 +166,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
   void dispose() {
     _pageController.dispose();
     _animationController.dispose();
+    _commentFocusNode.dispose();
+    textController.dispose();
     super.dispose();
   }
 
@@ -182,13 +200,14 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
               children: [
                 //? First, the page view.
                 PageView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   controller: _pageController,
                   itemCount: moments.length,
                   onPageChanged: (index) => _onPageChanged(index),
                   itemBuilder: (context, index) {
                     //? Get the moment.
-                    final moment = moments[currentIndex];
+                   
+                    final moment = moments[index];
 
                     //? This is fine.
                     if (moment.contentType.trim().toLowerCase() == 'text') {
@@ -325,20 +344,21 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
                 ),
 
                 //? This is fine.
-                if (!isMine)
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: ReplyMomentWidget(
-                      textController: textController,
-                      pause: pauseAnimation,
-                      continues: continueAnimating,
-                      uniqueKey:
-                          "up-${moments[currentIndex].userId}-$currentIndex",
-                      moment: moments[currentIndex],
-                    ),
-                  )
+                 if (!isMine)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: ReplyMomentWidget(
+                    textController: textController,
+                    pause: pauseAnimation,
+                    continues: continueAnimating,
+                    uniqueKey:
+                        "up-${moments[currentIndex].userId}-$currentIndex",
+                    moment: moments[currentIndex],
+                    focusNode: _commentFocusNode,
+                  ),
+                )
 
                 //? How we see our current moment metrics.
                 else
@@ -537,7 +557,6 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-  
     return Stack(
       fit: StackFit.expand,
       children: [

@@ -316,6 +316,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
           await _authRepository.toggle2Fa(code: code, purpose: "2FA");
 
       if (response.success) {
+        print("ewwedwedwedwdw");
         WayaNav.replaceNamed(AccountSecurity.route);
       }
     } catch (e) {
@@ -342,16 +343,12 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       state = state.copyWith(isLoading: false);
     }
   }
-
-/**
-
- */
   void updateResend(bool value) {
-    state = state.copyWith(isResend: value);
+    state = state.copyWith(isResend: value, isFromLogin: !value);
   }
 
   void updateFromLoginState(bool value) {
-    state = state.copyWith(isFromLogin: value);
+    state = state.copyWith(isFromLogin: value, isResend: !value);
   }
 }
 

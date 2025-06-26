@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
+import 'package:wayagram/features/activity_logs/view/donation_logs.dart';
 import 'package:wayagram/features/auth/account_creation/view/two_factor_auth.dart';
 import 'package:wayagram/features/activity_logs/view/page_logs.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
@@ -191,6 +192,7 @@ import '../../features/activity_logs/view/search_log.dart';
 import '../../features/activity_logs/view/user_action.dart';
 import '../../features/activity_logs/view/user_interaction.dart';
 import '../../features/activity_logs/view/visited_page.dart';
+import '../../features/group/view/mute_group.dart';
 import '../../features/group/view/search_group.dart';
 
 class WayaAppRoutes {
@@ -416,16 +418,16 @@ class WayaAppRoutes {
     QuotationSellerOrders.route: () => QuotationSellerOrders(),
     VisitedPage.route: () => VisitedPage(),
     PageLogs.route: () => PageLogs(),
+    DonationLogs.route: () => DonationLogs(),
     DonationSettingsPage.route: () => DonationSettingsPage(),
     QuotationSettingsPage.route: () => QuotationSettingsPage(),
     ShopSettingPage.route: () => ShopSettingPage(),
     PageGeneralSetting.route: () => PageGeneralSetting(),
     GroupSettingPage.route: () => GroupSettingPage(),
+    MuteGroup.route:() => MuteGroup(),
     UserPageInvitation.route: () => UserPageInvitation(),
-    SinglePageInvitation.route: () =>
-        SinglePageInvitation(id: WayaNav.search['id'].toString()),
-    SingleGroupInvitation.route: () =>
-        SingleGroupInvitation(id: WayaNav.search['id'].toString()),
+    SinglePageInvitation.route: () => SinglePageInvitation(id: WayaNav.search['id'].toString()),
+    SingleGroupInvitation.route: () => SingleGroupInvitation(id: WayaNav.search['id'].toString()),
     UserGroupInvitation.route: () => UserGroupInvitation(),
     EventSettingsPage.route: () => EventSettingsPage(),
     PostSettingsPage.route: () => PostSettingsPage(),

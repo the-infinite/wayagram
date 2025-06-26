@@ -619,6 +619,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (videoUrl != null) {
       listMap.add({"type": "VIDEO", "url": videoUrl});
     }
+    if(text.trim().isNotEmpty) {
+      listMap.add({"type": "TEXT", "url": text});
+    }
     // listMap.add({"type": "TEXT", "url": text});
 
     var map = {

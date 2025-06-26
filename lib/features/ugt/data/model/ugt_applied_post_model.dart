@@ -324,6 +324,7 @@ post.Contest mergeContest(AppliedContestModel model) {
                   stageName: e.stageName,
                   entryType: e.entryType,
                   entryAmount: e.entryAmount,
+                  maxVote: 0,
                   voteCountToQualify: e.voteCountToQualify,
                   numberOfPostPerWeek: e.numberOfPostPerWeek,
                   priceOfTheWinner: e.priceOfTheWinner,

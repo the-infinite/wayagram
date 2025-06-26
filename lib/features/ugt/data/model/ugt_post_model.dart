@@ -231,8 +231,9 @@ class Contest {
       howItWorks: howItWorks ?? this.howItWorks,
       entryType: entryType ?? this.entryType,
       amount: amount ?? this.amount,
-      participationStartDate:participationStartDate ?? this.participationStartDate,
-      participationEndDate:participationEndDate ?? this.participationEndDate,
+      participationStartDate:
+          participationStartDate ?? this.participationStartDate,
+      participationEndDate: participationEndDate ?? this.participationEndDate,
       descriptionOfAwards: descriptionOfAwards ?? this.descriptionOfAwards,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
@@ -356,6 +357,7 @@ class Stage {
     required this.numberOfPostPerWeek,
     required this.priceOfTheWinner,
     required this.startDate,
+    required this.maxVote,
     required this.endDate,
     required this.approveBeforeLive,
     required this.isActive,
@@ -367,6 +369,7 @@ class Stage {
   final dynamic entryAmount;
   final dynamic numberOfPostPerWeek;
   final dynamic priceOfTheWinner;
+  final dynamic maxVote;
   final String? startDate;
   final String? endDate;
   final bool? approveBeforeLive;
@@ -379,6 +382,7 @@ class Stage {
     dynamic entryAmount,
     dynamic numberOfPostPerWeek,
     dynamic priceOfTheWinner,
+    dynamic maxVote,
     String? startDate,
     String? endDate,
     bool? approveBeforeLive,
@@ -391,6 +395,7 @@ class Stage {
       entryAmount: entryAmount ?? this.entryAmount,
       numberOfPostPerWeek: numberOfPostPerWeek ?? this.numberOfPostPerWeek,
       priceOfTheWinner: priceOfTheWinner ?? this.priceOfTheWinner,
+      maxVote: maxVote ?? this.maxVote,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       approveBeforeLive: approveBeforeLive ?? this.approveBeforeLive,

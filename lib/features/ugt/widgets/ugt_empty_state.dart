@@ -32,6 +32,14 @@ class UgtEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+
+    var type = UserAccountType.personal;
+
+    try {
+      type = ConversationState.self.accountType ?? UserAccountType.personal;
+    } catch (e) {
+      // print(e);
+    }
     return SizedBox(
       width: context.width,
       child: Column(
@@ -78,7 +86,7 @@ class UgtEmptyState extends StatelessWidget {
               ),
             ),
 
-          if (ConversationState.self.accountType != UserAccountType.business &&showButtonBusiness)
+          if (type != UserAccountType.business && showButtonBusiness)
             WayaButton(
               callback: () {
                 WayaNav.toNamed(UpgradeToBusiness.route);

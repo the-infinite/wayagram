@@ -20,6 +20,7 @@ import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/view/request_payout.dart';
 
 import '../../../core/controller/debug_console.dart';
+import '../../chat/state/default.dart';
 
 class WalletVm extends StateNotifier<WalletState> {
   final _walletRepository = WalletRepository.instance;
@@ -169,6 +170,33 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> verifyAccountName(
+      ctx, {
+        required String acctNumber, required String bankCode
+      }) async {
+    try {
+      final response = await _walletRepository.verifyName(acctNumber, bankCode);
+      if (response.success && ctx.mounted) {
+        state = state.copyWith();
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Payout method deleted successfully!',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
 
   Future<void> getSingleRequest({required String id}) async {
     try {
@@ -324,12 +352,12 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
     final response = await _walletRepository!.fundWallet(
       FundWallet(
-          userId: user!.id,
+          userId: ConversationState.self.id,
           amount: amount,
           description: decription ?? "Wallet funding",
-          email: user.email ?? "",
+          email: ConversationState.self.email!,
+          //user?.email ?? "diala@gmail.com",
           fundOptionCode: fundOptionCode,
-          //callbackUrl: "https://staging.wayagram.ng"
           callbackUrl: WayaConstants.webUrl
           ),
     );
