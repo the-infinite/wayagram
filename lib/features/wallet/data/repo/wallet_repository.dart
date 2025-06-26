@@ -59,7 +59,7 @@ class WalletRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getBanks() {
-    return get('$serviceUrl/client/payout/supported-banks');
+    return get('$serviceUrl/client/payout/bank/banks');
   }
 
   Future<WayaRequestResponse> getRequestPayout(int page) {

@@ -16,6 +16,7 @@ import 'package:wayagram/features/donation/view/donation_details.dart';
 import 'package:wayagram/features/donation/view/donation_management.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/donation/view/see_all_approved_donation.dart';
+import 'package:wayagram/features/donation/view/see_all_live_donation.dart';
 import 'package:wayagram/features/donation/view/see_all_pending_donation.dart';
 import 'package:wayagram/features/donation/view/see_all_rejected_donation.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
@@ -391,13 +392,14 @@ class WayaAppRoutes {
         EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
     EditPageMemberInfo.route: () =>
         EditPageMemberInfo(id: WayaNav.search['id'].toString()),
-    SinglePollScreen.route: () => SinglePollScreen(),
+    SinglePollScreen.route: () => SinglePollScreen(id: WayaNav.search['id'].toString()),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
-    DonationDetails.route: () => DonationDetails(),
+    DonationDetails.route: () => DonationDetails(id: WayaNav.search['id'].toString()),
     CreateDonation.route: () => CreateDonation(),
     DonationManagement.route: () => DonationManagement(),
     SeeAllDonations.route: () => SeeAllDonations(),
+    SeeAllLiveDonations.route: () => SeeAllLiveDonations(),
     SeeAllRejectedDonations.route: () => SeeAllRejectedDonations(),
     SeeAllApprovedDonations.route: () => SeeAllApprovedDonations(),
     ChatAndSocial.route: () => ChatAndSocial(),

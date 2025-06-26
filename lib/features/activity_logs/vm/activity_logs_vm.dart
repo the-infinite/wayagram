@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 
@@ -251,16 +254,41 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<PageDocs>?> getPollLogs({required int page}) async {
+  Future<void> getPollActivity(int page) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getPollLogs(page);
+      state = state.copyWith(isLoading: false);
+
+      if (response.success) {
+        PollsActivityModel responseModel = PollsActivityModel.fromJson(response.data);
+        state = state.copyWith(
+            pollDocs: responseModel.data?.docs,
+            pollDocs1: responseModel.data?.docs
+        );
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.donations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
+  Future<PaginatedResult<PollsActivityDocs>?> getPollLogs({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getPollLogs(page);
-      List<PageDocs>? fetchPollDocs = [];
+      List<PollsActivityDocs>? fetchPollDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
-      if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+      if(response.success) {
+        PollsActivityModel responseModel = PollsActivityModel.fromJson(response.data);
         fetchPollDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(pollDocs: fetchPollDocs);
