@@ -251,4 +251,24 @@ class ActivityLogsState {
     // Return this one.
     return result.toList();
   }
+
+  List<GroupDocs> filterGroupDocs(DateTime start, DateTime end) {
+    Iterable<GroupDocs> result = groupDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((wallet) {
+      final timestamp = DateTime.parse(wallet.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((wallet) {
+      final timestamp = DateTime.parse(wallet.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
 }
