@@ -7,6 +7,7 @@ import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/applied_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
+import 'package:wayagram/features/donation/model/rejected_donation_model.dart';
 
 class DonationState{
     final TextEditingController title;
@@ -38,7 +39,7 @@ class DonationState{
     List<MyDonationDocs> myDonationDocs;
     List<MyDonationDocs>? approvedDonations;
     List<MyDonationDocs>? pendingDonations;
-    List<MyDonationDocs>? rejectedDonations;
+    List<RejectedDonationDocs> rejectedDonations;
     final List<Select> categories;
 
     final bool isLoading;
@@ -110,7 +111,7 @@ class DonationState{
       List<MyDonationDocs>? myDonationDocs,
       List<MyDonationDocs>? singleDonationDocs,
       List<MyDonationDocs>? approvedDonations,
-      List<MyDonationDocs>? rejectedDonations,
+      List<RejectedDonationDocs>? rejectedDonations,
       List<DocType>? donationImage,
       MultipartFile? image,
       String? privacyOption,
