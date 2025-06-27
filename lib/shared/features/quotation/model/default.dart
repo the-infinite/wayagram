@@ -228,13 +228,17 @@ class QuotationBidModel {
   final DateTime updatedAt;
   final DateTime createdAt;
   final String? counterAmount;
-  final double? deliveryCost;
+  final String? deliveryCost;
 
   double get amount => double.tryParse(bidAmount.replaceAll(",", "")) ?? 0.0;
 
   double? get counterValue => double.tryParse(counterAmount.toString().replaceAll(",", ""));
 
   double get usedAmount => counterValue ?? amount;
+
+  double? get deliveryCharge => double.tryParse(deliveryCost.toString().replaceAll(",", ""));
+
+  double get totalAmount => (deliveryCharge ?? 0) + usedAmount;
 
   QuotationBidModel({
     required this.id,
