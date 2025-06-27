@@ -103,8 +103,26 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     //! If the shop was not selected.
     if (shopId == null) return;
 
+    //? After the shop is selected, we need to confirm the delivery cost with
+    //? the seller.
+    final deliveryCost = await WayaUtils.showModalSheet<double>(
+      context,
+      child: EditOfferModal(
+        title: 'Delivery Cost',
+        hint: 'Enter the delivery cost for this request',
+        delta: widget.data.bidStartingAmount >= 3000000
+            ? 25000
+            : widget.data.bidStartingAmount >= 200000
+                ? 5000
+                : 1000,
+      ),
+    );
+
+    //! Since delivery cost specification failed, you can leave.
+    if (deliveryCost == null) return;
+
     //? Now, send the bid.
-    final result = await widget.notifier.sendBid(widget.data.id, amount, shopId);
+    final result = await widget.notifier.sendBid(widget.data.id, amount, shopId, deliveryCost);
 
     //! Since bidding failed, you can leave.
     if (result == null) return;
