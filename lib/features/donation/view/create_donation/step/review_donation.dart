@@ -40,6 +40,8 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
     final viewModel = ref.watch(donationVmProvider);
     final donation = ref.watch(donationVmProvider.notifier);
 
+    debugPrint('AMOUNt RAISEd ==>>>> ${viewModel.showAmountRaised}');
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,6 +128,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
                 viewModel.endDate,
                 viewModel.donationImage, viewModel.startDate,
                 viewModel.category,
+                viewModel.showAmountRaised,
                 context: context);
 
           }

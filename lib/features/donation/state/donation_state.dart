@@ -7,6 +7,7 @@ import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/applied_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
+import 'package:wayagram/features/donation/model/rejected_donation_model.dart';
 
 class DonationState{
     final TextEditingController title;
@@ -21,6 +22,7 @@ class DonationState{
     final MultipartFile? image;
     final List<String>? selectedCategoryId;
     final List<String> selected;
+    final List<MyDonationDocs> singleDonationDocs;
     final String category;
     final String? kycStatus;
     final String kycMessage;
@@ -34,10 +36,10 @@ class DonationState{
     final CreateDonationResponse? createDonationResponse;
     List<AllDonationDocs>? allDonationDocs;
     List<AppliedDonationDocs>? appliedDonationDocs;
-    List<MyDonationDocs>? myDonationDocs;
+    List<MyDonationDocs> myDonationDocs;
     List<MyDonationDocs>? approvedDonations;
     List<MyDonationDocs>? pendingDonations;
-    List<MyDonationDocs>? rejectedDonations;
+    List<RejectedDonationDocs> rejectedDonations;
     final List<Select> categories;
 
     final bool isLoading;
@@ -65,6 +67,7 @@ class DonationState{
       this.donationImage = const [],
       this.categories = const [],
       this.image,
+      this.singleDonationDocs = const [],
       this.startDate = '',
       this.commission = '',
       this.category = '',
@@ -106,8 +109,9 @@ class DonationState{
       List<AllDonationDocs>? allDonationDocs,
       List<AppliedDonationDocs>? appliedDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
+      List<MyDonationDocs>? singleDonationDocs,
       List<MyDonationDocs>? approvedDonations,
-      List<MyDonationDocs>? rejectedDonations,
+      List<RejectedDonationDocs>? rejectedDonations,
       List<DocType>? donationImage,
       MultipartFile? image,
       String? privacyOption,
@@ -145,6 +149,7 @@ class DonationState{
       categories: categories ?? this.categories,
       selected: selected ?? this.selected,
       image: image ?? this.image,
+      singleDonationDocs: singleDonationDocs ?? this.singleDonationDocs,
       privacyOption: privacyOption ?? this.privacyOption,
       accountType: accountType ?? this.accountType,
       startDate: startDate ?? this.startDate,

@@ -62,7 +62,7 @@ class MoreVm {
       MoreOptionModel(
         asset: WayaAssets.icons.mUgt.path,
         content: "A contest open for various school and other categories",
-        title: "University Got Talent",
+        title: "Contests",
         onTap: () {
           final ugt = WayaLocalDataSource();
           if (!ugt.getSeenUGT()) {

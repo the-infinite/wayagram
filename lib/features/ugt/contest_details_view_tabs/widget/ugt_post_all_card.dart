@@ -17,14 +17,12 @@ import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_card.dart';
-import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/media_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
-import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/media/video.dart';
@@ -77,9 +75,18 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           onTap: () {
                             /*   ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[0]; */
+                            print(
+                                "hope ${widget.post.contestantProfile?.profileId}");
+                            print("hope ${widget.post.contestId}");
 
                             WayaNav.toNamed(
                               '/contest-profile-page',
+                              arguments: {
+                                "id":
+                                    widget.post.contestantProfile?.profileId ??
+                                        "",
+                                "contest": widget.post.contestId ?? "",
+                              },
                             );
                           },
                           child: WayaImage(
@@ -118,7 +125,6 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         Gap(
                           context.width * 0.15,
                         ),
-                       
 
                         PopupMenuButton(
                           onSelected: (value) {},
@@ -203,27 +209,23 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
               Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-             
               if (widget.post.mediaContent != null &&
                   widget.post.mediaContent!.isNotEmpty)
                 MediaCard(
                     ontap: (String url, MyFullMediaType type) {
                       if (type == MyFullMediaType.image) {
-                         WayaNavigationHelper.toImageDetailsScreen(
+                        WayaNavigationHelper.toImageDetailsScreen(
                           null,
                           [url],
                         );
-
-                     
                       } else {
-                         WayaNav.to(
+                        WayaNav.to(
                           transition: Transition.circularReveal,
                           WayaVideoDetailScreen(
                             file: null,
                             videoUrl: url,
                           ),
                         );
-                    
                       }
                     },
                     mediaUrls: [
@@ -299,7 +301,6 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               subject: "Share Contestant Profile",
                             );
 
-                           
                             //?if shared increase the count
                             if (result.status == ShareResultStatus.success) {
                               viewModel.toggleShare(widget.post.contestId ?? "",
@@ -318,8 +319,27 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     fontSize: 12.sp,
                     height: 40,
                     callback: () async {
-                      //  debugPrint(widget.model.endDate ?? "");
                       if (isPresentIsPast(widget.model.endDate ?? "")) {
+                        WayaSnackBar.showToast("Contest has ended");
+                        return;
+                      }
+                      //? go to  the contestant page instead of voting directly
+                      /*   ref.read(selectedContestantProfile.notifier).state =
+                              widget.post;
+                            viewModelNotifier.updateContestId(widget.model.id); */
+                      ref.read(selectedContestProvider.notifier).state =
+                          widget.model;
+                      print("hope ${widget.post.contestantProfile?.profileId}");
+                      print("hope ${widget.post.contestId}");
+                      WayaNav.toNamed(
+                        '/contest-profile-page',
+                        arguments: {
+                          "id": widget.post.contestantProfile?.profileId ?? "",
+                          "contest": widget.post.contestId ?? "",
+                        },
+                      );
+                      //  debugPrint(widget.model.endDate ?? "");
+                      /*     if (isPresentIsPast(widget.model.endDate ?? "")) {
                         WayaSnackBar.showToast("Contest has ended");
                         return;
                       }
@@ -376,6 +396,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           votingLink: "votingLink",
                         ),
                       );
+                    */
                     },
                     text: "Vote Candidate",
                   ),

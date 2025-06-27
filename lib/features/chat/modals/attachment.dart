@@ -101,7 +101,9 @@ class ChatAttachmentDialog extends StatelessWidget {
 
                       //? This means it is now media...
                       controller.setMedia(true);
-                    } catch (_) {}
+                    } catch (e) {
+                      WayaSnackBar.showToast("Unable to open camera", showSuccess: false);
+                    }
                   },
                 ),
 

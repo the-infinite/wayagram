@@ -213,6 +213,9 @@ class GroupDocs {
       this.createdAt, 
       this.updatedAt,});
 
+  DateTime get createdTime => DateTime.parse(createdAt!);
+  DateTime get updatedTime => DateTime.parse(updatedAt!);
+
   GroupDocs.fromJson(dynamic json) {
     id = json['id'];
     userId = json['userId'];
@@ -265,24 +268,3 @@ class GroupDocs {
 
 }
 
-/*
-Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
-String metadataToJson(Metadata data) => json.encode(data.toJson());
-class Metadata {
-  Metadata({
-      this.groupId,});
-
-  Metadata.fromJson(dynamic json) {
-    groupId = json['groupId'];
-  }
-  String? groupId;
-Metadata copyWith({  String? groupId,
-}) => Metadata(  groupId: groupId ?? this.groupId,
-);
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['groupId'] = groupId;
-    return map;
-  }
-
-}*/

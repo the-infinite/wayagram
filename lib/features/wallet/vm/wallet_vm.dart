@@ -20,10 +20,11 @@ import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/view/request_payout.dart';
 
 import '../../../core/controller/debug_console.dart';
+import '../../chat/state/default.dart';
 
 class WalletVm extends StateNotifier<WalletState> {
   final _walletRepository = WalletRepository.instance;
-  WalletVm() : super(WalletState()){
+  WalletVm() : super(WalletState()) {
     state = state.copyWith(acctName: TextEditingController(text: ''));
     state = state.copyWith(acctNumber: TextEditingController(text: ''));
   }
@@ -71,7 +72,7 @@ class WalletVm extends StateNotifier<WalletState> {
         );
         WayaNav.toNamed(RequestPayout.route);
         reset();
-      }else {
+      } else {
         CreatePayoutModel responseModel = CreatePayoutModel.fromJson(response.data);
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
@@ -152,6 +153,29 @@ class WalletVm extends StateNotifier<WalletState> {
         getPayoutMethodTwo(
           page: 1,
         );
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Payout method deleted successfully!',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> verifyAccountName(ctx, {required String acctNumber, required String bankCode}) async {
+    try {
+      final response = await _walletRepository.verifyName(acctNumber, bankCode);
+      if (response.success && ctx.mounted) {
+        state = state.copyWith();
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
             content: Text(
@@ -274,7 +298,7 @@ class WalletVm extends StateNotifier<WalletState> {
         BankModel responseModel = BankModel.fromJson(response.data);
 
         final List<Select>? banksList = responseModel.data?.map((val) {
-          return Select(label: '${val.institutionName}', value: '${val.institutionCode}');
+          return Select(label: '${val.name}', value: '${val.code}');
         }).toList();
         state = state.copyWith(banks: banksList);
       }
@@ -302,8 +326,7 @@ final walletVmProvider = StateNotifierProvider<WalletVm, WalletState>((ref) {
 class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   final WalletRepository? _walletRepository;
   final SuccessfulSetUpState _setupState;
-  WalletFundingOptionsVm(this._walletRepository, this._setupState)
-      : super(WalletFundingOptionState());
+  WalletFundingOptionsVm(this._walletRepository, this._setupState) : super(WalletFundingOptionState());
 
   Future<void> getWalletFundingOptions() async {
     state = state.copyWith(isLoading: true);
@@ -320,18 +343,17 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
   Future<Map<String, dynamic>?> walletFunding(
       {String? decription, required double amount, required String fundOptionCode}) async {
-    final user = _setupState.user?.user;
+    //final user = _setupState.user?.user;
 
     final response = await _walletRepository!.fundWallet(
       FundWallet(
-          userId: user!.id,
+          userId: ConversationState.self.id,
           amount: amount,
           description: decription ?? "Wallet funding",
-          email: user.email ?? "",
+          email: ConversationState.self.email!,
+          //user?.email ?? "diala@gmail.com",
           fundOptionCode: fundOptionCode,
-          //callbackUrl: "https://staging.wayagram.ng"
-          callbackUrl: WayaConstants.webUrl
-          ),
+          callbackUrl: WayaConstants.webUrl),
     );
 
     if (response.success) {

@@ -22,6 +22,7 @@ import 'package:wayagram/features/donation/model/donation_setting_response.dart'
 import 'package:wayagram/features/donation/model/kyc_model.dart';
 import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
+import 'package:wayagram/features/donation/model/rejected_donation_model.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_commission_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -341,7 +342,7 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
   Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate,
-      image, startDate, category,
+      image, startDate, category, bool showRaised,
       {required BuildContext context}) async {
     try {
       // validate image
@@ -378,7 +379,7 @@ class DonationVm extends StateNotifier<DonationState> {
           : await WayaUtils.uploadFile(file: state.donationImage[0].file!, repository: _uploadFileRepository);
 
       final response = await _donationRepository.createCampaign(title, description, solution, impact, targetAmount,
-          minimumAmount, privacy, expirationDate, image!, startDate, category);
+          minimumAmount, privacy, expirationDate, image!, startDate, category, showRaised);
 
       if (response.success) {
         reset();
@@ -457,6 +458,7 @@ class DonationVm extends StateNotifier<DonationState> {
     } finally {}
   }
 
+
   Future<void> getPendingDonation() async {
     try {
       // API call
@@ -468,7 +470,9 @@ class DonationVm extends StateNotifier<DonationState> {
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
-        state = state.copyWith(myDonationDocs: responseModel.data?.docs, pendingDonations: responseModel.data?.docs);
+        state = state.copyWith(pendingDonations: responseModel.data?.docs,
+            //pendingDonations: responseModel.data?.docs
+        );
       } else {}
     } catch (e) {
       debugPrint(e.toString());
@@ -485,8 +489,7 @@ class DonationVm extends StateNotifier<DonationState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
-        //state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+        RejectedDonationModel responseModel = RejectedDonationModel.fromJson(response.data);
         state = state.copyWith(rejectedDonations: responseModel.data?.docs);
       } else {}
     } catch (e) {
@@ -549,6 +552,19 @@ class DonationVm extends StateNotifier<DonationState> {
       debugPrint(error.toString());
       return null;
     }
+  }
+
+  Future<void> getOneDonation(String id) async {
+    try {
+      final response = await _donationRepository.getSingleCampaign(id);
+      if (response.success) {
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        state = state.copyWith(singleDonationDocs: responseModel.data?.docs);
+      } else {}
+
+    }  catch (e) {
+      debugPrint(e.toString());
+    } finally {}
   }
 
   Future<bool?> updateDonationSettings({bool notifyFriends = false, bool makeDonationsPublic = false}) async {

@@ -66,19 +66,25 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     //var model = ref.watch(selectedContestProvider.notifier).state;
-    final String id = Get.parameters['id'] ?? 'Unknown';
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final String id = Get.parameters['id'] ?? args['id'] ?? "";
     var model = ref.watch(selectedContestantProfile);
-    final String contestId =
-        Get.parameters['contest'] ?? model?.contestId ?? "";
+
+    final String contestId = Get.parameters['contest'] ?? args['contest'] ?? "";
+    print(" hope contestId: $contestId   id: $id");
     var viewModel = ref.watch(votersContestNotifier.notifier);
     var notifier = ref.watch(postProvider.notifier);
     final imagePath = useState("");
 
     useEffect(() {
       notifier.fetchSingleContest(contestId: contestId, ref: ref);
-
-      ref.read(postProvider.notifier).fetchSingleContestantDetails(
-          ref, model?.contestId ?? contestId, model?.id ?? id);
+      var model = ref.watch(selectedContestantProfile);
+      ref
+          .watch(postProvider.notifier)
+          .fetchSingleContestantDetails(ref, contestId, id)
+          .then((value) {
+       
+      });
 
       //? check if contestant is active before going on to active a page
 
@@ -140,9 +146,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
           });
         }
       }
-      ref
-          .watch(ugtContestantProfileVm.notifier)
-          .fetchSingleContestantPosts(model?.id ?? id);
 
       /*  getImageUrl(model.introVideo ?? "").then((value) {
         imageUrl.value = value;
@@ -151,7 +154,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         imagePath.value = value?.path ?? "";
       });
       return null;
-    }, []);
+    }, [model]);
     final selectedViewIndex = useState(0);
     return WayaScaffold(
       isLoading: false,
@@ -159,11 +162,12 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
       onRefresh: () {
         ref
             .watch(ugtContestantProfileVm.notifier)
-            .fetchSingleContestantPosts(model?.id ?? id);
-        return ref.read(postProvider.notifier).fetchSingleContestantDetails(
-            ref, model?.contestId ?? contestId, model?.id ?? id);
+            .fetchSingleContestantPosts(id ?? id);
+        return ref
+            .read(postProvider.notifier)
+            .fetchSingleContestantDetails(ref, contestId, id);
       },
-      title: model?.profileId == viewModel.getLoggedInUserId()
+      title: id == viewModel.getLoggedInUserId()
           ? "My Profile"
           : "${model?.contestApplicant?.fullName?.split(" ").first}`s Profile",
       appBarTrailing: Row(
@@ -174,8 +178,8 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 await Share.share(
                   WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getContestantProfileRoute(
-                    model?.id ?? id,
-                    model?.contestId ?? contestId,
+                    id,
+                    contestId,
                   )),
                   subject: "Share Contestant Profile",
 
@@ -282,7 +286,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       ), */
                     ),
                     const Gap(20),
-                    if (model?.profileId == viewModel.getLoggedInUserId())
+                    if (id == viewModel.getLoggedInUserId())
                       Container(
                         margin: EdgeInsets.only(right: 20.w),
                         padding: REdgeInsets.symmetric(
@@ -472,7 +476,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
               width: 50,
               child: WayaButton(
                 callback: () {
-                  viewModel.updateContestantId(model?.id);
+                  viewModel.updateContestantId(model?.id, model?.profileId ?? "");
                   WayaNav.toNamed('/create-contest-post');
                 },
                 height: 50,

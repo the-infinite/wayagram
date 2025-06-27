@@ -58,6 +58,11 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
   }
 
   bool get showActions {
+    //? If this is fine...
+    if (widget.data.message.data != null) {
+      return false;
+    }
+
     //? Only show the action button when this is not yet followed.
     if (widget.data.messageType == NotificationMessageType.followRequest) {
       return _follow?.status == FollowRelationship.none;

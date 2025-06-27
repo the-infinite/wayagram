@@ -61,6 +61,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
   }
 
   void _cancelAndFinish() async {
+    _timer?.cancel();
     await notifier.cancelRequest(widget.id);
     WayaNav.goBack();
   }
@@ -198,7 +199,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: WayaButton(
-                    callback: () async => WayaNav.toNamed(
+                    callback: () async => WayaNav.offNamed(
                       WayaAppRoutes.getQuotationCheckoutScreen(request!.acceptedBid!.id, request.id),
                     ),
                     text: "Proceed to Payment",

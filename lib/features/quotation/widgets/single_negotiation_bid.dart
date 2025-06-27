@@ -108,8 +108,8 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
     if (!(result ?? false)) return;
 
     //? Prevent some confusing visuals.
-    locked = true;
     widget.timer?.cancel();
+    locked = true;
 
     //? Since this was done well.
     await WayaUtils.showModalSheet<double>(
