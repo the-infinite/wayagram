@@ -184,7 +184,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
 
                   return ManageDonationWidget(
                     text:  "Donate",
-                    amountRaised: donation.showRaised == false  ? WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')) : '****',
+                    amountRaised: donation.showRaised == true  ? WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')) : '****',
                     targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
                     title: donation.title?.capitalizeFirst,
                     image: donation.imageURL,
@@ -245,7 +245,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                   double ratioLeft = amountRaised / targetedAmount;
                   return ManageDonationWidget(
                     text: "Manage Donation",
-                    amountRaised: WayaHelpers.formatPrice(int.parse('${donation?.amountRaised?.replaceAll('.00', '')}')),
+                    amountRaised:donation?.showRaised == true ? WayaHelpers.formatPrice(int.parse('${donation?.amountRaised?.replaceAll('.00', '')}')) : '****',
                     targetAmount: WayaHelpers.formatPrice(int.parse('${donation?.targetAmount?.replaceAll('.00', '')}')),
                     title: donation?.title?.capitalizeFirst,
                     image: donation?.imageURL,
@@ -290,7 +290,6 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 //filteredMyDonations.length,
                 itemBuilder: (context, index) {
                   final donation = viewModel.pendingDonations?[index];
-                  //filteredMyDonations[index];
                   int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
 
                   int amountRaised = double.parse('${donation?.amountRaised}').toInt();

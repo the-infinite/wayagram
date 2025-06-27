@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/wallet_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_card_widget.dart';
@@ -66,7 +67,6 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           title = 'Get Quotation';
         }
       });
-      ref.read(activityLogsVmProvider.notifier).getPollActivity(1);
     });
   }
 
@@ -94,10 +94,26 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
       _ => null,
     };
 
-    //? Second, get the filtered donations.
+    //? Second, get the filtered wallet.
     final filteredWallet = startingBound == null || endingBound == null
         ? viewModel.walletActivityDocs
         : viewModel.filterWalletDocs(startingBound, endingBound);
+
+
+    //? Second, get the filtered groups.
+    final filteredGroup = startingBound == null || endingBound == null
+        ? viewModel.groupDocs
+        : viewModel.filterGroupDocs(startingBound, endingBound);
+
+    //? Second, get the filtered pages.
+    final filteredPage = startingBound == null || endingBound == null
+        ? viewModel.pageDocs
+        : viewModel.filterPageDocs(startingBound, endingBound);
+
+    //? Second, get the filtered polls.
+    final filteredPolls = startingBound == null || endingBound == null
+        ? viewModel.pollDocs
+        : viewModel.filterPollDocs(startingBound, endingBound);
 
     //? Log the starting and ending time.
     if (startingBound != null && endingBound != null) {
@@ -372,7 +388,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 final dateTimeString = "${wallet.createdAt}";
                                 final dateTime = DateTime.parse(dateTimeString).toLocal();
                                 return ActivityCardWidget(
-                                  title: '${wallet.description}',
+                                  title: '${wallet.metadata?.description ?? wallet.description}',
                                   subTitle:
                                   '${ref.read(createPollVotingProvider.notifier).formatDt2(wallet.createdAt)}, '
                                       '${DateFormat.jm().format(dateTime)}',
@@ -680,167 +696,127 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   alignment: Alignment.center,
                   width: 102.w,
                   height: 36.h,
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 5, top: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: WayaColors.greyColor300)),
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
                   child: DropdownButton(
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      iconSize: 12,
-                      icon: SvgPicture.asset(
-                        WayaAssets.icons.downArrow.path,
-                      ),
-                      isDense: true,
-                      isExpanded: false,
-                      value: selTransact,
-                      items: lsTransact.map((String ls) {
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
                         return DropdownMenuItem(
                           value: ls,
-                          child: Text(ls,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selTransact = value!;
-                          sortList(selTransact.toLowerCase(),
-                              viewModel.pollDocs, viewModel.pollDocs1);
-                        });
-                      }),
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
                 ),
                 Gap(10),
                 Expanded(
-                  child: viewModel.pollDocs.isEmpty
-                      ? ActivityLogsEmptyState(
-                          text: 'You don\'t have Poll Logs yet',
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.only(bottom: 80.h, top: 0),
-                          physics: const ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: dates.length,
-                          itemBuilder: (context, i) {
-                            debugPrint('my DATE ${dates[i]}');
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
-                                      fontFamily: WayaConstants.fontFamily,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black,
-                                    )),
-                                Gap(10),
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const ClampingScrollPhysics(),
-                                  padding:
-                                      EdgeInsets.only(bottom: 20.h, top: 0),
-                                  itemCount: viewModel.pollDocs.length,
-                                  itemBuilder: (context, index) {
-                                    final pollsLog = viewModel.pollDocs[index];
-                                    String dateTimeString =
-                                        "${pollsLog.createdAt}";
-                                    DateTime dateTime =
-                                        DateTime.parse(dateTimeString)
-                                            .toLocal();
-                                    if (viewModel.pollDocs[index].createdAt
-                                            .toString()
-                                            .split('T')[0] ==
-                                        dates[i]) {
-                                      return ActivityCardWidget(
-                                        title: '${pollsLog.description}',
-                                        subTitle:
-                                            '${ref.read(createPollVotingProvider.notifier).formatDt2(pollsLog.createdAt)}, '
-                                            '${DateFormat.jm().format(dateTime)}',
-                                      );
-                                    }
-
-                                    return const SizedBox.shrink();
-                                  },
-                                )
-                              ],
-                            );
-                          }),
-                ),
-
-                /* Expanded(
-                child: PaginatedDataView<PageDocs>(
-                    uniqueKey: 'poll-logs',
+                  child: PaginatedDataView<PollsActivityDocs>(
+                    uniqueKey: 'Polls',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
-                    emptyState:ActivityLogsEmptyState(text: 'You don\'t have polls logs yet',),
-                    fetchData: ref.read(activityLogsVmProvider.notifier).getPollLogs,
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Polls logs yet',
+                    ),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getPollsLogs,
                     result: (data, s) {
-
-                      for(int i = 0; i < viewModel.pollDocs.length; i++){
-                        if(!dates.contains(viewModel.pollDocs[i].createdAt.toString().split('T')[0])){
-                          dates.add(viewModel.pollDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.pollDocs.add(viewModel.pollDocs[i]);
-                        }
-                      }
                       return SingleChildScrollView(
-                        child: viewModel.pollDocs.isEmpty ?
-                        ActivityLogsEmptyState(text: 'You don\'t have Poll Logs for this week yet',):
-                        ListView.builder(
-                            padding: EdgeInsets.only(bottom: 80.h, top: 0),
-                            physics: const ClampingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: dates.length,
-                            itemBuilder: (context, i){
-                              debugPrint('my DATE ${dates[i]}');
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                   '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                     // '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pollDocs[i].createdAt.toString().split('T')[0])}',
-                                      style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontFamily: WayaConstants.fontFamily,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                      )),
-                                  Gap(10),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const ClampingScrollPhysics(),
-                                    padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.pollDocs.length,
-                                    itemBuilder: (context, index){
-                                      final pollsLog = viewModel.pollDocs[index];
-                                      String dateTimeString = "${pollsLog.createdAt}";
-                                      DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.pollDocs[index].createdAt.toString().split('T')[0] == dates[i]){
-                                        return ActivityCardWidget(
-                                          title: '${pollsLog.description}',
-                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(pollsLog.createdAt)}, '
-                                              '${DateFormat.jm().format(dateTime)}',);
-                                      }else{
-                                        return Container();
-                                      }
-                                    },
-                                  )
-                                ],
-                              );
-                            }),
+                        child: filteredPolls.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have poll logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredPolls.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredPolls.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredPolls[first];
+                                final next = filteredPolls[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
+
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final polls = filteredPolls[index];
+                                final dateTimeString = "${polls.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+
+                                return ActivityCardWidget(
+                                  title: '${polls.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(polls.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       );
-                    }),
-              ),*/
+                    },
+                  ),
+                ),
               ],
             );
           } else if (args['name'] == 'pages') {
@@ -853,131 +829,126 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   alignment: Alignment.center,
                   width: 102.w,
                   height: 36.h,
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 5, top: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: WayaColors.greyColor300)),
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
                   child: DropdownButton(
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      iconSize: 12,
-                      icon: SvgPicture.asset(
-                        WayaAssets.icons.downArrow.path,
-                      ),
-                      isDense: true,
-                      isExpanded: false,
-                      value: selTransact,
-                      items: lsTransact.map((String ls) {
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
                         return DropdownMenuItem(
                           value: ls,
-                          child: Text(ls,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selTransact = value!;
-                          sortList(selTransact.toLowerCase(),
-                              viewModel.pageDocs, viewModel.pageDocs1);
-                        });
-                      }),
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
                 ),
                 Gap(10),
                 Expanded(
                   child: PaginatedDataView<PageDocs>(
-                      uniqueKey: 'page-logs',
-                      loadingState: SizedBox(
-                          height: context.height * 0.4,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          )),
-                      emptyState: ActivityLogsEmptyState(
-                        text: 'You don\'t have page logs yet',
-                      ),
-                      fetchData:
-                          ref.read(activityLogsVmProvider.notifier).getPageLogs,
-                      result: (data, s) {
-                        for (int i = 0; i < viewModel.pageDocs.length; i++) {
-                          if (!dates.contains(viewModel.pageDocs[i].createdAt
-                              .toString()
-                              .split('T')[0])) {
-                            dates.add(viewModel.pageDocs[i].createdAt
-                                .toString()
-                                .split('T')[0]);
-                            viewModel.pageDocs.add(viewModel.pageDocs[i]);
-                          }
-                        }
-                        return SingleChildScrollView(
-                          child: viewModel.pageDocs.isEmpty
-                              ? ActivityLogsEmptyState(
-                                  text:
-                                      'You don\'t have Page Logs for this week yet',
-                                )
-                              : ListView.builder(
-                                  padding:
-                                      EdgeInsets.only(bottom: 80.h, top: 0),
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: dates.length,
-                                  itemBuilder: (context, i) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontFamily:
-                                                  WayaConstants.fontFamily,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                            )),
-                                        Gap(10),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const ClampingScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              bottom: 20.h, top: 0),
-                                          itemCount: viewModel.pageDocs.length,
-                                          itemBuilder: (context, index) {
-                                            final pageLog =
-                                                viewModel.pageDocs[index];
-                                            String dateTimeString =
-                                                "${pageLog.createdAt}";
-                                            DateTime dateTime =
-                                                DateTime.parse(dateTimeString)
-                                                    .toLocal();
-                                            if (viewModel
-                                                    .pageDocs[index].createdAt
-                                                    .toString()
-                                                    .split('T')[0] ==
-                                                dates[i]) {
-                                              return ActivityCardWidget(
-                                                title: '${pageLog.description}',
-                                                subTitle:
-                                                    '${ref.read(createPollVotingProvider.notifier).formatDt2(pageLog.createdAt)}, '
-                                                    '${DateFormat.jm().format(dateTime)}',
-                                              );
-                                            } else {
-                                              return Container();
-                                            }
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  }),
-                        );
-                      }),
+                    uniqueKey: 'Page',
+                    loadingState: SizedBox(
+                        height: context.height * 0.4,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Page logs yet',
+                    ),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getPageLogs,
+                    result: (data, s) {
+                      return SingleChildScrollView(
+                        child: filteredGroup.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have page logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredPage.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredPage.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredPage[first];
+                                final next = filteredPage[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
+
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final page = filteredPage[index];
+                                final dateTimeString = "${page.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+
+                                return ActivityCardWidget(
+                                  title: '${page.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(page.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             );
@@ -991,133 +962,127 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   alignment: Alignment.center,
                   width: 102.w,
                   height: 36.h,
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 5, top: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: WayaColors.greyColor300)),
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
                   child: DropdownButton(
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      iconSize: 12,
-                      icon: SvgPicture.asset(
-                        WayaAssets.icons.downArrow.path,
-                      ),
-                      isDense: true,
-                      isExpanded: false,
-                      value: selTransact,
-                      items: lsTransact.map((String ls) {
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
                         return DropdownMenuItem(
                           value: ls,
-                          child: Text(ls,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selTransact = value!;
-                          sortList(selTransact.toLowerCase(),
-                              viewModel.groupDocs, viewModel.groupDocs1);
-                        });
-                      }),
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
                 ),
                 Gap(10),
                 Expanded(
                   child: PaginatedDataView<GroupDocs>(
-                      uniqueKey: 'group-logs',
-                      loadingState: SizedBox(
-                          height: context.height * 0.4,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          )),
-                      emptyState: ActivityLogsEmptyState(
-                        text: 'You don\'t have group logs yet',
-                      ),
-                      fetchData: ref
-                          .read(activityLogsVmProvider.notifier)
-                          .getGroupLogs,
-                      result: (data, s) {
-                        for (int i = 0; i < viewModel.groupDocs.length; i++) {
-                          if (!dates.contains(viewModel.groupDocs[i].createdAt
-                              .toString()
-                              .split('T')[0])) {
-                            dates.add(viewModel.groupDocs[i].createdAt
-                                .toString()
-                                .split('T')[0]);
-                            viewModel.groupDocs.add(viewModel.groupDocs[i]);
-                          }
-                        }
-                        return SingleChildScrollView(
-                          child: viewModel.groupDocs.isEmpty
-                              ? ActivityLogsEmptyState(
-                                  text:
-                                      'You don\'t have Group Logs for this week yet',
-                                )
-                              : ListView.builder(
-                                  padding:
-                                      EdgeInsets.only(bottom: 80.h, top: 0),
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: dates.length,
-                                  itemBuilder: (context, i) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.groupDocs[i].createdAt.toString().split('T')[0])}',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontFamily:
-                                                  WayaConstants.fontFamily,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                            )),
-                                        Gap(10),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const ClampingScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              bottom: 20.h, top: 0),
-                                          itemCount: viewModel.groupDocs.length,
-                                          itemBuilder: (context, index) {
-                                            final groupLog =
-                                                viewModel.groupDocs[index];
-                                            String dateTimeString =
-                                                "${groupLog.createdAt}";
-                                            DateTime dateTime =
-                                                DateTime.parse(dateTimeString)
-                                                    .toLocal();
-                                            if (viewModel
-                                                    .groupDocs[index].createdAt
-                                                    .toString()
-                                                    .split('T')[0] ==
-                                                dates[i]) {
-                                              return ActivityCardWidget(
-                                                title:
-                                                    '${groupLog.description}',
-                                                subTitle:
-                                                    '${ref.read(createPollVotingProvider.notifier).formatDt2(groupLog.createdAt)}, '
-                                                    '${DateFormat.jm().format(dateTime)}',
-                                              );
-                                            } else {
-                                              return Container();
-                                            }
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  }),
-                        );
-                      }),
+                    uniqueKey: 'Group',
+                    loadingState: SizedBox(
+                        height: context.height * 0.4,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Group logs yet',
+                    ),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getGroupLogs,
+                    result: (data, s) {
+                      return SingleChildScrollView(
+                        child: filteredGroup.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have group logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredGroup.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredGroup.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredGroup[first];
+                                final next = filteredGroup[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
+
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final donation = filteredGroup[index];
+                                final dateTimeString = "${donation.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+                                //debugPrint('DATE CHECK ==> $dateCheck, ${dates[i]}');
+
+                                return ActivityCardWidget(
+                                  title: '${donation.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(donation.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             );

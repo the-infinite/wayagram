@@ -78,7 +78,7 @@ class _SeeAllLiveDonationsState extends ConsumerState<SeeAllLiveDonations> with 
                     double ratioLeft = amountRaised / targetedAmount;
                     return ManageDonationWidget(
                       text: "Manage Donation",
-                      amountRaised: WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
+                      amountRaised:donation.showRaised == true ? WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')):'****',
                       targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
                       title: donation.title?.capitalizeFirst,
                       image: donation.imageURL,
