@@ -41,6 +41,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
     viewModel.startTime.value = null;
     viewModel.endTime.value = null;
     viewModel.bidDate.value = null;
+    notifier.clear();
   }
 
   @override

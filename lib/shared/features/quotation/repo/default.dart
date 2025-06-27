@@ -62,14 +62,14 @@ class QuotationRepository extends BaseRepository {
     required String vendorId,
     required double amount,
     required String shopId,
-    required double deliveryCost,
+    required double? deliveryCost,
   }) {
     final payload = {
       "requestId": requestId, //request id
       "vendorId": vendorId, // user id of the vendor placing the bid
       "bidAmount": amount, // amount
       "shopId": shopId, // shop id of the vendor
-      "deliveryCost": deliveryCost, // delivery cost
+      if (deliveryCost != null) "deliveryCost": deliveryCost, // delivery cost
     };
     return post('$serviceUrl/vendor/bid', payload, showErrors: true);
   }

@@ -86,9 +86,7 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
   }
 
   Future<void> _viewSellerBid(QuotationBidModel result) async {
-    if (!WayaConstants.isProduction) {
-      WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
-    }
+    WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
   }
 
   @override
