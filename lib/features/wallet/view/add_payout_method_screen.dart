@@ -158,7 +158,6 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                     if (viewModel.acctNameController.text.isEmpty) {
                       return 'Account Name is required';
                     }
-
                     return null;
                   }, builder: (formState) {
                     return Column(
@@ -217,7 +216,6 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                   )
                 ],
               )),
-
         ],
       ) ,
     );
