@@ -180,35 +180,35 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
               const Gap(20),
 
               //? How we skip addresses.
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Switch(
-                    value: viewModel.skipAddress,
-                    onChanged: (value) => notifier.updateSkipAddress(value),
-                  ),
-                  const Gap(10),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Not yet", style: wayaTheme.textTheme.titleMedium),
-                      const Gap(6),
-                      Text(
-                        "You can skip adding a delivery address for now\nand do it later.",
-                        style: wayaTheme.textTheme.hintStyle,
-                      )
-                    ],
-                  )
-                ],
-              ),
+              //   Row(
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Switch(
+              //         value: viewModel.skipAddress,
+              //         onChanged: (value) => notifier.updateSkipAddress(value),
+              //       ),
+              //       const Gap(10),
+              //       Column(
+              //         mainAxisAlignment: MainAxisAlignment.start,
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text("Not yet", style: wayaTheme.textTheme.titleMedium),
+              //           const Gap(6),
+              //           Text(
+              //             "You can skip adding a delivery address for now\nand do it later.",
+              //             style: wayaTheme.textTheme.hintStyle,
+              //           )
+              //         ],
+              //       )
+              //     ],
+              //   ),
 
               // Some space.
-              const Gap(20),
+              // const Gap(20),
 
               //? Only show this when the user does not want to skip addresses.
-              if (!viewModel.skipAddress && viewModel.pickUpOption == 'delivery') ...[
+              if (viewModel.pickUpOption == 'delivery') ...[
                 FormField<String>(
                   validator: (value) {
                     if (viewModel.deliveryAddress.text.isEmpty) {

@@ -90,7 +90,7 @@ class FilterOverlayController {
     _showEvent.value = value;
   }
 
-  /// Then the functions used to toggle University Got Talent notifications.
+  /// Then the functions used to toggle Contests notifications.
   void setUgt(bool value) {
     _showUgt.value = value;
   }

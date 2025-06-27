@@ -113,6 +113,7 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
       bidId: bid.id,
       lastCounterSentBy: BidActionAuthor.vendor,
       counterAmount: amount.toStringAsFixed(2),
+      deliveryCost: bid.deliveryCost,
     ));
 
     //! Since bidding failed, you can leave.

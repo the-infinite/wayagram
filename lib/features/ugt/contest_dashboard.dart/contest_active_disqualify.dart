@@ -183,6 +183,10 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                                         .state = model;
                                     WayaNav.toNamed(
                                       '/contest-profile-page',
+                                      arguments: {
+                                        "id": item.profileId ?? "",
+                                        "contest": model?.id ?? "",
+                                      },
                                     );
                                   },
                                   asset: WayaAssets.icons.mComments.svg(

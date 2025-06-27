@@ -302,7 +302,7 @@ class _ExploreState extends ConsumerState<Explore> {
                 WayaNav.toNamed("/ugt-home");
               },
               subTitle: 'Join Upcoming Activities',
-              title: 'University Got Talent'),
+              title: 'Contests'),
           const Gap(25),
           //?added ugt widget to the page
           UgtContestWidget(

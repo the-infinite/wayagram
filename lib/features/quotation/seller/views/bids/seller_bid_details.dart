@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,8 +62,21 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
     //! If the shop was not selected.
     if (shopId == null) return;
 
+    //? Next, get the delivery cost.
+    final deliveryCost = await WayaUtils.showModalSheet<double>(
+      context,
+      child: EditOfferModal(
+        title: 'Delivery Cost',
+        hint: 'Enter the delivery cost for this request',
+        delta: 1500,
+      ),
+    );
+
+    //? If this is undefined.
+    if (deliveryCost == null) return;
+
     //? Now, send the bid.
-    final result = await notifier.sendBid(request.id, amount, shopId);
+    final result = await notifier.sendBid(request.id, amount, shopId, deliveryCost);
 
     //! Since bidding failed, you can leave.
     if (result == null) return;
