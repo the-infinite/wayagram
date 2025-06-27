@@ -99,7 +99,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
             ),
             SizedBox(height: 3.h),
             Text(
-              "Stay updated with the progress of your University Got Talent application. Below are the details and current status of your submission",
+              "Stay updated with the progress of your Contests application. Below are the details and current status of your submission",
               style: WayaTextStyles.hintStyleBold.wayaCopyWith(
                   color: WayaColors.greyColor500, fontWeight: FontWeight.w400),
               textAlign: TextAlign.start,

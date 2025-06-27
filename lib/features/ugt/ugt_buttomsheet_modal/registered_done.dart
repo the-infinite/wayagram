@@ -27,7 +27,7 @@ class _RegisteredDonState extends State<RegisteredDone> {
             Image.asset('assets/images/successugt.png', ),
             SizedBox(height: 20.h),
             Text(
-                "Thank you for registering for University Got Talent! ",
+                "Thank you for registering for Contests! ",
                 style: wayaTheme.textTheme.bodyMedium),
             SizedBox(height: 3.h),
             Text(

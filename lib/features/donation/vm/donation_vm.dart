@@ -342,7 +342,7 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
   Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate,
-      image, startDate, category,
+      image, startDate, category, bool showRaised,
       {required BuildContext context}) async {
     try {
       // validate image
@@ -379,7 +379,7 @@ class DonationVm extends StateNotifier<DonationState> {
           : await WayaUtils.uploadFile(file: state.donationImage[0].file!, repository: _uploadFileRepository);
 
       final response = await _donationRepository.createCampaign(title, description, solution, impact, targetAmount,
-          minimumAmount, privacy, expirationDate, image!, startDate, category);
+          minimumAmount, privacy, expirationDate, image!, startDate, category, showRaised);
 
       if (response.success) {
         reset();

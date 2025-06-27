@@ -24,7 +24,7 @@ import '../../chat/state/default.dart';
 
 class WalletVm extends StateNotifier<WalletState> {
   final _walletRepository = WalletRepository.instance;
-  WalletVm() : super(WalletState()){
+  WalletVm() : super(WalletState()) {
     state = state.copyWith(acctName: TextEditingController(text: ''));
     state = state.copyWith(acctNumber: TextEditingController(text: ''));
   }
@@ -72,7 +72,7 @@ class WalletVm extends StateNotifier<WalletState> {
         );
         WayaNav.toNamed(RequestPayout.route);
         reset();
-      }else {
+      } else {
         CreatePayoutModel responseModel = CreatePayoutModel.fromJson(response.data);
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
@@ -171,10 +171,7 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
-  Future<void> verifyAccountName(
-      ctx, {
-        required String acctNumber, required String bankCode
-      }) async {
+  Future<void> verifyAccountName(ctx, {required String acctNumber, required String bankCode}) async {
     try {
       final response = await _walletRepository.verifyName(acctNumber, bankCode);
       if (response.success && ctx.mounted) {
@@ -196,7 +193,6 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: false);
     }
   }
-
 
   Future<void> getSingleRequest({required String id}) async {
     try {
@@ -330,8 +326,7 @@ final walletVmProvider = StateNotifierProvider<WalletVm, WalletState>((ref) {
 class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   final WalletRepository? _walletRepository;
   final SuccessfulSetUpState _setupState;
-  WalletFundingOptionsVm(this._walletRepository, this._setupState)
-      : super(WalletFundingOptionState());
+  WalletFundingOptionsVm(this._walletRepository, this._setupState) : super(WalletFundingOptionState());
 
   Future<void> getWalletFundingOptions() async {
     state = state.copyWith(isLoading: true);
@@ -348,7 +343,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
   Future<Map<String, dynamic>?> walletFunding(
       {String? decription, required double amount, required String fundOptionCode}) async {
-    final user = _setupState.user?.user;
+    //final user = _setupState.user?.user;
 
     final response = await _walletRepository!.fundWallet(
       FundWallet(
@@ -358,8 +353,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
           email: ConversationState.self.email!,
           //user?.email ?? "diala@gmail.com",
           fundOptionCode: fundOptionCode,
-          callbackUrl: WayaConstants.webUrl
-          ),
+          callbackUrl: WayaConstants.webUrl),
     );
 
     if (response.success) {

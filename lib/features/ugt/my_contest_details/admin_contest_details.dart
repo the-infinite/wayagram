@@ -315,6 +315,10 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                             model;
                         WayaNav.toNamed(
                           '/contest-profile-page',
+                          arguments: {
+                            "id": viewModel.createPostProfileId.trim(),
+                            "contest": model?.id ?? "",
+                          },
                         );
                       } catch (e) {
                         print(e);
@@ -371,6 +375,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                                 model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
+                              arguments: {
+                                "id":
+                                    viewModel.myContestList[1].profileId ?? "",
+                                "contest": model?.id ?? "",
+                              },
                             );
                           },
                           child: AdminCard(
@@ -394,6 +403,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                                 model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
+                              arguments: {
+                                "id":
+                                    viewModel.myContestList[0].profileId ?? "",
+                                "contest": model?.id ?? "",
+                              },
                             );
                           },
                           child: AdminCard(
@@ -419,6 +433,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                                 model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
+                              arguments: {
+                                "id":
+                                    viewModel.myContestList[2].profileId ?? "",
+                                "contest": model?.id ?? "",
+                              },
                             );
                           },
                           child: AdminCard(

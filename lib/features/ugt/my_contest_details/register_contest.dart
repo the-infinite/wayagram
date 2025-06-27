@@ -74,7 +74,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Join University Got Talent and Let\n Your Talent Shine!",
+            Text("Join Contests and Let\n Your Talent Shine!",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(

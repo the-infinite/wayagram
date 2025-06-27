@@ -328,13 +328,14 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   }
 
   /// Helper function used to place a bid so that we can enter a quote auction.
-  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId) async {
+  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId, double deliveryCost) async {
     try {
       final response = await repo.placeBid(
         requestId: requestId,
         amount: amount,
         shopId: shopId,
         vendorId: ConversationState.self.id,
+        deliveryCost: deliveryCost,
       );
 
       //? This is fine.

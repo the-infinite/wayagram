@@ -85,7 +85,7 @@ class SharedOthersBuyRequestsWidget extends ConsumerStatefulWidget {
 class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyRequestsWidget> {
   late final notifier = ref.read(othersQuotationsProvider.notifier);
 
-  Timer? _timer;
+  static Timer? _timer;
 
   @override
   void initState() {
@@ -97,8 +97,8 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
       _timer ??= Timer.periodic(
         const Duration(seconds: 7),
         (timer) async {
-          debugPrint("Reloading quotations order");
           await notifier.reloadQuotationsOrder();
+          debugPrint("Reloaded quotations order");
         },
       );
     });
@@ -118,6 +118,7 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
   @override
   void dispose() {
     _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 

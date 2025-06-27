@@ -45,7 +45,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
 
   List<String> prevSelected = [];
 
-  bool sel = false;
+  bool sel = true;
 
   @override
   void initState() {
