@@ -53,7 +53,7 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
         ref.read(contestNotifierProvider.notifier).allCategories();
         return ref.read(postProvider.notifier).fetchContestForYou(true);
       },
-      title: "University Got Talent",
+      title: "Contests",
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,

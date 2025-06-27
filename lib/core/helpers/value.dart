@@ -104,7 +104,7 @@ class WayaValueHelper {
       WayaDebugEventModule.relationships => 'Followers and Following',
       WayaDebugEventModule.shops => 'Shops',
       WayaDebugEventModule.support => 'Support',
-      WayaDebugEventModule.ugt => 'University Got Talent',
+      WayaDebugEventModule.ugt => 'Contests',
       WayaDebugEventModule.wallets => 'Wallets',
       WayaDebugEventModule.unknown => 'Unknown',
     };
