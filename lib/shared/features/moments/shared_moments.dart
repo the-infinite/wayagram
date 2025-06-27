@@ -33,6 +33,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
       otherUserMoments.getAllMoments();
 
       //? This is fine.
+
       _timer ??= Timer.periodic(
         const Duration(seconds: 15),
         (_) async {
