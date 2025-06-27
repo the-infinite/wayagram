@@ -38,7 +38,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
     final entryType = useState(model.entryType ?? "Paid");
     final startDate = useState(model.startDate ?? "");
     final endDate = useState(model.endDate ?? "");
-    final maxVote = useState(model.maxVote ?? "");
+    //final maxVote = useState(model.maxVote ?? "");
     final priceForWinner = useState(_contestController.contestPrizeWinnerTextController.text.trim().isEmpty
         ? "No"
         : _contestController.contestPrizeWinnerTextController.text == "0"

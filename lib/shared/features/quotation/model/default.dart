@@ -228,6 +228,7 @@ class QuotationBidModel {
   final DateTime updatedAt;
   final DateTime createdAt;
   final String? counterAmount;
+  final double? deliveryCost;
 
   double get amount => double.tryParse(bidAmount.replaceAll(",", "")) ?? 0.0;
 
@@ -247,6 +248,7 @@ class QuotationBidModel {
     required this.shopId,
     required this.updatedAt,
     required this.createdAt,
+    this.deliveryCost,
     this.counterAmount,
   });
 
@@ -260,12 +262,14 @@ class BidActionModel {
   final BidActionAuthor lastCounterSentBy;
   final String bidId;
   final String? counterAmount;
+  final double? deliveryCost;
 
   const BidActionModel._({
     required this.bidId,
     required this.lastCounterSentBy,
     required this.action,
     required this.counterAmount,
+    this.deliveryCost,
   });
 
   /// Helper constructor used to create the bid action model for requests that
@@ -301,12 +305,14 @@ class BidActionModel {
     required String bidId,
     required BidActionAuthor lastCounterSentBy,
     required String counterAmount,
+    double? deliveryCost,
   }) =>
       BidActionModel._(
         bidId: bidId,
         lastCounterSentBy: lastCounterSentBy,
         action: BidActionType.negotiate,
         counterAmount: counterAmount,
+        deliveryCost: deliveryCost,
       );
 
   Map<String, dynamic> toJson() {
