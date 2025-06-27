@@ -96,7 +96,7 @@ class _LoginActivityState extends ConsumerState<AccountActivity> {
                       child: CircularProgressIndicator(),
                     )),
                 emptyState:ActivityLogsEmptyState(text: 'You don\'t have account activity yet',),
-                fetchData: ref.read(activityLogsVmProvider.notifier).getAccountActivity,
+                fetchData: ref.read(activityLogsVmProvider.notifier).getAccountLogs,
                 result: (data, s) {
                   return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),

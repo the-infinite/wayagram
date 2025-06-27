@@ -9,6 +9,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/activity_logs/data/model/account_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
@@ -49,6 +50,8 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           title = 'Shop';
         } else if (args['name'] == 'wallet') {
           title = 'Wallet';
+        }else if (args['name'] == 'account') {
+          title = 'Account';
         } else if (args['name'] == 'events') {
           title = 'Events';
         } else if (args['name'] == 'chat') {
@@ -114,6 +117,18 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
     final filteredPolls = startingBound == null || endingBound == null
         ? viewModel.pollDocs
         : viewModel.filterPollDocs(startingBound, endingBound);
+
+    //? Second, get the filtered account.
+    final filteredAccount = startingBound == null || endingBound == null
+        ? viewModel.accountActivityDocs
+        : viewModel.filterAccountDocs(startingBound, endingBound);
+
+    // //? Second, get the filtered account.
+    // final filteredEvent = startingBound == null || endingBound == null
+    //     ? viewModel.eventDocs
+    //     : viewModel.filterEventDocs(startingBound, endingBound);
+
+
 
     //? Log the starting and ending time.
     if (startingBound != null && endingBound != null) {
@@ -819,7 +834,141 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                 ),
               ],
             );
-          } else if (args['name'] == 'pages') {
+          }else if (args['name'] == 'account') {
+            return Column(
+              spacing: 10,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Gap(10),
+                Container(
+                  alignment: Alignment.center,
+                  width: 102.w,
+                  height: 36.h,
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
+                  child: DropdownButton(
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
+                        return DropdownMenuItem(
+                          value: ls,
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                        );
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
+                ),
+                Gap(10),
+                Expanded(
+                  child: PaginatedDataView<AccountActivityDocs>(
+                    uniqueKey: 'Account',
+                    loadingState: SizedBox(
+                        height: context.height * 0.4,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Account logs yet',
+                    ),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getAccountLogs,
+                    result: (data, s) {
+                      return SingleChildScrollView(
+                        child: filteredAccount.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have account logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredAccount.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredAccount.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredAccount[first];
+                                final next = filteredAccount[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
+
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final account = filteredAccount[index];
+                                final dateTimeString = "${account.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+
+                                return ActivityCardWidget(
+                                  title: '${account.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(account.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+          else if (args['name'] == 'pages') {
             return Column(
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,

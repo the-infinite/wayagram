@@ -48,7 +48,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     } finally {}
   }
 
-  Future<PaginatedResult<AccountActivityDocs>?> getAccountActivity({required int page}) async {
+ /* Future<PaginatedResult<AccountActivityDocs>?> getAccountActivity({required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getAccountActivity(page);
@@ -60,11 +60,50 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchAccountActivityHistoryDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(accountActivityDocs: fetchAccountActivityHistoryDocs);
-        state = state.copyWith(accountActivityDocs1: responseModel.data?.docs);
+
       } else {
         state = state.copyWith(isLoading: false);
       }
       return PaginatedResult(hasNextPage: hasNextPage!, items: fetchAccountActivityHistoryDocs!);
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+    return null;
+  }
+*/
+  Future<PaginatedResult<AccountActivityDocs>?> getAccountLogs({required int page}) async {
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getAccountActivity(page);
+      List<AccountActivityDocs>? fetchAccountDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        AccountActivityModel responseModel = AccountActivityModel.fromJson(response.data);
+        fetchAccountDocs = (responseModel.data?.docs ?? [])..sort((a, b) => b.createdTime.compareTo(a.createdTime));
+        hasNextPage = responseModel.data?.hasNextPage;
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchAccountDocs.addAll(state.accountActivityDocs);
+        }
+
+        state = state.copyWith(
+          accountActivityDocs: fetchAccountDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchAccountDocs);
     } catch (e) {
       _logger.e(e);
     } finally {
