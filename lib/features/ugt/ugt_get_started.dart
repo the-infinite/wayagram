@@ -28,7 +28,7 @@ class UgtGetStarted extends ConsumerWidget {
             Gap(context.height * 0.1),
             Image.asset('assets/images/u-start.png'),
             const Gap(30),
-            Text("Welcome to University Got Talent \n (UGT)! 🎓✨",
+            Text("Welcome to Contests \n (UGT)! 🎓✨",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(3),
             Text(

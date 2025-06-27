@@ -92,7 +92,7 @@ class NotificationState {
           [NotificationMessageType.creditAlert, NotificationMessageType.debitAlert].contains(notif.messageType));
     }
 
-    //? Seventh, filter out University Got Talent notifications.
+    //? Seventh, filter out Contests notifications.
     if (filters.isApplied && !filters.showUgtNotifications) {
       aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.event);
     }

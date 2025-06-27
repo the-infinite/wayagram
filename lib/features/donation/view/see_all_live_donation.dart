@@ -78,39 +78,38 @@ class _SeeAllLiveDonationsState extends ConsumerState<SeeAllLiveDonations> with 
 
                           int targetedAmount = double.parse('${donation.targetAmount}').toInt();
 
-                          double ratioLeft = amountRaised / targetedAmount;
-                          return ManageDonationWidget(
-                            text: "Manage Donation",
-                            amountRaised:
-                                WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
-                            targetAmount:
-                                WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
-                            title: donation.title?.capitalizeFirst,
-                            image: donation.imageURL,
-                            dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
-                            donationCount: donation.donationCount!,
-                            rangeRatio: ratioLeft,
-                            onTap: () {
-                              WayaNav.toNamed('/donationManagement', arguments: {
-                                'title': '${donation.title?.capitalizeFirst}',
-                                'image': '${donation.imageURL}',
-                                'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                                'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
-                                'desc': '${donation.description}',
-                                'solution': '${donation.solution}',
-                                'impact': '${donation.impact}',
-                                'url': '${donation.url}',
-                                'minimumDonationAmount': '${donation.minimumDonationAmount}',
-                                'daysLeft': '$daysLeft',
-                                'id': '${donation.id}',
-                                'range': ratioLeft,
-                                'donationCount': '${donation.donationCount}'
-                              });
-                            },
-                            buttonWidth: 120.0,
-                          );
-                        }),
-                  ),
+                    double ratioLeft = amountRaised / targetedAmount;
+                    return ManageDonationWidget(
+                      text: "Manage Donation",
+                      amountRaised: WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
+                      targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                      title: donation.title?.capitalizeFirst,
+                      image: donation.imageURL,
+                      dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
+                      donationCount: donation.donationCount!,
+                      rangeRatio: ratioLeft,
+                      onTap: () {
+                        WayaNav.toNamed('/donationManagement', arguments: {
+                          'title': '${donation.title?.capitalizeFirst}',
+                          'image': '${donation.imageURL}',
+                          'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
+                          'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                          'desc': '${donation.description}',
+                          'solution': '${donation.solution}',
+                          'impact': '${donation.impact}',
+                          'url': '${donation.url}',
+                          'minimumDonationAmount': '${donation.minimumDonationAmount}',
+                          'daysLeft': '$daysLeft',
+                          'id': '${donation.id}',
+                          'range':ratioLeft,
+                          'donationCount': '${donation.donationCount}'
+                        });
+                      },
+                      buttonWidth: 120.0,
+                    );
+                  }),
+            ),
+
           ],
         ));
   }

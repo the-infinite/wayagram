@@ -8,6 +8,7 @@ import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
 import 'package:wayagram/features/ugt/data/model/single_contestant_profile.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class ContestForYou extends StateNotifier<ContextForYouState> {
@@ -85,9 +86,6 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     }
   }
 
-
-
-
   //> generate video preview
   Future<File?> generateVideoPreview(String videoPath) async {
     final thumb = await VideoThumbnail.thumbnailFile(
@@ -112,6 +110,9 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
 
         ref.read(selectedContestantProfile.notifier).state =
             responseModel.data?.docs?.first;
+
+        ref.watch(ugtContestantProfileVm.notifier).fetchSingleContestantPosts(
+            responseModel.data?.docs?.first.id ?? "");
 
         return responseModel;
       }

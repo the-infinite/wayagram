@@ -54,6 +54,10 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
                 ref.read(selectedContestProvider.notifier).state = widget.model;
                 WayaNav.toNamed(
                   '/contest-profile-page',
+                  arguments: {
+                    "id": post.profileId ?? "",
+                    "contest": widget.model?.id ?? "",
+                  },
                 );
               },
               child: UgtLeaderboardCard(

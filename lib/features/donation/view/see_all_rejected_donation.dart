@@ -63,7 +63,6 @@ class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonation
                   )
                 : Expanded(
                     child: ListView.builder(
-                        //physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: viewModel.rejectedDonations.length,
                         //filteredMyDonations.length,
