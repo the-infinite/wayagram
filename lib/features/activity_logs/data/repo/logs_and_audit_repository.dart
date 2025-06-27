@@ -37,7 +37,7 @@ class ActivityLogsRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAccountActivity(int page) {
-    return get("wayagram-profile/api/v2/client/activity-logs?limit=10&page=$page&logType=login-history");
+    return get("wayagram-profile/api/v2/client/activity-logs?limit=500&page=$page&logType=login-history");
   }
 
   Future<WayaRequestResponse> getDonationLogs(int page) {
