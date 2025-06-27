@@ -101,6 +101,10 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                               model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
+                            arguments: {
+                              "id": post.profileId ?? "",
+                              "contest": model?.id ?? "",
+                            },
                           );
                           /*   notifier.filterByState(post.state );
                           WayaNav.toNamed(ManageStateSingleContest.route); */

@@ -44,6 +44,10 @@ class UgtContestantCard extends ConsumerWidget {
               ref.read(selectedContestProvider.notifier).state = model;
               WayaNav.toNamed(
                 '/contest-profile-page',
+                arguments: {
+                  "id": contestantData.profileId ?? "",
+                  "contest": model.id ?? "",
+                },
               );
             },
             child: Row(
@@ -95,6 +99,10 @@ class UgtContestantCard extends ConsumerWidget {
                                 model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
+                              arguments: {
+                                "id": contestantData.profileId ?? "",
+                                "contest": model.id ?? "",
+                              },
                             );
                           
               /*   if (model.amountPerVote == 0) {

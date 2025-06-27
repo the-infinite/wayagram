@@ -17,6 +17,7 @@ class VoterDetailState {
   final bool isLastPage;
 
   final String createPostId;
+  final String createPostProfileId;
   final String selectedState;
   final int? pendingPostCount;
   final String? contestId;
@@ -42,6 +43,7 @@ class VoterDetailState {
     this.ismakePaymentLoading = false,
     this.data,
     this.createPostId = "",
+    this.createPostProfileId = "",
     this.selectedState = "",
     this.pendingPostCount = 0,
     this.contestId = "",
@@ -70,6 +72,7 @@ class VoterDetailState {
     bool? isActive,
     Wallet? data,
     String? createPostId,
+    String? createPostProfileId,
     String? selectedState,
     int? pendingPostCount,
     String? contestId,
@@ -106,6 +109,7 @@ class VoterDetailState {
         myFilteredContestApplicantList: myFilteredContestApplicantList ??
             this.myFilteredContestApplicantList,
         createPostId: createPostId ?? this.createPostId,
+        createPostProfileId: createPostProfileId ?? this.createPostProfileId,
         pendingPostCount: pendingPostCount ?? this.pendingPostCount,
         contestId: contestId ?? this.contestId,
         myContestList: myContestList ?? this.myContestList,
