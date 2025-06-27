@@ -41,6 +41,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
   late final walletNotifier = ref.read(walletVmProvider.notifier);
   final loadingController = ValueNotifier(false);
+  double subtotal = 0;
   double deliveryCharge = 0;
   double totalCharge = 0;
   QuotationBidModel? bid;
@@ -152,7 +153,8 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
           bid = foundBid;
           request = foundQuote;
           deliveryCharge = 0;
-          totalCharge = deliveryCharge + (bid?.usedAmount ?? 0);
+          subtotal = (foundBid?.usedAmount ?? 0) * (foundQuote?.quantity ?? 0);
+          totalCharge = deliveryCharge + subtotal;
         });
 
         //? Finally, hide the preloader.
@@ -215,7 +217,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                             ),
                           )
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

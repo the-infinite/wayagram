@@ -222,10 +222,14 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //? Something like this.
-                    WayaDp(
-                      image: _shopData?.shop.coverImage,
-                      isSelf: false,
-                      radius: 24.r,
+                    GestureDetector(
+                      onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(_shopData?.shop.vendorId ?? 'undefined')),
+                      child: WayaDp(
+                        image: _shopData?.shop.coverImage,
+                        isSelf: false,
+                        canFocus: false,
+                        radius: 24.r,
+                      ),
                     ),
 
                     // Some space.
@@ -359,7 +363,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                 const Gap(10),
 
                 //? For the buttons we would be using to
-                if (widget.bid.status != BidActionType.accept)
+                if (![BidActionType.accept, BidActionType.reject].contains(widget.bid.status))
                   FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Row(
