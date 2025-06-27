@@ -364,6 +364,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
             myContestList: myContestantList,
             myContestListCopy: myContestantList,
             myFullContestantList: myContestantList2,
+            createPostProfileId:model?.profileId ?? "",
             createPostId: model?.id ?? "");
 
         updateStateList(contestList);
@@ -654,8 +655,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     state = state.copyWith(contestId: id);
   }
 
-  void updateContestantId(String? id) {
-    state = state.copyWith(createPostId: id);
+  void updateContestantId(String? id, String profileId) {
+    state = state.copyWith(createPostId: id, createPostProfileId: profileId);
   }
 
   void toggleLike(String postId, String galleryId) {
