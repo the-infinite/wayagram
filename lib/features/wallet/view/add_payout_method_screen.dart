@@ -24,6 +24,11 @@ class AddPayoutMethodScreen extends ConsumerStatefulWidget {
 class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  FocusNode acctNameFocus = FocusNode();
+  FocusNode acctNumberFocus = FocusNode();
+
+  bool chk = false, sel = false;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -72,7 +77,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                 children: [
                   Gap(10),
                   FormField<String>(validator: (value) {
-                    if (viewModel.acctNumber.text.isEmpty) {
+                    if (viewModel.acctNumberController.text.isEmpty) {
                       return 'Account Number is required';
                     }
 
@@ -83,14 +88,26 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                       children: [
                         WayaTextFormField(
                           keyboardType: TextInputType.number,
-                          controller: viewModel.acctNumber,
+                          controller: viewModel.acctNumberController,
                           hintText: 'Enter Bank Account Number',
                           maxLength: 10,
                           borderColor:
-                          formState.hasError && viewModel.acctNumber.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                          formState.hasError && viewModel.acctNumberController.text.isEmpty ? wayaTheme.colorScheme.error : null,
                           label: 'Account Number',
+                          onChanged: (text){
+                            viewModel.accountNumber = text;
+                            if(text.length == 10 ){
+                              ref.read(walletVmProvider.notifier).verifyAccountName(context,
+                                  acctNumber: viewModel.acctNumberController.text.trim(), bankCode:
+                                  '${viewModel.bank?.value}'
+                              ).whenComplete((){
+                                viewModel.acctNameController.text = viewModel.accountName;
+                                //setState(() {});
+                              });
+                            }
+                          },
                         ),
-                        if (formState.hasError && viewModel.acctNumber.text.isEmpty)
+                        if (formState.hasError && viewModel.acctNumberController.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
@@ -119,6 +136,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                             hintText: 'Select Bank',
                             value: viewModel.bank?.label.capitalizeFirst,
                             items: viewModel.banks,
+
                             onSelected: (value) {
                               //print('BANK ====>>> ${value.first}');
                               ref.read(walletVmProvider.notifier).selectCategory(value.first);
@@ -137,7 +155,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                   }),
                   Gap(10),
                   FormField<String>(validator: (value) {
-                    if (viewModel.acctName.text.isEmpty) {
+                    if (viewModel.acctNameController.text.isEmpty) {
                       return 'Account Name is required';
                     }
 
@@ -148,13 +166,17 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                       children: [
                         WayaTextFormField(
                           keyboardType: TextInputType.text,
-                          controller: viewModel.acctName,
+                          controller: viewModel.acctNameController,
                           hintText: 'Enter Bank Account Name',
                           borderColor:
-                          formState.hasError && viewModel.acctName.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                          formState.hasError && viewModel.acctNameController.text.isEmpty ? wayaTheme.colorScheme.error : null,
                           label: 'Account Name',
+                          isReadOnly: true,
+                          onChanged: (text){
+                            viewModel.accountName = text;
+                          },
                         ),
-                        if (formState.hasError && viewModel.acctName.text.isEmpty)
+                        if (formState.hasError && viewModel.acctNameController.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
@@ -172,7 +194,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                          WayaUtils.showModalSheet(
                            context,
                            child: PayoutModal(
-                             name: viewModel.acctName.text,
+                             name: viewModel.acctNameController.text,
                              bankName: viewModel.bank!.label,
                              bankCode: viewModel.bank!.value,
                            ),
@@ -184,20 +206,6 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                   ),
 
                   const Gap(10),
-                  // WayaConfirmationView(
-                  //   debounceTimer: const Duration(milliseconds: 20),
-                  //   getResult: ref.read(walletVmProvider.notifier).fetchBank(),
-                  //   getText: (user) => user?.fullname ?? "User not found",
-                  //   onResult: (user) {
-                  //     notifier.setAddedUser(user?.id);
-                  //   },
-                  //   backgroundColor: wayaTheme.colorScheme.primary50,
-                  //   searchController: viewModel.acctNumber,
-                  //   buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
-                  //     color: wayaTheme.colorScheme.primary,
-                  //   ),
-                  // ),
-
                   WayaButton(
                     text: 'Go Back',
                     color: wayaTheme.colorScheme.transparent,

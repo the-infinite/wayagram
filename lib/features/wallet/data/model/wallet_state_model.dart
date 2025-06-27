@@ -15,10 +15,11 @@ class WalletState {
   final String refNumber;
   final String bankName;
   final String payoutAccountNumber;
-  final String accountName;
+  String accountName;
   final String time;
-  final TextEditingController acctNumber;
-  final TextEditingController acctName;
+   String accountNumber;
+  final TextEditingController acctNumberController;
+  final TextEditingController acctNameController;
   final List<ExternalWalletModel>? externalWallets;
   final List<PayoutMethodData> payoutMethod;
   final List<RequestDocs> requestDocs;
@@ -34,18 +35,19 @@ class WalletState {
     this.refNumber = '',
     this.bankName = '',
     this.accountName = '',
+    this.accountNumber = '',
     this.payoutAccountNumber = '',
     this.banks = const [],
     this.bank,
-    TextEditingController? acctNumber,
-    TextEditingController? acctName,
+    TextEditingController? acctNumberController,
+    TextEditingController? acctNameController,
     this.externalWallets,
     this.payoutMethod = const [],
     this.requestDocs = const [],
 
   }):
-        acctNumber = acctNumber ?? TextEditingController(),
-        acctName = acctName ?? TextEditingController();
+        acctNumberController = acctNumberController ?? TextEditingController(),
+        acctNameController = acctNameController ?? TextEditingController();
 
   WalletState copyWith({
     bool? isLoading,
@@ -57,9 +59,10 @@ class WalletState {
     String? refNumber,
     String? bankName,
     String? accountName,
+    String? accountNumber,
     String? payoutAccountNumber,
-    TextEditingController? acctNumber,
-    TextEditingController? acctName,
+    TextEditingController? acctNumberController,
+    TextEditingController? acctNameController,
     List<ExternalWalletModel>? externalWallets,
     List<Select>? banks,
     List<RequestDocs>? requestDocs,
@@ -76,11 +79,12 @@ class WalletState {
         amount: amount ?? this.amount,
         refNumber: refNumber ?? this.refNumber,
         bankName: bankName ?? this.bankName,
+          accountNumber: accountNumber ?? this.accountNumber,
         payoutAccountNumber: payoutAccountNumber ?? this.payoutAccountNumber,
         requestDocs: requestDocs ?? this.requestDocs,
         accountName: accountName ?? this.accountName,
-        acctNumber: acctNumber ?? this.acctNumber,
-        acctName: acctName ?? this.acctName,
+        acctNumberController: acctNumberController ?? this.acctNumberController,
+        acctNameController: acctNameController ?? this.acctNameController,
         externalWallets: externalWallets ?? this.externalWallets,
         payoutMethod: payoutMethod ?? this.payoutMethod
       );
