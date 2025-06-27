@@ -30,7 +30,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
   List<XFile> _selectedImages = [];
   List<WayaVideoController> videoControllers = [];
 
-  bool sel = false;
+  bool sel = true;
   bool isTyping = false;
 
   @override
