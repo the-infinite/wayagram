@@ -257,14 +257,12 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                     spacing: 8.w,
                     children: [
                       //? The user's profile picture.
-                      GestureDetector(
+                      WayaDp(
+                        radius: 20.r,
+                        image: user!.$1.profilePicture,
                         onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user!.$1.id)),
-                        child: WayaDp(
-                          radius: 20.r,
-                          image: user!.$1.profilePicture,
-                          isSelf: false,
-                          canFocus: false,
-                        ),
+                        isSelf: false,
+                        canFocus: false,
                       ),
 
                       //? Second, the user's name.

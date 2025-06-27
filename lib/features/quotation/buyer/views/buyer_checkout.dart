@@ -110,6 +110,9 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
       },
     ));
 
+    //? If this is not bad.
+    if (chargeResult == false) return;
+
     //? Third, get the order that this order corresponds to.
     final order = await notifier.getOrderDetails(widget.requestId);
 
@@ -152,7 +155,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
         setState(() {
           bid = foundBid;
           request = foundQuote;
-          deliveryCharge = 0;
+          deliveryCharge = foundBid?.deliveryCharge ?? 0;
           subtotal = (foundBid?.usedAmount ?? 0) * (foundQuote?.quantity ?? 0);
           totalCharge = deliveryCharge + subtotal;
         });
