@@ -14,6 +14,7 @@ import 'package:wayagram/features/wallet/data/model/get_request_model.dart';
 import 'package:wayagram/features/wallet/data/model/payout_method_model.dart';
 import 'package:wayagram/features/wallet/data/model/single_payout_method_model.dart';
 import 'package:wayagram/features/wallet/data/model/single_request_model.dart';
+import 'package:wayagram/features/wallet/data/model/verify_account_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_state_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
@@ -25,8 +26,8 @@ import '../../chat/state/default.dart';
 class WalletVm extends StateNotifier<WalletState> {
   final _walletRepository = WalletRepository.instance;
   WalletVm() : super(WalletState()) {
-    state = state.copyWith(acctName: TextEditingController(text: ''));
-    state = state.copyWith(acctNumber: TextEditingController(text: ''));
+    state = state.copyWith(acctNameController: TextEditingController(text: ''));
+    state = state.copyWith(acctNumberController: TextEditingController(text: ''));
   }
 
   void reset() {
@@ -172,20 +173,16 @@ class WalletVm extends StateNotifier<WalletState> {
   }
 
   Future<void> verifyAccountName(ctx, {required String acctNumber, required String bankCode}) async {
+
     try {
+      state = state.copyWith(isLoading: true);
       final response = await _walletRepository.verifyName(acctNumber, bankCode);
-      if (response.success && ctx.mounted) {
-        state = state.copyWith();
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Payout method deleted successfully!',
-              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
-            ),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
+      state = state.copyWith(isLoading: false);
+      //debugPrint("DARLINGTON ACCOUNT NAME ${response.data}" );
+      if (response.success) {
+        VerifyAccountNameModel responseModel = VerifyAccountNameModel.fromJson(response.data);
+        state = state.copyWith(accountName: responseModel.data?.name);
+        debugPrint("DARLINGTON ACCOUNT NAME ${responseModel.data?.name}");
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -351,7 +348,6 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
           amount: amount,
           description: decription ?? "Wallet funding",
           email: ConversationState.self.email!,
-          //user?.email ?? "diala@gmail.com",
           fundOptionCode: fundOptionCode,
           callbackUrl: WayaConstants.webUrl),
     );
