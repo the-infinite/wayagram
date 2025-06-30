@@ -5,6 +5,7 @@ import 'package:wayagram/features/ugt/data/model/contestant_count_model.dart';
 import 'package:wayagram/features/ugt/data/model/contestant_transaction_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_dashboard_state.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
 import '../../../core/data/local_data_source.dart';
 
@@ -66,17 +67,31 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
     try {
       final response =
           await _contestRepository.fetchTransactionHistory(contestId);
-
+List<ContestTransactionModel> modelList= [];
       if (response.success) {
         ContestTransactionModelBase responseModel =
             ContestTransactionModelBase.fromJson(response.data);
 
-        state = state.copyWith(
-            contestTransactionHistoryList: responseModel.data?.docs ?? []);
+       
         int totalCommission = 0;
         for (var model in responseModel.data?.docs ?? []) {
           totalCommission += int.tryParse(model.commission ?? '') ?? 0;
         }
+        //
+         for (var modelNew in responseModel.data!.docs! ) {
+          // print('Hello name one ${model.profileId}');
+          var data = await UserResource.getUserDetails(
+              modelNew.userId ?? "");
+          var userModel = data?.$2;
+          var userModel1 = data?.$1;
+
+          modelNew.name = userModel?.displayName ?? "";
+          modelList.add(modelNew);
+        }
+         state = state.copyWith( contestTransactionHistoryList:modelList);
+
+
+        //
         state = state.copyWith(totalCommission: totalCommission);
       }
     } catch (e) {

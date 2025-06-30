@@ -169,7 +169,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
             subtitle:
                 "Your application has been sent for review. You will be notified once the review is complete. Once notified,Please go to Applied Contest Section under 'My Contest' to view your application status, and create a profile.",
             showCopyLink: false,
-            buttonText: null,
+            buttonText: "Go back to Contest",
             onShareTap: () async {},
             onTap: (_, __) {
               // WayaNav.removeUntilNamed("/ugt-home");
