@@ -25,7 +25,7 @@ enum NotificationChannel {
 }
 
 enum NotificationMessageType {
-  @JsonValue('chats')
+  @JsonValue('chat')
   chat,
 
   @JsonValue('call')

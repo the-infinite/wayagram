@@ -38,6 +38,7 @@ class SellerBidDetails extends ConsumerStatefulWidget {
 class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
   final loadingController = ValueNotifier(false);
+  CachedUserDataTuple? _buyerDetails;
 
   Future<void> _placeBid(BuyRequestModel request) async {
     final amount = await WayaUtils.showModalSheet<double>(
@@ -93,6 +94,18 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
   void dispose() {
     loadingController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //? Get the buyer's details.
+      final request = notifier.getBidQuote(widget.requestId)!;
+      _buyerDetails = await UserResource.getUserDetails(request.buyerId);
+      setState(() {});
+    });
+
+    super.initState();
   }
 
   @override
@@ -262,21 +275,16 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           Gap(15.h),
 
           //? The name of the customer.
-          WayaFutureSubscriber(
-            future: UserResource.getUserDetails(request.buyerId),
-            builder: (context, data) {
-              //? Return null as a failsafe.
-              if (data == null) {
-                return const SizedBox();
-              }
-
-              //? Then return the buyer's information.
-              return OrderInfoWidget(
+          if (_buyerDetails == null)
+            const SizedBox()
+          else
+            GestureDetector(
+              onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(_buyerDetails!.$1.id, "quotation")),
+              child: OrderInfoWidget(
                 title: "Customer's Name",
-                description: data.$1.fullname,
-              );
-            },
-          ),
+                description: _buyerDetails!.$1.fullname,
+              ),
+            ),
 
           // Some space.
           Gap(8.h),
@@ -321,8 +329,8 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
 
           //? The bid's amount.
           OrderInfoWidget(
-            title: "Bid Amount",
-            description: WayaValueHelper.formatPrice(bid.amount),
+            title: "Delivery Fee",
+            description: WayaValueHelper.formatPrice(bid.deliveryCharge ?? 0),
           ),
 
           // Some space.
@@ -357,7 +365,7 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
               height: 48,
               notifier: loadingController,
               leadingIcon: WayaAssets.icons.bid.svg(
-                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
                 width: 20,
               ),
             )

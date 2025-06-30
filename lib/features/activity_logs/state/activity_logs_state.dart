@@ -13,6 +13,8 @@ import 'package:wayagram/features/activity_logs/data/model/user_interaction_mode
 import 'package:wayagram/features/activity_logs/data/model/visited_pages_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/wallet_activity_model.dart';
 
+import '../data/model/event_log_model.dart';
+
 enum FilterType {
   allTime._("All Time"),
   thisWeek._("This Week"),
@@ -54,7 +56,7 @@ class ActivityLogsState {
 
   List<PollsActivityDocs> pollDocs;
   List<PollsActivityDocs> pollDocs1;
-  List<PageDocs> eventDocs;
+  List<EventLogDocs> eventDocs;
   List<PageDocs> eventDocs1;
   List<PageDocs> pageDocs;
   List<PageDocs> pageDocs1;
@@ -137,7 +139,7 @@ class ActivityLogsState {
     List<PageDocs>? quotationDocs1,
     List<PollsActivityDocs>? pollDocs,
     List<PollsActivityDocs>? pollDocs1,
-    List<PageDocs>? eventDocs,
+    List<EventLogDocs>? eventDocs,
     List<PageDocs>? eventDocs1,
     List<PageDocs>? socialDocs,
     List<PageDocs>? socialDocs1,
@@ -332,8 +334,8 @@ class ActivityLogsState {
     return result.toList();
   }
 
- /* List<AccountActivityDocs> filterEventDocs(DateTime start, DateTime end) {
-    Iterable<EventDocs> result = eventDocs;
+  List<EventLogDocs> filterEventDocs(DateTime start, DateTime end) {
+    Iterable<EventLogDocs> result = eventDocs;
 
     //? First, we want to only include things that have their start date before
     result = result.where((account) {
@@ -351,5 +353,4 @@ class ActivityLogsState {
     // Return this one.
     return result.toList();
   }
-*/
 }

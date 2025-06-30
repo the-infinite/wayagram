@@ -41,6 +41,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
   late final walletNotifier = ref.read(walletVmProvider.notifier);
   final loadingController = ValueNotifier(false);
+  double subtotal = 0;
   double deliveryCharge = 0;
   double totalCharge = 0;
   QuotationBidModel? bid;
@@ -109,6 +110,9 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
       },
     ));
 
+    //? If this is not bad.
+    if (chargeResult == false) return;
+
     //? Third, get the order that this order corresponds to.
     final order = await notifier.getOrderDetails(widget.requestId);
 
@@ -151,8 +155,9 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
         setState(() {
           bid = foundBid;
           request = foundQuote;
-          deliveryCharge = 0;
-          totalCharge = deliveryCharge + (bid?.usedAmount ?? 0);
+          deliveryCharge = foundBid?.deliveryCharge ?? 0;
+          subtotal = (foundBid?.usedAmount ?? 0) * (foundQuote?.quantity ?? 0);
+          totalCharge = deliveryCharge + subtotal;
         });
 
         //? Finally, hide the preloader.
@@ -215,7 +220,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                             ),
                           )
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

@@ -145,10 +145,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
     List<Map<String, dynamic>> mapStageList = stageList.map(
       (model) {
-        String stageEndDate = _convertToISO(model.endDate!) ==
-                _convertToISO(model.startDate!)
-            ? _convertToISO(model.endDate!).replaceAll("T00:00:00", "T23:59:59")
-            : _convertToISO(model.endDate!);
+        String stageEndDate =
+            _convertToISO(model.endDate!).replaceAll("T00:00:00", "T23:59:59");
 
         return <String, dynamic>{
           "stageName": model.stageName,
@@ -196,17 +194,12 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     //NGN8.00
     try {
       //  debugPrint("wwwww ${amountPerVote.text}");
-      String participationEndDate = _convertToISO(state.endDate) ==
-              _convertToISO(state.startDate)
-          ? _convertToISO(state.endDate).replaceAll("T00:00:00", "T23:59:59")
-          : _convertToISO(state.endDate);
+      String participationEndDate =
+          _convertToISO(state.endDate).replaceAll("T00:00:00", "T23:59:59");
 
       String contestTimeLineEndDate =
-          _convertToISO(state.contestTimelineEndDate) ==
-                  _convertToISO(state.contestTimelineStartDate)
-              ? _convertToISO(state.contestTimelineEndDate)
-                  .replaceAll("T00", "T23")
-              : _convertToISO(state.contestTimelineEndDate);
+          _convertToISO(state.contestTimelineEndDate)
+              .replaceAll("T00:00:00", "T23:59:59");
 
       var map = {
         "title": title.text,

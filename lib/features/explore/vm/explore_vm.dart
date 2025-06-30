@@ -96,7 +96,7 @@ class ExploreVm extends StateNotifier<ExploreState> {
     try {
       //? Continue.
       state = state.copyWith(isLoading: true);
-      final response = await _exploreRepository.getFeeds(state.cursor ?? 1, 20);
+      final response = await _exploreRepository.getFeeds(state.cursor ?? 1, 1000);
 
       if (response.success) {
         final data = response.data['data'];
