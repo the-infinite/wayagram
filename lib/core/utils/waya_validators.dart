@@ -18,7 +18,7 @@ class WayaValidators {
     if (!RegExp(r'^(?=.*[0-9])').hasMatch(password)) {
       return 'Password must contain a number';
     }
-    if (!RegExp(r'^(?=.*[!@#$%^&*])').hasMatch(password)) {
+    if (!RegExp(r'^(?=.*[.!@#$%^&*])').hasMatch(password)) {
       return 'Password must contain a special character';
     }
     return null;

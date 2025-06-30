@@ -8,7 +8,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
-import 'account_activity.dart';
 
 class LogsAndAuditTrials extends ConsumerStatefulWidget {
   static const route = '/logsAndAuditTrials';
@@ -32,7 +31,11 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Gap(10),
-          logCard('Account', WayaAssets.icons.genSet.account.path, ()=> WayaNav.toNamed(AccountActivity.route)),
+          //logCard('Account', WayaAssets.icons.genSet.account.path, ()=> WayaNav.toNamed(AccountActivity.route)),
+          logCard('Account', WayaAssets.icons.genSet.account.path, ()=> WayaNav.toNamed(ActivityLog.route,
+              arguments: {
+                'name': 'account'
+              })),
           logCard('Shop', WayaAssets.icons.genSet.shop.path,()=> WayaNav.toNamed(ActivityLog.route, arguments: {
             'name': 'shop'
           })),
@@ -48,17 +51,19 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
           logCard('Polls & Voting', WayaAssets.icons.genSet.polls.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
             'name': 'polls'
           })),
-          logCard('Pages', WayaAssets.icons.genSet.pages.path,()=>WayaNav.toNamed('/pageLogs',
-          //     arguments: {
-          //   'name': 'pages'
-          // }
+          logCard('Pages', WayaAssets.icons.genSet.pages.path,()=>WayaNav.toNamed(ActivityLog.route,
+              arguments: {
+            'name': 'pages'
+          }
           )),
           logCard('Groups', WayaAssets.icons.genSet.group.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
             'name': 'groups'
           })),
-          logCard('Donation', WayaAssets.icons.genSet.donation.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
-            'name': 'donation'
-          })),
+          logCard('Donation', WayaAssets.icons.genSet.donation.path,()=>WayaNav.toNamed('/donationLogs'
+          //     ActivityLog.route,  arguments: {
+          //   'name': 'donation'
+          // }
+          )),
           logCard('UGT', WayaAssets.icons.genSet.ugt.path,()=>WayaNav.toNamed(ActivityLog.route,  arguments: {
             'name': 'ugt'
           })),

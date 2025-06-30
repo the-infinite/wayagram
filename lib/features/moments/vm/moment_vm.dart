@@ -365,7 +365,7 @@ class MomentVm extends StateNotifier<MomentState> {
       if (state.selectedFile != null) {
         final publicUrl = await WayaFileRepository.instance.uploadFile(
           selectedAsset!,
-          "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
+          "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}",
         );
         //> get preview
         // final preview = await generateImagePreview(state.selectedFile!);
@@ -455,10 +455,9 @@ class MomentVm extends StateNotifier<MomentState> {
             );
           }
         }
-        WayaNav.removeUntilNamed(
-          MyMoments.route,
-          predicate: (route) => route.settings.name == BottomView.route,
-        );
+        //? remove all until BV and navigate to moment screen
+        WayaNav.popUntil((route) => route.settings.name == BottomView.route);
+        WayaNav.toNamed(MyMoments.route);
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -605,16 +604,14 @@ class MomentVm extends StateNotifier<MomentState> {
           userId: userId!, momentId: momentId, reason: reason);
       bool isSuccess = false;
       if (response.success) {
-       
         isSuccess = true;
       } else {
-        
         isSuccess = false;
       }
 
       // if (response.success && context.mounted) {
       // show success modal
-    //  WayaNav.goBack();
+      //  WayaNav.goBack();
       //
       // await WayaUtils.showNotice(
       //     context: context,

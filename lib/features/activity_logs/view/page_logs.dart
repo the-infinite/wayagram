@@ -108,7 +108,7 @@ class _PageLogsState extends ConsumerState<PageLogs > {
                   return SingleChildScrollView(
                     child: viewModel.pageDocs.isEmpty
                         ? ActivityLogsEmptyState(
-                      text: 'You don\'t have Page clicks for this week yet',
+                      text: 'You don\'t have Page for this week yet',
                     )
                         : ListView.builder(
                         padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -121,7 +121,8 @@ class _PageLogsState extends ConsumerState<PageLogs > {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pageDocs[i].createdAt.toString().split('T')[0])}',
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
+                                  //'${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pageDocs[i].createdAt.toString().split('T')[0])}',
                                   style: TextStyle(
                                     fontSize: 20.sp,
                                     fontFamily: WayaConstants.fontFamily,

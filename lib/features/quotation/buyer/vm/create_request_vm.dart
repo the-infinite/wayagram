@@ -17,6 +17,29 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 
   CreateRequestVm() : super(CreateRequestState());
 
+  void clear() {
+    state = CreateRequestState(
+      productCategory: '',
+      productCondition: '',
+      productType: '',
+      productColor: '',
+      productDescription: null,
+      productName: null,
+      productImage: null,
+      startDate: '',
+      endDate: '',
+      dateIsoFormat: '',
+      deliveryState: '',
+      deliveryLga: '',
+      lga: '',
+      stateOfPurchase: '',
+      pickUpOption: 'No',
+      biddingStartTime: '',
+      vendorSeeBuyRequest: false,
+      skipAddress: false,
+    );
+  }
+
   void selectStateOfPurchase(Select value) {
     state = state.copyWith(stateOfPurchase: value.value);
   }

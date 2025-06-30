@@ -449,20 +449,18 @@ class DioHttpClient implements WayaHttpClientInterface {
         }
 
         //? If this is in the staging environment.
-        if (!WayaConstants.isProduction) {
-          WayaDebugConsoleController.instance.addDebugEvent(
-            WayaDebugEvent(
-              type: WayaDebugEventType.http,
-              module: WayaDebugEventModule.unknown,
-              message: e.response?.data['errors'] != null
-                  ? e.response?.data['errors'][0]
-                  : e.response?.data['message'] ?? e.message ?? e.toString(),
-              raw: e,
-              stackTrace: e.stackTrace,
-              timestamp: DateTime.now(),
-            ),
-          );
-        }
+        WayaDebugConsoleController.instance.addDebugEvent(
+          WayaDebugEvent(
+            type: WayaDebugEventType.http,
+            module: WayaDebugEventModule.unknown,
+            message: e.response?.data['errors'] != null
+                ? e.response?.data['errors'][0]
+                : e.response?.data['message'] ?? e.message ?? e.toString(),
+            raw: e,
+            stackTrace: e.stackTrace,
+            timestamp: DateTime.now(),
+          ),
+        );
       }
 
       //? Handle this error.

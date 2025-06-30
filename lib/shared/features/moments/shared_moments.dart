@@ -24,7 +24,7 @@ class SharedMoments extends ConsumerStatefulWidget {
 
 class _SharedMomentsState extends ConsumerState<SharedMoments> {
   late final notifier = ref.read(momentVmProvider.notifier);
-  Timer? _timer;
+  static Timer? _timer;
 
   @override
   void initState() {
@@ -33,11 +33,13 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
       otherUserMoments.getAllMoments();
 
       //? This is fine.
-      _timer = Timer.periodic(
-        const Duration(minutes: 1),
-        (_) {
+
+      _timer ??= Timer.periodic(
+        const Duration(seconds: 15),
+        (_) async {
           notifier.getUserMoments(1);
-          otherUserMoments.getAllMoments();
+          await otherUserMoments.getAllMoments();
+          debugPrint("Reloaded moments");
         },
       );
     });
@@ -47,6 +49,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
   @override
   void dispose() {
     _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 
@@ -84,8 +87,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                             view: () => WayaNav.to(
                               transition: Transition.downToUp,
                               duration: const Duration(milliseconds: 600),
-                              ViewMoment(
-                                  moments: momentState.myMoments, isMine: true),
+                              ViewMoment(moments: momentState.myMoments, isMine: true),
                             ),
                           ),
                         );
@@ -110,8 +112,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                 children: [
                   MomentsWidget(
                     moment: moment,
-                    hasMoment:
-                        !notifier.hasViewedMoment(moment.moments.first.id),
+                    hasMoment: !notifier.hasViewedMoment(moment.moments.first.id),
                     onTap: () => WayaNav.to(
                       transition: Transition.downToUp,
                       duration: const Duration(milliseconds: 600),
@@ -156,9 +157,7 @@ class PopModal extends StatelessWidget {
                 textAlign: TextAlign.start,
                 "Create New Moment",
                 style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customBlack,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500),
+                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp, fontWeight: FontWeight.w500),
               ),
             ),
             SizedBox(height: 10),
@@ -171,9 +170,7 @@ class PopModal extends StatelessWidget {
                 "View Moment",
                 textAlign: TextAlign.start,
                 style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customBlack,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500),
+                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp, fontWeight: FontWeight.w500),
               ),
             ),
           ],

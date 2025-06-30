@@ -43,7 +43,7 @@ class DonationRepository extends BaseRepository {
       String expirationDate,
       String image,
       String startDate,
-      String category) {
+      String category, bool showRaised) {
     final payload = {
       "title": title,
       "description": description,
@@ -55,7 +55,8 @@ class DonationRepository extends BaseRepository {
       "expirationDate": expirationDate,
       "imageURL": image,
       "startDate": startDate,
-      "category": category
+      "category": category,
+      "showRaised": showRaised
     };
     return post("$serviceUrl/client/campaigns", payload);
   }
