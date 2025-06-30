@@ -74,18 +74,6 @@ class JoinRequestWidget extends StatelessWidget {
                   children: [
 
                     InkWell(
-                      onTap: accept,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: wayaTheme.colorScheme.success)
-                        ),
-                        child: Icon(Icons.check, color: wayaTheme.colorScheme.success,
-                        ),
-                      ),
-                    ),
-                    Gap(10),
-                    InkWell(
                       onTap: reject,
                       child: Container(
                         decoration: BoxDecoration(
@@ -96,39 +84,18 @@ class JoinRequestWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-
-                    /* SizedBox(
-                                    width: 68.w,
-                                    child: WayaButton(
-                                      callback: () async => await request.approveRequest(context, '${group.id}'),
-                                      text: 'Approve',
-                                      textStyle: TextStyle().wayaCopyWith(
-                                        color: wayaTheme.colorScheme.success,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12.sp,
-                                      ),
-                                      isLoading: viewModel.isLoading,
-                                      height: 32.h,
-                                      color: wayaTheme.colorScheme.success50,
-                                      textColor: wayaTheme.colorScheme.success,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 68.w,
-                                    child: WayaButton(
-                                      callback: () async => await request.rejectRequest(context, '${group.id}'),
-                                      text: 'Decline',
-                                      textStyle: TextStyle().wayaCopyWith(
-                                        color: wayaTheme.colorScheme.success,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12.sp,
-                                      ),
-                                      isLoading: viewModel.isLoading,
-                                      height: 32.h,
-                                      color: WayaColors.error50,
-                                      textColor: wayaTheme.colorScheme.error,
-                                    ),
-                                  ),*/
+                    Gap(10),
+                    InkWell(
+                      onTap: accept,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: wayaTheme.colorScheme.success)
+                        ),
+                        child: Icon(Icons.check, color: wayaTheme.colorScheme.success,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
