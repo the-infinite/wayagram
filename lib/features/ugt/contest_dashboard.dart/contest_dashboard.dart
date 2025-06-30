@@ -276,9 +276,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           height: 42,
                           text: "Request Payout",
                           callback: () async {
-
-                              WayaNav.toNamed('/admin-transaction-page');
-                          /*   ref
+                            WayaNav.toNamed('/admin-transaction-page');
+                            /*   ref
                                 .read(credentialInputProvider.notifier)
                                 .onSubmitPayoutPin(() => WayaNav.toNamed(
                                         '/payoutVerification',
@@ -559,7 +558,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       );
                     },
                   ),
-                
                 ],
               ),
             ),
@@ -656,6 +654,14 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                             value: e.isActive ?? false,
                             onChanged: (bool value) {
                               debugPrint("map ${e.toString()}");
+
+                              if (DateTime.now().isAfter(DateTime.parse(
+                                  e.endDate ?? "2096-01-01T00:00:00.000Z"))) {
+                                WayaSnackBar.showToast(
+                                    "Stage date has passed, Please edit contest stage date to continue");
+                                return;
+                              }
+
                               notifier.startStageContest(e.stageName ?? "", {
                                 "contestId": model?.id ?? "",
                                 "stageName": e.stageName ?? ""

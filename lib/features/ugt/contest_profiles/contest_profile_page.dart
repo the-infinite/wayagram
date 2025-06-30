@@ -154,15 +154,15 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         imagePath.value = value?.path ?? "";
       });
       return null;
-    }, [model]);
+    }, []);
     final selectedViewIndex = useState(0);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
       onRefresh: () {
-        ref
+        /* ref
             .watch(ugtContestantProfileVm.notifier)
-            .fetchSingleContestantPosts(id ?? id);
+            .fetchSingleContestantPosts(id ?? id); */
         return ref
             .read(postProvider.notifier)
             .fetchSingleContestantDetails(ref, contestId, id);
