@@ -151,12 +151,11 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
       isLoading: false,
       isScrollable: true,
       onRefresh: () {
-        /* ref
-            .watch(ugtContestantProfileVm.notifier)
-            .fetchSingleContestantPosts(id ?? id); */
+
         return ref
             .read(postProvider.notifier)
             .fetchSingleContestantDetails(ref, contestId, id);
+
       },
       title: id == viewModel.getLoggedInUserId()
           ? "My Profile"
