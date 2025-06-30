@@ -62,6 +62,14 @@ class WalletRepository extends BaseRepository {
     return get('$serviceUrl/client/payout/bank/banks');
   }
 
+  Future<WayaRequestResponse> verifyName(String acctNumber, String bankCode) {
+    final payload = {
+      "accountNumber": acctNumber,
+      "bankCode": bankCode
+    };
+    return post("$serviceUrl/client/payout/bank/name-enquiry", payload);
+  }
+
   Future<WayaRequestResponse> getRequestPayout(int page) {
     return get('$serviceUrl/client/payout/requests?page=$page&limit=10');
   }

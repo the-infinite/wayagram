@@ -103,8 +103,34 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     //! If the shop was not selected.
     if (shopId == null) return;
 
+    double? deliveryCost;
+
+    //? If this is a delivery request and the delivery address is not null.
+    //? After the shop is selected, we need to confirm the delivery cost with
+    //? the seller.
+    if (widget.data.deliveryAddress != null) {
+      final cost = await WayaUtils.showModalSheet<double>(
+        context,
+        child: EditOfferModal(
+          title: 'Delivery Cost',
+          hint: 'Enter your delivery cost for this order to deliver to\n\n${widget.data.deliveryAddress}',
+          delta: widget.data.bidStartingAmount >= 3000000
+              ? 25000
+              : widget.data.bidStartingAmount >= 200000
+                  ? 5000
+                  : 1000,
+        ),
+      );
+
+      //? Since const is null.
+      if (cost == null) return;
+
+      //? Now we can try again.
+      deliveryCost = cost;
+    }
+
     //? Now, send the bid.
-    final result = await widget.notifier.sendBid(widget.data.id, amount, shopId);
+    final result = await widget.notifier.sendBid(widget.data.id, amount, shopId, deliveryCost);
 
     //! Since bidding failed, you can leave.
     if (result == null) return;
@@ -114,9 +140,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
   }
 
   Future<void> _viewSellerBid(QuotationBidModel result) async {
-    if (!WayaConstants.isProduction) {
-      WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
-    }
+    WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
   }
 
   Future<void> _viewBids() async {

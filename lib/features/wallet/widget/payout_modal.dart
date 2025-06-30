@@ -77,11 +77,11 @@ class _PayoutModalState extends ConsumerState<PayoutModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
-                print('ACCOUNT NAME ${viewModel.acctName.text}');
+                print('ACCOUNT NAME ${viewModel.acctNameController.text}');
                 print('Bank NAME ${widget.bankName}');
                 print('Bank CODE ${widget.bankCode}');
-                print('ACCOUNT Number ${viewModel.acctNumber.text}');
-               await ref.watch(walletVmProvider.notifier).createPayoutMethod(viewModel.acctNumber.text,
+                print('ACCOUNT Number ${viewModel.acctNumberController.text}');
+               await ref.watch(walletVmProvider.notifier).createPayoutMethod(viewModel.acctNumberController.text,
                    widget.name, widget.bankName, widget.bankCode, context);
               },
               text: "Yes, Add Payout Method",

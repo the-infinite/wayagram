@@ -43,17 +43,19 @@ class MomentRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> viewMoments({
-    required String profileId,
+    // required String profileId,
     required String momentId,
     bool? likeMoment,
     bool? comment,
   }) {
-    final payload = {
-      'userId': profileId,
+    final Map<String, dynamic> payload = {
+      // 'userId': profileId,
       'momentId': momentId,
     };
-    if (likeMoment != null) payload['likeMoment'];
-    if (comment != null) payload['comment'];
+    if (likeMoment != null) payload['likeMoment'] = likeMoment;
+    if (comment != null) payload['comment'] = comment;
+
+    print(payload);
 
     return post("$serviceUrl/view-moments/view", payload);
   }

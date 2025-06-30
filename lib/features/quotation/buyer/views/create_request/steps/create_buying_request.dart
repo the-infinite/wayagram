@@ -27,7 +27,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      regionNotifier.setUseAll(true);
+      regionNotifier.setUseAll(false);
       regionNotifier.getStates();
     });
     super.initState();

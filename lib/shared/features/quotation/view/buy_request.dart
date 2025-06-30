@@ -85,7 +85,23 @@ class SharedOthersBuyRequestsWidget extends ConsumerStatefulWidget {
 class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyRequestsWidget> {
   late final notifier = ref.read(othersQuotationsProvider.notifier);
 
-  Timer? _timer;
+  static Timer? _timer;
+
+  void _restartTimer() {
+    //? First, cancel the timer if it exists.
+    _timer?.cancel();
+    _timer = null;
+
+    //? Now reassign the timer.
+
+    _timer ??= Timer.periodic(
+      const Duration(seconds: 7),
+      (timer) async {
+        await notifier.reloadQuotationsOrder();
+        debugPrint("Reloaded quotations order");
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -94,13 +110,7 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
       notifier.getBuyRequestsIfNotLoaded();
 
       //? This is fine.
-      _timer ??= Timer.periodic(
-        const Duration(seconds: 7),
-        (timer) async {
-          debugPrint("Reloading quotations order");
-          await notifier.reloadQuotationsOrder();
-        },
-      );
+      _restartTimer();
     });
     super.initState();
   }
@@ -111,6 +121,7 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
       //? Only fetch the requests if they have not been loaded yet.
       notifier.reset();
       notifier.getBuyRequestsIfNotLoaded();
+      _restartTimer();
     });
     super.reassemble();
   }
@@ -118,6 +129,7 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
   @override
   void dispose() {
     _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 
