@@ -19,22 +19,23 @@ import 'package:wayagram/shared/components/engagement_range.dart';
 class DonationDetails extends ConsumerStatefulWidget {
   static const route = '/donationDetails';
   final String id;
-  const DonationDetails({
-    super.key,
-    required this.id
-  });
+  const DonationDetails({super.key, required this.id});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _DonationDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _DonationDetailsState();
 }
 
-class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTickerProviderStateMixin {
+class _DonationDetailsState extends ConsumerState<DonationDetails>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
       //ref.read(donationVmProvider.notifier).getSingleDonation('${args['id']}');
-      ref.read(donationVmProvider.notifier).getOneDonation('${args['id'] ?? widget.id}');
+      ref
+          .read(donationVmProvider.notifier)
+          .getOneDonation('${args['id'] ?? widget.id}');
     });
     super.initState();
   }
@@ -45,6 +46,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
+    if (viewModel.singleDonationDocs.isEmpty) {
+      return SizedBox.shrink();
+    }
     return WayaScaffold(
       title: "Donation Details",
       isLoading: viewModel.isLoading,
@@ -57,12 +61,15 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
         children: [
           Text(
             '${args['title'] ?? viewModel.singleDonationDocs.first.title}',
-            style: TextStyle()
-                .wayaCopyWith(color: wayaTheme.colorScheme.black, fontSize: 24.sp, fontWeight: FontWeight.w700),
+            style: TextStyle().wayaCopyWith(
+                color: wayaTheme.colorScheme.black,
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w700),
           ),
           Gap(10),
           WayaImage(
-              imageUrl: '${args['image'] ?? viewModel.singleDonationDocs.first.imageURL}',
+              imageUrl:
+                  '${args['image'] ?? viewModel.singleDonationDocs.first.imageURL}',
               height: 180.h,
               width: double.infinity,
               radius: BorderRadius.all(Radius.circular(12))),
@@ -70,8 +77,10 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
           EngagementRange(
             topLeft:
                 "${WayaHelpers.formatPrice(int.parse('${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}'))}",
-            bottomLeft: "${args['donationCount'] ??  viewModel.singleDonationDocs.first.donationCount} Donations",
-            bottomRight: "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day' : 'days'} left",
+            bottomLeft:
+                "${args['donationCount'] ?? viewModel.singleDonationDocs.first.donationCount} Donations",
+            bottomRight:
+                "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day' : 'days'} left",
             range: args['ratioLeft'] ?? '',
             //range: args['donationCount'] == '0' ? 0.0 : 0.4
           ),
@@ -79,12 +88,18 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
           Row(
             children: [
               Expanded(
-                child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised ?? viewModel.singleDonationDocs.first.amountRaised}')), 'Amount Raised',
+                child: _detailCard(
+                    WayaHelpers.formatPrice(int.parse(
+                        '${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised ?? viewModel.singleDonationDocs.first.amountRaised}')),
+                    'Amount Raised',
                     wayaTheme.colorScheme.success50),
               ),
               Gap(10),
               Expanded(
-                child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}')), 'Target Amount',
+                child: _detailCard(
+                    WayaHelpers.formatPrice(int.parse(
+                        '${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}')),
+                    'Target Amount',
                     wayaTheme.colorScheme.pendingColor),
               )
             ],
@@ -92,17 +107,23 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
           Gap(20),
           Text(
             "Donation Information",
-            style: TextStyle()
-                .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 12.sp, fontWeight: FontWeight.w400),
+            style: TextStyle().wayaCopyWith(
+                color: wayaTheme.colorScheme.greyColor400,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400),
           ),
           Gap(20),
-          _reviewText('Cause Title', '${args['title'] ?? viewModel.singleDonationDocs.first.title}'),
+          _reviewText('Cause Title',
+              '${args['title'] ?? viewModel.singleDonationDocs.first.title}'),
           Gap(10),
-          _reviewText('Cause  Description', '${args['desc'] ??  viewModel.singleDonationDocs.first.description}'),
+          _reviewText('Cause  Description',
+              '${args['desc'] ?? viewModel.singleDonationDocs.first.description}'),
           Gap(10),
-          _reviewText('Proposed Solution', '${args['solution'] ?? viewModel.singleDonationDocs.first.solution}'),
+          _reviewText('Proposed Solution',
+              '${args['solution'] ?? viewModel.singleDonationDocs.first.solution}'),
           Gap(10),
-          _reviewText('Impact Statement', '${args['impact'] ?? viewModel.singleDonationDocs.first.impact}'),
+          _reviewText('Impact Statement',
+              '${args['impact'] ?? viewModel.singleDonationDocs.first.impact}'),
         ],
       ),
       bottomNavigationBar: Container(
@@ -123,13 +144,16 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                   children: [
                     SvgPicture.asset(
                       'assets/images/share.svg',
-                      colorFilter: ColorFilter.mode(wayaTheme.colorScheme.primary300, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(
+                          wayaTheme.colorScheme.primary300, BlendMode.srcIn),
                     ),
                     const Gap(10),
                     Text(
                       "Share Invite",
                       style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
+                          color: wayaTheme.colorScheme.customPrimary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.sp),
                     ),
                   ],
                 ),
@@ -138,7 +162,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                   color: wayaTheme.colorScheme.primary500,
                 ),
                 callback: () => Share.share(
-                  WayaValueHelper.getShareableUrl(WayaAppRoutes.getDonationDetailsPage('${args['id'] ??  viewModel.singleDonationDocs.first.id}')),
+                  WayaValueHelper.getShareableUrl(
+                      WayaAppRoutes.getDonationDetailsPage(
+                          '${args['id'] ?? viewModel.singleDonationDocs.first.id}')),
                   subject: 'Share Donation',
                 ),
                 color: wayaTheme.colorScheme.white,
@@ -154,14 +180,22 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                 callback: () => WayaUtils.showModalSheet(
                   context,
                   child: DonationModal(
-                    amountRaised: '${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised}',
-                    targetAmount: '${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}',
-                    title: '${args['title'] ?? viewModel.singleDonationDocs.first.title}',
-                    minimumDonationAmount: '${args['minimumDonationAmount'] ?? viewModel.singleDonationDocs.first.amountRaised}',
-                    campaignId: '${args['id'] ?? viewModel.singleDonationDocs.first.id}',
-                    privacy: '${args['privacy'] ?? viewModel.singleDonationDocs.first.privacy}',
-                    daysLeft: '${args['daysLeft'] ?? viewModel.singleDonationDocs.first.createdAt}',
-                    donationCount: '${args['donationCount'] ?? viewModel.singleDonationDocs.first.donationCount}',
+                    amountRaised:
+                        '${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised}',
+                    targetAmount:
+                        '${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}',
+                    title:
+                        '${args['title'] ?? viewModel.singleDonationDocs.first.title}',
+                    minimumDonationAmount:
+                        '${args['minimumDonationAmount'] ?? viewModel.singleDonationDocs.first.amountRaised}',
+                    campaignId:
+                        '${args['id'] ?? viewModel.singleDonationDocs.first.id}',
+                    privacy:
+                        '${args['privacy'] ?? viewModel.singleDonationDocs.first.privacy}',
+                    daysLeft:
+                        '${args['daysLeft'] ?? viewModel.singleDonationDocs.first.createdAt}',
+                    donationCount:
+                        '${args['donationCount'] ?? viewModel.singleDonationDocs.first.donationCount}',
                   ),
                 ),
               ),
@@ -176,7 +210,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
     return Container(
       width: 122.w,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+      decoration:
+          BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -186,7 +221,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
             child: Text(
               name,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.greyColor500),
             ),
           ),
           const Gap(10),
@@ -195,7 +232,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
             child: Text(
               number,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.black),
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.black),
             ),
           ),
         ],
@@ -210,14 +249,16 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
         Text(
           title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: Theme.of(context).colorScheme.greyColor500),
         ),
         Text(
           subTitle,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium!
-              .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
+          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.black),
         ),
       ],
     );
@@ -230,7 +271,11 @@ class DonationAction extends StatelessWidget {
   final dynamic donation;
 
   // Construct.
-  const DonationAction({super.key, required this.donationId, required this.isUser, required this.donation});
+  const DonationAction(
+      {super.key,
+      required this.donationId,
+      required this.isUser,
+      required this.donation});
 
   @override
   Widget build(BuildContext context) {
