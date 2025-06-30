@@ -16,7 +16,7 @@ import 'package:wayagram/features/wallet/data/model/single_payout_method_model.d
 import 'package:wayagram/features/wallet/data/model/single_request_model.dart';
 import 'package:wayagram/features/wallet/data/model/verify_account_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
-import 'package:wayagram/features/wallet/data/model/wallet_state_model.dart';
+import 'package:wayagram/features/wallet/state/wallet_state.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/view/request_payout.dart';
 
@@ -297,7 +297,8 @@ class WalletVm extends StateNotifier<WalletState> {
         final List<Select>? banksList = responseModel.data?.map((val) {
           return Select(label: '${val.name}', value: '${val.code}');
         }).toList();
-        state = state.copyWith(banks: banksList);
+        state = state.copyWith(banks: banksList,
+            filteredList: responseModel.data);
       }
     } catch (e) {
       // _logger.e(e);
