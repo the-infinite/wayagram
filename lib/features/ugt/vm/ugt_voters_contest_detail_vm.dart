@@ -90,14 +90,14 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   Future<bool> verifyAndPayForPaidStageContest(ValueNotifier<bool> isLoading,
-      String pin, Map<String, String> map) async {
+      String contestID, String pin, Map<String, String> map) async {
     isLoading.value = true;
     final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
         userId: _localDataSource.getUserId().toString(), pin: pin));
     debugPrint(map.toString());
     if (response.success) {
       // map[] =  _localDataSource.getUserId().toString();
-      return await payForPaidStageContest(isLoading, map);
+      return await acceptPaidStageContest(isLoading, contestID, map);
     } else {
       if (response.data["message"] == null) {
         WayaSnackBar.showToast(
@@ -136,9 +136,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> payForPaidStageContest(
+/*   Future<bool> payForPaidStageContest(
       ValueNotifier<bool> isLoading, Map<String, String> map) async {
-    final response = await _contestRepository.payForPaidStageContest(map);
+    final response = await _contestRepository.acceptPaidStageContest(map);
     isLoading.value = false;
     if (response.success) {
       return true;
@@ -155,7 +155,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       return false;
     }
   }
-
+ */
   Future<bool> deletePost(ValueNotifier<bool> isLoading, String postId,
       String contestId, VoidCallback onTap) async {
     final response = await _contestRepository.deletePost(postId);
@@ -248,10 +248,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> acceptPaidStageContest(
+  Future<bool> acceptPaidStageContest(ValueNotifier<bool> isLoading,
       String contestId, Map<String, String> map) async {
     final response = await _contestRepository.acceptPaidStageContest(map);
-    // isLoading.value = false;
+    isLoading.value = false;
     if (response.success) {
       fetchAllContestApplicant(contestId);
       getContestantProfileVoteDetails(contestId);
@@ -364,7 +364,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
             myContestList: myContestantList,
             myContestListCopy: myContestantList,
             myFullContestantList: myContestantList2,
-            createPostProfileId:model?.profileId ?? "",
+            createPostProfileId: model?.profileId ?? "",
             createPostId: model?.id ?? "");
 
         updateStateList(contestList);
@@ -430,6 +430,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       final response =
           await _contestRepository.fetchAllContestGallery(id, hostApproved);
       List<UgtAllPostContestModel> contestList = [];
+      state = state.copyWith(myPostList: []);
       if (response.success) {
         UgtAllPostContestModelBase responseModel =
             UgtAllPostContestModelBase.fromJson(response.data);
@@ -441,12 +442,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           var data = await UserResource.getUserDetails(
               model.contestantProfile?.profileId ?? "");
           var userModel = data?.$2;
-          var userModel1 = data?.$1;
-          print('Hello name one');
+          //var userModel1 = data?.$1;
 
-          print('Hello ${userModel?.toJson()}');
-          print('Hello 2 ${userModel1?.toJson()}');
-          print('Hello name one ${userModel?.displayName ?? ""}');
           model.fullName = userModel?.displayName ?? "";
           contestList2.add(model);
         }
@@ -620,7 +617,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (videoUrl != null) {
       listMap.add({"type": "VIDEO", "url": videoUrl});
     }
-    if(text.trim().isNotEmpty) {
+    if (text.trim().isNotEmpty) {
       listMap.add({"type": "TEXT", "url": text});
     }
     // listMap.add({"type": "TEXT", "url": text});

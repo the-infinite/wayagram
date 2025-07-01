@@ -24,6 +24,7 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
   final QuotationBidModel bid;
   final BidActionAuthor negotiator;
   final Timer? timer;
+  final FutureOr<void> Function()? onBidReacted;
 
   const SingleNegotiationBidWidget({
     super.key,
@@ -31,6 +32,7 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
     required this.bid,
     required this.timer,
     this.negotiator = BidActionAuthor.buyer,
+    this.onBidReacted,
   });
 
   @override
@@ -107,6 +109,9 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
     //! Since bidding failed, you can leave.
     if (!(result ?? false)) return;
 
+    //? Call this.
+    await widget.onBidReacted?.call();
+
     //? Prevent some confusing visuals.
     widget.timer?.cancel();
     locked = true;
@@ -154,6 +159,9 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
 
     //! Since bidding failed, you can leave.
     if (!(result ?? false)) return;
+
+    //? Call this.
+    await widget.onBidReacted?.call();
 
     //? Then notify the user that he or she has rejected the bid properly.
     WayaSnackBar.showToast("You have successfully rejected this bid");
@@ -225,6 +233,10 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                     WayaDp(
                       image: _shopData?.shop.coverImage,
                       isSelf: false,
+                      onTap: () => WayaNav.toNamed(
+                        WayaAppRoutes.getProfileRoute(_shopData?.shop.vendorId ?? 'undefined'),
+                      ),
+                      canFocus: false,
                       radius: 24.r,
                     ),
 
@@ -359,7 +371,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                 const Gap(10),
 
                 //? For the buttons we would be using to
-                if (widget.bid.status != BidActionType.accept)
+                if (![BidActionType.accept, BidActionType.reject].contains(widget.bid.status))
                   FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Row(
@@ -410,6 +422,21 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                       ],
                     ),
                   )
+                else if (widget.bid.status == BidActionType.accept)
+                  WayaButton(
+                    callback: () => WayaNav.toNamed(
+                      WayaAppRoutes.getQuotationCheckoutScreen(widget.bid.id, widget.bid.requestId),
+                    ),
+                    text: 'Checkout',
+                    height: 38,
+                    color: wayaTheme.colorScheme.success700,
+                    leadingIcon: WayaAssets.icons.orders.svg(
+                      colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

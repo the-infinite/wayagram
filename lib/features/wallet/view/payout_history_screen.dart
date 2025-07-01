@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:wayagram/features/wallet/data/model/get_request_model.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/features/wallet/widget/payout_empty_state.dart';

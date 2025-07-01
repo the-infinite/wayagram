@@ -661,7 +661,7 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
                       //? Since there are people typing.
                       //? First, build the text.
-                      String text = "${chat!.other.userData!.fullname} is typing";
+                      String text = "${chat!.find(usersTyping.first)!.userData!.fullname} is typing";
 
                       //? If exactly two users are typing...
                       if (usersTyping.length == 2) {

@@ -27,7 +27,7 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
   @override
   Widget build(BuildContext context) {
     //final wayaTheme = Theme.of(context);
-    final dashboardVm = ref.read(ugtAdminDashboardVm);
+    final dashboardVm = ref.watch(ugtAdminDashboardVm);
     final notifier = ref.read(ugtAdminDashboardVm.notifier);
     //final viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestProvider);

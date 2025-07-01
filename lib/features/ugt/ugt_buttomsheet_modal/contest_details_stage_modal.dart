@@ -27,17 +27,21 @@ class ContestDetailsStageModal extends StatefulHookConsumerWidget {
   final MyContestContestantModel? model;
   // String stageName;
   // final Function( BuildContext,WidgetRef) onTap;
-  const ContestDetailsStageModal({required this.post, required this.model, /*  required this.stageName, */ super.key});
+  const ContestDetailsStageModal(
+      {required this.post,
+      required this.model,
+      /*  required this.stageName, */ super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ApplicationStatusState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ApplicationStatusState();
 }
 
 class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    var viewModel = ref.watch(votersContestNotifier.notifier);
+    //var viewModel = ref.watch(votersContestNotifier.notifier);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
@@ -49,7 +53,8 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Application Status", style: wayaTheme.textTheme.bodyMedium),
+                Text("Application Status",
+                    style: wayaTheme.textTheme.bodyMedium),
               ],
             ),
             SizedBox(height: 3.h),
@@ -63,11 +68,17 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UpcomingWidget(title: "Next stage name", content: widget.post?.stageName ?? ""),
+                UpcomingWidget(
+                    title: "Next stage name",
+                    content: widget.post?.stageName ?? ""),
                 // const Gap(20),
-                UpcomingWidget(title: "Start date", content: formatDate(widget.post?.startDate ?? "")),
+                UpcomingWidget(
+                    title: "Start date",
+                    content: formatDate(widget.post?.startDate ?? "")),
                 //  const Gap(20),
-                UpcomingWidget(title: "End date", content: formatDate(widget.post?.endDate ?? "")),
+                UpcomingWidget(
+                    title: "End date",
+                    content: formatDate(widget.post?.endDate ?? "")),
                 /*   const Gap(20),
                 UpcomingWidget(
                     title: "Duration",
@@ -79,10 +90,13 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UpcomingWidget(title: "Entry type", content: widget.post?.entryType ?? ""),
+                UpcomingWidget(
+                    title: "Entry type", content: widget.post?.entryType ?? ""),
                 //  const Gap(20),
                 UpcomingWidget(
-                    title: "Entry fee", content: "₦${formatMoney(widget.post?.entryAmount?.toString() ?? "")}"),
+                    title: "Entry fee",
+                    content:
+                        "₦${formatMoney(widget.post?.entryAmount?.toString() ?? "")}"),
                 //   const Gap(20),
                 UpcomingWidget(
                   title: "Vote to qualify",
@@ -115,7 +129,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                       candidateName: "",
                     ),
                   );
-                } else {
+                } /* else {
                   viewModel.acceptPaidStageContest(widget.model?.contestId ?? "", {
                     "contestId": widget.model?.contestId ?? "",
                     "stageName": widget.post?.stageName ?? "",
@@ -142,16 +156,19 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                       },
                     ),
                   );
-                }
+                } */
               },
-              text: widget.post?.entryType?.toLowerCase() == "free" ? "Continue" : "Proceed to payment",
+              text: widget.post?.entryType?.toLowerCase() == "free"
+                  ? "Continue"
+                  : "Proceed to payment",
             ),
             const Gap(10),
             WayaButton(
               text: 'Go Back',
               color: wayaTheme.colorScheme.greyColor300,
               textColor: wayaTheme.colorScheme.customBlack,
-              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {},
             )
           ],
@@ -199,7 +216,8 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
   });
 
   @override
-  ConsumerState<AvailableBalanceModal> createState() => _AvailableBalanceModalState();
+  ConsumerState<AvailableBalanceModal> createState() =>
+      _AvailableBalanceModalState();
 }
 
 class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
@@ -227,7 +245,9 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
             Text(
               'Pay for contest',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -235,7 +255,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Are you sure you want to pay for the contest that will cost ',
+                    text:
+                        'Are you sure you want to pay for the contest that will cost ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
                       fontSize: 14.sp,
@@ -313,7 +334,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                       height: 80,
                       decoration: BoxDecoration(
                         color: WayaColors.white,
-                        borderRadius: BorderRadius.circular(6), // Rounded corners
+                        borderRadius:
+                            BorderRadius.circular(6), // Rounded corners
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
@@ -369,7 +391,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                             model: widget.model,
                             stageName: widget.stageName,
                             onTap: widget.onTap,
-                            amount: '${num.parse(widget.voteCount) * num.parse(widget.voteFee)}',
+                            amount:
+                                '${num.parse(widget.voteCount) * num.parse(widget.voteFee)}',
                             numOfVote: widget.voteCount,
                           ) /* PinVoteModal(
                           voteFee: "4",
@@ -389,7 +412,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                 ddddd */
                     }
                   : null,
-              centerWidget: LoadingState(loading: isLoading.value, text: 'Yes, Pay'),
+              centerWidget:
+                  LoadingState(loading: isLoading.value, text: 'Yes, Pay'),
             ),
             SizedBox(height: 17.h),
             WayaButton(
@@ -457,7 +481,10 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       debugPrint("i dey here ee $_pin");
       //  WayaNav.goBack();
 
-      var isPass = await ref.read(votersContestNotifier.notifier).verifyAndPayForPaidStageContest(isLoading, _pin, {
+      var isPass = await ref
+          .read(votersContestNotifier.notifier)
+          .verifyAndPayForPaidStageContest(
+              isLoading, widget.model?.contestId ?? "", _pin, {
         "profileId": widget.model?.profileId ?? "",
         "contestId": widget.model?.contestId ?? "",
         "stageName": widget.stageName,
@@ -473,15 +500,19 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
           context,
           child: SuccessfulModal(
             title: "Payment Successful! 🎉",
-            subtitle: "Your entry for the next round is confirmed. Best of luck!",
+            subtitle:
+                "Your entry for the next round is confirmed. Best of luck!",
             showCopyLink: false,
             buttonText: "Go to Contest Dashboard",
             onTap: (myContext, myRef) {
               //  WayaNav.goBack();
               debugPrint("i am cooking");
-              myRef.read(votersContestNotifier.notifier).fetchAllContestApplicant(widget.model?.contestId ?? "");
+              myRef
+                  .read(votersContestNotifier.notifier)
+                  .fetchAllContestApplicant(widget.model?.contestId ?? "");
               // WayaNav.removeUntil(AdminContestDetails());
-              WayaNav.removeAllUntil(AdminContestDetails(id: ""), AdminContestDetails.route);
+              WayaNav.removeAllUntil(
+                  AdminContestDetails(id: ""), AdminContestDetails.route);
               // WayaNav.goBack();
               //  WayaNav.toNamed("/create-profile-contest1");
             },
@@ -566,8 +597,12 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                 } else if (index == 11) {
                   return _buildKeypadButton(
                     child: isLoading.value
-                        ? SizedBox(height: 40, width: 40, child: CircularProgressIndicator())
-                        : const Icon(Icons.arrow_forward, color: Colors.black54),
+                        ? SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: CircularProgressIndicator())
+                        : const Icon(Icons.arrow_forward,
+                            color: Colors.black54),
                     onPressed: isLoading.value
                         ? () {
                             debugPrint(" i am so here");
@@ -580,7 +615,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                   );
                 } else {
                   return _buildKeypadButton(
-                    child: Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),
+                    child:
+                        Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }
@@ -592,14 +628,17 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
     );
   }
 
-  Widget _buildKeypadButton({required Widget child, required VoidCallback onPressed}) {
+  Widget _buildKeypadButton(
+      {required Widget child, required VoidCallback onPressed}) {
     return Material(
       color: Colors.transparent,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
+          borderRadius: BorderRadius.circular(48),
+          side: BorderSide(color: Colors.grey[300]!, width: 1)),
       child: InkWell(
         customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
+            borderRadius: BorderRadius.circular(48),
+            side: BorderSide(color: Colors.grey[300]!, width: 1)),
         onTap: onPressed,
         child: Container(
           alignment: Alignment.center,

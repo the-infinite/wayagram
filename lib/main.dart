@@ -166,7 +166,7 @@ class _WayagramState extends ConsumerState<Wayagram> {
 
         if (widget.path == BottomView.route) {
           await WayaSocketController.instance.connect(ref);
-          await WayaSocketController.instance.listen();
+          await WayaSocketController.instance.listen(ref);
         }
 
         //? This is fine.

@@ -180,7 +180,7 @@ class _UpcomingContestDetailsState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AboutUgtWidget(
-                      title: "Total Stages",
+                      title: "Multiple Stages",
                       content: model?.multipleStages ?? ""),
                   const Gap(20),
                   AboutUgtWidget(

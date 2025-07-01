@@ -41,40 +41,45 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
     final bool canViewDashboard =
         args != null ? args["canViewDashboard"] ?? false : false;
-    final String myPassedContestId = Get.parameters['id'] ?? 'Unknown';
-    final myContestId = useState("");
+
     var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     //  debugPrint("COntest DI $myPassedContestId");
+    var model = ref.watch(selectedContestProvider.notifier).state;
+    final String myPassedContestId = Get.parameters['id'] ??  model?.id??"";
+    final myContestId = useState( myPassedContestId);
     useEffect(() {
       // viewModelNotifier.changeActive(true);
-      String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
-          myPassedContestId;
-      Future.delayed(Duration(seconds: 2), () {
-        myContestId.value = contestId;
+      /*   String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
+          myPassedContestId; */
+      Future.delayed(Duration.zero, () {
+        // myContestId.value = contestId;
       });
 
-      debugPrint("COntest DI  2 $contestId");
+    
+     // debugPrint("COntest DI  5 ${args["id"]}");
       ref
           .read(postProvider.notifier)
-          .fetchSingleContest(contestId: contestId, ref: ref);
+          .fetchSingleContest(contestId: myContestId.value, ref: ref);
       ref
           .read(votersContestNotifier.notifier)
-          .getContestantProfileVoteDetails(contestId);
+          .getContestantProfileVoteDetails(myContestId.value);
 
+      ref.read(votersContestNotifier.notifier).fetchAllContestUnApprovedPosts(
+          myContestId.value,
+          hostApproved: false);
       ref
           .read(votersContestNotifier.notifier)
-          .fetchAllContestUnApprovedPosts(contestId, hostApproved: false);
-      ref.read(votersContestNotifier.notifier).fetchAllContestPosts(contestId);
+          .fetchAllContestPosts(myContestId.value);
       ref
           .read(votersContestNotifier.notifier)
-          .fetchAllContestApplicant(contestId);
+          .fetchAllContestApplicant(myContestId.value);
+
       return null;
-    }, []);
+    }, [myContestId.value]);
     var viewModel = ref.watch(votersContestNotifier);
     // var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
-    var model = ref.watch(selectedContestProvider.notifier).state;
-    print(
-        "COntest DI ${model?.participationStartDate} 1 ${model?.participationEndDate} ${isTodayInRange(model?.participationStartDate ?? "2025-06-19", model?.participationEndDate ?? "2025-06-19")}");
+
+    // print( "COntest DI ${model?.participationStartDate} 1 ${model?.participationEndDate} ${isTodayInRange(model?.participationStartDate ?? "2025-06-19", model?.participationEndDate ?? "2025-06-19")}");
     //? to change the active post seen on the post page
     final selectedViewIndex = useState(0);
     //? check if app is open with link
@@ -249,11 +254,13 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         children: [
                           UpcomingWidgetAdmin(
                               title: "Start Date",
-                              content: formatDate(model?.startDate)),
+                              content: formatDate(model?.startDate??
+                                      "2025-03-03T07:21:39.036Z")),
                           const Gap(20),
                           UpcomingWidgetAdmin(
                               title: "End Date",
-                              content: formatDate(model?.endDate)),
+                              content: formatDate(model?.endDate??
+                                      "2025-03-03T07:21:39.036Z")),
                           const Gap(20),
                           UpcomingWidgetAdmin(
                               title: "Entry Type",

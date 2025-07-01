@@ -6,9 +6,7 @@ import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/wallet/data/model/bank_model.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import '../widget/payout_modal.dart';
 
@@ -33,7 +31,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
 
   String searchQuery = '';
 
-  static bool instantTransfer = false;
+  //static bool instantTransfer = false;
 
   TextEditingController searchController = TextEditingController();
 
@@ -56,7 +54,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
     final wayaTheme = Theme.of(context);
 
 
-    var filteredList = viewModel.filteredList;
+    //var filteredList = viewModel.filteredList;
     return WayaScaffold(
       resizeToAvoidBottomInset: false,
       removeAppBar: false,
