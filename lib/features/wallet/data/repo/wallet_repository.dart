@@ -95,4 +95,16 @@ class WalletRepository extends BaseRepository {
     return delete("$serviceUrl/client/payout/methods/$id", showErrors: true);
   }
 
+  //payout
+  Future<WayaRequestResponse> requestPayout(String contestId) {
+   
+    return post('$serviceUrl/client/payout/requests', {"contestId": contestId},formdata: false);
+  }
+
+   Future<WayaRequestResponse> fetchPayoutHistory(String referenceId,String purpose, {int page = 1, int limit = 10}) {
+  
+    return get('$serviceUrl/client/payout/requests?page=$page&limit=$limit&referenceId=$referenceId&purpose=$purpose');
+  }
+
+
 }
