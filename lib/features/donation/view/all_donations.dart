@@ -169,8 +169,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                         debugPrint('MY RATIO $daysLeft');
                         WayaNav.toNamed('/donation-details', arguments: {
                           'id': '${donation.id}',
-                          'daysLeft': '$daysLeft',
-                          'ratioLeft': ratioLeft,
+                          // 'daysLeft': '$daysLeft',
+                          // 'ratioLeft': ratioLeft,
                           // 'title': '${donation.title?.capitalizeFirst}',
                           // 'image': '${donation.imageURL}',
                           // 'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
@@ -178,7 +178,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           // 'desc': '${donation.description}',
                           // 'solution': '${donation.solution}',
                           // 'impact': '${donation.impact}',
-                           'url': '${donation.url}',
+                             'url': '${donation.url}',
                           // 'minimumDonationAmount': '${donation.minimumDonationAmount}',
                           // 'privacy': '${donation.privacy}',
                           // 'donationCount': '${donation.donationCount}',
