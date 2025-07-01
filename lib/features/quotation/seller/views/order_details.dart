@@ -35,16 +35,20 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
   BidOrderModel? order;
   CachedUserDataTuple? user;
   BuyRequestModel? request;
+  QuotationBidModel? bid;
 
   void _ingestOrder() async {
     final foundOrder = await notifier.getOrderDetails(widget.requestId);
     final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
+    final foundBid =
+        foundOrder == null ? null : notifier.getBid(foundOrder.bidId) ?? await notifier.getSingleBid(foundOrder.bidId);
 
     //? This is fine.
     if (foundOrder != null && foundQuote != null && mounted) {
       setState(() {
         request = foundQuote;
         order = foundOrder;
+        bid = foundBid;
       });
     }
   }
@@ -60,6 +64,9 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
         final foundOrder = await notifier.getOrderDetails(widget.requestId);
         final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
         final foundUser = foundQuote != null ? await UserResource.getUserDetails(foundQuote.buyerId) : null;
+        final foundBid = foundOrder == null
+            ? null
+            : notifier.getBid(foundOrder.bidId) ?? await notifier.getSingleBid(foundOrder.bidId);
 
         //? Update these values in state.
         if (mounted) {
@@ -67,6 +74,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
             request = foundQuote;
             user = foundUser;
             order = foundOrder;
+            bid = foundBid;
           });
         }
 
@@ -80,6 +88,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final subtotal = (request?.quantity ?? 0) * (bid?.usedAmount ?? 0);
 
     //? Return the component.
     return WayaScaffold(
@@ -218,9 +227,12 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                 Gap(15.h),
 
                 //? The name of the customer.
-                OrderInfoWidget(
-                  title: "Customer's Name",
-                  description: user?.$1.fullname ?? "N/A",
+                GestureDetector(
+                  onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user?.$1.id ?? "undefined", "quotation")),
+                  child: OrderInfoWidget(
+                    title: "Customer's Name",
+                    description: user?.$1.fullname ?? "N/A",
+                  ),
                 ),
 
                 // Some space.
@@ -282,15 +294,6 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                 // Some space.
                 Gap(8.h),
 
-                //? The delivery price of a bid.
-                OrderInfoWidget(
-                  title: "Delivery Price",
-                  description: "-",
-                ),
-
-                // Some space.
-                Gap(8.h),
-
                 //? The delivery date.
                 OrderInfoWidget(
                   title: "Delivery Date",
@@ -304,6 +307,42 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                 OrderInfoWidget(
                   title: "Comment",
                   description: '-',
+                ),
+
+                // Some space.
+                Gap(30.h),
+
+                //? The details of the bid, starting with the section title.
+                Text(
+                  "Order Summary",
+                  style: wayaTheme.textTheme.bodyMedium,
+                ),
+
+                // Some space.
+                Gap(10.h),
+
+                //? The delivery price of a bid.
+                OrderInfoWidget(
+                  title: "Subtotal",
+                  description: WayaValueHelper.formatPrice(subtotal),
+                ),
+
+                // Some space.
+                Gap(8.h),
+
+                //? The delivery price of a bid.
+                OrderInfoWidget(
+                  title: "Delivery Price",
+                  description: WayaValueHelper.formatPrice(bid?.deliveryCharge ?? 0),
+                ),
+
+                // Some space.
+                Gap(8.h),
+
+                //? The delivery price of a bid.
+                OrderInfoWidget(
+                  title: "Total",
+                  description: WayaValueHelper.formatPrice(subtotal + (bid?.deliveryCharge ?? 0)),
                 ),
 
                 //? Section for buttons that mutate the state of the order.

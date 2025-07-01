@@ -63,11 +63,24 @@ class UgtHistoryCard extends ConsumerWidget {
                   ),
                 ),
                 Gap(10),
-                Text(
-                  model.type ?? "",
-                  overflow: TextOverflow.ellipsis,
-                  style: wayaTheme.textTheme.bodyMedium!
-                      .copyWith(color: wayaTheme.colorScheme.black),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      model.type ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      style: wayaTheme.textTheme.bodyMedium!
+                          .copyWith(color: wayaTheme.colorScheme.black),
+                    ),
+                    Text(
+                      model.name ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      style: wayaTheme.textTheme.bodyMedium!
+                          .copyWith(color: wayaTheme.colorScheme.black),
+                    ),
+                  ],
                 ),
               ],
             ),

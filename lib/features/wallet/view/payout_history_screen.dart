@@ -27,11 +27,7 @@ class _PayoutHistoryScreenState extends ConsumerState<PayoutHistoryScreen> {
     return Expanded(
       child: PaginatedDataView<RequestDocs>(
           uniqueKey: 'payout-history',
-          loadingState: SizedBox(
-              height: context.height * 0.4,
-              child: Center(
-                child: CircularProgressIndicator(),
-              )),
+          loadingState:const SizedBox(),
           emptyState: PayoutEmptyState(
             onTap: (){},
             title: 'No Payout Yet',

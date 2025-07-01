@@ -66,8 +66,6 @@ class CreateRequestState {
     this.isLoading = false,
     this.isFocused = false,
     TextEditingController? quantity,
-    TextEditingController? minDistance,
-    TextEditingController? maxDistance,
     TextEditingController? bidStartingAmount,
     TextEditingController? maxBidAmount,
     this.discountType = '',

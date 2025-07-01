@@ -58,8 +58,10 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/application/$userId/appliedContest?page=$page');
   }
 
-    Future<WayaRequestResponse> fetchAppliedSingleContest(String userId, String contestId) {
-    return get('$serviceUrl2/application/$userId/appliedContest?contestId=$contestId');
+  Future<WayaRequestResponse> fetchAppliedSingleContest(
+      String userId, String contestId) {
+    return get(
+        '$serviceUrl2/application/$userId/appliedContest?contestId=$contestId');
   }
 
   Future<WayaRequestResponse> fetchFollowedVoteContest(String userId) {
@@ -135,10 +137,10 @@ class ContestRepo extends BaseRepository {
         formdata: false);
   }
 
-  Future<WayaRequestResponse> payForPaidStageContest(payLoad) {
+/*   Future<WayaRequestResponse> payForPaidStageContest(payLoad) {
     return post('$serviceUrl2/profile/pay-for-contest', payLoad,
         formdata: false);
-  }
+  } */
 
   Future<WayaRequestResponse> startStage(payLoad) {
     return patch('$serviceUrl2/contests/start-stage', payLoad, formdata: false);
@@ -153,8 +155,7 @@ class ContestRepo extends BaseRepository {
   }
 
   Future<WayaRequestResponse> acceptPaidStageContest(payLoad) {
-    return patch('$serviceUrl2/profile/pay-for-satge', payLoad,
-        formdata: false);
+    return post('$serviceUrl2/profile/pay-for-satge', payLoad, formdata: false);
   }
 
   Future<WayaRequestResponse> fetchAllTotalEarningContest(
@@ -183,8 +184,7 @@ class ContestRepo extends BaseRepository {
   }
 
   Future<WayaRequestResponse> fetchSingleContest(String contestId) {
-  
     return get('$serviceUrl2/contests/web/contest-for-you?id=$contestId');
-  //  return get('$serviceUrl2/admin/contests/?id=$contestId');
+    //  return get('$serviceUrl2/admin/contests/?id=$contestId');
   }
 }

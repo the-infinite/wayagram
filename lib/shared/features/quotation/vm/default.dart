@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -328,7 +329,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   }
 
   /// Helper function used to place a bid so that we can enter a quote auction.
-  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId, double deliveryCost) async {
+  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId, double? deliveryCost) async {
     try {
       final response = await repo.placeBid(
         requestId: requestId,
@@ -361,6 +362,8 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         return doc;
       }
     } catch (e) {
+      Get.log('Error sending bid: $e');
+      Get.log('Stack trace: ${WayaDebugHelpers.getStackTrace(e)}');
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
@@ -427,6 +430,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         state = state.copyWith(isLoadingBids: false);
       }
     } catch (e) {
+      Get.log('Error sending bid: $e');
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,

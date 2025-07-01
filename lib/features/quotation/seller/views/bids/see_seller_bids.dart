@@ -113,7 +113,7 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
       bidId: bid.id,
       lastCounterSentBy: BidActionAuthor.vendor,
       counterAmount: amount.toStringAsFixed(2),
-      deliveryCost: bid.deliveryCost,
+      deliveryCost: bid.deliveryCharge,
     ));
 
     //! Since bidding failed, you can leave.
@@ -260,7 +260,9 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                       WayaDp(
                         radius: 20.r,
                         image: user!.$1.profilePicture,
+                        onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user!.$1.id)),
                         isSelf: false,
+                        canFocus: false,
                       ),
 
                       //? Second, the user's name.
@@ -373,8 +375,22 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                   // Boundless space.
                   const Spacer(),
 
-                  //? This is fine too.
-                  if (bid!.status != BidActionType.reject) ...[
+                  //? Since this bid is just opened, the seller cannot accept or reject it. So
+                  //? we will show a disabled button.
+                  if (bid!.status == BidActionType.noop) ...[
+                    //* The button to negotiate an offer.
+                    WayaButton(
+                      callback: null,
+                      isDisabled: true,
+                      text: "Waiting for response",
+                    ),
+
+                    // Some space.
+                    Gap(10.h),
+                  ]
+
+                  //? If this bid is not accepted or rejected, then we can show the buttons to negotiate, accept, and reject.
+                  else if (![BidActionType.accept, BidActionType.reject].contains(bid!.status)) ...[
                     //* The button to negotiate an offer.
                     WayaProgressiveButton(
                       callback: () => _negotiateBid(request!, bid!),

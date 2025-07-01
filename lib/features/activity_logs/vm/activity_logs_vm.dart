@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/event_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
@@ -358,19 +357,18 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<PageDocs>?> getEventLogs({required int page}) async {
+  Future<PaginatedResult<EventLogDocs>?> getEventLogs({required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getEventLogs(page);
-      List<PageDocs>? fetchEventDocs = [];
+      List<EventLogDocs>? fetchEventDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        EventLogModel responseModel = EventLogModel.fromJson(response.data);
         fetchEventDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(ugtDocs: fetchEventDocs);
-        state = state.copyWith(ugtDocs1: responseModel.data?.docs);
+        state = state.copyWith(eventDocs: fetchEventDocs);
       } else {
         state = state.copyWith(isLoading: false);
       }

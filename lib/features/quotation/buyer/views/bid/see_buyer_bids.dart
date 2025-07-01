@@ -38,22 +38,23 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
   final requestState = ValueNotifier<BuyRequestModel?>(null);
   Timer? _timer;
 
+  Future<void> _ingestBid() async {
+    //? Update this guy in the list.
+    final result = await notifier.getBuyRequest(widget.id);
+    if (result != null) requestState.value = result;
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         //? Now, let the timer keep ticking.
-        final result = await notifier.getBuyRequest(widget.id);
-        if (result != null) requestState.value = result;
+        await _ingestBid();
 
         //? Now, listen to this periodically.
         _timer = Timer.periodic(
           const Duration(seconds: 7),
-          (timer) async {
-            //? Update this guy in the list.
-            final result = await notifier.getBuyRequest(widget.id);
-            if (result != null) requestState.value = result;
-          },
+          (timer) async => await _ingestBid(),
         );
       },
     );
@@ -188,6 +189,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                         request: request,
                         timer: _timer,
                         bid: bid,
+                        onBidReacted: _ingestBid,
                       );
                     },
                   ),
