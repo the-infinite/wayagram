@@ -70,7 +70,7 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
               donationCount: donation?.donationCount,
               rangeRatio: ratioLeft,
               onTap: (){
-                WayaNav.toNamed('/donationDetails',
+                WayaNav.toNamed('/donation-details',
                     arguments: {
                       'title':'${donation?.title?.capitalizeFirst}',
                       'image':'${donation?.imageURL}',

@@ -184,7 +184,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                     rangeRatio: ratioLeft,
                     onTap: (){
                       debugPrint('MY RATIO $daysLeft');
-                      WayaNav.toNamed('/donationDetails',
+                      WayaNav.toNamed('/donation-details',
                           arguments: {
                             'title':'${donation.title?.capitalizeFirst}',
                             'image':'${donation.imageURL}',

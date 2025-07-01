@@ -23,6 +23,7 @@ import 'package:wayagram/features/donation/model/kyc_model.dart';
 import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/model/rejected_donation_model.dart';
+import 'package:wayagram/features/donation/model/single_donation_model.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_commission_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -201,11 +202,11 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
-        final responseModel = MyDonationModel.fromJson(response.data);
+        final SingleDonationModel responseModel = SingleDonationModel.fromJson(response.data);
         WayaUtils.showModalSheet(
           ctx,
           child: DonationGenerosityModal(
-            campaignId: '${responseModel.data?.docs?[0].id}',
+            campaignId: '${responseModel.data?.id}'
           ),
         );
         _logger.i(response.data['data']);
@@ -558,8 +559,23 @@ class DonationVm extends StateNotifier<DonationState> {
     try {
       final response = await _donationRepository.getSingleCampaign(id);
       if (response.success) {
-        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
-        state = state.copyWith(singleDonationDocs: responseModel.data?.docs);
+        SingleDonationModel responseModel = SingleDonationModel.fromJson(response.data);
+        state = state.copyWith(
+          donationId: '${responseModel.data?.id}',
+            donationTitle: '${responseModel.data?.title}',
+        donationCount: '${responseModel.data?.donationCount}',
+        donationDescription: '${responseModel.data?.description}',
+        donationAmountRaised: '${responseModel.data?.amountRaised}',
+        donationImpact: '${responseModel.data?.impact}',
+        donationMinimumDonationAmount: '${responseModel.data?.minimumDonationAmount}',
+        donationShowRaised: '${responseModel.data?.showRaised}',
+        donationSolution: '${responseModel.data?.solution}',
+        donationImageUrl: '${responseModel.data?.imageURL}',
+        donationTargetAmount: '${responseModel.data?.targetAmount}',
+        donationPrivacy: '${responseModel.data?.privacy}',
+        startDate: '${responseModel.data?.startDate}',
+        endDate: '${responseModel.data?.expirationDate}',
+        );
       } else {}
 
     }  catch (e) {
