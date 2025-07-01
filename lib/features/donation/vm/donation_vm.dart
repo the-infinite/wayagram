@@ -557,7 +557,12 @@ class DonationVm extends StateNotifier<DonationState> {
 
   Future<void> getOneDonation(String id) async {
     try {
+
+      // API call
+      state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getSingleCampaign(id);
+      // API call
+      state = state.copyWith(isLoading: false);
       if (response.success) {
         SingleDonationModel responseModel = SingleDonationModel.fromJson(response.data);
         state = state.copyWith(
@@ -575,6 +580,9 @@ class DonationVm extends StateNotifier<DonationState> {
         donationPrivacy: '${responseModel.data?.privacy}',
         startDate: '${responseModel.data?.startDate}',
         endDate: '${responseModel.data?.expirationDate}',
+          daysLeft: '${ DateTime.parse('${responseModel.data?.expirationDate}')
+              .difference(DateTime.parse('${responseModel.data?.startDate}'))
+              .inDays}'
         );
       } else {}
 

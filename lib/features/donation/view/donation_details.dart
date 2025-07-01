@@ -43,16 +43,15 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
-    // if (viewModel.singleDonationDocs.isEmpty) {
-    //   return SizedBox.shrink();
-    // }
+    //  int amountRaised = double.parse(viewModel.donationAmountRaised).toInt();
+    // int targetedAmount = double.parse(viewModel.donationTargetAmount).toInt();
+    // double ratioLeft = amountRaised / targetedAmount;
+
     return WayaScaffold(
       title: "Donation Details",
       isLoading: viewModel.isLoading,
       isScrollable: true,
-      // appBarTrailing: DonationAction(
-      //     donationId: args['id'] ?? widget.id, isUser: ConversationState.self.id == args['organizerId'], donation: args['donation']),
-      body: Column(
+       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -73,27 +72,22 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
           Gap(10),
           EngagementRange(
             topLeft:'',
-                //"${WayaHelpers.formatPrice(int.parse(viewModel.donationAmountRaised))} raised from ${WayaHelpers.formatPrice(int.parse(viewModel.donationTargetAmount))}",
-                //"${viewModel.donationAmountRaised.replaceAll('.00', '')} raised from ${viewModel.donationTargetAmount.replaceAll('.00', '')}",
-            bottomLeft: "${viewModel.donationCount} Donations",
-            bottomRight:
-                "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day' : 'days'} left",
-            range: args['ratioLeft'] ?? '',
-            //range: args['donationCount'] == '0' ? 0.0 : 0.4
+                 bottomLeft: "${viewModel.donationCount} Donations",
+            bottomRight:  viewModel.daysLeft == '1'? '${viewModel.daysLeft} day left' : '${viewModel.daysLeft} days left',
+            range: viewModel.donationCount == '0' ? 0.0: 0.4
+            //ratioLeft,
           ),
           Gap(10),
           Row(
             children: [
               Expanded(
                 child: _detailCard('N${viewModel.donationAmountRaised}',
-                    //WayaHelpers.formatPrice(int.parse(viewModel.donationAmountRaised)),
                     'Amount Raised',
                     wayaTheme.colorScheme.success50),
               ),
               Gap(10),
               Expanded(
                 child: _detailCard('N${viewModel.donationTargetAmount}',
-                    //WayaHelpers.formatPrice(int.parse(viewModel.donationTargetAmount)),
                     'Target Amount', wayaTheme.colorScheme.pendingColor),
               )
             ],
@@ -168,7 +162,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                 color: wayaTheme.colorScheme.primary500,
                 textStyle: TextStyle(color: wayaTheme.colorScheme.white),
                 callback: () {
-                  debugPrint("DIALA DONAtION ID ${viewModel.donationId}");
+                  debugPrint("SALARY NEVER DROP ${viewModel.donationId}");
                   int daysLeft = DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inDays;
                   WayaUtils.showModalSheet(
                     context,
