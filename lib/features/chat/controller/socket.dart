@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
@@ -183,6 +185,7 @@ class WayaSocketController {
   final _retryDuration = const Duration(milliseconds: 500);
   final secureDataSource = WayaSecureDataSource();
   WidgetRef? ref;
+  Timer? _timer;
   socket_io.Socket? _socket;
 
   WayaChatSocketArgs _quickDecode(dynamic data) {
@@ -247,6 +250,26 @@ class WayaSocketController {
     _socket = null;
   }
 
+  /// Our utility that is required ot help us ensure that our socket is always
+  /// connected to the internet.
+  Future<void> ensureConnected(WidgetRef ref) async {
+    //? Update the reference.
+    this.ref = ref;
+
+    //? This is
+    _timer ??= Timer.periodic(
+      _retryDuration,
+      (_) async {
+        //? This is fine.
+        if (_socket!.connected) return;
+
+        //? If this is not
+        await connect(ref);
+        await listen(ref);
+      },
+    );
+  }
+
   /// Our utility function used to update the contents of each chat list inside
   /// of a users conversations geed.
   Future<void> updateChats() async {
@@ -260,12 +283,29 @@ class WayaSocketController {
   }
 
   /// Our utility function that is used to start listening for socket events.
-  Future<void> listen() async {
+  Future<void> listen(WidgetRef ref) async {
     final socket = _socket!;
 
+    //? This is fine.
+    this.ref = ref;
+
+    //? If this has been done.
     if (socket.hasListeners("messageRead")) {
       return;
     }
+
+    //? When you connect, notify the user that you have connected.
+    socket.onConnect(
+      (data) {
+        //? If you connect, notify the peers to pull the chat.
+        _timer?.cancel();
+        _timer = null;
+      },
+    );
+
+    //? When you disconnect, notify the controller to start trying to reconnect.
+    //? This should keep trying until it succeeds.
+    socket.onDisconnect((data) => ensureConnected(ref));
 
     //? On any event.
     socket.onAny(
@@ -287,7 +327,7 @@ class WayaSocketController {
       "messageRead",
       (data) async {
         final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
         //? Since we are in this chat...
         await chatNotifier.getMessages(true);
@@ -302,7 +342,7 @@ class WayaSocketController {
       "start-typing",
       (data) async {
         final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
         //? If this is not fine.
         if (args.senderId == ConversationState.self.id) return;
@@ -317,7 +357,7 @@ class WayaSocketController {
       "stop-typing",
       (data) async {
         final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
         //? If this is not fine.
         if (args.senderId == ConversationState.self.id) return;
@@ -332,7 +372,7 @@ class WayaSocketController {
       "messageDeleted",
       (data) async {
         final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
         //? If this is not fine.
         if (args.messageId == null) return;
@@ -350,7 +390,7 @@ class WayaSocketController {
       "recieveMessage",
       (data) async {
         final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
         //? If this is not fine.
         if (args.messageId == null) return;
@@ -372,7 +412,7 @@ class WayaSocketController {
       "readMessages",
       (data) async {
         final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
         //? Ban this user from triggering infinite refreshes.
         if (args.senderId == ConversationState.self.id) return;

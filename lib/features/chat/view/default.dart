@@ -31,7 +31,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         await WayaSocketController.instance.connect(ref);
-        await WayaSocketController.instance.listen();
+        await WayaSocketController.instance.listen(ref);
         notifier.getChats(true);
         notifier.getArchivedChats(true);
       },
@@ -47,7 +47,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       (_) async {
         await WayaSocketController.instance.disconnect();
         await WayaSocketController.instance.connect(ref);
-        await WayaSocketController.instance.listen();
+        await WayaSocketController.instance.listen(ref);
         notifier.getChats(true);
         notifier.getArchivedChats(true);
       },

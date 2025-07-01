@@ -442,7 +442,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           var data = await UserResource.getUserDetails(
               model.contestantProfile?.profileId ?? "");
           var userModel = data?.$2;
-          var userModel1 = data?.$1;
+          //var userModel1 = data?.$1;
 
           model.fullName = userModel?.displayName ?? "";
           contestList2.add(model);

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -45,6 +46,9 @@ class ConversationWidget extends ConsumerStatefulWidget {
 }
 
 class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
+  //? How we update each chat periodically to get the online state of each user.
+  Timer? _timer;
+
   /// Helper function used to navigate to the current chat screen.
   void _toChat() async {
     final chat = wayaChatsCache.getCachedData(widget.chatId)!;
@@ -292,6 +296,22 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
 
     // Then we do it like this.
     Overlay.of(context).insert(entry);
+  }
+
+  @override
+  void initState() {
+    _timer ??= Timer.periodic(
+      const Duration(seconds: 8),
+      (_) => widget.conversationNotifier.getChatDetails(widget.chatId),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _timer = null;
+    super.dispose();
   }
 
   // This is fine too.
