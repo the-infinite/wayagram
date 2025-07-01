@@ -126,7 +126,7 @@ class _SearchState extends ConsumerState<SearchView> {
 
     //? Searching posts.
     final List<PostModel> filteredPosts = WayaUtils.strictSearch<PostModel>(
-        wayaPostCache.data.toList(), ['hashtags'], query);
+        wayaPostCache.data.toList(), ['hashtags', 'content'], query);
     final history = storage.getSearchHistory();
 
     // //? Moments
