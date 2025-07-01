@@ -41,7 +41,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    var viewModel = ref.watch(votersContestNotifier.notifier);
+    //var viewModel = ref.watch(votersContestNotifier.notifier);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
