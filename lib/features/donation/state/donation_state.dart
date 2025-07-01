@@ -8,6 +8,7 @@ import 'package:wayagram/features/donation/model/applied_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/model/rejected_donation_model.dart';
+import 'package:wayagram/features/donation/model/single_donation_model.dart';
 
 class DonationState{
     final TextEditingController title;
@@ -30,9 +31,22 @@ class DonationState{
     final String privacyOption;
     final Object? accountType;
     final String startDate;
+    final String daysLeft;
     final String endDate;
     final String startDateString;
     final String endDateString;
+    final String donationTitle;
+    final String donationCount;
+    final String donationDescription;
+    final String donationSolution;
+    final String donationImpact;
+    final String donationTargetAmount;
+    final String donationShowRaised;
+    final String donationAmountRaised;
+    final String donationMinimumDonationAmount;
+    final String donationImageUrl;
+    final String donationId;
+    final String donationPrivacy;
     final CreateDonationResponse? createDonationResponse;
     List<AllDonationDocs>? allDonationDocs;
     List<AppliedDonationDocs>? appliedDonationDocs;
@@ -78,11 +92,24 @@ class DonationState{
       this.endDate = '',
       this.startDateString = '',
       this.endDateString = '',
+      this.daysLeft = '',
       this.isLoading = false,
       this.isAgreeToTerm = false,
       this.showAmountRaised = false,
       this.showNumberOfDonors = false,
       this.createDonationResponse,
+      this.donationTitle = '',
+      this.donationCount = '',
+      this.donationDescription = '',
+      this.donationSolution = '',
+      this.donationImpact = '',
+      this.donationTargetAmount = '',
+      this.donationShowRaised = '',
+      this.donationImageUrl= '',
+      this.donationId = '',
+      this.donationPrivacy = '',
+      this.donationAmountRaised = '',
+      this.donationMinimumDonationAmount = '',
 
   }):     title = title ?? TextEditingController(),
           description = description ?? TextEditingController(),
@@ -114,6 +141,19 @@ class DonationState{
       List<RejectedDonationDocs>? rejectedDonations,
       List<DocType>? donationImage,
       MultipartFile? image,
+      String? daysLeft,
+      String? donationTitle,
+      String? donationImageUrl,
+      String? donationPrivacy,
+      String? donationId,
+      String? donationCount,
+      String? donationDescription,
+      String? donationSolution,
+      String? donationImpact,
+      String? donationTargetAmount,
+      String? donationShowRaised,
+      String? donationAmountRaised,
+      String? donationMinimumDonationAmount,
       String? privacyOption,
       String? category,
       String? startDate,
@@ -140,6 +180,18 @@ class DonationState{
       statement: statement ?? this.statement,
       amount: amount ?? this.amount,
       kycStatus: kycStatus ?? this.kycStatus,
+      donationTitle: donationTitle ?? this.donationTitle,
+      donationPrivacy: donationPrivacy ?? this.donationPrivacy,
+      donationCount: donationCount ?? this.donationCount,
+      donationDescription: donationDescription ?? this.donationDescription,
+      donationAmountRaised: donationAmountRaised ?? this.donationAmountRaised,
+      donationImpact: donationImpact ?? this.donationImpact,
+      donationMinimumDonationAmount: donationMinimumDonationAmount ?? this.donationMinimumDonationAmount,
+      donationShowRaised: donationShowRaised ?? this.donationShowRaised,
+      donationSolution: donationSolution ?? this.donationSolution,
+      donationImageUrl: donationImageUrl ?? this.donationImageUrl,
+      donationTargetAmount: donationTargetAmount ?? this.donationTargetAmount,
+      donationId: donationId?? this.donationId,
       kycMessage: kycMessage ?? this.kycMessage,
       targetAmount: targetAmount?? this.targetAmount,
       minimumDonationAmount: minimumDonationAmount ?? this.minimumDonationAmount,
@@ -149,6 +201,7 @@ class DonationState{
       categories: categories ?? this.categories,
       selected: selected ?? this.selected,
       image: image ?? this.image,
+      daysLeft: daysLeft ?? this.daysLeft,
       singleDonationDocs: singleDonationDocs ?? this.singleDonationDocs,
       privacyOption: privacyOption ?? this.privacyOption,
       accountType: accountType ?? this.accountType,

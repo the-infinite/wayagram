@@ -532,14 +532,14 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 );
                               },
                               itemBuilder: (context, index) {
-                                final account = filteredEvent[index];
-                                final dateTimeString = "${account.createdAt}";
+                                final event = filteredEvent[index];
+                                final dateTimeString = "${event.createdAt}";
                                 final dateTime = DateTime.parse(dateTimeString).toLocal();
 
                                 return ActivityCardWidget(
-                                  title: '${account.description}',
+                                  title: '${event.description}',
                                   subTitle:
-                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(account.createdAt)}, '
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(event.createdAt)}, '
                                       '${DateFormat.jm().format(dateTime)}',
                                 );
                               },

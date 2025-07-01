@@ -916,7 +916,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                               donationCount: donation.donationCount,
                               rangeRatio: ratioLeft,
                               onTap: () {
-                                WayaNav.toNamed('/donationDetails', arguments: {
+                                WayaNav.toNamed('/donation-details', arguments: {
                                   'title': '${donation.title.capitalizeFirst}',
                                   'image': '${donation.imageURL}',
                                   'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',

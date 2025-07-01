@@ -17,7 +17,7 @@ import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
 class DonationDetails extends ConsumerStatefulWidget {
-  static const route = '/donationDetails';
+  static const route = '/donation-details';
   final String id;
   const DonationDetails({super.key, required this.id});
 
@@ -32,10 +32,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      //ref.read(donationVmProvider.notifier).getSingleDonation('${args['id']}');
-      ref
-          .read(donationVmProvider.notifier)
-          .getOneDonation('${args['id'] ?? widget.id}');
+      ref.read(donationVmProvider.notifier).getOneDonation('${args['id'] ?? widget.id}');
     });
     super.initState();
   }
@@ -46,9 +43,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
-    if (viewModel.singleDonationDocs.isEmpty) {
-      return SizedBox.shrink();
-    }
+    // if (viewModel.singleDonationDocs.isEmpty) {
+    //   return SizedBox.shrink();
+    // }
     return WayaScaffold(
       title: "Donation Details",
       isLoading: viewModel.isLoading,
@@ -60,7 +57,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${args['title'] ?? viewModel.singleDonationDocs.first.title}',
+            viewModel.donationTitle,
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.black,
                 fontSize: 24.sp,
@@ -69,16 +66,16 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
           Gap(10),
           WayaImage(
               imageUrl:
-                  '${args['image'] ?? viewModel.singleDonationDocs.first.imageURL}',
+                  viewModel.donationImageUrl,
               height: 180.h,
               width: double.infinity,
               radius: BorderRadius.all(Radius.circular(12))),
           Gap(10),
           EngagementRange(
-            topLeft:
-                "${WayaHelpers.formatPrice(int.parse('${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}'))}",
-            bottomLeft:
-                "${args['donationCount'] ?? viewModel.singleDonationDocs.first.donationCount} Donations",
+            topLeft:'',
+                //"${WayaHelpers.formatPrice(int.parse(viewModel.donationAmountRaised))} raised from ${WayaHelpers.formatPrice(int.parse(viewModel.donationTargetAmount))}",
+                //"${viewModel.donationAmountRaised.replaceAll('.00', '')} raised from ${viewModel.donationTargetAmount.replaceAll('.00', '')}",
+            bottomLeft: "${viewModel.donationCount} Donations",
             bottomRight:
                 "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day' : 'days'} left",
             range: args['ratioLeft'] ?? '',
@@ -88,19 +85,16 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
           Row(
             children: [
               Expanded(
-                child: _detailCard(
-                    WayaHelpers.formatPrice(int.parse(
-                        '${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised ?? viewModel.singleDonationDocs.first.amountRaised}')),
+                child: _detailCard('N${viewModel.donationAmountRaised}',
+                    //WayaHelpers.formatPrice(int.parse(viewModel.donationAmountRaised)),
                     'Amount Raised',
                     wayaTheme.colorScheme.success50),
               ),
               Gap(10),
               Expanded(
-                child: _detailCard(
-                    WayaHelpers.formatPrice(int.parse(
-                        '${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}')),
-                    'Target Amount',
-                    wayaTheme.colorScheme.pendingColor),
+                child: _detailCard('N${viewModel.donationTargetAmount}',
+                    //WayaHelpers.formatPrice(int.parse(viewModel.donationTargetAmount)),
+                    'Target Amount', wayaTheme.colorScheme.pendingColor),
               )
             ],
           ),
@@ -113,17 +107,13 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                 fontWeight: FontWeight.w400),
           ),
           Gap(20),
-          _reviewText('Cause Title',
-              '${args['title'] ?? viewModel.singleDonationDocs.first.title}'),
+          _reviewText('Cause Title', viewModel.donationTitle),
           Gap(10),
-          _reviewText('Cause  Description',
-              '${args['desc'] ?? viewModel.singleDonationDocs.first.description}'),
+          _reviewText('Cause  Description', viewModel.donationDescription),
           Gap(10),
-          _reviewText('Proposed Solution',
-              '${args['solution'] ?? viewModel.singleDonationDocs.first.solution}'),
+          _reviewText('Proposed Solution', viewModel.donationSolution),
           Gap(10),
-          _reviewText('Impact Statement',
-              '${args['impact'] ?? viewModel.singleDonationDocs.first.impact}'),
+          _reviewText('Impact Statement', viewModel.donationImpact),
         ],
       ),
       bottomNavigationBar: Container(
@@ -163,41 +153,37 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                 ),
                 callback: () => Share.share(
                   WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getDonationDetailsPage(
-                          '${args['id'] ?? viewModel.singleDonationDocs.first.id}')),
+                      WayaAppRoutes.getDonationDetailsPage(viewModel.donationId)),
                   subject: 'Share Donation',
                 ),
                 color: wayaTheme.colorScheme.white,
               ),
             ),
             const Gap(8),
+
             SizedBox(
               width: context.width * 0.45,
               child: WayaButton(
                 text: 'Donate',
                 color: wayaTheme.colorScheme.primary500,
                 textStyle: TextStyle(color: wayaTheme.colorScheme.white),
-                callback: () => WayaUtils.showModalSheet(
-                  context,
-                  child: DonationModal(
-                    amountRaised:
-                        '${args['amountRaised'] ?? viewModel.singleDonationDocs.first.amountRaised}',
-                    targetAmount:
-                        '${args['targetAmount'] ?? viewModel.singleDonationDocs.first.targetAmount}',
-                    title:
-                        '${args['title'] ?? viewModel.singleDonationDocs.first.title}',
-                    minimumDonationAmount:
-                        '${args['minimumDonationAmount'] ?? viewModel.singleDonationDocs.first.amountRaised}',
-                    campaignId:
-                        '${args['id'] ?? viewModel.singleDonationDocs.first.id}',
-                    privacy:
-                        '${args['privacy'] ?? viewModel.singleDonationDocs.first.privacy}',
-                    daysLeft:
-                        '${args['daysLeft'] ?? viewModel.singleDonationDocs.first.createdAt}',
-                    donationCount:
-                        '${args['donationCount'] ?? viewModel.singleDonationDocs.first.donationCount}',
-                  ),
-                ),
+                callback: () {
+                  debugPrint("DIALA DONAtION ID ${viewModel.donationId}");
+                  int daysLeft = DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inDays;
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: DonationModal(
+                      amountRaised: viewModel.donationAmountRaised.replaceAll('.00', ''),
+                      targetAmount: viewModel.donationTargetAmount.replaceAll('.00', ''),
+                      title: viewModel.donationTitle,
+                      minimumDonationAmount: viewModel.donationMinimumDonationAmount.replaceAll('.00', ''),
+                      campaignId: viewModel.donationId,
+                      privacy: viewModel.donationPrivacy,
+                      daysLeft: daysLeft < 0 ? '0' : '$daysLeft',
+                      donationCount: '${args['donationCount'] ?? viewModel.donationCount}',
+                    ),
+                  );
+                }
               ),
             )
           ],

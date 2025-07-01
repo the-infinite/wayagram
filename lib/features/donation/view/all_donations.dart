@@ -167,23 +167,23 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       rangeRatio: ratioLeft,
                       onTap: () {
                         debugPrint('MY RATIO $daysLeft');
-                        WayaNav.toNamed('/donationDetails', arguments: {
-                          'title': '${donation.title?.capitalizeFirst}',
-                          'image': '${donation.imageURL}',
-                          'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                          'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
-                          'desc': '${donation.description}',
-                          'solution': '${donation.solution}',
-                          'impact': '${donation.impact}',
-                          'url': '${donation.url}',
-                          'minimumDonationAmount': '${donation.minimumDonationAmount}',
-                          'daysLeft': '$daysLeft',
-                          'privacy': '${donation.privacy}',
+                        WayaNav.toNamed('/donation-details', arguments: {
                           'id': '${donation.id}',
-                          'donationCount': '${donation.donationCount}',
+                          'daysLeft': '$daysLeft',
                           'ratioLeft': ratioLeft,
-                          'organizerId': donation.organizerId,
-                          "donation": donation
+                          // 'title': '${donation.title?.capitalizeFirst}',
+                          // 'image': '${donation.imageURL}',
+                          // 'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
+                          // 'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                          // 'desc': '${donation.description}',
+                          // 'solution': '${donation.solution}',
+                          // 'impact': '${donation.impact}',
+                           'url': '${donation.url}',
+                          // 'minimumDonationAmount': '${donation.minimumDonationAmount}',
+                          // 'privacy': '${donation.privacy}',
+                          // 'donationCount': '${donation.donationCount}',
+                          // 'organizerId': donation.organizerId,
+                          // "donation": donation
                         });
                       },
                       buttonWidth: 60.0,
@@ -327,7 +327,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       donationCount: donation.donationCount!,
                       rangeRatio: ratioLeft,
                       onTap: () {
-                        WayaNav.toNamed('/donationDetails', arguments: {
+                        WayaNav.toNamed('/donation-details', arguments: {
                           'title': '${donation.title?.capitalizeFirst}',
                           'image': '${donation.imageURL}',
                           'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
