@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
@@ -80,94 +81,6 @@ class _PollReviewState extends ConsumerState<PollReview> {
                 pollCard('₦${formatMoney(widget.model.amountDue ?? "0")}', 'Payout Due Amount'),
               ],
             ),
-           /* InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.white,
-                    isScrollControlled: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
-                    ),
-                    builder: (BuildContext context) {
-                      return StatefulBuilder(builder:
-                          (BuildContext context, StateSetter setModalState) {
-                        return Container(
-                          height: 690,
-                          padding: EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Choose Payout Method",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        color: WayaColors.customPrimary,
-                                        fontFamily: WayaConstants.fontFamily,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 18.0,
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-
-                              SizedBox(
-                                height: 500,
-                                child: ListView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: walletViewModel.payoutMethod.length,
-                                    itemBuilder: (context, index) {
-                                      return PaymentMethodWidget(
-                                          initial: '${walletViewModel.payoutMethod[index].accountName?.substring(0, 1)}',
-                                          accountName: '${walletViewModel.payoutMethod[index].accountName}',
-                                          accountNumber: '${walletViewModel.payoutMethod[index].accountNumber}',
-                                          bankName: '${walletViewModel.payoutMethod[index].bankName}',
-                                          wayaTheme: wayaTheme,
-                                          onClick: (){},
-                                          //onTap: ()=> ref.watch(walletVmProvider.notifier).deletePayoutMethod(context, id: '${viewModel.payoutMethod[index].id}'),
-                                          onTap: (){
-                                            WayaNav.toNamed('/enterRequestAmountScreen',
-                                                arguments: {
-                                                  'id':'${walletViewModel.payoutMethod[index].id}',
-                                                  'bankName':walletViewModel.payoutMethod[index].bankName,
-                                                  'acctNumber':walletViewModel.payoutAccountNumber
-                                                });
-                                          }
-
-                                      );
-                                    }),
-                              ),
-                            ],
-                          ),
-                        );
-                      });
-                    });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color:WayaColors.greyColor300),
-                ),
-                height: 50,
-                child: Text(
-                  'Choose',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: WayaConstants.fontFamily,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      fontStyle: FontStyle.normal,
-                      color: WayaColors.black),
-                ),
-              ),
-            ),*/
 
             const Gap(50),
             WayaButton(
@@ -207,7 +120,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
                                   ],
                                 ),
                               ),
-
+                              walletViewModel.payoutMethod.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have any payout method yet'):
                               SizedBox(
                                 height: 500,
                                 child: ListView.builder(
@@ -221,19 +134,17 @@ class _PollReviewState extends ConsumerState<PollReview> {
                                           accountNumber: '${walletViewModel.payoutMethod[index].accountNumber}',
                                           bankName: '${walletViewModel.payoutMethod[index].bankName}',
                                           wayaTheme: wayaTheme,
-                                          onClick: (){},
-                                          onTap: (){
+                                          isChecked: false,
+                                          onTap: (){},
+                                          onClick: (){
                                             WayaUtils.showModalSheet(
                                               context,
-                                              child: PinEntryBottomSheet2(id: widget.id, module: widget.module),
+                                              child: PinEntryBottomSheet2(id: widget.id, module: widget.module,
+                                              bankName: '${walletViewModel.payoutMethod[index].bankName}',
+                                              acctName: '${walletViewModel.payoutMethod[index].accountName}',
+                                              acctNumber: walletViewModel.payoutAccountNumber,
+                                              ),
                                             );
-                                            WayaNav.toNamed('/enterRequestAmountScreen',
-                                                arguments: {
-                                                  'id':'${walletViewModel.payoutMethod[index].id}',
-                                                  'bankName':walletViewModel.payoutMethod[index].bankName,
-                                                  'acctNumber':walletViewModel.payoutAccountNumber,
-                                                  'acctName': walletViewModel.payoutMethod[index].accountName
-                                                });
                                           }
 
                                       );
@@ -244,10 +155,6 @@ class _PollReviewState extends ConsumerState<PollReview> {
                         );
                       });
                     });
-                      // WayaUtils.showModalSheet(
-                      //   context,
-                      //   child: PinEntryBottomSheet2(id: widget.id, module: widget.module),
-                      // );
                     }
                   : null,
               centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Continue'),

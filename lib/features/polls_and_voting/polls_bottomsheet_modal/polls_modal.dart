@@ -536,9 +536,13 @@ class _PollPinEntryBottomSheetState
 class PinEntryBottomSheet2 extends ConsumerStatefulWidget {
   final String id;
   final PayoutModule module;
+  final String bankName;
+  final String acctName;
+  final String acctNumber;
 
   const PinEntryBottomSheet2(
-      {super.key, required this.id, required this.module});
+      {super.key, required this.id, required this.module, required this.bankName,
+      required this.acctName, required this.acctNumber});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>

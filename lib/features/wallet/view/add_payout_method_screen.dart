@@ -90,6 +90,41 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                 children: [
                   Gap(10),
                   FormField<String>(validator: (value) {
+                    if (viewModel.bank == null) {
+                      return 'Bank is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaSelectField<String>(
+                          height: 0.2,
+                          uniqueKey: 'bank-type',
+                          label: "Bank",
+                          hintText: 'Select Bank',
+                          value: viewModel.bank?.label.capitalizeFirst,
+                          items: viewModel.banks,
+                          onSelected: (value) {
+                            //print('BANK ====>>> ${value.first}');
+                            ref.read(walletVmProvider.notifier).selectCategory(value.first);
+                          },
+                        ),
+                        if (formState.hasError && viewModel.bank == null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                  FormField<String>(validator: (value) {
                     if (viewModel.acctNumberController.text.isEmpty) {
                       return 'Account Number is required';
                     }
@@ -141,43 +176,6 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                       ],
                     );
                   }),
-                  //const Gap(20),
-                  FormField<String>(validator: (value) {
-                    if (viewModel.bank == null) {
-                      return 'Bank is required';
-                    }
-
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaSelectField<String>(
-                          height: 0.2,
-                          uniqueKey: 'bank-type',
-                          label: "Bank",
-                          hintText: 'Select Bank',
-                          value: viewModel.bank?.label.capitalizeFirst,
-                          items: viewModel.banks,
-                          onSelected: (value) {
-                            //print('BANK ====>>> ${value.first}');
-                            ref.read(walletVmProvider.notifier).selectCategory(value.first);
-                          },
-                        ),
-                        if (formState.hasError && viewModel.bank == null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
-                            ),
-                          ),
-                      ],
-                    );
-                  }),
-                  Gap(10),
 
                   /// Search bank
                   /*InkWell(
@@ -308,7 +306,6 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                       ),
                     ),
                   ),*/
-                  Gap(10),
                   FormField<String>(validator: (value) {
                     if (viewModel.acctNameController.text.isEmpty) {
                       return 'Account Name is required';
