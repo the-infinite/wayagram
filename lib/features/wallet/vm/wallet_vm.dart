@@ -27,7 +27,8 @@ class WalletVm extends StateNotifier<WalletState> {
   final _walletRepository = WalletRepository.instance;
   WalletVm() : super(WalletState()) {
     state = state.copyWith(acctNameController: TextEditingController(text: ''));
-    state = state.copyWith(acctNumberController: TextEditingController(text: ''));
+    state =
+        state.copyWith(acctNumberController: TextEditingController(text: ''));
   }
 
   void reset() {
@@ -45,18 +46,24 @@ class WalletVm extends StateNotifier<WalletState> {
     if (response.success == true) {
       final walletData = response.data["data"]["wallet"];
       final walletAccountsData = response.data["data"]["walletAccounts"];
-      final externalWallets =
-          (walletAccountsData as List).map((walletAccount) => ExternalWalletModel.fromJson(walletAccount)).toList();
-      state = state.copyWith(data: Wallet.fromJson(walletData), externalWallets: externalWallets, isLoading: false);
+      final externalWallets = (walletAccountsData as List)
+          .map((walletAccount) => ExternalWalletModel.fromJson(walletAccount))
+          .toList();
+      state = state.copyWith(
+          data: Wallet.fromJson(walletData),
+          externalWallets: externalWallets,
+          isLoading: false);
     } else {
       state = state.copyWith(isLoading: false);
     }
   }
 
-  Future<void> createPayoutMethod(String acctNum, String acctName, String bankName, String bankCode, ctx) async {
+  Future<void> createPayoutMethod(String acctNum, String acctName,
+      String bankName, String bankCode, ctx) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _walletRepository.createPayoutMethod(acctNum, acctName, bankName, bankCode);
+      final response = await _walletRepository.createPayoutMethod(
+          acctNum, acctName, bankName, bankCode);
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
@@ -65,7 +72,8 @@ class WalletVm extends StateNotifier<WalletState> {
           SnackBar(
             content: Text(
               'Payout Method added successfully!',
-              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+              style: TextStyle(
+                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
@@ -74,12 +82,14 @@ class WalletVm extends StateNotifier<WalletState> {
         WayaNav.toNamed(RequestPayout.route);
         reset();
       } else {
-        CreatePayoutModel responseModel = CreatePayoutModel.fromJson(response.data);
+        CreatePayoutModel responseModel =
+            CreatePayoutModel.fromJson(response.data);
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
             content: Text(
               '${responseModel.message}',
-              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+              style: TextStyle(
+                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.error,
             duration: Duration(seconds: 2),
@@ -101,10 +111,12 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
-  Future<void> createPayoutRequest(String amount, String payoutMethodId, ctx) async {
+  Future<void> createPayoutRequest(
+      String amount, String payoutMethodId, ctx) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _walletRepository.createPayoutRequest(amount, payoutMethodId);
+      final response =
+          await _walletRepository.createPayoutRequest(amount, payoutMethodId);
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
@@ -112,7 +124,8 @@ class WalletVm extends StateNotifier<WalletState> {
           SnackBar(
             content: Text(
               'Payout Request created successfully!',
-              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+              style: TextStyle(
+                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
@@ -136,7 +149,8 @@ class WalletVm extends StateNotifier<WalletState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        PayoutMethodModel responseModel = PayoutMethodModel.fromJson(response.data);
+        PayoutMethodModel responseModel =
+            PayoutMethodModel.fromJson(response.data);
         state = state.copyWith(payoutMethod: responseModel.data);
       } else {}
     } catch (e) {
@@ -158,7 +172,8 @@ class WalletVm extends StateNotifier<WalletState> {
           SnackBar(
             content: Text(
               'Payout method deleted successfully!',
-              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+              style: TextStyle(
+                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
@@ -172,15 +187,16 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
-  Future<void> verifyAccountName(ctx, {required String acctNumber, required String bankCode}) async {
-
+  Future<void> verifyAccountName(ctx,
+      {required String acctNumber, required String bankCode}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.verifyName(acctNumber, bankCode);
       state = state.copyWith(isLoading: false);
       //debugPrint("DARLINGTON ACCOUNT NAME ${response.data}" );
       if (response.success) {
-        VerifyAccountNameModel responseModel = VerifyAccountNameModel.fromJson(response.data);
+        VerifyAccountNameModel responseModel =
+            VerifyAccountNameModel.fromJson(response.data);
         state = state.copyWith(accountName: responseModel.data?.name);
         debugPrint("DARLINGTON ACCOUNT NAME ${responseModel.data?.name}");
       }
@@ -201,14 +217,16 @@ class WalletVm extends StateNotifier<WalletState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        SingleRequestModel responseModel = SingleRequestModel.fromJson(response.data);
+        SingleRequestModel responseModel =
+            SingleRequestModel.fromJson(response.data);
         state = state.copyWith(
             amount: responseModel.data?.amount,
             status: responseModel.data?.status,
             refNumber: responseModel.data?.referenceId,
             bankName: responseModel.data?.payoutMethod?.bankName,
             accountName: responseModel.data?.payoutMethod?.accountName,
-            payoutAccountNumber: responseModel.data?.payoutMethod?.accountNumber,
+            payoutAccountNumber:
+                responseModel.data?.payoutMethod?.accountNumber,
             time: responseModel.data?.createdAt);
       } else {}
     } catch (e) {
@@ -226,7 +244,8 @@ class WalletVm extends StateNotifier<WalletState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        SinglePayoutMethodModel responseModel = SinglePayoutMethodModel.fromJson(response.data);
+        SinglePayoutMethodModel responseModel =
+            SinglePayoutMethodModel.fromJson(response.data);
         state = state.copyWith(
           bankName: responseModel.data?.bankName,
           payoutAccountNumber: responseModel.data?.accountName,
@@ -237,7 +256,8 @@ class WalletVm extends StateNotifier<WalletState> {
     } finally {}
   }
 
-  Future<PaginatedResult<PayoutMethodData>?> getPayoutMethodTwo({required int page}) async {
+  Future<PaginatedResult<PayoutMethodData>?> getPayoutMethodTwo(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getPayoutMethod();
@@ -245,7 +265,8 @@ class WalletVm extends StateNotifier<WalletState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PayoutMethodModel responseModel = PayoutMethodModel.fromJson(response.data);
+        PayoutMethodModel responseModel =
+            PayoutMethodModel.fromJson(response.data);
         fetchPageDocs = responseModel.data;
         //hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(payoutMethod: fetchPageDocs);
@@ -278,7 +299,8 @@ class WalletVm extends StateNotifier<WalletState> {
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchRequestDocs!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchRequestDocs!);
     } catch (e) {
       // _logger.e(e);
     } finally {
@@ -297,8 +319,8 @@ class WalletVm extends StateNotifier<WalletState> {
         final List<Select>? banksList = responseModel.data?.map((val) {
           return Select(label: '${val.name}', value: '${val.code}');
         }).toList();
-        state = state.copyWith(banks: banksList,
-            filteredList: responseModel.data);
+        state =
+            state.copyWith(banks: banksList, filteredList: responseModel.data);
       }
     } catch (e) {
       // _logger.e(e);
@@ -310,8 +332,58 @@ class WalletVm extends StateNotifier<WalletState> {
     final response = await _walletRepository.checkWalletPinStatus(userId);
     if (response.success == true) {
       final walletData = response.data["data"]["wallet"];
-      state = state.copyWith(data: Wallet.fromJson(walletData), isLoading: false);
+      state =
+          state.copyWith(data: Wallet.fromJson(walletData), isLoading: false);
     } else {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> requestPayoutMethod(
+    ctx, {
+    required String purpose,
+    required String referenceId,
+    required String accountNumber,
+    required String accountName,
+    required String bankName,
+    required String bankCode,
+  }) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _walletRepository.requestPayout(
+        purpose: purpose,
+        referenceId: referenceId,
+        accountNumber: accountNumber,
+        accountName: accountName,
+        bankName: bankName,
+        bankCode: bankCode,
+      );
+      state = state.copyWith(isLoading: false);
+      WayaNav.goBack();
+      if (response.success && ctx.mounted) {
+        
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Payout Method added successfully!',
+              style: TextStyle(
+                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+       
+      } 
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.polls,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+      // _logger.e(e);
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -324,15 +396,17 @@ final walletVmProvider = StateNotifierProvider<WalletVm, WalletState>((ref) {
 class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   final WalletRepository? _walletRepository;
   final SuccessfulSetUpState _setupState;
-  WalletFundingOptionsVm(this._walletRepository, this._setupState) : super(WalletFundingOptionState());
+  WalletFundingOptionsVm(this._walletRepository, this._setupState)
+      : super(WalletFundingOptionState());
 
   Future<void> getWalletFundingOptions() async {
     state = state.copyWith(isLoading: true);
     final response = await _walletRepository!.getWalletFundingOptions();
     if (response.success == true) {
       final fundingData = response.data["data"];
-      final fundingOptions =
-          (fundingData as List).map((fundOption) => WalletFundingOptionModel.fromJson(fundOption)).toList();
+      final fundingOptions = (fundingData as List)
+          .map((fundOption) => WalletFundingOptionModel.fromJson(fundOption))
+          .toList();
       state = state.copyWith(fundingOptions: fundingOptions, isLoading: false);
     } else {
       state = state.copyWith(isLoading: false);
@@ -340,7 +414,9 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   }
 
   Future<Map<String, dynamic>?> walletFunding(
-      {String? decription, required double amount, required String fundOptionCode}) async {
+      {String? decription,
+      required double amount,
+      required String fundOptionCode}) async {
     //final user = _setupState.user?.user;
 
     final response = await _walletRepository!.fundWallet(
@@ -363,7 +439,8 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
   Future<bool> verifyWalletPin(String pin) async {
     final user = _setupState.user?.user;
-    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(userId: user!.id, pin: pin));
+    final response = await _walletRepository!
+        .confirmWalletPin(ConfirmWalletPin(userId: user!.id, pin: pin));
     if (response.success) {
       return true;
     } else {
@@ -372,7 +449,9 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   }
 }
 
-final walletFundingOptionsVmProvider = StateNotifierProvider<WalletFundingOptionsVm, WalletFundingOptionState>((ref) {
+final walletFundingOptionsVmProvider =
+    StateNotifierProvider<WalletFundingOptionsVm, WalletFundingOptionState>(
+        (ref) {
   final successfulSetupVm = ref.watch(successfulSetupVmProvider);
   return WalletFundingOptionsVm(WalletRepository.instance, successfulSetupVm);
 });

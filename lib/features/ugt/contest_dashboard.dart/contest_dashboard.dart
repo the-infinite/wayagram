@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
@@ -254,7 +255,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             const Gap(20),
             GestureDetector(
               onTap: () {
-                WayaNav.toNamed('/admin-transaction-page');
+                WayaNav.toNamed(AdminTransactionHistory.route);
               },
               child: _buildStatCard2(context, "Revenue Generated",
                   "₦${dashboardVm.revenueGenerated}"),
