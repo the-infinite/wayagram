@@ -6,6 +6,7 @@ import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import '../widget/payout_modal.dart';
@@ -179,11 +180,9 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                   Gap(10),
 
                   /// Search bank
-                /*  InkWell(
+                  /*InkWell(
                     onTap: () {
-                      instantTransfer
-                          ? null
-                          : showModalBottomSheet(
+                      showModalBottomSheet(
                               context: context,
                               backgroundColor: Colors.white,
                               isScrollControlled: true,
@@ -204,7 +203,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                "Select Bank",
+                                                "Choose Payout Method",
                                                 textAlign: TextAlign.start,
                                                 style: TextStyle(
                                                   color: WayaColors.customPrimary,
@@ -213,40 +212,11 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                                                   fontSize: 18.0,
                                                 ),
                                               ),
-                                              Spacer(),
-                                              InkWell(
-                                                  onTap: ()=> WayaNav.goBack(),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: WayaColors.greyColor200,
-                                                    ),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(4.0),
-                                                      child: Icon(
-                                                        Icons.close,
-                                                        size: 20,
-                                                       // color: AppColors.primaryTextColor,
-                                                      ),
-                                                    ),
-                                                  )),
+
                                             ],
                                           ),
                                         ),
 
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 4.0, right: 4, top: 10),
-                                          child: WayaTextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller: viewModel.searchController,
-                                            hintText: 'Search bank',
-                                            onChanged: (v) {
-
-                                              filteredList = viewModel.filteredList.where((element)=> element.name!.toLowerCase().contains(v.toLowerCase())).toList();
-                                              setModalState(() {});
-                                            },
-                                          ),
-                                        ),
                                         SizedBox(
                                           height: 500,
                                           child: ListView.builder(
@@ -337,8 +307,8 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                         ),
                       ),
                     ),
-                  ),
-                  Gap(10),*/
+                  ),*/
+                  Gap(10),
                   FormField<String>(validator: (value) {
                     if (viewModel.acctNameController.text.isEmpty) {
                       return 'Account Name is required';
