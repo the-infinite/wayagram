@@ -306,32 +306,16 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
     }
   }
 
-  // void _submitPin() {
-  //   if (_pin.length == _pinLength) {
-  //
-  //     WayaNav.goBack();
-  //
-  //      WayaUtils.showModalSheet(
-  //       context,
-  //       child: DonationGenerosityModal(),
-  //     );
-  //
-  //
-  //
-  //   }
-  // }
-
   void _submitPin() async {
+
     if (_pin.length == _pinLength) {
       var isPass = await ref.read(donationVmProvider.notifier).verifyWalletPin(_pin, context);
 
       if (isPass) {
         //WayaNav.goBack();
-        debugPrint('DOANTION AMOUNT ${widget.amount}');
         await ref.watch(donationVmProvider.notifier).makeDonation(
               widget.campaignId,
               int.parse(widget.amount),
-              //widget.amount,
               widget.campaignTitle,
               context,
             );
@@ -355,8 +339,6 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
 
   @override
   Widget build(BuildContext context) {
-    //debugPrint('DARLINGTON AMOUNT ${widget.amount}');
-    //final viewModel = ref.watch(donationVmProvider.notifier);
     return SafeArea(
       child: Container(
         height: 490.h,
@@ -609,7 +591,10 @@ class DonationGenerosityModal extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DonationGenerosityModalState();
 }
 
+
 class _DonationGenerosityModalState extends ConsumerState<DonationGenerosityModal> {
+
+
   @override
   Widget build(BuildContext context) {
     //final viewModel = ref.watch(donationVmProvider);
@@ -658,6 +643,7 @@ class _DonationGenerosityModalState extends ConsumerState<DonationGenerosityModa
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
+                debugPrint('USA ID ${widget.campaignId}');
                 Share.share(
                   WayaValueHelper.getShareableUrl(WayaAppRoutes.getDonationDetailsPage(widget.campaignId)),
                   subject: 'Share Invite',

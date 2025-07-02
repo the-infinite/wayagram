@@ -83,7 +83,7 @@ List<ContestTransactionModel> modelList= [];
           var data = await UserResource.getUserDetails(
               modelNew.userId ?? "");
           var userModel = data?.$2;
-          var userModel1 = data?.$1;
+          //var userModel1 = data?.$1;
 
           modelNew.name = userModel?.displayName ?? "";
           modelList.add(modelNew);

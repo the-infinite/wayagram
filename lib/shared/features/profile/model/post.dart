@@ -147,7 +147,7 @@ class PostModel extends BaseModel<PostModel> {
 
 //? Using this for search implementation, pls don't remove
   @override
-  Map<String, dynamic> toMap() => {'hashtags': hashtags};
+  Map<String, dynamic> toMap() => {'hashtags': hashtags, 'content': content};
 }
 
 @JsonSerializable()
