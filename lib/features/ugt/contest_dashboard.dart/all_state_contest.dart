@@ -42,12 +42,14 @@ class _ManageStateContestState extends ConsumerState<AllStateContest> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Overview",
-                    style: wayaTheme.textTheme.hintStyle
-                        .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w400, color: Colors.black)),
+                    style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black)),
               ],
             ),
             const Gap(20),
-            Row(
+            /*   Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildStatCard(
@@ -69,7 +71,7 @@ class _ManageStateContestState extends ConsumerState<AllStateContest> {
               ],
             ),
 
-            SizedBox(height: 20),
+            SizedBox(height: 20), */
 
             // Manage States
             Container(
@@ -148,7 +150,8 @@ class _ManageStateContestState extends ConsumerState<AllStateContest> {
     );
   }
 
-  Widget _buildProfileItem2(BuildContext context, String name, String numberContestant) {
+  Widget _buildProfileItem2(
+      BuildContext context, String name, String numberContestant) {
     final wayaTheme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -158,15 +161,23 @@ class _ManageStateContestState extends ConsumerState<AllStateContest> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(name, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontSize: 16.sp)),
+          Text(name,
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 16.sp)),
           Text("$numberContestant contestants",
-              style: TextStyle(color: wayaTheme.primaryColor, fontWeight: FontWeight.w600, fontSize: 14.sp)),
+              style: TextStyle(
+                  color: wayaTheme.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp)),
         ],
       ),
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String title, String value, Widget widget) {
+  Widget _buildStatCard(
+      BuildContext context, String title, String value, Widget widget) {
     final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
@@ -184,12 +195,15 @@ class _ManageStateContestState extends ConsumerState<AllStateContest> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
+                Text(title,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
                     decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.primary500, // Background color
+                      color:
+                          wayaTheme.colorScheme.primary500, // Background color
                       shape: BoxShape.circle, // Makes the container circular
                       border: Border.all(
                         color: Colors.white, // Optional: Border color
@@ -200,7 +214,8 @@ class _ManageStateContestState extends ConsumerState<AllStateContest> {
               ],
             ),
             Gap(10),
-            Text(value, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            Text(value,
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
           ],
         ),
       ),

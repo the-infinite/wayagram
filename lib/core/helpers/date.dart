@@ -128,13 +128,21 @@ class WayaDateHelper {
       return getTimestamp(timestamp);
     }
 
+    //? The time in days.
+    final days = gap.inDays.abs();
+
     //? If this is yesterday...
-    if (gap.inDays.abs() < 2) {
+    if (days < 2) {
       return "Yesterday";
     }
 
+    //? If gap is
+    if (days < 31) {
+      return "${days}d ago";
+    }
+
     //? Then just return the timestamp.
-    return "${gap.inDays.abs()}d ago";
+    return DateFormat("dd.MM.yyyy").format(timestamp);
   }
 
   static String getSocialTimestamp(DateTime timestamp, [bool extraPrecise = true]) {

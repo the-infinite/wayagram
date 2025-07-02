@@ -44,13 +44,16 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   }
 
   bool get showActions {
+    final followerId = widget.data.message.followerId;
+    final followingId = widget.data.message.followingId;
+
     //? Only show the action button when this is not yet followed.
     if (widget.data.messageType == NotificationMessageType.followRequest) {
-      return _follow?.status == FollowRelationship.none;
+      return _follow?.status == FollowRelationship.none && followerId != null && followingId != null;
     }
 
     // This is fine.
-    return true;
+    return false;
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
@@ -17,6 +18,7 @@ class UgtGetStarted extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+     final ugt = WayaLocalDataSource();
     return WayaScaffold(
         removeAppBar: true,
         isScrollable: true,
@@ -73,6 +75,9 @@ class UgtGetStarted extends ConsumerWidget {
             const Gap(30),
             WayaButton(
               callback: () async {
+                 
+       
+            ugt.saveSeenUGT(true);
                 WayaNav.toNamed("/ugt-home");
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                   ref.read(contestNotifierProvider.notifier).allCategories();

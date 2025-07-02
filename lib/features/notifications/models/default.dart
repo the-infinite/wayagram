@@ -24,6 +24,7 @@ enum NotificationChannel {
   webhook,
 }
 
+@JsonEnum()
 enum NotificationMessageType {
   @JsonValue('chat')
   chat,
@@ -177,9 +178,14 @@ class NotificationModel {
     // First, do the basic conversion.
     var json = {...data};
 
+    //? First, we make sure that the notification type is reconciled here.
+    if (json['nType'] == 'chats') {
+      json['nType'] = 'chat';
+    }
+
     //? If this has any data here....
-    if (data["message"]?["data"] != null) {
-      final messageData = data["message"]!["data"] as Map<String, dynamic>?;
+    if (json["message"]?["data"] != null) {
+      final messageData = json["message"]!["data"] as Map<String, dynamic>?;
 
       //? If the body is absolutely null and this is a chat...
       if (json['messageType'] == 'chats' && (messageData?.isNotEmpty ?? false)) {

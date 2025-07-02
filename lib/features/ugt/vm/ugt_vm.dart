@@ -423,7 +423,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       ref
           .read(votersContestNotifier.notifier)
           .fetchAllContestApplicant(model.contestId ?? "");
-      WayaNav.removeUntilNamed(AdminContestDetails.route);
+     // WayaNav.removeUntilNamed(AdminContestDetails.route);
+        WayaNav.removeAllUntil(AdminContestDetails(id: ""),
+                              AdminContestDetails.route);
     } else {
       WayaSnackBar.showToast(response.data["message"]);
     }

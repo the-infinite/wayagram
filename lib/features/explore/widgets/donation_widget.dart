@@ -89,7 +89,7 @@ class DonationWidget extends ConsumerWidget {
                             width: 65,
                             child: WayaButton(
                               callback: () {
-                                WayaNav.toNamed('/donationDetails', arguments: {
+                                WayaNav.toNamed('/donation-details', arguments: {
                                   'title': '${donation.title?.capitalizeFirst}',
                                   'image': '${donation.imageURL}',
                                   'amountRaised':
