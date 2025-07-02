@@ -17,6 +17,7 @@ import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
@@ -597,28 +598,37 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
               accountNumber: "accountNumber",
               accountName: "accountName",
               bankName: "bankName",
-              bankCode: "bankCode");
+              bankCode: "bankCode", goBackTo: () {
+            //TODO Poll navigate to on success
+          });
         } else if (widget.module == PayoutModule.contest) {
-        /*   ref
+          ref
               .read(contestNotifierProvider.notifier)
-              .requestPayout(context, widget.id); */
-               ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
+              .requestPayout(context, widget.id);
+          ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
               purpose: PayoutModule.contest.name.toUpperCase(),
               referenceId: widget.id,
               accountNumber: "accountNumber",
               accountName: "accountName",
               bankName: "bankName",
-              bankCode: "bankCode");
+              bankCode: "bankCode", goBackTo: () {
+            WayaNav.removeAllUntil(
+                DashboardContestPage(), DashboardContestPage.route);
+          });
         } else if (widget.module == PayoutModule.event) {
-         
-           ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
-              purpose: PayoutModule.event.name.toUpperCase(),
-              referenceId: widget.id,
-              accountNumber: "accountNumber",
-              accountName: "accountName",
-              bankName: "bankName",
-              bankCode: "bankCode");
-        /*   ref
+          ref.read(walletVmProvider.notifier).requestPayoutMethod(
+            context,
+            purpose: PayoutModule.event.name.toUpperCase(),
+            referenceId: widget.id,
+            accountNumber: "accountNumber",
+            accountName: "accountName",
+            bankName: "bankName",
+            bankCode: "bankCode",
+            goBackTo: () {
+              //TODO Event navigate to on success
+            },
+          );
+          /*   ref
               .read(eventVmProvider.notifier)
               .requestForEventPayout(context, widget.id); */
         }

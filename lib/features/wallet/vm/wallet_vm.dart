@@ -339,15 +339,14 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
-  Future<void> requestPayoutMethod(
-    ctx, {
-    required String purpose,
-    required String referenceId,
-    required String accountNumber,
-    required String accountName,
-    required String bankName,
-    required String bankCode,
-  }) async {
+  Future<void> requestPayoutMethod(ctx,
+      {required String purpose,
+      required String referenceId,
+      required String accountNumber,
+      required String accountName,
+      required String bankName,
+      required String bankCode,
+      required VoidCallback goBackTo}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.requestPayout(
@@ -361,7 +360,6 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
-        
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
             content: Text(
@@ -373,8 +371,8 @@ class WalletVm extends StateNotifier<WalletState> {
             duration: Duration(seconds: 2),
           ),
         );
-       
-      } 
+        goBackTo();
+      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
