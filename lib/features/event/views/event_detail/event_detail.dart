@@ -136,17 +136,17 @@ class _EventDetailState extends ConsumerState<EventDetail> {
       final today = DateTime(now.year, now.month, now.day);
 
       //? Check ticket sales end date
-      if (event.ticketSalesEndDate != null) {
-        final ticketEnd = DateTime(
-          event.ticketSalesEndDate!.year,
-          event.ticketSalesEndDate!.month,
-          event.ticketSalesEndDate!.day,
-        );
-        if (today.isAtSameMomentAs(ticketEnd.add(const Duration(days: 1))) ||
-            today.isAfter(ticketEnd.add(const Duration(days: 1)))) {
-          return true;
-        }
-      }
+      // if (event.ticketSalesEndDate != null) {
+      //   final ticketEnd = DateTime(
+      //     event.ticketSalesEndDate!.year,
+      //     event.ticketSalesEndDate!.month,
+      //     event.ticketSalesEndDate!.day,
+      //   );
+      //   if (today.isAtSameMomentAs(ticketEnd.add(const Duration(days: 1))) ||
+      //       today.isAfter(ticketEnd.add(const Duration(days: 1)))) {
+      //     return true;
+      //   }
+      // }
       //? Check event end date
       final eventEnd = DateTime(
         event.endDate.year,
@@ -218,29 +218,31 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: () {
-                          if (payoutList.isEmpty) {
-                            if (event.noOfAttendees < 1 &&
-                                event.eventType == 'paid') {
-                              WayaSnackBar.showToast(
-                                  "No attendee has paid for the event");
-                              return;
-                            }
+                        callback: isDayAfterTicketOrEventEnd(event)
+                            ? () {
+                                if (payoutList.isEmpty) {
+                                  if (event.noOfAttendees < 1 &&
+                                      event.eventType == 'paid') {
+                                    WayaSnackBar.showToast(
+                                        "No attendee has paid for the event");
+                                    return;
+                                  }
 
-                            ref
-                                .read(credentialInputProvider.notifier)
-                                .onSubmitPayoutPin(() => WayaNav.toNamed(
-                                        '/payoutVerification',
-                                        arguments: {
-                                          "id": event.id,
-                                          "Module": PayoutModule.event,
-                                        }));
-                          } else {
-                            WayaNav.toNamed(
-                                WayaAppRoutes.getSingleEventDashboard(
-                                    event.id));
-                          }
-                        },
+                                  ref
+                                      .read(credentialInputProvider.notifier)
+                                      .onSubmitPayoutPin(() => WayaNav.toNamed(
+                                              '/payoutVerification',
+                                              arguments: {
+                                                "id": event.id,
+                                                "Module": PayoutModule.event,
+                                              }));
+                                } else {
+                                  WayaNav.toNamed(
+                                      WayaAppRoutes.getSingleEventDashboard(
+                                          event.id));
+                                }
+                              }
+                            : null,
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
                             width: 1,
