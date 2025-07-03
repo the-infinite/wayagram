@@ -382,7 +382,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   ),
                   Gap(10),
                   Text(
-                    "${remainingTime.inDays}days  :   ${remainingTime.inHours.remainder(24)}hrs  :  ${remainingTime.inMinutes.remainder(60)}mins  :  ${remainingTime.inSeconds.remainder(60)}sec",
+                    remainingTime.inSeconds.remainder(60) > 0
+                        ? "${remainingTime.inDays}days  :   ${remainingTime.inHours.remainder(24)}hrs  :  ${remainingTime.inMinutes.remainder(60)}mins  :  ${remainingTime.inSeconds.remainder(60)}sec"
+                        : "0days  :   0hrs  :  0mins  :  0sec",
                     style: TextStyle(
                         color: wayaTheme.primaryColor,
                         fontWeight: FontWeight.bold),

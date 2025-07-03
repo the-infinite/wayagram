@@ -122,7 +122,8 @@ class WalletRepository extends BaseRepository {
       }
     };
 
-    return post('$serviceUrl/client/payout/requests', payload, formdata: false);
+    return post('$serviceUrl/client/payout/requests', payload,
+        formdata: false, showErrors: true);
   }
 
   Future<WayaRequestResponse> fetchPayoutHistory(

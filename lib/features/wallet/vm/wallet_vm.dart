@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -347,43 +349,51 @@ class WalletVm extends StateNotifier<WalletState> {
       required String bankName,
       required String bankCode,
       required VoidCallback goBackTo}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _walletRepository.requestPayout(
-        purpose: purpose,
-        referenceId: referenceId,
-        accountNumber: accountNumber,
-        accountName: accountName,
-        bankName: bankName,
-        bankCode: bankCode,
-      );
-      state = state.copyWith(isLoading: false);
-      WayaNav.goBack();
-      if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Payout Method added successfully!',
-              style: TextStyle(
-                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
-            ),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
+    // try {
+    state = state.copyWith(isLoading: true);
+    final response = await _walletRepository.requestPayout(
+      purpose: purpose,
+      referenceId: referenceId,
+      accountNumber: accountNumber,
+      accountName: accountName,
+      bankName: bankName,
+      bankCode: bankCode,
+    );
+    state = state.copyWith(isLoading: false);
+    WayaNav.goBack();
+    if (response.success && ctx.mounted) {
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Payout Method added successfully!',
+            style: TextStyle(
+                fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
           ),
-        );
-        goBackTo();
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
+          backgroundColor: WayaColors.primary,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      goBackTo();
+    } else {
+    //  print('sjjsjsjss');
+       WayaSnackBar.showToast("An error occurred, Please try again!!");
+    }
+    /*  } on DioException catch (e) {
+      print('sjjsjsjss 344');
+      WayaSnackBar.showToast(e.message ?? "An error occured");
+    } */ /* catch (e) {
+      print('sjjsjsjss 2');
+      WayaSnackBar.showToast(e.toString());
+      /*  WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
         WayaDebugEventModule.polls,
         WayaDebugHelpers.getStackTrace(e),
-      );
+      ); */
       // _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
-    }
+    } */
   }
 }
 

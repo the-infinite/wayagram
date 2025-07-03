@@ -13,9 +13,12 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
+import 'package:wayagram/features/event/views/event_dashboard.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
+import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
@@ -539,10 +542,16 @@ class PinEntryBottomSheet2 extends ConsumerStatefulWidget {
   final String bankName;
   final String acctName;
   final String acctNumber;
+  final String bankCode;
 
   const PinEntryBottomSheet2(
-      {super.key, required this.id, required this.module, required this.bankName,
-      required this.acctName, required this.acctNumber});
+      {super.key,
+      required this.id,
+      required this.module,
+      required this.bankName,
+      required this.bankCode,
+      required this.acctName,
+      required this.acctNumber});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -599,10 +608,11 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
           ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
               purpose: "POLL & VOTE",
               referenceId: widget.id,
-              accountNumber: "accountNumber",
-              accountName: "accountName",
-              bankName: "bankName",
-              bankCode: "bankCode", goBackTo: () {
+              accountNumber: widget.acctNumber,
+              accountName: widget.acctName,
+              bankName: widget.bankName,
+              bankCode: widget.bankCode, goBackTo: () {
+            WayaNav.removeAllUntil(PollAndVoting(), PollAndVoting.route);
             //TODO Poll navigate to on success
           });
         } else if (widget.module == PayoutModule.contest) {
@@ -612,10 +622,10 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
           ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
               purpose: PayoutModule.contest.name.toUpperCase(),
               referenceId: widget.id,
-              accountNumber: "accountNumber",
-              accountName: "accountName",
-              bankName: "bankName",
-              bankCode: "bankCode", goBackTo: () {
+              accountNumber: widget.acctNumber,
+              accountName: widget.acctName,
+              bankName: widget.bankName,
+              bankCode: widget.bankCode, goBackTo: () {
             WayaNav.removeAllUntil(
                 DashboardContestPage(), DashboardContestPage.route);
           });
@@ -624,11 +634,30 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
             context,
             purpose: PayoutModule.event.name.toUpperCase(),
             referenceId: widget.id,
-            accountNumber: "accountNumber",
-            accountName: "accountName",
-            bankName: "bankName",
-            bankCode: "bankCode",
+            accountNumber: widget.acctNumber,
+            accountName: widget.acctName,
+            bankName: widget.bankName,
+            bankCode: widget.bankCode,
             goBackTo: () {
+              WayaNav.removeAllUntil(
+                  EventDashboard(id: widget.id), EventDashboard.route);
+              //TODO Event navigate to on success
+            },
+          );
+          /*  ref
+              .read(eventVmProvider.notifier)
+              .requestForEventPayout(context, widget.id);   */
+        } else if (widget.module == PayoutModule.donation) {
+          ref.read(walletVmProvider.notifier).requestPayoutMethod(
+            context,
+            purpose: PayoutModule.donation.name.toUpperCase(),
+            referenceId: widget.id,
+            accountNumber: widget.acctNumber,
+            accountName: widget.acctName,
+            bankName: widget.bankName,
+            bankCode: widget.bankCode,
+            goBackTo: () {
+              WayaNav.removeAllUntil(Donations(), Donations.route);
               //TODO Event navigate to on success
             },
           );
