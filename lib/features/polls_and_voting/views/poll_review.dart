@@ -142,6 +142,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
                                               child: PinEntryBottomSheet2(id: widget.id, module: widget.module,
                                               bankName: '${walletViewModel.payoutMethod[index].bankName}',
                                               acctName: '${walletViewModel.payoutMethod[index].accountName}',
+                                              bankCode: '${walletViewModel.payoutMethod[index].bankCode}',
                                               acctNumber: walletViewModel.payoutAccountNumber,
                                               ),
                                             );
