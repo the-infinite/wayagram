@@ -40,13 +40,17 @@ class _WayaSocialNotificationsScreenState extends ConsumerState<WayaSocialNotifi
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final state = ref.watch(socialNotificationProvider);
+    final currentNotifications = state.currentNotifications();
+
+    //? Get the filters.
+    debugPrint("Filter: ${state.filters}");
 
     // Build the current screen.
     return WayaScaffold(
       isLoading: false,
       isScrollable: false,
       title: 'Social Notifications',
-      resizeToAvoidBottomInset: state.currentNotifications.isEmpty,
+      resizeToAvoidBottomInset: currentNotifications.isEmpty,
       floatingActionButton: WayaButton(
         callback: _markAllAsRead,
         height: 50,
@@ -74,7 +78,7 @@ class _WayaSocialNotificationsScreenState extends ConsumerState<WayaSocialNotifi
             ),
 
             //? Now for the notifications view.
-            if (state.currentNotifications.isEmpty)
+            if (currentNotifications.isEmpty)
               Expanded(
                 child: Center(
                   child: EmptyState(
@@ -93,9 +97,9 @@ class _WayaSocialNotificationsScreenState extends ConsumerState<WayaSocialNotifi
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: List.generate(
-                        state.currentNotifications.length,
+                        currentNotifications.length,
                         (index) {
-                          final notification = state.currentNotifications[index];
+                          final notification = currentNotifications[index];
 
                           //? If this is a request.
                           if (const [

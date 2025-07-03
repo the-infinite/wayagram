@@ -27,6 +27,7 @@ class _SharedUserBuyRequestsWidgetState extends ConsumerState<SharedUserBuyReque
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //? Only fetch the requests if they have not been loaded yet.
+      notifier.reset();
       notifier.getBuyRequestsIfNotLoaded();
     });
     super.initState();
@@ -107,6 +108,7 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //? Only fetch the requests if they have not been loaded yet.
+      notifier.reset();
       notifier.getBuyRequestsIfNotLoaded();
 
       //? This is fine.

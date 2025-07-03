@@ -5,6 +5,7 @@ class ChatState {
   final bool hasLoaded;
   final bool isLoading;
   final ChatModel? chat;
+  final String chatId;
   final List<MessageModel> messages;
   final int limit;
   final int page;
@@ -18,6 +19,7 @@ class ChatState {
     required this.hasLoaded,
     required this.isLoading,
     required this.chat,
+    required this.chatId,
     required this.messages,
     required this.limit,
     required this.totalCount,
@@ -32,6 +34,7 @@ class ChatState {
     hasLoaded: false,
     isLoading: false,
     chat: null,
+    chatId: "",
     messages: [],
     limit: 100,
     totalCount: 0,
@@ -39,13 +42,14 @@ class ChatState {
     hasNextPage: true,
     page: 1,
     isActive: false,
-   );
+  );
 
   /// A helper function used to copy the contents of this chat's internal state
   /// and then pass it around.
   ChatState copyWith({
     bool? hasLoaded,
     bool? isLoading,
+    String? chatId,
     ChatModel? chat,
     List<MessageModel>? messages,
     int? page,
@@ -58,6 +62,7 @@ class ChatState {
       hasLoaded: hasLoaded ?? this.hasLoaded,
       isLoading: isLoading ?? this.isLoading,
       chat: chat ?? this.chat,
+      chatId: chatId ?? this.chatId,
       messages: messages ?? this.messages,
       limit: limit,
       totalCount: totalCount ?? this.totalCount,
