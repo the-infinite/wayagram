@@ -22,9 +22,11 @@ import 'package:wayagram/features/event/views/event_detail/event_detail_widget.d
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
@@ -51,6 +53,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
+        ref.read(walletVmProvider.notifier).getPayoutMethod();
         try {
           notifier.getAttendees(page: 1, id: widget.id);
         } catch (_) {}
@@ -83,6 +86,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     final wayaTheme = Theme.of(context);
     final event = viewModel.singleEvent;
     final size = MediaQuery.sizeOf(context);
+    final walletViewModel = ref.watch(walletVmProvider);
 
     //? If this one sef dey.
     if (event == null) {
@@ -220,6 +224,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       child: WayaButton(
                         callback: isDayAfterTicketOrEventEnd(event)
                             ? () {
+                              //?check if user have payout method added
+                                if (walletViewModel.payoutMethod.isEmpty) {
+                                  WayaUtils.showModalSheet(
+                                    context,
+                                    child: AddPayoutModal(),
+                                  );
+                                  return;
+                                }
                                 if (payoutList.isEmpty) {
                                   if (event.noOfAttendees < 1 &&
                                       event.eventType == 'paid') {
