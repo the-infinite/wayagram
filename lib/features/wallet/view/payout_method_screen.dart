@@ -54,6 +54,7 @@ class _PayoutMethodScreenState extends ConsumerState<PayoutMethodScreen> {
           itemCount: viewModel.payoutMethod.length,
           itemBuilder: (context, index) {
             return PaymentMethodWidget(
+              isChecked: true,
               initial: '${viewModel.payoutMethod[index].accountName?.substring(0, 1)}',
               accountName: '${viewModel.payoutMethod[index].accountName}',
               accountNumber: '${viewModel.payoutMethod[index].accountNumber}',

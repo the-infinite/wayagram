@@ -256,7 +256,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
                         ? () {
 
                             final percentage = '${(double.parse('${viewModel.commission}') / 100) * num.parse(viewModel.moneyGenerated)}';
-                            final amountDue = int.parse(viewModel.moneyGenerated) - double.parse(percentage);
+                            final amountDue = double.parse(viewModel.moneyGenerated) - double.parse(percentage);
 
                             debugPrint('DASHBOARD AMOUNT DUE $amountDue ');
                             ref.read(credentialInputProvider.notifier)
