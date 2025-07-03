@@ -227,12 +227,12 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
           WayaButton(
             callback: !viewModelState.isLoading
                 ? () {
-                    WayaNav.to(PollReview(
+                   /*  WayaNav.to(PollReview(
                         id: '${args['id']}',
                         module: args['Module'] as PayoutModule,
                         model: args['Model'] as PayoutReviewModel));
-
-                    /*  final code = ref.watch(verifyAccountProvider).inputCode;
+ */
+                     final code = ref.watch(verifyAccountProvider).inputCode;
                     viewModel.verifyPayout(
                         onSuccess: () {
                           WayaNav.to(PollReview(
@@ -241,7 +241,7 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                               model: args['Model'] as PayoutReviewModel));
                         },
                         code: code,
-                        email: '${ConversationState.self.email}'); */
+                        email: '${ConversationState.self.email}');
                   }
                 : null,
             centerWidget: LoadingState(
