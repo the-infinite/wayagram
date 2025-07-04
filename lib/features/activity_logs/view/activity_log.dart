@@ -10,10 +10,12 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/account_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/event_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/ugt_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/wallet_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_card_widget.dart';
@@ -129,7 +131,15 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
         ? viewModel.eventDocs
         : viewModel.filterEventDocs(startingBound, endingBound);
 
+    //? Second, get the filtered event.
+    final filteredUgt = startingBound == null || endingBound == null
+        ? viewModel.ugtLogDocs
+        : viewModel.filterUgtDocs(startingBound, endingBound);
 
+    //? Second, get the filtered donations.
+    final filteredDonations = startingBound == null || endingBound == null
+        ? viewModel.donationDocs
+        : viewModel.filterDonationDocs(startingBound, endingBound);
 
     //? Log the starting and ending time.
     if (startingBound != null && endingBound != null) {
@@ -345,7 +355,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                           child: CircularProgressIndicator(),
                         )),
                     emptyState: ActivityLogsEmptyState(
-                      text: 'You don\'t have Wallet yet',
+                      text: 'You don\'t have wallet yet',
                     ),
                     fetchData: ref.read(activityLogsVmProvider.notifier).getWalletLogs,
                     result: (data, s) {
@@ -1019,13 +1029,11 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
-                    emptyState: ActivityLogsEmptyState(
-                      text: 'You don\'t have Page logs yet',
-                    ),
+                    emptyState: ActivityLogsEmptyState(text: 'You don\'t have Page logs yet',),
                     fetchData: ref.read(activityLogsVmProvider.notifier).getPageLogs,
                     result: (data, s) {
                       return SingleChildScrollView(
-                        child: filteredGroup.isEmpty
+                        child: filteredPage.isEmpty
                             ? ActivityLogsEmptyState(
                           text: 'You don\'t have page logs for ${_filterBy.name.toLowerCase()} yet',
                         )
@@ -1208,15 +1216,14 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 );
                               },
                               itemBuilder: (context, index) {
-                                final donation = filteredGroup[index];
-                                final dateTimeString = "${donation.createdAt}";
+                                final group = filteredGroup[index];
+                                final dateTimeString = "${group.createdAt}";
                                 final dateTime = DateTime.parse(dateTimeString).toLocal();
-                                //debugPrint('DATE CHECK ==> $dateCheck, ${dates[i]}');
 
                                 return ActivityCardWidget(
-                                  title: '${donation.description}',
+                                  title: '${group.description}',
                                   subTitle:
-                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(donation.createdAt)}, '
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(group.createdAt)}, '
                                       '${DateFormat.jm().format(dateTime)}',
                                 );
                               },
@@ -1239,177 +1246,128 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   alignment: Alignment.center,
                   width: 102.w,
                   height: 36.h,
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 5, top: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: WayaColors.greyColor300)),
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
                   child: DropdownButton(
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      iconSize: 12,
-                      icon: SvgPicture.asset(
-                        WayaAssets.icons.downArrow.path,
-                      ),
-                      isDense: true,
-                      isExpanded: false,
-                      value: selTransact,
-                      items: lsTransact.map((String ls) {
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
                         return DropdownMenuItem(
                           value: ls,
-                          child: Text(ls,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selTransact = value!;
-                          sortList(selTransact.toLowerCase(),
-                              viewModel.donationDocs, viewModel.donationDocs1);
-                        });
-                      }),
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
                 ),
                 Gap(10),
-
                 Expanded(
-                  child: ListView.builder(
-                      padding: EdgeInsets.only(bottom: 80.h, top: 0),
-                      physics: const ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: dates.length,
-                      itemBuilder: (context, i) {
-                        for (int i = 0;
-                            i < viewModel.donationDocs.length;
-                            i++) {
-                          if (!dates.contains(viewModel
-                              .donationDocs[i].createdAt
-                              .toString()
-                              .split('T')[0])) {
-                            dates.add(viewModel.donationDocs[i].createdAt
-                                .toString()
-                                .split('T')[0]);
-                            viewModel.donationDocs
-                                .add(viewModel.donationDocs[i]);
-                          }
-                        }
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.donationDocs[i].createdAt.toString().split('T')[0])}',
-                                style: TextStyle(
-                                  fontSize: 20.sp,
-                                  fontFamily: WayaConstants.fontFamily,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black,
-                                )),
-                            Gap(10),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const ClampingScrollPhysics(),
-                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                              itemCount: viewModel.donationDocs.length,
-                              itemBuilder: (context, index) {
-                                final donationLog =
-                                    viewModel.donationDocs[index];
-                                String dateTimeString =
-                                    "${donationLog.createdAt}";
-                                DateTime dateTime =
-                                    DateTime.parse(dateTimeString).toLocal();
-                                if (viewModel.donationDocs[index].createdAt
-                                        .toString()
-                                        .split('T')[0] ==
-                                    dates[i]) {
-                                  return ActivityCardWidget(
-                                    title: '${donationLog.description}',
-                                    subTitle:
-                                        '${ref.read(createPollVotingProvider.notifier).formatDt2(donationLog.createdAt)}, '
-                                        '${DateFormat.jm().format(dateTime)}',
-                                  );
-                                } else {
-                                  return Text('idiot me');
-                                }
-                              },
-                            )
-                          ],
-                        );
-                      }),
-                ),
-
-                /// donation
-                /*   Expanded(
-                child: PaginatedDataView<DonationDocs>(
-                    uniqueKey: 'donation-logs',
+                  child: PaginatedDataView<DonationDocs>(
+                    uniqueKey: 'Donation',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
-                    emptyState:ActivityLogsEmptyState(text: 'You don\'t have donation logs yet',),
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Donation yet',
+                    ),
                     fetchData: ref.read(activityLogsVmProvider.notifier).getDonationLogs,
                     result: (data, s) {
-
-                      for(int i = 0; i < viewModel.donationDocs.length; i++){
-                        if(!dates.contains(viewModel.donationDocs[i].createdAt.toString().split('T')[0])){
-                          dates.add(viewModel.donationDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.donationDocs.add(viewModel.donationDocs[i]);
-                        }
-                      }
                       return SingleChildScrollView(
-                        child: viewModel.donationDocs.isEmpty ?
-                        ActivityLogsEmptyState(text: 'You don\'t have Donation Logs for this week yet',):
-                        ListView.builder(
-                            padding: EdgeInsets.only(bottom: 80.h, top: 0),
-                            physics: const ClampingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: dates.length,
-                            itemBuilder: (context, i){
+                        child: filteredDonations.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have donation logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredDonations.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredDonations.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredDonations[first];
+                                final next = filteredDonations[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.donationDocs[i].createdAt.toString().split('T')[0])}',
-                                      style: TextStyle(
-                                        fontSize: 20.sp,
-                                        fontFamily: WayaConstants.fontFamily,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                      )),
-                                  Gap(10),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const ClampingScrollPhysics(),
-                                    padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.donationDocs.length,
-                                    itemBuilder: (context, index){
-                                      final donationLog = viewModel.donationDocs[index];
-                                      String dateTimeString = "${donationLog.createdAt}";
-                                      DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.donationDocs[index].createdAt.toString().split('T')[0] == dates[i]){
-                                        return ActivityCardWidget(
-                                          title: '${donationLog.description}',
-                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(donationLog.createdAt)}, '
-                                              '${DateFormat.jm().format(dateTime)}',
-                                          );
-                                      }else{
-                                        return Container();
-                                      }
-                                    },
-                                  )
-                                ],
-                              );
-                            }),
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final donation = filteredDonations[index];
+                                final dateTimeString = "${donation.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+                                //debugPrint('DATE CHECK ==> $dateCheck, ${dates[i]}');
+
+                                return ActivityCardWidget(
+                                  title: '${donation.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(donation.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       );
-                    }),
-              ),*/
+                    },
+                  ),
+                ),
               ],
             );
           } else if (args['name'] == 'ugt') {
@@ -1422,131 +1380,126 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   alignment: Alignment.center,
                   width: 102.w,
                   height: 36.h,
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 5, top: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: WayaColors.greyColor300)),
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
                   child: DropdownButton(
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      iconSize: 12,
-                      icon: SvgPicture.asset(
-                        WayaAssets.icons.downArrow.path,
-                      ),
-                      isDense: true,
-                      isExpanded: false,
-                      value: selTransact,
-                      items: lsTransact.map((String ls) {
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
                         return DropdownMenuItem(
                           value: ls,
-                          child: Text(ls,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selTransact = value!;
-                          sortList(selTransact.toLowerCase(), viewModel.ugtDocs,
-                              viewModel.ugtDocs1);
-                        });
-                      }),
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
                 ),
                 Gap(10),
                 Expanded(
-                  child: PaginatedDataView<PageDocs>(
-                      uniqueKey: 'ugt-logs',
-                      loadingState: SizedBox(
-                          height: context.height * 0.4,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          )),
-                      emptyState: ActivityLogsEmptyState(
-                        text: 'You don\'t have Ugt logs yet',
-                      ),
-                      fetchData:
-                          ref.read(activityLogsVmProvider.notifier).getUgtLogs,
-                      result: (data, s) {
-                        for (int i = 0; i < viewModel.ugtDocs.length; i++) {
-                          if (!dates.contains(viewModel.ugtDocs[i].createdAt
-                              .toString()
-                              .split('T')[0])) {
-                            dates.add(viewModel.ugtDocs[i].createdAt
-                                .toString()
-                                .split('T')[0]);
-                            viewModel.ugtDocs.add(viewModel.ugtDocs[i]);
-                          }
-                        }
-                        return SingleChildScrollView(
-                          child: viewModel.ugtDocs.isEmpty
-                              ? ActivityLogsEmptyState(
-                                  text:
-                                      'You don\'t have Ugt Logs for this week yet',
-                                )
-                              : ListView.builder(
-                                  padding:
-                                      EdgeInsets.only(bottom: 80.h, top: 0),
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: dates.length,
-                                  itemBuilder: (context, i) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.ugtDocs[i].createdAt.toString().split('T')[0])}',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontFamily:
-                                                  WayaConstants.fontFamily,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                            )),
-                                        Gap(10),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const ClampingScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              bottom: 20.h, top: 0),
-                                          itemCount: viewModel.ugtDocs.length,
-                                          itemBuilder: (context, index) {
-                                            final ugtLog =
-                                                viewModel.ugtDocs[index];
-                                            String dateTimeString =
-                                                "${ugtLog.createdAt}";
-                                            DateTime dateTime =
-                                                DateTime.parse(dateTimeString)
-                                                    .toLocal();
-                                            if (viewModel
-                                                    .ugtDocs[index].createdAt
-                                                    .toString()
-                                                    .split('T')[0] ==
-                                                dates[i]) {
-                                              return ActivityCardWidget(
-                                                  title:
-                                                      '${ugtLog.description}',
-                                                  subTitle:
-                                                      '${ref.read(createPollVotingProvider.notifier).formatDt2(ugtLog.createdAt)}, '
-                                                      '${DateFormat.jm().format(dateTime)}');
-                                            } else {
-                                              return Container();
-                                            }
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  }),
-                        );
-                      }),
+                  child: PaginatedDataView<UgtLogDocs>(
+                    uniqueKey: 'Ugt',
+                    loadingState: SizedBox(
+                        height: context.height * 0.4,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Ugt logs yet',
+                    ),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getUgtLogs,
+                    result: (data, s) {
+                      return SingleChildScrollView(
+                        child: filteredEvent.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have ugt logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredEvent.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredUgt.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredUgt[first];
+                                final next = filteredUgt[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
+
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final ugt = filteredUgt[index];
+                                final dateTimeString = "${ugt.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+
+                                return ActivityCardWidget(
+                                  title: '${ugt.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(ugt.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             );

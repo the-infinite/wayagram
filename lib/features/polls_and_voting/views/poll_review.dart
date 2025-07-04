@@ -64,13 +64,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
             ),
 
             const Gap(5),
-            // Text(
-            //   'Poll',
-            //   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-            //       fontSize: 14.sp,
-            //       fontWeight: FontWeight.w400,
-            //       color: Theme.of(context).colorScheme.greyColor500 ),
-            // ),
+
 
             Row(
               children: [
