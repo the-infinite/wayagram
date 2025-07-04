@@ -227,4 +227,18 @@ class QuotationsState {
       orderStatus: orderStatus ?? this.orderStatus,
     );
   }
+
+  List<BuyRequestModel> filterRequests(String text) {
+    final filter = text.toLowerCase().trim();
+
+    if (filter.isEmpty) {
+      return requests;
+    }
+    final result = requests.where((request) =>
+        request.productName.toLowerCase().contains(filter) ||
+        request.brand != null && request.brand!.toLowerCase().contains(filter) ||
+        request.description.toLowerCase().contains(filter));
+
+    return result.toList();
+  }
 }

@@ -8,6 +8,7 @@ import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
@@ -63,7 +64,10 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
         //? This is fine.
         final foundOrder = await notifier.getOrderDetails(widget.requestId);
         final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
-        final foundUser = foundQuote != null ? await UserResource.getUserDetails(foundQuote.buyerId) : null;
+        final foundUser = foundQuote != null
+            ? await UserResource.getUserDetails(
+                ConversationState.self.id == foundQuote.buyerId ? (foundOrder?.vendorId ?? "") : foundQuote.buyerId)
+            : null;
         final foundBid = foundOrder == null
             ? null
             : notifier.getBid(foundOrder.bidId) ?? await notifier.getSingleBid(foundOrder.bidId);
@@ -219,7 +223,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
                 //? The customer details section title..
                 Text(
-                  "Customer Details",
+                  order?.buyerId == ConversationState.self.id ? "Seller Details" : "Customer Details",
                   style: wayaTheme.textTheme.bodyMedium,
                 ),
 
@@ -230,7 +234,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                 GestureDetector(
                   onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user?.$1.id ?? "undefined", "quotation")),
                   child: OrderInfoWidget(
-                    title: "Customer's Name",
+                    title: order?.buyerId == ConversationState.self.id ? "Seller's Name" : "Customer's Name",
                     description: user?.$1.fullname ?? "N/A",
                   ),
                 ),
@@ -351,7 +355,9 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                   Gap(30.h),
 
                   //? The button to change the status of the delivery.
-                  if (request!.deliveryType == BuyRequestDeliveryType.delivery)
+                  if (order!.buyerId == ConversationState.self.id)
+                    const SizedBox.shrink()
+                  else if (request!.deliveryType == BuyRequestDeliveryType.delivery)
                     WayaButton(
                       color: wayaTheme.colorScheme.transparent,
                       textColor: wayaTheme.colorScheme.greyColor900,
@@ -422,37 +428,38 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                   Gap(10.h),
 
                   //? The button to change the order status.
-                  WayaButton(
-                    color: wayaTheme.colorScheme.transparent,
-                    textColor: wayaTheme.colorScheme.greyColor900,
-                    border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-                    callback: () async {
-                      final controller = ValueNotifier<QuotationOrderStatus?>(null);
-                      final isLoading = ValueNotifier(false);
+                  if (order!.buyerId != ConversationState.self.id)
+                    WayaButton(
+                      color: wayaTheme.colorScheme.transparent,
+                      textColor: wayaTheme.colorScheme.greyColor900,
+                      border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                      callback: () async {
+                        final controller = ValueNotifier<QuotationOrderStatus?>(null);
+                        final isLoading = ValueNotifier(false);
 
-                      //? Show the modal sheet.
-                      await WayaUtils.showModalSheet(
-                        context,
-                        child: UpdateOrderStatusModal(
-                          notifier: notifier,
-                          controller: controller,
-                          isLoading: isLoading,
-                          orderId: order!.id,
-                        ),
-                      );
+                        //? Show the modal sheet.
+                        await WayaUtils.showModalSheet(
+                          context,
+                          child: UpdateOrderStatusModal(
+                            notifier: notifier,
+                            controller: controller,
+                            isLoading: isLoading,
+                            orderId: order!.id,
+                          ),
+                        );
 
-                      //? Dispose these ones.
-                      try {
-                        controller.dispose();
-                        isLoading.dispose();
-                      } catch (_) {}
-                    },
-                    text: "Change Order Status",
-                    leadingIcon: WayaAssets.icons.buttonIcon.svg(
-                      colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
-                      width: 20,
+                        //? Dispose these ones.
+                        try {
+                          controller.dispose();
+                          isLoading.dispose();
+                        } catch (_) {}
+                      },
+                      text: "Change Order Status",
+                      leadingIcon: WayaAssets.icons.buttonIcon.svg(
+                        colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                        width: 20,
+                      ),
                     ),
-                  ),
                 ],
               ],
             ),

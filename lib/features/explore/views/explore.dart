@@ -51,6 +51,7 @@ class Explore extends ConsumerStatefulWidget {
 
 class _ExploreState extends ConsumerState<Explore> {
   final suggestedFriendsHandler = WayaObservableScrollController();
+  final quotationSearch = TextEditingController();
 
   @override
   void initState() {
@@ -68,6 +69,13 @@ class _ExploreState extends ConsumerState<Explore> {
       ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    //suggestedFriendsHandler.dispose();
+    quotationSearch.dispose();
+    super.dispose();
   }
 
   @override
@@ -176,7 +184,10 @@ class _ExploreState extends ConsumerState<Explore> {
           const Gap(25),
 
           //? The shared quotations widget.
-          const SharedOthersBuyRequestsWidget(isExpanded: false),
+          SharedOthersBuyRequestsWidget(
+            isExpanded: false,
+            controller: quotationSearch,
+          ),
 
           //? For the next section.
           GroupedWidgetHeader(

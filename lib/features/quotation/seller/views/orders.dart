@@ -5,13 +5,11 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/widgets/order_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
-import 'package:wayagram/shared/features/user/models/default.dart';
 
 class QuotationSellerOrders extends ConsumerStatefulWidget {
   static const route = '/quotation/seller/orders';
@@ -29,9 +27,7 @@ class _AllSellerOrdersState extends ConsumerState<QuotationSellerOrders> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifier.getOrders(ConversationState.self.accountType == UserAccountType.business && ShopResource.hasSelectedShop
-          ? ShopResource.currentShop.id
-          : ConversationState.self.id);
+      notifier.getOrders(ShopResource.currentShop.id);
     });
     super.initState();
   }
@@ -50,7 +46,7 @@ class _AllSellerOrdersState extends ConsumerState<QuotationSellerOrders> {
         handler: handler,
         shouldFetch: !state.isLoadingBids,
         isAtEnd: !state.hasNextBid,
-        onReachEnd: () async => await notifier.getBids(ShopResource.currentShop.id),
+        onReachEnd: () async => await notifier.getOrders(ShopResource.currentShop.id),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
