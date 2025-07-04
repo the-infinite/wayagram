@@ -78,7 +78,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final result = <MessageModel>[];
 
     //? This is fine.
-    final response = await repo.getMessages(state.chat!.id, state.limit, state.page);
+    final response = await repo.getMessages(state.chatId, state.limit, state.page);
 
     //? This is fine.
     if (response.success) {
@@ -225,7 +225,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         }
 
         // Notify everyone of it.
-        WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, result.id));
+        WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, result.id));
 
         //? Return the result.
         return result;
@@ -275,14 +275,14 @@ class ChatNotifier extends StateNotifier<ChatState> {
   /// A helper function that is used to mark all messages in the chat as read by
   /// the user.
   Future<bool> markAllAsRead() async {
-    final response = await repo.readAllInChat(state.chat!.id);
+    final response = await repo.readAllInChat(state.chatId);
 
     //? We need to fetch the messages again.
     if (response.success) {
       getMessages(true);
 
       // This is fine.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.markAllAsRead(state.chat!.id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.markAllAsRead(state.chatId));
     }
 
     //? This is fine.
@@ -317,7 +317,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this was fine...
     if (response.success) {
       //? If this was read.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
 
       // Now, pull all messages.
       getMessage(id);
@@ -334,7 +334,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this was fine...
     if (response.success) {
       //? If this was read.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
 
       // Now, pull all messages.
       getMessage(id);
@@ -354,7 +354,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       // Notify everyone of it.
       if (action == MessageDeleteAction.deleteForEveryone) {
-        WayaSocketController.instance.emit(WayaChatSocketArgs.deleteMessage(state.chat!.id, id));
+        WayaSocketController.instance.emit(WayaChatSocketArgs.deleteMessage(state.chatId, id));
       }
 
       // Remove this.
@@ -372,7 +372,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this succeeded...
     if (response.success) {
       // Notify everyone of it.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
 
       // This is fine.
       getMessage(id);
@@ -389,7 +389,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this succeeded...
     if (response.success) {
       // Notify everyone of it.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
 
       // This is fine.
       getMessage(id);
@@ -437,5 +437,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 }
 
 final chatProvider = StateNotifierProvider.family<ChatNotifier, ChatState, String>(
-  (ref, id) => ChatNotifier(ChatState.initial),
+  (ref, id) => ChatNotifier(
+    ChatState.initial.copyWith(chatId: id),
+  ),
 );
