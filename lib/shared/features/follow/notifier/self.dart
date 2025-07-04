@@ -226,6 +226,7 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
+      debugPrint("Error: $e");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,

@@ -110,24 +110,23 @@ class WalletRepository extends BaseRepository {
     required String bankCode,
   }) {
     final payload = {
-      {
-        "chargeType": "WHOLE", //use this always for now
-        "purpose":
-            purpose, // "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
-        "referenceId": referenceId,
-        "accountNumber": accountNumber,
-        "accountName": accountName,
-        "bankName": bankName,
-        "bankCode": bankCode
-      }
+      "chargeType": "WHOLE", //use this always for now
+      "purpose":
+          purpose, // "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+      "referenceId": referenceId,
+      "accountNumber": accountNumber,
+      "accountName": accountName,
+      "bankName": bankName,
+      "bankCode": bankCode
     };
 
-    return post('$serviceUrl/client/payout/requests', payload, formdata: false);
+    return post('$serviceUrl/client/payout/requests', payload,
+        formdata: false, showErrors: true);
   }
 
   Future<WayaRequestResponse> fetchPayoutHistory(
       String referenceId, String purpose,
-      {int page = 1, int limit = 10}) {
+      {int page = 1, int limit = 100}) {
     return get(
         '$serviceUrl/client/payout/requests?page=$page&limit=$limit&referenceId=$referenceId&purpose=$purpose');
   }

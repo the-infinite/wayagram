@@ -115,6 +115,7 @@ class NotificationVm extends StateNotifier<NotificationState> {
         );
       }
     } catch (e) {
+      debugPrint("${WayaDebugHelpers.getStackTrace(e)}");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,

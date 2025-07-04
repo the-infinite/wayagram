@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -11,6 +13,7 @@ import 'package:wayagram/features/wallet/data/model/bank_model.dart';
 import 'package:wayagram/features/wallet/data/model/create_payout_model.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/get_request_model.dart';
+import 'package:wayagram/features/wallet/data/model/payout_history_model.dart';
 import 'package:wayagram/features/wallet/data/model/payout_method_model.dart';
 import 'package:wayagram/features/wallet/data/model/single_payout_method_model.dart';
 import 'package:wayagram/features/wallet/data/model/single_request_model.dart';
@@ -348,7 +351,6 @@ class WalletVm extends StateNotifier<WalletState> {
       required String bankCode,
       required VoidCallback goBackTo}) async {
     try {
-      state = state.copyWith(isLoading: true);
       final response = await _walletRepository.requestPayout(
         purpose: purpose,
         referenceId: referenceId,
@@ -357,8 +359,8 @@ class WalletVm extends StateNotifier<WalletState> {
         bankName: bankName,
         bankCode: bankCode,
       );
-      state = state.copyWith(isLoading: false);
-      WayaNav.goBack();
+
+      //  WayaNav.goBack();
       if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
@@ -372,18 +374,41 @@ class WalletVm extends StateNotifier<WalletState> {
           ),
         );
         goBackTo();
+      } else {
+        //  print('sjjsjsjss');
+        // WayaSnackBar.showToast(response.message ?? "An Error Occurred");
       }
     } catch (e) {
-      WayaDebugConsoleController.instance.addException(
+      print('sjjsjsjss 2');
+      WayaSnackBar.showToast(e.toString());
+      /*  WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
         WayaDebugEventModule.polls,
         WayaDebugHelpers.getStackTrace(e),
-      );
+      ); */
       // _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  Future<void> fetchUserPayoutTransaction(String referenceId, String purpose,
+      {int page = 1, int limit = 100}) async {
+    try {
+      final response = await _walletRepository
+          .fetchPayoutHistory(referenceId, purpose, page: page, limit: limit);
+
+      if (response.success) {
+        PayoutHistoryModelBase responseModel =
+            PayoutHistoryModelBase.fromJson(response.data);
+
+        state = state.copyWith(
+            payoutHistoryList: responseModel.data?.docs ?? []);
+      }
+    } catch (e) {
+      //debugPrint(e.toString());
+    } finally {}
   }
 }
 
