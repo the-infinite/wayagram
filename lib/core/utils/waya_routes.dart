@@ -148,7 +148,6 @@ import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disq
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_leaderboard_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/view_single_contestant_data.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
@@ -164,6 +163,7 @@ import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/voters_list_page.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/search_transaction.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
@@ -279,7 +279,9 @@ class WayaAppRoutes {
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
-    UgtPayoutHistory.route: () => UgtPayoutHistory(),
+    PayoutHistory.route: () => PayoutHistory(
+
+    ),
     WayaSocialNotificationsScreen.route: () => WayaSocialNotificationsScreen(),
     ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
     AdminTransactionHistory.route: () => AdminTransactionHistory(),
