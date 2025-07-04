@@ -220,6 +220,9 @@ class EventLogDocs {
       this.createdAt, 
       this.updatedAt,});
 
+  DateTime get createdTime => DateTime.parse(createdAt!);
+  DateTime get updatedTime => DateTime.parse(updatedAt!);
+
   EventLogDocs.fromJson(dynamic json) {
     id = json['id'];
     userId = json['userId'];

@@ -32,11 +32,11 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      ref.read(donationVmProvider.notifier).getOneDonation('${args['id'] ?? widget.id}');
+      ref.read(donationVmProvider.notifier).getOneDonation(widget.id);
     });
     super.initState();
   }
-
+//args['id'] ??
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);

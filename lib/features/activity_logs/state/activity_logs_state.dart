@@ -8,6 +8,7 @@ import 'package:wayagram/features/activity_logs/data/model/page_activity_model.d
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/search_log_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/ugt_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_actions_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/visited_pages_model.dart';
@@ -45,6 +46,7 @@ class ActivityLogsState {
   List<PageDocs> walletDocs1;
   List<PageDocs> quotationDocs;
   List<PageDocs> quotationDocs1;
+  List<UgtLogDocs> ugtLogDocs;
 
   final int? totalSize;
   final int? limit;
@@ -62,8 +64,6 @@ class ActivityLogsState {
   List<PageDocs> pageDocs1;
   List<PageDocs> socialDocs;
   List<PageDocs> socialDocs1;
-  List<PageDocs> ugtDocs;
-  List<PageDocs> ugtDocs1;
   List<GroupDocs> groupDocs;
   List<GroupDocs> groupDocs1;
   List<SearchLogDocs> searchLogDocs1;
@@ -85,8 +85,7 @@ class ActivityLogsState {
     this.cmsDocs1 = const [],
     this.pollDocs = const [],
     this.pollDocs1 = const [],
-    this.ugtDocs = const [],
-    this.ugtDocs1 = const [],
+    this.ugtLogDocs = const [],
     this.eventDocs = const [],
     this.eventDocs1 = const [],
     this.walletDocs = const [],
@@ -129,8 +128,7 @@ class ActivityLogsState {
   ActivityLogsState copyWith({
     TextEditingController? title,
     List<LoginHistoryDocs>? loginHistoryDocs,
-    List<PageDocs>? ugtDocs,
-    List<PageDocs>? ugtDocs1,
+    List<UgtLogDocs>? ugtLogDocs,
     List<PageDocs>? walletDocs,
     List<PageDocs>? walletDocs1,
     List<PageDocs>? shopDocs,
@@ -191,8 +189,7 @@ class ActivityLogsState {
       groupDocs1: groupDocs1 ?? this.groupDocs1,
       eventDocs: eventDocs ?? this.eventDocs,
       eventDocs1: eventDocs1 ?? this.eventDocs1,
-      ugtDocs: ugtDocs1 ?? this.ugtDocs,
-      ugtDocs1: ugtDocs1 ?? this.ugtDocs1,
+      ugtLogDocs: ugtLogDocs ?? this.ugtLogDocs,
       pageDocs: pageDocs ?? this.pageDocs,
       pageDocs1: pageDocs1 ?? this.pageDocs1,
       donationDocs: donationDocs ?? this.donationDocs,
@@ -347,6 +344,26 @@ class ActivityLogsState {
     //? end date.
     result = result.where((account) {
       final timestamp = DateTime.parse(account.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<UgtLogDocs> filterUgtDocs(DateTime start, DateTime end) {
+    Iterable<UgtLogDocs> result = ugtLogDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((ugt) {
+      final timestamp = DateTime.parse(ugt.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((ugt) {
+      final timestamp = DateTime.parse(ugt.createdAt!);
       return !timestamp.isAfter(end);
     });
 
