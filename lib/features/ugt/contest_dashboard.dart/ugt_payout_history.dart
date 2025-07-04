@@ -10,9 +10,11 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_payout_history_card.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import '../../../core/components/waya_scaffold.dart';
 
 class UgtPayoutHistory extends StatefulHookConsumerWidget {
@@ -27,12 +29,12 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
   @override
   Widget build(BuildContext context) {
     //final wayaTheme = Theme.of(context);
-    final dashboardVm = ref.watch(ugtAdminDashboardVm);
-    final notifier = ref.read(ugtAdminDashboardVm.notifier);
+    final walletViewModel = ref.watch(walletVmProvider);
+    final notifier = ref.watch(walletVmProvider.notifier);
     //final viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestProvider);
     useEffect(() {
-      notifier.fetchUserPayoutTransaction(model?.id ?? "");
+      notifier.fetchUserPayoutTransaction(model?.id ?? "", "CONTEST");
 
       return null;
     }, []);
@@ -79,18 +81,18 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
 
             SizedBox(height: 20),
 
-            if (dashboardVm.contestPayoutHistoryList.isEmpty) emptyWidget(),
+            if (walletViewModel.payoutHistoryList.isEmpty) emptyWidget(),
 
-            if (dashboardVm.contestPayoutHistoryList.isNotEmpty)
+            if (walletViewModel.payoutHistoryList.isNotEmpty)
               ListView.builder(
                 // controller: _scrollController,
                 shrinkWrap: true,
-                itemCount: dashboardVm.contestPayoutHistoryList.length,
+                itemCount: walletViewModel.payoutHistoryList.length,
                 itemBuilder: (context, index) {
-                  final post = dashboardVm.contestPayoutHistoryList[index];
+                  final post = walletViewModel.payoutHistoryList[index];
                   return GestureDetector(
                     onTap: () {},
-                    child: UgtHistoryCard(
+                    child: UgtPayoutHistoryCard(
                       model: post,
                       isPayout: true,
                       position: index + 1,
@@ -154,8 +156,8 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: WayaAssets.images.uEmptystate.image(),
-        desc: "Transaction history is empty",
-        title: "No Transaction History",
+        desc: "Payout history is empty",
+        title: "No Payout History",
         buttonText: "Host a Contest",
         showButtonBusiness: true,
         hideButton: false,

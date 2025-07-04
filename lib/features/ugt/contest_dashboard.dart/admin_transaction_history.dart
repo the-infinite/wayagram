@@ -51,89 +51,87 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
       isScrollable: true,
       title: "Transaction History",
       backgroundColor: Colors.white,
-      floatingActionButton: DateTime.now().isAfter(
-              DateTime.parse(model?.endDate ?? "2096-01-01T00:00:00.000Z"))
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Gap(40),
-                if (ConversationState.self.accountType ==
-                    UserAccountType.business)
-                  SizedBox(
-                    width: context.width / 2.8,
-                    child: WayaButton(
-                        horizontalPadding: 10,
-                        fontSize: 14.sp,
-                        height: 45.h,
-                        text: "Request Payout",
-                        callback: () async {
-                          ref
-                              .read(credentialInputProvider.notifier)
-                              .onSubmitPayoutPin(() => WayaNav.toNamed(
-                                      '/payoutVerification',
-                                      arguments: {
-                                        "id": model?.id ?? "",
-                                        "Module": PayoutModule.contest,
-                                        "Model": PayoutReviewModel(
-                                            comission: dashboardVm
-                                                .totalCommission
-                                                .toString(),
-                                            amount: dashboardVm.revenueGenerated
-                                                    ?.toString() ??
-                                                '0',
-                                            amountDue: dashboardVm
-                                                    .revenueGenerated
-                                                    ?.toString() ??
-                                                '0',
-                                            endDate: model?.endDate ?? "")
-                                      }));
-                        }),
-                  ),
-                Gap(10),
-                GestureDetector(
-                  onTap: () {
-                    WayaNav.toNamed(UgtPayoutHistory.route);
-                    //  WayaNav.toNamed('/admin-transaction-page');
-                  },
-                  child: Container(
-                    //  margin: EdgeInsets.only(right: 20.w),
-                    width: 130.w,
-                    height: 45.h,
-                    padding: REdgeInsets.symmetric(
-                        vertical: 8.dg, horizontal: 12.dg),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: wayaTheme.colorScheme.primary600,
-                        width: 1.5,
-                      ),
-                      color: wayaTheme.colorScheme.white,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        /*   WayaAssets.icons.export.svg(
+      floatingActionButton: DateTime.now().isAfter(DateTime.parse(
+                    model?.endDate ?? "2096-01-01T00:00:00.000Z")) &&
+                dashboardVm.revenueGenerated != 0
+          ?
+          Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Gap(40),
+          if (ConversationState.self.accountType == UserAccountType.business)
+            SizedBox(
+              width: context.width / 2.8,
+              child: WayaButton(
+                  horizontalPadding: 10,
+                  fontSize: 14.sp,
+                  height: 45.h,
+                  text: "Request Payout",
+                  callback: () async {
+                    ref
+                        .read(credentialInputProvider.notifier)
+                        .onSubmitPayoutPin(() =>
+                            WayaNav.toNamed('/payoutVerification', arguments: {
+                              "id": model?.id ?? "",
+                              "Module": PayoutModule.contest,
+                              "Model": PayoutReviewModel(
+                                  comission:
+                                      dashboardVm.totalCommission.toString(),
+                                  amount: dashboardVm.revenueGenerated
+                                          ?.toString() ??
+                                      '0',
+                                  amountDue: dashboardVm.revenueGenerated
+                                          ?.toString() ??
+                                      '0',
+                                  endDate: model?.endDate ?? "")
+                            }));
+                  }),
+            ),
+          Gap(10),
+          GestureDetector(
+            onTap: () {
+              WayaNav.toNamed(UgtPayoutHistory.route);
+              //  WayaNav.toNamed('/admin-transaction-page');
+            },
+            child: Container(
+              //  margin: EdgeInsets.only(right: 20.w),
+              width: 130.w,
+              height: 45.h,
+              padding: REdgeInsets.symmetric(vertical: 8.dg, horizontal: 12.dg),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: wayaTheme.colorScheme.primary600,
+                  width: 1.5,
+                ),
+                color: wayaTheme.colorScheme.white,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  /*   WayaAssets.icons.export.svg(
                           width: 18,
                           height: 18,
                           fit: BoxFit.scaleDown,
                           color: wayaTheme.colorScheme.primary600,
                         ),
                         Gap(8), */
-                        Text(
-                          'Payout History',
-                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                            color: wayaTheme.colorScheme.primary600,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    'Payout History',
+                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                      color: wayaTheme.colorScheme.primary600,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-              ],
-            )
-          : Container(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      )
+       : Container()
+      ,
       body: SingleChildScrollView(
         //  padding: EdgeInsets.all(),
         child: Column(

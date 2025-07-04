@@ -617,9 +617,9 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
             //TODO Poll navigate to on success
           });
         } else if (widget.module == PayoutModule.contest) {
-          ref
+         /*  ref
               .read(contestNotifierProvider.notifier)
-              .requestPayout(context, widget.id);
+              .requestPayout(context, widget.id); */
           ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
               purpose: PayoutModule.contest.name.toUpperCase(),
               referenceId: widget.id,

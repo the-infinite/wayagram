@@ -5,6 +5,7 @@ import 'package:wayagram/features/ugt/data/model/contestant_count_model.dart';
 import 'package:wayagram/features/ugt/data/model/contestant_transaction_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_dashboard_state.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/wallet/data/model/payout_history_model.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 
 import '../../../core/data/local_data_source.dart';
@@ -107,9 +108,12 @@ List<ContestTransactionModel> modelList= [];
       if (response.success) {
         ContestTransactionModelBase responseModel =
             ContestTransactionModelBase.fromJson(response.data);
+  /*  PayoutHistoryModelBase responseModel =
+            PayoutHistoryModelBase.fromJson(response.data); */
 
-        state = state.copyWith(
-            contestPayoutHistoryList: responseModel.data?.docs ?? []);
+
+      /*   state = state.copyWith(
+            contestPayoutHistoryList: responseModel.data?.docs ?? []); */
        
       }
     } catch (e) {

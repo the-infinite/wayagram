@@ -21,6 +21,7 @@ import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.d
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/pdf/contestant_pdf.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -80,13 +81,17 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     final walletViewModel = ref.watch(walletVmProvider);
     var model = ref.watch(selectedContestProvider);
     useEffect(() {
-      dashboardNotifier.fetchTotalContestant(model?.id ?? "");
-      dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration.zero, () {
+        dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+        dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
+        ref.read(walletVmProvider.notifier).getPayoutMethod();
+      });
+
+      Future.delayed(Duration(seconds: 2), () {
         notifier.addStages(model?.contestSettings?.stages ?? []);
       });
       targetDate = DateTime.parse(model?.endDate ?? "2026-01-01T00:00:00.000Z");
-      ref.read(walletVmProvider.notifier).getPayoutMethod();
+
       return null;
     }, []);
     return WayaScaffold(
@@ -264,12 +269,13 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                 WayaNav.toNamed(AdminTransactionHistory.route);
               },
               child: _buildStatCard2(context, "Revenue Generated",
-                  "₦${dashboardVm.revenueGenerated}"),
+                  "₦${formatMoney(dashboardVm.revenueGenerated?.toString() ?? "0")}"),
             ),
             const Gap(10),
-            // DateTime.now().isAfter(DateTime.parse(model?.endDate)) ?
-            if (DateTime.now().isAfter(
-                DateTime.parse(model?.endDate ?? "2096-01-01T00:00:00.000Z")))
+
+            if (DateTime.now().isAfter(DateTime.parse(
+                    model?.endDate ?? "2096-01-01T00:00:00.000Z")) &&
+                dashboardVm.revenueGenerated != 0)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

@@ -13,6 +13,7 @@ import 'package:wayagram/features/wallet/data/model/bank_model.dart';
 import 'package:wayagram/features/wallet/data/model/create_payout_model.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/get_request_model.dart';
+import 'package:wayagram/features/wallet/data/model/payout_history_model.dart';
 import 'package:wayagram/features/wallet/data/model/payout_method_model.dart';
 import 'package:wayagram/features/wallet/data/model/single_payout_method_model.dart';
 import 'package:wayagram/features/wallet/data/model/single_request_model.dart';
@@ -349,39 +350,35 @@ class WalletVm extends StateNotifier<WalletState> {
       required String bankName,
       required String bankCode,
       required VoidCallback goBackTo}) async {
-    // try {
-    state = state.copyWith(isLoading: true);
-    final response = await _walletRepository.requestPayout(
-      purpose: purpose,
-      referenceId: referenceId,
-      accountNumber: accountNumber,
-      accountName: accountName,
-      bankName: bankName,
-      bankCode: bankCode,
-    );
-    state = state.copyWith(isLoading: false);
-    WayaNav.goBack();
-    if (response.success && ctx.mounted) {
-      ScaffoldMessenger.of(ctx).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Payout Method added successfully!',
-            style: TextStyle(
-                fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
-          ),
-          backgroundColor: WayaColors.primary,
-          duration: Duration(seconds: 2),
-        ),
+    try {
+      final response = await _walletRepository.requestPayout(
+        purpose: purpose,
+        referenceId: referenceId,
+        accountNumber: accountNumber,
+        accountName: accountName,
+        bankName: bankName,
+        bankCode: bankCode,
       );
-      goBackTo();
-    } else {
-    //  print('sjjsjsjss');
-       WayaSnackBar.showToast("An error occurred, Please try again!!");
-    }
-    /*  } on DioException catch (e) {
-      print('sjjsjsjss 344');
-      WayaSnackBar.showToast(e.message ?? "An error occured");
-    } */ /* catch (e) {
+
+      //  WayaNav.goBack();
+      if (response.success && ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Payout Method added successfully!',
+              style: TextStyle(
+                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        goBackTo();
+      } else {
+        //  print('sjjsjsjss');
+        // WayaSnackBar.showToast(response.message ?? "An Error Occurred");
+      }
+    } catch (e) {
       print('sjjsjsjss 2');
       WayaSnackBar.showToast(e.toString());
       /*  WayaDebugConsoleController.instance.addException(
@@ -393,7 +390,25 @@ class WalletVm extends StateNotifier<WalletState> {
       // _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
-    } */
+    }
+  }
+
+  Future<void> fetchUserPayoutTransaction(String referenceId, String purpose,
+      {int page = 1, int limit = 100}) async {
+    try {
+      final response = await _walletRepository
+          .fetchPayoutHistory(referenceId, purpose, page: page, limit: limit);
+
+      if (response.success) {
+        PayoutHistoryModelBase responseModel =
+            PayoutHistoryModelBase.fromJson(response.data);
+
+        state = state.copyWith(
+            payoutHistoryList: responseModel.data?.docs ?? []);
+      }
+    } catch (e) {
+      //debugPrint(e.toString());
+    } finally {}
   }
 }
 
