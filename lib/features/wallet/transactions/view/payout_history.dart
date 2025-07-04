@@ -9,32 +9,33 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
+
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_payout_history_card.dart';
-import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
-import '../../../core/components/waya_scaffold.dart';
 
-class UgtPayoutHistory extends StatefulHookConsumerWidget {
-  static const route = '/ugt-payout-history-page';
-  const UgtPayoutHistory({super.key});
+//"Module": "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+class PayoutHistory extends StatefulHookConsumerWidget {
+  static const route = '/payout-history-page';
+  const PayoutHistory({super.key});
 
   @override
-  ConsumerState<UgtPayoutHistory> createState() => _ManageStateContestState();
+  ConsumerState<PayoutHistory> createState() => _ManageStateContestState();
 }
 
-class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
+class _ManageStateContestState extends ConsumerState<PayoutHistory> {
   @override
   Widget build(BuildContext context) {
-    //final wayaTheme = Theme.of(context);
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
     final walletViewModel = ref.watch(walletVmProvider);
     final notifier = ref.watch(walletVmProvider.notifier);
-    //final viewModel = ref.watch(votersContestNotifier);
-    var model = ref.watch(selectedContestProvider);
+
     useEffect(() {
-      notifier.fetchUserPayoutTransaction(model?.id ?? "", "CONTEST");
+      //? check the module type after the import
+      Future.delayed(Duration.zero, () {
+         notifier.fetchUserPayoutTransaction(args["referenceId"], args["Module"]);
+      });
 
       return null;
     }, []);
@@ -57,27 +58,6 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
               ],
             ),
             const Gap(20),
-            /*   Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildStatCard(
-                    context,
-                    "Revenue\nGenerated",
-                    "₦${formatMoney(dashboardVm.revenueGenerated?.toString() ?? '0')}",
-                    Icon(
-                      Icons.map_outlined,
-                      color: Colors.white,
-                    )),
-                _buildStatCard(
-                    context,
-                    "Total\nCommissions",
-                    "₦${formatMoney(dashboardVm.totalCommission?.toString() ?? '0')}",
-                    Icon(
-                      Icons.map_outlined,
-                      color: Colors.white,
-                    )),
-              ],
-            ), */
 
             SizedBox(height: 20),
 
@@ -162,14 +142,5 @@ class _ManageStateContestState extends ConsumerState<UgtPayoutHistory> {
         showButtonBusiness: true,
         hideButton: false,
         onTap: () {});
-  }
-
-  Color getColor(bool isText, String text) {
-    return isText ? Color(0xff9E0A05) : Color(0xffFEF6E7);
-    /*  } else if (text == "rejected") {
-      return isText ? Color(0xff9E0A05) : Color(0xffFBEAE9);
-    } else {
-      return isText ? Color(0xff865503) : Color(0xffFEF6E7);
-    } */
   }
 }

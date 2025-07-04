@@ -14,12 +14,13 @@ import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.da
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
+
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 import '../../../core/components/waya_scaffold.dart';
@@ -90,8 +91,11 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
           Gap(10),
           GestureDetector(
             onTap: () {
-              WayaNav.toNamed(UgtPayoutHistory.route);
-              //  WayaNav.toNamed('/admin-transaction-page');
+              // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+                      WayaNav.toNamed(PayoutHistory.route, arguments: {
+                        "referenceId": model?.id ?? "",
+                        "Module": 'CONTEST'
+                      });
             },
             child: Container(
               //  margin: EdgeInsets.only(right: 20.w),

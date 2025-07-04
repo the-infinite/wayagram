@@ -19,7 +19,7 @@ import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls
 import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
+
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/pdf/contestant_pdf.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
@@ -27,6 +27,7 @@ import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
@@ -319,7 +320,11 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   Gap(10),
                   GestureDetector(
                     onTap: () {
-                      WayaNav.toNamed(UgtPayoutHistory.route);
+                      // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+                      WayaNav.toNamed(PayoutHistory.route, arguments: {
+                        "referenceId": model?.id ?? "",
+                        "Module": 'CONTEST'
+                      });
                     },
                     child: Container(
                       //  margin: EdgeInsets.only(right: 20.w),
