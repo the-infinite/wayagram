@@ -13,17 +13,22 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
+
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/pdf/contestant_pdf.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class DashboardContestPage extends StatefulHookConsumerWidget {
@@ -74,14 +79,20 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     final notifier = ref.read(votersContestNotifier.notifier);
     final dashboardNotifier = ref.watch(ugtAdminDashboardVm.notifier);
     final dashboardVm = ref.watch(ugtAdminDashboardVm);
+    final walletViewModel = ref.watch(walletVmProvider);
     var model = ref.watch(selectedContestProvider);
     useEffect(() {
-      dashboardNotifier.fetchTotalContestant(model?.id ?? "");
-      dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration.zero, () {
+        dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+        dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
+        ref.read(walletVmProvider.notifier).getPayoutMethod();
+      });
+
+      Future.delayed(Duration(seconds: 2), () {
         notifier.addStages(model?.contestSettings?.stages ?? []);
       });
       targetDate = DateTime.parse(model?.endDate ?? "2026-01-01T00:00:00.000Z");
+
       return null;
     }, []);
     return WayaScaffold(
@@ -92,6 +103,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             .read(votersContestNotifier.notifier)
             .fetchAllContestApplicant(model?.id ?? "");
         dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+        ref.read(walletVmProvider.notifier).getPayoutMethod();
         return dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
       },
       title: "",
@@ -258,12 +270,13 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                 WayaNav.toNamed(AdminTransactionHistory.route);
               },
               child: _buildStatCard2(context, "Revenue Generated",
-                  "₦${dashboardVm.revenueGenerated}"),
+                  "₦${formatMoney(dashboardVm.revenueGenerated?.toString() ?? "0")}"),
             ),
             const Gap(10),
-            // DateTime.now().isAfter(DateTime.parse(model?.endDate)) ?
-            if (DateTime.now().isAfter(
-                DateTime.parse(model?.endDate ?? "2096-01-01T00:00:00.000Z")))
+
+            if (DateTime.now().isAfter(DateTime.parse(
+                    model?.endDate ?? "2096-01-01T00:00:00.000Z")) &&
+                dashboardVm.revenueGenerated != 0)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -277,6 +290,15 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           height: 42,
                           text: "Request Payout",
                           callback: () async {
+                            //?check if user have payout method added
+                            if (walletViewModel.payoutMethod.isEmpty) {
+                              WayaUtils.showModalSheet(
+                                context,
+                                child: AddPayoutModal(),
+                              );
+                              return;
+                            }
+
                             WayaNav.toNamed('/admin-transaction-page');
                             /*   ref
                                 .read(credentialInputProvider.notifier)
@@ -298,7 +320,11 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   Gap(10),
                   GestureDetector(
                     onTap: () {
-                      WayaNav.toNamed(UgtPayoutHistory.route);
+                      // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+                      WayaNav.toNamed(PayoutHistory.route, arguments: {
+                        "referenceId": model?.id ?? "",
+                        "Module": 'CONTEST'
+                      });
                     },
                     child: Container(
                       //  margin: EdgeInsets.only(right: 20.w),
@@ -382,7 +408,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   ),
                   Gap(10),
                   Text(
-                    "${remainingTime.inDays}days  :   ${remainingTime.inHours.remainder(24)}hrs  :  ${remainingTime.inMinutes.remainder(60)}mins  :  ${remainingTime.inSeconds.remainder(60)}sec",
+                    remainingTime.inSeconds.remainder(60) > 0
+                        ? "${remainingTime.inDays}days  :   ${remainingTime.inHours.remainder(24)}hrs  :  ${remainingTime.inMinutes.remainder(60)}mins  :  ${remainingTime.inSeconds.remainder(60)}sec"
+                        : "0days  :   0hrs  :  0mins  :  0sec",
                     style: TextStyle(
                         color: wayaTheme.primaryColor,
                         fontWeight: FontWeight.bold),

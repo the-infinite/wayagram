@@ -13,12 +13,16 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
+import 'package:wayagram/features/event/views/event_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
+import 'package:wayagram/features/wallet/view/request_payout.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PollsModal extends ConsumerStatefulWidget {
@@ -535,9 +539,19 @@ class _PollPinEntryBottomSheetState
 class PinEntryBottomSheet2 extends ConsumerStatefulWidget {
   final String id;
   final PayoutModule module;
+  final String bankName;
+  final String acctName;
+  final String acctNumber;
+  final String bankCode;
 
   const PinEntryBottomSheet2(
-      {super.key, required this.id, required this.module});
+      {super.key,
+      required this.id,
+      required this.module,
+      required this.bankName,
+      required this.bankCode,
+      required this.acctName,
+      required this.acctNumber});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -594,23 +608,25 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
           ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
               purpose: "POLL & VOTE",
               referenceId: widget.id,
-              accountNumber: "accountNumber",
-              accountName: "accountName",
-              bankName: "bankName",
-              bankCode: "bankCode", goBackTo: () {
+              accountNumber: widget.acctNumber,
+              accountName: widget.acctName,
+              bankName: widget.bankName,
+              bankCode: widget.bankCode, goBackTo: () {
+           WayaNav.removeAllUntil(
+                    PollRequestPayout(), PollRequestPayout.route);
             //TODO Poll navigate to on success
           });
         } else if (widget.module == PayoutModule.contest) {
-          ref
+         /*  ref
               .read(contestNotifierProvider.notifier)
-              .requestPayout(context, widget.id);
+              .requestPayout(context, widget.id); */
           ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
               purpose: PayoutModule.contest.name.toUpperCase(),
               referenceId: widget.id,
-              accountNumber: "accountNumber",
-              accountName: "accountName",
-              bankName: "bankName",
-              bankCode: "bankCode", goBackTo: () {
+              accountNumber: widget.acctNumber,
+              accountName: widget.acctName,
+              bankName: widget.bankName,
+              bankCode: widget.bankCode, goBackTo: () {
             WayaNav.removeAllUntil(
                 DashboardContestPage(), DashboardContestPage.route);
           });
@@ -619,11 +635,30 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
             context,
             purpose: PayoutModule.event.name.toUpperCase(),
             referenceId: widget.id,
-            accountNumber: "accountNumber",
-            accountName: "accountName",
-            bankName: "bankName",
-            bankCode: "bankCode",
+            accountNumber: widget.acctNumber,
+            accountName: widget.acctName,
+            bankName: widget.bankName,
+            bankCode: widget.bankCode,
             goBackTo: () {
+              WayaNav.removeAllUntil(
+                  EventDashboard(id: widget.id), EventDashboard.route);
+              //TODO Event navigate to on success
+            },
+          );
+          /*  ref
+              .read(eventVmProvider.notifier)
+              .requestForEventPayout(context, widget.id);   */
+        } else if (widget.module == PayoutModule.donation) {
+          ref.read(walletVmProvider.notifier).requestPayoutMethod(
+            context,
+            purpose: PayoutModule.donation.name.toUpperCase(),
+            referenceId: widget.id,
+            accountNumber: widget.acctNumber,
+            accountName: widget.acctName,
+            bankName: widget.bankName,
+            bankCode: widget.bankCode,
+            goBackTo: () {
+              WayaNav.removeAllUntil(Donations(), Donations.route);
               //TODO Event navigate to on success
             },
           );
@@ -1126,6 +1161,69 @@ class _VoteInsufficientModalState extends State<VoteInsufficientModal> {
     );
   }
 }
+
+class AddPayoutModal extends StatefulWidget {
+  const AddPayoutModal({super.key});
+
+  @override
+  State<AddPayoutModal> createState() => _AddPayoutModalState();
+}
+
+class _AddPayoutModalState extends State<AddPayoutModal> {
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/polls/cancel.png',
+              height: 116.h,
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              'Add Payout Method',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.black),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 3.h),
+            Text(
+              "It seems you have not added any payout method. Click the button below to add Payout method.",
+              style: wayaTheme.textTheme.hintStyle,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 30.h),
+            WayaButton(
+              callback: () async {
+                WayaNav.goBack();
+                WayaNav.toNamed(RequestPayout.route);
+              },
+              text: "Add Payout Method",
+            ),
+            SizedBox(height: 17.h),
+            WayaButton(
+              border: Border.all(color: WayaColors.greyColor300),
+              color: Colors.white,
+              callback: () async {
+                WayaNav.goBack();
+                
+              },
+              text: "Go Back",
+              textColor: WayaColors.black,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class NumPadButton extends StatelessWidget {
   final String? text;
