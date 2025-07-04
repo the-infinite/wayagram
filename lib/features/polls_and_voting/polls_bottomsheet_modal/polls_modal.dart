@@ -1213,9 +1213,9 @@ class _AddPayoutModalState extends State<AddPayoutModal> {
               color: Colors.white,
               callback: () async {
                 WayaNav.goBack();
-                WayaNav.toNamed("/poll-dashboard");
+                
               },
-              text: "Go Back to Polls",
+              text: "Go Back",
               textColor: WayaColors.black,
             ),
           ],

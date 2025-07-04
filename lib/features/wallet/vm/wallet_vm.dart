@@ -200,8 +200,10 @@ class WalletVm extends StateNotifier<WalletState> {
       if (response.success) {
         VerifyAccountNameModel responseModel =
             VerifyAccountNameModel.fromJson(response.data);
-        state = state.copyWith(accountName: responseModel.data?.name);
+        state = state.copyWith(accountName: responseModel.data?.name, acctNameController: TextEditingController(text: responseModel.data?.name));
         debugPrint("DARLINGTON ACCOUNT NAME ${responseModel.data?.name}");
+
+
       }
     } catch (e) {
       debugPrint(e.toString());
