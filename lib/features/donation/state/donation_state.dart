@@ -8,7 +8,6 @@ import 'package:wayagram/features/donation/model/applied_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/model/rejected_donation_model.dart';
-import 'package:wayagram/features/donation/model/single_donation_model.dart';
 
 class DonationState{
     final TextEditingController title;

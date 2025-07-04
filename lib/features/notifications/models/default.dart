@@ -183,6 +183,11 @@ class NotificationModel {
       json['nType'] = 'chat';
     }
 
+    //? Second, if this is not a proper priority constant.
+    if (json['priority'] == 'medium') {
+      json['priority'] = 'normal';
+    }
+
     //? If this has any data here....
     if (json["message"]?["data"] != null) {
       final messageData = json["message"]!["data"] as Map<String, dynamic>?;

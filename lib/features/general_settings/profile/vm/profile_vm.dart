@@ -24,6 +24,7 @@ import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/group/notifier/default.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {
   final ProfileRepo _profileRepo;
@@ -184,6 +185,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
     wayaPostCache.clear();
     wayaGroupCache.clear();
     wayaPageCache.clear();
+    await ShopResource.reset();
 
     //? Go all the wat to the last page.
     WayaNav.removeUntilNamed(LoginCoverPage.route);

@@ -3,6 +3,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/wallet/data/model/bank_model.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/get_request_model.dart';
+import 'package:wayagram/features/wallet/data/model/payout_history_model.dart';
 import 'package:wayagram/features/wallet/data/model/payout_method_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 
@@ -28,6 +29,7 @@ class WalletState {
   final List<RequestDocs> requestDocs;
   final List<Select> banks;
   final List<BankModelData>  filteredList;
+  final List<PayoutHistoryModel> payoutHistoryList;
 
   WalletState({
     this.isLoading = false,
@@ -51,6 +53,7 @@ class WalletState {
     this.externalWallets,
     this.payoutMethod = const [],
     this.requestDocs = const [],
+    this.payoutHistoryList = const [],
 
   }):
         acctNumberController = acctNumberController ?? TextEditingController(),
@@ -78,6 +81,7 @@ class WalletState {
     List<RequestDocs>? requestDocs,
     List<PayoutMethodData>? payoutMethod,
     List<BankModelData>? filteredList,
+    List<PayoutHistoryModel>? payoutHistoryList,
 
   }) =>
       WalletState(
@@ -100,7 +104,8 @@ class WalletState {
           searchController: searchController ?? this.searchController,
         externalWallets: externalWallets ?? this.externalWallets,
         payoutMethod: payoutMethod ?? this.payoutMethod,
-        filteredList: filteredList ?? this.filteredList
+        filteredList: filteredList ?? this.filteredList,
+        payoutHistoryList: payoutHistoryList ?? this.payoutHistoryList
       );
 }
 

@@ -7,6 +7,7 @@ import 'package:wayagram/features/activity_logs/data/model/event_log_model.dart'
 import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/ugt_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/wallet_activity_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -229,6 +230,45 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
+  Future<PaginatedResult<UgtLogDocs>?> getUgtLogs({required int page}) async {
+
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getUgtLogs(page);
+      List<UgtLogDocs>? fetchUgtDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        UgtLogModel responseModel = UgtLogModel.fromJson(response.data);
+        fetchUgtDocs = (responseModel.data?.docs ?? [])..sort((a, b) => b.createdTime.compareTo(a.createdTime));
+        hasNextPage = responseModel.data?.hasNextPage;
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchUgtDocs.addAll(state.ugtLogDocs);
+        }
+
+        state = state.copyWith(
+          ugtLogDocs: fetchUgtDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchUgtDocs);
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+    return null;
+  }
+
   Future<PaginatedResult<PageDocs>?> getPageLogs({required int page}) async {
 
     try {
@@ -332,32 +372,9 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<PageDocs>?> getUgtLogs({required int page}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _activityLogsRepository.getUgtLogs(page);
-      List<PageDocs>? fetchUgtDocs = [];
-      bool? hasNextPage = false;
-      state = state.copyWith(isLoading: false);
-      if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
-        fetchUgtDocs = responseModel.data?.docs;
-        hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(ugtDocs: fetchUgtDocs);
-        state = state.copyWith(ugtDocs1: responseModel.data?.docs);
-      } else {
-        state = state.copyWith(isLoading: false);
-      }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchUgtDocs!);
-    } catch (e) {
-      _logger.e(e);
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-    return null;
-  }
 
   Future<PaginatedResult<EventLogDocs>?> getEventLogs({required int page}) async {
+
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getEventLogs(page);
@@ -366,13 +383,27 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         EventLogModel responseModel = EventLogModel.fromJson(response.data);
-        fetchEventDocs = responseModel.data?.docs;
+        fetchEventDocs = (responseModel.data?.docs ?? [])..sort((a, b) => b.createdTime.compareTo(a.createdTime));
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(eventDocs: fetchEventDocs);
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchEventDocs.addAll(state.eventDocs);
+        }
+
+        state = state.copyWith(
+          eventDocs: fetchEventDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchEventDocs!);
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchEventDocs);
     } catch (e) {
       _logger.e(e);
     } finally {

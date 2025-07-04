@@ -10,12 +10,14 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/event/data/model/payout_response_model.dart';
 import 'package:wayagram/features/event/data/model/transaction_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:csv/csv.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 
 class EventDashboard extends ConsumerStatefulWidget {
   static const route = "/event-dashboard";
@@ -86,10 +88,28 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Gap(10.h),
-          Text(
-            payouts[0].eventPayouts.title,
-            style: wayaTheme.textTheme.headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w600, fontSize: 18.sp),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                payouts[0].eventPayouts.title,
+                style: wayaTheme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w600, fontSize: 18.sp),
+              ),
+              WayaButton(
+                height: 30,
+                callback: () {
+WayaNav.toNamed(PayoutHistory.route, arguments: {
+                      "referenceId": widget.id,
+                      "Module": 'CONTEST'
+                    });
+              }
+              ,
+              text: 'Request Payout',
+              textStyle: wayaTheme.textTheme.descriptionStyle,
+              )
+             
+            ],
           ),
           Gap(10.h),
           GridView(

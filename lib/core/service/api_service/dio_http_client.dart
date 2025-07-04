@@ -14,6 +14,7 @@ import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_storage_interface.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 typedef WayaDownloadListener = void Function(double done, int totalSize);
 
@@ -411,6 +412,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             if (token != null && !_signedOut) {
               await secureDataSource.deleteAll();
               await WayaFastStorageService().deleteAll();
+              await ShopResource.reset();
               _signedOut = true;
               await WayaUtils.showModalSheet(
                 WayaNav.context,
