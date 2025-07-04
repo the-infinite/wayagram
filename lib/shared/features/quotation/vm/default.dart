@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
@@ -81,6 +82,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         state = state.copyWith(isLoadingRequests: false);
       }
     } catch (e) {
+      debugPrint("Error: $e");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
@@ -146,6 +148,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         state = state.copyWith(isLoadingRequests: false);
       }
     } catch (e) {
+      debugPrint("Error: $e");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,

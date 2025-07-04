@@ -48,7 +48,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
           Gap(10),
           Row(
             children: [
-              Text('Total Balance: ₦${ref.watch(createPollVotingProvider.notifier).formatAm('${state.data?.balance}')}',
+              Text('Total Balance: ₦${ref.watch(createPollVotingProvider.notifier).formatAm('${state.data?.balance}') ?? '0.00'}',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,

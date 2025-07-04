@@ -148,6 +148,11 @@ class ShopResource {
     return _getAndSave(id);
   }
 
+  /// Helper function used to reset the shop resource.
+  static Future<void> reset() async {
+    _current = null;
+  }
+
   static Future<ShopDetailsModel?> _getAndSave(String id) async {
     final response = await _repo.getShopDetailsById(id);
 

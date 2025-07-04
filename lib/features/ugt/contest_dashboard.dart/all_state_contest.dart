@@ -176,51 +176,51 @@ class _ManageStateContestState extends ConsumerState<AllStateContest> {
     );
   }
 
-  Widget _buildStatCard(
-      BuildContext context, String title, String value, Widget widget) {
-    final wayaTheme = Theme.of(context);
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4),
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.orange[50],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(title,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
-                Container(
-                    width: 50.w, // Must be equal to height for a perfect circle
-                    height: 50.w,
-                    decoration: BoxDecoration(
-                      color:
-                          wayaTheme.colorScheme.primary500, // Background color
-                      shape: BoxShape.circle, // Makes the container circular
-                      border: Border.all(
-                        color: Colors.white, // Optional: Border color
-                        width: 3.0, // Optional: Border width
-                      ),
-                    ),
-                    child: widget)
-              ],
-            ),
-            Gap(10),
-            Text(value,
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
-    );
-  }
+//   Widget _buildStatCard(
+//       BuildContext context, String title, String value, Widget widget) {
+//     final wayaTheme = Theme.of(context);
+//     return Expanded(
+//       child: Container(
+//         margin: EdgeInsets.symmetric(horizontal: 4),
+//         padding: EdgeInsets.all(12),
+//         decoration: BoxDecoration(
+//           color: Colors.orange[50],
+//           borderRadius: BorderRadius.circular(10),
+//         ),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           children: [
+//             Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Text(title,
+//                     textAlign: TextAlign.start,
+//                     style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
+//                 Container(
+//                     width: 50.w, // Must be equal to height for a perfect circle
+//                     height: 50.w,
+//                     decoration: BoxDecoration(
+//                       color:
+//                           wayaTheme.colorScheme.primary500, // Background color
+//                       shape: BoxShape.circle, // Makes the container circular
+//                       border: Border.all(
+//                         color: Colors.white, // Optional: Border color
+//                         width: 3.0, // Optional: Border width
+//                       ),
+//                     ),
+//                     child: widget)
+//               ],
+//             ),
+//             Gap(10),
+//             Text(value,
+//                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 
 //   Widget _buildStateItem(BuildContext context, String state, String contestants) {
 //     final wayaTheme = Theme.of(context);

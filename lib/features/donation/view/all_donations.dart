@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
+import 'package:wayagram/features/donation/view/donation_details.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/donation_empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
@@ -167,7 +168,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       rangeRatio: ratioLeft,
                       onTap: () {
                         debugPrint('MY RATIO $daysLeft');
-                        WayaNav.toNamed('/donation-details', arguments: {
+                        WayaNav.to(DonationDetails(id: '${donation.id}',));
+                       /* WayaNav.toNamed('/donation-details', arguments: {
                           'id': '${donation.id}',
                           // 'daysLeft': '$daysLeft',
                           // 'ratioLeft': ratioLeft,
@@ -184,7 +186,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           // 'donationCount': '${donation.donationCount}',
                           // 'organizerId': donation.organizerId,
                           // "donation": donation
-                        });
+                        });*/
                       },
                       buttonWidth: 60.0,
                     );
