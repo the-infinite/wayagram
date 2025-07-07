@@ -126,7 +126,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     try {
       //? This is fine.
-      final response = await repo.getMessages(state.chatId, state.limit, state.page);
+      final response = await repo.getChatMedia(state.chatId);
 
       //? This is fine.
       if (response.success) {

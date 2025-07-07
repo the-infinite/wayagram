@@ -92,7 +92,7 @@ class _ChatMediaWidgetState extends State<ChatMediaWidget> {
                 Expanded(
                   child: SectionCountButton(
                     title: "Videos",
-                    count: 0,
+                    count: state.videos.length,
                     value: 1,
                     controller: mediaTypeController,
                   ),
@@ -102,7 +102,7 @@ class _ChatMediaWidgetState extends State<ChatMediaWidget> {
                 Expanded(
                   child: SectionCountButton(
                     title: "Images",
-                    count: 0,
+                    count: state.images.length,
                     value: 2,
                     controller: mediaTypeController,
                   ),
