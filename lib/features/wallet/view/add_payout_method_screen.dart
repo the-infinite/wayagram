@@ -6,7 +6,6 @@ import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import '../widget/payout_modal.dart';

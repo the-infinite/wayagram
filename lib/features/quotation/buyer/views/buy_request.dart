@@ -23,6 +23,7 @@ class BuyRequests extends ConsumerStatefulWidget {
 class _BuyRequestsState extends ConsumerState<BuyRequests> {
   int currentPage = 0;
   late Timer timer;
+  final quotationSearch = TextEditingController();
 
   PageController pageController = PageController(
     initialPage: 0,
@@ -48,11 +49,17 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
   }
 
   @override
+  void dispose() {
+    quotationSearch.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         //? How we filter inside of our purchase requests.
-        FilterWidget(search: TextEditingController(), hintText: 'Search Requests'),
+        FilterWidget(search: quotationSearch, hintText: 'Search Requests'),
 
         // Some space.
         const Gap(25),
@@ -119,7 +126,10 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
         ),
 
         //? The buyer requests that we have.
-        const SharedOthersBuyRequestsWidget(isExpanded: false),
+        SharedOthersBuyRequestsWidget(
+          isExpanded: false,
+          controller: quotationSearch,
+        ),
 
         // Some space.
         const Gap(25),
@@ -135,7 +145,10 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
         const Gap(25),
 
         //? Explore the available buyer requests.
-        const SharedOthersBuyRequestsWidget(isExpanded: false),
+        SharedOthersBuyRequestsWidget(
+          isExpanded: false,
+          controller: quotationSearch,
+        ),
       ],
     );
   }
