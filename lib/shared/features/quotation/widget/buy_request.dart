@@ -12,6 +12,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/shared/cache/quotation.dart';
 import 'package:wayagram/shared/features/quotation/modal/choose_shop.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
@@ -44,25 +45,29 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isClosed) return;
 
+      //? This is fine.
+      final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+
       //? If the status is not started, then we need to calculate the time left
       //? until the bid starts.
-      if (widget.data.status == BuyRequestStatus.notStarted) {
-        timeNotifier.value = widget.data.bidStart.difference(DateTime.now()).abs();
+      if (request.status == BuyRequestStatus.notStarted) {
+        timeNotifier.value = request.bidStart.difference(DateTime.now()).abs();
       }
 
       //? If the status is active, then we need to calculate the time left until
       //? bidding ends.
       else {
-        timeNotifier.value = widget.data.bidEnd.difference(DateTime.now()).abs();
+        timeNotifier.value = request.bidEnd.difference(DateTime.now()).abs();
       }
 
       //? Now, let the timer keep ticking.
       timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        final cachedRequest = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
         final eval = timeNotifier.value - const Duration(seconds: 1);
 
         //? Update this guy in the list.
         if (eval.isNegative) {
-          await widget.notifier.getBuyRequest(widget.data.id);
+          await widget.notifier.getBuyRequest(cachedRequest.id);
           return;
         }
 
@@ -81,14 +86,15 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
   }
 
   Future<void> _placeBid() async {
+    final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final amount = await WayaUtils.showModalSheet<double>(
       context,
       child: EditOfferModal(
         title: 'Edit your Offer',
         hint: 'Update your base price for this request',
-        delta: widget.data.bidStartingAmount >= 3000000
+        delta: request.bidStartingAmount >= 3000000
             ? 25000
-            : widget.data.bidStartingAmount >= 200000
+            : request.bidStartingAmount >= 200000
                 ? 5000
                 : 1000,
       ),
@@ -108,15 +114,15 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     //? If this is a delivery request and the delivery address is not null.
     //? After the shop is selected, we need to confirm the delivery cost with
     //? the seller.
-    if (widget.data.deliveryAddress != null) {
+    if (request.deliveryAddress != null) {
       final cost = await WayaUtils.showModalSheet<double>(
         context,
         child: EditOfferModal(
           title: 'Delivery Cost',
-          hint: 'Enter your delivery cost for this order to deliver to\n\n${widget.data.deliveryAddress}',
-          delta: widget.data.bidStartingAmount >= 3000000
+          hint: 'Enter your delivery cost for this order to deliver to\n\n${request.deliveryAddress}',
+          delta: request.bidStartingAmount >= 3000000
               ? 25000
-              : widget.data.bidStartingAmount >= 200000
+              : request.bidStartingAmount >= 200000
                   ? 5000
                   : 1000,
         ),
@@ -130,7 +136,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     }
 
     //? Now, send the bid.
-    final result = await widget.notifier.sendBid(widget.data.id, amount, shopId, deliveryCost);
+    final result = await widget.notifier.sendBid(request.id, amount, shopId, deliveryCost);
 
     //! Since bidding failed, you can leave.
     if (result == null) return;
@@ -144,13 +150,23 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
   }
 
   Future<void> _viewBids() async {
-    WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(widget.data.id));
+    final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+    WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(request.id));
   }
 
   @override
   Widget build(BuildContext context) {
+    //? First, get the quotation that owns this bid.
+    final request = wayaQuotationsCache.getCachedData(widget.data.id);
+
+    //? If this is undefined...
+    if (request == null) {
+      return const SizedBox.shrink();
+    }
+
+    //? Proceed to get all the utilities needed to render the views.
     final wayaTheme = Theme.of(context);
-    final vendoredBid = widget.data.bids
+    final vendoredBid = request.bids
         ?.where((bid) => bid.vendorId == ConversationState.self.id && bid.status != BidActionType.reject)
         .firstOrNull;
 
@@ -175,7 +191,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
               Container(
                 padding: EdgeInsets.only(left: 10, top: 10, right: 16, bottom: 10),
                 decoration: BoxDecoration(
-                  color: switch (widget.data.status) {
+                  color: switch (request.status) {
                     BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending.withAlpha(30),
                     BuyRequestStatus.active => wayaTheme.colorScheme.success50,
                     _ => wayaTheme.colorScheme.error.withAlpha(30),
@@ -189,7 +205,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                     //? The icons.
                     WayaAssets.icons.bBid.svg(
                       colorFilter: ColorFilter.mode(
-                        switch (widget.data.status) {
+                        switch (request.status) {
                           BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending,
                           BuyRequestStatus.active => wayaTheme.colorScheme.success,
                           _ => wayaTheme.colorScheme.error,
@@ -200,14 +216,14 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
 
                     //? The status description text.
                     Text(
-                      switch (widget.data.status) {
+                      switch (request.status) {
                         BuyRequestStatus.notStarted => "Not Started",
                         BuyRequestStatus.active => "Open Bid",
                         BuyRequestStatus.cancelled => "Cancelled",
                         BuyRequestStatus.closed => "Closed",
                       },
                       style: wayaTheme.textTheme.descriptionStyle.copyWith(
-                        color: switch (widget.data.status) {
+                        color: switch (request.status) {
                           BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending,
                           BuyRequestStatus.active => wayaTheme.colorScheme.success,
                           _ => wayaTheme.colorScheme.error,
@@ -224,7 +240,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
 
               //? The category of this quotation
               Text(
-                widget.data.category.toUpperCase(),
+                request.category.toUpperCase(),
                 style: wayaTheme.textTheme.hintStyle,
               ),
 
@@ -233,7 +249,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
 
               //? The name of the product.
               Text(
-                widget.data.fullname,
+                request.fullname,
                 style: wayaTheme.textTheme.titleLarge,
               ),
 
@@ -242,7 +258,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
 
               //? Our description.
               WayaCollapsibleText(
-                widget.data.description,
+                request.description,
                 maxLines: 3,
                 textColor: wayaTheme.colorScheme.greyColor500,
                 buttonColor: wayaTheme.colorScheme.primary,
@@ -260,7 +276,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: switch (widget.data.status) {
+                          text: switch (request.status) {
                             BuyRequestStatus.notStarted => 'Bidding Starts in ',
                             BuyRequestStatus.active => 'Bidding Ends in ',
                             BuyRequestStatus.cancelled => 'Bidding Cancelled ',
@@ -270,7 +286,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                         ),
                         TextSpan(
                           text: isClosed
-                              ? WayaDateHelper.getSocialDate(widget.data.updatedAt)
+                              ? WayaDateHelper.getSocialDate(request.updatedAt)
                               : WayaDateHelper.convertDurationToCountdown(timeNotifier.value),
                           style: wayaTheme.textTheme.descriptionStyle.copyWith(
                             color: wayaTheme.colorScheme.customPrimary,
@@ -296,7 +312,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
 
                     //* For the starting amount.
                     TextSpan(
-                      text: '₦ ${widget.data.bidStartingAmount}',
+                      text: '₦ ${request.bidStartingAmount}',
                       style: wayaTheme.textTheme.bodyBold.copyWith(
                         color: wayaTheme.colorScheme.black,
                         fontSize: 14.sp,
@@ -320,12 +336,11 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                 )
               else
                 WayaProgressiveButton(
-                  callback: widget.data.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
-                  text: widget.data.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
+                  callback: request.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
+                  text: request.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
                   height: 48,
-                  isDisabled: widget.data.buyerId == ConversationState.self.id
-                      ? false
-                      : widget.data.status != BuyRequestStatus.active,
+                  isDisabled:
+                      request.buyerId == ConversationState.self.id ? false : request.status != BuyRequestStatus.active,
                   notifier: loadingController,
                 ),
             ],

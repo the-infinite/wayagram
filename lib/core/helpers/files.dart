@@ -233,9 +233,9 @@ class WayaFileHelper {
     var directory = await getApplicationDocumentsDirectory();
 
     //?  If this is Android.
-    if (Platform.isAndroid) {
-      directory = Directory("${(await getExternalStorageDirectory())!.parent.parent.parent.path}/media/ng.wayagram");
-    }
+    // if (Platform.isAndroid) {
+    //   directory = Directory("${(await getExternalStorageDirectory())!.parent.parent.parent.path}/media/ng.wayagram");
+    // }
 
     //? If this does not exist...
     if (!await directory.exists()) {
