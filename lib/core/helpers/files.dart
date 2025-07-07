@@ -208,6 +208,17 @@ class WayaFileExtensions {
     // Default fallback for unknown types
     return MediaType('application', 'octet-stream');
   }
+
+  /// Extracts the file extension from a given file path string.
+  ///
+  /// Returns the extension without the dot, or an empty string if no extension is found.
+  /// Example:
+  ///   WayaFileExtensions.getExtensionFromPath('example/file.txt'); // returns 'txt'
+  static String getExtensionFromPath(String path) {
+    final filename = path.split(Platform.pathSeparator).last;
+    final extensionIndex = filename.lastIndexOf(".");
+    return extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+  }
 }
 
 class WayaFileHelper {
