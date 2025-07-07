@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/ugt/data/model/contest_transaction_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/wallet/data/model/payout_history_model.dart';
 

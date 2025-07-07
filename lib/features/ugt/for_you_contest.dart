@@ -179,11 +179,9 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                           context: context,
                                           onTap: () {
                                             WayaNav.goBack();
-                                            if (e.text == "All States") {
-                                              postNotifier.updateFilter(null);
-                                            } else {
+                                           
                                               postNotifier.updateFilter(e.text);
-                                            }
+                                            
                                             /*   dashboardNotifier.fetchTotalEarnings(
                                             model?.id ?? "", e.text.toLowerCase()); */
 
