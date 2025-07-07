@@ -42,9 +42,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       state = state.copyWith(isLoadingRequests: true);
 
       //? This is fine.
-      final response = !state.isUser &&
-              ConversationState.self.accountType == UserAccountType.business &&
-              ShopResource.hasSelectedShop
+      final response = !state.isUser && ShopResource.hasSelectedShop
           ? await repo.getAllAvailableQuotation(state.limit, state.requestPage)
           : await repo.getBuyerRequest(state.limit, state.requestPage, state.requestStatus, state.isUser);
 
@@ -525,7 +523,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       state = state.copyWith(isLoadingOrders: true);
 
       //? This is fine.
-      final response = ConversationState.self.accountType == UserAccountType.business
+      final response = ShopResource.hasSelectedShop
           ? await repo.getSellerOrders(entityId, state.limit, state.orderPage)
           : await repo.getBuyerOrders(entityId, state.limit, state.orderPage);
 

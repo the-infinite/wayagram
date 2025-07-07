@@ -17,9 +17,17 @@ class MyRequests extends ConsumerStatefulWidget {
 }
 
 class _MyRequestsState extends ConsumerState<MyRequests> {
+  final quotationSearch = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    quotationSearch.dispose();
+    super.dispose();
   }
 
   @override
@@ -27,7 +35,7 @@ class _MyRequestsState extends ConsumerState<MyRequests> {
     return Column(
       children: [
         //? First, our widget for filtering the buy requests as a search.
-        FilterWidget(search: TextEditingController(), hintText: 'Search Requests'),
+        FilterWidget(search: quotationSearch, hintText: 'Search Requests'),
 
         // Some space.
         const Gap(25),
@@ -53,7 +61,10 @@ class _MyRequestsState extends ConsumerState<MyRequests> {
         const Gap(25),
 
         //? This is fine too.
-        const SharedUserBuyRequestsWidget(isExpanded: false),
+        SharedUserBuyRequestsWidget(
+          isExpanded: false,
+          controller: quotationSearch,
+        ),
 
         // Some space.
         const Gap(25),
@@ -71,7 +82,10 @@ class _MyRequestsState extends ConsumerState<MyRequests> {
         const Gap(25),
 
         //? Now, for the user's quotation requests.
-        const SharedUserBuyRequestsWidget(isExpanded: false),
+        SharedUserBuyRequestsWidget(
+          isExpanded: false,
+          controller: quotationSearch,
+        ),
       ],
     );
   }

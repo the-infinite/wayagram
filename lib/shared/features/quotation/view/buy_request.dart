@@ -9,11 +9,13 @@ import 'package:wayagram/shared/features/quotation/widget/buy_request.dart';
 class SharedUserBuyRequestsWidget extends ConsumerStatefulWidget {
   /// Should this show all the entries that have been gathered?
   final bool isExpanded;
+  final TextEditingController controller;
 
   // Construct.
   const SharedUserBuyRequestsWidget({
     super.key,
     required this.isExpanded,
+    required this.controller,
   });
 
   @override
@@ -49,22 +51,31 @@ class _SharedUserBuyRequestsWidgetState extends ConsumerState<SharedUserBuyReque
     final state = ref.watch(userQuotationsProvider);
 
     //? Return our component
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        //? First, the entries themselves.
-        ...List.generate(
-          widget.isExpanded ? state.requests.length : min(state.requests.length, 3),
-          (index) => QuotationBuyRequestWidget(
-            index: index,
-            data: state.requests[index],
-            notifier: notifier,
-          ),
-        ),
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (context, _) {
+        //? Get here.
+        final request = state.filterRequests(widget.controller.text);
 
-        // Next, space.
-        const SizedBox(height: 25),
-      ],
+        //? Return this.
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //? First, the entries themselves.
+            ...List.generate(
+              widget.isExpanded ? request.length : min(request.length, 3),
+              (index) => QuotationBuyRequestWidget(
+                index: index,
+                data: request[index],
+                notifier: notifier,
+              ),
+            ),
+
+            // Next, space.
+            const SizedBox(height: 25),
+          ],
+        );
+      },
     );
   }
 }
@@ -72,11 +83,13 @@ class _SharedUserBuyRequestsWidgetState extends ConsumerState<SharedUserBuyReque
 class SharedOthersBuyRequestsWidget extends ConsumerStatefulWidget {
   /// Should this show all the entries that have been gathered?
   final bool isExpanded;
+  final TextEditingController controller;
 
   // Construct.
   const SharedOthersBuyRequestsWidget({
     super.key,
     required this.isExpanded,
+    required this.controller,
   });
 
   @override
@@ -141,22 +154,31 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
     final state = ref.watch(othersQuotationsProvider);
 
     //? Return our component
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        //? First, the entries themselves.
-        ...List.generate(
-          widget.isExpanded ? state.requests.length : min(state.requests.length, 3),
-          (index) => QuotationBuyRequestWidget(
-            index: index,
-            data: state.requests[index],
-            notifier: notifier,
-          ),
-        ),
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (context, _) {
+        //? Get here.
+        final request = state.filterRequests(widget.controller.text);
 
-        // Next, space.
-        const SizedBox(height: 25),
-      ],
+        //? Return this.
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //? First, the entries themselves.
+            ...List.generate(
+              widget.isExpanded ? request.length : min(request.length, 3),
+              (index) => QuotationBuyRequestWidget(
+                index: index,
+                data: request[index],
+                notifier: notifier,
+              ),
+            ),
+
+            // Next, space.
+            const SizedBox(height: 25),
+          ],
+        );
+      },
     );
   }
 }
