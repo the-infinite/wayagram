@@ -41,6 +41,9 @@ class ContestRepo extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getContestForYou(int page, String? filter) {
+    if (filter == "All States") {
+      return get('$serviceUrl2/contests/contest-for-you?page=$page');
+    }
     if (filter != null) {
       return get(
           '$serviceUrl2/contests/contest-for-you?page=$page&state=$filter');

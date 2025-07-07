@@ -64,7 +64,9 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   }
 
   void updateFilter(String? filter) {
+   
     state = state.copyWith(filter: filter);
+  
     fetchContestForYou(true);
   }
 
