@@ -43,7 +43,13 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
     ref.read(orderPinProvider.notifier).state = '';
   }
 
-  Future<void> submitPins(BuildContext context, Order order) async {
+  Future<void> submitPins(
+      {required BuildContext context,
+      required Order order,
+      required String bankCode,
+      required String acctNumber,
+      required String bankName,
+      required String acctName}) async {
     final pin = ref.read(orderPinProvider);
 
     try {
@@ -54,8 +60,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
             message:
                 'The code you entered is incorrect. Please double-check and try again',
             onPress: () {
-               WayaNav.goBack();
-            
+              WayaNav.goBack();
             },
             icon: Image.asset('assets/icons/d-code-invalid.svg'),
             buttonText: 'Try Again');
@@ -63,8 +68,12 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
         return;
       }
       state = state.copyWith(isLoading: true);
-      final response =
-          await _shopRepository.addToken(deliveryToken: pin.toString());
+      final response = await _shopRepository.addToken(
+          deliveryToken: pin.toString(),
+          accountNumber: acctNumber,
+          accountName: acctName,
+          bankName: bankName,
+          bankCode: bankCode);
 
       if (response.success && context.mounted) {
         clearPins();

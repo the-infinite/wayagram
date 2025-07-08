@@ -91,7 +91,8 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                     //! system enough time to flush the file to storage. Some
                     //! times the file might be lingering in memory as opposed
                     //! to storage.
-                    await Future.delayed(const Duration(seconds: 4));
+                    await WayaFileHelper.saveNetworkImage(widget.image.uri.toString());
+                    await Future.delayed(const Duration(seconds: 2));
                     if (!mounted) return;
                     setState(() {
                       downloaded = true;
@@ -199,7 +200,10 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                     //? Otherwise, return a placeholder.
                     return AspectRatio(
                       aspectRatio: 1,
-                      child: DecoratedBox(
+                      child: Container(
+                        height: double.infinity,
+                        width: double.infinity,
+                        padding: EdgeInsets.all(70.dg),
                         decoration: BoxDecoration(
                           color: WayaColors.primary50,
                           borderRadius: BorderRadius.circular(16.r),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,6 +35,7 @@ class QuotationOrderDetails extends ConsumerStatefulWidget {
 
 class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDetails> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
+  Timer? _timer;
   BidOrderModel? order;
   CachedUserDataTuple? user;
   BuyRequestModel? request;
@@ -72,6 +75,11 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
             ? null
             : notifier.getBid(foundOrder.bidId) ?? await notifier.getSingleBid(foundOrder.bidId);
 
+        //? If this is actually on the buyer side, poll to update the order's state.
+        if (foundOrder?.buyerId == ConversationState.self.id) {
+          _timer = Timer.periodic(const Duration(seconds: 7), (_) => _ingestOrder());
+        }
+
         //? Update these values in state.
         if (mounted) {
           setState(() {
@@ -87,6 +95,13 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
       },
     );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _timer = null;
+    super.dispose();
   }
 
   @override

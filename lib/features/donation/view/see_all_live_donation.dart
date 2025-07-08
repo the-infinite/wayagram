@@ -89,7 +89,7 @@ class _SeeAllLiveDonationsState extends ConsumerState<SeeAllLiveDonations> with 
                       donationCount: donation.donationCount!,
                       rangeRatio: ratioLeft,
                       onTap: () {
-                        WayaNav.toNamed('/donationManagement', arguments: {
+                        WayaNav.toNamed('/donationDashboard', arguments: {
                           'title': '${donation.title?.capitalizeFirst}',
                           'image': '${donation.imageURL}',
                           'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
