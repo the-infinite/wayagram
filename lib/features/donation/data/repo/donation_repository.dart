@@ -92,6 +92,13 @@ class DonationRepository extends BaseRepository {
         "$serviceUrl/client/campaigns?organizerId=$organizerId&status=pending_approval");
   }
 
+  Future<WayaRequestResponse> getClosedDonation(
+      String organizerId,
+      ) {
+    return get(
+        "$serviceUrl/client/campaigns?organizerId=$organizerId&status=closed");
+  }
+
   Future<WayaRequestResponse> getRejectedDonation(
     String organizerId,
   ) {
