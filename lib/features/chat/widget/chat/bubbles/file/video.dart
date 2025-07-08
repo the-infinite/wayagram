@@ -94,10 +94,11 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                 widget.video,
                 (result) async {
                   if (result) {
-                    //! DO NOT REMOVE THIS LINE. It is us giving the operating 
+                    //! DO NOT REMOVE THIS LINE. It is us giving the operating
                     //! system enough time to flush the file to storage. Some
                     //! times the file might be lingering in memory as opposed
                     //! to storage.
+                    await WayaFileHelper.saveNetworkImage(widget.video.uri.toString());
                     await Future.delayed(const Duration(seconds: 4));
                     if (!mounted) return;
                     setState(() {
