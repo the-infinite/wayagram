@@ -27,6 +27,7 @@ import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/features/wallet/view/request_payout.dart';
 
 class ManageShop extends ConsumerStatefulWidget {
   static const route = '/manage-shop';
@@ -131,6 +132,16 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   ),
                 ],
               ),
+              WayaButton(
+                height: null,
+                verticalPadding: 8,
+                horizontalPadding: 8,
+                callback: () {
+                  WayaNav.toNamed(RequestPayout.route);
+                },
+                text: 'Payouts',
+                textStyle: wayaTheme.textTheme.descriptionStyle,
+              )
             ],
           ),
           const Gap(30),
