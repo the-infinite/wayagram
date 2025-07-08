@@ -41,6 +41,10 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
     // Then get the theme.
     final wayaTheme = Theme.of(context);
 
+    //? This is fine.
+    debugPrint("Files: ${widget.file}");
+    debugPrint("URLs: ${widget.imageUrl}");
+
     //? Show the widget.
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -104,6 +108,16 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
                       widget.file!.length,
                       (index) => PhotoView(
                         imageProvider: FileImage(widget.file![index]),
+                        errorBuilder: (context, e, stackTrace) {
+                          debugPrint("Error: $e");
+
+                          //? This is fine.
+                          return Icon(
+                            Icons.broken_image,
+                            size: 80.sp,
+                            color: wayaTheme.colorScheme.greyColor300,
+                          );
+                        },
                         minScale: PhotoViewComputedScale.contained * 1,
                         maxScale: PhotoViewComputedScale.covered * 5,
                       ),

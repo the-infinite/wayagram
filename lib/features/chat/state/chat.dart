@@ -1,4 +1,5 @@
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/model/media.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 
 class ChatState {
@@ -7,6 +8,7 @@ class ChatState {
   final ChatModel? chat;
   final String chatId;
   final List<MessageModel> messages;
+  final List<ChatMediaModel> media;
   final int limit;
   final int page;
   final bool hasNextPage;
@@ -20,6 +22,7 @@ class ChatState {
     required this.isLoading,
     required this.chat,
     required this.chatId,
+    required this.media,
     required this.messages,
     required this.limit,
     required this.totalCount,
@@ -36,6 +39,7 @@ class ChatState {
     chat: null,
     chatId: "",
     messages: [],
+    media: [],
     limit: 100,
     totalCount: 0,
     totalPages: 0,
@@ -52,6 +56,7 @@ class ChatState {
     String? chatId,
     ChatModel? chat,
     List<MessageModel>? messages,
+    List<ChatMediaModel>? media,
     int? page,
     bool? hasNextPage,
     int? totalCount,
@@ -64,6 +69,7 @@ class ChatState {
       chat: chat ?? this.chat,
       chatId: chatId ?? this.chatId,
       messages: messages ?? this.messages,
+      media: media ?? this.media,
       limit: limit,
       totalCount: totalCount ?? this.totalCount,
       totalPages: totalPages ?? this.totalPages,
@@ -72,4 +78,16 @@ class ChatState {
       isActive: isActive ?? this.isActive,
     );
   }
+
+  /// Returns an iterable of [ChatMediaModel] objects that are images.
+  ///
+  /// Filters the [media] collection and includes only those items
+  /// where [ChatMediaModel.isImage] is `true`.
+  List<ChatMediaModel> get images => media.isEmpty ? [] : media.where((media) => media.isImage).toList();
+
+  /// Returns an iterable of [ChatMediaModel] objects that are videos.
+  ///
+  /// Filters the [media] collection and includes only those items where
+  /// [ChatMediaModel.isVideo] is `true`.
+  List<ChatMediaModel> get videos => media.isEmpty ? [] : media.where((media) => media.isVideo).toList();
 }

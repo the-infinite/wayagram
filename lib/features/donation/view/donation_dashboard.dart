@@ -23,17 +23,17 @@ import '../../../shared/features/user/models/default.dart';
 import '../../auth/upgrade_to_business/views/upgrade_to_business.dart';
 import '../../chat/state/default.dart';
 
-class DonationManagement extends ConsumerStatefulWidget {
-  static const route = '/donationManagement';
-  const DonationManagement({
+class DonationDashboard extends ConsumerStatefulWidget {
+  static const route = '/donationDashboard';
+  const DonationDashboard({
     super.key,
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _DonationManagementState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DonationDashboardState();
 }
 
-class _DonationManagementState extends ConsumerState<DonationManagement> with SingleTickerProviderStateMixin {
+class _DonationDashboardState extends ConsumerState<DonationDashboard> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -49,6 +49,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
     final walletViewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    debugPrint('DAYSLEFT Is DASHBOARD ===>> ${args['daysLeft']}');
     return WayaScaffold(
       title: "Donation Dashboard",
       isLoading: viewModel.isLoading,
@@ -106,40 +107,44 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
           _reviewText('Impact Statement', '${args['impact']}'),
         ],
       ),
-      bottomNavigationBar: args['daysLeft'] == 0
-          ? WayaButton(
-              callback: !viewModel.isLoading
-                  ? () {
-                final percentage =
-                    '${(double.parse(viewModel.commission) / 100) * num.parse('${args['amountRaised']}')}';
-                final amountDue = double.parse('${args['amountRaised']}') - double.parse(percentage);
+      bottomNavigationBar: args['daysLeft'] == '0'
+          ? Container(
+        padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+            child: WayaButton(
+
+                callback: !viewModel.isLoading
+                    ? () {
+                  final percentage =
+                      '${(double.parse(viewModel.commission) / 100) * num.parse('${args['amountRaised']}')}';
+                  final amountDue = double.parse('${args['amountRaised']}') - double.parse(percentage);
 
 
-                if(walletViewModel.payoutMethod.isEmpty){
-                  WayaUtils.showModalSheet(
-                    context,
-                    child: AddPayoutModal(),
-                  );
-                }else{
-                  ref
-                      .read(credentialInputProvider.notifier)
-                      .onSubmitPayoutPin(() => WayaNav.toNamed('/payoutVerification', arguments: {
-                    "id": args['id'],
-                    "Module": PayoutModule.donation,
-                    "Model": PayoutReviewModel(
-                        comission: percentage,
-                        amount: '${args['amountRaised']}',
-                        amountDue: '$amountDue',
-                        endDate: args['endDate'])
-                  }));
-                }
+                  if(walletViewModel.payoutMethod.isEmpty){
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: AddPayoutModal(),
+                    );
+                  }else{
+                    ref
+                        .read(credentialInputProvider.notifier)
+                        .onSubmitPayoutPin(() => WayaNav.toNamed('/payoutVerification', arguments: {
+                      "id": args['id'],
+                      "Module": PayoutModule.donation,
+                      "Model": PayoutReviewModel(
+                          comission: percentage,
+                          amount: '${args['amountRaised']}',
+                          amountDue: '$amountDue',
+                          endDate: args['endDate'])
+                    }));
+                  }
 
 
 
-                    }
-                  : null,
-              centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Request Payout'),
-            )
+                      }
+                    : null,
+                centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Request Payout'),
+              ),
+          )
           : Container(
               width: double.infinity,
               padding: EdgeInsets.fromLTRB(10, 4, 10, 10),

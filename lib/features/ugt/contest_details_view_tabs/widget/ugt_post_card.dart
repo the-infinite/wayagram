@@ -249,12 +249,17 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                         }); */
                       }
                     },
-                    mediaUrls: [
-                      // post.mediaContent![0].url!,
-                      ...widget.post.mediaContent!.map((e) {
+                    mediaUrls: [  // post.mediaContent![0].url!,
+                        ...widget.post.mediaContent!
+                          .where((e) =>
+                              e.type?.toLowerCase() == "video" ||
+                              e.type?.toLowerCase() == "image")
+                          .map((e) => CardMediaContent(
+                              type: e.type ?? "", url: e.url ?? ""))
+                   /*    ...widget.post.mediaContent!.map((e) {
                         return CardMediaContent(
                             type: e.type ?? "", url: e.url ?? "");
-                      })
+                      }) */
                     ] // post.mediaContent![0].url!,
                     ),
               const Gap(20),

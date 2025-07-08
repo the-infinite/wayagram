@@ -352,6 +352,19 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
     } catch (_) {}
   }
 
+  void _viewVideo() async {
+    final result = await WayaNav.to(
+      transition: Transition.circularReveal,
+      WayaVideoDetailScreen(
+        file: widget.file,
+        videoUrl: widget.networkUrl?.toString(),
+      ),
+    );
+
+    //? Do nothing.
+    if (result == null) return;
+  }
+
   @override
   Widget build(BuildContext context) {
     //? If these are not initialized, initialize them.
@@ -407,7 +420,12 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
           //? Third, the clickable area of the screen that is used to switch
           //? hide or unhide the buttons.
           GestureDetector(
-            onTap: _controlsHidden ? _unhideControls : _hideControls,
+            onTap: widget.canFocus
+                ? _viewVideo
+                : _controlsHidden
+                    ? _unhideControls
+                    : _hideControls,
+            behavior: HitTestBehavior.translucent,
             onDoubleTap: () {
               //? On double tap this thing, pause if this is playing.
               if (widget.controller.isPlaying) {
@@ -434,20 +452,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
 
     //? Since this has no complex controls, just return the composition widget.
     return GestureDetector(
-      onTap: !widget.canFocus
-          ? null
-          : () async {
-              final result = await WayaNav.to(
-                transition: Transition.circularReveal,
-                WayaVideoDetailScreen(
-                  file: widget.file,
-                  videoUrl: widget.networkUrl.toString(),
-                ),
-              );
-
-              //? Do nothing.
-              if (result == null) return;
-            },
+      onTap: !widget.canFocus ? null : _viewVideo,
       child: composition,
     );
   }

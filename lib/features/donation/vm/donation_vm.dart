@@ -441,6 +441,24 @@ class DonationVm extends StateNotifier<DonationState> {
     } finally {}
   }
 
+  Future<void> getClosedDonation() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getClosedDonation(ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        state = state.copyWith(closedDonations: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
   Future<void> getAppliedDonation() async {
     try {
       // API call
