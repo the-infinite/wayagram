@@ -192,6 +192,7 @@ import '../../features/activity_logs/view/search_log.dart';
 import '../../features/activity_logs/view/user_action.dart';
 import '../../features/activity_logs/view/user_interaction.dart';
 import '../../features/activity_logs/view/visited_page.dart';
+import '../../features/donation/view/see_all_closed_donation.dart';
 import '../../features/group/view/mute_group.dart';
 import '../../features/group/view/search_group.dart';
 
@@ -397,6 +398,7 @@ class WayaAppRoutes {
     SeeAllLiveDonations.route: () => SeeAllLiveDonations(),
     SeeAllRejectedDonations.route: () => SeeAllRejectedDonations(),
     SeeAllApprovedDonations.route: () => SeeAllApprovedDonations(),
+    SeeAllClosedDonations.route: () => SeeAllClosedDonations(),
     ChatAndSocial.route: () => ChatAndSocial(),
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
