@@ -44,6 +44,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
       ref.read(donationVmProvider.notifier).getAppliedDonation();
       ref.read(donationVmProvider.notifier).getRejectedDonation();
       ref.read(donationVmProvider.notifier).getMyDonation();
+      ref.read(donationVmProvider.notifier).getClosedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
@@ -249,7 +250,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                     donationCount: donation?.donationCount!,
                     rangeRatio: ratioLeft,
                     onTap: () {
-                      WayaNav.toNamed('/donationManagement', arguments: {
+                      WayaNav.toNamed('/donationDashboard', arguments: {
                         'title': '${donation?.title?.capitalizeFirst}',
                         'image': '${donation?.imageURL}',
                         'amountRaised': '${donation?.amountRaised?.replaceAll('.00', '')}',
@@ -269,6 +270,64 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                   );
                 }),
           ),
+
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/seeAllClosedDonations');
+              },
+              subTitle: 'See and manage all your closed donations',
+              title: 'Closed Donations'),
+          const Gap(10),
+          viewModel.closedDonations.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have closed donations yet',):
+          SizedBox(
+            height: Platform.isAndroid ? 350 : 250,
+            child: ListView.builder(
+                padding: EdgeInsets.only(bottom: 20),
+                shrinkWrap: true,
+                itemCount: viewModel.closedDonations.length,
+                itemBuilder: (context, index) {
+                  final donation = viewModel.closedDonations[index];
+                  int daysLeft = DateTime.parse('${donation.createdAt}')
+                      .difference(DateTime.parse('${donation.startDate}'))
+                      .inDays;
+
+                  int amountRaised = double.parse('${donation.amountRaised}').toInt();
+
+                  int targetedAmount = double.parse('${donation.targetAmount}').toInt();
+
+                  double ratioLeft = amountRaised / targetedAmount;
+                  return ManageDonationWidget(
+                    text: "Manage Donation",
+                    amountRaised: WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
+                    targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                    title: donation.title?.capitalizeFirst,
+                    image: donation.imageURL,
+                    dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
+                    donationCount: donation.donationCount!,
+                    rangeRatio: ratioLeft,
+                    onTap: () {
+
+                      WayaNav.toNamed('/donationDashboard', arguments: {
+                        'title': '${donation.title?.capitalizeFirst}',
+                        'image': '${donation.imageURL}',
+                        'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
+                        'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                        'desc': '${donation.description}',
+                        'solution': '${donation.solution}',
+                        'impact': '${donation.impact}',
+                        'url': '${donation.url}',
+                        'minimumDonationAmount': '${donation.minimumDonationAmount}',
+                        'daysLeft': '$daysLeft',
+                        'id': '${donation.id}',
+                        'range':ratioLeft,
+                        'donationCount': '${donation.donationCount}'
+                      });
+                    },
+                    buttonWidth: 120.0,
+                  );
+                }),
+          ),
+
           const Gap(10),
           GroupedWidgetHeader(
               onTap: () {
@@ -283,7 +342,6 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
             child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: viewModel.pendingDonations?.length,
-                //filteredMyDonations.length,
                 itemBuilder: (context, index) {
                   final donation = viewModel.pendingDonations?[index];
                   //filteredMyDonations[index];

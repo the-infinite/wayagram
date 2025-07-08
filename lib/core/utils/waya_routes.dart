@@ -14,7 +14,7 @@ import 'package:wayagram/features/chat/view/profile.dart';
 import 'package:wayagram/features/chat/view/profile/edit_group.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
 import 'package:wayagram/features/donation/view/donation_details.dart';
-import 'package:wayagram/features/donation/view/donation_management.dart';
+import 'package:wayagram/features/donation/view/donation_dashboard.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/donation/view/see_all_approved_donation.dart';
 import 'package:wayagram/features/donation/view/see_all_live_donation.dart';
@@ -192,6 +192,7 @@ import '../../features/activity_logs/view/search_log.dart';
 import '../../features/activity_logs/view/user_action.dart';
 import '../../features/activity_logs/view/user_interaction.dart';
 import '../../features/activity_logs/view/visited_page.dart';
+import '../../features/donation/view/see_all_closed_donation.dart';
 import '../../features/group/view/mute_group.dart';
 import '../../features/group/view/search_group.dart';
 
@@ -392,11 +393,12 @@ class WayaAppRoutes {
     Donations.route: () => Donations(),
     DonationDetails.route: () => DonationDetails(id: WayaNav.search['id'].toString()),
     CreateDonation.route: () => CreateDonation(),
-    DonationManagement.route: () => DonationManagement(),
+    DonationDashboard.route: () => DonationDashboard(),
     SeeAllDonations.route: () => SeeAllDonations(),
     SeeAllLiveDonations.route: () => SeeAllLiveDonations(),
     SeeAllRejectedDonations.route: () => SeeAllRejectedDonations(),
     SeeAllApprovedDonations.route: () => SeeAllApprovedDonations(),
+    SeeAllClosedDonations.route: () => SeeAllClosedDonations(),
     ChatAndSocial.route: () => ChatAndSocial(),
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
