@@ -224,7 +224,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       child: WayaButton(
                         callback: isDayAfterTicketOrEventEnd(event)
                             ? () {
-                              //?check if user have payout method added
+                                //?check if user have payout method added
                                 if (walletViewModel.payoutMethod.isEmpty) {
                                   WayaUtils.showModalSheet(
                                     context,
