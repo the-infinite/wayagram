@@ -139,7 +139,7 @@ class _ManageStateContestState extends ConsumerState<PayoutHistory> {
         desc: "Payout history is empty",
         title: "No Payout History",
         buttonText: "Host a Contest",
-        showButtonBusiness: true,
+        showButtonBusiness: false,
         hideButton: false,
         onTap: () {});
   }
