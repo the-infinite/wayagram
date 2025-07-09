@@ -10,6 +10,7 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_edit_type_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
@@ -46,7 +47,7 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
           ref
               .read(verifyAccountProvider.notifier)
               .requestOtp(purpose: "CHANGE_OF_EMAIL", email: args['initial']);
-        } else {
+        } else if (args['Module'] == null) {
           ref.read(verifyAccountProvider.notifier).requestOtp(
               purpose: "CHANGE_OF_PHONE", phone: "234${args['initial']}");
         }
@@ -166,10 +167,14 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
                             ref.read(verifyAccountProvider.notifier).requestOtp(
                                 purpose: "CHANGE_OF_EMAIL",
                                 email: args['initial']);
-                          } else {
+                          } else if (args['Module'] == null) {
                             ref.read(verifyAccountProvider.notifier).requestOtp(
                                 purpose: "CHANGE_OF_PHONE",
                                 phone: "234${args['initial']}");
+                          } else {
+                            ref
+                                .read(credentialInputProvider.notifier)
+                                .onResendPayoutOtp();
                           }
                         } else {
                           ref
@@ -227,12 +232,12 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
           WayaButton(
             callback: !viewModelState.isLoading
                 ? () {
-                   /*  WayaNav.to(PollReview(
+                    /*  WayaNav.to(PollReview(
                         id: '${args['id']}',
                         module: args['Module'] as PayoutModule,
                         model: args['Model'] as PayoutReviewModel));
  */
-                     final code = ref.watch(verifyAccountProvider).inputCode;
+                    final code = ref.watch(verifyAccountProvider).inputCode;
                     viewModel.verifyPayout(
                         onSuccess: () {
                           WayaNav.to(PollReview(
