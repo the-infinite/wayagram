@@ -116,7 +116,7 @@ class CartVm extends StateNotifier<CartState> {
     for (int i = 0; i < updatedItems.length; i++) {
       if (updatedItems[i].shopId == shopId) {
         final updatedProducts = [...updatedItems[i].products];
-
+        bool? success = true;
         for (int j = 0; j < updatedProducts.length; j++) {
           if (updatedProducts[j].productId == productId) {
             updatedProducts[j] = updatedProducts[j].copyWith(
@@ -124,10 +124,12 @@ class CartVm extends StateNotifier<CartState> {
             );
             productAdded = true;
             debugPrint("updating");
-            await updateCartItem(id: productId, shopId: shopId);
+            success = await updateCartItem(id: productId, shopId: shopId);
             break;
           }
         }
+        //? don't add item to the cart
+        if (success == false) return;
 
         if (!productAdded) {
           updatedProducts.add(
@@ -298,7 +300,7 @@ class CartVm extends StateNotifier<CartState> {
     }
   }
 
-  Future<void> updateCartItem(
+  Future<bool?> updateCartItem(
       {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
@@ -308,11 +310,20 @@ class CartVm extends StateNotifier<CartState> {
         userId: userId!,
         shopId: shopId,
       );
+      bool isSuccess = false;
       if (response.success) {
+        isSuccess = true;
         debugPrint(response.data.toString());
+      } else if (response.data['responseCode'] == 703) {
+        isSuccess = false;
+        removeFromCart(productId: id, shopId: shopId, isNotWayaDeal: false);
+        WayaSnackBar.showToast(
+            "You are not yet eligible to purchase another wayagram deal");
       }
+      return isSuccess;
     } catch (e) {
       debugPrint(e.toString());
+      return false;
     }
   }
 

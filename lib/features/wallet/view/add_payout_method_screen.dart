@@ -42,8 +42,8 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(walletVmProvider.notifier).fetchBank();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await ref.read(walletVmProvider.notifier).fetchBank();
     });
     super.initState();
   }
