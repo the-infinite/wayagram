@@ -22,6 +22,7 @@ class DonationRepository extends BaseRepository {
         "$walletServiceUrl/client/commission/commission-rates");
   }
 
+
   Future<WayaRequestResponse> getSingleDonation(String donationId) {
     return get("$serviceUrl/client/donations/$donationId");
   }
