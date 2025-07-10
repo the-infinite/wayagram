@@ -76,6 +76,26 @@ class NotificationVm extends StateNotifier<NotificationState> {
     return false;
   }
 
+  /// Helper function used to send the generated device token to the back-end.
+  Future<bool> deleteDeviceToken() async {
+    try {
+      //? Next, try to make the request.
+      final response = await _repo.deleteDeviceToken();
+
+      // Return whether or not this was fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.notifications,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return false;
+  }
+
   /// Helper function used to get all notifications.
   Future<List<NotificationModel>> getUserNotifications([bool reset = true]) async {
     final result = <NotificationModel>[];

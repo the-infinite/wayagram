@@ -91,8 +91,10 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                     //! system enough time to flush the file to storage. Some
                     //! times the file might be lingering in memory as opposed
                     //! to storage.
-                    await WayaFileHelper.saveNetworkImage(widget.image.uri.toString());
                     await Future.delayed(const Duration(seconds: 2));
+                    if (await widget.image.exists()) {
+                      await WayaFileHelper.saveNetworkImage(widget.image.uri.toString());
+                    }
                     if (!mounted) return;
                     setState(() {
                       downloaded = true;

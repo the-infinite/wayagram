@@ -16,6 +16,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/payout_review_mode
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
@@ -87,6 +88,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
     final viewModel = ref.watch(createPollVotingProvider);
     final walletViewModel = ref.watch(walletVmProvider);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final wayaTheme = Theme.of(context);
 
     return WayaScaffold(
         isLoading: viewModel.isLoading,
@@ -286,6 +288,43 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
                         loading: viewModel.isLoading, text: 'Request Payout'),
                   )
                 : Container(),
+
+            Gap(10),
+            GestureDetector(
+              onTap: () {
+                // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+                WayaNav.toNamed(PayoutHistory.route, arguments: {
+                  "referenceId": args['id'] ?? "",
+                  "Module": 'POLL'
+                });
+              },
+              child: Container(
+                width: double.infinity,
+                padding: REdgeInsets.symmetric(
+                    vertical: 8.dg, horizontal: 12.dg),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: wayaTheme.colorScheme.primary600,
+                    width: 1.5,
+                  ),
+                  color: wayaTheme.colorScheme.white,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Payout History',
+                      style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                        color: wayaTheme.colorScheme.primary600,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ));
   }

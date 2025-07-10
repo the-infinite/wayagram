@@ -84,6 +84,10 @@ class ChatAttachmentDialog extends StatelessWidget {
                   callback: () async {
                     //? If it is not...
                     try {
+                      //? First, request for camera permissions.
+                      
+
+                      //? This is fine then.
                       final choice = await ImagePicker().pickImage(
                         source: ImageSource.camera,
                         imageQuality: 40,

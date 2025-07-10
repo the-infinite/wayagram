@@ -126,6 +126,28 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     }
   }
 
+
+  Future<void> onResendPayoutOtp() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _authRepository.resendOtp(
+        email: '${ConversationState.self.email}',
+        purpose: 'PAYOUT',
+      );
+
+      if (response.data["statusCode"] == 200) {
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message:
+                "A Password reset Otp has been sent to ${ConversationState.self.email}");
+   
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
   Future<void> onSubmitPayoutPin(VoidCallback onSuccess) async {
     try {
       state = state.copyWith(isLoading: true);

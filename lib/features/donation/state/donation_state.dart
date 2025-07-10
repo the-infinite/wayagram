@@ -24,6 +24,7 @@ class DonationState{
     final List<String> selected;
     final List<MyDonationDocs> singleDonationDocs;
     final List<MyDonationDocs> closedDonations;
+    final List<MyDonationDocs> donationPayout;
     final String category;
     final String? kycStatus;
     final String kycMessage;
@@ -76,6 +77,7 @@ class DonationState{
       this.myDonationDocs = const [],
       this.selectedCategoryId = const [],
       this.selected = const [],
+      this.donationPayout = const [],
       this.approvedDonations = const [],
       this.rejectedDonations = const [],
       this.donationImage = const [],
@@ -137,6 +139,7 @@ class DonationState{
       List<AllDonationDocs>? allDonationDocs,
       List<AppliedDonationDocs>? appliedDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
+      List<MyDonationDocs>? donationPayout,
       List<MyDonationDocs>? singleDonationDocs,
       List<MyDonationDocs>? approvedDonations,
       List<MyDonationDocs>? closedDonations,
@@ -195,6 +198,7 @@ class DonationState{
       donationTargetAmount: donationTargetAmount ?? this.donationTargetAmount,
       donationId: donationId?? this.donationId,
       kycMessage: kycMessage ?? this.kycMessage,
+      donationPayout: donationPayout ?? this.donationPayout,
       targetAmount: targetAmount?? this.targetAmount,
       minimumDonationAmount: minimumDonationAmount ?? this.minimumDonationAmount,
       details: details ?? this.details,

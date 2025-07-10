@@ -17,7 +17,9 @@ import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/views/event_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
+import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
@@ -609,7 +611,7 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
               bankName: widget.bankName,
               bankCode: widget.bankCode, goBackTo: () {
            WayaNav.removeAllUntil(
-                    PollRequestPayout(), PollRequestPayout.route);
+               PollAndVoting(), PollAndVoting.route);
             //TODO Poll navigate to on success
           });
         } else if (widget.module == PayoutModule.contest) {
