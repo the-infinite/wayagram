@@ -45,6 +45,8 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
     var model = ref.watch(selectedContestProvider);
     //? for commission
     final viewModel = ref.watch(createPollVotingProvider);
+    final percentage = (double.parse('${viewModel.commission}') / 100) *
+        num.parse(dashboardVm.revenueGenerated?.toString() ?? "0");
     useEffect(() {
       notifier.fetchUserTransaction(model?.id ?? "");
       ref.read(createPollVotingProvider.notifier).getPayoutCommission();
@@ -210,7 +212,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                 _buildStatCard(
                     context,
                     "Total\nCommissions",
-                    "₦${formatMoney(dashboardVm.totalCommission?.toString() ?? '0')}",
+                    "₦${formatMoney(percentage.toString())}",
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
