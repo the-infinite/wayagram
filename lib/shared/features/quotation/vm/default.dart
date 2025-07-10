@@ -693,6 +693,32 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     return false;
   }
 
+  /// Helper function used to complete an order. This is useful when we want to
+  /// complete an order in the system.
+  Future<bool> trackDelivery(String id) async {
+    try {
+      final response = await repo.trackDelivery(requestId: id);
+
+      //? If this went well...
+      if (response.success) {
+        debugPrint("Result: ${response.data}");
+      }
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return false;
+  }
+
   /// Helper function used to search the list of quotes that this store has bid
   /// on in an attempt to find the corresponding quote to a single bid. That
   /// way, on the front-end, we do not drive ourselves somewhat insane and the

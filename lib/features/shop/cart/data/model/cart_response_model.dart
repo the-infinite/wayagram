@@ -114,11 +114,11 @@ class CartItem {
     return CartItem(
       shopId: json['shopId'] ?? '',
       deliveryAddress: json['deliveryAddress'],
-      deliveryFee: _parseToInt(json['deliveryFee']), // Safe parsing
+      deliveryFee: _parseToInt(json['deliveryFee']), 
       deliveryDate: json['deliveryDate'],
       shopName: json['shopName'] ?? '',
       shopLogo: json['shopLogo'] ?? '',
-      totalFee: _parseToInt(json['totalFee']), // Safe parsing
+      totalFee: _parseToInt(json['totalFee']), 
       products: (json['products'] as List)
           .map((product) => CartProduct.fromJson(product))
           .toList(),

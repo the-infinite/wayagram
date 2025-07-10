@@ -141,6 +141,18 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
         ? viewModel.donationDocs
         : viewModel.filterDonationDocs(startingBound, endingBound);
 
+    //? Second, get the filtered shop.
+    final filteredShop = startingBound == null || endingBound == null
+        ? viewModel.shopDocs
+        : viewModel.filterShopDocs(startingBound, endingBound);
+
+    //? Second, get the filtered event.
+    final filteredGetQuotation = startingBound == null || endingBound == null
+        ? viewModel.quotationDocs
+        : viewModel.filterQuotationDocs(startingBound, endingBound);
+
+
+
     //? Log the starting and ending time.
     if (startingBound != null && endingBound != null) {
       debugPrint(
@@ -167,133 +179,126 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   alignment: Alignment.center,
                   width: 102.w,
                   height: 36.h,
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 5, top: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: WayaColors.greyColor300)),
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
                   child: DropdownButton(
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      iconSize: 12,
-                      icon: SvgPicture.asset(
-                        WayaAssets.icons.downArrow.path,
-                      ),
-                      isDense: true,
-                      isExpanded: false,
-                      value: selTransact,
-                      items: lsTransact.map((String ls) {
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
                         return DropdownMenuItem(
                           value: ls,
-                          child: Text(ls,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selTransact = value!;
-                          sortList(selTransact.toLowerCase(),
-                              viewModel.shopDocs, viewModel.shopDocs1);
-                        });
-                      }),
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
                 ),
                 Gap(10),
                 Expanded(
-                  child: PaginatedDataView<PageDocs>(
-                      uniqueKey: 'shop-logs',
-                      loadingState: SizedBox(
-                          height: context.height * 0.4,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          )),
-                      emptyState: ActivityLogsEmptyState(
-                        text: 'You don\'t have shop logs yet',
-                      ),
-                      fetchData:
-                          ref.read(activityLogsVmProvider.notifier).getShopLogs,
-                      result: (data, s) {
-                        for (int i = 0; i < viewModel.shopDocs.length; i++) {
-                          if (!dates.contains(viewModel.shopDocs[i].createdAt
-                              .toString()
-                              .split('T')[0])) {
-                            dates.add(viewModel.shopDocs[i].createdAt
-                                .toString()
-                                .split('T')[0]);
-                            viewModel.shopDocs.add(viewModel.shopDocs[i]);
-                          }
-                        }
-                        return SingleChildScrollView(
-                          child: viewModel.shopDocs.isEmpty
-                              ? ActivityLogsEmptyState(
-                                  text:
-                                      'You don\'t have Shop Logs for this week yet',
-                                )
-                              : ListView.builder(
-                                  padding:
-                                      EdgeInsets.only(bottom: 80.h, top: 0),
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: dates.length,
-                                  itemBuilder: (context, i) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontFamily:
-                                                  WayaConstants.fontFamily,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                            )),
-                                        Gap(10),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const ClampingScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              bottom: 20.h, top: 0),
-                                          itemCount: viewModel.shopDocs.length,
-                                          itemBuilder: (context, index) {
-                                            final shopLog =
-                                                viewModel.shopDocs[index];
-                                            String dateTimeString =
-                                                "${shopLog.createdAt}";
-                                            DateTime dateTime =
-                                                DateTime.parse(dateTimeString)
-                                                    .toLocal();
-                                            if (viewModel
-                                                    .shopDocs[index].createdAt
-                                                    .toString()
-                                                    .split('T')[0] ==
-                                                dates[i]) {
-                                              return ActivityImageWidget(
-                                                title: '${shopLog.description}',
-                                                subTitle:
-                                                    '${ref.read(createPollVotingProvider.notifier).formatDt2(shopLog.createdAt)}, '
-                                                    '${DateFormat.jm().format(dateTime)}',
-                                                image:
-                                                    'assets/icons/search.svg',
-                                              );
-                                            } else {
-                                              return Container();
-                                            }
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  }),
-                        );
-                      }),
+                  child: PaginatedDataView<EventLogDocs>(
+                    uniqueKey: 'Shop',
+                    loadingState: SizedBox(
+                        height: context.height * 0.4,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Shop logs yet',
+                    ),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getShopLogs,
+                    result: (data, s) {
+                      return SingleChildScrollView(
+                        child: filteredShop.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have shop logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredShop.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredShop.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredShop[first];
+                                final next = filteredShop[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
+
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final shop = filteredShop[index];
+                                final dateTimeString = "${shop.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+
+                                return ActivityCardWidget(
+                                  title: '${shop.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(shop.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             );
@@ -1513,140 +1518,126 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   alignment: Alignment.center,
                   width: 102.w,
                   height: 36.h,
-                  padding: const EdgeInsets.only(
-                      left: 8, right: 5, top: 5, bottom: 0),
+                  padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: WayaColors.greyColor300)),
+                      borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
                   child: DropdownButton(
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(8),
-                      elevation: 4,
-                      padding: EdgeInsets.zero,
-                      iconSize: 12,
-                      icon: SvgPicture.asset(
-                        WayaAssets.icons.downArrow.path,
-                      ),
-                      isDense: true,
-                      isExpanded: false,
-                      value: selTransact,
-                      items: lsTransact.map((String ls) {
+                    underline: Container(),
+                    borderRadius: BorderRadius.circular(8),
+                    elevation: 4,
+                    padding: EdgeInsets.zero,
+                    iconSize: 12,
+                    icon: SvgPicture.asset(
+                      WayaAssets.icons.downArrow.path,
+                    ),
+                    isDense: true,
+                    isExpanded: false,
+                    value: _filterBy,
+                    items: FilterType.values.map(
+                          (ls) {
                         return DropdownMenuItem(
                           value: ls,
-                          child: Text(ls,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                          child: Text(
+                            ls.name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: WayaConstants.fontFamily,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
                         );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          selTransact = value!;
-                          sortList(
-                              selTransact.toLowerCase(),
-                              viewModel.quotationDocs,
-                              viewModel.quotationDocs1);
-                        });
-                      }),
+                      },
+                    ).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _filterBy = value!;
+                      });
+                    },
+                  ),
                 ),
                 Gap(10),
                 Expanded(
-                  child: PaginatedDataView<PageDocs>(
-                      uniqueKey: 'Quotation-logs',
-                      loadingState: SizedBox(
-                          height: context.height * 0.4,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          )),
-                      emptyState: ActivityLogsEmptyState(
-                        text: 'You don\'t have Get Quotation logs yet',
-                      ),
-                      fetchData: ref
-                          .read(activityLogsVmProvider.notifier)
-                          .getQuotationLogs,
-                      result: (data, s) {
-                        for (int i = 0;
-                            i < viewModel.quotationDocs.length;
-                            i++) {
-                          if (!dates.contains(viewModel
-                              .quotationDocs[i].createdAt
-                              .toString()
-                              .split('T')[0])) {
-                            dates.add(viewModel.quotationDocs[i].createdAt
-                                .toString()
-                                .split('T')[0]);
-                            viewModel.quotationDocs
-                                .add(viewModel.quotationDocs[i]);
-                          }
-                        }
-                        return SingleChildScrollView(
-                          child: viewModel.quotationDocs.isEmpty
-                              ? ActivityLogsEmptyState(
-                                  text:
-                                      'You don\'t have Get Quotation Logs for this week yet',
-                                )
-                              : ListView.builder(
-                                  padding:
-                                      EdgeInsets.only(bottom: 80.h, top: 0),
-                                  physics: const ClampingScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: dates.length,
-                                  itemBuilder: (context, i) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.quotationDocs[i].createdAt.toString().split('T')[0])}',
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
-                                              fontFamily:
-                                                  WayaConstants.fontFamily,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                            )),
-                                        Gap(10),
-                                        ListView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const ClampingScrollPhysics(),
-                                          padding: EdgeInsets.only(
-                                              bottom: 20.h, top: 0),
-                                          itemCount:
-                                              viewModel.quotationDocs.length,
-                                          itemBuilder: (context, index) {
-                                            final quotationLog =
-                                                viewModel.quotationDocs[index];
-                                            String dateTimeString =
-                                                "${quotationLog.createdAt}";
-                                            DateTime dateTime =
-                                                DateTime.parse(dateTimeString)
-                                                    .toLocal();
-                                            if (viewModel.quotationDocs[index]
-                                                    .createdAt
-                                                    .toString()
-                                                    .split('T')[0] ==
-                                                dates[i]) {
-                                              return ActivityCardWidget(
-                                                title:
-                                                    '${quotationLog.description}',
-                                                subTitle:
-                                                    '${ref.read(createPollVotingProvider.notifier).formatDt2(quotationLog.createdAt)}, '
-                                                    '${DateFormat.jm().format(dateTime)}',
-                                              );
-                                            } else {
-                                              return Container();
-                                            }
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  }),
-                        );
-                      }),
+                  child: PaginatedDataView<EventLogDocs>(
+                    uniqueKey: 'Quotation-logs',
+                    loadingState: SizedBox(
+                        height: context.height * 0.4,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    emptyState: ActivityLogsEmptyState(
+                      text: 'You don\'t have Quotation logs yet',
+                    ),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getQuotationLogs,
+                    result: (data, s) {
+                      return SingleChildScrollView(
+                        child: filteredGetQuotation.isEmpty
+                            ? ActivityLogsEmptyState(
+                          text: 'You don\'t have Quotation logs for ${_filterBy.name.toLowerCase()} yet',
+                        )
+                            : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.h),
+                              child: Text(
+                                  WayaDateHelper.getDailyTimestamp(
+                                      DateTime.parse('${filteredGetQuotation.first.createdAt}')),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                              itemCount: filteredGetQuotation.length,
+                              separatorBuilder: (context, first) {
+                                final previous = filteredGetQuotation[first];
+                                final next = filteredGetQuotation[first + 1];
+                                final firstDate = DateTime.parse('${previous.createdAt}');
+                                final secondDate = DateTime.parse('${next.createdAt}');
+
+                                //? If this happened on the same day as the other one.
+                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                  return SizedBox();
+                                }
+
+                                //? Return this.
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 30.h),
+                                  child: Text(
+                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    style: TextStyle(
+                                      fontSize: 20.sp,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, index) {
+                                final quotation = filteredGetQuotation[index];
+                                final dateTimeString = "${quotation.createdAt}";
+                                final dateTime = DateTime.parse(dateTimeString).toLocal();
+
+                                return ActivityCardWidget(
+                                  title: '${quotation.description}',
+                                  subTitle:
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt2(quotation.createdAt)}, '
+                                      '${DateFormat.jm().format(dateTime)}',
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             );
