@@ -232,7 +232,7 @@ class DonationVm extends StateNotifier<DonationState> {
         fetchAllDonations = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(allDonationDocs: fetchAllDonations);
-        state = state.copyWith(allDonationDocs: responseModel.data?.docs);
+        //state = state.copyWith(allDonationDocs: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -416,6 +416,24 @@ class DonationVm extends StateNotifier<DonationState> {
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
         state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
+  Future<void> getMyLiveDonation() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getMyCampaigns(ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        state = state.copyWith(myLiveDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
       debugPrint(e.toString());
