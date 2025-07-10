@@ -85,8 +85,8 @@ class UgtHistoryCard extends ConsumerWidget {
               ],
             ),
             trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Amount       :₦${formatMoney(model.totalAmount?.toString() ?? '0')}",
@@ -94,12 +94,12 @@ class UgtHistoryCard extends ConsumerWidget {
                       .copyWith(color: wayaTheme.colorScheme.greyColor400),
                 ),
                 //  Gap(5),
-                if (!isPayout)
+                /*  if (!isPayout)
                   Text(
                     "Commission :₦${formatMoney(model.commission?.toString() ?? '0')}",
                     style: wayaTheme.textTheme.hintStyle
                         .copyWith(color: wayaTheme.colorScheme.greyColor400),
-                  ),
+                  ), */
 
                 if (isPayout)
                   Text(

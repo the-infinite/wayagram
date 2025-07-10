@@ -14,6 +14,7 @@ import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.da
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -42,8 +43,13 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
     final notifier = ref.read(ugtAdminDashboardVm.notifier);
     //final viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestProvider);
+    //? for commission
+    final viewModel = ref.watch(createPollVotingProvider);
+    final percentage = (double.parse('${viewModel.commission}') / 100) *
+        num.parse(dashboardVm.revenueGenerated?.toString() ?? "0");
     useEffect(() {
       notifier.fetchUserTransaction(model?.id ?? "");
+      ref.read(createPollVotingProvider.notifier).getPayoutCommission();
 
       return null;
     }, []);
@@ -53,89 +59,100 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
       title: "Transaction History",
       backgroundColor: Colors.white,
       floatingActionButton: DateTime.now().isAfter(DateTime.parse(
-                    model?.endDate ?? "2096-01-01T00:00:00.000Z")) &&
-                dashboardVm.revenueGenerated != 0
-          ?
-          Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Gap(40),
-          if (ConversationState.self.accountType == UserAccountType.business)
-            SizedBox(
-              width: context.width / 2.8,
-              child: WayaButton(
-                  horizontalPadding: 10,
-                  fontSize: 14.sp,
-                  height: 45.h,
-                  text: "Request Payout",
-                  callback: () async {
-                    ref
-                        .read(credentialInputProvider.notifier)
-                        .onSubmitPayoutPin(() =>
-                            WayaNav.toNamed('/payoutVerification', arguments: {
-                              "id": model?.id ?? "",
-                              "Module": PayoutModule.contest,
-                              "Model": PayoutReviewModel(
-                                  comission:
-                                      dashboardVm.totalCommission.toString(),
-                                  amount: dashboardVm.revenueGenerated
+                  model?.endDate ?? "2096-01-01T00:00:00.000Z")) &&
+              dashboardVm.revenueGenerated != 0
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Gap(40),
+                if (ConversationState.self.accountType ==
+                    UserAccountType.business)
+                  SizedBox(
+                    width: context.width / 2.8,
+                    child: WayaButton(
+                        horizontalPadding: 10,
+                        fontSize: 14.sp,
+                        height: 45.h,
+                        text: "Request Payout",
+                        callback: () async {
+                          final percentage =
+                              (double.parse('${viewModel.commission}') / 100) *
+                                  num.parse(dashboardVm.revenueGenerated
                                           ?.toString() ??
-                                      '0',
-                                  amountDue: dashboardVm.revenueGenerated
-                                          ?.toString() ??
-                                      '0',
-                                  endDate: model?.endDate ?? "")
-                            }));
-                  }),
-            ),
-          Gap(10),
-          GestureDetector(
-            onTap: () {
-              // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
-                      WayaNav.toNamed(PayoutHistory.route, arguments: {
-                        "referenceId": model?.id ?? "",
-                        "Module": 'CONTEST'
-                      });
-            },
-            child: Container(
-              //  margin: EdgeInsets.only(right: 20.w),
-              width: 130.w,
-              height: 45.h,
-              padding: REdgeInsets.symmetric(vertical: 8.dg, horizontal: 12.dg),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: wayaTheme.colorScheme.primary600,
-                  width: 1.5,
-                ),
-                color: wayaTheme.colorScheme.white,
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  /*   WayaAssets.icons.export.svg(
+                                      "0");
+                          final amountDue = double.parse(
+                                  dashboardVm.revenueGenerated?.toString() ??
+                                      '0') -
+                              double.parse(percentage.toString());
+                          //  print('Amount Due: $amountDue');
+                          //print('Commission Percentage: $percentage');
+
+                          ref
+                              .read(credentialInputProvider.notifier)
+                              .onSubmitPayoutPin(() => WayaNav.toNamed(
+                                      '/payoutVerification',
+                                      arguments: {
+                                        "id": model?.id ?? "",
+                                        "Module": PayoutModule.contest,
+                                        "Model": PayoutReviewModel(
+                                            comission: percentage.toString(),
+                                            amountDue:
+                                                amountDue.toString() ?? '0',
+                                            amount: dashboardVm.revenueGenerated
+                                                    ?.toString() ??
+                                                '0',
+                                            endDate: model?.endDate ?? "")
+                                      }));
+                        }),
+                  ),
+                Gap(10),
+                GestureDetector(
+                  onTap: () {
+                    // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+                    WayaNav.toNamed(PayoutHistory.route, arguments: {
+                      "referenceId": model?.id ?? "",
+                      "Module": 'CONTEST'
+                    });
+                  },
+                  child: Container(
+                    //  margin: EdgeInsets.only(right: 20.w),
+                    width: 130.w,
+                    height: 45.h,
+                    padding: REdgeInsets.symmetric(
+                        vertical: 8.dg, horizontal: 12.dg),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: wayaTheme.colorScheme.primary600,
+                        width: 1.5,
+                      ),
+                      color: wayaTheme.colorScheme.white,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        /*   WayaAssets.icons.export.svg(
                           width: 18,
                           height: 18,
                           fit: BoxFit.scaleDown,
                           color: wayaTheme.colorScheme.primary600,
                         ),
                         Gap(8), */
-                  Text(
-                    'Payout History',
-                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                      color: wayaTheme.colorScheme.primary600,
-                      fontWeight: FontWeight.w600,
+                        Text(
+                          'Payout History',
+                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary600,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      )
-       : Container()
-      ,
+                ),
+              ],
+            )
+          : Container(),
       body: SingleChildScrollView(
         //  padding: EdgeInsets.all(),
         child: Column(
@@ -195,7 +212,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                 _buildStatCard(
                     context,
                     "Total\nCommissions",
-                    "₦${formatMoney(dashboardVm.totalCommission?.toString() ?? '0')}",
+                    "₦${formatMoney(percentage.toString())}",
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
