@@ -82,8 +82,8 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                   dashboardVm.revenueGenerated?.toString() ??
                                       '0') -
                               double.parse(percentage.toString());
-                          print('Amount Due: $amountDue');
-                          print('Commission Percentage: $percentage');
+                          //  print('Amount Due: $amountDue');
+                          //print('Commission Percentage: $percentage');
 
                           ref
                               .read(credentialInputProvider.notifier)
@@ -94,9 +94,9 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                         "Module": PayoutModule.contest,
                                         "Model": PayoutReviewModel(
                                             comission: percentage.toString(),
-                                            amount: amountDue.toString() ?? '0',
-                                            amountDue: dashboardVm
-                                                    .revenueGenerated
+                                            amountDue:
+                                                amountDue.toString() ?? '0',
+                                            amount: dashboardVm.revenueGenerated
                                                     ?.toString() ??
                                                 '0',
                                             endDate: model?.endDate ?? "")
