@@ -232,6 +232,36 @@ class WayaFileHelper {
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
   }
 
+  /// Returns a helper used to calculate the the downloads directory.
+  static Future<Directory?> getDownloadedFilesDirectory() async {
+    Directory? directory;
+    try {
+      if (Platform.isIOS) {
+        directory = await getApplicationDocumentsDirectory();
+      } else {
+        directory = Directory('/storage/emulated/0/Download');
+        // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+        // ignore: avoid_slow_async_io
+        if (!await directory.exists()) directory = await getExternalStorageDirectory();
+      }
+    } catch (err) {
+      print("Cannot get download folder path");
+    }
+
+    //? This is fine.
+    if (directory == null) {
+      return null;
+    }
+
+    //? If this does not exist...
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? We can tent.
+    return directory;
+  }
+
   /// Returns the base storage directory for the application.
   ///
   /// This is an asynchronous method that resolves to a [Directory] object

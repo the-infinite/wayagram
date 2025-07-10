@@ -44,11 +44,6 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        // notifier.markAllAsRead().then((result) {
-        //   if (!result) return;
-        //   conversationNotifier.getChats(true);
-        //   conversationNotifier.getArchivedChats(true);
-        // });
         ChatInputController.instance.setRef(ref);
         notifier.getMessages(true);
       },

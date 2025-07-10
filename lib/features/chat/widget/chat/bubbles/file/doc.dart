@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+import 'package:open_file/open_file.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/model/message.dart';
@@ -61,6 +63,24 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
     super.initState();
   }
 
+  void _openFile() async {
+    //? If this does not exist, leave.
+    if (!await widget.doc.exists()) return;
+
+    //? This is the end.
+    try {
+      final result = await OpenFile.open(widget.doc.path);
+
+      //? If this failed, then panic.
+      if (result.type != ResultType.done) {
+        WayaSnackBar.showToast("Unable to open document");
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      WayaSnackBar.showToast("Unable to open document");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //? This is fine.
@@ -105,220 +125,223 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
     }
 
     //? Return this here.
-    return Padding(
-      padding: widget.index == min(widget.totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(bottom: 10),
-      child: ClipPath(
-        clipper: ShapeBorderClipper(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onTap: downloaded ? _openFile : null,
+      child: Padding(
+        padding: widget.index == min(widget.totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(bottom: 10),
+        child: ClipPath(
+          clipper: ShapeBorderClipper(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
-        ),
-        child: ColoredBox(
-          color: Colors.white,
-          child: Container(
-            padding: const EdgeInsets.all(5),
-            color: background,
-            child: Stack(
-              children: [
-                if (!downloaded &&
-                    widget.message != null &&
-                    widget.message?.dto == null &&
-                    widget.message!.media!.isNotEmpty)
-                  //? Since this is not yet downloaded, first, a stream for this.
-                  StreamBuilder(
-                    stream: WayaFileRepository.instance.downloadFile(
-                      widget.message!.media!.first.mediaUrl,
-                      widget.doc,
-                      (result) {
-                        if (result) {
-                          setState(() {
-                            downloaded = true;
-                          });
-                        }
-                      },
-                    ),
-                    builder: (context, snapshot) {
-                      final data = snapshot.data;
-                      final progress = data?.$1 ?? 0;
-                      final total = data?.$2 ?? 0;
+          child: ColoredBox(
+            color: Colors.white,
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              color: background,
+              child: Stack(
+                children: [
+                  if (!downloaded &&
+                      widget.message != null &&
+                      widget.message?.dto == null &&
+                      widget.message!.media!.isNotEmpty)
+                    //? Since this is not yet downloaded, first, a stream for this.
+                    StreamBuilder(
+                      stream: WayaFileRepository.instance.downloadFile(
+                        widget.message!.media!.first.mediaUrl,
+                        widget.doc,
+                        (result) {
+                          if (result) {
+                            setState(() {
+                              downloaded = true;
+                            });
+                          }
+                        },
+                      ),
+                      builder: (context, snapshot) {
+                        final data = snapshot.data;
+                        final progress = data?.$1 ?? 0;
+                        final total = data?.$2 ?? 0;
 
-                      //? This is where it is at.
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          //? First, the download stream
-                          Container(
-                            height: 50,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: highlights,
+                        //? This is where it is at.
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            //? First, the download stream
+                            Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: highlights,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              borderRadius: BorderRadius.circular(10),
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Stack(
+                                  children: [
+                                    //? The progress things.
+                                    CircularProgressIndicator(
+                                      value: progress / 100,
+                                      color: highlights,
+                                    ),
+
+                                    //* First, the icon.
+                                    SvgPicture.asset(
+                                      icon,
+                                      height: 30,
+                                      width: 30,
+                                      color: highlights,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Stack(
+
+                            // Some space.
+                            const Gap(10),
+
+                            //? Second, the file's name.
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  //? The progress things.
-                                  CircularProgressIndicator(
-                                    value: progress / 100,
-                                    color: highlights,
+                                  //? The download bar.
+                                  Text(
+                                    "${progress > 0 ? progress.toStringAsFixed(0) : 0}% downloaded",
+                                    style: WayaTextStyles.bodyMedium.copyWith(
+                                      color: highlights,
+                                    ),
                                   ),
 
-                                  //* First, the icon.
-                                  SvgPicture.asset(
-                                    icon,
-                                    height: 30,
-                                    width: 30,
-                                    color: highlights,
+                                  //? The file name.
+                                  Text(
+                                    widget.filename,
+                                    maxLines: 1,
+                                    style: WayaTextStyles.bodyMedium.copyWith(
+                                      color: highlights,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
+
+                            //? Finally, the playback duration button.
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                WayaFileHelper.getFileSize(total),
+                                style: WayaTextStyles.bodySmall.copyWith(
+                                  color: WayaColors.primary,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    )
+
+                  //? Since it is real, first, the document file itself.
+                  else
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        //? First, the file icon.
+                        Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: highlights,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-
-                          // Some space.
-                          const Gap(10),
-
-                          //? Second, the file's name.
-                          Expanded(
+                          child: AspectRatio(
+                            aspectRatio: 1,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                //? The download bar.
-                                Text(
-                                  "${progress > 0 ? progress.toStringAsFixed(0) : 0}% downloaded",
-                                  style: WayaTextStyles.bodyMedium.copyWith(
-                                    color: highlights,
-                                  ),
+                                //* First, the icon.
+                                SvgPicture.asset(
+                                  icon,
+                                  height: 30,
+                                  width: 30,
+                                  color: highlights,
                                 ),
 
-                                //? The file name.
+                                //* The text file.
                                 Text(
-                                  widget.filename,
-                                  maxLines: 1,
-                                  style: WayaTextStyles.bodyMedium.copyWith(
+                                  widget.extension.toUpperCase(),
+                                  style: WayaTextStyles.bodySemiBold.copyWith(
                                     color: highlights,
-                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 14.sp,
                                   ),
                                 ),
                               ],
                             ),
                           ),
+                        ),
 
-                          //? Finally, the playback duration button.
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text(
-                              WayaFileHelper.getFileSize(total),
-                              style: WayaTextStyles.bodySmall.copyWith(
-                                color: WayaColors.primary,
-                                fontSize: 14.sp,
-                              ),
+                        // Some space.
+                        const Gap(5),
+
+                        //? Second, the file's name.
+                        Expanded(
+                          child: Text(
+                            widget.filename,
+                            maxLines: 1,
+                            style: WayaTextStyles.bodyMedium.copyWith(
+                              color: highlights,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                        ],
-                      );
-                    },
-                  )
+                        ),
+                      ],
+                    ),
 
-                //? Since it is real, first, the document file itself.
-                else
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      //? First, the file icon.
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: highlights,
-                          ),
+                  //* Only if this is interactive...
+                  if (widget.interactive) ...[
+                    //? Second, the overlay..
+                    ClipPath(
+                      clipper: ShapeBorderClipper(
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              //* First, the icon.
-                              SvgPicture.asset(
-                                icon,
-                                height: 30,
-                                width: 30,
-                                color: highlights,
-                              ),
+                      ),
+                      child: ColoredBox(
+                        color: Colors.black.withAlpha(120),
+                      ),
+                    ),
 
-                              //* The text file.
-                              Text(
-                                widget.extension.toUpperCase(),
-                                style: WayaTextStyles.bodySemiBold.copyWith(
-                                  color: highlights,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                            ],
-                          ),
+                    //? Third, the remove button.
+                    Positioned(
+                      top: 5,
+                      right: 5,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () => widget.controller?.removeFile(widget.index),
+                        constraints: BoxConstraints(
+                          minHeight: 0,
+                          minWidth: 0,
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          padding: EdgeInsets.all(2),
+                        ),
+                        icon: WayaAssets.icons.cMultiplyCircle.svg(
+                          color: WayaColors.greyColor400,
                         ),
                       ),
-
-                      // Some space.
-                      const Gap(5),
-
-                      //? Second, the file's name.
-                      Expanded(
-                        child: Text(
-                          widget.filename,
-                          maxLines: 1,
-                          style: WayaTextStyles.bodyMedium.copyWith(
-                            color: highlights,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                //* Only if this is interactive...
-                if (widget.interactive) ...[
-                  //? Second, the overlay..
-                  ClipPath(
-                    clipper: ShapeBorderClipper(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: ColoredBox(
-                      color: Colors.black.withAlpha(120),
-                    ),
-                  ),
-
-                  //? Third, the remove button.
-                  Positioned(
-                    top: 5,
-                    right: 5,
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => widget.controller?.removeFile(widget.index),
-                      constraints: BoxConstraints(
-                        minHeight: 0,
-                        minWidth: 0,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.all(2),
-                      ),
-                      icon: WayaAssets.icons.cMultiplyCircle.svg(
-                        color: WayaColors.greyColor400,
-                      ),
-                    ),
-                  )
+                    )
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),

@@ -98,8 +98,10 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                     //! system enough time to flush the file to storage. Some
                     //! times the file might be lingering in memory as opposed
                     //! to storage.
-                    await WayaFileHelper.saveNetworkImage(widget.video.uri.toString());
                     await Future.delayed(const Duration(seconds: 4));
+                    if (await widget.video.exists()) {
+                      await WayaFileHelper.saveNetworkVideo(widget.video.uri.toString());
+                    }
                     if (!mounted) return;
                     setState(() {
                       downloaded = true;
