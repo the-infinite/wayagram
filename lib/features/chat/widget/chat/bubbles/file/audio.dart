@@ -40,9 +40,11 @@ class AudioFileWidget extends StatefulWidget {
 }
 
 class _AudioFileWidgetState extends State<AudioFileWidget> {
-  late final isSender = (ConversationState.self.id == widget.message?.id) || widget.interactive;
+  late final isSender =
+      (ConversationState.self.id == widget.message?.id) || widget.interactive;
   late final waveStyle = PlayerWaveStyle(
-    fixedWaveColor: (isSender ? WayaColors.white : WayaColors.primary).withAlpha(20),
+    fixedWaveColor:
+        (isSender ? WayaColors.white : WayaColors.primary).withAlpha(20),
     liveWaveColor: isSender ? WayaColors.white : WayaColors.primary,
     spacing: 4,
     waveThickness: 3,
@@ -131,7 +133,9 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
 
     //? Return this here.
     return Padding(
-      padding: widget.index == min(widget.totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(bottom: 10),
+      padding: widget.index == min(widget.totalSize - 1, 2)
+          ? EdgeInsets.zero
+          : const EdgeInsets.only(bottom: 10),
       child: ClipPath(
         clipper: ShapeBorderClipper(
           shape: RoundedRectangleBorder(
@@ -209,7 +213,8 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                           //? The download bar.
                                           Text(
                                             "${progress > 0 ? progress.toStringAsFixed(0) : 0}% downloaded",
-                                            style: WayaTextStyles.bodyMedium.copyWith(
+                                            style: WayaTextStyles.bodyMedium
+                                                .copyWith(
                                               color: WayaColors.primary,
                                             ),
                                           ),
@@ -218,7 +223,8 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                           Text(
                                             widget.filename,
                                             maxLines: 1,
-                                            style: WayaTextStyles.bodyMedium.copyWith(
+                                            style: WayaTextStyles.bodyMedium
+                                                .copyWith(
                                               color: WayaColors.primary,
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -232,7 +238,8 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                       padding: const EdgeInsets.only(left: 10),
                                       child: Text(
                                         WayaFileHelper.getFileSize(total),
-                                        style: WayaTextStyles.bodySmall.copyWith(
+                                        style:
+                                            WayaTextStyles.bodySmall.copyWith(
                                           color: WayaColors.primary,
                                           fontSize: 14.sp,
                                         ),
@@ -259,8 +266,9 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                 //? First, the pause/play icon.
                                 AnimatedCrossFade(
                                   duration: const Duration(milliseconds: 350),
-                                  crossFadeState:
-                                      isStreamPlaying ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                  crossFadeState: isStreamPlaying
+                                      ? CrossFadeState.showFirst
+                                      : CrossFadeState.showSecond,
                                   firstChild: WayaButton(
                                     callback: () {
                                       player.pausePlayer();
@@ -352,7 +360,8 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                       right: 5,
                       child: IconButton(
                         padding: EdgeInsets.zero,
-                        onPressed: () => widget.controller?.removeFile(widget.index),
+                        onPressed: () =>
+                            widget.controller?.removeFile(widget.index),
                         constraints: BoxConstraints(
                           minHeight: 0,
                           minWidth: 0,
