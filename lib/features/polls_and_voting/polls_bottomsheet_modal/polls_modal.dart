@@ -576,21 +576,6 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
     }
   }
 
-  // void _submitPin() {
-  //   if (_pin.length == _pinLength) {
-  //
-  //     WayaNav.goBack();
-  //
-  //      WayaUtils.showModalSheet(
-  //       context,
-  //       child: DonationGenerosityModal(),
-  //     );
-  //
-  //
-  //
-  //   }
-  // }
-
   void _submitPin() async {
     if (_pin.length == _pinLength) {
       var isPass = await ref

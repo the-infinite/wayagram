@@ -44,6 +44,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
       ref.read(donationVmProvider.notifier).getAppliedDonation();
       ref.read(donationVmProvider.notifier).getRejectedDonation();
       ref.read(donationVmProvider.notifier).getMyDonation();
+      ref.read(donationVmProvider.notifier).getMyLiveDonation();
       ref.read(donationVmProvider.notifier).getClosedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
@@ -153,7 +154,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               subTitle: 'See and manage all your live donations',
               title: 'Live Donations'),
           const Gap(10),
-          viewModel.myDonationDocs.isEmpty
+          viewModel.myLiveDonationDocs.isEmpty
               ? ActivityLogsEmptyState(
                   text: 'You don\'t have live donations yet',
                 )
@@ -162,9 +163,9 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                   child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: viewModel.myDonationDocs.length,
+                      itemCount: viewModel.myLiveDonationDocs.length,
                       itemBuilder: (context, index) {
-                        final donation = viewModel.myDonationDocs[index];
+                        final donation = viewModel.myLiveDonationDocs[index];
                         int daysLeft = DateTime.parse('${donation.expirationDate}')
                             .difference(DateTime.parse('${donation.startDate}'))
                             .inDays;
@@ -232,8 +233,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                         //final donation = filteredMyDonations[index];
                         final donation = viewModel.approvedDonations?[index];
                         int daysLeft = DateTime.parse('${donation?.expirationDate}')
-                            .difference(DateTime.parse('${donation?.startDate}'))
-                            .inDays;
+                            .difference(DateTime.parse('${donation?.startDate}')).inDays;
 
                         int amountRaised = double.parse('${donation?.amountRaised}').toInt();
 
