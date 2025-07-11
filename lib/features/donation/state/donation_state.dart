@@ -52,6 +52,7 @@ class DonationState{
     List<AllDonationDocs>? allDonationDocs;
     List<AppliedDonationDocs>? appliedDonationDocs;
     List<MyDonationDocs> myDonationDocs;
+    List<MyDonationDocs> myLiveDonationDocs;
     List<MyDonationDocs>? approvedDonations;
     List<MyDonationDocs>? pendingDonations;
     List<RejectedDonationDocs> rejectedDonations;
@@ -75,6 +76,7 @@ class DonationState{
       this.pendingDonations = const [],
       this.appliedDonationDocs = const [],
       this.myDonationDocs = const [],
+      this.myLiveDonationDocs = const [],
       this.selectedCategoryId = const [],
       this.selected = const [],
       this.donationPayout = const [],
@@ -139,6 +141,7 @@ class DonationState{
       List<AllDonationDocs>? allDonationDocs,
       List<AppliedDonationDocs>? appliedDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
+      List<MyDonationDocs>? myLiveDonationDocs,
       List<MyDonationDocs>? donationPayout,
       List<MyDonationDocs>? singleDonationDocs,
       List<MyDonationDocs>? approvedDonations,
@@ -226,6 +229,7 @@ class DonationState{
       closedDonations: closedDonations ?? this.closedDonations,
       appliedDonationDocs: appliedDonationDocs ?? this.appliedDonationDocs,
       myDonationDocs: myDonationDocs ?? this.myDonationDocs,
+      myLiveDonationDocs: myLiveDonationDocs ?? this.myLiveDonationDocs,
       approvedDonations: approvedDonations ?? this.approvedDonations,
       rejectedDonations: rejectedDonations ?? this.rejectedDonations,
       createDonationResponse: createDonationResponse ?? this.createDonationResponse,
