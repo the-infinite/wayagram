@@ -17,8 +17,6 @@ import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/views/event_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
-import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
-import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
