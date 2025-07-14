@@ -143,7 +143,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               : ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: viewModel.allDonationDocs?.length,
+                  itemCount:filteredAllDonations.length,
+                  //viewModel.allDonationDocs?.length,
                   //filteredAllDonations.length,
                   itemBuilder: (context, index) {
                     final donation = filteredAllDonations[index];
@@ -158,7 +159,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
 
                     return ManageDonationWidget(
                       text: "Donate",
-                      amountRaised: donation?.showRaised == true
+                      amountRaised: donation.showRaised == true
                           ? WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}'))
                           : '',
                       targetAmount:

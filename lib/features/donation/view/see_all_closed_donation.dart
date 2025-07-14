@@ -9,9 +9,7 @@ import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 
 class SeeAllClosedDonations extends ConsumerStatefulWidget {
   static const route = '/seeAllClosedDonations';
-  const SeeAllClosedDonations({
-    super.key,
-  });
+  const SeeAllClosedDonations({super.key,});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SeeAllClosedDonationsState();
@@ -25,7 +23,6 @@ class _SeeAllClosedDonationsState extends ConsumerState<SeeAllClosedDonations> w
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(donationVmProvider.notifier).getClosedDonation();
-      ref.read(donationVmProvider.notifier).getMyKYC();
     });
   }
 
@@ -42,7 +39,7 @@ class _SeeAllClosedDonationsState extends ConsumerState<SeeAllClosedDonations> w
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            viewModel.myDonationDocs.isEmpty
+            viewModel.closedDonations.isEmpty
                 ? ActivityLogsEmptyState(
               text: 'You don\'t have closed donations yet',
             )
@@ -68,7 +65,7 @@ class _SeeAllClosedDonationsState extends ConsumerState<SeeAllClosedDonations> w
                       targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
                       title: donation.title?.capitalizeFirst,
                       image: donation.imageURL,
-                      dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
+                      dayLeft: DateTime.now().isAfter(DateTime.parse("${donation.expirationDate}"))? '0': daysLeft.toString(),
                       donationCount: donation.donationCount!,
                       rangeRatio: ratioLeft,
                       onTap: () {
@@ -82,7 +79,8 @@ class _SeeAllClosedDonationsState extends ConsumerState<SeeAllClosedDonations> w
                           'impact': '${donation.impact}',
                           'url': '${donation.url}',
                           'minimumDonationAmount': '${donation.minimumDonationAmount}',
-                          'daysLeft': '$daysLeft',
+                          'daysLeft': '0',
+                          //'$daysLeft',
                           'id': '${donation.id}',
                           'range':ratioLeft,
                           'donationCount': '${donation.donationCount}'
