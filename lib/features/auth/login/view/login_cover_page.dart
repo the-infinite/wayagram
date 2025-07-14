@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -7,6 +8,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'dart:io' show Platform;
 
@@ -45,28 +47,30 @@ class LoginCoverPage extends ConsumerWidget {
             ),
           ),
           Gap(Get.height * 0.25),
-          Platform.isAndroid
-              ? WayaButton(
-                  color: wayaTheme.colorScheme.secondaryColor,
-                  callback: () {
-                    viewModel.signinWithGoogle();
-                  },
-                  leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
-                  text: "Continue with Google",
-                  textColor: wayaTheme.colorScheme.black,
-                )
-              :
-              // Gap(10),
-              WayaButton(
-                  color: wayaTheme.colorScheme.black,
-                  callback: () {
-                    viewModel.signinWithApple();
-                  },
-                  leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
-                  text: "Continue with Apple",
-                  textColor: wayaTheme.colorScheme.onPrimary,
-                ),
-          Gap(10),
+          if (!WayaConstants.isProduction || kDebugMode) ...[
+            Platform.isAndroid
+                ? WayaButton(
+                    color: wayaTheme.colorScheme.secondaryColor,
+                    callback: () {
+                      viewModel.signinWithGoogle();
+                    },
+                    leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
+                    text: "Continue with Google",
+                    textColor: wayaTheme.colorScheme.black,
+                  )
+                :
+                // Gap(10),
+                WayaButton(
+                    color: wayaTheme.colorScheme.black,
+                    callback: () {
+                      viewModel.signinWithApple();
+                    },
+                    leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
+                    text: "Continue with Apple",
+                    textColor: wayaTheme.colorScheme.onPrimary,
+                  ),
+            Gap(10),
+          ],
           WayaButton(
             color: wayaTheme.colorScheme.primary500,
             callback: () {

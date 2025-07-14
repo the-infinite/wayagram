@@ -24,8 +24,6 @@ import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
-import '../../../core/components/waya_scaffold.dart';
-
 class AdminTransactionHistory extends StatefulHookConsumerWidget {
   static const route = '/admin-transaction-page';
   const AdminTransactionHistory({super.key});
@@ -97,7 +95,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                         "Model": PayoutReviewModel(
                                             comission: percentage.toString(),
                                             amountDue:
-                                                amountDue.toString() ?? '0',
+                                                amountDue.toString(),
                                             amount: dashboardVm.revenueGenerated
                                                     ?.toString() ??
                                                 '0',

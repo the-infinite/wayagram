@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:file_saver/file_saver.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 

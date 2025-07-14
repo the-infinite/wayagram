@@ -158,7 +158,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
 
                     return ManageDonationWidget(
                       text: "Donate",
-                      amountRaised: donation?.showRaised == true
+                      amountRaised: donation.showRaised == true
                           ? WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}'))
                           : '',
                       targetAmount:

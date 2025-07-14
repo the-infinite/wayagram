@@ -79,6 +79,8 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
   Widget build(BuildContext context) {
     //? This is fine.
     final size = MediaQuery.sizeOf(context);
+    final width = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
+    final height = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
 
     //? Return this here.
     return Padding(
@@ -182,9 +184,13 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: SizedBox(
-                width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: height,
+                  minHeight: height,
+                  maxWidth: width,
+                  minWidth: width,
+                ),
                 child: WayaVideoWidget.file(
                   widget.video,
                   controller: controller,
