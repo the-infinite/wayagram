@@ -532,7 +532,13 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                           border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
                           callback: () async => await WayaNav.to(
                             transition: Transition.rightToLeftWithFade,
-                            ConfirmQuotationOrder(request: request!, bid: bid!, order: order!, user: user!),
+                            ConfirmQuotationOrder(
+                              request: request!,
+                              bid: bid!,
+                              order: order!,
+                              user: user!,
+                              notifier: notifier,
+                            ),
                           ),
                           text: "Complete Order",
                           leadingIcon: WayaAssets.icons.buttonIcon.svg(

@@ -48,7 +48,12 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
             downloaded = false;
           });
         }
+
+        //? Now, wait for the download to finish...
+        return;
       }
+
+      //? Since the file exists, then let us do the needful.
     });
     super.initState();
   }
@@ -72,6 +77,8 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
   Widget build(BuildContext context) {
     //? This is fine.
     final size = MediaQuery.sizeOf(context);
+    final width = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
+    final height = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
 
     //? Return this here.
     return Padding(
@@ -187,37 +194,45 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Image.file(
-                  widget.image,
-                  width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                  height: !widget.interactive && widget.totalSize < 3 ? null : 100,
-                  fit: BoxFit.cover,
-                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                    //? If this is synchronously loaded, return the child.
-                    if (wasSynchronouslyLoaded) return child;
-
-                    //? If this has been loaded, then return the child as is.
-                    if (frame != null) return child;
-
-                    //? Otherwise, return a placeholder.
-                    return AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        padding: EdgeInsets.all(70.dg),
-                        decoration: BoxDecoration(
-                          color: WayaColors.primary50,
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, e, _) => CachedNetworkImage(
-                    imageUrl: widget.message?.media?.first.mediaUrl ?? "",
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: height,
+                    minHeight: height,
+                    maxWidth: width,
+                    minWidth: width,
+                  ),
+                  child: Image.file(
+                    widget.image,
                     width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
                     height: !widget.interactive && widget.totalSize < 3 ? null : 100,
                     fit: BoxFit.cover,
+                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                      //? If this is synchronously loaded, return the child.
+                      if (wasSynchronouslyLoaded) return child;
+
+                      //? If this has been loaded, then return the child as is.
+                      if (frame != null) return child;
+
+                      //? Otherwise, return a placeholder.
+                      return AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(70.dg),
+                          decoration: BoxDecoration(
+                            color: WayaColors.primary50,
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, e, _) => CachedNetworkImage(
+                      imageUrl: widget.message?.media?.first.mediaUrl ?? "",
+                      width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
+                      height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),

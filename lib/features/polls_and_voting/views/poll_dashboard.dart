@@ -193,8 +193,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
               padding: const EdgeInsets.fromLTRB(10, 15, 10, 6),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                    color: Theme.of(context).colorScheme.greyColor100),
+                border: Border.all(color: Theme.of(context).colorScheme.greyColor100),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,7 +267,18 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
                             context,
                             child: AddPayoutModal(),
                           );
-                        }else{
+                        }else if(args['amountRaised'] == 0){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'No revenue was generated from this Poll.' ,
+                              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                            ),
+                            backgroundColor: WayaColors.primary,
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }else{
                           ref.read(credentialInputProvider.notifier)
                               .onSubmitPayoutPin(() => WayaNav.toNamed(
                               '/payoutVerification',
