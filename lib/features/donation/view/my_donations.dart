@@ -42,18 +42,6 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
 
   @override
   Widget build(BuildContext context) {
-    //final viewModel = ref.watch(donationVmProvider);
-    // final wayaTheme = Theme.of(context);
-    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
-
-    // Filter the myDonations
-    // final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
-    //   viewModel.myDonationDocs!,
-    //   [
-    //     'title',
-    //   ],
-    //   searchController.text,
-    // );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -15,7 +15,7 @@ import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_busi
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/view/application_details.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
-import 'package:wayagram/features/donation/widget/applied_donationi_widget.dart';
+import 'package:wayagram/features/donation/widget/applied_donation_widget.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';

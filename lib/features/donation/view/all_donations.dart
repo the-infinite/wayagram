@@ -143,7 +143,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               : ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: viewModel.allDonationDocs?.length,
+                  itemCount:filteredAllDonations.length,
+                  //viewModel.allDonationDocs?.length,
                   //filteredAllDonations.length,
                   itemBuilder: (context, index) {
                     final donation = filteredAllDonations[index];
