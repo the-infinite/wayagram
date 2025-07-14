@@ -606,12 +606,14 @@ class NumPadButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color? backgroundColor;
   final Color? iconColor;
+  final bool enabled;
 
   const NumPadButton({
     super.key,
+    required this.onTap,
+    this.enabled = true,
     this.text,
     this.icon,
-    required this.onTap,
     this.backgroundColor,
     this.iconColor,
   });
@@ -627,7 +629,7 @@ class NumPadButton extends StatelessWidget {
         ),
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: enabled ? onTap : null,
         borderRadius: BorderRadius.circular(32),
         child: Center(
           child: icon != null

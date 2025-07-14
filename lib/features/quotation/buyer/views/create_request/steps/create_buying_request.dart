@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/shared/features/location/vm/default.dart';
 
@@ -395,17 +394,17 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 const Gap(10),
 
                 //? For distance ranges.
-                Text(
-                  "Distance Range",
-                  style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.sp,
-                  ),
-                ),
+                // Text(
+                //   "Distance Range",
+                //   style: TextStyle().wayaCopyWith(
+                //     color: wayaTheme.colorScheme.black,
+                //     fontWeight: FontWeight.w500,
+                //     fontSize: 14.sp,
+                //   ),
+                // ),
 
                 // Some space.
-                const Gap(10),
+                // const Gap(10),
 
                 //? Our range controls.
                 // RangeSlider(

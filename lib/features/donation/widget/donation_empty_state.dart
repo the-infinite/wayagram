@@ -16,9 +16,7 @@ class DonationEmptyState extends StatelessWidget {
         padding: EdgeInsets.only(left: 30, right: 30, bottom: 30,),
         child: EmptyState(
             hasButton: false,
-            onTap: () {
-              //WayaNav.toNamed(CreatePost.route);
-            },
+            onTap: () {},
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
               colorFilter: ColorFilter.mode(

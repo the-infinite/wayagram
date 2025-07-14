@@ -125,7 +125,6 @@ class ManageDonationWidget extends ConsumerWidget {
                               '$donationCount ${donationCount == 0 || donationCount == 1 ? 'Donation' : 'Donations'}',
                           bottomRight: "$dayLeft ${dayLeft == '1' ? 'day' : 'days'} left",
                           range: rangeRatio
-                          //donationCount == 0 ? 0.0 : 0.4
                       )
                     ],
                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -681,6 +682,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? This is fine.
       return response.success;
     } catch (e) {
+      WayaSnackBar.showToast(WayaDebugHelpers.getMessage(e));
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
