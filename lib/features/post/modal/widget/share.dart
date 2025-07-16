@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
@@ -45,6 +46,13 @@ class _ShareReportButtonState extends ConsumerState<ShareRepostButton> {
             final result = await notifier.repostPost(context, widget.post);
 
             //? If the result is not null, then we are loading.
+            PushNotifications.showSimpleNotification(
+              title: "Repost",
+              body: "Post has been reposted successfully.",
+              payload: "{}",
+            );
+
+            //? This is fine.
             if (result != null) {
               loadingController.value = true;
               await notifier.sharePost(context, postId: widget.post.id);
