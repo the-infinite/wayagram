@@ -29,22 +29,15 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      //final dynamic args = ModalRoute.of(context)?.settings.arguments;
       ref.read(donationVmProvider.notifier).getOneDonation(widget.id);
     });
     super.initState();
   }
 
-//args['id'] ??
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
-
-    //  int amountRaised = double.parse(viewModel.donationAmountRaised).toInt();
-    // int targetedAmount = double.parse(viewModel.donationTargetAmount).toInt();
-    // double ratioLeft = amountRaised / targetedAmount;
 
     return WayaScaffold(
       title: "Donation Details",
@@ -151,9 +144,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                   color: wayaTheme.colorScheme.primary500,
                   textStyle: TextStyle(color: wayaTheme.colorScheme.white),
                   callback: () {
-                    debugPrint("SALARY NEVER DROP ${viewModel.donationId}");
-                    int daysLeft =
-                        DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inDays;
+                    debugPrint("SHUTDOWN ${viewModel.donationId}");
+                    int daysLeft = DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inDays;
                     WayaUtils.showModalSheet(
                       context,
                       child: DonationModal(
@@ -164,7 +156,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                         campaignId: viewModel.donationId,
                         privacy: viewModel.donationPrivacy,
                         daysLeft: daysLeft < 0 ? '0' : '$daysLeft',
-                        donationCount: '${args['donationCount'] ?? viewModel.donationCount}',
+                        donationCount: viewModel.donationCount,
                       ),
                     );
                   }),
