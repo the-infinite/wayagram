@@ -49,9 +49,7 @@ class _PollsModalState extends ConsumerState<PollsModal> {
             Text(
               'Congratulations your\npoll is live!',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.black),
+                  fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -65,6 +63,8 @@ class _PollsModalState extends ConsumerState<PollsModal> {
               callback: () async {
                 WayaNav.toNamed('/poll-and-voting',
                     arguments: {'poll': 'poll'});
+                // await ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
+                WayaNav.toNamed('/poll-and-voting', arguments: {'poll': 'poll'});
                 ref.read(createPollVotingProvider.notifier).reset();
               },
               text: "View Application Status",
@@ -489,6 +489,8 @@ class _PollPinEntryBottomSheetState
                         onPressed: () {
                           //final userId = _wayaLocalDataSource.getUserId();
                           if (_pin.length == _pinLength) {
+                            // viewModel.submitPins(context);
+                            // viewModel.verifyWalletPin(_pin);
                             //WayaNav.goBack();
                             _submitPin();
                           }
@@ -664,8 +666,12 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
     }
   }
 
+  //final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
+
   @override
   Widget build(BuildContext context) {
+    //debugPrint('DARLINGTON AMOUNT ${widget.amount}');
+    //final viewModel = ref.watch(donationVmProvider.notifier);
     return SafeArea(
       child: Container(
         height: 490.h,
@@ -743,6 +749,8 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
                         onPressed: () {
                           //final userId = _wayaLocalDataSource.getUserId();
                           if (_pin.length == _pinLength) {
+                            // viewModel.submitPins(context);
+                            // viewModel.verifyWalletPin(_pin);
                             //WayaNav.goBack();
                             _submitPin();
                           }
