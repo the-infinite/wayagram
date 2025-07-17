@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -11,13 +12,15 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/cache/quotation.dart';
 import 'package:wayagram/shared/features/quotation/modal/choose_shop.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
-class QuotationBuyRequestWidget extends StatefulWidget {
+class QuotationBuyRequestWidget extends ConsumerStatefulWidget {
   final BuyRequestModel data;
   final int index;
   final QuotationsNotifier notifier;
@@ -31,10 +34,10 @@ class QuotationBuyRequestWidget extends StatefulWidget {
   });
 
   @override
-  State<QuotationBuyRequestWidget> createState() => _QuotationBuyRequestWidgetState();
+  ConsumerState<QuotationBuyRequestWidget> createState() => _QuotationBuyRequestWidgetState();
 }
 
-class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
+class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestWidget> {
   final timeNotifier = ValueNotifier(Duration.zero);
   final loadingController = ValueNotifier(false);
   Timer? timer;
@@ -86,6 +89,25 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
   }
 
   Future<void> _placeBid() async {
+    //? Try to load all of the payment methods first, in place.
+    final walletNotifier = ref.read(walletVmProvider.notifier);
+    await walletNotifier.getPayoutMethod();
+
+    //? First, we check if this user has any payout methods configured before
+    //? placing the bid.
+    final walletViewModel = ref.read(walletVmProvider);
+
+    //? Check if user have payout method added and then tell he or she to if he
+    //? or she has not.
+    if (walletViewModel.payoutMethod.isEmpty) {
+      await WayaUtils.showModalSheet(
+        context,
+        child: AddPayoutModal(),
+      );
+      return;
+    }
+
+    //? Then move forward.
     final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final amount = await WayaUtils.showModalSheet<double>(
       context,
