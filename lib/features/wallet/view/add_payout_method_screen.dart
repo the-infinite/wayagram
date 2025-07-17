@@ -358,7 +358,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                     );
                   }),
 
-                  Gap(140.h),
+                  Gap(120.h),
                   WayaButton(
                     callback: () {
                       if (_formKey.currentState!.validate()) {
