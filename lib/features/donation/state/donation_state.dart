@@ -54,7 +54,7 @@ class DonationState{
     List<MyDonationDocs> myDonationDocs;
     List<MyDonationDocs> myLiveDonationDocs;
     List<MyDonationDocs>? approvedDonations;
-    List<MyDonationDocs>? pendingDonations;
+    List<MyDonationDocs> pendingDonations;
     List<RejectedDonationDocs> rejectedDonations;
     final List<Select> categories;
 

@@ -70,12 +70,12 @@ class BankModelData {
   }
   String? code;
   String? name;
-  String? id;
+  num? id;
   bool? status;
   bool? requestStatus;
   BankModelData copyWith({  String? code,
   String? name,
-  String? id,
+  num? id,
   bool? status,
   bool? requestStatus,
 }) => BankModelData(  code: code ?? this.code,

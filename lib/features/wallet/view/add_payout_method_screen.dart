@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
@@ -53,6 +54,16 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
     final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
 
+    if (viewModel.banks.isEmpty) {
+      return Container(
+        color: wayaTheme.colorScheme.white,
+        width: context.width,
+        height: context.height,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     //var filteredList = viewModel.filteredList;
     return WayaScaffold(
@@ -107,7 +118,9 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                           items: viewModel.banks,
                           onSelected: (value) {
                             //print('BANK ====>>> ${value.first}');
-                            ref.read(walletVmProvider.notifier).selectCategory(value.first);
+                            ref
+                                .read(walletVmProvider.notifier)
+                                .selectCategory(value.first);
                           },
                         ),
                         if (formState.hasError && viewModel.bank == null)
@@ -149,10 +162,12 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                               ref
                                   .read(walletVmProvider.notifier)
                                   .verifyAccountName(context,
-                                      acctNumber: viewModel.acctNumberController.text.trim(),
+                                      acctNumber: viewModel
+                                          .acctNumberController.text
+                                          .trim(),
                                       bankCode: '${viewModel.bank?.value}'
                                       //bankCode: selectedBankRef
-                              )
+                                      )
                                   .whenComplete(() {
                                 viewModel.acctNameController.text =
                                     viewModel.accountName;
@@ -343,8 +358,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                     );
                   }),
 
-
-                  Gap(140.h),
+                  Gap(120.h),
                   WayaButton(
                     callback: () {
                       if (_formKey.currentState!.validate()) {
@@ -379,9 +393,4 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
       ),
     );
   }
-
-
-
-
 }
-

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_image.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -39,8 +40,13 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
     final wayaTheme = Theme.of(context);
 
     return GestureDetector(
-        onTap: () =>
-            WayaNav.toNamed(ManageShop.route, arguments: widget.shopId),
+        onTap: () {
+          if (widget.isDeactivated) {
+            return WayaSnackBar.showToast(
+                "Shop has been deactivated. Contact Support!!");
+          }
+          WayaNav.toNamed(ManageShop.route, arguments: widget.shopId);
+        },
         child: Container(
           margin: EdgeInsets.only(bottom: 10.h),
           padding: EdgeInsets.fromLTRB(8, 8, 8, 8),

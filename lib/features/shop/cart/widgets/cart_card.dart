@@ -84,7 +84,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                         ),
                         if (isDeliveryCharge || isAddedDeliveryDate)
                           Text(
-                            "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not Requested'}",
+                            "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not added'}",
                             style: TextStyle().wayaCopyWith(
                                 color: wayaTheme.colorScheme.greyColor400,
                                 fontSize: 14.sp),

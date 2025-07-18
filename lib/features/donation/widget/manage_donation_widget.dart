@@ -66,7 +66,7 @@ class ManageDonationWidget extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: 220.w,
+                            width: 210.w,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
