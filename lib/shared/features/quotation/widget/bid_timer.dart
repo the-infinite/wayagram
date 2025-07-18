@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/shared/cache/quotation.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class QuotationBidTimer extends StatefulWidget {
@@ -63,16 +64,19 @@ class _QuotationBidTimerState extends State<QuotationBidTimer> {
       //? If this is no longer open for any reason.
       if (isClosed) return;
 
+      //? Obtain the request.
+      final request = wayaQuotationsCache.getCachedData(widget.request.id) ?? widget.request;
+
       //? If the status is not started, then we need to calculate the time left
       //? until the bid starts.
-      if (widget.request.status == BuyRequestStatus.notStarted) {
-        timeNotifier.value = widget.request.bidStart.difference(DateTime.now()).abs();
+      if (request.status == BuyRequestStatus.notStarted) {
+        timeNotifier.value = request.bidStart.difference(DateTime.now()).abs();
       }
 
       //? If the status is active, then we need to calculate the time left until
       //? bidding ends.
       else {
-        timeNotifier.value = widget.request.bidEnd.difference(DateTime.now()).abs();
+        timeNotifier.value = request.bidEnd.difference(DateTime.now()).abs();
       }
 
       //? Now, let the timer keep ticking.
@@ -107,7 +111,7 @@ class _QuotationBidTimerState extends State<QuotationBidTimer> {
         WayaDateHelper.convertDurationToCountdown(timeLeft, !widget.isShortTime),
         textAlign: TextAlign.center,
         style: wayaTheme.textTheme.descriptionStyle.copyWith(
-          color: widget.textColor ?? (isClosed ? wayaTheme.colorScheme.greyColor400 : wayaTheme.colorScheme.customPrimary),
+          color:  widget.textColor ?? (isClosed ? wayaTheme.colorScheme.greyColor400 : wayaTheme.colorScheme.customPrimary),
           fontSize: widget.fontSize ?? 16.sp,
           fontWeight: widget.fontWeight ?? FontWeight.w400,
         ),
