@@ -127,7 +127,7 @@ class _DeliveryRequestCardState extends ConsumerState<DeliveryRequestCard> {
                         productName: item.products[index].productName,
                         deliveryCharge: false,
                         unitPrice: item.products[index].price,
-                        productImage: item.products[index].productImage ?? '',
+                        productImage: item.products[index].productImage,
                         deliveryOptions: '');
                     return OrderedProductCard(orders: cartProduct);
                   })
