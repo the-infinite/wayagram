@@ -11,7 +11,8 @@ class DeliveryRequestResponseModel {
     return DeliveryRequestResponseModel(
       message: json['message'] as String,
       data: (json['data'] as List<dynamic>)
-          .map((item) => DeliveryRequestData.fromJson(item as Map<String, dynamic>))
+          .map((item) =>
+              DeliveryRequestData.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -54,11 +55,13 @@ class DeliveryItem {
   final String shopId;
   final List<DeliveryProduct> products;
   final String deliveryAddress;
+  final int? totalFee;
 
   DeliveryItem({
     required this.shopId,
     required this.products,
     required this.deliveryAddress,
+     this.totalFee
   });
 
   factory DeliveryItem.fromJson(Map<String, dynamic> json) {
@@ -68,6 +71,7 @@ class DeliveryItem {
           .map((item) => DeliveryProduct.fromJson(item as Map<String, dynamic>))
           .toList(),
       deliveryAddress: json['deliveryAddress'] as String,
+      totalFee: json['totalFee']
     );
   }
 
@@ -76,27 +80,32 @@ class DeliveryItem {
       'shopId': shopId,
       'products': products.map((product) => product.toJson()).toList(),
       'deliveryAddress': deliveryAddress,
+      'totalFee': totalFee
     };
   }
 }
 
 class DeliveryProduct {
-  final int price;
+  final String price;
   final int quantity;
   final String productId;
+  final String productName;
+  final String productImage;
 
-  DeliveryProduct({
-    required this.price,
-    required this.quantity,
-    required this.productId,
-  });
+  DeliveryProduct(
+      {required this.price,
+      required this.quantity,
+      required this.productId,
+      required this.productImage,
+      required this.productName});
 
   factory DeliveryProduct.fromJson(Map<String, dynamic> json) {
     return DeliveryProduct(
-      price: double.parse(json['unitPrice'] as String).toInt(),
-      quantity: json['quantity'],
-      productId: json['productId'],
-    );
+        price: json['unitPrice'] as String,
+        quantity: json['quantity'],
+        productId: json['productId'],
+        productImage: json['productImage'],
+        productName: json['productName']);
   }
 
   Map<String, dynamic> toJson() {
@@ -104,6 +113,8 @@ class DeliveryProduct {
       'price': price,
       'quantity': quantity,
       'productId': productId,
+      'productImage': productImage,
+      'productName': productName
     };
   }
 }

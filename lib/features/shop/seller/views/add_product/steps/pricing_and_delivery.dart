@@ -230,7 +230,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                             style: wayaTheme.textTheme.titleMedium),
                         const Gap(6),
                         Text(
-                          "This means a certain amount will be removed from the actual product price.",
+                          "This means a certain amount will be \n removed from the actual product price.",
                           style: wayaTheme.textTheme.hintStyle,
                         )
                       ],
