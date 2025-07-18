@@ -1,98 +1,169 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:svg_flutter/svg.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
+import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
-class SingleDeliveryRequestWidget extends ConsumerWidget {
+
+class DeliveryRequestCard extends ConsumerStatefulWidget {
   final DeliveryRequestData data;
-  const SingleDeliveryRequestWidget({super.key, required this.data});
+
+  const DeliveryRequestCard({
+    super.key,
+    required this.data,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _DeliveryRequestCardState();
+}
+
+class _DeliveryRequestCardState extends ConsumerState<DeliveryRequestCard> {
+  bool _isExpanded = true;
+
+  @override
+  Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(singleOrderWigdetViewModelProvider);
-    return GestureDetector(
-      onTap: () {
-        viewModel.sellerOrderAction(context, data);
-      },
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(8, 6, 8, 6),
+
+    if (widget.data.items.isEmpty) return SizedBox.shrink();
+
+    final item = widget.data.items[0];
+
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _isExpanded = !_isExpanded;
+            });
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: wayaTheme.colorScheme.scaffoldColor,
-                borderRadius: BorderRadius.circular(8)),
+                borderRadius: BorderRadius.circular(12)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      WayaAssets.icons.vanIcon.path,
-                      colorFilter: ColorFilter.mode(
-                          wayaTheme.colorScheme.primary200, BlendMode.srcIn),
-                    ),
-                    const Gap(4),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "#${data.userId.substring(0, 6)}",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14.sp),
-                        ),
-                        const Gap(8),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
-                          decoration: BoxDecoration(
-                              color: Colors.yellow[50],
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Text(
-                            "pending",
-                            style: TextStyle().wayaCopyWith(
-                                color: Colors.yellow[600],
-                                fontWeight: FontWeight.w500,
-                                fontSize: 11.sp),
-                          ),
-                        )
-                      ],
-                    )
+                    FutureBuilder(
+                        future: UserResource.getUserDetails(widget.data.userId),
+                        builder: (context, snapshot) {
+                          final userInfo = snapshot.data;
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            spacing: 3,
+                            children: [
+                              ChatProfilePicture(
+                                user: userInfo!.$1,
+                                radius: 20.h,
+                                showActive: false,
+                              ),
+                              Text(
+                                "${userInfo.$1.firstName} ${userInfo.$1.lastName}",
+                                overflow: TextOverflow.ellipsis,
+                                style: wayaTheme.textTheme.descriptionStyle
+                                    .copyWith(
+                                        color:
+                                            wayaTheme.colorScheme.customBlack),
+                              )
+                            ],
+                          );
+                        })
                   ],
                 ),
-                // Column(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   crossAxisAlignment: CrossAxisAlignment.end,
-                //   children: [
-                //     Text(
-                //       "-N 2,500",
-                //       style: TextStyle().wayaCopyWith(
-                //           color: wayaTheme.colorScheme.error700, fontSize: 13),
-                //     ),
-                //     const Gap(8),
-                //     Text(
-                //       "Aug 11, 2024",
-                //       style: TextStyle().wayaCopyWith(
-                //           color: wayaTheme.colorScheme.greyColor400,
-                //           fontSize: 13),
-                //     )
-                //   ],
-                // )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Gap(10),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        _isExpanded
+                            ? Icons.arrow_drop_up
+                            : Icons.arrow_drop_down,
+                        color: wayaTheme.colorScheme.customPrimary,
+                        size: 22,
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           ),
-          const Gap(10)
-        ],
-      ),
+        ),
+        const Gap(10),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: _isExpanded
+              ? ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: item.products.length,
+                  itemBuilder: (context, index) {
+                    final CartProduct cartProduct = CartProduct(
+                        price: double.parse(item.products[index].price).toInt(),
+                        quantity: item.products[index].quantity,
+                        productId: item.products[index].productId,
+                        productName: item.products[index].productName,
+                        deliveryCharge: false,
+                        unitPrice: item.products[index].price,
+                        productImage: item.products[index].productImage ?? '',
+                        deliveryOptions: '');
+                    return OrderedProductCard(orders: cartProduct);
+                  })
+              : SizedBox.shrink(),
+        ),
+        // const Gap(10),
+        Container(
+          padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: wayaTheme.colorScheme.greyColor300, width: 1),
+              borderRadius: BorderRadius.circular(8)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: context.width * 0.40,
+                child: Center(
+                  child: Text(WayaHelpers.formatPrice(item.totalFee ?? 0),
+                      style: wayaTheme.textTheme.titleLarge),
+                ),
+              ),
+              SizedBox(
+                width: context.width * 0.40,
+                child: WayaButton(
+                    callback: () {
+                      viewModel.sellerOrderAction(context, widget.data);
+                    },
+                    text: "Delivery Charge"),
+              )
+            ],
+          ),
+        ),
+        const Gap(30),
+      ],
     );
   }
 }
