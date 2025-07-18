@@ -272,13 +272,13 @@ class WayaUtils {
     if (searchTerm.isEmpty) {
       return [];
     }
-     print("search terms $searchTerm $accessorKeys $data");
+    
 
     final lowerSearchTerm = searchTerm.toLowerCase();
 
     final filteredData = data.where((item) {
       final map = item.toMap();
-print("accessorKeys $accessorKeys");
+
       final hasMatchInIndividualFields = accessorKeys.any((key) {
           print("accessorKeys $accessorKeys ");
         final value = map[key];
