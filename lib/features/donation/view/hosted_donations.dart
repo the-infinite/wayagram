@@ -87,7 +87,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
     // );
 
     return SizedBox(
-      height: 530.h,
+      height: 430.h,
       child: ListView(
         children: [
           WayaButton(
@@ -323,7 +323,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                         'donationCount': '${donation.donationCount}'
                       });
                     },
-                    buttonWidth: 120.0,
+                    buttonWidth: 97.w,
                   );
                 }),
           ),

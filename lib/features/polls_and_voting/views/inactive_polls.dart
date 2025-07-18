@@ -48,7 +48,7 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
 
     return viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any completed polls"):
     SizedBox(
-      height: 478.h,
+      //height: 478.h,
       child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           shrinkWrap: true,

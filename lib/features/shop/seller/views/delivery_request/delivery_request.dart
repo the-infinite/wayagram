@@ -68,7 +68,7 @@ class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return SingleDeliveryRequestWidget(
+                      return DeliveryRequestCard(
                           data: viewModel.deliveryRequests[index]);
                     })
           ],

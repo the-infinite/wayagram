@@ -39,12 +39,11 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
-    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return
       viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any active polls"):
       SizedBox(
-        height: 478.h,
+        height: 474.h,
         child:
           ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
