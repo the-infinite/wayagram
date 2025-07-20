@@ -30,7 +30,8 @@ class GroupPost extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupPostState();
 }
 
-class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProviderStateMixin {
+class _GroupPostState extends ConsumerState<GroupPost>
+    with SingleTickerProviderStateMixin {
   GroupModel? group;
 
   @override
@@ -70,13 +71,15 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.getAllPost?.length ?? 0,
-            itemBuilder: (_, index) => group?.mutedAt == null  ? WayaPostWidget(
-              data: viewModel.getAllPost![index],
-              index: index,
-            ) : WayaMutedPostWidget(
-              data: viewModel.getAllPost![index],
-              index: index,
-            ),
+            itemBuilder: (_, index) => group?.mutedAt == null
+                ? WayaPostWidget(
+                    data: viewModel.getAllPost![index],
+                    index: index,
+                  )
+                : WayaMutedPostWidget(
+                    data: viewModel.getAllPost![index],
+                    index: index,
+                  ),
           ),
 
         // Some space.
@@ -103,7 +106,8 @@ class PostEmptyState extends StatelessWidget {
             buttontext: 'Create a Post',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

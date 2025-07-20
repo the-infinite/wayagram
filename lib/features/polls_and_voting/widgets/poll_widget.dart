@@ -106,7 +106,6 @@ class PollWidget extends ConsumerWidget {
             ...List.generate(poll.choices!.length, (index) {
               final choice = poll.choices![index];
 
-            
               return InkWell(
                 splashColor: Colors.transparent,
                 splashFactory: NoSplash.splashFactory,
@@ -142,7 +141,9 @@ class PollWidget extends ConsumerWidget {
                             ? WayaImage(
                                 imageUrl: choice.imageUrl ?? '',
                                 fit: BoxFit.cover,
-                                height: 44.h, width: 60,)
+                                height: 44.h,
+                                width: 60,
+                              )
                             : SizedBox.shrink(),
                         choice.imageUrl != null
                             ? const Gap(40)

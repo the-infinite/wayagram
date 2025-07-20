@@ -25,11 +25,6 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
 

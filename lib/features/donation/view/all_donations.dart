@@ -39,14 +39,17 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
       ref.read(donationVmProvider.notifier).fetchCategory();
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
     super.initState();
+  }
+
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -55,8 +58,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
-    debugPrint('DONATION ARGS $args');
+    // final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    // debugPrint('DONATION ARGS $args');
 
     // Filter the allDonations
     final filteredAllDonations = WayaUtils.search<AllDonationDocs>(
@@ -77,25 +80,30 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               children: [
                 SvgPicture.asset(
                   'assets/icons/donation.svg',
-                  colorFilter: ColorFilter.mode(wayaTheme.colorScheme.primary300, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                      wayaTheme.colorScheme.primary300, BlendMode.srcIn),
                 ),
                 const Gap(10),
                 Text(
                   "Create a Donation Post",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
+                      color: wayaTheme.colorScheme.customPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16.sp),
                 ),
               ],
             ),
             callback: () async {
               await ref.read(donationVmProvider.notifier).getMyKYC();
               debugPrint('KYc STATUS ==> ${viewModel.kycStatus}');
-              if (ConversationState.self.accountType == UserAccountType.personal) {
+              if (ConversationState.self.accountType ==
+                  UserAccountType.personal) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
                       context: context,
                       title: "You don't have a Business Account",
-                      message: 'Please upgrade to a business account to create a donation post',
+                      message:
+                          'Please upgrade to a business account to create a donation post',
                       onPress: () {
                         WayaNav.goBack();
                         WayaNav.toNamed(UpgradeToBusiness.route);
@@ -110,10 +118,12 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 WayaUtils.showNotice(
                     context: context,
                     title: "Update KYC Information ",
-                    message: 'You must complete KYC verification before creating a donation post',
+                    message:
+                        'You must complete KYC verification before creating a donation post',
                     onPress: () {
                       WayaNav.goBack();
-                      WayaNav.toNamed('/kycUpdate', arguments: {'kyc': '${viewModel.kycStatus}'});
+                      WayaNav.toNamed('/kycUpdate',
+                          arguments: {'kyc': '${viewModel.kycStatus}'});
                     },
                     buttonText: 'Update KYC',
                     secondButtonText: 'Cancel',
@@ -132,18 +142,19 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
           Text(
             "Support a Cause That Matters",
             style: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: Theme.of(context).colorScheme.greyColor500),
           ),
           const Gap(30),
           filteredAllDonations.isEmpty
-
               ? DonationEmptyState(
                   title: "You haven't added any donations yet",
                 )
               : ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount:filteredAllDonations.length,
+                  itemCount: filteredAllDonations.length,
                   //viewModel.allDonationDocs?.length,
                   //filteredAllDonations.length,
                   itemBuilder: (context, index) {
@@ -151,19 +162,22 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                     int daysLeft = DateTime.parse('${donation.expirationDate}')
                         .difference(DateTime.parse('${donation.startDate}'))
                         .inDays;
-                    int amountRaised = double.parse('${donation.amountRaised}').toInt();
+                    int amountRaised =
+                        double.parse('${donation.amountRaised}').toInt();
 
-                    int targetedAmount = double.parse('${donation.targetAmount}').toInt();
+                    int targetedAmount =
+                        double.parse('${donation.targetAmount}').toInt();
 
                     double ratioLeft = amountRaised / targetedAmount;
 
                     return ManageDonationWidget(
                       text: "Donate",
                       amountRaised: donation.showRaised == true
-                          ? WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}'))
+                          ? WayaHelpers.formatPrice(int.parse(
+                              '${donation.amountRaised?.replaceAll('.00', '')}'))
                           : '',
-                      targetAmount:
-                          WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                      targetAmount: WayaHelpers.formatPrice(int.parse(
+                          '${donation.targetAmount?.replaceAll('.00', '')}')),
                       title: donation.title?.capitalizeFirst,
                       image: donation.imageURL,
                       dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
@@ -171,8 +185,10 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       rangeRatio: ratioLeft,
                       onTap: () {
                         debugPrint('MY RATIO $daysLeft');
-                        WayaNav.to(DonationDetails(id: '${donation.id}',));
-                       /* WayaNav.toNamed('/donation-details', arguments: {
+                        WayaNav.to(DonationDetails(
+                          id: '${donation.id}',
+                        ));
+                        /* WayaNav.toNamed('/donation-details', arguments: {
                           'id': '${donation.id}',
                           // 'daysLeft': '$daysLeft',
                           // 'ratioLeft': ratioLeft,
@@ -199,7 +215,9 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
           Text(
             "View donations based on their categories",
             style: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: Theme.of(context).colorScheme.greyColor500),
           ),
           const Gap(10),
           SizedBox(
@@ -216,14 +234,18 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       const Gap(6),
                       WayaButton(
                         callback: () {
-                          ref.read(donationVmProvider.notifier).getAllDonation(page: 1);
+                          ref
+                              .read(donationVmProvider.notifier)
+                              .getAllDonation(page: 1);
                         },
                         border: Border.all(
-                            color: viewModel.selected.contains(viewModel.categories[0].value)
+                            color: viewModel.selected
+                                    .contains(viewModel.categories[0].value)
                                 ? wayaTheme.colorScheme.primary50
                                 : wayaTheme.colorScheme.greyColor300),
                         horizontalPadding: 8,
-                        color: viewModel.selected.contains(viewModel.categories[0].value)
+                        color: viewModel.selected
+                                .contains(viewModel.categories[0].value)
                             ? wayaTheme.colorScheme.primary50
                             : wayaTheme.colorScheme.transparent,
                         radius: 10,
@@ -239,7 +261,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
-                                  color: viewModel.selected.contains(viewModel.categories[index].value)
+                                  color: viewModel.selected.contains(
+                                          viewModel.categories[index].value)
                                       ? wayaTheme.colorScheme.customPrimary
                                       : WayaColors.greyColor400,
                                   fontFamily: WayaConstants.fontFamily,
@@ -263,8 +286,12 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                     children: [
                       WayaButton(
                         callback: () {
-                          ref.read(donationVmProvider.notifier).updateSelectedCategory(donation);
-                          ref.read(donationVmProvider.notifier).fetchDonationBasedOnCategory(donation.label);
+                          ref
+                              .read(donationVmProvider.notifier)
+                              .updateSelectedCategory(donation);
+                          ref
+                              .read(donationVmProvider.notifier)
+                              .fetchDonationBasedOnCategory(donation.label);
                         },
                         border: Border.all(
                             color: viewModel.selected.contains(donation.value)
@@ -287,7 +314,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
-                                  color: viewModel.selected.contains(donation.value)
+                                  color: viewModel.selected
+                                          .contains(donation.value)
                                       ? wayaTheme.colorScheme.customPrimary
                                       : WayaColors.greyColor400,
                                   fontFamily: WayaConstants.fontFamily,
@@ -317,15 +345,18 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                         .difference(DateTime.parse('${donation.startDate}'))
                         .inDays;
 
-                    int amountRaised = double.parse('${donation.amountRaised}').toInt();
+                    int amountRaised =
+                        double.parse('${donation.amountRaised}').toInt();
 
-                    int targetedAmount = double.parse('${donation.targetAmount}').toInt();
+                    int targetedAmount =
+                        double.parse('${donation.targetAmount}').toInt();
 
                     double ratioLeft = amountRaised / targetedAmount;
                     return ManageDonationWidget(
                       text: "Donate",
                       amountRaised: donation.amountRaised,
-                      targetAmount: WayaHelpers.formatPrice(double.parse('${donation.targetAmount}').toInt()),
+                      targetAmount: WayaHelpers.formatPrice(
+                          double.parse('${donation.targetAmount}').toInt()),
                       title: donation.title?.capitalizeFirst,
                       image: donation.imageURL,
                       dayLeft: '$daysLeft',
@@ -335,13 +366,16 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                         WayaNav.toNamed('/donation-details', arguments: {
                           'title': '${donation.title?.capitalizeFirst}',
                           'image': '${donation.imageURL}',
-                          'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                          'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                          'amountRaised':
+                              '${donation.amountRaised?.replaceAll('.00', '')}',
+                          'targetAmount':
+                              '${donation.targetAmount?.replaceAll('.00', '')}',
                           'desc': '${donation.description}',
                           'solution': '${donation.solution}',
                           'impact': '${donation.impact}',
                           'url': '${donation.url}',
-                          'minimumDonationAmount': '${donation.minimumDonationAmount}',
+                          'minimumDonationAmount':
+                              '${donation.minimumDonationAmount}',
                           'daysLeft': '$daysLeft',
                           'privacy': '${donation.privacy}',
                           'donationCount': '${donation.donationCount}',

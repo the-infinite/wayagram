@@ -10,7 +10,6 @@ import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/widget/muted_post.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
-
 class MediaPost extends ConsumerStatefulWidget {
   final GroupProviderFamily provider;
   final String id;
@@ -24,7 +23,8 @@ class MediaPost extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MediaPostState();
 }
 
-class _MediaPostState extends ConsumerState<MediaPost> with SingleTickerProviderStateMixin {
+class _MediaPostState extends ConsumerState<MediaPost>
+    with SingleTickerProviderStateMixin {
   int like = 0;
 
   GroupModel? group;
@@ -78,4 +78,3 @@ class _MediaPostState extends ConsumerState<MediaPost> with SingleTickerProvider
     );
   }
 }
-

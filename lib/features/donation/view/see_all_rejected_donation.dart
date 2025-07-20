@@ -17,11 +17,18 @@ class SeeAllRejectedDonations extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SeeAllRejectedDonationsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SeeAllRejectedDonationsState();
 }
 
-class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonations> with SingleTickerProviderStateMixin {
+class _SeeAllRejectedDonationsState
+    extends ConsumerState<SeeAllRejectedDonations>
+    with SingleTickerProviderStateMixin {
   late TextEditingController searchController;
+
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
 
   @override
   void initState() {
@@ -31,9 +38,14 @@ class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonation
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,40 +81,52 @@ class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonation
                         itemBuilder: (context, index) {
                           //final donation = filteredMyDonations[index];
                           final donation = viewModel.rejectedDonations[index];
-                          int daysLeft = DateTime.parse('${donation.expirationDate}')
-                              .difference(DateTime.parse('${donation.startDate}'))
-                              .inDays;
+                          int daysLeft =
+                              DateTime.parse('${donation.expirationDate}')
+                                  .difference(
+                                      DateTime.parse('${donation.startDate}'))
+                                  .inDays;
 
-                          int amountRaised = double.parse('${donation.amountRaised}').toInt();
+                          int amountRaised =
+                              double.parse('${donation.amountRaised}').toInt();
 
-                          int targetedAmount = double.parse('${donation.targetAmount}').toInt();
+                          int targetedAmount =
+                              double.parse('${donation.targetAmount}').toInt();
 
                           double ratioLeft = amountRaised / targetedAmount;
                           return AppliedDonationWidget(
                             onTap: () async {
                               await WayaUtils.showModalSheet(context,
                                   child: ApplicationStatus(
-                                    causeTitle: '${donation.title?.capitalizeFirst}',
+                                    causeTitle:
+                                        '${donation.title?.capitalizeFirst}',
                                     solution: '${donation.solution}',
                                     desc: '${donation.description}',
                                     startDate: ref
                                         .read(createPollVotingProvider.notifier)
-                                        .formatDonationDate('${donation.startDate}'),
+                                        .formatDonationDate(
+                                            '${donation.startDate}'),
                                     endDate: ref
                                         .read(createPollVotingProvider.notifier)
-                                        .formatDonationDate('${donation.expirationDate}'),
-                                    targetAmount: '${donation.targetAmount?.replaceAll('.00', '')}',
-                                    amountRaised: '${donation.amountRaised?.replaceAll('.00', '')}',
+                                        .formatDonationDate(
+                                            '${donation.expirationDate}'),
+                                    targetAmount:
+                                        '${donation.targetAmount?.replaceAll('.00', '')}',
+                                    amountRaised:
+                                        '${donation.amountRaised?.replaceAll('.00', '')}',
                                     status: 'Rejected',
                                     privacy: '${donation.privacy}',
-                                    showRaised: donation.showRaised == true ? 'YES' : 'NO',
+                                    showRaised: donation.showRaised == true
+                                        ? 'YES'
+                                        : 'NO',
                                     url: '${donation.url}',
                                     image: '${donation.imageURL}',
                                     id: '${donation.id}',
                                     donationCount: donation.donationCount,
                                     daysLeft: daysLeft,
                                     impact: '${donation.impact}',
-                                    minimumDonationAmount: '${donation.minimumDonationAmount}',
+                                    minimumDonationAmount:
+                                        '${donation.minimumDonationAmount}',
                                     ratioLeft: ratioLeft,
                                   ));
                             },
@@ -114,11 +138,14 @@ class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonation
                                     ? 'Accepted'
                                     : 'Rejected',
                             image: '${donation.imageURL}',
-                            targetAmount:
-                                WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
-                            startDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.startDate}'),
-                            endDate:
-                                ref.read(createPollVotingProvider.notifier).formatDt1('${donation.expirationDate}'),
+                            targetAmount: WayaHelpers.formatPrice(int.parse(
+                                '${donation.targetAmount?.replaceAll('.00', '')}')),
+                            startDate: ref
+                                .read(createPollVotingProvider.notifier)
+                                .formatDt1('${donation.startDate}'),
+                            endDate: ref
+                                .read(createPollVotingProvider.notifier)
+                                .formatDt1('${donation.expirationDate}'),
                             color: donation.status == 'pending_approval'
                                 ? WayaColors.pendingColor
                                 : donation.status == 'approved'

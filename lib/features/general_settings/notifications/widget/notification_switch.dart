@@ -27,7 +27,8 @@ class NotificationSwitchButton extends StatefulWidget {
   });
 
   @override
-  State<NotificationSwitchButton> createState() => _NotificationSwitchButtonState();
+  State<NotificationSwitchButton> createState() =>
+      _NotificationSwitchButtonState();
 }
 
 class _NotificationSwitchButtonState extends State<NotificationSwitchButton> {

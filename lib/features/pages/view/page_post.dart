@@ -21,7 +21,8 @@ class PagePost extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PagePostState();
 }
 
-class _PagePostState extends ConsumerState<PagePost> with SingleTickerProviderStateMixin {
+class _PagePostState extends ConsumerState<PagePost>
+    with SingleTickerProviderStateMixin {
   late final pageProvider = singlePageProvider("page-${widget.pageId}");
   late final notifier = ref.read(pageProvider.notifier);
   int like = 0;
@@ -102,7 +103,8 @@ class PostEmptyState extends StatelessWidget {
           buttontext: 'Create a Post',
           buttonTrailingIcon: SvgPicture.asset(
             WayaAssets.icons.addEventIcon.path,
-            colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            colorFilter:
+                ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
           ),
           assetImage: Image.asset(
             WayaAssets.images.emptyEvent.path,

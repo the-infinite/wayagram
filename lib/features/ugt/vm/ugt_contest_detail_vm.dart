@@ -8,7 +8,8 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   final ContestRepo _contestRepository;
   final WayaLocalDataSource _localDataSource;
 
-  ContestDetailNotifier(this._contestRepository, this._localDataSource) : super([]);
+  ContestDetailNotifier(this._contestRepository, this._localDataSource)
+      : super([]);
 
   final int _page = 1; // Pagination tracking
   bool isLoading = false;
@@ -31,7 +32,8 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
     });
  */
     try {
-      final response = await _contestRepository.fetchHostedContest(_localDataSource.getUserId().toString(), _page);
+      final response = await _contestRepository.fetchHostedContest(
+          _localDataSource.getUserId().toString(), _page);
       List<Contest> contestList = [];
       if (response.success) {
         state = [];
@@ -87,8 +89,10 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
 
   void doOnLikeLike(String postId) async {
     // debugPrint("do like stuff");
-    final response = await _contestRepository
-        .likeContest({"profileId": _localDataSource.getUserId().toString(), "contestId": postId});
+    final response = await _contestRepository.likeContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
 
     if (!response.success) {
       //  debugPrint("do like stuff Fail");
@@ -112,11 +116,14 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
 
   void doFollow(String postId) async {
     // debugPrint("do like stuff");
-    final response = await _contestRepository
-        .followContest({"profileId": _localDataSource.getUserId().toString(), "contestId": postId});
+    final response = await _contestRepository.followContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
     state = state.map((post) {
       if (post.id == postId) {
-        bool value = post.isFollowing == null ? false : post.isFollowing ?? false;
+        bool value =
+            post.isFollowing == null ? false : post.isFollowing ?? false;
         return post.copyWith(
           // isLiked: true,
           isFollowing: !value,
@@ -151,8 +158,10 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
 
   void doShare(String postId) async {
     // debugPrint("do like stuff");
-    final response = await _contestRepository
-        .shareContest({"profileId": _localDataSource.getUserId().toString(), "contestId": postId});
+    final response = await _contestRepository.shareContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
 
     if (!response.success) {
       //  debugPrint("do like stuff Fail");
@@ -183,6 +192,7 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
 }
 
 // Provider
-final contestDetailProvider = StateNotifierProvider<ContestDetailNotifier, List<Contest>>((ref) {
+final contestDetailProvider =
+    StateNotifierProvider<ContestDetailNotifier, List<Contest>>((ref) {
   return ContestDetailNotifier(ContestRepo(), WayaLocalDataSource());
 });

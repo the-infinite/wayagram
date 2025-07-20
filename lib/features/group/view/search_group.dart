@@ -24,15 +24,17 @@ class SearchGroup extends ConsumerStatefulWidget {
 class _SearchGroupState extends ConsumerState<SearchGroup> {
   TextEditingController searchController = TextEditingController();
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       myGroupNotifier.getCreatedGroups();
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
 
     // That's fine.
     super.initState();
@@ -40,6 +42,7 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -57,12 +60,12 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
         leading: WayaBackButton(onTap: () => WayaNav.goBack()),
         title: WayaTextFormField(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-          prefixIcon: Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
+          prefixIcon:
+              Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
           controller: searchController,
           hintText: 'Search name, description',
         ),
       ),
-
       body: mySearch.isEmpty
           ? ActivityLogsEmptyState(text: 'Nothing here')
           : ListView.builder(

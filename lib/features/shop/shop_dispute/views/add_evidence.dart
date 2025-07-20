@@ -34,6 +34,12 @@ class _AddEvidenceState extends ConsumerState<AddEvidence> {
   }
 
   @override
+  void dispose() {
+    fileController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
@@ -78,7 +84,8 @@ class _AddEvidenceState extends ConsumerState<AddEvidence> {
           //? A description of the dispute.
           AboutProduct(
             title: 'Dispute Description',
-            content: "I recently purchased Dr Teal's Ultra Moisturizing Body Wash,"
+            content:
+                "I recently purchased Dr Teal's Ultra Moisturizing Body Wash,"
                 "expecting a luxurious experience based on the product description."
                 "However, upon using it, I found that it did not deliver the hydration"
                 "and revitalization promised. The scent was less citrusy than advertised,"

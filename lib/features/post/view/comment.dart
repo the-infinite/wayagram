@@ -64,6 +64,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
   void dispose() {
     try {
       _timer?.cancel();
+      inputController.dispose();
       loadingController.dispose();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -105,7 +106,8 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
               Expanded(
                 child: WayaPaginatedListView(
                   nextPage: state.page,
-                  getPage: (_) async => await notifier.getCommentsStream(widget.id),
+                  getPage: (_) async =>
+                      await notifier.getCommentsStream(widget.id),
                   itemCount: state.comments.length,
                   isAtEnd: !state.hasNextPage,
                   handler: handler,

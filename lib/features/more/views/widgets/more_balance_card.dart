@@ -15,7 +15,8 @@ class MoreBalanceCard extends ConsumerStatefulWidget {
   const MoreBalanceCard({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MoreBalanceCardState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MoreBalanceCardState();
 }
 
 class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
@@ -33,7 +34,6 @@ class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
     final viewModel = ref.watch(walletVmProvider);
     return ClipRRect(
       borderRadius: BorderRadius.circular(15),
-      
       child: Stack(
         children: [
           Container(
@@ -99,12 +99,10 @@ class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
                       textStyle: wayaTheme.textTheme.labelSmall,
                       textColor: wayaTheme.colorScheme.customPrimary,
                       callback: () {
-
                         WayaUtils.showModalSheet(
                           context,
                           child: LearnMoreInstructionsContent(),
                         );
-
                       },
                     ),
                   ],

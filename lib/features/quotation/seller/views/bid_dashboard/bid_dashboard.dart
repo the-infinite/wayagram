@@ -179,7 +179,8 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                   icon: WayaAssets.icons.settlement.svg(
                     width: 28,
                     height: 28,
-                    colorFilter: ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
+                    colorFilter:
+                        ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
                   ),
                   color: Color(0xffFBEAE9),
                   onTap: () {

@@ -9,14 +9,13 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 
 class InvitationCard extends StatelessWidget {
-  const InvitationCard({
-    super.key,
-    required this.group,
-    required this.wayaTheme,
-    required this.ref,
-    required this.accept,
-    required this.reject
-  });
+  const InvitationCard(
+      {super.key,
+      required this.group,
+      required this.wayaTheme,
+      required this.ref,
+      required this.accept,
+      required this.reject});
 
   final GroupInvitationModelDocs group;
   final ThemeData wayaTheme;
@@ -32,7 +31,8 @@ class InvitationCard extends StatelessWidget {
       padding: EdgeInsets.only(
         left: 10,
       ),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12), color: Colors.white),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +46,8 @@ class InvitationCard extends StatelessWidget {
                 backgroundImage: group.group?.profileImage == null
                     ? AssetImage("assets/placeholder.jpg")
                     : NetworkImage(
-                  '${group.group?.profileImage}',
-                ),
+                        '${group.group?.profileImage}',
+                      ),
               ),
               Gap(10),
               Expanded(
@@ -86,21 +86,27 @@ class InvitationCard extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: wayaTheme.colorScheme.error)
-                        ),
-                        child: Icon(Icons.close, color: wayaTheme.colorScheme.error,
+                            border:
+                                Border.all(color: wayaTheme.colorScheme.error)),
+                        child: Icon(
+                          Icons.close,
+                          color: wayaTheme.colorScheme.error,
                         ),
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     InkWell(
                       onTap: accept,
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: wayaTheme.colorScheme.success)
-                        ),
-                        child: Icon(Icons.check, color: wayaTheme.colorScheme.success,
+                            border: Border.all(
+                                color: wayaTheme.colorScheme.success)),
+                        child: Icon(
+                          Icons.check,
+                          color: wayaTheme.colorScheme.success,
                         ),
                       ),
                     ),

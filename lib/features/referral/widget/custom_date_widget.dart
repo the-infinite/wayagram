@@ -46,7 +46,8 @@ class _CustomDateWidgetState extends ConsumerState<CustomDateWidget> {
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isStartDate ? startDate ?? DateTime.now() : endDate ?? DateTime.now(),
+      initialDate:
+          isStartDate ? startDate ?? DateTime.now() : endDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
@@ -131,7 +132,8 @@ class _CustomDateWidgetState extends ConsumerState<CustomDateWidget> {
                   return;
                 }
 
-                String startDateNew = DateFormat('yyyy-MM-dd').format(startDate!);
+                String startDateNew =
+                    DateFormat('yyyy-MM-dd').format(startDate!);
                 String endDateNew = DateFormat('yyyy-MM-dd').format(endDate!);
 
                 notifier.updateStartAndEndDate(startDateNew, endDateNew);
@@ -207,7 +209,9 @@ class _CustomDateWidgetState extends ConsumerState<CustomDateWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              date != null ? DateFormat('MMMM dd\'th\' yyyy').format(date) : 'Select date',
+              date != null
+                  ? DateFormat('MMMM dd\'th\' yyyy').format(date)
+                  : 'Select date',
               style: TextStyle(
                 color: date != null ? Colors.black : Colors.grey,
               ),

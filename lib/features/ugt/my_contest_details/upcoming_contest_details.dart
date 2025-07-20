@@ -39,7 +39,6 @@ class _UpcomingContestDetailsState
     final hasProfile = useState(false);
     final appliedContestModel =
         useState<applied_contest.AppliedContestModel?>(null);
-    debugPrint("my value ${model?.hasApplied}");
 
     useEffect(() {
       ref

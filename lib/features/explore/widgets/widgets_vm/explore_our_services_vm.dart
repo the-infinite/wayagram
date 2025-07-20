@@ -21,14 +21,16 @@ class ExploreOurServicesVm {
         icon: WayaAssets.icons.eShop.path,
         name: 'Shop',
         onTap: () {
-          WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
+          WayaNav.toNamed(BottomView.route,
+              arguments: 1, preventDuplicates: false);
         },
       ),
       Services(
         icon: WayaAssets.icons.eQuotation.path,
         name: 'Get Quotation',
         onTap: () {
-          WayaNav.toNamed(BottomView.route, arguments: 3, preventDuplicates: false);
+          WayaNav.toNamed(BottomView.route,
+              arguments: 3, preventDuplicates: false);
         },
       ),
       Services(
@@ -42,7 +44,8 @@ class ExploreOurServicesVm {
         icon: WayaAssets.icons.eDonation.path,
         name: 'Donations',
         onTap: () {
-          WayaNav.toNamed(BottomView.route, arguments: 2, preventDuplicates: false);
+          WayaNav.toNamed(BottomView.route,
+              arguments: 2, preventDuplicates: false);
         },
       ),
       Services(

@@ -25,6 +25,12 @@ class _AddEventState extends ConsumerState<AddEvent>
     WidgetsBinding.instance.addPostFrameCallback((_) => _initializeArgs());
   }
 
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   void _initializeArgs() {
     final EventDoc? args =
         ModalRoute.of(context)?.settings.arguments as EventDoc?;

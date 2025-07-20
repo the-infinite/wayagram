@@ -33,10 +33,12 @@ class QuotationOrderDetails extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _QuotationOrderDetailsScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _QuotationOrderDetailsScreenState();
 }
 
-class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDetails> {
+class _QuotationOrderDetailsScreenState
+    extends ConsumerState<QuotationOrderDetails> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
   Timer? _timer;
   bool _loaded = false;
@@ -48,13 +50,18 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
   void _ingestOrder() async {
     final foundOrder = await notifier.getOrderDetails(widget.requestId);
-    final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
-    final foundBid =
-        foundOrder == null ? null : notifier.getBid(foundOrder.bidId) ?? await notifier.getSingleBid(foundOrder.bidId);
+    final foundQuote = notifier.getBidQuote(widget.requestId) ??
+        await notifier.getBuyRequest(widget.requestId);
+    final foundBid = foundOrder == null
+        ? null
+        : notifier.getBid(foundOrder.bidId) ??
+            await notifier.getSingleBid(foundOrder.bidId);
     final statusList = await notifier.trackDelivery(widget.requestId);
     foundQuote?.deliveryType == BuyRequestDeliveryType.pickup
-        ? statusList?.sort((first, second) => first.pickupStatus.rank.compareTo(second.pickupStatus.rank))
-        : statusList?.sort((first, second) => first.deliveryStatus.rank.compareTo(second.deliveryStatus.rank));
+        ? statusList?.sort((first, second) =>
+            first.pickupStatus.rank.compareTo(second.pickupStatus.rank))
+        : statusList?.sort((first, second) =>
+            first.deliveryStatus.rank.compareTo(second.deliveryStatus.rank));
     final foundStatus = statusList?.firstOrNull;
 
     //? Emit this one.
@@ -80,23 +87,30 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
         //? This is fine.
         final foundOrder = await notifier.getOrderDetails(widget.requestId);
-        final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
+        final foundQuote = notifier.getBidQuote(widget.requestId) ??
+            await notifier.getBuyRequest(widget.requestId);
         final statusList = await notifier.trackDelivery(widget.requestId);
         foundQuote?.deliveryType == BuyRequestDeliveryType.pickup
-            ? statusList?.sort((first, second) => first.pickupStatus.rank.compareTo(second.pickupStatus.rank))
-            : statusList?.sort((first, second) => first.deliveryStatus.rank.compareTo(second.deliveryStatus.rank));
+            ? statusList?.sort((first, second) =>
+                first.pickupStatus.rank.compareTo(second.pickupStatus.rank))
+            : statusList?.sort((first, second) => first.deliveryStatus.rank
+                .compareTo(second.deliveryStatus.rank));
         final foundStatus = statusList?.firstOrNull;
         final foundUser = foundQuote != null
             ? await UserResource.getUserDetails(
-                ConversationState.self.id == foundQuote.buyerId ? (foundOrder?.vendorId ?? "") : foundQuote.buyerId)
+                ConversationState.self.id == foundQuote.buyerId
+                    ? (foundOrder?.vendorId ?? "")
+                    : foundQuote.buyerId)
             : null;
         final foundBid = foundOrder == null
             ? null
-            : notifier.getBid(foundOrder.bidId) ?? await notifier.getSingleBid(foundOrder.bidId);
+            : notifier.getBid(foundOrder.bidId) ??
+                await notifier.getSingleBid(foundOrder.bidId);
 
         //? If this is actually on the buyer side, poll to update the order's state.
         if (foundOrder?.buyerId == ConversationState.self.id) {
-          _timer = Timer.periodic(const Duration(seconds: 7), (_) => _ingestOrder());
+          _timer =
+              Timer.periodic(const Duration(seconds: 7), (_) => _ingestOrder());
         }
 
         //? Update these values in state.
@@ -236,7 +250,8 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                         Expanded(
                           child: AboutProduct(
                             title: 'Quantity',
-                            content: WayaValueHelper.formatNumber(request!.quantity),
+                            content:
+                                WayaValueHelper.formatNumber(request!.quantity),
                           ),
                         ),
 
@@ -265,7 +280,8 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     //? The starting amount for bidding.
                     OrderInfoWidget(
                       title: "Bid Starting Amount",
-                      description: WayaValueHelper.formatPrice(request!.bidStartingAmount),
+                      description: WayaValueHelper.formatPrice(
+                          request!.bidStartingAmount),
                     ),
 
                     // Some space.
@@ -282,8 +298,9 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
                     //? The name of the customer.
                     GestureDetector(
-                      onTap: () =>
-                          WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user?.$1.id ?? "undefined", "quotation")),
+                      onTap: () => WayaNav.toNamed(
+                          WayaAppRoutes.getProfileRoute(
+                              user?.$1.id ?? "undefined", "quotation")),
                       child: OrderInfoWidget(
                         title: isBuyer ? "Seller's Name" : "Customer's Name",
                         description: user?.$1.fullname ?? "N/A",
@@ -296,7 +313,10 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     //? The delivery type.
                     OrderInfoWidget(
                       title: "Delivery Type",
-                      description: request!.deliveryType == BuyRequestDeliveryType.pickup ? 'Pickup' : 'Home Delivery',
+                      description:
+                          request!.deliveryType == BuyRequestDeliveryType.pickup
+                              ? 'Pickup'
+                              : 'Home Delivery',
                     ),
 
                     //? Only show the confirmation token when the value exists
@@ -316,7 +336,8 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
                       //? The second position.
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 15.w, vertical: 10.h),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.r),
                           color: wayaTheme.colorScheme.greyColor50,
@@ -336,9 +357,12 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
                             //? Finally, the button to copy the token to clipboard.
                             IconButton(
-                              onPressed: () => WayaUtils.copyText(order?.token ?? "Not Available"),
+                              onPressed: () => WayaUtils.copyText(
+                                  order?.token ?? "Not Available"),
                               icon: WayaAssets.icons.sCopy.svg(
-                                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.primary, BlendMode.srcIn),
+                                colorFilter: ColorFilter.mode(
+                                    wayaTheme.colorScheme.primary,
+                                    BlendMode.srcIn),
                               ),
                             ),
                           ],
@@ -359,10 +383,12 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     Gap(10.h),
 
                     //? The delivery address.
-                    if (request!.deliveryType == BuyRequestDeliveryType.delivery) ...[
+                    if (request!.deliveryType ==
+                        BuyRequestDeliveryType.delivery) ...[
                       OrderInfoWidget(
                         title: "Delivery Address",
-                        description: request!.deliveryAddress ?? "No delivery address provided",
+                        description: request!.deliveryAddress ??
+                            "No delivery address provided",
                       ),
 
                       // Some space.
@@ -381,7 +407,8 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     //? The bid's amount.
                     OrderInfoWidget(
                       title: "Bid Amount",
-                      description: WayaValueHelper.formatPrice(bid?.usedAmount ?? 0),
+                      description:
+                          WayaValueHelper.formatPrice(bid?.usedAmount ?? 0),
                     ),
 
                     // Some space.
@@ -397,15 +424,20 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     Gap(8.h),
 
                     //? The status.
-                    if (request!.deliveryType == BuyRequestDeliveryType.delivery)
+                    if (request!.deliveryType ==
+                        BuyRequestDeliveryType.delivery)
                       OrderInfoWidget(
                         title: "Delivery Status",
-                        child: DeliveryStatusCard(status: status?.deliveryStatus ?? QuotationDeliveryStatus.pending),
+                        child: DeliveryStatusCard(
+                            status: status?.deliveryStatus ??
+                                QuotationDeliveryStatus.pending),
                       )
                     else
                       OrderInfoWidget(
                         title: "Pickup Status",
-                        child: PickupStatusCard(status: status?.pickupStatus ?? QuotationPickupStatus.pending),
+                        child: PickupStatusCard(
+                            status: status?.pickupStatus ??
+                                QuotationPickupStatus.pending),
                       ),
 
                     //? When this is for the seller, please include whether or
@@ -454,7 +486,8 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     //? The delivery price of a bid.
                     OrderInfoWidget(
                       title: "Delivery Price",
-                      description: WayaValueHelper.formatPrice(bid?.deliveryCharge ?? 0),
+                      description:
+                          WayaValueHelper.formatPrice(bid?.deliveryCharge ?? 0),
                     ),
 
                     // Some space.
@@ -463,24 +496,30 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     //? The delivery price of a bid.
                     OrderInfoWidget(
                       title: "Total",
-                      description: WayaValueHelper.formatPrice(subtotal + (bid?.deliveryCharge ?? 0)),
+                      description: WayaValueHelper.formatPrice(
+                          subtotal + (bid?.deliveryCharge ?? 0)),
                     ),
 
                     //? Section for buttons that mutate the state of the order.
-                    if (order!.orderStatus == QuotationOrderStatus.inProgress) ...[
+                    if (order!.orderStatus ==
+                        QuotationOrderStatus.inProgress) ...[
                       // Some space.
                       Gap(30.h),
 
                       //? The button to change the status of the delivery.
                       if (isBuyer)
                         const SizedBox.shrink()
-                      else if (request!.deliveryType == BuyRequestDeliveryType.delivery)
+                      else if (request!.deliveryType ==
+                          BuyRequestDeliveryType.delivery)
                         WayaButton(
                           color: wayaTheme.colorScheme.transparent,
                           textColor: wayaTheme.colorScheme.greyColor900,
-                          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                          border: Border.all(
+                              width: 1,
+                              color: wayaTheme.colorScheme.greyColor300),
                           callback: () async {
-                            final controller = ValueNotifier<QuotationDeliveryStatus?>(null);
+                            final controller =
+                                ValueNotifier<QuotationDeliveryStatus?>(null);
                             final isLoading = ValueNotifier(false);
 
                             //? Show the modal sheet.
@@ -503,7 +542,9 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                           },
                           text: "Change Delivery Status",
                           leadingIcon: WayaAssets.icons.vanIcon.svg(
-                            colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(
+                                wayaTheme.colorScheme.greyColor900,
+                                BlendMode.srcIn),
                             width: 20,
                           ),
                         )
@@ -511,9 +552,12 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                         WayaButton(
                           color: wayaTheme.colorScheme.transparent,
                           textColor: wayaTheme.colorScheme.greyColor900,
-                          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                          border: Border.all(
+                              width: 1,
+                              color: wayaTheme.colorScheme.greyColor300),
                           callback: () async {
-                            final controller = ValueNotifier<QuotationPickupStatus?>(null);
+                            final controller =
+                                ValueNotifier<QuotationPickupStatus?>(null);
                             final isLoading = ValueNotifier(false);
 
                             //? Show the modal sheet.
@@ -536,7 +580,9 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                           },
                           text: "Change Pickup Status",
                           leadingIcon: WayaAssets.icons.vanIcon.svg(
-                            colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(
+                                wayaTheme.colorScheme.greyColor900,
+                                BlendMode.srcIn),
                             width: 20,
                           ),
                         ),
@@ -546,7 +592,10 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
                       //? If this is for the buyer and the order has gotten to the
                       //? final step that needs confirmation...
-                      if (!isBuyer && order?.orderStatus == QuotationOrderStatus.inProgress && hasArrived) ...[
+                      if (!isBuyer &&
+                          order?.orderStatus ==
+                              QuotationOrderStatus.inProgress &&
+                          hasArrived) ...[
                         // Some space.
                         Gap(30.h),
 
@@ -554,7 +603,9 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                         WayaButton(
                           color: wayaTheme.colorScheme.transparent,
                           textColor: wayaTheme.colorScheme.greyColor900,
-                          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                          border: Border.all(
+                              width: 1,
+                              color: wayaTheme.colorScheme.greyColor300),
                           callback: () async => await WayaNav.to(
                             transition: Transition.rightToLeftWithFade,
                             ConfirmQuotationOrder(
@@ -567,20 +618,26 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                           ),
                           text: "Complete Order",
                           leadingIcon: WayaAssets.icons.buttonIcon.svg(
-                            colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(
+                                wayaTheme.colorScheme.greyColor900,
+                                BlendMode.srcIn),
                             width: 20,
                           ),
                         ),
                       ]
 
                       //? The button to change the order status.
-                      else if (!isBuyer && order?.orderStatus == QuotationOrderStatus.inProgress)
+                      else if (!isBuyer &&
+                          order?.orderStatus == QuotationOrderStatus.inProgress)
                         WayaButton(
                           color: wayaTheme.colorScheme.transparent,
                           textColor: wayaTheme.colorScheme.greyColor900,
-                          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                          border: Border.all(
+                              width: 1,
+                              color: wayaTheme.colorScheme.greyColor300),
                           callback: () async {
-                            final controller = ValueNotifier<QuotationOrderStatus?>(null);
+                            final controller =
+                                ValueNotifier<QuotationOrderStatus?>(null);
                             final isLoading = ValueNotifier(false);
 
                             //? Show the modal sheet.
@@ -602,7 +659,9 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                           },
                           text: "Change Order Status",
                           leadingIcon: WayaAssets.icons.buttonIcon.svg(
-                            colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(
+                                wayaTheme.colorScheme.greyColor900,
+                                BlendMode.srcIn),
                             width: 20,
                           ),
                         ),

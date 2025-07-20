@@ -34,6 +34,7 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
 
   @override
   void dispose() {
+    searchController.dispose();
     super.dispose();
   }
 

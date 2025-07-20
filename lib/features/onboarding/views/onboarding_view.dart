@@ -90,7 +90,9 @@ class OnboardingView extends ConsumerWidget {
                           style: WayaTextStyles.descriptionStyle,
                         ),
                         const Gap(20),
-                        WayaCustomIndicator(currentPage: currPage, pageCount: viewModel.pageData.length),
+                        WayaCustomIndicator(
+                            currentPage: currPage,
+                            pageCount: viewModel.pageData.length),
                         const Gap(30),
                         WayaButton(
                           callback: () {
@@ -101,11 +103,19 @@ class OnboardingView extends ConsumerWidget {
                         const Gap(20),
                         RichText(
                             textAlign: TextAlign.center,
-                            text:  TextSpan(children: [
-                              TextSpan(text: "By proceeding, you agree to our ", style: WayaTextStyles.bodySmall),
-                              TextSpan(text: "Terms and conditions ", style: WayaTextStyles.smallActiveLinkStyle),
-                              TextSpan(text: "and our ", style: WayaTextStyles.bodySmall),
-                              TextSpan(text: "Privacy policy", style: WayaTextStyles.smallActiveLinkStyle)
+                            text: TextSpan(children: [
+                              TextSpan(
+                                  text: "By proceeding, you agree to our ",
+                                  style: WayaTextStyles.bodySmall),
+                              TextSpan(
+                                  text: "Terms and conditions ",
+                                  style: WayaTextStyles.smallActiveLinkStyle),
+                              TextSpan(
+                                  text: "and our ",
+                                  style: WayaTextStyles.bodySmall),
+                              TextSpan(
+                                  text: "Privacy policy",
+                                  style: WayaTextStyles.smallActiveLinkStyle)
                             ]))
                       ]),
                 ),

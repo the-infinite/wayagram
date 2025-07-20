@@ -54,7 +54,8 @@ class GroupedWidgetHeader extends StatelessWidget {
               onTap: onTap,
               child: Text(
                 "See All",
-                style: WayaTextStyles.hintStyleBold.wayaCopyWith(color: WayaColors.primary500),
+                style: WayaTextStyles.hintStyleBold
+                    .wayaCopyWith(color: WayaColors.primary500),
               ),
             ),
           )

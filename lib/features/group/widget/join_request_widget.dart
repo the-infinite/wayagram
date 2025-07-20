@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -11,10 +10,11 @@ class JoinRequestWidget extends StatelessWidget {
   final VoidCallback accept;
   final VoidCallback reject;
   final JoinRequestDocs joinRequest;
-  const JoinRequestWidget({super.key,
-    required this.reject,
-    required this.accept,
-    required this.joinRequest});
+  const JoinRequestWidget(
+      {super.key,
+      required this.reject,
+      required this.accept,
+      required this.joinRequest});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,8 @@ class JoinRequestWidget extends StatelessWidget {
       padding: EdgeInsets.only(
         left: 10,
       ),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12), color: Colors.white),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,11 +39,11 @@ class JoinRequestWidget extends StatelessWidget {
                 backgroundColor: WayaColors.greyColor100,
                 backgroundImage: joinRequest.user?.profilePicture == null
                     ? AssetImage(
-                  '',
-                )
+                        '',
+                      )
                     : NetworkImage(
-                  '${joinRequest.user?.profilePicture}',
-                ),
+                        '${joinRequest.user?.profilePicture}',
+                      ),
               ),
               Gap(10),
               Column(
@@ -72,15 +73,16 @@ class JoinRequestWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-
                     InkWell(
                       onTap: reject,
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: wayaTheme.colorScheme.error)
-                        ),
-                        child: Icon(Icons.close, color: wayaTheme.colorScheme.error,
+                            border:
+                                Border.all(color: wayaTheme.colorScheme.error)),
+                        child: Icon(
+                          Icons.close,
+                          color: wayaTheme.colorScheme.error,
                         ),
                       ),
                     ),
@@ -90,9 +92,11 @@ class JoinRequestWidget extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: wayaTheme.colorScheme.success)
-                        ),
-                        child: Icon(Icons.check, color: wayaTheme.colorScheme.success,
+                            border: Border.all(
+                                color: wayaTheme.colorScheme.success)),
+                        child: Icon(
+                          Icons.check,
+                          color: wayaTheme.colorScheme.success,
                         ),
                       ),
                     ),

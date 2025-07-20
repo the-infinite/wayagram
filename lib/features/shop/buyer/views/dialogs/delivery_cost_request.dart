@@ -34,10 +34,10 @@ class DeliveryCostRequest extends ConsumerWidget {
     final state = ref.watch(cartVmProvider);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16,horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.horizontal(left: Radius.circular(16), right: Radius.circular(16)),
-
+          borderRadius: BorderRadius.horizontal(
+              left: Radius.circular(16), right: Radius.circular(16)),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -45,11 +45,9 @@ class DeliveryCostRequest extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                "Delivery Cost Request",
-                textAlign: TextAlign.start,
-                style: wayaTheme.textTheme.headlineMedium
-              ),
+              Text("Delivery Cost Request",
+                  textAlign: TextAlign.start,
+                  style: wayaTheme.textTheme.headlineMedium),
               const Gap(12),
               Text(
                 "Add delivery address this to order so the seller can review and send the delivery cost for it.",
@@ -138,8 +136,7 @@ class DeliveryCostRequest extends ConsumerWidget {
               const Gap(10),
               WayaButton(
                   callback: () {
-                     WayaNav.goBack();
-             
+                    WayaNav.goBack();
                   },
                   textColor: wayaTheme.colorScheme.greyColor500,
                   color: wayaTheme.colorScheme.transparent,

@@ -50,6 +50,14 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    acctNameFocus.dispose();
+    acctNumberFocus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);

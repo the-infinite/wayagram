@@ -17,6 +17,10 @@ class MyDonations extends ConsumerStatefulWidget {
 class _MyDonationsState extends ConsumerState<MyDonations> {
   late TextEditingController searchController;
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     super.initState();
@@ -27,22 +31,20 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
       ref.read(donationVmProvider.notifier).getAppliedDonation();
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
   }
 
   int _selectedIndex = 0;
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

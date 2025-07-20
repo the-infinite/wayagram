@@ -36,8 +36,6 @@ class ProductCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final String image = product.images.isEmpty ? "" : product.images[0];
-    debugPrint(
-        "${product.discountPercentage} ${product.name} ${product.discountPercentage.toString() == "0"}");
 
     return GestureDetector(
       onTap: () {

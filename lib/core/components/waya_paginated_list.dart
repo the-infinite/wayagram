@@ -100,13 +100,35 @@ class WayaPaginatedListView<T> extends StatefulWidget {
   });
 
   @override
-  State<WayaPaginatedListView<T>> createState() => WayaPaginatedListViewState<T>();
+  State<WayaPaginatedListView<T>> createState() =>
+      WayaPaginatedListViewState<T>();
 }
 
 class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
   late final _scrollController = widget.controller ?? ScrollController();
   final _itemsNotifier = ValueNotifier(0);
   final _loadingController = ValueNotifier(false);
+
+  void _onScrollChanged() async {
+    final target =
+        _scrollController.position.maxScrollExtent - widget.scrollNotice;
+    final current = _scrollController.offset;
+
+    //? Stop if this is at the end.
+    if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) {
+      return;
+    }
+
+    //? Call this function.
+    await widget.onScroll?.call(_scrollController);
+
+    //? If we should scroll.
+    if (current >= target) {
+      debugPrint(
+          "paginated-list-builder> Fetching because (T: $target, X: $current)");
+      getPage(widget.nextPage);
+    }
+  }
 
   @override
   void initState() {
@@ -124,22 +146,7 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
         //? Add this listener to this one.
         _scrollController.addListener(
-          () async {
-            final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
-            final current = _scrollController.offset;
-
-            //? Stop if this is at the end.
-            if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) return;
-
-            //? Call this function.
-            await widget.onScroll?.call(_scrollController);
-
-            //? If we should scroll.
-            if (current >= target) {
-              debugPrint("paginated-list-builder> Fetching because (T: $target, X: $current)");
-              getPage(widget.nextPage);
-            }
-          },
+          _onScrollChanged,
         );
       },
     );
@@ -194,6 +201,7 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScrollChanged);
     _scrollController.dispose();
     _itemsNotifier.dispose();
     _loadingController.dispose();

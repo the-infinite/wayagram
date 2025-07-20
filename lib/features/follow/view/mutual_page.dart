@@ -25,7 +25,8 @@ class MutualPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MutualPageState();
 }
 
-class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProviderStateMixin {
+class _MutualPageState extends ConsumerState<MutualPage>
+    with SingleTickerProviderStateMixin {
   late final userFollowProvider = userFollowersProvider(widget.userId);
   late final notifier = ref.read(userFollowProvider.notifier);
   final followersHandler = WayaObservableScrollController();
@@ -92,7 +93,9 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
                 WayaTabButton(
                   isSelected: _selectedIndex == 1,
                   text: 'Following',
-                  count: followingState.hasLoadedFollowing ? followingState.followingTotalSize : null,
+                  count: followingState.hasLoadedFollowing
+                      ? followingState.followingTotalSize
+                      : null,
                   onTap: () => setState(() => _selectedIndex = 1),
                 ),
 
@@ -100,7 +103,9 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
                 WayaTabButton(
                   isSelected: _selectedIndex == 2,
                   text: 'Followers',
-                  count: followingState.hasLoadedFollowers ? followingState.followersTotalSize : null,
+                  count: followingState.hasLoadedFollowers
+                      ? followingState.followersTotalSize
+                      : null,
                   onTap: () => setState(() => _selectedIndex = 2),
                 ),
               ],

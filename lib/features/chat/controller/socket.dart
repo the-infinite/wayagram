@@ -39,7 +39,8 @@ class WayaChatSocketArgs {
     this.isFlag,
   });
 
-  factory WayaChatSocketArgs.typing(String chatId, bool isTyping, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.typing(String chatId, bool isTyping,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -53,7 +54,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.sendMessage(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.sendMessage(String chatId, String messageId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -67,7 +69,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.markAsRead(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.markAsRead(String chatId, String messageId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -81,7 +84,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.markAllAsRead(String chatId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.markAllAsRead(String chatId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -94,7 +98,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.deleteMessage(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.deleteMessage(String chatId, String messageId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -108,7 +113,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.join(String chatId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.join(String chatId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -398,7 +404,9 @@ class WayaSocketController {
         // This is fine.
         await chatNotifier.getMessage(args.messageId!);
         await chatNotifier.updateMessageStatus(
-          chatNotifier.isActive ? MessageStatusCode.read : MessageStatusCode.delivered,
+          chatNotifier.isActive
+              ? MessageStatusCode.read
+              : MessageStatusCode.delivered,
           args.messageId!,
         );
 

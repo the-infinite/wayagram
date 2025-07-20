@@ -249,9 +249,15 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
 
   @override
   void dispose() {
-    state.businessName.dispose();
+    state.businessAddress.removeListener(validateInputs);
     state.businessAddress.dispose();
+    state.businessName.removeListener(validateInputs);
+    state.businessName.dispose();
+    state.cac.removeListener(validateInputs);
     state.cac.dispose();
+
+    state.bvn.removeListener(validateInputs);
+    state.bvn.dispose();
     super.dispose();
   }
 

@@ -14,19 +14,17 @@ class PollsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    
     List<Choices> sortedChoices = List.from(poll.choices ?? []);
 
-    
     sortedChoices.sort((a, b) {
       double aVote = (a.voteCount ?? 0).toDouble();
       double bVote = (b.voteCount ?? 0).toDouble();
-      double totalVotes = (poll.voteCount ?? 1).toDouble(); 
+      double totalVotes = (poll.voteCount ?? 1).toDouble();
 
       double aCalc = totalVotes > 0 ? aVote / totalVotes : 0;
       double bCalc = totalVotes > 0 ? bVote / totalVotes : 0;
 
-      return bCalc.compareTo(aCalc); 
+      return bCalc.compareTo(aCalc);
     });
 
     return Column(
@@ -67,7 +65,8 @@ class PollsCard extends StatelessWidget {
                 itemBuilder: (context, index) {
                   int choiceVote = sortedChoices[index].voteCount!.toInt();
                   int totalPollCount = poll.voteCount!.toInt();
-                  double calc = totalPollCount > 0 ? choiceVote / totalPollCount : 0;
+                  double calc =
+                      totalPollCount > 0 ? choiceVote / totalPollCount : 0;
 
                   return EngagementRange(
                     topLeft: sortedChoices[index].text,

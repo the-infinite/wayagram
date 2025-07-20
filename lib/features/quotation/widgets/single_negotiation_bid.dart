@@ -38,10 +38,12 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SingleNegotiationBidWidget> createState() => _SingleNegotiationBidWidgetState();
+  ConsumerState<SingleNegotiationBidWidget> createState() =>
+      _SingleNegotiationBidWidgetState();
 }
 
-class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBidWidget> {
+class _SingleNegotiationBidWidgetState
+    extends ConsumerState<SingleNegotiationBidWidget> {
   late final userQuotationNotifier = ref.read(userQuotationsProvider.notifier);
   final stateNotifier = ValueNotifier(false);
   bool locked = false;
@@ -65,7 +67,8 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
     if (amount == null) return;
 
     //? Now, send the bid.
-    final result = await userQuotationNotifier.sendBidAction(BidActionModel.negotiate(
+    final result =
+        await userQuotationNotifier.sendBidAction(BidActionModel.negotiate(
       bidId: widget.bid.id,
       lastCounterSentBy: widget.negotiator,
       counterAmount: amount.toStringAsFixed(2),
@@ -87,7 +90,8 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
       context: context,
       onCancel: () => WayaNav.goBack(),
       title: 'Are you sure you want to accept this bid?',
-      message: 'Are you sure you want to accept this bid? Once confirmed this can\'t be undone',
+      message:
+          'Are you sure you want to accept this bid? Once confirmed this can\'t be undone',
       icon: WayaAssets.images.dCodeValid.image(
         height: 117.dg,
         width: 117.dg,
@@ -138,7 +142,8 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
       context: context,
       onCancel: () => WayaNav.goBack(),
       title: 'Are you sure you want to reject this bid?',
-      message: 'Are you sure you want to reject this bid? Once confirmed this can\'t be undone',
+      message:
+          'Are you sure you want to reject this bid? Once confirmed this can\'t be undone',
       icon: WayaAssets.images.dCodeInvalid.image(
         height: 117.dg,
         width: 117.dg,
@@ -185,12 +190,19 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
   }
 
   @override
+  void dispose() {
+    stateNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final sentBid = widget.bid.usedAmount != widget.request.bidStartingAmount;
 
     //? If this has been
-    if (widget.bid.lastCounterSentBy == BidActionAuthor.vendor && widget.bid.status == BidActionType.accept) {
+    if (widget.bid.lastCounterSentBy == BidActionAuthor.vendor &&
+        widget.bid.status == BidActionType.accept) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) {
           if (!locked) {
@@ -236,7 +248,8 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                       image: _shopData?.shop.coverImage,
                       isSelf: false,
                       onTap: () => WayaNav.toNamed(
-                        WayaAppRoutes.getProfileRoute(_shopData?.shop.vendorId ?? 'undefined'),
+                        WayaAppRoutes.getProfileRoute(
+                            _shopData?.shop.vendorId ?? 'undefined'),
                       ),
                       canFocus: false,
                       radius: 24.r,
@@ -313,7 +326,8 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                                   //? count.
                                   Text(
                                     " ${_shopData?.averageRating ?? '0'} (${_shopData?.ratings.length ?? 0} reviews)",
-                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                    style: wayaTheme.textTheme.bodyMedium
+                                        ?.copyWith(
                                       color: WayaColors.greyColor400,
                                       fontSize: 12.sp,
                                     ),
@@ -349,7 +363,9 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                     fontWeight: sentBid ? FontWeight.normal : FontWeight.w500,
                     decoration: sentBid ? TextDecoration.lineThrough : null,
                     decorationColor: wayaTheme.colorScheme.greyColor300,
-                    color: sentBid ? wayaTheme.colorScheme.greyColor300 : wayaTheme.colorScheme.customBlack,
+                    color: sentBid
+                        ? wayaTheme.colorScheme.greyColor300
+                        : wayaTheme.colorScheme.customBlack,
                   ),
                 ),
 
@@ -377,7 +393,8 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                   const SizedBox()
 
                 //? For the buttons we would be using to
-                else if (![BidActionType.accept, BidActionType.reject].contains(widget.bid.status))
+                else if (![BidActionType.accept, BidActionType.reject]
+                    .contains(widget.bid.status))
                   FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Row(
@@ -431,7 +448,8 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                 else if (widget.bid.status == BidActionType.accept)
                   WayaButton(
                     callback: () => WayaNav.toNamed(
-                      WayaAppRoutes.getQuotationCheckoutScreen(widget.bid.id, widget.bid.requestId),
+                      WayaAppRoutes.getQuotationCheckoutScreen(
+                          widget.bid.id, widget.bid.requestId),
                     ),
                     text: 'Checkout',
                     height: 38,

@@ -32,11 +32,11 @@ class _UgtHomeState extends ConsumerState<ShopSettingPage> {
 
 //? get user settings to update the UI Once
     useEffect(() {
-       shopNotifier.getShopSettings().then((value) {
+      shopNotifier.getShopSettings().then((value) {
         if (value != null) {
-          notifyShop.value = value.data?.notifyFriendsAboutProductPosts ?? false;
+          notifyShop.value =
+              value.data?.notifyFriendsAboutProductPosts ?? false;
           shopPublicPrivate.value = value.data?.makeProductPostsPublic ?? false;
-         
         }
       });
       return null;
@@ -64,7 +64,7 @@ class _UgtHomeState extends ConsumerState<ShopSettingPage> {
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
             Gap(20),
             //? card for each of the switch
-         
+
             PrivacyWidget(
                 title: "Notify Friend",
                 value: "Notify my Friends when i post product",

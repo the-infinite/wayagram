@@ -48,10 +48,19 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
     });
 
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {}); // Rebuild when search text changes
-    });
+    searchController.addListener(_onSearchChanged);
     super.initState();
+  }
+
+  void _onSearchChanged() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
   }
 
   @override

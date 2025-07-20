@@ -19,7 +19,8 @@ class ConfirmPageDetails extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ConfirmPageDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ConfirmPageDetailsState();
 }
 
 class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
@@ -53,7 +54,7 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                 args['type'] == 'Public Page' ? true : false,
                 (args['image'] as File).path,
                 (args['coverImage'] as File).path,
-                  viewModel.category,
+                viewModel.category,
                 //args['type'] == 'Public Page' ? false : true,
               );
               viewModel2.reset();
@@ -106,13 +107,16 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                   left: 16.w,
                   bottom: -20.h,
                   child: CircleAvatar(
-                      radius: 20, backgroundImage: FileImage(File('${args['coverImage'].absolute.path}')))),
+                      radius: 20,
+                      backgroundImage: FileImage(
+                          File('${args['coverImage'].absolute.path}')))),
             ],
           ),
           const Gap(50),
           details('Page Name', viewModel.pageName.text.capitalizeFirst),
           Gap(20),
-          details('Page Description', viewModel.pageDescription.text.capitalizeFirst),
+          details('Page Description',
+              viewModel.pageDescription.text.capitalizeFirst),
           Gap(20),
           details('Page Type', args['type'])
         ],

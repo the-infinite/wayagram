@@ -58,7 +58,8 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
     if (amount == null) return;
 
     //? Which shop is the user sending the bid as?
-    final shopId = await WayaUtils.showModalSheet(context, child: ChooseShopModal());
+    final shopId =
+        await WayaUtils.showModalSheet(context, child: ChooseShopModal());
 
     //! If the shop was not selected.
     if (shopId == null) return;
@@ -77,7 +78,8 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
     if (deliveryCost == null) return;
 
     //? Now, send the bid.
-    final result = await notifier.sendBid(request.id, amount, shopId, deliveryCost);
+    final result =
+        await notifier.sendBid(request.id, amount, shopId, deliveryCost);
 
     //! Since bidding failed, you can leave.
     if (result == null) return;
@@ -87,7 +89,8 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
   }
 
   Future<void> _viewSellerBid(QuotationBidModel result) async {
-    WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
+    WayaNav.toNamed(
+        WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
   }
 
   @override
@@ -279,7 +282,8 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
             const SizedBox()
           else
             GestureDetector(
-              onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(_buyerDetails!.$1.id, "quotation")),
+              onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(
+                  _buyerDetails!.$1.id, "quotation")),
               child: OrderInfoWidget(
                 title: "Customer's Name",
                 description: _buyerDetails!.$1.fullname,
@@ -292,7 +296,9 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           //? The delivery type.
           OrderInfoWidget(
             title: "Delivery Type",
-            description: request.deliveryType == BuyRequestDeliveryType.pickup ? 'Pickup' : 'Home Delivery',
+            description: request.deliveryType == BuyRequestDeliveryType.pickup
+                ? 'Pickup'
+                : 'Home Delivery',
           ),
 
           // Some space.
@@ -350,11 +356,14 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
             WayaButton(
               color: wayaTheme.colorScheme.transparent,
               textColor: wayaTheme.colorScheme.greyColor900,
-              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () => WayaNav.toNamed(
+                  WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
               text: "View Order",
               leadingIcon: WayaAssets.icons.orders.svg(
-                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
                 width: 20,
               ),
             )
@@ -365,7 +374,8 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
               height: 48,
               notifier: loadingController,
               leadingIcon: WayaAssets.icons.bid.svg(
-                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.white, BlendMode.srcIn),
                 width: 20,
               ),
             )

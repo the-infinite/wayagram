@@ -60,6 +60,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
   void dispose() {
     _scrollController.removeListener(_scrollListener); // Remove listener safely
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 

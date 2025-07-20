@@ -96,22 +96,24 @@ class _AppFieldState extends State<WayaTextFormField> {
   late Color borderColor;
   bool isObscure = false;
 
+  void _focusListener() {
+    setState(() {
+      borderColor = _focusNode.hasFocus
+          ? Theme.of(context).colorScheme.customPrimary
+          : Theme.of(context).colorScheme.greyColor300;
+      fillColor = _focusNode.hasFocus
+          ? Theme.of(context).colorScheme.customPrimary
+          : widget.fillColor ?? Theme.of(context).colorScheme.scaffoldColor;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     fillColor = widget.fillColor ?? WayaColors.scaffoldColor;
     borderColor = WayaColors.greyColor300;
 
-    _focusNode.addListener(() {
-      setState(() {
-        borderColor = _focusNode.hasFocus
-            ? Theme.of(context).colorScheme.customPrimary
-            : Theme.of(context).colorScheme.greyColor300;
-        fillColor = _focusNode.hasFocus
-            ? Theme.of(context).colorScheme.customPrimary
-            : widget.fillColor ?? Theme.of(context).colorScheme.scaffoldColor;
-      });
-    });
+    _focusNode.addListener(_focusListener);
   }
 
   void toggleObscure() {
@@ -242,6 +244,7 @@ class _AppFieldState extends State<WayaTextFormField> {
 
   @override
   void dispose() {
+    _focusNode.removeListener(_focusListener);
     _focusNode.dispose();
     super.dispose();
   }

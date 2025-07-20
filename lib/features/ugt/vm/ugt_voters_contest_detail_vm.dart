@@ -704,15 +704,13 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     var list = state.myPostList.map((post) {
       debugPrint("i dey here wwww");
       if (post.id == postId) {
-        debugPrint("i dey here pppppp");
-        return post.copyWith(
+            return post.copyWith(
           // isLiked: true,
           shares: post.shares! + 1,
         );
       }
       return post;
     }).toList();
-    debugPrint("i dey here pppppp");
     state = state.copyWith(myPostList: [...list]);
     doshare(postId, galleryId);
   }

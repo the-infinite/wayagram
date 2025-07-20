@@ -22,7 +22,7 @@ class ConfirmDeleteWidget extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-           Text(
+          Text(
             'Delete this moment?',
             style: TextStyle(
               fontSize: 22.sp,

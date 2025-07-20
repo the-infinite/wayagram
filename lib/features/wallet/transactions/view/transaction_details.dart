@@ -702,6 +702,7 @@ class _TransactionDetailsScreenState
                               .verifyTransaction(
                                   state.transaction!.transactionId,
                                   state.transaction!.paymentMethod);
+                          if (!mounted) return;
                           WayaLoadingDialog.show(context);
                           if (state.verified!) {
                             await ref

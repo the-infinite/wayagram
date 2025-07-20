@@ -34,7 +34,8 @@ class _BuyerOrdersWidgetState extends ConsumerState<BuyerOrdersWidget> {
       handler: handler,
       shouldFetch: !state.isLoadingBids,
       isAtEnd: !state.hasNextBid,
-      onReachEnd: () async => await notifier.getOrders(ConversationState.self.id),
+      onReachEnd: () async =>
+          await notifier.getOrders(ConversationState.self.id),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,

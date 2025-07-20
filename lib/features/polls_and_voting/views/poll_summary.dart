@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -21,29 +19,28 @@ import 'package:wayagram/shared/features/user/models/default.dart';
 
 import '../../auth/account_creation/vm/successful_setup_vm.dart';
 
-
 class PollSummary extends ConsumerStatefulWidget {
   static const route = '/poll-summary';
-  const PollSummary({super.key,});
+  const PollSummary({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollSummaryState();
 }
 
-class _PollSummaryState extends ConsumerState<PollSummary>  {
-
-
+class _PollSummaryState extends ConsumerState<PollSummary> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(createPollVotingProvider.notifier).fetchAccountType();
-     // ref.read(donationVmProvider.notifier).getMyKYC();
+      // ref.read(donationVmProvider.notifier).getMyKYC();
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
@@ -58,92 +55,108 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         isLoading: viewModel.isLoading,
         isScrollable: true,
         appBarTrailing: Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: WayaButton(
-            callback: !viewModel.isLoading
-                ? () async {
+            padding: const EdgeInsets.only(right: 20),
+            child: WayaButton(
+              callback: !viewModel.isLoading
+                  ? () async {
+                      //debugPrint('DIALA POLL ==>> ${ConversationState.self.accountType}');
+                      //debugPrint('DIALA ACCOUNT TYPE ==>> ${viewModel.accountType }');
+                      if (viewModel.pollType == 'paid' &&
+                          ConversationState.self.accountType ==
+                              UserAccountType.personal) {
+                        //if (viewModel.pollType == 'paid' &&  viewModel.accountType  == 'PERSONAL') {
 
-              debugPrint('DIALA ACCOUNT TYPE ==>> ${ConversationState.self.accountType}');
-              //debugPrint('DIALA ACCOUNT TYPE ==>> ${viewModel.accountType }');
-              if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
-              //if (viewModel.pollType == 'paid' &&  viewModel.accountType  == 'PERSONAL') {
-
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  WayaUtils.showNotice(
-                      context: context,
-                      title: "You don't have a Business Account",
-                      message: 'Please upgrade to a business account to create a paid poll',
-                      onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
-                      buttonText: 'Upgrade to Business',
-                      secondButtonText: 'Cancel',
-                      icon: Image.asset('assets/images/cp-shop.png'));
-                });
-              } if(viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.business){
-              //} if(viewModel.pollType == 'paid' && viewModel.accountType  == 'BUSINESS'){
-                await ref.read(createPollVotingProvider.notifier).createPoll(
-                    context,
-                    viewModel.pollTitle.text,
-                    viewModel.startDate,
-                    viewModel.endDate,
-                    viewModel.voteNumber.text,
-                    viewModel.pollDescription.text,
-                    viewModel.firstChoiceDescription.text,
-                    '${int.tryParse(viewModel.votePrice.text)}',
-                    viewModel.pollType.toLowerCase(),
-                  viewModel.pollDescription.text,
-                );
-                //poll.reset();
-              }if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.business){
-              //}if(viewModel.pollType == 'free' && viewModel.accountType  == 'BUSINESS'){
-                await ref.read(createPollVotingProvider.notifier).createFreePoll(
-                    context,
-                    viewModel.pollTitle.text,
-                    viewModel.startDate,
-                    viewModel.endDate,
-                    viewModel.voteNumber.text,
-                    viewModel.pollDescription.text,
-                    viewModel.firstChoiceDescription.text,
-                    '${int.tryParse(viewModel.votePrice.text)}',
-                    viewModel.pollType.toLowerCase(),
-                  viewModel.pollDescription.text,
-                );
-                //poll.reset();
-              }
-              if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.personal){
-              //if(viewModel.pollType == 'free' && viewModel.accountType  == 'PERSONAL'){
-                await ref.read(createPollVotingProvider.notifier).createFreePoll(
-                    context,
-                    viewModel.pollTitle.text,
-                    viewModel.startDate,
-                    viewModel.endDate,
-                    viewModel.voteNumber.text,
-                    viewModel.pollDescription.text,
-                    viewModel.firstChoiceDescription.text,
-                    '${int.tryParse(viewModel.votePrice.text)}',
-                    viewModel.pollType.toLowerCase(),
-                   viewModel.pollDescription.text,
-                );
-                //poll.reset();
-              }
-            } : null,
-            height: 30,
-            isLoading: viewModel.isLoading,
-            text: 'Create',
-            horizontalPadding: 12,
-            textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.white ),
-          )
-        ),
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          WayaUtils.showNotice(
+                              context: context,
+                              title: "You don't have a Business Account",
+                              message:
+                                  'Please upgrade to a business account to create a paid poll',
+                              onPress: () =>
+                                  WayaNav.toNamed(UpgradeToBusiness.route),
+                              buttonText: 'Upgrade to Business',
+                              secondButtonText: 'Cancel',
+                              icon: Image.asset('assets/images/cp-shop.png'));
+                        });
+                      }
+                      if (viewModel.pollType == 'paid' &&
+                          ConversationState.self.accountType ==
+                              UserAccountType.business) {
+                        //} if(viewModel.pollType == 'paid' && viewModel.accountType  == 'BUSINESS'){
+                        await ref
+                            .read(createPollVotingProvider.notifier)
+                            .createPoll(
+                              context,
+                              viewModel.pollTitle.text,
+                              viewModel.startDate,
+                              viewModel.endDate,
+                              viewModel.voteNumber.text,
+                              viewModel.pollDescription.text,
+                              viewModel.firstChoiceDescription.text,
+                              '${int.tryParse(viewModel.votePrice.text)}',
+                              viewModel.pollType.toLowerCase(),
+                              viewModel.pollDescription.text,
+                            );
+                        //poll.reset();
+                      }
+                      if (viewModel.pollType == 'free' &&
+                          ConversationState.self.accountType ==
+                              UserAccountType.business) {
+                        //}if(viewModel.pollType == 'free' && viewModel.accountType  == 'BUSINESS'){
+                        await ref
+                            .read(createPollVotingProvider.notifier)
+                            .createFreePoll(
+                              context,
+                              viewModel.pollTitle.text,
+                              viewModel.startDate,
+                              viewModel.endDate,
+                              viewModel.voteNumber.text,
+                              viewModel.pollDescription.text,
+                              viewModel.firstChoiceDescription.text,
+                              '${int.tryParse(viewModel.votePrice.text)}',
+                              viewModel.pollType.toLowerCase(),
+                              viewModel.pollDescription.text,
+                            );
+                        //poll.reset();
+                      }
+                      if (viewModel.pollType == 'free' &&
+                          ConversationState.self.accountType ==
+                              UserAccountType.personal) {
+                        //if(viewModel.pollType == 'free' && viewModel.accountType  == 'PERSONAL'){
+                        await ref
+                            .read(createPollVotingProvider.notifier)
+                            .createFreePoll(
+                              context,
+                              viewModel.pollTitle.text,
+                              viewModel.startDate,
+                              viewModel.endDate,
+                              viewModel.voteNumber.text,
+                              viewModel.pollDescription.text,
+                              viewModel.firstChoiceDescription.text,
+                              '${int.tryParse(viewModel.votePrice.text)}',
+                              viewModel.pollType.toLowerCase(),
+                              viewModel.pollDescription.text,
+                            );
+                        //poll.reset();
+                      }
+                    }
+                  : null,
+              height: 30,
+              isLoading: viewModel.isLoading,
+              text: 'Create',
+              horizontalPadding: 12,
+              textStyle: WayaTextStyles.bodySmall.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.white),
+            )),
         //createPoll(context),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text(
-                "${viewModel.pollTitle.text.capitalizeFirst}",
+            Text("${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
@@ -151,46 +164,58 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.greyColor500 ),
+                  color: Theme.of(context).colorScheme.greyColor500),
             ),
-
             const Gap(40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                summary('Start Date',
+                summary(
+                    'Start Date',
                     '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
-                    'Host', setUp.user?.user?.firstName.capitalizeFirst ?? ''),
-                summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
-                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', viewModel.pollType == 'free'?'': 'Prize per vote',viewModel.pollType == 'free'?'': '₦${viewModel.votePrice.text}'
-                ),
-                summary('Duration', '$daysLeft Weeks\n' , '', ''),
+                    'Host',
+                    setUp.user?.user?.firstName.capitalizeFirst ?? ''),
+                summary(
+                    'End Date',
+                    '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n',
+                    'Times to Vote',
+                    viewModel.voteNumber.text),
+                summary(
+                    'Poll Type',
+                    '${viewModel.pollType.capitalizeFirst}\n',
+                    viewModel.pollType == 'free' ? '' : 'Prize per vote',
+                    viewModel.pollType == 'free'
+                        ? ''
+                        : '₦${viewModel.votePrice.text}'),
+                summary('Duration', '$daysLeft Weeks\n', '', ''),
               ],
             ),
             const Gap(40),
-
             Text(
               'Choices',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.greyColor900 ),
+                  color: Theme.of(context).colorScheme.greyColor900),
             ),
             const Gap(10),
             SizedBox(
               height: 400,
               child: ListView.builder(
                   itemCount: viewModel.choices.length,
-                  itemBuilder: (context, index){
-                    return presImage('${viewModel.choices[index].image?.absolute.path}',
-                      viewModel.choices[index].text.text.capitalizeFirst, context, viewModel.choices[index].image?.absolute.path == null);
+                  itemBuilder: (context, index) {
+                    return presImage(
+                        '${viewModel.choices[index].image?.absolute.path}',
+                        viewModel.choices[index].text.text.capitalizeFirst,
+                        context,
+                        viewModel.choices[index].image?.absolute.path == null);
                   }),
             )
           ],
-        ) );
+        ));
   }
 
-  summary(title, subTitle, title2, subTitle2){
+  summary(title, subTitle, title2, subTitle2) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -199,7 +224,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.greyColor600 ),
+              color: Theme.of(context).colorScheme.greyColor600),
         ),
         const Gap(5),
         Text(
@@ -207,7 +232,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.black ),
+              color: Theme.of(context).colorScheme.black),
         ),
         const Gap(15),
         Text(
@@ -215,7 +240,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.greyColor600 ),
+              color: Theme.of(context).colorScheme.greyColor600),
         ),
         const Gap(5),
         Text(
@@ -223,9 +248,10 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.black ),
+              color: Theme.of(context).colorScheme.black),
         ),
-      ],);
+      ],
+    );
   }
 
   String formatDate(String dateString) {
@@ -259,34 +285,46 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     }
   }
 
-  presImage(img, name, ctx, chk){
+  presImage(img, name, ctx, chk) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10,),
-      padding: EdgeInsets.only(left: 20.w,  bottom: 0,),
-      height: 60.h,
-      decoration: BoxDecoration(
-        border: Border.all(color: WayaColors.primary600, ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(children: [
-        ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: chk?
-            //Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
-            Container():
-            Image.file(File(img), height: 66.h, width: 50.w,),
+        margin: EdgeInsets.only(
+          bottom: 10,
         ),
-        const Gap(40),
-        Text(
-          name,
-          style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w500,
-              color: Theme.of(ctx).colorScheme.primary600 ),
+        padding: EdgeInsets.only(
+          left: 20.w,
+          bottom: 0,
         ),
-
-      ],)
-    );
+        height: 60.h,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: WayaColors.primary600,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: chk
+                  ?
+                  //Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+                  Container()
+                  : Image.file(
+                      File(img),
+                      height: 66.h,
+                      width: 50.w,
+                    ),
+            ),
+            const Gap(40),
+            Text(
+              name,
+              style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(ctx).colorScheme.primary600),
+            ),
+          ],
+        ));
   }
 
   // Widget createPoll(ctx,){
@@ -336,19 +374,23 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         context: context,
         title: 'Payment Information',
         message:
-        'Waya will take a commission from the payment\nand the rest of the money will be paid into your\naccount at the end of post duration or its\nexpiry date.',
+            'Waya will take a commission from the payment\nand the rest of the money will be paid into your\naccount at the end of post duration or its\nexpiry date.',
         onPress: () => WayaNav.goBack(),
-        icon: Image.asset('assets/images/d-code-invalid.png', height: 10,),
+        icon: Image.asset(
+          'assets/images/d-code-invalid.png',
+          height: 10,
+        ),
         buttonCenterWidget: Column(
           children: [
-
             const Gap(8),
             InkWell(
-              onTap: (){
+              onTap: () {
                 WayaNav.goBack();
                 WayaUtils.showModalSheet(
                   context,
-                  child: PollsModal(url: '',),
+                  child: PollsModal(
+                    url: '',
+                  ),
                 );
               },
               child: Text(
@@ -356,7 +398,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
-                    color: Theme.of(context).colorScheme.greyColor500 ),
+                    color: Theme.of(context).colorScheme.greyColor500),
               ),
             )
             /*  WayaButton(

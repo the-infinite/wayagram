@@ -117,8 +117,10 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                           // final String bankCode =
                           //     walletViewModel.payoutMethod[0].bankCode ?? '';
 
-                          viewModel.submitPins(context: context, order: arg,
-                             );
+                          viewModel.submitPins(
+                            context: context,
+                            order: arg,
+                          );
                         },
                         onBackspace: viewModel.handleBackspace)),
                 const Gap(20),

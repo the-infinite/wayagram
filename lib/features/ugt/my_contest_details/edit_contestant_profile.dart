@@ -45,6 +45,13 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
     });
   }
 
+  @override
+  void dispose() {
+    bioController.dispose();
+    whatExpectVoterController.dispose();
+    super.dispose();
+  }
+
   File? _imgFile;
   File? _videoFile;
 

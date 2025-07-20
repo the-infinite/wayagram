@@ -47,6 +47,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost>
     for (final controller in videoControllers) {
       controller.dispose();
     }
+    pageController.dispose();
     super.dispose();
   }
 

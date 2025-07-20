@@ -35,11 +35,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);

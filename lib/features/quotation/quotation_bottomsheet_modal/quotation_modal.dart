@@ -89,10 +89,13 @@ class QuotationModal extends StatelessWidget {
                                     Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              4, 1, 4, 1),
                                           decoration: BoxDecoration(
-                                            color: wayaTheme.colorScheme.success,
-                                            borderRadius: BorderRadius.circular(6),
+                                            color:
+                                                wayaTheme.colorScheme.success,
+                                            borderRadius:
+                                                BorderRadius.circular(6),
                                           ),
                                           child: Row(
                                             children: [
@@ -105,7 +108,8 @@ class QuotationModal extends StatelessWidget {
                                               Text(
                                                 "Accepted",
                                                 style: TextStyle().wayaCopyWith(
-                                                  color: wayaTheme.colorScheme.white,
+                                                  color: wayaTheme
+                                                      .colorScheme.white,
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 11.sp,
                                                 ),
@@ -123,7 +127,8 @@ class QuotationModal extends StatelessWidget {
                                     Text(
                                       data.shop.name,
                                       style: TextStyle().wayaCopyWith(
-                                        color: wayaTheme.colorScheme.customBlack,
+                                        color:
+                                            wayaTheme.colorScheme.customBlack,
                                         fontSize: 14.sp,
                                       ),
                                     ),
@@ -204,12 +209,16 @@ class QuotationModal extends StatelessWidget {
             //? The
             if (user == BidActionAuthor.vendor)
               WayaButton(
-                callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
+                callback: () async => WayaNav.toNamed(
+                    WayaAppRoutes.getQuotationOrderDetailsScreen(
+                        bid.requestId)),
                 text: "Proceed to Order Fulfillment",
               )
             else
               WayaButton(
-                callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId)),
+                callback: () async => WayaNav.toNamed(
+                    WayaAppRoutes.getQuotationCheckoutScreen(
+                        bid.id, bid.requestId)),
                 text: "Proceed to Payment",
               ),
           ],
@@ -292,7 +301,8 @@ class BidWonModal extends StatelessWidget {
                                   children: [
                                     Text(
                                       'Time Remaining | ',
-                                      style: wayaTheme.textTheme.hintStyle.copyWith(
+                                      style: wayaTheme.textTheme.hintStyle
+                                          .copyWith(
                                         fontSize: 13.sp,
                                       ),
                                     ),
@@ -310,7 +320,9 @@ class BidWonModal extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      request.condition == "new" ? " Brand New " : " Fairly Used ",
+                                      request.condition == "new"
+                                          ? " Brand New "
+                                          : " Fairly Used ",
                                       style: TextStyle().wayaCopyWith(
                                         color: WayaColors.greyColor400,
                                         fontSize: 12.sp,
@@ -371,12 +383,14 @@ class BidWonModal extends StatelessWidget {
               callback: () async {
                 //? For a buyer.
                 if (user == BidActionAuthor.buyer) {
-                  WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId));
+                  WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(
+                      bid.id, bid.requestId));
                 }
 
                 //? For the seller.
                 else {
-                  WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId));
+                  WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(
+                      bid.requestId));
                 }
               },
               text: "Proceed to Order Fulfillment",
@@ -496,7 +510,8 @@ class _EditOfferModalState extends State<EditOfferModal> {
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: WayaColors.greyColor200,
@@ -524,7 +539,9 @@ class _EditOfferModalState extends State<EditOfferModal> {
                     style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                       fontSize: 36.sp,
                       fontWeight: FontWeight.w600,
-                      color: raw == 0 ? wayaTheme.colorScheme.greyColor400 : wayaTheme.colorScheme.black,
+                      color: raw == 0
+                          ? wayaTheme.colorScheme.greyColor400
+                          : wayaTheme.colorScheme.black,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -541,7 +558,8 @@ class _EditOfferModalState extends State<EditOfferModal> {
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: WayaColors.primary,
@@ -625,7 +643,9 @@ class NumPadButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(32),
         side: BorderSide(
-          color: backgroundColor != null ? Colors.transparent : Colors.grey.shade300,
+          color: backgroundColor != null
+              ? Colors.transparent
+              : Colors.grey.shade300,
         ),
       ),
       child: InkWell(
@@ -756,10 +776,12 @@ class ExtendBidTime extends StatelessWidget {
                 }
 
                 //? Now, the new time.
-                final newTime = request.bidEnd.add(Duration(hours: int.parse(time.value!)));
+                final newTime =
+                    request.bidEnd.add(Duration(hours: int.parse(time.value!)));
 
                 //? Now, go back.
-                await notifier.extendBidTime(request.id, newTime.toIso8601String());
+                await notifier.extendBidTime(
+                    request.id, newTime.toIso8601String());
                 WayaNav.goBack();
               },
               text: "Extend Bid Time",
@@ -773,7 +795,8 @@ class ExtendBidTime extends StatelessWidget {
               callback: () => WayaNav.goBack(),
               textColor: wayaTheme.colorScheme.greyColor500,
               color: wayaTheme.colorScheme.transparent,
-              border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+              border: Border.all(
+                  color: wayaTheme.colorScheme.greyColor500, width: 1),
               text: "Cancel",
             ),
           ],
@@ -910,7 +933,8 @@ class UpdateOrderStatusModal extends StatelessWidget {
                 callback: () => WayaNav.goBack(),
                 textColor: wayaTheme.colorScheme.greyColor500,
                 color: wayaTheme.colorScheme.transparent,
-                border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+                border: Border.all(
+                    color: wayaTheme.colorScheme.greyColor500, width: 1),
                 text: "Cancel",
               ),
             ],
@@ -1061,9 +1085,11 @@ class UpdateDeliveryStatusModal extends StatelessWidget {
                   }
 
                   //? Now, go back.
-                  await notifier.updateDeliveryStatus(orderId, controller.value!);
+                  await notifier.updateDeliveryStatus(
+                      orderId, controller.value!);
                   WayaNav.goBack();
-                  WayaSnackBar.showToast("Delivery status updated successfully");
+                  WayaSnackBar.showToast(
+                      "Delivery status updated successfully");
                 },
                 text: "Confirm",
               ),
@@ -1076,7 +1102,8 @@ class UpdateDeliveryStatusModal extends StatelessWidget {
                 callback: () => WayaNav.goBack(),
                 textColor: wayaTheme.colorScheme.greyColor500,
                 color: wayaTheme.colorScheme.transparent,
-                border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+                border: Border.all(
+                    color: wayaTheme.colorScheme.greyColor500, width: 1),
                 text: "Cancel",
               ),
             ],
@@ -1223,7 +1250,8 @@ class UpdatePickupStatusModal extends StatelessWidget {
                 callback: () => WayaNav.goBack(),
                 textColor: wayaTheme.colorScheme.greyColor500,
                 color: wayaTheme.colorScheme.transparent,
-                border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+                border: Border.all(
+                    color: wayaTheme.colorScheme.greyColor500, width: 1),
                 text: "Cancel",
               ),
             ],

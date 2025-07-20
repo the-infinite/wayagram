@@ -6,7 +6,6 @@ class ExploreHeaderVm extends ChangeNotifier {
   ExploreHeaderVm(this.ref);
   final TextEditingController search = TextEditingController();
 
-
   @override
   void dispose() {
     search.dispose();

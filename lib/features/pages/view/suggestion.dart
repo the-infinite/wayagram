@@ -17,7 +17,8 @@ class Suggestion extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _SuggestionState();
 }
 
-class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProviderStateMixin {
+class _SuggestionState extends ConsumerState<Suggestion>
+    with SingleTickerProviderStateMixin {
   late final notifier = ref.watch(createPageProvider.notifier);
 
   @override
@@ -27,7 +28,6 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
       notifier.getRecommendedPages();
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,8 @@ class PageEmptyState extends StatelessWidget {
             //buttontext: 'Create a Post',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

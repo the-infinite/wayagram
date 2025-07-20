@@ -22,18 +22,20 @@ class AllJoinedEvents extends ConsumerStatefulWidget {
 
 class _AllJoinedEventsState extends ConsumerState<AllJoinedEvents> {
   TextEditingController searchController = TextEditingController();
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
 
   @override
   void initState() {
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }

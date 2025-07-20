@@ -36,7 +36,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       }
 
       //? If this is for me, return this one.
-      else if (widget.id == ConversationState.self.id || widget.username == ConversationState.profile.username) {
+      else if (widget.id == ConversationState.self.id ||
+          widget.username == ConversationState.profile.username) {
         _cachedUserData = (ConversationState.self, ConversationState.profile);
       }
 

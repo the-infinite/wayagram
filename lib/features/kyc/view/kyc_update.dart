@@ -93,15 +93,17 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                 height: 16.h,
               ),
               Gap(10),
-              viewModel.kycStatus == 'APPROVED' || viewModel.kycStatus == 'PENDING'?
-              Text(
-                'Date Submitted: ${ref.read(createPollVotingProvider.notifier).formatDt2(viewModel.date)} ',
-                textAlign: TextAlign.center,
-                style: WayaTextStyles.bodySmall.copyWith(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: WayaColors.greyColor800),
-              ): Container(),
+              viewModel.kycStatus == 'APPROVED' ||
+                      viewModel.kycStatus == 'PENDING'
+                  ? Text(
+                      'Date Submitted: ${ref.read(createPollVotingProvider.notifier).formatDt2(viewModel.date)} ',
+                      textAlign: TextAlign.center,
+                      style: WayaTextStyles.bodySmall.copyWith(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: WayaColors.greyColor800),
+                    )
+                  : Container(),
             ],
           ),
           Gap(100.h),

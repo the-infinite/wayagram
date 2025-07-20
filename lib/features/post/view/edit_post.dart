@@ -68,6 +68,15 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
     });
   }
 
+  @override
+  void dispose() {
+    _contentController.dispose();
+    for (final controller in videoControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   Future<void> _pickImages() async {
     try {
       //? Dispose the older video controllers

@@ -77,7 +77,8 @@ class ArchivedChatsScreen extends ConsumerWidget {
                 (index) => ConversationWidget(
                   index: index,
                   chatId: state.archivedResults[index].id,
-                  notifier: ref.read(chatProvider(state.archivedResults[index].id).notifier),
+                  notifier: ref.read(
+                      chatProvider(state.archivedResults[index].id).notifier),
                   conversationNotifier: notifier,
                 ),
               ),

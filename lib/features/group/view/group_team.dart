@@ -84,36 +84,40 @@ class _GroupTeamState extends ConsumerState<GroupTeam>
           if (viewModel.allGroupMemberDocs!.isEmpty)
             GroupPageEmptyState(text: 'No members yet')
           else
-    ListView.builder(
-          padding: EdgeInsets.only(bottom: 50.h),
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: viewModel.allGroupMemberDocs?.length,
-        itemBuilder: (_, index){
-
-       return ValueListenableBuilder(
-           valueListenable: wayaGroupCache,
-           builder: (context, redraws, _) {
-             final groupMember = viewModel.allGroupMemberDocs?[index];
-             final group = wayaGroupCache.getCachedData(widget.groupId);
-             if (group == null) {
-               return SizedBox();
-             }
-             //? If this is in vertical orientation.
-             if (vertical) {
-               return GroupMemberCardWidget(groupMember: groupMember, widget: widget, wayaTheme: wayaTheme, ref: ref);
-             }
-             // Build and return our component.
-             return GroupMemberCardWidget(groupMember: groupMember, widget: widget, wayaTheme: wayaTheme, ref: ref);
-           });
-    })
-
+            ListView.builder(
+                padding: EdgeInsets.only(bottom: 50.h),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: viewModel.allGroupMemberDocs?.length,
+                itemBuilder: (_, index) {
+                  return ValueListenableBuilder(
+                      valueListenable: wayaGroupCache,
+                      builder: (context, redraws, _) {
+                        final groupMember =
+                            viewModel.allGroupMemberDocs?[index];
+                        final group =
+                            wayaGroupCache.getCachedData(widget.groupId);
+                        if (group == null) {
+                          return SizedBox();
+                        }
+                        //? If this is in vertical orientation.
+                        if (vertical) {
+                          return GroupMemberCardWidget(
+                              groupMember: groupMember,
+                              widget: widget,
+                              wayaTheme: wayaTheme,
+                              ref: ref);
+                        }
+                        // Build and return our component.
+                        return GroupMemberCardWidget(
+                            groupMember: groupMember,
+                            widget: widget,
+                            wayaTheme: wayaTheme,
+                            ref: ref);
+                      });
+                })
         ],
       ),
     );
   }
 }
-
-
-
-

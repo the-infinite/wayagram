@@ -9,9 +9,9 @@ class DioInterceptor extends Interceptor {
   DioInterceptor(this.dio, this.secureDataSource, this.baseURL);
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await secureDataSource.getToken();
-    debugPrint('token: $token');
     options.headers['Authorization'] = 'Bearer $token';
     debugPrint('options: $options');
     return handler.next(options);
@@ -35,8 +35,8 @@ class DioInterceptor extends Interceptor {
               data: {"token": refreshToken});
 
           final newtoken = response.data['data']['token']['token'];
-          final newrefreshToken = response.data['data']['token']['refreshToken'];
-          debugPrint(" new token $newtoken");
+          final newrefreshToken =
+              response.data['data']['token']['refreshToken'];
           secureDataSource.saveToken(newtoken);
           secureDataSource.saveRefreshToken(newrefreshToken);
 

@@ -107,13 +107,9 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
       String mySelectedState, VoidCallback onPressed) async {
     isLoading.value = true;
-    debugPrint("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
       (model) {
         String? image = model.imagePath;
-        debugPrint("Mean1  ${model.imagePath}");
-        debugPrint("Mean1  ${model.title}");
-        debugPrint("Mean2  ${model.textController?.text}");
         // debugPrint("Mean  sow ${model.textController?.text}");
         /*  if(model.type== FieldType.image ){
             image = await WayaFileRepository.instance.uploadFile(
@@ -127,8 +123,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
         };
       },
     ).toList();
-    debugPrint("Mean $detailsList");
-    List<Map<String, dynamic>> detailsListRight = [];
     var mapNew = {};
     for (var oldMap in detailsList) {
       if (oldMap["type"] == FieldType.image) {
@@ -142,7 +136,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       }
     }
 
-    debugPrint("Mean 1 $detailsListRight");
 
     var map = {
       "userId": _localDataSource.getUserId().toString(),
@@ -157,7 +150,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       "state": mySelectedState,
       "applicationData": mapNew
     };
-    debugPrint(map.toString());
     final response = await _contestRepository.registerContest(map);
     isLoading.value = false;
 
@@ -204,7 +196,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   void updateText(String id, String text) {
     state = state.map((field) {
       if (field.id == id && field.type == FieldType.text) {
-        debugPrint("Mean jjj ");
         return field.copyWith(imagePath: text);
       }
       return field;

@@ -31,7 +31,8 @@ class _JoinEventState extends ConsumerState<PayForPromotion> {
     final walletState = ref.watch(walletVmProvider);
     final state = ref.watch(promotionVmProvider);
     final walletBalance = walletState.data?.balance ?? '0';
-    final isInsufficientBalance = double.parse(walletBalance).toInt() < widget.budget;
+    final isInsufficientBalance =
+        double.parse(walletBalance).toInt() < widget.budget;
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
       child: Column(

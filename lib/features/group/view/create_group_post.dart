@@ -49,6 +49,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
     for (final controller in videoControllers) {
       controller.dispose();
     }
+    pageController.dispose();
     super.dispose();
   }
 

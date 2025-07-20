@@ -93,7 +93,7 @@ class ShareSheet extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
+          Text(
             'Share options',
             textAlign: TextAlign.start,
             style: TextStyle(
@@ -128,7 +128,7 @@ class ShareSheet extends ConsumerWidget {
         const SizedBox(height: 8),
         Text(
           option.title,
-          style:  TextStyle(
+          style: TextStyle(
             fontSize: 12.sp,
             color: Colors.black87,
           ),

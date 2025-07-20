@@ -59,6 +59,12 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
   }
 
   @override
+  void dispose() {
+    loadingController.dispose();
+    super.dispose();
+  }
+
+  @override
   void reassemble() {
     super.reassemble();
   }

@@ -21,7 +21,8 @@ class EditPageMemberInfo extends ConsumerStatefulWidget {
   const EditPageMemberInfo({super.key, required this.id});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _EditPageMemberInfoState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _EditPageMemberInfoState();
 }
 
 class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
@@ -34,7 +35,7 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
     final viewModel = ref.watch(pageProvider);
 
     final wayaTheme = Theme.of(context);
@@ -46,51 +47,51 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
         padding: const EdgeInsets.only(right: 16),
         child: viewModel.roleType.isEmpty
             ? WayaButton(
-          callback: viewModel.isLoading
-              ? () async {
-
-            if (_formKey.currentState!.validate()) {}
-          }
-              : null,
-          height: 30,
-          text: 'Continue',
-          isLoading: viewModel.isLoading,
-          textStyle: WayaTextStyles.bodySmall.copyWith(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w600,
-            color: wayaTheme.colorScheme.white,
-          ),
-        )
+                callback: viewModel.isLoading
+                    ? () async {
+                        if (_formKey.currentState!.validate()) {}
+                      }
+                    : null,
+                height: 30,
+                text: 'Continue',
+                isLoading: viewModel.isLoading,
+                textStyle: WayaTextStyles.bodySmall.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: wayaTheme.colorScheme.white,
+                ),
+              )
             : WayaButton(
-          callback: () async {
-
-            if (_formKey.currentState!.validate()) {
-              //? If this went well.
-              if (await ref.read(createPageProvider.notifier).updateTeamMember(
-                context,
-                viewModel.roleType,
-                args['pageId'],
-                args['id'],
-              )) {
-                await showCustomDialog(
-                  context,
-                  'Success!',
-                  'Your role has been edited as ${viewModel.roleType}. You can now collaborate seamlessly and manage the page together.',
-                );
-                notifier.reset();
-                WayaNav.goBack();
-              }
-            }
-          },
-          height: 30,
-          text: 'Continue',
-          isLoading: viewModel.isLoading,
-          textStyle: WayaTextStyles.bodySmall.copyWith(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w600,
-            color: wayaTheme.colorScheme.white,
-          ),
-        ),
+                callback: () async {
+                  if (_formKey.currentState!.validate()) {
+                    //? If this went well.
+                    if (await ref
+                        .read(createPageProvider.notifier)
+                        .updateTeamMember(
+                          context,
+                          viewModel.roleType,
+                          args['pageId'],
+                          args['id'],
+                        )) {
+                      await showCustomDialog(
+                        context,
+                        'Success!',
+                        'Your role has been edited as ${viewModel.roleType}. You can now collaborate seamlessly and manage the page together.',
+                      );
+                      notifier.reset();
+                      WayaNav.goBack();
+                    }
+                  }
+                },
+                height: 30,
+                text: 'Continue',
+                isLoading: viewModel.isLoading,
+                textStyle: WayaTextStyles.bodySmall.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: wayaTheme.colorScheme.white,
+                ),
+              ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,10 +109,9 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
             height: 50.h,
             width: double.infinity,
             decoration: BoxDecoration(
-              //color: wayaTheme.colorScheme.greyColor300,
+                //color: wayaTheme.colorScheme.greyColor300,
                 border: Border.all(color: wayaTheme.colorScheme.greyColor300),
-                borderRadius: BorderRadius.circular(4)
-            ),
+                borderRadius: BorderRadius.circular(4)),
             child: Center(child: Text('${args['email']}')),
           ),
           Form(
@@ -120,7 +120,6 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   const Gap(20),
                   FormField<String>(validator: (value) {
                     if (viewModel.roleType.isEmpty) {
@@ -148,7 +147,9 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -160,74 +161,77 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
           viewModel.roleType.isEmpty
               ? Container()
               : viewModel.roleType == 'admin'
-              ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Permission & Access',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: WayaColors.greyColor700,
-                  )),
-              const Gap(15),
-              _permissionType(
-                "Manage Roles",
-                "Assign, update, or remove roles for other members (except\nthe owner)",
-              ),
-              const Gap(15),
-              _permissionType(
-                "Page Settings",
-                "Edit page info, update images, and modify general settings.",
-              ),
-              const Gap(15),
-              _permissionType(
-                "Content Creation:",
-                "Post updates, photos, and manage page content.",
-              ),
-              const Gap(15),
-              _permissionType(
-                "Community Management",
-                "Respond to comments, messages, and moderate\ninteractions.",
-              ),
-              const Gap(15),
-            ],
-          )
-              : viewModel.roleType == 'moderator'
-              ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Permission & Access',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: WayaColors.greyColor700,
-                  )),
-              const Gap(15),
-              _permissionType(
-                  "Community Safety", "Manage and moderate comments to keep discussions civil."),
-              const Gap(15),
-              _permissionType("User Management", "Block or ban users if necessary"),
-              const Gap(15),
-            ],
-          )
-              : viewModel.roleType == 'editor'
-              ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Permission & Access',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                    color: WayaColors.greyColor700,
-                  )),
-              const Gap(15),
-              _permissionType("Content Focused", "Create and manage all page posts and media"),
-              const Gap(15),
-              _permissionType("Comment & Message Handling", "Respond to user comments and messages"),
-              const Gap(15),
-            ],
-          )
-              : Container(),
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Permission & Access',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500,
+                              color: WayaColors.greyColor700,
+                            )),
+                        const Gap(15),
+                        _permissionType(
+                          "Manage Roles",
+                          "Assign, update, or remove roles for other members (except\nthe owner)",
+                        ),
+                        const Gap(15),
+                        _permissionType(
+                          "Page Settings",
+                          "Edit page info, update images, and modify general settings.",
+                        ),
+                        const Gap(15),
+                        _permissionType(
+                          "Content Creation:",
+                          "Post updates, photos, and manage page content.",
+                        ),
+                        const Gap(15),
+                        _permissionType(
+                          "Community Management",
+                          "Respond to comments, messages, and moderate\ninteractions.",
+                        ),
+                        const Gap(15),
+                      ],
+                    )
+                  : viewModel.roleType == 'moderator'
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Permission & Access',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: WayaColors.greyColor700,
+                                )),
+                            const Gap(15),
+                            _permissionType("Community Safety",
+                                "Manage and moderate comments to keep discussions civil."),
+                            const Gap(15),
+                            _permissionType("User Management",
+                                "Block or ban users if necessary"),
+                            const Gap(15),
+                          ],
+                        )
+                      : viewModel.roleType == 'editor'
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Permission & Access',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: WayaColors.greyColor700,
+                                    )),
+                                const Gap(15),
+                                _permissionType("Content Focused",
+                                    "Create and manage all page posts and media"),
+                                const Gap(15),
+                                _permissionType("Comment & Message Handling",
+                                    "Respond to user comments and messages"),
+                                const Gap(15),
+                              ],
+                            )
+                          : Container(),
         ],
       ),
     );
@@ -300,7 +304,9 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                     child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -327,7 +333,8 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
                               Text(
                                 title,
                                 maxLines: 7,
-                                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                                style: wayaTheme.textTheme.bodyMedium!
+                                    .wayaCopyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
                                   color: wayaTheme.colorScheme.black,
@@ -353,7 +360,8 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
                             child: Text(
                               subTitle,
                               maxLines: 7,
-                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                              style:
+                                  wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: wayaTheme.colorScheme.greyColor500,

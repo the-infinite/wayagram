@@ -297,14 +297,13 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
   }
 
   void isCommented(bool isComment, String id, String userId) async {
-   // if (_isDisposed) return;
+    // if (_isDisposed) return;
     state = state.copyWith(isComment: isComment);
-    await postSingleUserMoment(
-        momentId: id, userId: userId, isComment: true);
+    await postSingleUserMoment(momentId: id, userId: userId, isComment: true);
   }
 
   void toggleLiked(bool liked, String id, String userId) async {
-   // if (_isDisposed) return;
+    // if (_isDisposed) return;
     state = state.copyWith(isLiked: liked);
 
     await postSingleUserMoment(momentId: id, userId: userId, isLiked: true);

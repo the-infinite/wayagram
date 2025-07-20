@@ -130,7 +130,6 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-    debugPrint("Contest for you");
     state = state.copyWith(
         listContestForYou: state.listContestForYou.map((post) {
       if (post.id == postId) {

@@ -31,7 +31,7 @@ class _PromotionDashboard extends ConsumerState<PromotionDashboard> {
   Widget build(BuildContext context) {
     final state = ref.watch(promoteVmProvider);
     final wayaTheme = Theme.of(context);
-    
+
     return WayaScaffold(
         isLoading: state.loadingPromos,
         isScrollable: true,
@@ -106,9 +106,7 @@ class _PromotionDashboard extends ConsumerState<PromotionDashboard> {
                       data: promo.metadata,
                       showTimeLeft: true,
                       timeLeft: promo.endDate.toIso8601String(),
-                      id: promo.id
-                      
-                      );
+                      id: promo.id);
                 })
           ],
         ));

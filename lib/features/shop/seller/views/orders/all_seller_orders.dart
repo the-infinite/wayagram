@@ -35,6 +35,10 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
   List<SalesMetric> orders = orderMetrics;
   int _selectedIndex = 0;
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,13 +48,12 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
       ref.read(sellerOrdersVmProvider.notifier).getShopId(shopId);
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }

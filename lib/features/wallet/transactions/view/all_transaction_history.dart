@@ -108,6 +108,13 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
     });
   }
 
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   void _scrollListener() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {

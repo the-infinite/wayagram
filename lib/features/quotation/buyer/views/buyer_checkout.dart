@@ -67,11 +67,13 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
     final walletState = ref.read(walletVmProvider);
 
     //? Now, read the wallet balance.
-    if (walletState.data == null || walletState.data!.balanceNumber < totalCharge) {
+    if (walletState.data == null ||
+        walletState.data!.balanceNumber < totalCharge) {
       final balanceCheck = await WayaUtils.showNotice<bool>(
         context: context,
         title: 'Payment Unsuccessful',
-        message: 'Payment failed. Top up your WayaGram Wallet to complete your \n purchase seamlessly',
+        message:
+            'Payment failed. Top up your WayaGram Wallet to complete your \n purchase seamlessly',
         onCancel: () => WayaNav.goBack(),
         onPress: () async {
           WayaNav.goBack(result: true);
@@ -88,7 +90,8 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
       if (balanceCheck ?? false) {
         await WayaNav.toNamed(
           FundWalletOptionsScreen.route,
-          arguments: WayaAppRoutes.getQuotationCheckoutScreen(widget.id, widget.requestId),
+          arguments: WayaAppRoutes.getQuotationCheckoutScreen(
+              widget.id, widget.requestId),
         );
         return;
       }
@@ -96,7 +99,8 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
 
     //? Second, we now know the user has enough money. Therefore, we want to
     //? charge the account of this user.
-    final chargeResult = await WalletResource.instance.payForService(WalletPaymentData.build(
+    final chargeResult =
+        await WalletResource.instance.payForService(WalletPaymentData.build(
       recipientId: bid!.vendorId,
       amount: totalCharge,
       purpose: WalletServiceType.shopping,
@@ -120,7 +124,9 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
     if (order == null) {
       await WayaUtils.showModalSheet(
         context,
-        child: WayaErrorDialog(title: "Unable to generate the order details for this buy request."),
+        child: WayaErrorDialog(
+            title:
+                "Unable to generate the order details for this buy request."),
       );
       return;
     }
@@ -148,8 +154,10 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
         WayaPreloaderController.instance.show();
 
         //? This is fine.
-        final foundBid = notifier.getBid(widget.id) ?? await notifier.getSingleBid(widget.id);
-        final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
+        final foundBid = notifier.getBid(widget.id) ??
+            await notifier.getSingleBid(widget.id);
+        final foundQuote = notifier.getBidQuote(widget.requestId) ??
+            await notifier.getBuyRequest(widget.requestId);
 
         //? Update these values in state.
         setState(() {
@@ -207,7 +215,8 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Delivery Address", style: wayaTheme.textTheme.bodyMedium),
+                          Text("Delivery Address",
+                              style: wayaTheme.textTheme.bodyMedium),
                           const Gap(5),
                           FittedBox(
                             fit: BoxFit.fitWidth,
@@ -225,7 +234,8 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                   ),
                 ),
                 const Gap(30),
-                AboutProduct(title: 'Product Name', content: request!.productName),
+                AboutProduct(
+                    title: 'Product Name', content: request!.productName),
                 const Gap(15),
                 if (request?.brand != null) ...[
                   AboutProduct(title: 'Brand Name', content: request!.brand!),
@@ -235,31 +245,45 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: AboutProduct(title: 'Product Category', content: request!.category),
+                      child: AboutProduct(
+                          title: 'Product Category',
+                          content: request!.category),
                     ),
                     Expanded(
                       child: AboutProduct(
                         title: 'Product Condition',
-                        content: request!.condition == "new" ? "Brand New" : "Fairly Used",
+                        content: request!.condition == "new"
+                            ? "Brand New"
+                            : "Fairly Used",
                       ),
                     )
                   ],
                 ),
                 const Gap(15),
-                AboutProduct(title: 'Product Description', content: request!.description),
+                AboutProduct(
+                    title: 'Product Description',
+                    content: request!.description),
                 const Gap(15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: AboutProduct(title: 'Quantity', content: WayaValueHelper.formatNumber(request!.quantity)),
+                      child: AboutProduct(
+                          title: 'Quantity',
+                          content:
+                              WayaValueHelper.formatNumber(request!.quantity)),
                     ),
                     Expanded(
                       flex: 2,
-                      child: AboutProduct(title: 'State of Purchase', content: request!.stateOfPurchase),
+                      child: AboutProduct(
+                          title: 'State of Purchase',
+                          content: request!.stateOfPurchase),
                     ),
                     Expanded(
-                      child: AboutProduct(title: 'LGA', content: request!.lga == "all" ? "Any" : request!.lga),
+                      child: AboutProduct(
+                          title: 'LGA',
+                          content:
+                              request!.lga == "all" ? "Any" : request!.lga),
                     )
                   ],
                 ),
@@ -280,12 +304,16 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                         children: [
                           Text(
                             "Bid Amount",
-                            style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13.sp),
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.greyColor400,
+                                fontSize: 13.sp),
                           ),
                           const Gap(6),
                           Text(
                             WayaValueHelper.formatPrice(bid!.usedAmount),
-                            style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.customBlack,
+                                fontSize: 14.sp),
                           )
                         ],
                       ),
@@ -310,12 +338,16 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                         children: [
                           Text(
                             "Delivery Charges",
-                            style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13.sp),
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.greyColor400,
+                                fontSize: 13.sp),
                           ),
                           const Gap(6),
                           Text(
                             WayaValueHelper.formatPrice(deliveryCharge),
-                            style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.customBlack,
+                                fontSize: 14.sp),
                           )
                         ],
                       ),
@@ -340,12 +372,16 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                         children: [
                           Text(
                             "Total",
-                            style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13.sp),
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.greyColor400,
+                                fontSize: 13.sp),
                           ),
                           const Gap(6),
                           Text(
                             WayaValueHelper.formatPrice(totalCharge),
-                            style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18.sp),
+                            style: TextStyle().wayaCopyWith(
+                                color: wayaTheme.colorScheme.customBlack,
+                                fontSize: 18.sp),
                           )
                         ],
                       ),
@@ -357,8 +393,9 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                 const Gap(10),
                 Container(
                   padding: EdgeInsets.all(10),
-                  decoration:
-                      BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.scaffoldColor,
+                      borderRadius: BorderRadius.circular(8)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

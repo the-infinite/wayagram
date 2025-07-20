@@ -177,7 +177,9 @@ class _LogoutDialogState extends State<LogoutDialog> {
                 notifier: buttonController,
                 color: theme.colorScheme.error,
                 callback: () async {
-                  await widget.ref.read(profileVmProvider.notifier).logOutUser();
+                  await widget.ref
+                      .read(profileVmProvider.notifier)
+                      .logOutUser();
                 },
                 text: "Sign out",
               ),

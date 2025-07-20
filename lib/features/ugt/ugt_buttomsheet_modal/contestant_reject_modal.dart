@@ -30,6 +30,12 @@ class _ConfirmVoteOptionModalState
   final rejectionReasonController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
+  void dispose() {
+    rejectionReasonController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     // final viewModel = ref.watch(createPollVotingProvider);
@@ -79,7 +85,8 @@ class _ConfirmVoteOptionModalState
                         child: Text(
                           formState.errorText ?? "",
                           style: TextStyle(
-                              color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              color: wayaTheme.colorScheme.error,
+                              fontSize: 12.sp),
                         ),
                       ),
                   ],
@@ -90,7 +97,7 @@ class _ConfirmVoteOptionModalState
             WayaButton(
               callback: !isLoading.value
                   ? () async {
-                      widget.onTap(isLoading,rejectionReasonController.text);
+                      widget.onTap(isLoading, rejectionReasonController.text);
                     }
                   : null,
               centerWidget:

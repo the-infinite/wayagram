@@ -18,7 +18,8 @@ class PageSetting extends StatefulHookConsumerWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PageSettingState();
 }
 
-class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProviderStateMixin {
+class _PageSettingState extends ConsumerState<PageSetting>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
@@ -63,7 +64,7 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
           /// isOpen              --->
           /// adminsCanCreate     --->
 
-       /*   GestureDetector(
+          /*   GestureDetector(
             onTap: () {
               viewModel2.selectValue(context, "Who Can Contact Me", [
                 Select(label: "Everyone", value: "1"),
@@ -73,7 +74,10 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
                 followPermission.value = value.first.label;
                 //? updating the state
                 pageNotifier.updatePageSetting(
-                    context, followPermission.value == "Everyone", commentPermission.value == "Everyone", args["pageId"]);
+                    context,
+                    followPermission.value == "Everyone",
+                    commentPermission.value == "Everyone",
+                    args["pageId"]);
               }, false);
             },
             child: PrivacyWidget(
@@ -96,12 +100,16 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
                 commentPermission.value = value.first.label;
                 //? updating the state
                 pageNotifier.updatePageSetting(
-                    context, followPermission.value == "Everyone", commentPermission.value == "Everyone", args["pageId"]);
+                    context,
+                    followPermission.value == "Everyone",
+                    commentPermission.value == "Everyone",
+                    args["pageId"]);
               }, false);
             },
             child: PrivacyWidget(
                 title: "Comment Permissions",
-                value: "Choose who you want to comment on page posts to have more control over your page",
+                value:
+                    "Choose who you want to comment on page posts to have more control over your page",
                 showSwitch: false,
                 whoCanContactMe: commentPermission,
                 switchValue: lastSeen),
@@ -111,33 +119,44 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
 
           accessType(
               "Everyone can comment",
-              "Allow anyone to follow without restrictions for a more inclusive community", viewModel.comment,
-                  (value) {
-                    ref.read(createPageProvider.notifier).updateOpenCommentToEveryone(value);
-                    ref.read(createPageProvider.notifier).updatePageSetting(context, viewModel.openToEveryone, value, viewModel.adminCanCreate, args['pageId']);
-
-                  }
-          ),
+              "Allow anyone to follow without restrictions for a more inclusive community",
+              viewModel.comment, (value) {
+            ref
+                .read(createPageProvider.notifier)
+                .updateOpenCommentToEveryone(value);
+            ref.read(createPageProvider.notifier).updatePageSetting(
+                context,
+                viewModel.openToEveryone,
+                value,
+                viewModel.adminCanCreate,
+                args['pageId']);
+          }),
           Gap(10),
-            accessType(
+          accessType(
               "Is Open permission",
-              "Allow anyone to follow without restrictions for a more inclusive community", viewModel.openToEveryone,
-                  (value) {
-                  ref.read(createPageProvider.notifier).updateOpenToEveryone(value);
-                  ref.read(createPageProvider.notifier).updatePageSetting(context, value, viewModel.comment, viewModel.adminCanCreate, args['pageId']);
-              }
-            ),
+              "Allow anyone to follow without restrictions for a more inclusive community",
+              viewModel.openToEveryone, (value) {
+            ref.read(createPageProvider.notifier).updateOpenToEveryone(value);
+            ref.read(createPageProvider.notifier).updatePageSetting(
+                context,
+                value,
+                viewModel.comment,
+                viewModel.adminCanCreate,
+                args['pageId']);
+          }),
           Gap(10),
           accessType(
               "Admins can create",
-              "Allow invited admins to manage/create post", viewModel.adminCanCreate,
-                  (value) {
-                    ref.read(createPageProvider.notifier).updateAdminCanCreate(value);
-                    ref.read(createPageProvider.notifier).updatePageSetting(context, viewModel.openToEveryone, viewModel.comment, value, args['pageId']);
-                  }
-              ),
-
-
+              "Allow invited admins to manage/create post",
+              viewModel.adminCanCreate, (value) {
+            ref.read(createPageProvider.notifier).updateAdminCanCreate(value);
+            ref.read(createPageProvider.notifier).updatePageSetting(
+                context,
+                viewModel.openToEveryone,
+                viewModel.comment,
+                value,
+                args['pageId']);
+          }),
         ],
       ),
     );
@@ -147,15 +166,19 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
     final wayaTheme = Theme.of(context);
     return Container(
       height: 88.h,
-      padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
+      padding:
+          EdgeInsets.only(left: 10.w, right: 10.w, top: 10.h, bottom: 10.h),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12), color: Colors.white),
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         title: Text(title, style: wayaTheme.textTheme.titleSmall),
         subtitle: Text(
           subTitle,
           style: TextStyle().wayaCopyWith(
-              fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: Theme.of(context).colorScheme.greyColor500),
         ),
         trailing: Switch(value: chk, onChanged: onPressed),
       ),

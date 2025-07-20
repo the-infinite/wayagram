@@ -17,7 +17,10 @@ class ReviewDonation extends ConsumerStatefulWidget {
   final Function gotoPreviousTab;
   final bool isWayagramDeal;
   const ReviewDonation(
-      {super.key, required this.goBack, required this.gotoPreviousTab, this.isWayagramDeal =false});
+      {super.key,
+      required this.goBack,
+      required this.gotoPreviousTab,
+      this.isWayagramDeal = false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReviewDonationState();
@@ -27,9 +30,8 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
   DonationState? viewModel;
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_){
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       viewModel = ref.read(donationVmProvider);
-
     });
     super.initState();
   }
@@ -51,32 +53,34 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         Text("Review your donation details before submission",
             style: wayaTheme.textTheme.hintStyle),
         const Gap(20),
-        Text("Donation Thumbnail",
+        Text(
+          "Donation Thumbnail",
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.black),),
+              color: Theme.of(context).colorScheme.black),
+        ),
         const Gap(15),
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: viewModel.donationImage.isNotEmpty
               ? viewModel.donationImage[0].file != null
-              ? Image.file(
-            viewModel.donationImage[0].file!,
-            fit: BoxFit.cover,
-            height: 200,
-            width: double.infinity,
-            filterQuality: FilterQuality.high,
-            scale: 1,
-          )
-              : Image.network(
-            viewModel.donationImage[0].url,
-            fit: BoxFit.cover,
-            height: 200,
-            width: double.infinity,
-            filterQuality: FilterQuality.high,
-            scale: 1,
-          )
+                  ? Image.file(
+                      viewModel.donationImage[0].file!,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: double.infinity,
+                      filterQuality: FilterQuality.high,
+                      scale: 1,
+                    )
+                  : Image.network(
+                      viewModel.donationImage[0].url,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      width: double.infinity,
+                      filterQuality: FilterQuality.high,
+                      scale: 1,
+                    )
               : SizedBox.shrink(),
         ),
         const Gap(30),
@@ -86,64 +90,75 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
           },
           title: 'Donation Information ',
         ),
-    _reviewText('Cause Title', '${viewModel.title.text.capitalizeFirst}'),
+        _reviewText('Cause Title', '${viewModel.title.text.capitalizeFirst}'),
         const Gap(10),
-    _reviewText('Cause Description', '${viewModel.description.text.capitalizeFirst}'),
+        _reviewText('Cause Description',
+            '${viewModel.description.text.capitalizeFirst}'),
         const Gap(10),
-    _reviewText('Proposed Solution', '${viewModel.solution.text.capitalizeFirst}'),
+        _reviewText(
+            'Proposed Solution', '${viewModel.solution.text.capitalizeFirst}'),
         const Gap(10),
-    _reviewText('Impact Statement', '${viewModel.statement.text.capitalizeFirst}'),
+        _reviewText(
+            'Impact Statement', '${viewModel.statement.text.capitalizeFirst}'),
         const Gap(10),
-    _reviewText('Target Amount', WayaHelpers.formatPrice(int.tryParse(viewModel.targetAmount.text) ??0)),
+        _reviewText(
+            'Target Amount',
+            WayaHelpers.formatPrice(
+                int.tryParse(viewModel.targetAmount.text) ?? 0)),
         const Gap(10),
-        Row(children: [
-          _reviewText('Start Date', viewModel.startDate),
-          Spacer(),
-          _reviewText('End Date', viewModel.endDate),
-        ],),
+        Row(
+          children: [
+            _reviewText('Start Date', viewModel.startDate),
+            Spacer(),
+            _reviewText('End Date', viewModel.endDate),
+          ],
+        ),
         const Gap(10),
-    _reviewText('Fundraiser Details', '${viewModel.details.text.capitalizeFirst}'),
+        _reviewText(
+            'Fundraiser Details', '${viewModel.details.text.capitalizeFirst}'),
         const Gap(10),
-    _reviewText('Privacy Settings', viewModel.privacyOption.capitalizeFirst),
+        _reviewText(
+            'Privacy Settings', viewModel.privacyOption.capitalizeFirst),
         const Gap(10),
-    Row(children: [
-      _reviewText('Show Amount Raised', viewModel.showAmountRaised ? 'Yes':'No'),
-      Spacer(),
-      _reviewText('Show Number of Donors', viewModel.showNumberOfDonors? 'Yes':'No'),
-    ],),
-
+        Row(
+          children: [
+            _reviewText('Show Amount Raised',
+                viewModel.showAmountRaised ? 'Yes' : 'No'),
+            Spacer(),
+            _reviewText('Show Number of Donors',
+                viewModel.showNumberOfDonors ? 'Yes' : 'No'),
+          ],
+        ),
         const Gap(30),
-
         WayaButton(
           callback: !viewModel.isLoading
-              ? ()  async{
-           await donation.onSubmit(
-                viewModel.title.text,
-                viewModel.description.text,
-                viewModel.solution.text,
-                viewModel.statement.text,
-                viewModel.targetAmount.text,
-                viewModel.minimumDonationAmount.text,
-                viewModel.privacyOption,
-                viewModel.endDate,
-                viewModel.donationImage, viewModel.startDate,
-                viewModel.category,
-                viewModel.showAmountRaised,
-                context: context);
-
-          }
+              ? () async {
+                  await donation.onSubmit(
+                      viewModel.title.text,
+                      viewModel.description.text,
+                      viewModel.solution.text,
+                      viewModel.statement.text,
+                      viewModel.targetAmount.text,
+                      viewModel.minimumDonationAmount.text,
+                      viewModel.privacyOption,
+                      viewModel.endDate,
+                      viewModel.donationImage,
+                      viewModel.startDate,
+                      viewModel.category,
+                      viewModel.showAmountRaised,
+                      context: context);
+                }
               : null,
-          centerWidget: LoadingState(
-              loading: viewModel.isLoading, text: 'Post Donation'),
+          centerWidget:
+              LoadingState(loading: viewModel.isLoading, text: 'Post Donation'),
         ),
-
         const Gap(8),
         WayaButton(
             text: 'Go Back',
             color: wayaTheme.colorScheme.transparent,
             textColor: wayaTheme.colorScheme.customBlack,
             border:
-            Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
               WayaNav.goBack();
               //widget.gotoPreviousTab();
@@ -151,28 +166,31 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
       ],
     );
   }
-  _reviewText(title, subTitle){
+
+  _reviewText(title, subTitle) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-      Text(title,
-        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
-            fontFamily: WayaConstants.fontFamily,
-            color: Theme.of(context).colorScheme.greyColor500),),
-
-      Text(subTitle,
-        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w500,
-            fontFamily: WayaConstants.fontFamily,
-            color: Theme.of(context).colorScheme.greyColor900),),
-    ],);
+        Text(
+          title,
+          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              fontFamily: WayaConstants.fontFamily,
+              color: Theme.of(context).colorScheme.greyColor500),
+        ),
+        Text(
+          subTitle,
+          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              fontFamily: WayaConstants.fontFamily,
+              color: Theme.of(context).colorScheme.greyColor900),
+        ),
+      ],
+    );
   }
 }
-
-
 
 class EditHeader extends StatelessWidget {
   final VoidCallback onTap;
@@ -216,7 +234,8 @@ class EditHeader extends StatelessWidget {
                 Text(
                   "Edit",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                      color: wayaTheme.colorScheme.customBlack,
+                      fontSize: 14.sp),
                 )
               ],
             ),

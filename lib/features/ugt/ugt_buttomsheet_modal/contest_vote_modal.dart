@@ -131,8 +131,6 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       // TODO: Submit PIN
       // log('PIN submitted: $_pin');
       // WayaNav.goBack();
-      debugPrint(" i am so here ${widget.amount}");
-      debugPrint(" i am so here ${widget.numOfVote}");
       var isPass = await ref
           .read(votersContestNotifier.notifier)
           .verifyWalletPin(isLoading, _pin, {
@@ -151,6 +149,9 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
             .getContestantProfileVoteDetails(
                 ref.read(selectedContestProvider.notifier).state?.id ?? "");
         WayaNav.goBack();
+        if (!mounted) {
+          return;
+        }
         WayaUtils.showModalSheet(context,
             child: VoteSuccessModal(
                 candidateName: widget.candidateName,
@@ -254,10 +255,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                             color: Colors.black54),
                     onPressed: isLoading.value
                         ? () {
-                            debugPrint(" i am so here");
-                          }
+                            }
                         : () {
-                            debugPrint(" i am so noooooooot here");
                             _submitPin(isLoading);
                           },
                   );
@@ -368,7 +367,6 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
       return;
     } else {
       WayaNav.goBack();
-      debugPrint('$amount ${widget.voteFee}');
       WayaUtils.showModalSheet(
         context,
         child: ConfirmVoteOptionModal(
@@ -516,7 +514,6 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
   calculateAmount() {
     num x = 0;
     x = num.parse(widget.voteFee) * num.parse(amount);
-    debugPrint(x.toString());
     return x;
   }
 }
@@ -650,7 +647,6 @@ class _ConfirmVoteOptionModalState
                         return;
                       }
                       ref.watch(votersContestNotifier.notifier).getUserWallet();
-                      debugPrint('${widget.amount} ${widget.voteFee}');
                       WayaUtils.showModalSheet(
                         context,
                         child: AvailableBalanceModal(
@@ -1006,7 +1002,6 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                debugPrint('YOUR URL ${widget.votingLink}');
                 // Share.share(widget.votingLink);
                 // final result = await WayaNavigationHelper.sharePost(null, ref);
                 final result = await WayaUtils.showModalSheet<ShareResult>(
@@ -1018,7 +1013,6 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
                 );
 
                 if (result != null) {
-                  debugPrint("Share result: ${result.status}");
                 }
 
                 WayaNav.removeAllUntil(

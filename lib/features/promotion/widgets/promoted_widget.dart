@@ -17,11 +17,6 @@ class PromotedWidget extends ConsumerStatefulWidget {
 
 class _PromotedWidgetState extends ConsumerState<PromotedWidget> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(

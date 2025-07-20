@@ -29,20 +29,28 @@ class ListedProducts extends ConsumerStatefulWidget {
 class _ListedProductState extends ConsumerState<ListedProducts> {
   late TextEditingController searchController;
   List<String> categories = [];
+
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     super.initState();
 
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {}); // Rebuild when search text changes
-    });
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Expanded(
         child: PaginatedDataView<SellerProduct>(
             uniqueKey: 'listed-products',
@@ -64,8 +72,8 @@ class _ListedProductState extends ConsumerState<ListedProducts> {
         WayaButton(
           callback: () {
             WayaNav.toNamed(AddProduct.route,
-                arguments: AddWayagramArg(
-                    uniqueKey: Uuid().v4(), isWayagram: true));
+                arguments:
+                    AddWayagramArg(uniqueKey: Uuid().v4(), isWayagram: true));
           },
           color: wayaTheme.colorScheme.primary50,
           centerWidget: Row(
@@ -138,8 +146,8 @@ class SellerProductEmptyState extends StatelessWidget {
         WayaButton(
           callback: () {
             WayaNav.toNamed(AddProduct.route,
-                arguments: AddWayagramArg(
-                    uniqueKey: Uuid().v4(), isWayagram: true));
+                arguments:
+                    AddWayagramArg(uniqueKey: Uuid().v4(), isWayagram: true));
           },
           centerWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,

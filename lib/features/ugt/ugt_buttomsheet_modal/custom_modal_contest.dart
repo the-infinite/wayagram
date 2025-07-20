@@ -297,7 +297,6 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
 
   void _submitPin(BuildContext context1, ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
-      debugPrint("i dey here ee $_pin");
       //  WayaNav.goBack();
 
       var isPass = await ref
@@ -314,7 +313,9 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
         if (WayaNav.canPop()) {
           WayaNav.goBack();
         }
-
+        if (!mounted) {
+          return;
+        }
         WayaUtils.showModalSheetUgt(
           context,
           child: SuccessfulModal(
@@ -325,7 +326,6 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
             buttonText: "Create Contest Profile",
             onTap: (myContext, myRef) {
               //  WayaNav.goBack();
-              debugPrint("i am cooking");
               myRef.read(selectedAppliedContestProvider.notifier).state =
                   widget.model;
 
@@ -421,10 +421,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                             color: Colors.black54),
                     onPressed: isLoading.value
                         ? () {
-                            debugPrint(" i am so here");
                           }
                         : () {
-                            debugPrint(" i am so noooooooot here");
                             //   widget.onTap();
                             _submitPin(context, isLoading);
                           },

@@ -42,8 +42,9 @@ class ServiceCard extends StatelessWidget {
           SizedBox(height: 8),
           Text(service.name,
               textAlign: TextAlign.center,
-              style: wayaTheme.textTheme.labelSmall!
-                  .wayaCopyWith(color: wayaTheme.colorScheme.black, fontWeight: FontWeight.w500)),
+              style: wayaTheme.textTheme.labelSmall!.wayaCopyWith(
+                  color: wayaTheme.colorScheme.black,
+                  fontWeight: FontWeight.w500)),
         ],
       ),
     );

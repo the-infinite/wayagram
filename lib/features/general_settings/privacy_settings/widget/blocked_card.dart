@@ -16,9 +16,9 @@ class BlockedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
 
-      //? future to get the user details before populating the UI
+    //? future to get the user details before populating the UI
     return WayaFutureSubscriber(
       future: UserResource.getUserDetails(user.userId),
       suspense: (context) => const SizedBox(),
@@ -82,7 +82,7 @@ class BlockedCard extends StatelessWidget {
                       size: 20.0,
                     ),
                     onPressed: () {
-                     //? show the block dialog to confirm unblocking the user
+                      //? show the block dialog to confirm unblocking the user
                       WayaUtils.showModalSheetUgt(
                         context,
                         child: BlockDialog(

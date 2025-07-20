@@ -29,6 +29,12 @@ class _AddProductState extends ConsumerState<AddProduct>
     WidgetsBinding.instance.addPostFrameCallback((_) => _initializeArgs());
   }
 
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   void _initializeArgs() {
     final args = ModalRoute.of(context)?.settings.arguments;
 

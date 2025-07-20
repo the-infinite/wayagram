@@ -26,9 +26,11 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
   void initState() {
     super.initState();
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
   }
 
   @override

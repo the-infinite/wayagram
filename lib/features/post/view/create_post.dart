@@ -35,7 +35,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
 
   @override
   void dispose() {
-    //? Dispose the older video controllers
+    pageController.dispose();
     for (final controller in videoControllers) {
       controller.dispose();
     }

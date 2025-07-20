@@ -21,6 +21,24 @@ class VotersListPage extends StatefulHookConsumerWidget {
 class _ManageStateContestState extends ConsumerState<VotersListPage> {
   final ScrollController _scrollController = ScrollController();
   double _previousScrollOffset = 0.0;
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    double currentOffset = _scrollController.position.pixels;
+
+    // ✅ Fetch data only when scrolling **downward** and near the bottom
+    if (currentOffset > _previousScrollOffset &&
+        _scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 100) {}
+    _previousScrollOffset = currentOffset;
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -32,17 +50,7 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
     useEffect(() {
       notifier.fetchVotersList(model?.id ?? "", true);
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollController.addListener(() {
-          double currentOffset = _scrollController.position.pixels;
-
-          // ✅ Fetch data only when scrolling **downward** and near the bottom
-          if (currentOffset > _previousScrollOffset &&
-              _scrollController.position.pixels >=
-                  _scrollController.position.maxScrollExtent - 100) {
-            notifier.fetchVotersList(model?.id ?? "", false);
-          }
-          _previousScrollOffset = currentOffset;
-        });
+        _scrollController.addListener(_scrollListener);
         //  notifier.fetchVotersList(model?.id ?? "", true);
       });
       return null;

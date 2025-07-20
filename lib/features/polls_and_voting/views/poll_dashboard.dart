@@ -30,7 +30,6 @@ class PollDashboard extends ConsumerStatefulWidget {
 }
 
 class _PollDashboardState extends ConsumerState<PollDashboard> {
-
   @override
   void initState() {
     super.initState();
@@ -193,7 +192,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
               padding: const EdgeInsets.fromLTRB(10, 15, 10, 6),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Theme.of(context).colorScheme.greyColor100),
+                border: Border.all(
+                    color: Theme.of(context).colorScheme.greyColor100),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,46 +259,52 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
                 ? WayaButton(
                     callback: !viewModel.isLoading
                         ? () {
-                      final percentage = '${(double.parse('${viewModel.commission}') / 100) * num.parse(viewModel.moneyGenerated)}';
-                      final amountDue = double.parse(viewModel.moneyGenerated) - double.parse(percentage);
+                            final percentage =
+                                '${(double.parse('${viewModel.commission}') / 100) * num.parse(viewModel.moneyGenerated)}';
+                            final amountDue =
+                                double.parse(viewModel.moneyGenerated) -
+                                    double.parse(percentage);
 
-                      if(walletViewModel.payoutMethod.isEmpty){
-                          WayaUtils.showModalSheet(
-                            context,
-                            child: AddPayoutModal(),
-                          );
-                        }else if(args['amountRaised'] == 0){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'No revenue was generated from this Poll.' ,
-                              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
-                            ),
-                            backgroundColor: WayaColors.primary,
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      }else{
-                          ref.read(credentialInputProvider.notifier)
-                              .onSubmitPayoutPin(() => WayaNav.toNamed(
-                              '/payoutVerification',
-                              arguments: {
-                                "id": args['id'],
-                                "Module": PayoutModule.polls,
-                                "Model": PayoutReviewModel(
-                                    comission: percentage,
-                                    amount: viewModel.moneyGenerated,
-                                    amountDue: '$amountDue',
-                                    endDate: args['endDate'])
-                              }));
-                        }
+                            if (walletViewModel.payoutMethod.isEmpty) {
+                              WayaUtils.showModalSheet(
+                                context,
+                                child: AddPayoutModal(),
+                              );
+                            } else if (args['amountRaised'] == 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'No revenue was generated from this Poll.',
+                                    style: TextStyle(
+                                        fontFamily: WayaConstants.fontFamily,
+                                        fontSize: 12.sp),
+                                  ),
+                                  backgroundColor: WayaColors.primary,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            } else {
+                              ref
+                                  .read(credentialInputProvider.notifier)
+                                  .onSubmitPayoutPin(() => WayaNav.toNamed(
+                                          '/payoutVerification',
+                                          arguments: {
+                                            "id": args['id'],
+                                            "Module": PayoutModule.polls,
+                                            "Model": PayoutReviewModel(
+                                                comission: percentage,
+                                                amount:
+                                                    viewModel.moneyGenerated,
+                                                amountDue: '$amountDue',
+                                                endDate: args['endDate'])
+                                          }));
+                            }
                           }
                         : null,
                     centerWidget: LoadingState(
                         loading: viewModel.isLoading, text: 'Request Payout'),
                   )
                 : Container(),
-
             Gap(10),
             GestureDetector(
               onTap: () {
@@ -310,8 +316,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
               },
               child: Container(
                 width: double.infinity,
-                padding: REdgeInsets.symmetric(
-                    vertical: 8.dg, horizontal: 12.dg),
+                padding:
+                    REdgeInsets.symmetric(vertical: 8.dg, horizontal: 12.dg),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: wayaTheme.colorScheme.primary600,

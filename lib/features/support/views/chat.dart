@@ -19,7 +19,8 @@ class SupportChatScreen extends ConsumerStatefulWidget {
   const SupportChatScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SupportChatScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SupportChatScreenState();
 }
 
 class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
@@ -149,7 +150,8 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                     isAtEnd: !state.hasNextPage,
                     shouldFetch: !state.isLoading,
                     direction: Axis.vertical,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
                     physics: const AlwaysScrollableScrollPhysics(),
                     reverse: true,
                     getPage: (page) async {
@@ -159,7 +161,9 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                       index: index,
                       inputFocus: focusNode,
                       chat: state.chat,
-                      previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+                      previousDate: index == 0
+                          ? DateTime(1970)
+                          : state.messages[index - 1].createdAt,
                       data: state.messages[index],
                       controller: inputController,
                       isLast: index == state.messages.length - 1,
@@ -170,7 +174,8 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
               //? Third, the chat input widget.
               if (_currentChat == null)
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 10.h),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 25.h, horizontal: 10.h),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withAlpha(50),
                   ),
@@ -189,7 +194,8 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                         //? Second, the other guy here.
                         TextSpan(
                           text: "start a new conversation ",
-                          recognizer: TapGestureRecognizer()..onTap = _startSupportChat,
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = _startSupportChat,
                           style: theme.textTheme.bodySemiBold.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.bold,

@@ -29,11 +29,14 @@ class WayaCommentRepliesScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<WayaCommentRepliesScreen> createState() => _WayaCommentRepliesScreenState();
+  ConsumerState<WayaCommentRepliesScreen> createState() =>
+      _WayaCommentRepliesScreenState();
 }
 
-class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScreen> {
-  late final objectProvider = createCommentProvider("repl-${widget.comment.id}");
+class _WayaCommentRepliesScreenState
+    extends ConsumerState<WayaCommentRepliesScreen> {
+  late final objectProvider =
+      createCommentProvider("repl-${widget.comment.id}");
   late final notifier = ref.read(objectProvider.notifier);
   final inputController = CommentInputController.instance;
   final loadingController = ValueNotifier(false);
@@ -64,6 +67,7 @@ class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScr
   void dispose() {
     try {
       _timer?.cancel();
+      inputController.dispose();
       loadingController.dispose();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -115,7 +119,8 @@ class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScr
                 padding: EdgeInsets.only(left: 20.w),
                 child: WayaPaginatedListView(
                   nextPage: state.replyPage,
-                  getPage: (_) async => await notifier.getReplies(widget.post.id, widget.comment.id),
+                  getPage: (_) async => await notifier.getReplies(
+                      widget.post.id, widget.comment.id),
                   itemCount: state.replies.length,
                   isAtEnd: !state.replyHasNextPage,
                   handler: handler,

@@ -316,7 +316,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                   );
                 }),
                 const Gap(10),
-                 ],
+              ],
             ),
           ),
         ],

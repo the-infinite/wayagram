@@ -89,7 +89,8 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                   }
 
                   //? If there are  no images selected for this page yet...
-                  else if (!(_selectedImage?.existsSync() ?? false) || !(_coverImage?.existsSync() ?? false)) {
+                  else if (!(_selectedImage?.existsSync() ?? false) ||
+                      !(_coverImage?.existsSync() ?? false)) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -119,8 +120,10 @@ class _CreatePageState extends ConsumerState<CreatePage> {
           isLoading: viewModel.isLoading,
           text: 'Create',
           horizontalPadding: 12,
-          textStyle: WayaTextStyles.bodySmall
-              .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+          textStyle: WayaTextStyles.bodySmall.copyWith(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.white),
         ),
       ),
       body: Column(
@@ -183,7 +186,9 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                       CircleAvatar(
                         radius: 20,
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
-                        backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
+                        backgroundImage: _coverImage != null
+                            ? FileImage(_coverImage!)
+                            : null,
                         child: _coverImage == null
                             ? GestureDetector(
                                 onTap: _pickCoverImage,
@@ -237,17 +242,21 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.pageName,
                           hintText: 'Enter page name here',
-                          borderColor: formState.hasError && viewModel.pageName.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.pageName.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Page Name',
                         ),
-                        if (formState.hasError && viewModel.pageName.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.pageName.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -269,17 +278,21 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.pageDescription,
                           hintText: 'Describe what your page does',
-                          borderColor: formState.hasError && viewModel.pageDescription.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.pageDescription.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Page Description',
                         ),
-                        if (formState.hasError && viewModel.pageDescription.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.pageDescription.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -303,14 +316,17 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                             hintText: 'Select Category',
                             value: viewModel.category.capitalizeFirst,
                             items: viewModel.categories,
-                            onSelected: (value) =>
-                                ref.read(createPageProvider.notifier).selectCategory(value.first)),
+                            onSelected: (value) => ref
+                                .read(createPageProvider.notifier)
+                                .selectCategory(value.first)),
                         if (formState.hasError && viewModel.category.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
@@ -401,7 +417,8 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Private Page", style: wayaTheme.textTheme.titleMedium),
+                    Text("Private Page",
+                        style: wayaTheme.textTheme.titleMedium),
                     const Gap(6),
                     Text(
                       "Not everyone can see activity on the group except invited\nmembers",

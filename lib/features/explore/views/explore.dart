@@ -73,7 +73,6 @@ class _ExploreState extends ConsumerState<Explore> {
 
   @override
   void dispose() {
-    //suggestedFriendsHandler.dispose();
     quotationSearch.dispose();
     super.dispose();
   }
@@ -150,7 +149,8 @@ class _ExploreState extends ConsumerState<Explore> {
           SharedMoments(),
           const Gap(25),
           GroupedWidgetHeader(
-            onTap: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
+            onTap: () =>
+                WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
             subTitle: 'Have a buy request, just create a quote',
             title: 'Get Quotation',
           ),
@@ -192,7 +192,8 @@ class _ExploreState extends ConsumerState<Explore> {
           //? For the next section.
           GroupedWidgetHeader(
               onTap: () {
-                WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
+                WayaNav.toNamed(BottomView.route,
+                    arguments: 1, preventDuplicates: false);
               },
               subTitle: 'Explore Categories & Best Offers',
               title: 'Shop'),
@@ -200,7 +201,9 @@ class _ExploreState extends ConsumerState<Explore> {
           CategoriesFilterWidget(setCategory: (value) {
             ref.read(shopVmProvider.notifier).setCategory(value);
             for (String categoryId in value) {
-              ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
+              ref
+                  .read(productEngagementProvider.notifier)
+                  .addCategory(categoryId, ProductPoint.searchPoint.value);
             }
           }),
           const Gap(25),
@@ -213,7 +216,8 @@ class _ExploreState extends ConsumerState<Explore> {
           const Gap(25),
           GroupedWidgetHeader(
             onTap: () => WayaNav.toNamed(DisplayFeed.route),
-            subTitle: 'Explore content based on your interests and interactions.',
+            subTitle:
+                'Explore content based on your interests and interactions.',
             title: 'Discover',
           ),
           const Gap(25),
@@ -325,7 +329,8 @@ class _ExploreState extends ConsumerState<Explore> {
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () => WayaUtils.showModalSheet(context, child: CreateSheet()),
+          callback: () =>
+              WayaUtils.showModalSheet(context, child: CreateSheet()),
           height: 50,
           centerWidget: Center(
             child: Icon(

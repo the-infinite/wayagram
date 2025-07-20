@@ -34,7 +34,6 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
     return WayaScaffold(
         isLoading: ref.watch(loadingProvider),
         isScrollable: true,
-
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,

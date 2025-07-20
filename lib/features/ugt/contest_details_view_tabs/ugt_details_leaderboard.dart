@@ -21,11 +21,6 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
     //final wayaTheme = Theme.of(context);
@@ -68,7 +63,6 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
           },
         ),
         Gap(50)
-      
       ],
     );
   }

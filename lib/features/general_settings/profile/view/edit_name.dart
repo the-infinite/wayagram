@@ -20,7 +20,7 @@ class EditNamePage extends ConsumerStatefulWidget {
 
 class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
   TextEditingController nameController = TextEditingController();
-  dynamic dateIsoFormat;
+  String dateIsoFormat = '';
 
   @override
   void didChangeDependencies() {

@@ -52,7 +52,8 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
           readReceipt.value = value.canSeeReadReceipt ?? false;
           lastSeen.value = value.canSeeLastSeen ?? false;
           showOnline.value = value.canSeeOnlineStatus ?? false;
-          whoCanContactme.value = value.everyoneCanContactMe == true ? "Everyone" : "Friends";
+          whoCanContactme.value =
+              value.everyoneCanContactMe == true ? "Everyone" : "Friends";
           //videoCallPermission.value = value.ci ?? false;
         }
       });
@@ -91,7 +92,8 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                         canSeeReadReceipt: readReceipt.value,
                         canSeeProfilePicture: true,
                         canSeeProfileDescription: true,
-                        everyoneCanContactMe: whoCanContactme.value == "Everyone"),
+                        everyoneCanContactMe:
+                            whoCanContactme.value == "Everyone"),
                   );
                 }, false);
               },
@@ -115,7 +117,8 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                         canSeeReadReceipt: value,
                         canSeeProfilePicture: true,
                         canSeeProfileDescription: true,
-                        everyoneCanContactMe: whoCanContactme.value == "Everyone"),
+                        everyoneCanContactMe:
+                            whoCanContactme.value == "Everyone"),
                   );
                 },
                 showSwitch: true,
@@ -134,7 +137,8 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                       canSeeReadReceipt: readReceipt.value,
                       canSeeProfilePicture: true,
                       canSeeProfileDescription: true,
-                      everyoneCanContactMe: whoCanContactme.value == "Everyone"),
+                      everyoneCanContactMe:
+                          whoCanContactme.value == "Everyone"),
                 );
               },
               switchValue: lastSeen,

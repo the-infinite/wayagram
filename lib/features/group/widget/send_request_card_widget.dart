@@ -47,12 +47,16 @@ class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
           ListTile(
             contentPadding: EdgeInsets.only(left: 0, right: 0),
             leading: CircleAvatar(
-                radius: 40, backgroundColor: WayaColors.greyColor100, backgroundImage: NetworkImage(widget.image)),
+                radius: 40,
+                backgroundColor: WayaColors.greyColor100,
+                backgroundImage: NetworkImage(widget.image)),
             title: Row(
               children: [
                 Text('${widget.groupName.capitalizeFirst}',
                     style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.black)),
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.black)),
                 Spacer(),
                 SizedBox(
                   width: context.width * 0.30,
@@ -71,8 +75,13 @@ class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
                     // },
                     text: 'Send Join Request',
                     isLoading: isLoading,
-                    textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                        fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.white),
+                    textStyle: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .wayaCopyWith(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).colorScheme.white),
                     height: 32.h,
                   ),
                 )
@@ -81,13 +90,17 @@ class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
             subtitle: Text(
               '${widget.memberCount} Members',
               style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                  fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.greyColor500),
             ),
           ),
           Text(
             '${widget.groupDesc.capitalizeFirst}',
             style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: Theme.of(context).colorScheme.greyColor500),
           ),
         ],
       ),

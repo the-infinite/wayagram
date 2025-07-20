@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,7 +49,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                           duration: Duration(seconds: 2),
                         ),
                       );
-                    } else if(viewModel.choices.length > 5){
+                    } else if (viewModel.choices.length > 5) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
@@ -63,7 +62,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                           duration: Duration(seconds: 2),
                         ),
                       );
-                    }else if (!_formKey.currentState!.validate()) {
+                    } else if (!_formKey.currentState!.validate()) {
                       WayaNav.toNamed("/poll-summary");
                       debugPrint('CREATE POLL');
                     } else {
@@ -164,7 +163,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                   if (viewModel.choices[index].description.text
                                       .isEmpty) {
                                     return null;
-                                      //'Description ${index + 1} is required';
+                                    //'Description ${index + 1} is required';
                                   }
 
                                   return null;
@@ -204,7 +203,6 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                   );
                                 }),
                                 const Gap(10),
-
                                 InkWell(
                                   splashFactory: NoSplash.splashFactory,
                                   splashColor: Colors.transparent,
@@ -274,17 +272,23 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                           ),
                           const Gap(20),
                           GestureDetector(
-                            onTap: () =>
-                                ref.read(createPollVotingProvider.notifier).removeChoice(index),
+                            onTap: () => ref
+                                .read(createPollVotingProvider.notifier)
+                                .removeChoice(index),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   'Remove Choice',
-                                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).colorScheme.black),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .wayaCopyWith(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .black),
                                 ),
                                 const Gap(8),
                                 Icon(
@@ -299,32 +303,33 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                         ],
                       );
                     })),
-
             const Gap(15),
-            if(viewModel.choices.length < 30)
-            GestureDetector(
-              onTap: () =>
-                  ref.read(createPollVotingProvider.notifier).addChoice(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Add Another Choice',
-                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.black),
-                  ),
-                  const Gap(8),
-                  Icon(
-                    Icons.add,
-                    size: 20,
-                    color: wayaTheme.colorScheme.customPrimary,
-                  ),
-                ],
+            if (viewModel.choices.length < 30)
+              GestureDetector(
+                onTap: () =>
+                    ref.read(createPollVotingProvider.notifier).addChoice(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Add Another Choice',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .wayaCopyWith(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.black),
+                    ),
+                    const Gap(8),
+                    Icon(
+                      Icons.add,
+                      size: 20,
+                      color: wayaTheme.colorScheme.customPrimary,
+                    ),
+                  ],
+                ),
               ),
-            ),
-
           ],
         ));
   }

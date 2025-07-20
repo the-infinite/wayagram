@@ -37,7 +37,6 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
   final textField = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-
   final ImagePicker _pickers = ImagePicker();
   final List<MyMediaType> _selectedImages = [];
 
@@ -82,11 +81,11 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
 
       //  File tempVideo = File("${tempDir.path}/assets/my_video_thumb.png");
 
-      VideoPlayerController controller =
+      VideoPlayerController videoPlayerController =
           VideoPlayerController.file(File(pickedVideoFile?.path ?? ""));
-      await controller.initialize();
+      await videoPlayerController.initialize();
 
-      if (controller.value.duration.inSeconds > 120) {
+      if (videoPlayerController.value.duration.inSeconds > 120) {
         WayaSnackBar.showToast("Please select a video under 2 minutes!");
         return;
       }
@@ -100,6 +99,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
             type: true,
             extention: pickedVideoFile?.mimeType ?? ""));
       });
+      videoPlayerController.dispose();
       // });
     }
   }
@@ -124,6 +124,13 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
       }
       _selectedImages.removeAt(index);
     });
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    textField.dispose();
+    super.dispose();
   }
 
   @override

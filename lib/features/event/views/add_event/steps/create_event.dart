@@ -295,7 +295,6 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               selectDate: ref
                                   .read(addEventVmProvider.notifier)
                                   .selectStartDate)),
-            
                       Expanded(
                           child: EventDateWidget(
                               uniqueKey: 'end-date',
@@ -342,12 +341,12 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                 ),
 
                 const Gap(25),
-                 Text(
+                Text(
                   "Ticket Sales Date",
                   style: wayaTheme.textTheme.hintStyle,
                 ),
-                  const Gap(25),
-                  SizedBox(
+                const Gap(25),
+                SizedBox(
                   width: double.infinity,
                   child: Row(
                     spacing: 6,
@@ -364,7 +363,6 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               selectDate: ref
                                   .read(addEventVmProvider.notifier)
                                   .selectTicketSalesStartDate)),
-            
                       Expanded(
                           child: EventDateWidget(
                               uniqueKey: 'sales-end-date',
@@ -378,7 +376,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     ],
                   ),
                 ),
-                  const Gap(25),
+                const Gap(25),
                 Text(
                   "Configure Ticket",
                   style: wayaTheme.textTheme.hintStyle,

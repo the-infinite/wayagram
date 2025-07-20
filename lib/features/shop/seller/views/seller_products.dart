@@ -32,6 +32,10 @@ class SellerProducts extends ConsumerStatefulWidget {
 class _SellerProductsState extends ConsumerState<SellerProducts> {
   late TextEditingController searchController;
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     super.initState();
@@ -43,9 +47,14 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
           .sellerProducts(shopId: shopId);
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {}); // Rebuild when search text changes
-    });
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
   }
 
   @override

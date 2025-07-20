@@ -51,6 +51,15 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     state.email.addListener(_validateInputs);
     state.phone.addListener(_validateInputs);
   }
+  @override
+  void dispose() {
+    state.email.removeListener(_validateInputs);
+    state.phone.removeListener(_validateInputs);
+    state.email.dispose();
+    state.phone.dispose();
+
+    super.dispose();
+  }
 
   void toggle() {
     if (state.isEmail) {
@@ -126,7 +135,7 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     }
   }
 
-    Future<void> onToChangeTransactionPin({VoidCallback? onSuccess}) async {
+  Future<void> onToChangeTransactionPin({VoidCallback? onSuccess}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.resendOtp(
@@ -149,7 +158,7 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     }
   }
 
-      Future<void> onToChangePassword({VoidCallback? onSuccess}) async {
+  Future<void> onToChangePassword({VoidCallback? onSuccess}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.resendOtp(
@@ -172,8 +181,6 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     }
   }
 
-
-
   Future<void> onResendPayoutOtp() async {
     try {
       state = state.copyWith(isLoading: true);
@@ -187,7 +194,6 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
             variant: SnackbarType.success,
             message:
                 "A Password reset Otp has been sent to ${ConversationState.self.email}");
-   
       }
     } catch (e) {
       _logger.e(e);
@@ -195,6 +201,7 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
   Future<void> onSubmitPayoutPin(VoidCallback onSuccess) async {
     try {
       state = state.copyWith(isLoading: true);

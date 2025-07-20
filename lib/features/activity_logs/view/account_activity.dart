@@ -123,7 +123,6 @@ class _LoginActivityState extends ConsumerState<AccountActivity> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.accountActivityDocs = [];
-    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if (s == 'all time') {
         viewModel.accountActivityDocs = viewModel.accountActivityDocs1;
@@ -138,24 +137,19 @@ class _LoginActivityState extends ConsumerState<AccountActivity> {
           String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
           String a = DateTime.now().subtract(Duration(days: i + 1)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('?? $b');
         }
-
-        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.accountActivityDocs1.length; i++) {
           String week = viewModel.accountActivityDocs1[i].createdAt.toString().split('T')[0];
           if (allWeekDays.contains(week.split('-')[2])) {
             viewModel.accountActivityDocs.add(viewModel.accountActivityDocs1[i]);
           }
         }
-        debugPrint('??? ${viewModel.accountActivityDocs.length}');
       } else if (s == 'this month') {
         String m = DateTime.now().month.toString().padLeft(2, '0');
         for (int i = 0; i < viewModel.accountActivityDocs1.length; i++) {

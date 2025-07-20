@@ -15,16 +15,19 @@ class WayaSocialNotificationsScreen extends ConsumerStatefulWidget {
   const WayaSocialNotificationsScreen({super.key});
 
   @override
-  ConsumerState<WayaSocialNotificationsScreen> createState() => _WayaSocialNotificationsScreenState();
+  ConsumerState<WayaSocialNotificationsScreen> createState() =>
+      _WayaSocialNotificationsScreenState();
 }
 
-class _WayaSocialNotificationsScreenState extends ConsumerState<WayaSocialNotificationsScreen> {
+class _WayaSocialNotificationsScreenState
+    extends ConsumerState<WayaSocialNotificationsScreen> {
   late final notifier = ref.read(socialNotificationProvider.notifier);
 
   @override
   void initState() {
     //? Get the user's notifications.
-    WidgetsBinding.instance.addPostFrameCallback((_) => notifier.getUserNotifications());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => notifier.getUserNotifications());
 
     //? Now, do the needful.
     super.initState();

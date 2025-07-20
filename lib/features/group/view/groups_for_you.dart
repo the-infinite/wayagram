@@ -24,7 +24,8 @@ class GroupsForYou extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupsForYouState();
 }
 
-class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerProviderStateMixin {
+class _GroupsForYouState extends ConsumerState<GroupsForYou>
+    with SingleTickerProviderStateMixin {
   int like = 0;
 
   @override
@@ -33,7 +34,9 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(createGroupProvider.notifier).getRecommendedGroups();
       //ref.read(createGroupProvider.notifier).getGroupPosts();
-      ref.read(createPageProvider.notifier).getAllPosts(ConversationState.self.id);
+      ref
+          .read(createPageProvider.notifier)
+          .getAllPosts(ConversationState.self.id);
       ref.read(createGroupProvider.notifier).getPopularPosts();
     });
   }
@@ -44,7 +47,9 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       ref.read(createGroupProvider.notifier).getRecommendedGroups();
       //ref.read(createGroupProvider.notifier).getGroupPosts();
-      ref.read(createPageProvider.notifier).getAllPosts(ConversationState.self.id);
+      ref
+          .read(createPageProvider.notifier)
+          .getAllPosts(ConversationState.self.id);
       ref.read(createGroupProvider.notifier).getPopularPosts();
     });
   }
@@ -145,7 +150,8 @@ class PostEmptyState extends StatelessWidget {
           buttontext: 'Create a Post',
           buttonTrailingIcon: SvgPicture.asset(
             WayaAssets.icons.addEventIcon.path,
-            colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            colorFilter:
+                ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
           ),
           assetImage: Image.asset(
             WayaAssets.images.emptyEvent.path,

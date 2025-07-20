@@ -313,20 +313,11 @@ class MomentVm extends StateNotifier<MomentState> {
     final textStyle = state.textStyle;
     final selectedAsset = state.selectedFile;
     final caption = state.caption;
-    final mediaType = state.mediaType;
     String content = '';
     String contentType = '';
     String color = '';
     String fontType = '';
     String? thumbnail = state.thumbnail;
-
-    debugPrint('Submitting moment:');
-    debugPrint('Text: $text');
-    debugPrint('Background Color: $backgroundColor');
-    debugPrint('Text Style: $textStyle');
-    debugPrint('Media Type: $mediaType');
-    debugPrint('Has Media: ${selectedAsset != null}');
-    debugPrint('Caption: $caption');
 
     state = state.copyWith(isCreatingMoment: true);
     if (state.type == StatusType.text) {
@@ -571,7 +562,6 @@ class MomentVm extends StateNotifier<MomentState> {
 
       return moments?[0];
     } catch (error) {
-      debugPrint(error.toString());
       return null;
     }
   }
@@ -608,7 +598,6 @@ class MomentVm extends StateNotifier<MomentState> {
       //     ),
       //     message: 'Thank you for reporting. We take your feedback seriously',
       //     buttonText: 'Dismiss');
-      debugPrint(response.data.toString());
       return isSuccess;
 
       // }
@@ -636,8 +625,7 @@ class MomentVm extends StateNotifier<MomentState> {
   //         comment: state.isComment);
 
   //     if (response.success) {
-  //       debugPrint(response.data.toString());
-  //     }
+  //   //     }
   //   } catch (error) {
   //     debugPrint(error.toString());
   //   }

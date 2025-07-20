@@ -15,13 +15,20 @@ class CreateContest extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateContestState();
 }
 
-class _CreateContestState extends ConsumerState<CreateContest> with SingleTickerProviderStateMixin {
+class _CreateContestState extends ConsumerState<CreateContest>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void _goToNextTab() {

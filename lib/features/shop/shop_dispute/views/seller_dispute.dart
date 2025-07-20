@@ -33,6 +33,12 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   // This is fine.
   @override
   Widget build(BuildContext context) {

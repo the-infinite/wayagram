@@ -139,19 +139,19 @@ Future<void> convertContestantToPDF(
   File contestantFile = File(path);
   contestantFile.writeAsBytesSync(await pdf.save());
 
- /*  Share.shareXFiles([
+  /*  Share.shareXFiles([
     XFile(path),
   ], text: 'Contestants'); */
 
   final pdfBytes = await pdf.save();
   await contestantFile.writeAsBytes(pdfBytes.toList());
-   await FileSaver.instance.saveAs(
-        name: "Contestants Details",
-       bytes: pdfBytes,
-       file: contestantFile,
-        ext: 'pdf',
-        mimeType: MimeType.pdf,
-      );
+  await FileSaver.instance.saveAs(
+    name: "Contestants Details",
+    bytes: pdfBytes,
+    file: contestantFile,
+    ext: 'pdf',
+    mimeType: MimeType.pdf,
+  );
 }
 
 Widget _buildStatCard(String title, String value, Widget widget) {

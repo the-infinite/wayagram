@@ -92,8 +92,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                         "Module": PayoutModule.contest,
                                         "Model": PayoutReviewModel(
                                             comission: percentage.toString(),
-                                            amountDue:
-                                                amountDue.toString(),
+                                            amountDue: amountDue.toString(),
                                             amount: dashboardVm.revenueGenerated
                                                     ?.toString() ??
                                                 '0',

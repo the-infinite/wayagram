@@ -25,7 +25,8 @@ class QuotationOrderWidget extends ConsumerWidget {
 
     //? This is our component.
     return GestureDetector(
-      onTap: () => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(order.requestId)),
+      onTap: () => WayaNav.toNamed(
+          WayaAppRoutes.getQuotationOrderDetailsScreen(order.requestId)),
       child: Container(
         margin: EdgeInsets.only(bottom: 10.h),
         padding: EdgeInsets.fromLTRB(8, 6, 8, 6),

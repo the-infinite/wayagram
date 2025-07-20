@@ -61,7 +61,6 @@ class _PublicPageState extends ConsumerState<PublicPage>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-
       debugPrint('DIALA PAGEID ${widget.id}');
       if (wayaPageCache.getCachedData(widget.id) != null) return;
 
@@ -94,7 +93,9 @@ class _PublicPageState extends ConsumerState<PublicPage>
 
     //? Fetch the data of this page.
     if (page.ownerId == ConversationState.self.id) {
-      return PrivatePage(page: page,);
+      return PrivatePage(
+        page: page,
+      );
     }
 
     //? Return the Scaffolded screen here.
@@ -308,18 +309,15 @@ class _PublicPageState extends ConsumerState<PublicPage>
                         color: wayaTheme.colorScheme.greyColor500,
                       ),
                     ),
+
                     /// 0e2f98e8-2b78-455f-8ade-567298ee648f
                     const Gap(10),
                     Row(
                       children: [
                         //? This is fine too.
                         InkWell(
-                          onTap: () => WayaNav.toNamed(
-                              '/pageFollowerScreen',
-                              arguments: {
-                                'pageId': widget.id
-                              }
-                          ),
+                          onTap: () => WayaNav.toNamed('/pageFollowerScreen',
+                              arguments: {'pageId': widget.id}),
                           child: actionType2(
                             WayaValueHelper.formatNumber(page.followerCount),
                             'Followers',

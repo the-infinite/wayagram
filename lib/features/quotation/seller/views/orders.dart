@@ -17,7 +17,8 @@ class QuotationSellerOrders extends ConsumerStatefulWidget {
   const QuotationSellerOrders({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AllSellerOrdersState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AllSellerOrdersState();
 }
 
 class _AllSellerOrdersState extends ConsumerState<QuotationSellerOrders> {
@@ -46,7 +47,8 @@ class _AllSellerOrdersState extends ConsumerState<QuotationSellerOrders> {
         handler: handler,
         shouldFetch: !state.isLoadingBids,
         isAtEnd: !state.hasNextBid,
-        onReachEnd: () async => await notifier.getOrders(ShopResource.currentShop.id),
+        onReachEnd: () async =>
+            await notifier.getOrders(ShopResource.currentShop.id),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

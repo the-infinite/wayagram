@@ -89,24 +89,26 @@ class DonationWidget extends ConsumerWidget {
                             width: 65,
                             child: WayaButton(
                               callback: () {
-                                WayaNav.toNamed('/donation-details', arguments: {
-                                  'title': '${donation.title?.capitalizeFirst}',
-                                  'image': '${donation.imageURL}',
-                                  'amountRaised':
-                                      '${donation.amountRaised?.replaceAll('.00', '')}',
-                                  'targetAmount':
-                                      '${donation.targetAmount?.replaceAll('.00', '')}',
-                                  'desc': '${donation.description}',
-                                  'solution': '${donation.solution}',
-                                  'impact': '${donation.impact}',
-                                  'url': '${donation.url}',
-                                  'minimumDonationAmount':
-                                      '${donation.minimumDonationAmount}',
-                                  'daysLeft': '$daysLeft',
-                                  'privacy': '${donation.privacy}',
-                                  'id': '${donation.id}',
-                                  "donation": donation
-                                });
+                                WayaNav.toNamed('/donation-details',
+                                    arguments: {
+                                      'title':
+                                          '${donation.title?.capitalizeFirst}',
+                                      'image': '${donation.imageURL}',
+                                      'amountRaised':
+                                          '${donation.amountRaised?.replaceAll('.00', '')}',
+                                      'targetAmount':
+                                          '${donation.targetAmount?.replaceAll('.00', '')}',
+                                      'desc': '${donation.description}',
+                                      'solution': '${donation.solution}',
+                                      'impact': '${donation.impact}',
+                                      'url': '${donation.url}',
+                                      'minimumDonationAmount':
+                                          '${donation.minimumDonationAmount}',
+                                      'daysLeft': '$daysLeft',
+                                      'privacy': '${donation.privacy}',
+                                      'id': '${donation.id}',
+                                      "donation": donation
+                                    });
                               },
                               text: "Donate",
                               height: 30,

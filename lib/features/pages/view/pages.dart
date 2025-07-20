@@ -22,7 +22,8 @@ class Pages extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PagesState();
 }
 
-class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMixin {
+class _PagesState extends ConsumerState<Pages>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
@@ -49,17 +50,18 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
       isScrollable: true,
       title: 'Pages',
       appBarTrailing: Padding(
-        padding:  EdgeInsets.only(right: 20.w),
+        padding: EdgeInsets.only(right: 20.w),
         child: Row(
           spacing: 20,
           children: [
             InkWell(
-                onTap: ()=> WayaNav.toNamed('/searchPage'),
+                onTap: () => WayaNav.toNamed('/searchPage'),
                 child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
             Gap(8),
             InkWell(
-                onTap: ()=> WayaNav.toNamed('/userPageInvitation'),
-                child: WayaAssets.icons.notifGroupRequest.svg(fit: BoxFit.none)),
+                onTap: () => WayaNav.toNamed('/userPageInvitation'),
+                child:
+                    WayaAssets.icons.notifGroupRequest.svg(fit: BoxFit.none)),
           ],
         ),
       ),

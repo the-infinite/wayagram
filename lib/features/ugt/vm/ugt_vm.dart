@@ -127,7 +127,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "textDescription": "Participant's full name",
         "required": true
      */
-    debugPrint("eeeeee ${state.startDate}");
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     isLoading.value = true;
     state = state.copyWith(isLoading: true);
@@ -258,7 +257,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           "formRequirements": mapRequireList
         }
       };
-      debugPrint(map.toString());
       WayaRequestResponse? response;
       if (isEditing) {
         response = await _contestRepository.editContest(
@@ -465,8 +463,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      debugPrint(error.toString());
-    }
+      }
   }
 
   Future<void> showDatePickerDialog2(BuildContext context) async {
@@ -479,8 +476,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         state = state.copyWith(endDate: endDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      debugPrint(error.toString());
-    }
+      }
   }
 
   Future<DateTime?> pickerDialog(BuildContext context,
@@ -496,8 +492,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         return response;
       }
     } catch (error) {
-      debugPrint(error.toString());
-    }
+      }
     return null;
   }
 
@@ -514,8 +509,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         return response;
       }
     } catch (error) {
-      debugPrint(error.toString());
-    }
+      }
     return null;
   }
 
@@ -537,8 +531,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             state.copyWith(endDate: endDate, endDateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      debugPrint(error.toString());
-    }
+      }
   }
 
   List<Select> ugtCategory() {
@@ -580,12 +573,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 
   void update(Select value, String name) {
-    debugPrint('were ${value.toJson()}');
     state = state.copyWith(categorys: value.label);
     state = state.copyWith(categoryId: value.value);
     state = state.copyWith(
         selectedCategory: Select(label: value.label, value: value.value));
-    debugPrint('were ${state.categoryId}');
   }
 
   updateEdit(String value) {
@@ -678,14 +669,12 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             ContestCategory2.fromJson(response.data);
 
         final List<Select> allCategory = responseModel.data.map((val) {
-          debugPrint('Error: ${val.id}');
           return Select(
               label: val.name ?? "", value: val.id ?? "", image: val.id ?? "");
         }).toList();
         state = state.copyWith(category: allCategory);
       }
     } catch (e) {
-      debugPrint('Error: $e');
     }
   }
 
@@ -755,8 +744,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             contestTimelineStartDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      debugPrint(error.toString());
-    }
+      }
   }
 
   Future<void> showDateContestEnd(BuildContext context) async {
@@ -775,8 +763,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             contestTimelineEndDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      debugPrint(error.toString());
-    }
+      }
   }
 
   Future<String?> showDatePickerMain(BuildContext context,
@@ -791,8 +778,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         return startDate;
       }
     } catch (error) {
-      debugPrint(error.toString());
-    }
+      }
     return null;
   }
 
@@ -874,9 +860,6 @@ bool isDateBefore(String dateString) {
   DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
 
   DateTime now = DateTime.now().toUtc();
-  debugPrint("Given Date: $givenDate");
-  debugPrint("Now: $now");
-  debugPrint("Now: ${givenDate.isBefore(now)}");
 
   return givenDate.isBefore(now);
 }
@@ -891,9 +874,6 @@ bool isInPast(String dateString) {
   DateTime oldDate = DateTime(inputDate.year, inputDate.month, inputDate.day);
 
   // Compare the dates
-  debugPrint("Input Date: $inputDate");
-  debugPrint("Input Date: $today");
-  debugPrint("Input Date: ${oldDate.isBefore(today)}");
   if (oldDate.isBefore(today)) {
     return true;
   }

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,33 +33,31 @@ class ApplicationStatus extends ConsumerStatefulWidget {
 
   const ApplicationStatus(
       {super.key,
-        required this.causeTitle,
-        required this.solution,
-        required this.desc,
-        required this.startDate,
-        required this.endDate,
-        required this.targetAmount,
-        required this.amountRaised,
-        required this.status,
-        required this.privacy,
-        required this.showRaised,
-        required this.url,
-        required this.image,
-        required this.id,
-        required this.donationCount,
-        required this.daysLeft,
-        required this.impact,
-        required this.minimumDonationAmount,
-        required this.ratioLeft
-      });
+      required this.causeTitle,
+      required this.solution,
+      required this.desc,
+      required this.startDate,
+      required this.endDate,
+      required this.targetAmount,
+      required this.amountRaised,
+      required this.status,
+      required this.privacy,
+      required this.showRaised,
+      required this.url,
+      required this.image,
+      required this.id,
+      required this.donationCount,
+      required this.daysLeft,
+      required this.impact,
+      required this.minimumDonationAmount,
+      required this.ratioLeft});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ApplicationDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ApplicationDetailsState();
 }
 
 class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
-
-
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -90,146 +86,161 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
             thickness: 1,
           ),
           Gap(20),
-          Row(children: [
-            _reviewText( 'Start date', widget.startDate),
-            const Gap(30),
-            _reviewText( 'End date', widget.endDate),
-            const Gap(30),
-            _reviewText( 'Privacy\n', widget.privacy.capitalizeFirst),
-            const Gap(30),
-            _reviewText( 'Show Amount\nRaised', widget.showRaised),
-          ],),
+          Row(
+            children: [
+              _reviewText('Start date', widget.startDate),
+              const Gap(30),
+              _reviewText('End date', widget.endDate),
+              const Gap(30),
+              _reviewText('Privacy\n', widget.privacy.capitalizeFirst),
+              const Gap(30),
+              _reviewText('Show Amount\nRaised', widget.showRaised),
+            ],
+          ),
           Gap(20),
-          Row(children: [
-            _reviewText( 'Target Amount', WayaHelpers.formatPrice(int.parse(widget.targetAmount.replaceAll('.00', '')))),
-            const Gap(30),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Gap(10),
-                Text(
-                  'Application',
-                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Theme.of(context).colorScheme.greyColor600 ),
-                ),
-                const Gap(5),
-                Container(
-                  decoration: BoxDecoration(
-                    color: widget.status == 'Pending'?WayaColors.pendingColor:
-                    widget.status =='Approved'? WayaColors.success50:
-                    WayaColors.error50,
-                    borderRadius: BorderRadius.circular(20),
+          Row(
+            children: [
+              _reviewText(
+                  'Target Amount',
+                  WayaHelpers.formatPrice(
+                      int.parse(widget.targetAmount.replaceAll('.00', '')))),
+              const Gap(30),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(10),
+                  Text(
+                    'Application',
+                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Theme.of(context).colorScheme.greyColor600),
                   ),
-                  height: 20.h,
-                  width: 68.w,
-                  child: Center(
-                    child: Text(
-                      widget.status,
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                          color: widget.status == 'Pending'? WayaColors.pendingColor2:
-                          widget.status == 'Approved'? WayaColors.success: WayaColors.error ),
+                  const Gap(5),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: widget.status == 'Pending'
+                          ? WayaColors.pendingColor
+                          : widget.status == 'Approved'
+                              ? WayaColors.success50
+                              : WayaColors.error50,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    height: 20.h,
+                    width: 68.w,
+                    child: Center(
+                      child: Text(
+                        widget.status,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .wayaCopyWith(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                                color: widget.status == 'Pending'
+                                    ? WayaColors.pendingColor2
+                                    : widget.status == 'Approved'
+                                        ? WayaColors.success
+                                        : WayaColors.error),
+                      ),
                     ),
                   ),
-
-                ),
-              ],
-            ),
-
-
-          ],),
-          const Gap(30),
-          widget.status == 'Pending'?  WayaButton(
-            text: 'Go Back',
-            color: wayaTheme.colorScheme.primary500,
-            textColor: wayaTheme.colorScheme.white,
-            border:
-            Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-            callback: (){
-              WayaNav.goBack();
-            },
-            height: 40,
-            textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 14.sp,
-                fontFamily: WayaConstants.fontFamily,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.white ),
-
-          ):
-          widget.status == 'Approved'?WayaButton(
-            text: 'Manage Donation',
-            color: wayaTheme.colorScheme.primary500,
-            textColor: wayaTheme.colorScheme.white,
-            border:
-            Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-            callback: (){
-              WayaNav.toNamed('/donationDashboard', arguments: {
-                'title': widget.causeTitle,
-                'image': widget.image,
-                'amountRaised': widget.amountRaised.replaceAll('.00', ''),
-                'targetAmount': widget.targetAmount.replaceAll('.00', ''),
-                'desc': widget.desc,
-                'solution': widget.solution,
-                'privacy':widget.privacy,
-                'impact': widget.impact,
-                'url': widget.url,
-                'minimumDonationAmount': widget.minimumDonationAmount,
-                'daysLeft': widget.daysLeft,
-                'id': widget.id,
-                'range': widget.ratioLeft,
-                'donationCount': widget.donationCount
-              });
-            },
-            height: 40,
-            textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 14.sp,
-                fontFamily: WayaConstants.fontFamily,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.white ),
-
-          ):
-          WayaButton(
-            text: 'Go Back',
-            color: wayaTheme.colorScheme.primary500,
-            textColor: wayaTheme.colorScheme.white,
-            border:
-            Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-            callback: (){
-              WayaNav.goBack();
-            },
-            height: 40,
-            textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 14.sp,
-                fontFamily: WayaConstants.fontFamily,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.white ),
-
+                ],
+              ),
+            ],
           ),
-
+          const Gap(30),
+          widget.status == 'Pending'
+              ? WayaButton(
+                  text: 'Go Back',
+                  color: wayaTheme.colorScheme.primary500,
+                  textColor: wayaTheme.colorScheme.white,
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  callback: () {
+                    WayaNav.goBack();
+                  },
+                  height: 40,
+                  textStyle: WayaTextStyles.bodySmall.copyWith(
+                      fontSize: 14.sp,
+                      fontFamily: WayaConstants.fontFamily,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.white),
+                )
+              : widget.status == 'Approved'
+                  ? WayaButton(
+                      text: 'Manage Donation',
+                      color: wayaTheme.colorScheme.primary500,
+                      textColor: wayaTheme.colorScheme.white,
+                      border: Border.all(
+                          width: 1, color: wayaTheme.colorScheme.greyColor300),
+                      callback: () {
+                        WayaNav.toNamed('/donationDashboard', arguments: {
+                          'title': widget.causeTitle,
+                          'image': widget.image,
+                          'amountRaised':
+                              widget.amountRaised.replaceAll('.00', ''),
+                          'targetAmount':
+                              widget.targetAmount.replaceAll('.00', ''),
+                          'desc': widget.desc,
+                          'solution': widget.solution,
+                          'privacy': widget.privacy,
+                          'impact': widget.impact,
+                          'url': widget.url,
+                          'minimumDonationAmount': widget.minimumDonationAmount,
+                          'daysLeft': widget.daysLeft,
+                          'id': widget.id,
+                          'range': widget.ratioLeft,
+                          'donationCount': widget.donationCount
+                        });
+                      },
+                      height: 40,
+                      textStyle: WayaTextStyles.bodySmall.copyWith(
+                          fontSize: 14.sp,
+                          fontFamily: WayaConstants.fontFamily,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.white),
+                    )
+                  : WayaButton(
+                      text: 'Go Back',
+                      color: wayaTheme.colorScheme.primary500,
+                      textColor: wayaTheme.colorScheme.white,
+                      border: Border.all(
+                          width: 1, color: wayaTheme.colorScheme.greyColor300),
+                      callback: () {
+                        WayaNav.goBack();
+                      },
+                      height: 40,
+                      textStyle: WayaTextStyles.bodySmall.copyWith(
+                          fontSize: 14.sp,
+                          fontFamily: WayaConstants.fontFamily,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.white),
+                    ),
         ],
       ),
     );
   }
-  _reviewText(title, subTitle){
+
+  _reviewText(title, subTitle) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
+        Text(
+          title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.greyColor500),),
-
-        Text(subTitle,
+              color: Theme.of(context).colorScheme.greyColor500),
+        ),
+        Text(
+          subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.black),),
-      ],);
+              color: Theme.of(context).colorScheme.black),
+        ),
+      ],
+    );
   }
-
-
 }

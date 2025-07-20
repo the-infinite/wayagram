@@ -13,11 +13,8 @@ import 'package:wayagram/features/shop/order/vm/order_vm.dart';
 class RejectionReason extends ConsumerWidget {
   final String orderId;
   final String shopId;
-  const RejectionReason({
-    super.key,
-    required this.orderId,
-    required this.shopId
-  });
+  const RejectionReason(
+      {super.key, required this.orderId, required this.shopId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -51,6 +51,8 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
   @override
   void dispose() {
     quotationSearch.dispose();
+    pageController.dispose();
+    timer.cancel();
     super.dispose();
   }
 
@@ -109,7 +111,8 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
 
         //? This one is there too.
         Padding(
-          padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w, bottom: 30.h),
+          padding:
+              EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w, bottom: 30.h),
           child: Center(
             child: SmoothPageIndicator(
               effect: ExpandingDotsEffect(

@@ -20,20 +20,23 @@ class AllEvents extends ConsumerStatefulWidget {
 class _AllEventsState extends ConsumerState<AllEvents> {
   late TextEditingController searchController;
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(eventVmProvider.notifier).getEventWithStatus(page:1);
+      ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -64,12 +67,12 @@ class _AllEventsState extends ConsumerState<AllEvents> {
     return Expanded(
         child: RefreshIndicator(
             onRefresh: () =>
-                ref.read(eventVmProvider.notifier).getEventWithStatus(page:1),
+                ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1),
             child: ListView(
               children: [
                 // WayaButton(
                 //   callback: () {
-                    
+
                 //      WayaNav.replaceNamed( AddEvent.route);
                 //   },
                 //   color: wayaTheme.colorScheme.primary50,

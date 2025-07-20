@@ -34,12 +34,18 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
   void initState() {
     _scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
       ref
           .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
           .initialize(widget.fetchData);
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _scrollListener() {

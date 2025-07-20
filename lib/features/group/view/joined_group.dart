@@ -14,7 +14,8 @@ class JoinedGroup extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _JoinedGroupState();
 }
 
-class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProviderStateMixin {
+class _JoinedGroupState extends ConsumerState<JoinedGroup>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -57,7 +58,8 @@ class GroupEmptyState extends StatelessWidget {
             onTap: () {},
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

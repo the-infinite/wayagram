@@ -14,7 +14,8 @@ class Mutuals extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MutualsState();
 }
 
-class _MutualsState extends ConsumerState<Mutuals> with SingleTickerProviderStateMixin {
+class _MutualsState extends ConsumerState<Mutuals>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -51,7 +52,9 @@ class _MutualsState extends ConsumerState<Mutuals> with SingleTickerProviderStat
                   ListTile(
                     contentPadding: EdgeInsets.only(left: 0, right: 0),
                     leading: Image.asset(
-                      index.isEven ? 'assets/images/pages/c1.png' : 'assets/images/pages/temi.png',
+                      index.isEven
+                          ? 'assets/images/pages/c1.png'
+                          : 'assets/images/pages/temi.png',
                       height: 40.h,
                     ),
                     title: Row(
@@ -74,15 +77,23 @@ class _MutualsState extends ConsumerState<Mutuals> with SingleTickerProviderStat
                             height: 38,
                             color: Colors.white,
                             textColor: Theme.of(context).colorScheme.primary600,
-                            border: Border.all(color: Theme.of(context).colorScheme.primary600),
+                            border: Border.all(
+                                color:
+                                    Theme.of(context).colorScheme.primary600),
                           ),
                         )
                       ],
                     ),
                     subtitle: Text(
                       index.isEven ? '@maleek2024' : '@chukwudi2024',
-                      style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                          fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .wayaCopyWith(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
+                              color:
+                                  Theme.of(context).colorScheme.greyColor500),
                     ),
                   ),
                   //Gap(10),
@@ -91,8 +102,13 @@ class _MutualsState extends ConsumerState<Mutuals> with SingleTickerProviderStat
                     index.isEven
                         ? '🌍 Adventurous soul | Espresso lover ☕ | Gadget aficionado 💻 | Documenting my journeys and life lessons! ✨'
                         : '✈️ Wanderlust-driven | Tea connoisseur 🍵 | Tech enthusiast 💻 | Exploring the world and sharing my stories! 🌟',
-                    style: Theme.of(context).textTheme.displaySmall!.wayaCopyWith(
-                        fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall!
+                        .wayaCopyWith(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).colorScheme.greyColor500),
                   ),
                 ],
               ),

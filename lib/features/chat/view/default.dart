@@ -20,7 +20,8 @@ class ConversationScreen extends ConsumerStatefulWidget {
   const ConversationScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ConversationScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ConversationScreenState();
 }
 
 class _ConversationScreenState extends ConsumerState<ConversationScreen> {
@@ -129,7 +130,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                     WayaNav.toNamed(ArchivedChatsScreen.route);
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(200),
                       color: WayaColors.primary50,
@@ -189,7 +191,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             ],
           ),
         ),
-        body: conversationState.conversations.isEmpty && conversationState.hasLoaded
+        body: conversationState.conversations.isEmpty &&
+                conversationState.hasLoaded
             ? SizedBox.expand(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 17),
@@ -237,7 +240,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       (index) => ConversationWidget(
                         index: index,
                         chatId: conversationState.results[index].id,
-                        notifier: ref.read(chatProvider(conversationState.results[index].id).notifier),
+                        notifier: ref.read(
+                            chatProvider(conversationState.results[index].id)
+                                .notifier),
                         conversationNotifier: notifier,
                       ),
                     ),
@@ -264,7 +269,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         (index) => ConversationWidget(
                           index: index,
                           chatId: conversationState.pinned[index].id,
-                          notifier: ref.read(chatProvider(conversationState.pinned[index].id).notifier),
+                          notifier: ref.read(
+                              chatProvider(conversationState.pinned[index].id)
+                                  .notifier),
                           conversationNotifier: notifier,
                         ),
                       ),
@@ -293,7 +300,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       (index) => ConversationWidget(
                         index: index,
                         chatId: conversationState.unpinned[index].id,
-                        notifier: ref.read(chatProvider(conversationState.unpinned[index].id).notifier),
+                        notifier: ref.read(
+                            chatProvider(conversationState.unpinned[index].id)
+                                .notifier),
                         conversationNotifier: notifier,
                       ),
                     ),

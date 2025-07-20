@@ -32,9 +32,6 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents> {
 
   @override
   Widget build(BuildContext context) {
-    
-
-  
     return WayaScaffold(
         isLoading: false,
         isScrollable: false,
@@ -43,37 +40,39 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FilterWidget(
-               hintText: 'Search Event by title, organizer, location, and type',
+              hintText: 'Search Event by title, organizer, location, and type',
               search: searchController,
             ),
             const Gap(25),
-           Expanded(child:  PaginatedDataView<EventDoc>(
-                uniqueKey: 'upcoming-events',
-                emptyState: EmptyState(
-                    assetImage:
-                        WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
-                    message: "No Event Yet"),
-                loadingState: SizedBox(
-                height: context.height * 0.4,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                )),
-                fetchData: ref.read(eventVmProvider.notifier).getEventWithStatus,
-                result: (data,s) {
-                  final filteredUpcomingEvents = WayaUtils.search<EventDoc>(
-                      data,
-                      ['title', 'organizerName', 'eventType', 'location'],
-                      searchController.text);
-                  return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: filteredUpcomingEvents.length,
-                  itemBuilder: (context, index) {
-                    return EventWidget(event: filteredUpcomingEvents[index]);
-                  });
-                }))
+            Expanded(
+                child: PaginatedDataView<EventDoc>(
+                    uniqueKey: 'upcoming-events',
+                    emptyState: EmptyState(
+                        assetImage: WayaAssets.images.wallet.searchDocu
+                            .image(scale: 1.5),
+                        message: "No Event Yet"),
+                    loadingState: SizedBox(
+                        height: context.height * 0.4,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        )),
+                    fetchData:
+                        ref.read(eventVmProvider.notifier).getEventWithStatus,
+                    result: (data, s) {
+                      final filteredUpcomingEvents = WayaUtils.search<EventDoc>(
+                          data,
+                          ['title', 'organizerName', 'eventType', 'location'],
+                          searchController.text);
+                      return ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: filteredUpcomingEvents.length,
+                          itemBuilder: (context, index) {
+                            return EventWidget(
+                                event: filteredUpcomingEvents[index]);
+                          });
+                    }))
           ],
         ));
   }
-
 }

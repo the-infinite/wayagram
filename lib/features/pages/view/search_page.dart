@@ -25,18 +25,19 @@ class SearchPage extends ConsumerStatefulWidget {
 class _SearchPageState extends ConsumerState<SearchPage> {
   TextEditingController searchController = TextEditingController();
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       myPageNotifier.getCreatedPages();
       myPageNotifier.getPagesUserFollows();
       ref.read(createPageProvider.notifier).getAllPages();
-
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
 
     // That's fine.
     super.initState();
@@ -44,6 +45,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -63,7 +65,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
         leading: WayaBackButton(onTap: () => WayaNav.goBack()),
         title: WayaTextFormField(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-          prefixIcon: Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
+          prefixIcon:
+              Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
           controller: searchController,
           hintText: 'Search name, description',
         ),

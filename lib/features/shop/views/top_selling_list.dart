@@ -22,6 +22,10 @@ class _TopSellingState extends ConsumerState<TopSellingList> {
   late TextEditingController searchController;
   bool isLoading = false;
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,9 +39,15 @@ class _TopSellingState extends ConsumerState<TopSellingList> {
       });
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {}); // Rebuild when search text changes
-    });
+    searchController
+        .addListener(_onSearchChanged); // Rebuild when search text changes
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
   }
 
   @override

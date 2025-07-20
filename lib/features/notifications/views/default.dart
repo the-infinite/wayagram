@@ -17,7 +17,8 @@ class WayaNotifications extends ConsumerStatefulWidget {
   ConsumerState<WayaNotifications> createState() => _WayaNotificationsState();
 }
 
-class _WayaNotificationsState extends ConsumerState<WayaNotifications> with TickerProviderStateMixin {
+class _WayaNotificationsState extends ConsumerState<WayaNotifications>
+    with TickerProviderStateMixin {
   late final notifier = ref.read(notificationProvider.notifier);
   TabController? _pageController;
 
@@ -35,7 +36,8 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
     });
 
     //? Get the user's notifications.
-    WidgetsBinding.instance.addPostFrameCallback((_) => notifier.getUserNotifications());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => notifier.getUserNotifications());
   }
 
   @override
@@ -115,7 +117,8 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
               // Filter this.
               NotificationFilterWidget(
                 all: state.notifications,
-                hintText: "Search ${state.requestsOnly ? 'requests' : 'notifications'}",
+                hintText:
+                    "Search ${state.requestsOnly ? 'requests' : 'notifications'}",
                 value: state.filters,
               ),
 

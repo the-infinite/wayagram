@@ -47,7 +47,8 @@ class PrivacyWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title,
-                          style: WayaTextStyles.hintStyleBold.wayaCopyWith(color: wayaTheme.colorScheme.greyColor900)),
+                          style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                              color: wayaTheme.colorScheme.greyColor900)),
                       SizedBox(
                         width: context.width * 0.5,
                         child: Text(
@@ -69,8 +70,11 @@ class PrivacyWidget extends StatelessWidget {
                           children: [
                             Text(whoCanContactMe?.value ?? "",
                                 style: WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(color: wayaTheme.colorScheme.greyColor500)),
-                            Icon(Icons.arrow_forward_ios, color: wayaTheme.colorScheme.greyColor400),
+                                    .wayaCopyWith(
+                                        color: wayaTheme
+                                            .colorScheme.greyColor500)),
+                            Icon(Icons.arrow_forward_ios,
+                                color: wayaTheme.colorScheme.greyColor400),
                           ],
                         )
                       : CupertinoSwitch(

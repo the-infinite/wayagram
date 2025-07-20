@@ -15,7 +15,8 @@ class ManageGroups extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ManageGroupsState();
 }
 
-class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerProviderStateMixin {
+class _ManageGroupsState extends ConsumerState<ManageGroups>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -62,7 +63,8 @@ class GroupEmptyState extends StatelessWidget {
             buttontext: 'Create Group',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

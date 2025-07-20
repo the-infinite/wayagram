@@ -57,7 +57,8 @@ class WayaScaffold extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     // final themeNotifier = ref.read(themeProvider.notifier);
-    final paddedBody = padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+    final paddedBody =
+        padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
 
     //? This is fine.
     return BlurryModalProgressHUD(
@@ -72,7 +73,9 @@ class WayaScaffold extends ConsumerWidget {
                 AppBar(
                   elevation: 0,
                   scrolledUnderElevation: 0,
-                  backgroundColor: appBarColor ?? backgroundColor ?? wayaTheme.colorScheme.white,
+                  backgroundColor: appBarColor ??
+                      backgroundColor ??
+                      wayaTheme.colorScheme.white,
                   title: Text(title ?? ''),
                   leading: automaticallyImplyLeading
                       ? WayaBackButton(
@@ -151,25 +154,31 @@ class WayaScaffoldWithProgressBar extends StatefulWidget {
   });
 
   @override
-  State<WayaScaffoldWithProgressBar> createState() => _WayaScaffoldWithProgressBarState();
+  State<WayaScaffoldWithProgressBar> createState() =>
+      _WayaScaffoldWithProgressBarState();
 }
 
-class _WayaScaffoldWithProgressBarState extends State<WayaScaffoldWithProgressBar> {
+class _WayaScaffoldWithProgressBarState
+    extends State<WayaScaffoldWithProgressBar> {
   double _progress = 0.12;
   final double _progressBarHeight = 12;
 
-  @override
-  void initState() {
-    super.initState();
-    widget.tabController.addListener(() {
-      setState(() {
-        _progress = (widget.tabController.index + 0.5) / widget.tabController.length;
-      });
+  void _onTabChanged() {
+    setState(() {
+      _progress =
+          (widget.tabController.index + 0.5) / widget.tabController.length;
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    widget.tabController.addListener(_onTabChanged);
+  }
+
+  @override
   void dispose() {
+    widget.tabController.removeListener(_onTabChanged);
     widget.tabController.dispose();
     super.dispose();
   }

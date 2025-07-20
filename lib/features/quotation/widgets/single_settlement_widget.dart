@@ -22,8 +22,9 @@ class SingleSettlementWidget extends ConsumerWidget {
         children: [
           Container(
             padding: EdgeInsets.fromLTRB(8, 6, 8, 6),
-            decoration:
-                BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(
+                color: wayaTheme.colorScheme.scaffoldColor,
+                borderRadius: BorderRadius.circular(8)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,8 +40,9 @@ class SingleSettlementWidget extends ConsumerWidget {
                         //? Title.
                         Text(
                           "Payment From Buyer",
-                          style: wayaTheme.textTheme.bodyMedium
-                              ?.copyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                              color: wayaTheme.colorScheme.customBlack,
+                              fontSize: 14.sp),
                         ),
 
                         // Some space.
@@ -117,23 +119,27 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
    */
   }
 
-  Future<void> sellerBidAction(BuildContext context, QuotationBidModel bid) async {
+  Future<void> sellerBidAction(
+      BuildContext context, QuotationBidModel bid) async {
     WayaUtils.showNotice(
         context: context,
         buttonText: 'Add Delivery Details',
         secondButtonText: 'See your Order Details',
         title: 'Populate Delivery Details',
-        message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+        message:
+            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
         onPress: () async {
           await addDeliveryDetail(context);
         },
         onCancel: () {
-          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
+          WayaNav.toNamed(
+              WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
         },
         icon: Image.asset('assets/images/shop/delivery-van.png'));
   }
 }
 
-final singleSettlementWidgetViewModelProvider = ChangeNotifierProvider<SingleBidWidgetViewModel>(
+final singleSettlementWidgetViewModelProvider =
+    ChangeNotifierProvider<SingleBidWidgetViewModel>(
   (ref) => SingleBidWidgetViewModel(ref),
 );

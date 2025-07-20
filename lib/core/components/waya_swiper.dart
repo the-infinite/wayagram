@@ -84,13 +84,15 @@ class WayaSwiper extends StatefulWidget {
     this.animationDelay = const Duration(milliseconds: 150),
     this.offsetDx = 0.3,
     this.swipeSensitivity = 5,
-  }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 35, "swipeSensitivity value must be between 5 to 35");
+  }) : assert(swipeSensitivity >= 5 && swipeSensitivity <= 35,
+            "swipeSensitivity value must be between 5 to 35");
 
   @override
   State<WayaSwiper> createState() => _WayaSwiperState();
 }
 
-class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateMixin {
+class _WayaSwiperState extends State<WayaSwiper>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
   late Animation<double> _leftIconAnimation;
@@ -126,13 +128,16 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
         (details) {
           log("Right Swipe Not Provided");
         };
-    _controller.addListener(() {
-      setState(() {});
-    });
+    _controller.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
   }
 
   @override
   dispose() {
+    _controller.removeListener(_onSearchChanged);
     _controller.dispose();
     super.dispose();
   }
@@ -180,9 +185,11 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
       behavior: HitTestBehavior.translucent,
       onLongPress: widget.onLongPress,
       onPanUpdate: (details) {
-        if (details.delta.dx > widget.swipeSensitivity && widget.onRightSwipe != null) {
+        if (details.delta.dx > widget.swipeSensitivity &&
+            widget.onRightSwipe != null) {
           _runAnimation(onRight: true, details: details);
-        } else if (details.delta.dx < -(widget.swipeSensitivity) && widget.onLeftSwipe != null) {
+        } else if (details.delta.dx < -(widget.swipeSensitivity) &&
+            widget.onLeftSwipe != null) {
           _runAnimation(onRight: false, details: details);
         } else if (details.delta.dy > widget.swipeSensitivity) {
           widget.onVerticalSwipe?.call();
@@ -205,7 +212,8 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
                     Icon(
                       widget.iconOnRightSwipe,
                       size: widget.iconSize,
-                      color: widget.iconColor ?? Theme.of(context).iconTheme.color,
+                      color:
+                          widget.iconColor ?? Theme.of(context).iconTheme.color,
                     ),
               ),
               AnimatedOpacity(
@@ -216,7 +224,8 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
                     Icon(
                       widget.iconOnLeftSwipe,
                       size: widget.iconSize,
-                      color: widget.iconColor ?? Theme.of(context).iconTheme.color,
+                      color:
+                          widget.iconColor ?? Theme.of(context).iconTheme.color,
                     ),
               ),
             ],

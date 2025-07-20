@@ -18,16 +18,11 @@ class FollowRelationshipsPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MutualPageState();
 }
 
-class _MutualPageState extends ConsumerState<FollowRelationshipsPage> with SingleTickerProviderStateMixin {
+class _MutualPageState extends ConsumerState<FollowRelationshipsPage>
+    with SingleTickerProviderStateMixin {
   final followersHandler = WayaObservableScrollController();
   final followingHandler = WayaObservableScrollController();
   int _selectedIndex = 1;
-
-  @override
-  void initState() {
-    // This is fine.
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +63,9 @@ class _MutualPageState extends ConsumerState<FollowRelationshipsPage> with Singl
                   WayaTabButton(
                     isSelected: _selectedIndex == 1,
                     text: 'Following',
-                    count: state.hasLoadedFollowing ? state.followingTotalSize : null,
+                    count: state.hasLoadedFollowing
+                        ? state.followingTotalSize
+                        : null,
                     onTap: () => setState(() => _selectedIndex = 1),
                   ),
 
@@ -76,7 +73,9 @@ class _MutualPageState extends ConsumerState<FollowRelationshipsPage> with Singl
                   WayaTabButton(
                     isSelected: _selectedIndex == 2,
                     text: 'Followers',
-                    count: state.hasLoadedFollowers ? state.followersTotalSize : null,
+                    count: state.hasLoadedFollowers
+                        ? state.followersTotalSize
+                        : null,
                     onTap: () => setState(() => _selectedIndex = 2),
                   ),
                 ],

@@ -13,7 +13,8 @@ class ProductListing extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ProductListingState();
 }
 
-class _ProductListingState extends ConsumerState<ProductListing> with SingleTickerProviderStateMixin {
+class _ProductListingState extends ConsumerState<ProductListing>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -26,6 +27,12 @@ class _ProductListingState extends ConsumerState<ProductListing> with SingleTick
     if (_tabController.index < _tabController.length - 1) {
       _tabController.animateTo(_tabController.index + 1);
     }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override

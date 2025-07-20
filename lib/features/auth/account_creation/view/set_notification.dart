@@ -35,49 +35,46 @@ class SetNotification extends ConsumerWidget {
             flex: 1,
             child: Image.asset("assets/images/auth/set-notification.png"),
           ),
-          Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Don’t miss out on what your \n friends are up to",
-                  textAlign: TextAlign.center,
-                  style: wayaTheme.textTheme.titleLarge,
-                ),
-                const Gap(20),
-                Text(
-                  "Enable notifications so you won’t miss anything \n important",
-                  textAlign: TextAlign.center,
-                  style: wayaTheme.textTheme.descriptionStyle,
-                ),
-                const Gap(20),
-                WayaButton(
-                  callback: state.isLoading
-                      ? null
-                      : () {
-                          viewModel.setNotification();
-                        },
-                  centerWidget: LoadingState(
-                      loading: state.isLoading, text: "Turn on Notification"),
-                ),
-                const Gap(20),
-                Align(
-                    child: GestureDetector(
-                  onTap: state.isLoading
-                      ? null
-                      : () {
-                          WayaNav.toNamed(SelectInterest.route);
-                        },
-                  child: Text(
-                    "Skip for now",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600),
-                  ),
-                )),
-                const Gap(20),
-              ]),
+          Column(children: [
+            Text(
+              "Don’t miss out on what your \n friends are up to",
+              textAlign: TextAlign.center,
+              style: wayaTheme.textTheme.titleLarge,
+            ),
+            const Gap(20),
+            Text(
+              "Enable notifications so you won’t miss anything \n important",
+              textAlign: TextAlign.center,
+              style: wayaTheme.textTheme.descriptionStyle,
+            ),
+            const Gap(20),
+            WayaButton(
+              callback: state.isLoading
+                  ? null
+                  : () {
+                      viewModel.setNotification();
+                    },
+              centerWidget: LoadingState(
+                  loading: state.isLoading, text: "Turn on Notification"),
+            ),
+            const Gap(20),
+            Align(
+                child: GestureDetector(
+              onTap: state.isLoading
+                  ? null
+                  : () {
+                      WayaNav.toNamed(SelectInterest.route);
+                    },
+              child: Text(
+                "Skip for now",
+                style: TextStyle().wayaCopyWith(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600),
+              ),
+            )),
+            const Gap(20),
+          ]),
           const Gap(20)
         ],
       ),

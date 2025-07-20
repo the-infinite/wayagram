@@ -18,12 +18,14 @@ class AddNewRequirementModal extends StatefulHookConsumerWidget {
   const AddNewRequirementModal({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AddNewRequirementModalState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AddNewRequirementModalState();
 }
 
 bool isSwitched = false;
 
-class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal> {
+class _AddNewRequirementModalState
+    extends ConsumerState<AddNewRequirementModal> {
   final _contestController = Get.put(ContestController());
   final _formKey = GlobalKey<FormState>();
 
@@ -32,12 +34,15 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
     //final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
 
-    NewRequirementModel model =
-        ref.read(stateRequirementProvider.notifier).state[_contestController.selectedIndexSignUPRequire];
+    NewRequirementModel model = ref
+        .read(stateRequirementProvider.notifier)
+        .state[_contestController.selectedIndexSignUPRequire];
     final requirementType = useState(model.requirementType ?? "");
     useEffect(() {
-      _contestController.contestEnterRequirementNameController.text = model.requirementName ?? "";
-      _contestController.contestEnterTextFieldOptionalController.text = model.requirementOptional ?? "";
+      _contestController.contestEnterRequirementNameController.text =
+          model.requirementName ?? "";
+      _contestController.contestEnterTextFieldOptionalController.text =
+          model.requirementOptional ?? "";
       return null;
     }, []);
     return Padding(
@@ -58,7 +63,9 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                     value: requirementType.value,
                     label: "Requirement Type ",
                     hintText: 'Requirement type',
-                    items: ref.read(contestNotifierProvider.notifier).ugtRequirementType(),
+                    items: ref
+                        .read(contestNotifierProvider.notifier)
+                        .ugtRequirementType(),
                     onSelected: (value) {
                       requirementType.value = value.first.label;
                     },
@@ -66,7 +73,8 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                   ),
                   const Gap(15),
                   FormField<String>(validator: (value) {
-                    if (_contestController.contestEnterRequirementNameController.text.isEmpty) {
+                    if (_contestController
+                        .contestEnterRequirementNameController.text.isEmpty) {
                       return 'Requirement Name is required';
                     }
 
@@ -76,20 +84,30 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          controller: _contestController.contestEnterRequirementNameController,
+                          controller: _contestController
+                              .contestEnterRequirementNameController,
                           hintText: "Enter Requirement Name",
                           label: "Enter requirement name ",
                           borderColor: formState.hasError &&
-                                  _contestController.contestEnterRequirementNameController.text.isEmpty
+                                  _contestController
+                                      .contestEnterRequirementNameController
+                                      .text
+                                      .isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                         ),
-                        if (formState.hasError && _contestController.contestEnterRequirementNameController.text.isEmpty)
+                        if (formState.hasError &&
+                            _contestController
+                                .contestEnterRequirementNameController
+                                .text
+                                .isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText ?? "",
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -103,21 +121,30 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          controller: _contestController.contestEnterTextFieldOptionalController,
+                          controller: _contestController
+                              .contestEnterTextFieldOptionalController,
                           hintText: "Enter text field label",
                           label: " Text Field (optional) ",
                           borderColor: formState.hasError &&
-                                  _contestController.contestEnterTextFieldOptionalController.text.isEmpty
+                                  _contestController
+                                      .contestEnterTextFieldOptionalController
+                                      .text
+                                      .isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                         ),
                         if (formState.hasError &&
-                            _contestController.contestEnterTextFieldOptionalController.text.isEmpty)
+                            _contestController
+                                .contestEnterTextFieldOptionalController
+                                .text
+                                .isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText ?? "",
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -149,7 +176,9 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                   "Mark as Required",
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: isSwitched ? wayaTheme.colorScheme.primaryContainer : wayaTheme.colorScheme.greyColor900,
+                    color: isSwitched
+                        ? wayaTheme.colorScheme.primaryContainer
+                        : wayaTheme.colorScheme.greyColor900,
                   ),
                 ),
               ],
@@ -162,15 +191,18 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                   //check for image null
                   ref.read(stateRequirementProvider.notifier).state = ref
                       .read(stateRequirementProvider)
-                      .where((i) => _contestController.selectedIndexSignUPRequire != i.id)
+                      .where((i) =>
+                          _contestController.selectedIndexSignUPRequire != i.id)
                       .toList();
                   ref.read(stateRequirementProvider.notifier).state.insert(
                         _contestController.selectedIndexSignUPRequire,
                         NewRequirementModel(
                           id: _contestController.selectedIndexSignUPRequire,
                           requirementType: requirementType.value,
-                          requirementName: _contestController.contestEnterRequirementNameController.text,
-                          requirementOptional: _contestController.contestEnterTextFieldOptionalController.text,
+                          requirementName: _contestController
+                              .contestEnterRequirementNameController.text,
+                          requirementOptional: _contestController
+                              .contestEnterTextFieldOptionalController.text,
                           isRequired: isSwitched,
                         ),
                       );
@@ -186,7 +218,8 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                 text: 'Go Back',
                 color: wayaTheme.colorScheme.greyColor300,
                 textColor: wayaTheme.colorScheme.customBlack,
-                border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                border: Border.all(
+                    width: 1, color: wayaTheme.colorScheme.greyColor300),
                 callback: () {})
           ],
         ),

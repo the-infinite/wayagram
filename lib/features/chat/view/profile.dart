@@ -20,7 +20,8 @@ class ChatProfilePage extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ChatProfilePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ChatProfilePageState();
 }
 
 class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {

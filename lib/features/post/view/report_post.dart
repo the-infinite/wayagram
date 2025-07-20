@@ -14,7 +14,11 @@ class ReportPost extends ConsumerStatefulWidget {
   final String currentStatus;
   final String postId;
   final List<String> statuses;
-  const ReportPost({super.key, required this.statuses, required this.currentStatus, required this.postId});
+  const ReportPost(
+      {super.key,
+      required this.statuses,
+      required this.currentStatus,
+      required this.postId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReportPostState();
@@ -41,7 +45,6 @@ class _ReportPostState extends ConsumerState<ReportPost> {
 
   @override
   Widget build(BuildContext context) {
-    
     final wayaTheme = Theme.of(context);
     final reportState = ref.watch(createPageProvider);
     return SingleChildScrollView(
@@ -49,7 +52,8 @@ class _ReportPostState extends ConsumerState<ReportPost> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Report ", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+          Text("Report ",
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
           const Gap(5),
           Text(
               maxLines: 3,
@@ -96,19 +100,25 @@ class _ReportPostState extends ConsumerState<ReportPost> {
                             ListTile(
                               minTileHeight: 30,
                               selectedTileColor:
-                                  selectedStatus == widget.statuses[index] ? wayaTheme.colorScheme.scaffoldColor : null,
+                                  selectedStatus == widget.statuses[index]
+                                      ? wayaTheme.colorScheme.scaffoldColor
+                                      : null,
                               trailing: selectedStatus == widget.statuses[index]
                                   ? Icon(
                                       Icons.check_circle,
                                       size: 20,
-                                      color: wayaTheme.colorScheme.customPrimary,
+                                      color:
+                                          wayaTheme.colorScheme.customPrimary,
                                     )
                                   : null,
-                              contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 1, horizontal: 1),
                               title: Text(
-                                WayaHelpers.removeCamelCaseAndUnderscore(widget.statuses[index]),
-                                style:
-                                    TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                                WayaHelpers.removeCamelCaseAndUnderscore(
+                                    widget.statuses[index]),
+                                style: TextStyle().wayaCopyWith(
+                                    color: wayaTheme.colorScheme.customBlack,
+                                    fontSize: 14.sp),
                               ),
                               onTap: () {
                                 setState(() {
@@ -116,7 +126,8 @@ class _ReportPostState extends ConsumerState<ReportPost> {
                                 });
                               },
                             ),
-                            if (index < widget.statuses.length - 1) const Gap(0), // Adjust the gap as needed
+                            if (index < widget.statuses.length - 1)
+                              const Gap(0), // Adjust the gap as needed
                           ],
                         );
                       }),
@@ -162,7 +173,8 @@ class _ReportPostState extends ConsumerState<ReportPost> {
               },
               textColor: wayaTheme.colorScheme.greyColor500,
               color: wayaTheme.colorScheme.transparent,
-              border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+              border: Border.all(
+                  color: wayaTheme.colorScheme.greyColor500, width: 1),
               text: 'Cancel')
         ],
       ),

@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
- import 'package:wayagram/shared/features/quotation/model/default.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 
@@ -68,7 +68,8 @@ class _ConfirmQuotationOrderState extends State<ConfirmQuotationOrder> {
 
     //? If this was done well...
     if (result) {
-      WayaSnackBar.showToast("This order has been completed successfully", showSuccess: true);
+      WayaSnackBar.showToast("This order has been completed successfully",
+          showSuccess: true);
       return;
     }
   }

@@ -11,20 +11,24 @@ import 'package:wayagram/shared/features/location/vm/default.dart';
 class PricingAndDeliveryRequest extends ConsumerStatefulWidget {
   final Function gotoNextTab;
   final Function gotoPreviousTab;
-  const PricingAndDeliveryRequest({super.key, required this.gotoPreviousTab, required this.gotoNextTab});
+  const PricingAndDeliveryRequest(
+      {super.key, required this.gotoPreviousTab, required this.gotoNextTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PricingAndDeliveryRequestState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PricingAndDeliveryRequestState();
 }
 
-class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRequest> {
+class _PricingAndDeliveryRequestState
+    extends ConsumerState<PricingAndDeliveryRequest> {
   final _formKey = GlobalKey<FormState>();
   late final regionNotifier = ref.read(regionsProvider.notifier);
   late final notifier = ref.read(createRequestProvider.notifier);
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => regionNotifier.setUseAll(false));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => regionNotifier.setUseAll(false));
     super.initState();
   }
 
@@ -45,7 +49,9 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
       children: [
         Text("Pricing and Delivery", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
-        Text("Provide the pricing and delivery information for the buy\nrequest", style: wayaTheme.textTheme.hintStyle),
+        Text(
+            "Provide the pricing and delivery information for the buy\nrequest",
+            style: wayaTheme.textTheme.hintStyle),
         const Gap(30),
         Text(
           "Pricing",
@@ -72,20 +78,25 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                         keyboardType: TextInputType.number,
                         controller: viewModel.bidStartingAmount,
                         hintText: 'Enter the initial bid amount',
-                        borderColor: formState.hasError && viewModel.bidStartingAmount.text.isEmpty
+                        borderColor: formState.hasError &&
+                                viewModel.bidStartingAmount.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Bid Starting Amount',
                         suffixIcon: Padding(
                           padding: EdgeInsets.symmetric(vertical: 15),
-                          child: Text("NGN", style: wayaTheme.textTheme.hintStyle),
+                          child:
+                              Text("NGN", style: wayaTheme.textTheme.hintStyle),
                         )),
-                    if (formState.hasError && viewModel.bidStartingAmount.text.isEmpty)
+                    if (formState.hasError &&
+                        viewModel.bidStartingAmount.text.isEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           formState.errorText!,
-                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                          style: TextStyle(
+                              color: wayaTheme.colorScheme.error,
+                              fontSize: 12.sp),
                         ),
                       ),
                   ],
@@ -108,20 +119,25 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                           keyboardType: TextInputType.number,
                           controller: viewModel.maxBidAmount,
                           hintText: 'Enter the maximum bid amount',
-                          borderColor: formState.hasError && viewModel.maxBidAmount.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.maxBidAmount.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Maximum Bid Amount (optional)',
                           suffixIcon: Padding(
                             padding: EdgeInsets.symmetric(vertical: 15),
-                            child: Text("NGN", style: wayaTheme.textTheme.hintStyle),
+                            child: Text("NGN",
+                                style: wayaTheme.textTheme.hintStyle),
                           )),
-                      if (formState.hasError && viewModel.maxBidAmount.text.isEmpty)
+                      if (formState.hasError &&
+                          viewModel.maxBidAmount.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -225,7 +241,8 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                           keyboardType: TextInputType.streetAddress,
                           controller: viewModel.deliveryAddress,
                           hintText: 'Enter Delivery Address',
-                          borderColor: formState.hasError && viewModel.deliveryAddress.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.deliveryAddress.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Delivery Address',
@@ -235,12 +252,15 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                             size: 24,
                           ),
                         ),
-                        if (formState.hasError && viewModel.deliveryAddress.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.deliveryAddress.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -275,17 +295,21 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                               value: viewModel.deliveryState,
                               onSelected: (value) {
                                 notifier.update(value.first, "deliveryState");
-                                regionNotifier.getLGAs(value.first.value, regionsData.countries.first.isoCode);
+                                regionNotifier.getLGAs(value.first.value,
+                                    regionsData.countries.first.isoCode);
                               },
                             ),
 
                             // Error
-                            if (formState.hasError && viewModel.deliveryState.isEmpty)
+                            if (formState.hasError &&
+                                viewModel.deliveryState.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                  style: TextStyle(
+                                      color: wayaTheme.colorScheme.error,
+                                      fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -313,11 +337,13 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                 hintText: 'Select LGA',
                                 items: regionsData.areaItems,
                                 value: viewModel.deliveryLga,
-                                onSelected: (value) => notifier.update(value.first, "deliveryLga"),
+                                onSelected: (value) =>
+                                    notifier.update(value.first, "deliveryLga"),
                               ),
 
                               // Error
-                              if (formState.hasError && viewModel.deliveryLga.isEmpty)
+                              if (formState.hasError &&
+                                  viewModel.deliveryLga.isEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
@@ -377,12 +403,15 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                     ),
 
                     // Error
-                    if (formState.hasError && viewModel.biddingStartTime.isEmpty)
+                    if (formState.hasError &&
+                        viewModel.biddingStartTime.isEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           formState.errorText!,
-                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                          style: TextStyle(
+                              color: wayaTheme.colorScheme.error,
+                              fontSize: 12.sp),
                         ),
                       ),
                   ],
@@ -412,17 +441,22 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                           controller: viewModel.bidDate,
                           hintText: 'Select Bid Date',
                           label: 'Start Date',
-                          hasError: formState.hasError && viewModel.bidDate.value == null,
-                          initialDate: DateTime.now().add(const Duration(days: 1)),
+                          hasError: formState.hasError &&
+                              viewModel.bidDate.value == null,
+                          initialDate:
+                              DateTime.now().add(const Duration(days: 1)),
                         ),
 
                         // Error
-                        if (formState.hasError && viewModel.bidDate.value == null)
+                        if (formState.hasError &&
+                            viewModel.bidDate.value == null)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -458,12 +492,15 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                           ),
 
                           //? This is fine.
-                          if (formState.hasError && viewModel.startTime.value == null)
+                          if (formState.hasError &&
+                              viewModel.startTime.value == null)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 formState.errorText!,
-                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -482,7 +519,8 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
 
                         //? If this is not a valid value.
                         if (viewModel.startTime.value != null &&
-                            viewModel.startTime.value!.isAfter(viewModel.endTime.value!)) {
+                            viewModel.startTime.value!
+                                .isAfter(viewModel.endTime.value!)) {
                           return 'End Time must be after Start Time';
                         }
 
@@ -506,7 +544,9 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                  style: TextStyle(
+                                      color: wayaTheme.colorScheme.error,
+                                      fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -541,7 +581,8 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
           text: 'Go Back',
           color: wayaTheme.colorScheme.transparent,
           textColor: wayaTheme.colorScheme.customBlack,
-          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+          border:
+              Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
           callback: () {
             widget.gotoPreviousTab();
           },

@@ -73,15 +73,16 @@ class _BottomViewState extends ConsumerState<BottomView> {
             ),
             title: Text(
               'Confirm Exit?',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontSize: 16.sp, color: Theme.of(context).colorScheme.customBlack),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: 16.sp,
+                  color: Theme.of(context).colorScheme.customBlack),
             ),
             content: Text(
               'Are you sure you want to exit?',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700),
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.greyColor700),
             ),
             actions: <Widget>[
               SizedBox(
@@ -120,21 +121,26 @@ class _BottomViewState extends ConsumerState<BottomView> {
     final List<Widget> pages = [
       Explore(),
       WayaShop(
-        currentIndex: data != null && data is Map<String, dynamic> ? data['current'] : 0,
+        currentIndex:
+            data != null && data is Map<String, dynamic> ? data['current'] : 0,
       ),
       Donations(),
-      ShopResource.hasSelectedShop ? WayaSellerQuotation() : WayaBuyerQuotation(),
+      ShopResource.hasSelectedShop
+          ? WayaSellerQuotation()
+          : WayaBuyerQuotation(),
       ConversationScreen(),
       MoreView(),
     ];
 
-    final List<BottomNavigationBarItem> bottomNavigationItem = viewModel.barItems.asMap().entries.map(
+    final List<BottomNavigationBarItem> bottomNavigationItem =
+        viewModel.barItems.asMap().entries.map(
       (entry) {
         final index = entry.key;
         final item = entry.value;
 
-        final itemColor =
-            _selectedIndex == index ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
+        final itemColor = _selectedIndex == index
+            ? wayaTheme.colorScheme.customPrimary
+            : wayaTheme.colorScheme.customBlack;
 
         //? If this is a chat.
         if (entry.value.isChat) {
@@ -169,7 +175,8 @@ class _BottomViewState extends ConsumerState<BottomView> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
                             child: Text(
-                              WayaValueHelper.formatNumber(chats.totalUnreadCount),
+                              WayaValueHelper.formatNumber(
+                                  chats.totalUnreadCount),
                               style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                 color: wayaTheme.colorScheme.white,
                                 fontSize: 12.sp,

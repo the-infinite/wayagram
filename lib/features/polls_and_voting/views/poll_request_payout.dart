@@ -17,7 +17,8 @@ class PollRequestPayout extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PollRequestPayoutState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PollRequestPayoutState();
 }
 
 class _PollRequestPayoutState extends ConsumerState<PollRequestPayout> {
@@ -34,7 +35,8 @@ class _PollRequestPayoutState extends ConsumerState<PollRequestPayout> {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-      onTapBackButton: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 0),
+      onTapBackButton: () =>
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 0),
       title: "Poll Request Payout",
       isLoading: viewModel.isLoading,
       isScrollable: true,
@@ -77,7 +79,10 @@ class _PollRequestPayoutState extends ConsumerState<PollRequestPayout> {
                       child: Center(
                         child: Text(
                           '${poll.status?.capitalizeFirst}',
-                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .wayaCopyWith(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: poll.status == 'pending'
@@ -131,7 +136,8 @@ class _PollRequestPayoutState extends ConsumerState<PollRequestPayout> {
                   ],
                 ),
                 const Gap(10),
-                Text("${poll.poll?.question?.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
+                Text("${poll.poll?.question?.capitalizeFirst}",
+                    style: wayaTheme.textTheme.titleLarge),
                 const Gap(3),
                 if (poll.poll?.description != null)
                   Text(

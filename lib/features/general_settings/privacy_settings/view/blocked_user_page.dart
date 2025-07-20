@@ -33,8 +33,8 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
 
     // ✅ Fetch data only when scrolling **downward** and near the bottom
     if (currentOffset > _previousScrollOffset &&
-        _scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
-      // debugPrint("fetching .....${_scrollController.position.pixels}");
+        _scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 100) {
       ref.read(conversationProvider.notifier).getBlockedUsers();
     }
     _previousScrollOffset = currentOffset;
@@ -83,7 +83,8 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (viewModelReal.isLoading == true) Center(child: CircularProgressIndicator()),
+            if (viewModelReal.isLoading == true)
+              Center(child: CircularProgressIndicator()),
             if (viewModelReal.blocked.isEmpty) emptyWidget(),
             Expanded(
               // height: context.height - 200,

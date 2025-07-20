@@ -48,7 +48,8 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
         handler: handler,
         shouldFetch: !state.isLoadingBids,
         isAtEnd: !state.hasNextBid,
-        onReachEnd: () async => await notifier.getBids(ShopResource.currentShop.id),
+        onReachEnd: () async =>
+            await notifier.getBids(ShopResource.currentShop.id),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

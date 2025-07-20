@@ -44,7 +44,9 @@ class SelectConversationWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: isSelected ? WayaColors.primary.withAlpha(30) : Colors.transparent,
+            color: isSelected
+                ? WayaColors.primary.withAlpha(30)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -55,7 +57,8 @@ class SelectConversationWidget extends StatelessWidget {
               ChatProfilePicture(
                 user: chat.other.userData ?? ConversationState.self,
                 lastSeen: chat.other.chatUser?.lastSeen,
-                showActive: chat.other.chatUser?.onlineStatus == ChatUserActivity.online,
+                showActive: chat.other.chatUser?.onlineStatus ==
+                    ChatUserActivity.online,
                 radius: 27,
               ),
 
@@ -70,10 +73,14 @@ class SelectConversationWidget extends StatelessWidget {
                   children: [
                     //* For the other person's name.
                     Text(
-                      chat.name ?? chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User",
+                      chat.name ??
+                          chat.other.userData?.fullname ??
+                          chat.other.chatUser?.displayName ??
+                          "WayaGram User",
                       maxLines: 1,
                       style: WayaTextStyles.titleMedium.copyWith(
-                        fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
+                        fontWeight:
+                            unread < 1 ? FontWeight.normal : FontWeight.w600,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -84,9 +91,12 @@ class SelectConversationWidget extends StatelessWidget {
                         "@${chat.other.profileData!.username!}",
                         maxLines: 1,
                         style: WayaTextStyles.titleMedium.copyWith(
-                          fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
+                          fontWeight:
+                              unread < 1 ? FontWeight.normal : FontWeight.w600,
                           overflow: TextOverflow.ellipsis,
-                          color: unread < 1 ? WayaColors.greyColor400 : WayaColors.greyColor500,
+                          color: unread < 1
+                              ? WayaColors.greyColor400
+                              : WayaColors.greyColor500,
                           fontSize: 14.sp,
                         ),
                       ),
@@ -115,7 +125,8 @@ class SelectConversationWidget extends StatelessWidget {
                   },
                 ),
                 side: BorderSide(
-                  color: isSelected ? WayaColors.greyColor300 : WayaColors.primary,
+                  color:
+                      isSelected ? WayaColors.greyColor300 : WayaColors.primary,
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100000),
@@ -177,7 +188,9 @@ class SelectUserWidget extends StatelessWidget {
 
                 //? This is fine.
                 final size = value.length;
-                controller.value = max != null ? value.sublist((size - max!).abs(), size) : value;
+                controller.value = max != null
+                    ? value.sublist((size - max!).abs(), size)
+                    : value;
                 onSelect(data.$1, isSelected);
               },
               splashColor: WayaColors.primary.withAlpha(30),
@@ -186,7 +199,9 @@ class SelectUserWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: isSelected ? WayaColors.primary.withAlpha(30) : Colors.transparent,
+                  color: isSelected
+                      ? WayaColors.primary.withAlpha(30)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -256,7 +271,9 @@ class SelectUserWidget extends StatelessWidget {
                         },
                       ),
                       side: BorderSide(
-                        color: isSelected ? WayaColors.greyColor300 : WayaColors.primary,
+                        color: isSelected
+                            ? WayaColors.greyColor300
+                            : WayaColors.primary,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100000),
@@ -319,7 +336,9 @@ class UserActionWidget extends StatelessWidget {
                 child: Text(
                   actionText,
                   style: WayaTextStyles.bodyBold.copyWith(
-                    color: actionAvailable ? WayaColors.primary : WayaColors.greyColor500,
+                    color: actionAvailable
+                        ? WayaColors.primary
+                        : WayaColors.greyColor500,
                     fontSize: 14.sp,
                   ),
                 ),
@@ -369,7 +388,8 @@ class ChatAndSocialUserWidget extends StatelessWidget {
               //* For the messages part.
               Expanded(
                 child: InkWell(
-                  onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(id)),
+                  onTap: () =>
+                      WayaNav.toNamed(WayaAppRoutes.getProfileRoute(id)),
                   splashColor: WayaColors.primary.withAlpha(30),
                   focusColor: WayaColors.primary.withAlpha(30),
                   highlightColor: WayaColors.primary.withAlpha(30),
@@ -380,7 +400,9 @@ class ChatAndSocialUserWidget extends StatelessWidget {
                     children: [
                       //* For the other person's name.
                       Text(
-                        useYou && id == ConversationState.self.id ? "You " : data.$1.fullname,
+                        useYou && id == ConversationState.self.id
+                            ? "You "
+                            : data.$1.fullname,
                         maxLines: 1,
                         style: WayaTextStyles.titleMedium.copyWith(
                           fontWeight: FontWeight.w600,

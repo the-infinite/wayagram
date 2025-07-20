@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -21,7 +20,8 @@ class WayaFileRepository extends BaseRepository {
   }
 
   /// A helper function used when downloading a file over the network.
-  Stream<(double, int)> downloadFile(String url, File output, void Function(bool) onComplete) {
+  Stream<(double, int)> downloadFile(
+      String url, File output, void Function(bool) onComplete) {
     //? First, we are not downloading this at the moment.
     late final StreamController<(double, int)> controller;
 
@@ -66,7 +66,8 @@ class WayaFileRepository extends BaseRepository {
       final response = await _getSignedUrl(file, name);
       final filename = file.uri.pathSegments.last;
       final extensionIndex = filename.lastIndexOf(".");
-      final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+      final extension =
+          extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
       final fileType = WayaFileExtensions.getMimeType(extension);
 
       //? Then send this over.
@@ -94,9 +95,6 @@ class WayaFileRepository extends BaseRepository {
         return outputPath;
       }
     } catch (_) {}
-
-    //? Then fail.
-    debugPrint("SendMessageDTO/ Failed to upload file.");
 
     //? Return null.
     return null;

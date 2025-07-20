@@ -19,7 +19,8 @@ class ConfirmGroupDetails extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ConfirmGroupDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ConfirmGroupDetailsState();
 }
 
 class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
@@ -49,20 +50,20 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
             notifier: createController,
             callback: () async {
               final createdGroup = await myGroupNotifier.createGroup(
-                viewModel.groupName.text,
-                viewModel.groupDescription.text,
-                args['type'] == 'Public Group' ? false : true,
-                (args['image'] as File).path,
-                (args['coverImage'] as File).path,
-                viewModel.category,
-                  args['type'] == 'Public Group' ? false : true
-              );
+                  viewModel.groupName.text,
+                  viewModel.groupDescription.text,
+                  args['type'] == 'Public Group' ? false : true,
+                  (args['image'] as File).path,
+                  (args['coverImage'] as File).path,
+                  viewModel.category,
+                  args['type'] == 'Public Group' ? false : true);
               notifier.reset();
               WayaNav.goBack();
               await Future.delayed(const Duration(milliseconds: 350));
               WayaNav.goBack();
               await Future.delayed(const Duration(milliseconds: 350));
-              WayaNav.replaceNamed("/successGroup", arguments: {'type': args['type'], 'id': createdGroup?.id});
+              WayaNav.replaceNamed("/successGroup",
+                  arguments: {'type': args['type'], 'id': createdGroup?.id});
             },
             height: null,
             verticalPadding: 6.h,
@@ -119,7 +120,8 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
           const Gap(50),
           details('Group Name', viewModel.groupName.text.capitalizeFirst),
           Gap(20),
-          details('Group Description', viewModel.groupDescription.text.capitalizeFirst),
+          details('Group Description',
+              viewModel.groupDescription.text.capitalizeFirst),
           Gap(20),
           //details('Group Type', '$type')
           details('Group Type', args['type'])

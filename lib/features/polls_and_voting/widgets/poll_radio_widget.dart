@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-
 
 class AppRadioGroup<T> extends StatelessWidget {
   final ValueNotifier<T?> controller;
@@ -53,7 +51,7 @@ class AppRadioGroup<T> extends StatelessWidget {
         spacing: spacing ?? 0,
         children: List.generate(
           optionData.length,
-              (index) => InkWell(
+          (index) => InkWell(
             onTap: () => _select(index),
             borderRadius: BorderRadius.circular(borderRadius ?? 10.r),
             child: Container(
@@ -62,14 +60,16 @@ class AppRadioGroup<T> extends StatelessWidget {
                 borderRadius: BorderRadius.circular(borderRadius ?? 10.r),
                 border: showBorder
                     ? Border.all(
-                  color: optionData.elementAt(index) == groupValue
-                      ? activeColor ?? wayaTheme.colorScheme.customPrimary
-                      : inactiveColor ?? wayaTheme.colorScheme.greyColor200,
-                  width: 1.5,
-                )
+                        color: optionData.elementAt(index) == groupValue
+                            ? activeColor ?? wayaTheme.colorScheme.customPrimary
+                            : inactiveColor ??
+                                wayaTheme.colorScheme.greyColor200,
+                        width: 1.5,
+                      )
                     : null,
                 color: optionData.elementAt(index) == groupValue
-                    ? activeBackgroundColor ?? wayaTheme.colorScheme.customPrimary
+                    ? activeBackgroundColor ??
+                        wayaTheme.colorScheme.customPrimary
                     : inactiveBackgroundColor,
               ),
               child: Row(
@@ -78,7 +78,9 @@ class AppRadioGroup<T> extends StatelessWidget {
                 spacing: spacing ?? 0,
                 children: [
                   //? First, the option indicator.
-                  Expanded(child: optionBuilder(context, optionData.elementAt(index))),
+                  Expanded(
+                      child:
+                          optionBuilder(context, optionData.elementAt(index))),
 
                   //? Second, the radio button.
                   Radio(
@@ -86,25 +88,29 @@ class AppRadioGroup<T> extends StatelessWidget {
                     onChanged: (_) => _select(index),
                     groupValue: groupValue,
                     overlayColor: WidgetStateColor.resolveWith(
-                          (states) {
+                      (states) {
                         //? If this is selected...
                         if (states.contains(WidgetState.selected)) {
-                          return activeBackgroundColor ?? wayaTheme.colorScheme.customPrimary;
+                          return activeBackgroundColor ??
+                              wayaTheme.colorScheme.customPrimary;
                         }
 
                         // Since it is not.
-                        return inactiveBackgroundColor ??  wayaTheme.colorScheme.greyColor200;
+                        return inactiveBackgroundColor ??
+                            wayaTheme.colorScheme.greyColor200;
                       },
                     ),
                     fillColor: WidgetStateColor.resolveWith(
-                          (states) {
+                      (states) {
                         //? If this is selected...
                         if (states.contains(WidgetState.selected)) {
-                          return activeColor ?? wayaTheme.colorScheme.customPrimary;
+                          return activeColor ??
+                              wayaTheme.colorScheme.customPrimary;
                         }
 
                         // Since it is not.
-                        return inactiveColor ?? wayaTheme.colorScheme.greyColor200;
+                        return inactiveColor ??
+                            wayaTheme.colorScheme.greyColor200;
                       },
                     ),
                   ),

@@ -49,7 +49,6 @@ class _ChooseShopModalState extends State<ChooseShopModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    debugPrint(shops.toString());
 
     //? Construct the widget.
     return Padding(

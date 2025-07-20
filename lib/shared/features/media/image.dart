@@ -35,7 +35,8 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
   @override
   Widget build(BuildContext context) {
     //? The both parameters cannot be null.
-    assert(widget.imageUrl != null || widget.file != null, "This must contain either a file or a network URL");
+    assert(widget.imageUrl != null || widget.file != null,
+        "This must contain either a file or a network URL");
     //assert(widget.imageUrl == null || widget.file == null, "The two properties cannot have non-null values");
 
     // Then get the theme.
@@ -61,7 +62,10 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
                   onTap: () async {
                     bool hasSaved = await WayaFileHelper.saveNetworkImage(
                       widget.imageUrl?.elementAt(pageController.page!.ceil()) ??
-                          widget.file!.elementAt(pageController.page!.ceil()).uri.toString(),
+                          widget.file!
+                              .elementAt(pageController.page!.ceil())
+                              .uri
+                              .toString(),
                     );
 
                     if (hasSaved) {

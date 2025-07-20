@@ -18,12 +18,18 @@ class ForgotPasswordStep extends ConsumerStatefulWidget {
 class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-   String email = '';
+  String email = '';
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void _goToNextTab() {
@@ -35,8 +41,8 @@ class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep>
   void getEmail({String? emailAddress}) {
     if (emailAddress != null) {
       setState(() {
-      email = emailAddress;
-    });
+        email = emailAddress;
+      });
     }
     _goToNextTab();
   }
@@ -48,7 +54,8 @@ class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep>
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
           CredentialInput(goToNextTab: getEmail),
-          VerifyAccount(goToNextTab: getEmail, type: "forgot-password", email: email),
+          VerifyAccount(
+              goToNextTab: getEmail, type: "forgot-password", email: email),
           CreateNewPassword(email: email),
         ],
         tabController: _tabController);

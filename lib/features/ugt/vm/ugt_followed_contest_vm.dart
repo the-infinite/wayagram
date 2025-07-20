@@ -41,7 +41,6 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-    debugPrint("Contest followed post");
     state = state.map((post) {
       if (post.id == postId) {
         if (!post.hasLiked!) {

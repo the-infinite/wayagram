@@ -100,7 +100,6 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
         state = state.copyWith(listShop: getContestsSelect(list));
       }
     } catch (e) {
-      debugPrint(e.toString());
     } finally {}
   }
 
@@ -142,7 +141,6 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       "contestId": shopId,
       "roles": [roleId]
     };
-    debugPrint(map.toString());
     WayaRequestResponse response;
     if (isEditing) {
       if (module == "Contest") {
@@ -212,7 +210,6 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       }
     } catch (e) {
       state = state.copyWith(isLoading: false);
-      debugPrint(e.toString());
     } finally {}
   }
 
@@ -251,7 +248,6 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       }
     } catch (e) {
       state = state.copyWith(isLoading: false);
-      debugPrint(e.toString());
     } finally {}
   }
 

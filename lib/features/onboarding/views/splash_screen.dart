@@ -11,7 +11,6 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
@@ -41,4 +40,3 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     );
   }
 }
-

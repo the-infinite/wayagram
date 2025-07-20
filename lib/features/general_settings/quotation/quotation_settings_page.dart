@@ -33,12 +33,14 @@ class _UgtHomeState extends ConsumerState<QuotationSettingsPage> {
 
 //? get user settings to update the UI Once
     useEffect(() {
-       shopNotifier.getShopSettings().then((value) {
+      shopNotifier.getShopSettings().then((value) {
         if (value != null) {
-          receiveQuotationRequest.value = value.data?.receiveQuotationRequests ?? false;
-          makeMyQuotationPrivate.value = value.data?.makeRequestsPublic ?? false;
-          showQuotationRequest.value = value.data?.displayQuotationRequestsInFeed ?? false;
-         
+          receiveQuotationRequest.value =
+              value.data?.receiveQuotationRequests ?? false;
+          makeMyQuotationPrivate.value =
+              value.data?.makeRequestsPublic ?? false;
+          showQuotationRequest.value =
+              value.data?.displayQuotationRequestsInFeed ?? false;
         }
       });
       return null;

@@ -101,7 +101,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
           final state = ref.watch(provider);
           final config = ChatSettingsNotifier.instance;
           final backgroundColor = config.isDarkMode ? Color(0xFF121212) : null;
-          final grayTextColor = config.isDarkMode ? WayaColors.greyColor300 : WayaColors.greyColor500;
+          final grayTextColor = config.isDarkMode
+              ? WayaColors.greyColor300
+              : WayaColors.greyColor500;
 
           //? If this is after the state of this has been reset.
           if (state.chat == null) return const SizedBox();
@@ -147,8 +149,11 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                     children: [
                       //* The back button, first.
                       WayaBackButton(
-                        buttonBackgroundColor: config.isDarkMode ? WayaColors.darkGrey : WayaColors.greyColor200,
-                        arrowColor: config.isDarkMode ? Colors.white : WayaColors.black,
+                        buttonBackgroundColor: config.isDarkMode
+                            ? WayaColors.darkGrey
+                            : WayaColors.greyColor200,
+                        arrowColor:
+                            config.isDarkMode ? Colors.white : WayaColors.black,
                       ),
 
                       // Some space.
@@ -159,20 +164,26 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                         child: InkWell(
                           splashColor: theme.colorScheme.primary.withAlpha(30),
                           focusColor: theme.colorScheme.primary.withAlpha(30),
-                          highlightColor: theme.colorScheme.primary.withAlpha(30),
+                          highlightColor:
+                              theme.colorScheme.primary.withAlpha(30),
                           customBorder: StadiumBorder(),
                           splashFactory: NoSplash.splashFactory,
-                          onTap: () => WayaNav.toNamed(WayaAppRoutes.getChatProfile(chat.id)),
+                          onTap: () => WayaNav.toNamed(
+                              WayaAppRoutes.getChatProfile(chat.id)),
                           child: ValueListenableBuilder(
                             valueListenable: wayaChatsCache,
                             builder: (context, redraws, _) {
                               // Ensure we area always using the most up to date version of this chat.
-                              final chat = wayaChatsCache.getCachedData(widget.chatId) ?? state.chat!;
+                              final chat =
+                                  wayaChatsCache.getCachedData(widget.chatId) ??
+                                      state.chat!;
                               final chatUser = chat.other.chatUser;
-                              final userStatus = (chatUser?.canSeeOnlineStatus ?? true)
-                                  ? chatUser?.onlineStatus
-                                  : ChatUserActivity.offline;
-                              final lastSeenText = chatUser?.lastSeen != null && (chatUser?.canSeeLastSeen ?? true)
+                              final userStatus =
+                                  (chatUser?.canSeeOnlineStatus ?? true)
+                                      ? chatUser?.onlineStatus
+                                      : ChatUserActivity.offline;
+                              final lastSeenText = chatUser?.lastSeen != null &&
+                                      (chatUser?.canSeeLastSeen ?? true)
                                   ? "Last seen ${WayaDateHelper.getSocialTimestamp(chat.other.chatUser!.lastSeen).toLowerCase()}"
                                   : null;
 
@@ -184,9 +195,11 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                 children: [
                                   // First, the user's profile picture.
                                   ChatProfilePicture(
-                                    user: chat.other.userData ?? ConversationState.self,
-                                    showActive:
-                                        chat.chatType != ChatType.group && userStatus == ChatUserActivity.online,
+                                    user: chat.other.userData ??
+                                        ConversationState.self,
+                                    showActive: chat.chatType !=
+                                            ChatType.group &&
+                                        userStatus == ChatUserActivity.online,
                                     lastSeen: chat.other.chatUser?.lastSeen,
                                     chat: chat,
                                     radius: 16,
@@ -197,19 +210,25 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                     child: Padding(
                                       padding: const EdgeInsets.only(right: 10),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           //* For the other person's name.
                                           Text(
                                             chat.name ??
                                                 chat.other.userData?.fullname ??
-                                                chat.other.chatUser?.displayName ??
+                                                chat.other.chatUser
+                                                    ?.displayName ??
                                                 "WayaGram User",
                                             maxLines: 1,
-                                            style: WayaTextStyles.titleMedium.copyWith(
+                                            style: WayaTextStyles.titleMedium
+                                                .copyWith(
                                               fontSize: 15.sp,
-                                              color: config.isDarkMode ? Colors.white : null,
+                                              color: config.isDarkMode
+                                                  ? Colors.white
+                                                  : null,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
@@ -219,18 +238,21 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                             Text(
                                               "${WayaValueHelper.formatNumber(chat.chatMembers.length)} members",
                                               maxLines: 1,
-                                              style: WayaTextStyles.titleMedium.copyWith(
+                                              style: WayaTextStyles.titleMedium
+                                                  .copyWith(
                                                 fontWeight: FontWeight.normal,
                                                 overflow: TextOverflow.ellipsis,
                                                 color: grayTextColor,
                                                 fontSize: 13.sp,
                                               ),
                                             )
-                                          else if (userStatus == ChatUserActivity.online)
+                                          else if (userStatus ==
+                                              ChatUserActivity.online)
                                             Text(
                                               "Online",
                                               maxLines: 1,
-                                              style: WayaTextStyles.titleMedium.copyWith(
+                                              style: WayaTextStyles.titleMedium
+                                                  .copyWith(
                                                 fontWeight: FontWeight.normal,
                                                 overflow: TextOverflow.ellipsis,
                                                 color: grayTextColor,
@@ -241,7 +263,8 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                             Text(
                                               lastSeenText,
                                               maxLines: 1,
-                                              style: WayaTextStyles.titleMedium.copyWith(
+                                              style: WayaTextStyles.titleMedium
+                                                  .copyWith(
                                                 fontWeight: FontWeight.normal,
                                                 overflow: TextOverflow.ellipsis,
                                                 color: grayTextColor,
@@ -266,11 +289,15 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                           child: WayaButton(
                             callback: _startVideoCall,
                             height: null,
-                            color: config.isDarkMode ? WayaColors.darkGrey : WayaColors.greyColor200,
+                            color: config.isDarkMode
+                                ? WayaColors.darkGrey
+                                : WayaColors.greyColor200,
                             horizontalPadding: 8,
                             verticalPadding: 8,
                             centerWidget: WayaAssets.icons.cCallVideo.svg(
-                              color: config.isDarkMode ? Colors.white : WayaColors.black,
+                              color: config.isDarkMode
+                                  ? Colors.white
+                                  : WayaColors.black,
                               height: 15,
                               width: 15,
                             ),
@@ -285,11 +312,15 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                           child: WayaButton(
                             callback: _startAudioCall,
                             height: null,
-                            color: config.isDarkMode ? WayaColors.darkGrey : WayaColors.greyColor200,
+                            color: config.isDarkMode
+                                ? WayaColors.darkGrey
+                                : WayaColors.greyColor200,
                             horizontalPadding: 8,
                             verticalPadding: 8,
                             centerWidget: WayaAssets.icons.cCallVoice.svg(
-                              color: config.isDarkMode ? Colors.white : WayaColors.black,
+                              color: config.isDarkMode
+                                  ? Colors.white
+                                  : WayaColors.black,
                               height: 15,
                               width: 15,
                             ),
@@ -332,7 +363,8 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                               Text(
                                 "Send the first message",
                                 style: WayaTextStyles.titleLarge.copyWith(
-                                  color: config.isDarkMode ? Colors.white : null,
+                                  color:
+                                      config.isDarkMode ? Colors.white : null,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 24.sp,
                                 ),
@@ -343,7 +375,8 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
 
                               //* Some text
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 40),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 40),
                                 child: Text(
                                   chat.chatType == ChatType.group
                                       ? "Start the conversation in ${chat.name ?? "Group Chat"} with your friends!"
@@ -368,14 +401,17 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                             shouldFetch: !state.isLoading,
                             direction: Axis.vertical,
                             onScroll: (controller) => focusNode.unfocus(),
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
                             physics: const AlwaysScrollableScrollPhysics(),
                             reverse: true,
                             getPage: (page) async => notifier.getMessages(),
                             builder: (context, index) => ChatBubbleWidget(
                               index: index,
                               inputFocus: focusNode,
-                              previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+                              previousDate: index == 0
+                                  ? DateTime(1970)
+                                  : state.messages[index - 1].createdAt,
                               data: state.messages[index],
                               chat: chat,
                               controller: inputController,

@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/order/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
+
 class WayaBuyer extends ConsumerStatefulWidget {
   const WayaBuyer({super.key});
 
@@ -16,14 +17,8 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
     with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
-
- 
-
   @override
   Widget build(BuildContext context) {
-    
- 
-
     return WayaScaffold(
         isLoading: false,
         isScrollable: true,
@@ -34,7 +29,7 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-              Row(
+            Row(
               children: [
                 WayaTabButton(
                   isSelected: _selectedIndex == 0,
@@ -48,13 +43,11 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
                 ),
               ],
             ),
-          
+
             const Gap(25),
-            // AllProducts() 
+            // AllProducts()
             _selectedIndex == 0 ? AllProducts() : AllOrders()
           ],
         ));
   }
 }
-
-

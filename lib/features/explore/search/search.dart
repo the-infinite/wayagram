@@ -55,6 +55,22 @@ class _SearchState extends ConsumerState<SearchView> {
   // Tracks selected services
   Set<String> selectedServices = {};
 
+  void _onSearchChanged() {
+    final value = searchController.text.trim();
+
+    //? Leave when this has no content.
+    if (value.isEmpty) return;
+
+    //? Now, try to update it.
+    debounce(
+      key: "search-discovery",
+      delay: const Duration(milliseconds: 750),
+      () {
+        setState(() {}); // Rebuild when search text changes
+      },
+    )();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -76,25 +92,12 @@ class _SearchState extends ConsumerState<SearchView> {
     searchController = TextEditingController();
 
     //? How we get all users from storage.
-    searchController.addListener(() {
-      final value = searchController.text.trim();
-
-      //? Leave when this has no content.
-      if (value.isEmpty) return;
-
-      //? Now, try to update it.
-      debounce(
-        key: "search-discovery",
-        delay: const Duration(milliseconds: 750),
-        () {
-          setState(() {}); // Rebuild when search text changes
-        },
-      )();
-    });
+    searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }

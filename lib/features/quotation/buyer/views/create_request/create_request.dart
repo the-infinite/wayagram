@@ -16,13 +16,20 @@ class CreateRequest extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateRequestState();
 }
 
-class _CreateRequestState extends ConsumerState<CreateRequest> with SingleTickerProviderStateMixin {
+class _CreateRequestState extends ConsumerState<CreateRequest>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void _goToNextTab() {

@@ -21,10 +21,6 @@ class UgtDetailsContestants extends ConsumerStatefulWidget {
 class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
   final ScrollController _scrollController = ScrollController();
   final searchController = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +90,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
   @override
   void dispose() {
     _scrollController.dispose();
+    searchController.dispose();
     super.dispose();
   }
 }
