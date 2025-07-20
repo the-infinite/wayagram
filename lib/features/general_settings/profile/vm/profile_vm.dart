@@ -209,7 +209,6 @@ class ProfileVm extends StateNotifier<ProfileState> {
         await googleSignIn.signOut();
       }
     } catch (error) {
-      print('Error signing out: $error');
     }
   }
 

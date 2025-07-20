@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -99,16 +98,14 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
               WayaButton(
                 height: 30,
                 callback: () {
-WayaNav.toNamed(PayoutHistory.route, arguments: {
-                      "referenceId": widget.id,
-                      "Module": 'CONTEST'
-                    });
-              }
-              ,
-              text: 'Request Payout',
-              textStyle: wayaTheme.textTheme.descriptionStyle,
+                  WayaNav.toNamed(PayoutHistory.route, arguments: {
+                    "referenceId": widget.id,
+                    "Module": 'CONTEST'
+                  });
+                },
+                text: 'Request Payout',
+                textStyle: wayaTheme.textTheme.descriptionStyle,
               )
-             
             ],
           ),
           Gap(10.h),

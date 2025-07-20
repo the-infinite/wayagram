@@ -38,7 +38,7 @@ class UgtEmptyState extends StatelessWidget {
     try {
       type = ConversationState.self.accountType ?? UserAccountType.personal;
     } catch (e) {
-      // print(e);
+      debugPrint(e.toString());
     }
     return SizedBox(
       width: context.width,

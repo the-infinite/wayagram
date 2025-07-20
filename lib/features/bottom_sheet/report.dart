@@ -163,10 +163,7 @@ class _ReportEventState extends ConsumerState<Report> {
                             isLoading = false;
                           });
 
-
                           return WayaNav.goBack(result: resp);
-
-                         
                         },
                         centerWidget: LoadingState(
                             loading: isLoading, text: "Submit Report")),

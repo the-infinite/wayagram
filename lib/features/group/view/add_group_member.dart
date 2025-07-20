@@ -36,7 +36,6 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
 
   @override
   Widget build(BuildContext context) {
-    print('GROUPID ==>>> ${widget.id}');
     final viewModel = ref.watch(groupProvider);
 
     final wayaTheme = Theme.of(context);

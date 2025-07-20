@@ -51,14 +51,11 @@ class CandidatePostScreen extends StatelessWidget {
                     value: "download",
                     onTap: () async {
                       bool hasSaved = false;
-                      print(data["type"]);
                       if (data["type"] == MyFullMediaType.image) {
                         hasSaved = await WayaFileHelper.saveNetworkImage(
                             data["url"] ?? "");
                       } else {
-                        print(data["type"]);
-                        print("dcjdj ${data["url"] ?? ""}");
-                        hasSaved = await WayaFileHelper.saveNetworkVideo(
+                          hasSaved = await WayaFileHelper.saveNetworkVideo(
                             data["url"] ?? "");
                       }
 

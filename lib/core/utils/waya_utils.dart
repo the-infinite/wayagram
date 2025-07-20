@@ -280,7 +280,6 @@ class WayaUtils {
       final map = item.toMap();
 
       final hasMatchInIndividualFields = accessorKeys.any((key) {
-          print("accessorKeys $accessorKeys ");
         final value = map[key];
       
         return _checkValueMatch(value, lowerSearchTerm);
@@ -316,12 +315,10 @@ class WayaUtils {
     if (value == null) return false;
 
     if (value is String) {
-      print("wefwefwefew yes string ");
       return value.toLowerCase().contains(lowerSearchTerm);
     }
 
     if (value is List) {
-      print("wefwefwefew yes ");
       return value.any((element) {
         if (element is String) {
           return element.toLowerCase().contains(lowerSearchTerm);

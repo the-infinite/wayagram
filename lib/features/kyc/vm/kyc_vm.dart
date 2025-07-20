@@ -49,7 +49,6 @@ class KycVm extends StateNotifier<KycState> {
       if (businessProfile.success) {
         businessData =
             BusinessAccountData.fromJson(businessProfile.data['data']);
-        print("fefefef ${businessData.toJson()}");
         await _secureDataSource.saveBusinessId(businessData.id);
       } else {
         state = state.copyWith(notBusiness: true);

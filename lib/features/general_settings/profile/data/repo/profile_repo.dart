@@ -34,7 +34,6 @@ class ProfileRepo extends BaseRepository {
     if (email != null) payload['newEmail'] = email;
     if (phone != null) payload['newPhoneNumber'] = phone;
 
-    print(payload);
 
     return patch('$serviceUrl/client/users/$userId/email-or-phone/update', payload, showErrors: true);
   }

@@ -72,7 +72,6 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
         }
         //
         for (var modelNew in responseModel.data!.docs!) {
-          // print('Hello name one ${model.profileId}');
           var data = await UserResource.getUserDetails(modelNew.userId ?? "");
           var userModel = data?.$2;
           //var userModel1 = data?.$1;

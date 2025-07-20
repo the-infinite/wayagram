@@ -305,10 +305,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 callback: () {
                   ref.read(selectedContestProvider.notifier).state =
                       widget.post;
-                  print(isTodayInRange(widget.post.participationStartDate ?? "",
-                      widget.post.participationStartDate ?? ""));
                   if (widget.isFromHost) {
-                    print("i am here nw");
                     WayaNav.toNamed("/contest-details-page",
                         arguments: {"canViewDashboard": true});
                     return;
@@ -319,9 +316,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     });
                     return;
                   }
-                  print("i am here 1111");
-                  print("i am here ${widget.post.profileId}");
-                  print("i am here ${voteNotifier.getLoggedInUserId()}");
                   if (widget.post.profileId ==
                       voteNotifier.getLoggedInUserId()) {
                     WayaNav.toNamed('/contest-details-page');
@@ -330,7 +324,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
 
                   if (isTodayInRange(widget.post.participationStartDate ?? "",
                       widget.post.participationEndDate ?? "")) {
-                    print("i am here");
                     ref.read(registerFormProvider.notifier).addDefault(
                         widget.post.contestSettings?.formRequirements ?? [],
                         widget.post);
@@ -350,7 +343,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       return;
                     }
  */
-                    print("i am here 2222");
                     ref.read(selectedContestProvider.notifier).state =
                         widget.post;
                     WayaNav.toNamed('/contest-details-page');
@@ -507,9 +499,6 @@ bool isTodayInRange(String startDateStr, String endDateStr) {
   // Optional: Normalize start and end to remove time (if needed)
   startDate = DateTime(startDate.year, startDate.month, startDate.day);
   endDate = DateTime(endDate.year, endDate.month, endDate.day);
-  print("kk my $today");
-  print("kk my $startDate");
-  print("kk my $endDate");
 
   // Check if today is within range [start, end]
   return today.isAtSameMomentAs(startDate) ||

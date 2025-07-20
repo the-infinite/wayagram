@@ -53,7 +53,6 @@ class ReferralVm extends StateNotifier<ReferralState> {
       }
       return false;
     }).toList();
-   // print("object $list");
     state = state.copyWith(referralList: [...list]);
   }
 

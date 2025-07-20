@@ -54,7 +54,6 @@ class _AllJoinedEventsState extends ConsumerState<AllJoinedEvents> {
             message: "You are yet to register for an event"),
         fetchData: ref.read(eventVmProvider.notifier).getJoinedEvents,
         result: (data, s) {
-          print("wefewfwefwefwe $data");
           final filteredEvents = WayaUtils.search<EventDoc>(
             data,
             ['title', 'organizerName', 'eventType', 'location'],
@@ -88,5 +87,3 @@ class _AllJoinedEventsState extends ConsumerState<AllJoinedEvents> {
     );
   }
 }
-
-

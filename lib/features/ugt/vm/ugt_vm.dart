@@ -318,7 +318,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     String expectationFromVoters,
     String contestID,
   ) async {
-    print("Here heeee");
     isLoading.value = true;
     String mimeTypeImage = WayaHelpers.getContentTypeFromPath(imagePath) ?? "";
     final imageUrl = await WayaFileRepository.instance.uploadFile(
@@ -339,9 +338,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       "introVideo": videoUrl,
       "profilePhoto": imageUrl
     };
-    print("Here");
-    print(map.toString());
-    print("here2");
     final response = await _contestRepository.createProfile(map);
     isLoading.value = false;
     if (response.success) {
@@ -423,9 +419,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       ref
           .read(votersContestNotifier.notifier)
           .fetchAllContestApplicant(model.contestId ?? "");
-     // WayaNav.removeUntilNamed(AdminContestDetails.route);
-        WayaNav.removeAllUntil(AdminContestDetails(id: ""),
-                              AdminContestDetails.route);
+      // WayaNav.removeUntilNamed(AdminContestDetails.route);
+      WayaNav.removeAllUntil(
+          AdminContestDetails(id: ""), AdminContestDetails.route);
     } else {
       WayaSnackBar.showToast(response.data["message"]);
     }

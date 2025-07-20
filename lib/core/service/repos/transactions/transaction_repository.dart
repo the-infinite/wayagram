@@ -36,9 +36,9 @@ class TransactionRepository extends BaseRepository {
         mimeType: MimeType.pdf,
       );
 
-      print("resposeeee $value");
+      // File saved successfully
     } catch (e) {
-      print("error $e");
+      // Handle error silently
     }
   }
 }

@@ -85,7 +85,6 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
                             } else if (e.text == "Contest") {
                               rollAccessNotifier.setTypeRole(TypeRole.contest);
                               rollAccessNotifier.getAllContestMembers(true);
-                              print("I am fetching for Contest");
                             }
                             selectPresentTap(e);
                           },

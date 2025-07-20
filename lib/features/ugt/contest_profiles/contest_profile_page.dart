@@ -70,7 +70,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     var model = ref.watch(selectedContestantProfile);
 
     final String contestId = Get.parameters['contest'] ?? args['contest'] ?? "";
-    print(" hope contestId: $contestId   id: $id");
     var viewModel = ref.watch(votersContestNotifier.notifier);
     var notifier = ref.watch(postProvider.notifier);
     final imagePath = useState("");
@@ -168,7 +167,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         children: [
           GestureDetector(
               onTap: () async {
-                //  print(model?.id ?? id);
                 await Share.share(
                   WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getContestantProfileRoute(

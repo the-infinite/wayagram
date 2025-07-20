@@ -250,7 +250,6 @@ class _AppTextFieldState extends State<AppTextField> {
       controller: widget.controller,
       obscureText:
           widget.textFieldType == TextFieldType.PASSWORD && !isPasswordVisible,
-     
       textInputAction: applyTextInputAction(),
       onFieldSubmitted: (s) {
         if (widget.nextFocus != null) {
@@ -266,10 +265,8 @@ class _AppTextFieldState extends State<AppTextField> {
             ))
           : InputDecoration(counterText: ""),
       focusNode: widget.focus,
-      style: widget.textStyle ,
+      style: widget.textStyle,
       textAlign: widget.textAlign,
-      
-     
       autofocus: widget.autoFocus,
       enabled: widget.enabled,
       onChanged: widget.onChanged,
@@ -277,12 +274,9 @@ class _AppTextFieldState extends State<AppTextField> {
           Theme.of(context).textSelectionTheme.cursorColor,
       readOnly: widget.readOnly,
       maxLength: widget.maxLength,
-     
       autofillHints: widget.autoFillHints ?? applyAutofillHints(),
       scrollPadding: widget.scrollPadding ?? EdgeInsets.all(20),
-     
       cursorHeight: widget.cursorHeight,
-     
       onTap: widget.onTap,
       buildCounter: widget.buildCounter,
       scrollPhysics: BouncingScrollPhysics(),
@@ -303,8 +297,6 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
- 
-
     return textFormFieldWidget();
   }
 }

@@ -34,13 +34,10 @@ class _TwoFactorAuthState extends ConsumerState<TwoFactorAuth> {
       final arg = ModalRoute.of(context)!.settings.arguments;
 
       if (arg != null) {
-        print("aadadw $arg");
         if (arg == "resend") {
           notifier.updateResend(true);
-
         } else {
           notifier.updateFromLoginState(true);
-        
         }
       }
       startCountdown();

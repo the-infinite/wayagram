@@ -18,7 +18,11 @@ class PayoutModal extends ConsumerStatefulWidget {
   final String name;
   final String bankName;
   final String bankCode;
-  const PayoutModal({super.key, required this.name, required this.bankName, required this.bankCode});
+  const PayoutModal(
+      {super.key,
+      required this.name,
+      required this.bankName,
+      required this.bankCode});
 
   @override
   ConsumerState<PayoutModal> createState() => _PayoutModalState();
@@ -37,9 +41,8 @@ class _PayoutModalState extends ConsumerState<PayoutModal> {
           children: [
             Text(
               'Are you sure?',
-              style: Theme.of(context).textTheme
-                  .bodyMedium!
-                  .wayaCopyWith(fontSize: 24.sp,
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -50,14 +53,13 @@ class _PayoutModalState extends ConsumerState<PayoutModal> {
                 text: 'Are you sure you want to add ',
                 style: wayaTheme.textTheme.hintStyle,
                 children: <TextSpan>[
-                   TextSpan(
-                      text: widget.name,
-                      style: Theme.of(context).textTheme
-                          .bodyMedium!
-                          .wayaCopyWith(fontSize: 16.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Theme.of(context).colorScheme.greyColor500),),
-
+                  TextSpan(
+                    text: widget.name,
+                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.greyColor500),
+                  ),
                 ],
               ),
             ),
@@ -67,22 +69,22 @@ class _PayoutModalState extends ConsumerState<PayoutModal> {
             //   textAlign: TextAlign.center,
             // ),
             //SizedBox(height: 5.h),
-            Text('to your Payout Method list and be able to send payouts to this account?',
+            Text(
+                'to your Payout Method list and be able to send payouts to this account?',
                 style: wayaTheme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     fontFamily: WayaConstants.fontFamily,
                     fontSize: 16.sp,
-                    color: WayaColors.customPrimary
-                )),
+                    color: WayaColors.customPrimary)),
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
-                print('ACCOUNT NAME ${viewModel.acctNameController.text}');
-                print('Bank NAME ${widget.bankName}');
-                print('Bank CODE ${widget.bankCode}');
-                print('ACCOUNT Number ${viewModel.acctNumberController.text}');
-               await ref.watch(walletVmProvider.notifier).createPayoutMethod(viewModel.acctNumberController.text,
-                   widget.name, widget.bankName, widget.bankCode, context);
+                await ref.watch(walletVmProvider.notifier).createPayoutMethod(
+                    viewModel.acctNumberController.text,
+                    widget.name,
+                    widget.bankName,
+                    widget.bankCode,
+                    context);
               },
               text: "Yes, Add Payout Method",
               isLoading: viewModel.isLoading!,
@@ -113,7 +115,8 @@ class PayoutPinEntryBottomSheet extends ConsumerStatefulWidget {
       _PayoutPinEntryBottomSheetState();
 }
 
-class _PayoutPinEntryBottomSheetState extends ConsumerState<PayoutPinEntryBottomSheet> {
+class _PayoutPinEntryBottomSheetState
+    extends ConsumerState<PayoutPinEntryBottomSheet> {
   String _pin = '';
   final int _pinLength = 4;
   late WalletRepository _walletRepository;
@@ -150,8 +153,7 @@ class _PayoutPinEntryBottomSheetState extends ConsumerState<PayoutPinEntryBottom
 
       if (response.success) {
         WayaNav.toNamed('/payoutSuccessScreen',
-        arguments: {'amount': widget.amount}
-        );
+            arguments: {'amount': widget.amount});
         //WayaNav.goBack(result: true);
       } else if (response.data['error'] == 'User hasn\'t set wallet pin yet') {
         WayaSnackBar.showToast("Kindly set transaction pin");
@@ -160,7 +162,6 @@ class _PayoutPinEntryBottomSheetState extends ConsumerState<PayoutPinEntryBottom
       } else {
         WayaSnackBar.showToast("Incorrect Pin");
         //> incorrect pin
-
       }
     }
   }
@@ -209,10 +210,10 @@ class _PayoutPinEntryBottomSheetState extends ConsumerState<PayoutPinEntryBottom
               child: Center(
                 child: index < _pin.length
                     ? Text("*",
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
-                    ))
+                        style: TextStyle(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.bold,
+                        ))
                     : null,
               ),
             ),
@@ -250,7 +251,7 @@ class _PayoutPinEntryBottomSheetState extends ConsumerState<PayoutPinEntryBottom
                 } else {
                   return _buildKeypadButton(
                     child:
-                    Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),
+                        Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }
@@ -270,7 +271,7 @@ class _PayoutPinEntryBottomSheetState extends ConsumerState<PayoutPinEntryBottom
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(48),
           side:
-          BorderSide(color: wayaTheme.colorScheme.greyColor300, width: 1)),
+              BorderSide(color: wayaTheme.colorScheme.greyColor300, width: 1)),
       child: InkWell(
         customBorder: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(48),

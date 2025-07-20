@@ -45,8 +45,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     //  debugPrint("COntest DI $myPassedContestId");
     var model = ref.watch(selectedContestProvider.notifier).state;
-    final String myPassedContestId = Get.parameters['id'] ??  model?.id??"";
-    final myContestId = useState( myPassedContestId);
+    final String myPassedContestId = Get.parameters['id'] ?? model?.id ?? "";
+    final myContestId = useState(myPassedContestId);
     useEffect(() {
       // viewModelNotifier.changeActive(true);
       /*   String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
@@ -55,8 +55,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         // myContestId.value = contestId;
       });
 
-    
-     // debugPrint("COntest DI  5 ${args["id"]}");
+      // debugPrint("COntest DI  5 ${args["id"]}");
       ref
           .read(postProvider.notifier)
           .fetchSingleContest(contestId: myContestId.value, ref: ref);
@@ -79,7 +78,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     var viewModel = ref.watch(votersContestNotifier);
     // var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
 
-    // print( "COntest DI ${model?.participationStartDate} 1 ${model?.participationEndDate} ${isTodayInRange(model?.participationStartDate ?? "2025-06-19", model?.participationEndDate ?? "2025-06-19")}");
     //? to change the active post seen on the post page
     final selectedViewIndex = useState(0);
     //? check if app is open with link
@@ -254,13 +252,13 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         children: [
                           UpcomingWidgetAdmin(
                               title: "Start Date",
-                              content: formatDate(model?.startDate??
-                                      "2025-03-03T07:21:39.036Z")),
+                              content: formatDate(model?.startDate ??
+                                  "2025-03-03T07:21:39.036Z")),
                           const Gap(20),
                           UpcomingWidgetAdmin(
                               title: "End Date",
-                              content: formatDate(model?.endDate??
-                                      "2025-03-03T07:21:39.036Z")),
+                              content: formatDate(model?.endDate ??
+                                  "2025-03-03T07:21:39.036Z")),
                           const Gap(20),
                           UpcomingWidgetAdmin(
                               title: "Entry Type",
@@ -328,7 +326,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                           },
                         );
                       } catch (e) {
-                        print(e);
+                        debugPrint(e.toString());
                       }
                     },
                     color: wayaTheme.colorScheme.primary50,
@@ -350,7 +348,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
 
                         WayaNav.toNamed("/upcoming-contest-details");
                       } catch (e) {
-                        print(e);
+                        debugPrint(e.toString());
                       }
                     },
                     color: wayaTheme.colorScheme.primary50,

@@ -53,12 +53,9 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
           moduleID.value = "Contest";
           modulePicker.value = "Contest";
           for (var model in viewModel.listShop) {
-            print("${model.label} ${model.value}");
-            print("my own ${viewModelSelected?.contestId}");
             if (model.value == viewModelSelected?.contestId) {
               shopPicker.value = model.label;
               shopPicker.value = model.value;
-              print("I am here sha ${model.label}");
             }
           }
         } else {
@@ -221,7 +218,6 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                               rollAccessNotifier.fetchHostedContest();
                               //  rollAccessNotifier.ge
                             } else {
-                              print("i am in role selected");
                               rollAccessNotifier.getRoles();
                               rollAccessNotifier.getShops();
                             }

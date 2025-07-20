@@ -245,7 +245,7 @@ class WayaFileHelper {
         if (!await directory.exists()) directory = await getExternalStorageDirectory();
       }
     } catch (err) {
-      print("Cannot get download folder path");
+      // Error handled silently
     }
 
     //? This is fine.

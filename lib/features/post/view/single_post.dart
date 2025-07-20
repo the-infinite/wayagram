@@ -57,7 +57,6 @@ class _SinglePostState extends ConsumerState<SinglePost> {
         ),
       );
     }
- //   print(post?.categories ?? '');
     return WayaScaffold(
         body: Column(
           children: [

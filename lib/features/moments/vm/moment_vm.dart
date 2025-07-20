@@ -8,6 +8,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_thumbnail_video/index.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
@@ -293,7 +295,6 @@ class MomentVm extends StateNotifier<MomentState> {
       quality: 60,
     );
 
-    //? This is fine.
     return File(thumb.path);
   }
 
@@ -607,7 +608,6 @@ class MomentVm extends StateNotifier<MomentState> {
       //     ),
       //     message: 'Thank you for reporting. We take your feedback seriously',
       //     buttonText: 'Dismiss');
-      //  print("fwfewfwef $isSuccess");
       debugPrint(response.data.toString());
       return isSuccess;
 

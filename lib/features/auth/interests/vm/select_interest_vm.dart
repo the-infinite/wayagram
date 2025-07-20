@@ -16,7 +16,9 @@ class SelectedInterest {
   SelectedInterest({required this.category, required this.interest});
 
   SelectedInterest copyWith({String? category, List<String>? interest}) {
-    return SelectedInterest(category: category ?? this.category, interest: interest ?? this.interest);
+    return SelectedInterest(
+        category: category ?? this.category,
+        interest: interest ?? this.interest);
   }
 }
 
@@ -54,8 +56,9 @@ class States {
         interests: interests ?? this.interests);
   }
 
-  List<UserInterest> get selectedCategories =>
-      userInterests.where((interest) => selected.contains(interest.interest.id)).toList();
+  List<UserInterest> get selectedCategories => userInterests
+      .where((interest) => selected.contains(interest.interest.id))
+      .toList();
 }
 
 class SelectInterestVm extends StateNotifier<States> {
@@ -70,8 +73,10 @@ class SelectInterestVm extends StateNotifier<States> {
 
       List<RestructuredCategory>? allInterests;
       if (response.success) {
-        InterestsResponseModel responseModel = InterestsResponseModel.fromJson(response.data);
-        List<RestructuredCategory> data = restructureCategoriesRefined(responseModel.data);
+        InterestsResponseModel responseModel =
+            InterestsResponseModel.fromJson(response.data);
+        List<RestructuredCategory> data =
+            restructureCategoriesRefined(responseModel.data);
         state = state.copyWith(interests: data);
         allInterests = data;
       }
@@ -90,13 +95,16 @@ class SelectInterestVm extends StateNotifier<States> {
 
   Future<void> getUserInterest() async {
     try {
-      final response = await _repository.getSelectedInterests(userId: ConversationState.self.id);
+      final response = await _repository.getSelectedInterests(
+          userId: ConversationState.self.id);
 
       if (response.success) {
-        SelectedInterestsResponseModel responseModel = SelectedInterestsResponseModel.fromJson(response.data);
+        SelectedInterestsResponseModel responseModel =
+            SelectedInterestsResponseModel.fromJson(response.data);
         state = state.copyWith(userInterests: responseModel.data);
         state = state.copyWith(
-            prevSelected: responseModel.data.map((el) => el.interest.id).toList(),
+            prevSelected:
+                responseModel.data.map((el) => el.interest.id).toList(),
             selected: responseModel.data.map((el) => el.interest.id).toList());
 
         debugPrint(response.data.toString());
@@ -151,11 +159,10 @@ class SelectInterestVm extends StateNotifier<States> {
 
     //> Update state with new selected interests
     state = state.copyWith(selected: selected);
-
-    print(state.selected);
   }
 }
 
-final selectInterestProvider = StateNotifierProvider<SelectInterestVm, States>((ref) {
+final selectInterestProvider =
+    StateNotifierProvider<SelectInterestVm, States>((ref) {
   return SelectInterestVm(AuthRepository(), ref);
 });

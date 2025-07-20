@@ -9,12 +9,9 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
 import 'dart:io' show Platform;
-
-import '../../../../../../core/utils/waya_navigation.dart';
 
 class PersonalAccountView extends ConsumerStatefulWidget {
   const PersonalAccountView({
@@ -22,7 +19,8 @@ class PersonalAccountView extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PersonalAccountViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PersonalAccountViewState();
 }
 
 class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
@@ -79,7 +77,8 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                         keyboardType: TextInputType.emailAddress,
                         controller: viewModel.emailController,
                         hintText: 'example@gmail.com',
-                        borderColor: formState.hasError && viewModel.emailController.text.isEmpty
+                        borderColor: formState.hasError &&
+                                viewModel.emailController.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Email Address',
@@ -89,7 +88,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -97,19 +98,23 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  return WayaValidators.passwordValidator(viewModel.passwordController.text);
+                  return WayaValidators.passwordValidator(
+                      viewModel.passwordController.text);
                 }, builder: (formState) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Focus(
                         onFocusChange: (hasFocus) {
-                          ref.read(loginVmProvider.notifier).setPasswordFocus(hasFocus);
+                          ref
+                              .read(loginVmProvider.notifier)
+                              .setPasswordFocus(hasFocus);
                         },
                         child: WayaTextFormField(
                           keyboardType: TextInputType.visiblePassword,
                           controller: viewModel.passwordController,
-                          borderColor: formState.hasError && viewModel.passwordController.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.passwordController.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           hintText: 'Enter Your Password',
@@ -117,7 +122,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                           obscureText: !viewModel.isPasswordVisible,
                           suffixIcon: IconButton(
                             onPressed: () {
-                              ref.read(loginVmProvider.notifier).togglePasswordVisibility();
+                              ref
+                                  .read(loginVmProvider.notifier)
+                                  .togglePasswordVisibility();
                             },
                             autofocus: false,
                             icon: Icon(viewModel.isPasswordVisible
@@ -134,7 +141,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -146,8 +155,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   child: GestureDetector(
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
-                        style: wayaTheme.textTheme.bodySemiBold
-                            .wayaCopyWith(fontSize: 14.sp, color: wayaTheme.colorScheme.customPrimary)),
+                        style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
+                            fontSize: 14.sp,
+                            color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),
                 Gap(30),
@@ -157,11 +167,14 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                       ? () async {
                           if (_formKey.currentState!.validate()) {
                             debugPrint('TEST BUTTOn');
-                            ref.read(loginVmProvider.notifier).onSubmit(ref, isBusinessLogin: false);
+                            ref
+                                .read(loginVmProvider.notifier)
+                                .onSubmit(ref, isBusinessLogin: false);
                           }
                         }
                       : null,
-                  centerWidget: LoadingState(loading: viewModel.isLoading, text: "Login"),
+                  centerWidget:
+                      LoadingState(loading: viewModel.isLoading, text: "Login"),
                   textColor: wayaTheme.colorScheme.onPrimary,
                 ),
               ],
@@ -175,7 +188,8 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
               label: WayaRichText(
             title1: "Don't have an account? ",
             title2: "Create new account",
-            style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
+            style1: wayaTheme.textTheme.hintStyle
+                .wayaCopyWith(color: wayaTheme.colorScheme.black),
           )),
         ),
       ],
@@ -189,7 +203,8 @@ class BusinessAccountView extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _BusinessAccountViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _BusinessAccountViewState();
 }
 
 class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
@@ -267,17 +282,21 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.businessAcctController,
                         hintText: 'Enter Your Email or Business ID',
-                        borderColor: formState.hasError && viewModel.businessAcctController.text.isEmpty
+                        borderColor: formState.hasError &&
+                                viewModel.businessAcctController.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Email Address/Business ID',
                       ),
-                      if (formState.hasError && viewModel.businessAcctController.text.isEmpty)
+                      if (formState.hasError &&
+                          viewModel.businessAcctController.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -285,19 +304,23 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                 }),
                 Gap(10),
                 FormField<String>(validator: (value) {
-                  return WayaValidators.passwordValidator(viewModel.passwordController.text);
+                  return WayaValidators.passwordValidator(
+                      viewModel.passwordController.text);
                 }, builder: (formState) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Focus(
                         onFocusChange: (hasFocus) {
-                          ref.read(loginVmProvider.notifier).setPasswordFocus(hasFocus);
+                          ref
+                              .read(loginVmProvider.notifier)
+                              .setPasswordFocus(hasFocus);
                         },
                         child: WayaTextFormField(
                           keyboardType: TextInputType.visiblePassword,
                           controller: viewModel.passwordController,
-                          borderColor: formState.hasError && viewModel.passwordController.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.passwordController.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           hintText: 'Enter Your Password',
@@ -305,7 +328,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                           obscureText: !viewModel.isPasswordVisible,
                           suffixIcon: IconButton(
                             onPressed: () {
-                              ref.read(loginVmProvider.notifier).togglePasswordVisibility();
+                              ref
+                                  .read(loginVmProvider.notifier)
+                                  .togglePasswordVisibility();
                             },
                             autofocus: false,
                             icon: Icon(viewModel.isPasswordVisible
@@ -322,7 +347,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -334,8 +361,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                   child: GestureDetector(
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
-                        style: wayaTheme.textTheme.bodySemiBold
-                            .wayaCopyWith(fontSize: 14.sp, color: wayaTheme.colorScheme.customPrimary)),
+                        style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
+                            fontSize: 14.sp,
+                            color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),
                 Gap(25),
@@ -344,11 +372,14 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                   callback: !viewModel.isLoading
                       ? () async {
                           if (_formKey.currentState!.validate()) {
-                            ref.read(loginVmProvider.notifier).onSubmit(ref, isBusinessLogin: true);
+                            ref
+                                .read(loginVmProvider.notifier)
+                                .onSubmit(ref, isBusinessLogin: true);
                           }
                         }
                       : null,
-                  centerWidget: LoadingState(loading: viewModel.isLoading, text: "Login"),
+                  centerWidget:
+                      LoadingState(loading: viewModel.isLoading, text: "Login"),
                   textColor: wayaTheme.colorScheme.onPrimary,
                 ),
               ],
@@ -362,7 +393,8 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
               label: WayaRichText(
             title1: "Don't have an account? ",
             title2: "Create new account",
-            style1: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
+            style1: wayaTheme.textTheme.hintStyle
+                .wayaCopyWith(color: wayaTheme.colorScheme.black),
           )),
         ),
       ],

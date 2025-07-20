@@ -51,8 +51,6 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
   @override
   Widget build(BuildContext context) {
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-    print('Member id==>>> ${args['id']}');
-    print('GROUP ID ==>>> ${args['groupId']}');
     final viewModel = ref.watch(groupProvider);
 
     final wayaTheme = Theme.of(context);

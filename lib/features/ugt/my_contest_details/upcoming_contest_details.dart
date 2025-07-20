@@ -42,14 +42,11 @@ class _UpcomingContestDetailsState
     debugPrint("my value ${model?.hasApplied}");
 
     useEffect(() {
-      print("dude 1");
       ref
           .read(appliedContestProvider.notifier)
           .fetchSingleAppliedContest(model?.id ?? "")
           .then((value1) {
-        print("dude 2 ${value1?.fullName}");
         if (value1 != null) {
-          print("dude ${value1.fullName}");
           appliedContestModel.value = value1;
         }
       });

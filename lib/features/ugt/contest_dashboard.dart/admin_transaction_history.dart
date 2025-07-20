@@ -82,8 +82,6 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                   dashboardVm.revenueGenerated?.toString() ??
                                       '0') -
                               double.parse(percentage.toString());
-                          //  print('Amount Due: $amountDue');
-                          //print('Commission Percentage: $percentage');
 
                           ref
                               .read(credentialInputProvider.notifier)

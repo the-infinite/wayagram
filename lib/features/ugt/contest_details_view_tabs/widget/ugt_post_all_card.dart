@@ -75,9 +75,6 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           onTap: () {
                             /*   ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[0]; */
-                            print(
-                                "hope ${widget.post.contestantProfile?.profileId}");
-                            print("hope ${widget.post.contestId}");
 
                             WayaNav.toNamed(
                               '/contest-profile-page',
@@ -136,8 +133,6 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                                 child: _buildActionNav(
                                     context: context,
                                     onTap: () async {
-                                      print(widget.post.contestantProfile?.id ??
-                                          "");
                                       await Share.share(
                                         WayaValueHelper.getShareableUrl(
                                             WayaAppRoutes
@@ -329,8 +324,6 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             viewModelNotifier.updateContestId(widget.model.id); */
                       ref.read(selectedContestProvider.notifier).state =
                           widget.model;
-                      print("hope ${widget.post.contestantProfile?.profileId}");
-                      print("hope ${widget.post.contestId}");
                       WayaNav.toNamed(
                         '/contest-profile-page',
                         arguments: {

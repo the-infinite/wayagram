@@ -15,12 +15,10 @@ class RoleAccessRepo extends BaseRepository {
   }
 
   Future<WayaRequestResponse> addContestTeamMember(payLoad) {
-    print(payLoad);
     return post('$serviceUrl1/judges/create', payLoad, formdata: false);
   }
 
   Future<WayaRequestResponse> editContestTeamMember(String judgeId, payLoad) {
-    print(payLoad);
     return patch('$serviceUrl1/judges/update/$judgeId', payLoad,
         formdata: false);
   }

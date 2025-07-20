@@ -422,7 +422,7 @@ class CartVm extends StateNotifier<CartState> {
         WayaSnackBar.showToast("An error occured. Try again!!");
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }

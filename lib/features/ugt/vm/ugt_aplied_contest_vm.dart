@@ -95,7 +95,6 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
         AppliedContest responseModel = AppliedContest.fromJson(response.data);
 
         if (responseModel.data?.docs?.isNotEmpty == true) {
-          print("dude ww: ${responseModel.data?.docs?.first.fullName}");
           return responseModel.data?.docs?.first;
         } else {
           return null;

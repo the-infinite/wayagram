@@ -60,7 +60,6 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
       "phoneNumber": phone.text
     };
 
-    print(map);
 
     final response = await _roleProfileRepository.postSupportDetails({
       "topic": topicNotifier.value?.label ?? "",

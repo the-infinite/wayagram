@@ -331,16 +331,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           myContestListCopy: [],
         ); */
 
-        print("here 1");
-
         ContestContestantModelMean responseModel =
             ContestContestantModelMean.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
-        print("here 2");
         MyContestContestantModel? model;
-        print("here 3");
         contestList.sort((a, b) => b.votes!.compareTo(a.votes!));
-        print("here 4");
         //? this may not contain what i am looking for that y i am using try here
         try {
           model = contestList.firstWhere(
@@ -349,10 +344,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           debugPrint(e.toString());
         }
 
-        print("here 5");
         // createPostId = ;
         final myContestantList = contestList.where((e) {
-          print("ErrorOLODO ${e.status?.toLowerCase()}");
           return e.status?.toLowerCase() == "active" &&
               e.contestApplicant != null;
         }).toList();
@@ -373,7 +366,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       }
       // return contestList;
     } catch (e) {
-      print("ErrorOLODO , ${e.toString()}}");
       _logger.e(e.toString());
     } finally {
       // isLoading = false;
@@ -405,7 +397,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
 
     for (var entry in mapState.entries) {
-      print("ErrorOLODO ${entry.key}  ${entry.value.toString()},");
       listStates.add(State(state: entry.key, id: entry.value.toString()));
     }
     listStates.sort((a, b) => b.id.compareTo(a.id));
@@ -438,7 +429,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
         List<UgtAllPostContestModel> contestList2 = [];
         for (var model in contestList) {
-          // print('Hello name one ${model.profileId}');
           var data = await UserResource.getUserDetails(
               model.contestantProfile?.profileId ?? "");
           var userModel = data?.$2;

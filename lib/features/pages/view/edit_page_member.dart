@@ -35,8 +35,6 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
   @override
   Widget build(BuildContext context) {
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-    print('Member id==>>> ${args['id']}');
-    print('PAGE ID ==>>> ${args['pageId']}');
     final viewModel = ref.watch(pageProvider);
 
     final wayaTheme = Theme.of(context);

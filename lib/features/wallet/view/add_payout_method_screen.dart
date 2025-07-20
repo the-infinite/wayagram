@@ -117,7 +117,6 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                           value: viewModel.bank?.label.capitalizeFirst,
                           items: viewModel.banks,
                           onSelected: (value) {
-                            //print('BANK ====>>> ${value.first}');
                             ref
                                 .read(walletVmProvider.notifier)
                                 .selectCategory(value.first);

@@ -134,7 +134,6 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
                                         list.first, list.last);
                                     notifier.getAllUserReferrals(true);
                                   } else if (e.text == "Custom") {
-                                    print("i dey here plenty");
                                     WayaUtils.showModalSheetUgt(context,
                                         child: CustomDateWidget());
                                   }

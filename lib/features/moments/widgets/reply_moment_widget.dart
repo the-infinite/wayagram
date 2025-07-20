@@ -207,7 +207,6 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                   likedMoments[widget.moment.id] =
                       !(likedMoments[widget.moment.id] ?? false);
                 });
-                print("loieerree");
                 notifier.toggleLiked(likedMoments[widget.moment.id]!,
                     widget.moment.id, widget.moment.userId);
               },
@@ -294,25 +293,20 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
 
   void updateComment(String comment) {
     if (_isDisposed) return;
-    print("commeting");
     state = state.copyWith(comment: comment);
-    print("commeeeeee ${state.comment}");
   }
 
   void isCommented(bool isComment, String id, String userId) async {
    // if (_isDisposed) return;
     state = state.copyWith(isComment: isComment);
-    print("efwef ------ commenting $isComment");
     await postSingleUserMoment(
         momentId: id, userId: userId, isComment: true);
   }
 
   void toggleLiked(bool liked, String id, String userId) async {
-     print("efwef liking before dispose");
    // if (_isDisposed) return;
     state = state.copyWith(isLiked: liked);
 
-    print("efwef liking");
     await postSingleUserMoment(momentId: id, userId: userId, isLiked: true);
   }
 
@@ -325,7 +319,6 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
       final profileId = await _secureDataSource.getUserId();
 
       if (profileId == userId) return debugPrint("working but it's yours");
-      print("efwef ---ewfewfwe--- commenting $isComment $isLiked");
       final response = await _momentRepository.viewMoments(
         // profileId: profileId!,
         momentId: momentId,

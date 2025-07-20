@@ -134,7 +134,6 @@ class _CustomDateWidgetState extends ConsumerState<CustomDateWidget> {
                 String startDateNew = DateFormat('yyyy-MM-dd').format(startDate!);
                 String endDateNew = DateFormat('yyyy-MM-dd').format(endDate!);
 
-                //print(formattedDate); // Output: 1990-12-31
                 notifier.updateStartAndEndDate(startDateNew, endDateNew);
                 notifier.getAllUserReferrals(true);
                 WayaNav.goBack();

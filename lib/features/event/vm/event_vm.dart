@@ -259,17 +259,13 @@ class EventVm extends StateNotifier<EventState> {
       {required int page}) async {
     try {
       // state = state.copyWith(isLoadingUserEvents: true);
-      print("fewfewfwef b4");
       final response = await _eventRepository.eventsJoined(
           userId: ConversationState.self.id, page: page);
       List<EventDoc> myEvents = [];
       bool hasNextPage = false;
-      print("fewfewfwef after b4 success");
       if (response.success) {
-        // print("fewfewfwef after success ${response.data["data"]['docs']}");
         //  final data = response.data["data"]['docs'];
 
-        //    print("vergergesdfsdfsfsdfsfd ${((response.data["data"]['docs'] as List).map((d) => d['eventDetails']).toList())}" );
 
         // JoinedEventResponse eventResponse =
         //     JoinedEventResponse.fromJson(response.data);
@@ -277,13 +273,11 @@ class EventVm extends StateNotifier<EventState> {
         final doeecs = (response.data["data"]['docs'] as List)
             .map((d) => EventDoc.fromJson(d['eventDetails']))
             .toList();
-        print("dddd $doeecs");
         //     .map((doc) => EventDoc.fromJson(doc));
 
         // final docs =
         //     eventResponse.data.docs.map((c) => c.eventDetails).toList();
 
-        // print("dddd $docs");
         myEvents = doeecs;
 
         hasNextPage = response.data["data"]['hasNextPage'];
@@ -539,10 +533,8 @@ class EventVm extends StateNotifier<EventState> {
       final response = await _eventRepository.getSingleEvent(id);
 
       if (response.success) {
-        print("fwefwfw, eventId- $id , ${response.data}");
         SingleEventResponse eventResponse =
             SingleEventResponse.fromJson(response.data);
-        print("ewfwef fetching event");
         state = state.copyWith(singleEvent: eventResponse.data);
         return eventResponse.data;
       }

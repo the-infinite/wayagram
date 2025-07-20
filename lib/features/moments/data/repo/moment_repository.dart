@@ -55,8 +55,6 @@ class MomentRepository extends BaseRepository {
     if (likeMoment != null) payload['likeMoment'] = likeMoment;
     if (comment != null) payload['comment'] = comment;
 
-    print(payload);
-
     return post("$serviceUrl/view-moments/view", payload);
   }
 

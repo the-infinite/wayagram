@@ -33,7 +33,6 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
 //? get user settings to update the UI Once
     useEffect(() {
       notifier.getEventSettings().then((value) {
-        print("value: ${value?.toJson()}");
         if (value != null) {
           letEveryOneJoin.value = value.letEveryoneJoin ?? false;
           approveJoinRequest.value = value.approveJoinRequest ?? false;

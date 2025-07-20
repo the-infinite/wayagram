@@ -355,7 +355,6 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
           await _authRepository.toggle2Fa(code: code, purpose: "2FA");
 
       if (response.success) {
-        print("ewwedwedwedwdw");
         WayaNav.replaceNamed(AccountSecurity.route);
       }
     } catch (e) {

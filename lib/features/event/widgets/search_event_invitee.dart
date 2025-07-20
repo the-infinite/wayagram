@@ -97,8 +97,6 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
                 UserSearchBarWidget(
                   onSelect: (users) async {
                     //? This is fine.
-                    print(users.length);
-
                     eventNotifier.updateSelectedInvitee(invitee: users.first);
 
                     await Future.delayed(const Duration(milliseconds: 800));
