@@ -79,16 +79,25 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
   Widget build(BuildContext context) {
     //? This is fine.
     final size = MediaQuery.sizeOf(context);
-    final width = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
-    final height = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
+    final width = !widget.interactive && widget.totalSize < 3
+        ? size.width / widget.totalSize
+        : 100.0;
+    final height = !widget.interactive && widget.totalSize < 3
+        ? size.width / widget.totalSize
+        : 100.0;
 
     //? Return this here.
     return Padding(
-      padding: widget.index == min(widget.totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(right: 10),
+      padding: widget.index == min(widget.totalSize - 1, 2)
+          ? EdgeInsets.zero
+          : const EdgeInsets.only(right: 10),
       child: Stack(
         children: [
           //? First, the video file itself.
-          if (!downloaded && widget.message != null && widget.message?.dto == null && widget.message!.media!.isNotEmpty)
+          if (!downloaded &&
+              widget.message != null &&
+              widget.message?.dto == null &&
+              widget.message!.media!.isNotEmpty)
             //? Since this is not yet downloaded, first, a stream for this.
             StreamBuilder(
               stream: WayaFileRepository.instance.downloadFile(
@@ -194,7 +203,9 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                 child: WayaVideoWidget.file(
                   widget.video,
                   controller: controller,
-                  controls: widget.interactive ? WayaVideoControls.message : WayaVideoControls.content,
+                  controls: widget.interactive
+                      ? WayaVideoControls.message
+                      : WayaVideoControls.content,
                   canFocus: widget.message?.dto == null,
                 ),
               ),
@@ -231,7 +242,10 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                   padding: EdgeInsets.all(2),
                 ),
                 icon: WayaAssets.icons.cMultiplyCircle.svg(
-                  color: WayaColors.greyColor400,
+                  colorFilter: ColorFilter.mode(
+                    WayaColors.greyColor400,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             )

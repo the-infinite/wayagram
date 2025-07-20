@@ -14,7 +14,7 @@ final abstractedDarkTheme = ThemeData(
 );
 
 AppBarTheme _appBarThemeData() {
-  return  AppBarTheme(
+  return AppBarTheme(
       titleTextStyle: WayaTextStyles.titleLarge,
       elevation: 0,
       centerTitle: true,
@@ -23,7 +23,8 @@ AppBarTheme _appBarThemeData() {
 
 CheckboxThemeData _checkBoxThemeData() {
   return CheckboxThemeData(
-      side: const BorderSide(color: Colors.green, width: 2.2), // Changed color to green
+      side: const BorderSide(
+          color: Colors.green, width: 2.2), // Changed color to green
       fillColor: WidgetStateProperty.resolveWith<Color>((states) {
         if (states.contains(WidgetState.selected)) {
           return Colors.green; // Changed color to green
@@ -31,7 +32,8 @@ CheckboxThemeData _checkBoxThemeData() {
         return Colors.blue; // Changed to blue for unselected
       }),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
-      checkColor: const WidgetStatePropertyAll(Colors.green)); // Changed color to green
+      checkColor:
+          const WidgetStatePropertyAll(Colors.green)); // Changed color to green
 }
 
 ElevatedButtonThemeData _elevatedButtonThemeData() {
@@ -42,7 +44,8 @@ ElevatedButtonThemeData _elevatedButtonThemeData() {
       minimumSize: const Size(double.infinity, 55.0),
       backgroundColor: Colors.green, // Changed to green
       foregroundColor: Colors.white, // Text color remains white
-      padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5), // Padding for height
+      padding: const EdgeInsets.symmetric(
+          vertical: 2.0, horizontal: 5), // Padding for height
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0), // Rounded corners
       ),
@@ -61,7 +64,8 @@ ChipThemeData _chipThemeData() {
       borderRadius: BorderRadius.circular(8.0),
       side: const BorderSide(color: Colors.transparent, width: 1.0),
     ),
-    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 6.0), // Spacing inside the chip
+    padding: const EdgeInsets.symmetric(
+        vertical: 12.0, horizontal: 6.0), // Spacing inside the chip
   );
 }
 
@@ -70,17 +74,21 @@ SwitchThemeData _switchThemeData() {
     thumbIcon: WidgetStateProperty.resolveWith<Icon>(
       (Set<WidgetState> states) {
         if (states.containsAll([WidgetState.disabled, WidgetState.selected])) {
-          return const Icon(Icons.circle, color: Colors.green); // Changed to green
+          return const Icon(Icons.circle,
+              color: Colors.green); // Changed to green
         }
 
         if (states.contains(WidgetState.disabled)) {
-          return const Icon(Icons.circle, color: Colors.blue); // Changed to blue
+          return const Icon(Icons.circle,
+              color: Colors.blue); // Changed to blue
         }
 
         if (states.contains(WidgetState.selected)) {
-          return const Icon(Icons.circle, color: Colors.green); // Changed to green
+          return const Icon(Icons.circle,
+              color: Colors.green); // Changed to green
         } else {
-          return const Icon(Icons.circle, color: Colors.green); // Changed to green
+          return const Icon(Icons.circle,
+              color: Colors.green); // Changed to green
         }
       },
     ),
@@ -94,7 +102,8 @@ SwitchThemeData _switchThemeData() {
     }),
     overlayColor: WidgetStateProperty.resolveWith<Color>((states) {
       if (states.contains(WidgetState.pressed)) {
-        return Colors.green.withOpacity(0.2); // Changed to green with opacity on press
+        return Colors.green
+            .withValues(alpha: 0.2); // Changed to green with opacity on press
       }
       return Colors.transparent;
     }),

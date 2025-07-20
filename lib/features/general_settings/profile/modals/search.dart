@@ -113,14 +113,23 @@ class SearchProfileModal extends StatefulWidget {
 }
 
 class _SearchProfileModalState extends State<SearchProfileModal> {
-  late final categoriesSelected = <FilterCategoryModel>[...(widget.searchManager.value?.categories ?? [])];
-  late final startingTime = ValueNotifier<DateTime?>(widget.searchManager.value?.timeStart);
-  late final endingTime = ValueNotifier<DateTime?>(widget.searchManager.value?.timeEnd);
-  late final promotionEnabled = ValueNotifier<bool?>(widget.searchManager.value?.isPromoted);
-  late final startingPrice = ValueNotifier(widget.searchManager.value?.priceStart);
-  late final endingPrice = ValueNotifier(widget.searchManager.value?.priceStart);
-  late final startingActivity = ValueNotifier(widget.searchManager.value?.activityStart);
-  late final endingActivity = ValueNotifier(widget.searchManager.value?.activityEnd);
+  late final categoriesSelected = <FilterCategoryModel>[
+    ...(widget.searchManager.value?.categories ?? [])
+  ];
+  late final startingTime =
+      ValueNotifier<DateTime?>(widget.searchManager.value?.timeStart);
+  late final endingTime =
+      ValueNotifier<DateTime?>(widget.searchManager.value?.timeEnd);
+  late final promotionEnabled =
+      ValueNotifier<bool?>(widget.searchManager.value?.isPromoted);
+  late final startingPrice =
+      ValueNotifier(widget.searchManager.value?.priceStart);
+  late final endingPrice =
+      ValueNotifier(widget.searchManager.value?.priceStart);
+  late final startingActivity =
+      ValueNotifier(widget.searchManager.value?.activityStart);
+  late final endingActivity =
+      ValueNotifier(widget.searchManager.value?.activityEnd);
   final categoriesEnabled = ValueNotifier<int>(0);
   final formKey = GlobalKey<FormState>();
 
@@ -134,9 +143,11 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
   }
 
   List<FilterCategoryModel> get usedCategories => (widget.page == 10
-          ? ShopResource.categories.map((category) => FilterCategoryModel(id: category.id, name: category.name))
-          : widget.interests.selectedCategories
-              .map((interest) => FilterCategoryModel(id: interest.id, name: interest.interest.name)))
+          ? ShopResource.categories.map((category) =>
+              FilterCategoryModel(id: category.id, name: category.name))
+          : widget.interests.selectedCategories.map((interest) =>
+              FilterCategoryModel(
+                  id: interest.id, name: interest.interest.name)))
       .toList();
 
   @override
@@ -186,7 +197,10 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                       backgroundColor: theme.colorScheme.greyColor200,
                     ),
                     icon: WayaAssets.icons.actonDismiss.svg(
-                      color: theme.colorScheme.black,
+                      colorFilter: ColorFilter.mode(
+                        theme.colorScheme.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ],
@@ -236,10 +250,12 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                     (index) => IntrinsicWidth(
                       child: WayaStatefulButton(
                         text: filterCategories[index].name,
-                        isSelected: categoriesSelected.any((filter) => filter.id == filterCategories[index].id),
+                        isSelected: categoriesSelected.any((filter) =>
+                            filter.id == filterCategories[index].id),
                         callback: () {
-                          final selected =
-                              categoriesSelected.indexWhere((filter) => filter.id == filterCategories[index].id);
+                          final selected = categoriesSelected.indexWhere(
+                              (filter) =>
+                                  filter.id == filterCategories[index].id);
 
                           //? If this is a part of the list...
                           if (selected >= 0) {
@@ -284,13 +300,16 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                     //? First, the title.
                     InkWell(
                       onTap: () {
-                        promotionEnabled.value = !(promotionEnabled.value ?? false);
+                        promotionEnabled.value =
+                            !(promotionEnabled.value ?? false);
                       },
                       child: Text(
                         "Promoted Content",
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontSize: 15.sp,
-                          color: isSelected ?? false ? theme.colorScheme.customPrimary : Colors.black,
+                          color: isSelected ?? false
+                              ? theme.colorScheme.customPrimary
+                              : Colors.black,
                         ),
                       ),
                     ),
@@ -314,7 +333,9 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                         },
                       ),
                       side: BorderSide(
-                        color: isSelected ?? false ? theme.colorScheme.primary : theme.colorScheme.greyColor300,
+                        color: isSelected ?? false
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.greyColor300,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100000),
@@ -343,11 +364,13 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                   builder: (context, start, _) => ValueListenableBuilder(
                     valueListenable: endingActivity,
                     builder: (context, end, _) => RangeSlider(
-                      values: RangeValues((start ?? 0).toDouble(), (end ?? 0.0).toDouble()),
+                      values: RangeValues(
+                          (start ?? 0).toDouble(), (end ?? 0.0).toDouble()),
                       min: filterSections.minCount.toDouble(),
                       max: filterSections.maxCount.toDouble(),
                       divisions: filterSections.maxCount,
-                      labels: RangeLabels((start ?? 0).toString(), (end ?? 0).toString()),
+                      labels: RangeLabels(
+                          (start ?? 0).toString(), (end ?? 0).toString()),
                       onChanged: (newValues) {
                         startingActivity.value = newValues.start.toInt();
                         endingActivity.value = newValues.end.toInt();
@@ -406,8 +429,10 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                       controller: startingTime,
                       hintText: 'Starting date',
                       label: 'Start Date',
-                      firstDate: DateTime.now().subtract(const Duration(days: 3652, minutes: 30)),
-                      initialDate: startingTime.value ?? DateTime.now().subtract(const Duration(days: 4)),
+                      firstDate: DateTime.now()
+                          .subtract(const Duration(days: 3652, minutes: 30)),
+                      initialDate: startingTime.value ??
+                          DateTime.now().subtract(const Duration(days: 4)),
                     ),
                   ),
 
@@ -416,7 +441,8 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
                     child: WayaDatePicker(
                       controller: endingTime,
                       hintText: 'Ending date',
-                      firstDate: DateTime.now().subtract(const Duration(days: 3652, minutes: 30)),
+                      firstDate: DateTime.now()
+                          .subtract(const Duration(days: 3652, minutes: 30)),
                       label: 'End Date',
                       initialDate: endingTime.value ?? DateTime.now(),
                     ),
@@ -431,12 +457,14 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
               WayaButton(
                 callback: () async {
                   // Extract the search query.
-                  final search = widget.searchController.text.trim().toLowerCase();
+                  final search =
+                      widget.searchController.text.trim().toLowerCase();
 
                   //? How is this too?
                   widget.searchManager.value = BaseFilterModel(
                     isPromoted: promotionEnabled.value,
-                    categories: categoriesSelected.isEmpty ? null : categoriesSelected,
+                    categories:
+                        categoriesSelected.isEmpty ? null : categoriesSelected,
                     timeStart: startingTime.value,
                     timeEnd: endingTime.value,
                     activityStart: startingActivity.value,

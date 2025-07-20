@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 
 class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   final ContestRepo _contestRepository;

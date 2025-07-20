@@ -31,9 +31,8 @@ class MyMomentMetrics extends ConsumerWidget {
             pause();
             await WayaUtils.showModalSheet(context,
                 child: MomentViewers(momentId: moment.id));
-     
-              continues();
-            
+
+            continues();
           },
           child: SvgPicture.asset(WayaAssets.icons.mChevronUp.path),
         ),
@@ -46,8 +45,8 @@ class MyMomentMetrics extends ConsumerWidget {
           children: [
             metricCard(
               color: moment.contentType == 'text'
-                  ? wayaTheme.colorScheme.white.withOpacity(0.5)
-                  : wayaTheme.colorScheme.black.withOpacity(0.5),
+                  ? wayaTheme.colorScheme.white.withValues(alpha: 0.5)
+                  : wayaTheme.colorScheme.black.withValues(alpha: 0.5),
               context: context,
               metric: WayaHelpers.formatMetrics(moment.totalViews),
               icon: SvgPicture.asset(WayaAssets.icons.mEye.path),
@@ -57,8 +56,8 @@ class MyMomentMetrics extends ConsumerWidget {
             ),
             metricCard(
               color: moment.contentType == 'text'
-                  ? wayaTheme.colorScheme.white.withOpacity(0.5)
-                  : wayaTheme.colorScheme.black.withOpacity(0.5),
+                  ? wayaTheme.colorScheme.white.withValues(alpha: 0.5)
+                  : wayaTheme.colorScheme.black.withValues(alpha: 0.5),
               context: context,
               metric: WayaHelpers.formatMetrics(moment.totalLikes),
               icon: SvgPicture.asset(WayaAssets.icons.mNotliked.path),
@@ -69,8 +68,8 @@ class MyMomentMetrics extends ConsumerWidget {
             metricCard(
               context: context,
               color: moment.contentType == 'text'
-                  ? wayaTheme.colorScheme.white.withOpacity(0.5)
-                  : wayaTheme.colorScheme.black.withOpacity(0.5),
+                  ? wayaTheme.colorScheme.white.withValues(alpha: 0.5)
+                  : wayaTheme.colorScheme.black.withValues(alpha: 0.5),
               metric: WayaHelpers.formatMetrics(moment.totalComments),
               icon: SvgPicture.asset(WayaAssets.icons.mComments.path),
             ),

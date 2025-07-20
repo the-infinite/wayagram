@@ -249,7 +249,7 @@ class _ContestSignupRequirementState
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
+                          color: Colors.red.withValues(alpha: 0.1),
                           shape: BoxShape.rectangle,
                         ),
                         child: IconButton(
@@ -407,7 +407,7 @@ class _ContestSignupRequirementState
         WayaButton(
             centerWidget:
                 LoadingState(loading: isLoading.value, text: 'Submit'),
-            callback: !isLoading.value && acceptedTerms.value 
+            callback: !isLoading.value && acceptedTerms.value
                 ? () {
                     /*   if (ref
                         .read(stateRequirementProvider.notifier)

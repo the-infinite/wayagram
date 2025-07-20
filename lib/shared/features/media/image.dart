@@ -85,7 +85,10 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
             },
             child: WayaAssets.icons.genSet.moreHorz.svg(
               fit: BoxFit.none,
-              color: Colors.white,
+              colorFilter: ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           Gap(8.sp),

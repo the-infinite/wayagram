@@ -33,7 +33,6 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
   List<FavoriteItem> favoriteItems = [];
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setState(() => isLoading = true);
       try {
@@ -57,8 +56,7 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
 
   @override
   Widget build(BuildContext context) {
-    
-     // search filter
+    // search filter
     final searchFilteredProducts = WayaUtils.search<FavoriteItem>(
         favoriteItems,
         [
@@ -72,7 +70,6 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
         ],
         searchController.text);
 
-    // TODO: implement build
     return WayaScaffold(
         isScrollable: true,
         isLoading: isLoading,

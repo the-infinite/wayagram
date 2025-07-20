@@ -158,7 +158,10 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                             fit: BoxFit.none,
                             width: 20,
                             height: 20,
-                            color: wayaTheme.colorScheme.white,
+                            colorFilter: ColorFilter.mode(
+                              wayaTheme.colorScheme.white,
+                              BlendMode.srcIn,
+                            ),
                           ),
                           text: "Promote",
                         )),

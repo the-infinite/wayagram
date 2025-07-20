@@ -123,7 +123,7 @@ class _TransactionDetailsScreenState
                     children: [
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
-                        child: pw.Text('${transaction.id}'),
+                        child: pw.Text(transaction.id),
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
@@ -135,7 +135,7 @@ class _TransactionDetailsScreenState
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
-                        child: pw.Text('${transaction.description}'),
+                        child: pw.Text(transaction.description),
                       ),
                     ],
                   )),

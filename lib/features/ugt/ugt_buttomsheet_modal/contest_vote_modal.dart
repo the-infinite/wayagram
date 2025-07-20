@@ -102,7 +102,8 @@ class PinEntryBottomSheet extends StatefulHookConsumerWidget {
       super.key});
 
   @override
-  _PinEntryBottomSheetState createState() => _PinEntryBottomSheetState();
+  ConsumerState<PinEntryBottomSheet> createState() =>
+      _PinEntryBottomSheetState();
 }
 
 class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
@@ -1150,7 +1151,7 @@ class PaymentDialog extends StatefulWidget {
   const PaymentDialog({super.key});
 
   @override
-  _PaymentDialogState createState() => _PaymentDialogState();
+  State<StatefulWidget> createState() => _PaymentDialogState();
 }
 
 class _PaymentDialogState extends State<PaymentDialog> {

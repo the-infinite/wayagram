@@ -82,13 +82,13 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     final dashboardVm = ref.watch(ugtAdminDashboardVm);
     final walletViewModel = ref.watch(walletVmProvider);
     var model = ref.watch(selectedContestProvider);
-   
+
     useEffect(() {
       Future.delayed(Duration.zero, () {
         dashboardNotifier.fetchTotalContestant(model?.id ?? "");
         dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
         ref.read(walletVmProvider.notifier).getPayoutMethod();
-          ref.read(createPollVotingProvider.notifier).getPayoutCommission();
+        ref.read(createPollVotingProvider.notifier).getPayoutCommission();
       });
 
       Future.delayed(Duration(seconds: 2), () {
@@ -150,7 +150,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                                 selectPresentTap(e);
                               },
                               asset: WayaAssets.icons.mComments.svg(
-                                color: wayaTheme.colorScheme.customBlack,
+                                colorFilter: ColorFilter.mode(
+                                  wayaTheme.colorScheme.customBlack,
+                                  BlendMode.srcIn,
+                                ),
                                 height: 20,
                               ),
                               text: e.text,
@@ -177,8 +180,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         WayaAssets.icons.actionFilter.svg(
-                          color: wayaTheme.colorScheme.greyColor400,
-                          //  color: wayaTheme.colorScheme.primary600,
+                          colorFilter: ColorFilter.mode(
+                            wayaTheme.colorScheme.greyColor400,
+                            BlendMode.srcIn,
+                          ),
                         ),
                         Gap(5),
                         Text(
@@ -190,8 +195,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         ),
                         Gap(5),
                         WayaAssets.icons.downArrow.svg(
-                          color: wayaTheme.colorScheme.greyColor400,
-                          //color: wayaTheme.colorScheme.primary600,
+                          colorFilter: ColorFilter.mode(
+                            wayaTheme.colorScheme.greyColor400,
+                            BlendMode.srcIn,
+                          ),
                         )
                       ],
                     ),
@@ -251,7 +258,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           width: 18,
                           height: 18,
                           fit: BoxFit.scaleDown,
-                          color: wayaTheme.colorScheme.primary600,
+                          colorFilter: ColorFilter.mode(
+                            wayaTheme.colorScheme.primary600,
+                            BlendMode.srcIn,
+                          ),
                         ),
                         Gap(8),
                         Text(

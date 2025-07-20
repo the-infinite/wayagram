@@ -15,7 +15,7 @@ class VideoThumbnailPlayer extends StatefulWidget {
   });
 
   @override
-  _VideoThumbnailPlayerState createState() => _VideoThumbnailPlayerState();
+  State<StatefulWidget> createState() => _VideoThumbnailPlayerState();
 }
 
 class _VideoThumbnailPlayerState extends State<VideoThumbnailPlayer> {

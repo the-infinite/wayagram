@@ -122,7 +122,10 @@ class CreateSheet extends ConsumerWidget {
                   backgroundColor: WayaColors.greyColor200,
                 ),
                 icon: WayaAssets.icons.actonDismiss.svg(
-                  color: WayaColors.black,
+                  colorFilter: ColorFilter.mode(
+                    WayaColors.black,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ],

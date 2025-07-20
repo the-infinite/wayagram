@@ -77,16 +77,25 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
   Widget build(BuildContext context) {
     //? This is fine.
     final size = MediaQuery.sizeOf(context);
-    final width = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
-    final height = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
+    final width = !widget.interactive && widget.totalSize < 3
+        ? size.width / widget.totalSize
+        : 100.0;
+    final height = !widget.interactive && widget.totalSize < 3
+        ? size.width / widget.totalSize
+        : 100.0;
 
     //? Return this here.
     return Padding(
-      padding: widget.index == min(widget.totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(right: 10),
+      padding: widget.index == min(widget.totalSize - 1, 2)
+          ? EdgeInsets.zero
+          : const EdgeInsets.only(right: 10),
       child: Stack(
         children: [
           //? First, the image file itself.
-          if (!downloaded && widget.message != null && widget.message?.dto == null && widget.message!.media!.isNotEmpty)
+          if (!downloaded &&
+              widget.message != null &&
+              widget.message?.dto == null &&
+              widget.message!.media!.isNotEmpty)
             //? Since this is not yet downloaded, first, a stream for this.
             StreamBuilder(
               stream: WayaFileRepository.instance.downloadFile(
@@ -179,9 +188,13 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
               onTap: widget.message?.dto != null
                   ? null
                   : () async {
-                      final result = await WayaNavigationHelper.toImageDetailsScreen(
+                      final result =
+                          await WayaNavigationHelper.toImageDetailsScreen(
                         [widget.image],
-                        widget.message?.media?.map((media) => media.mediaUrl).toList() ?? [],
+                        widget.message?.media
+                                ?.map((media) => media.mediaUrl)
+                                .toList() ??
+                            [],
                       );
 
                       //? Do nothing.
@@ -203,10 +216,15 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                   ),
                   child: Image.file(
                     widget.image,
-                    width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                    height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+                    width: !widget.interactive && widget.totalSize < 3
+                        ? size.width / widget.totalSize
+                        : 100,
+                    height: !widget.interactive && widget.totalSize < 3
+                        ? null
+                        : 100,
                     fit: BoxFit.cover,
-                    frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                    frameBuilder:
+                        (context, child, frame, wasSynchronouslyLoaded) {
                       //? If this is synchronously loaded, return the child.
                       if (wasSynchronouslyLoaded) return child;
 
@@ -229,8 +247,12 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                     },
                     errorBuilder: (context, e, _) => CachedNetworkImage(
                       imageUrl: widget.message?.media?.first.mediaUrl ?? "",
-                      width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                      height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+                      width: !widget.interactive && widget.totalSize < 3
+                          ? size.width / widget.totalSize
+                          : 100,
+                      height: !widget.interactive && widget.totalSize < 3
+                          ? null
+                          : 100,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -269,7 +291,10 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                   padding: EdgeInsets.all(2),
                 ),
                 icon: WayaAssets.icons.cMultiplyCircle.svg(
-                  color: WayaColors.greyColor400,
+                  colorFilter: ColorFilter.mode(
+                    WayaColors.greyColor400,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             )

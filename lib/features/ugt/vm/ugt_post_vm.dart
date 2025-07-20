@@ -8,7 +8,7 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
 import 'package:wayagram/features/ugt/data/model/single_contestant_profile.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 

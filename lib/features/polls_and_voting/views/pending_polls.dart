@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +15,7 @@ import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PendingPolls extends ConsumerStatefulWidget {
   final bool isExpanded;
-  const PendingPolls({super.key,  this.isExpanded = false});
+  const PendingPolls({super.key, this.isExpanded = false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PendingPollsState();
@@ -38,7 +37,6 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
@@ -57,7 +55,7 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
                 DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
             return InkWell(
               onTap: (){
-                WayaNav.toNamed('/poll-details',arguments: {
+                WayaNav.toNamed('/singlePollScreen',arguments: {
                   'id':poll.id
                 });
               },
@@ -119,69 +117,93 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
                     ),
                     const Gap(10),
 
-                    Text("${poll.question?.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
-                    const Gap(3),
-                    if (poll.description != null)
-                      Text(
-                        '${poll.description?.capitalizeFirst}',
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Theme.of(context).colorScheme.greyColor500),
-                      ),
-                    const Gap(10),
-                    Text(
-                      '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} • $hoursLeft hours remaining',
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.greyColor500),
-                    ),
-                    const Gap(10),
-                    //[vote(choice)/vote(poll)] * 100
-                    Column(
-                      spacing: 10.h,
-                      children: [
-                        if (poll.choices != null)
-                          ...poll.choices!.map(
-                                (e) => InkWell(
-                              onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'The poll has not started.',
-                                      style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
-                                    ),
-                                    backgroundColor: WayaColors.primary,
-                                    duration: Duration(seconds: 2),
-                                  ),
-                                );
-
-                              },
-                              child: WayaInformativeProgressBar(
-                                title: '${e.text?.capitalizeFirst}',
-                                text: '${e.text?.capitalizeFirst}',
-                                subtitle: '',
-                                progress: viewModel.fetchAllPols[index].voteCount == 0 ? 0 :double.parse(((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
-                                height: 60.0,
-                                filledRegion: wayaTheme.colorScheme.customPrimary,
-                                unfilledRegion: wayaTheme.colorScheme.greyColor200,
-                                count: e.voteCount!,
-                                fontSize: 12,
-                                activeTextColor: wayaTheme.colorScheme.white,
-                                inactiveTextColor: wayaTheme.colorScheme.primary500,
-                                imageUrl: e.imageUrl,
-                              ),
+                          Text("${poll.question?.capitalizeFirst}",
+                              style: wayaTheme.textTheme.titleLarge),
+                          const Gap(3),
+                          if (poll.description != null)
+                            Text(
+                              '${poll.description?.capitalizeFirst}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .wayaCopyWith(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .greyColor500),
                             ),
+                          const Gap(10),
+                          Text(
+                            '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} • $hoursLeft hours remaining',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .wayaCopyWith(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .greyColor500),
                           ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            );
-          })
-    );
+                          const Gap(10),
+                          //[vote(choice)/vote(poll)] * 100
+                          Column(
+                            spacing: 10.h,
+                            children: [
+                              if (poll.choices != null)
+                                ...poll.choices!.map(
+                                  (e) => InkWell(
+                                    onTap: () {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'The poll has not started.',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    WayaConstants.fontFamily,
+                                                fontSize: 12),
+                                          ),
+                                          backgroundColor: WayaColors.primary,
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    },
+                                    child: WayaInformativeProgressBar(
+                                      title: '${e.text?.capitalizeFirst}',
+                                      text: '${e.text?.capitalizeFirst}',
+                                      subtitle: '',
+                                      progress: viewModel.fetchAllPols[index]
+                                                  .voteCount ==
+                                              0
+                                          ? 0
+                                          : double.parse(((e.voteCount!) /
+                                                  viewModel.fetchAllPols[index]
+                                                      .voteCount!)
+                                              .toStringAsFixed(2)),
+                                      height: 60.0,
+                                      filledRegion:
+                                          wayaTheme.colorScheme.customPrimary,
+                                      unfilledRegion:
+                                          wayaTheme.colorScheme.greyColor200,
+                                      count: e.voteCount!,
+                                      fontSize: 12,
+                                      activeTextColor:
+                                          wayaTheme.colorScheme.white,
+                                      inactiveTextColor:
+                                          wayaTheme.colorScheme.primary500,
+                                      imageUrl: e.imageUrl,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }));
   }
 
   Widget _buildActionNav({
@@ -214,5 +236,3 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
     );
   }
 }
-
-

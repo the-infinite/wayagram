@@ -53,7 +53,8 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
   void _toChat() async {
     final chat = wayaChatsCache.getCachedData(widget.chatId)!;
     widget.conversationNotifier.dismissOverlay();
-    widget.notifier.setChat((await widget.conversationNotifier.getChatDetails(chat.id)) ?? chat);
+    widget.notifier.setChat(
+        (await widget.conversationNotifier.getChatDetails(chat.id)) ?? chat);
     widget.notifier.markAllAsRead().then((result) {
       if (!result) return;
       widget.conversationNotifier.getChats(true);
@@ -113,7 +114,9 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               textColor: WayaColors.black,
               color: Colors.transparent,
               leadingIcon: Icon(
-                chat.self?.isPined ?? false ? CupertinoIcons.pin_slash_fill : CupertinoIcons.pin_fill,
+                chat.self?.isPined ?? false
+                    ? CupertinoIcons.pin_slash_fill
+                    : CupertinoIcons.pin_fill,
                 size: 20,
                 color: WayaColors.black,
               ),
@@ -137,7 +140,9 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               textColor: WayaColors.black,
               color: Colors.transparent,
               leadingIcon: Icon(
-                chat.self?.isArchived ?? false ? CupertinoIcons.archivebox : CupertinoIcons.archivebox_fill,
+                chat.self?.isArchived ?? false
+                    ? CupertinoIcons.archivebox
+                    : CupertinoIcons.archivebox_fill,
                 size: 20,
                 color: WayaColors.black,
               ),
@@ -168,12 +173,21 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               alignment: Alignment.centerLeft,
               verticalPadding: 8,
               horizontalPadding: 8,
-              textColor: chat.self?.isMuted ?? false ? WayaColors.black : WayaColors.error,
+              textColor: chat.self?.isMuted ?? false
+                  ? WayaColors.black
+                  : WayaColors.error,
               color: Colors.transparent,
               leadingIcon: SvgPicture.asset(
-                chat.self?.isMuted ?? false ? WayaAssets.icons.cProfileUnmute.path : WayaAssets.icons.cProfileMute.path,
+                chat.self?.isMuted ?? false
+                    ? WayaAssets.icons.cProfileUnmute.path
+                    : WayaAssets.icons.cProfileMute.path,
                 height: 20.sp,
-                color: chat.self?.isMuted ?? false ? WayaColors.black : WayaColors.error,
+                colorFilter: ColorFilter.mode(
+                  chat.self?.isMuted == true
+                      ? WayaColors.black
+                      : WayaColors.error,
+                  BlendMode.srcIn,
+                ),
               ),
               text: chat.self?.isMuted ?? false ? "Unmute" : "Mute",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
@@ -209,7 +223,10 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               leadingIcon: WayaAssets.icons.cBin.svg(
                 height: 20,
                 width: 20,
-                color: WayaColors.error,
+                colorFilter: ColorFilter.mode(
+                  WayaColors.error,
+                  BlendMode.srcIn,
+                ),
               ),
               text: "Delete conversation",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
@@ -230,7 +247,8 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
         return ValueListenableBuilder(
           valueListenable: sizeNotifier,
           builder: (context, popupSize, _) {
-            final popupExtent = offset.dy + mySize.height + popupSize.height + 5;
+            final popupExtent =
+                offset.dy + mySize.height + popupSize.height + 5;
 
             //? This is fine.
             return Material(
@@ -257,13 +275,16 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
 
                   //? Second, the actions and conversation component.
                   Positioned(
-                    top: popupExtent > screenSize.height ? offset.dy - 10 - popupSize.height : offset.dy,
+                    top: popupExtent > screenSize.height
+                        ? offset.dy - 10 - popupSize.height
+                        : offset.dy,
                     child: SizedBox(
                       width: screenSize.width,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        verticalDirection:
-                            popupExtent > screenSize.height ? VerticalDirection.up : VerticalDirection.down,
+                        verticalDirection: popupExtent > screenSize.height
+                            ? VerticalDirection.up
+                            : VerticalDirection.down,
                         spacing: 10.h,
                         children: [
                           //? This is fine.
@@ -325,10 +346,12 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
     final chat = wayaChatsCache.getCachedData(widget.chatId)!;
     final consumerState = ref.watch(conversationProvider);
     final isMine = chat.lastMessage?.senderId == ConversationState.self.id;
-    final isDeleted = chat.lastMessage?.myStatus?.status == MessageStatusCode.deleted ||
-        (chat.lastMessage?.isDeleted ?? false) ||
-        (chat.lastMessage?.isDeletedBySender ?? false);
-    final isBlocked = chat.chatType == ChatType.personal && consumerState.isBlocked(chat.other.userId);
+    final isDeleted =
+        chat.lastMessage?.myStatus?.status == MessageStatusCode.deleted ||
+            (chat.lastMessage?.isDeleted ?? false) ||
+            (chat.lastMessage?.isDeletedBySender ?? false);
+    final isBlocked = chat.chatType == ChatType.personal &&
+        consumerState.isBlocked(chat.other.userId);
     final unread = chat.unreadCount;
     final userStatus = chat.other.chatUser?.onlineStatus;
 
@@ -353,7 +376,8 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               ChatProfilePicture(
                 user: chat.other.userData!,
                 lastSeen: chat.other.chatUser?.lastSeen,
-                showActive: chat.chatType != ChatType.group && userStatus == ChatUserActivity.online,
+                showActive: chat.chatType != ChatType.group &&
+                    userStatus == ChatUserActivity.online,
                 chat: chat,
                 radius: 25.r,
               ),
@@ -369,10 +393,14 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
                   children: [
                     //* For the other person's name.
                     Text(
-                      chat.name ?? chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User",
+                      chat.name ??
+                          chat.other.userData?.fullname ??
+                          chat.other.chatUser?.displayName ??
+                          "WayaGram User",
                       maxLines: 1,
                       style: WayaTextStyles.titleMedium.copyWith(
-                        fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
+                        fontWeight:
+                            unread < 1 ? FontWeight.normal : FontWeight.w600,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -387,10 +415,14 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
                                 : "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
                         maxLines: 1,
                         style: WayaTextStyles.titleMedium.copyWith(
-                          fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
+                          fontWeight:
+                              unread < 1 ? FontWeight.normal : FontWeight.w600,
                           overflow: TextOverflow.ellipsis,
-                          fontStyle: isBlocked || isDeleted ? FontStyle.italic : null,
-                          color: unread < 1 ? WayaColors.greyColor400 : WayaColors.greyColor500,
+                          fontStyle:
+                              isBlocked || isDeleted ? FontStyle.italic : null,
+                          color: unread < 1
+                              ? WayaColors.greyColor400
+                              : WayaColors.greyColor500,
                           fontSize: 14.sp,
                         ),
                       ),
@@ -408,9 +440,11 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
                 children: [
                   // First, the time.
                   Text(
-                    WayaDateHelper.getSocialTimeAgo(chat.lastMessage?.updatedAt ?? chat.updatedAt),
+                    WayaDateHelper.getSocialTimeAgo(
+                        chat.lastMessage?.updatedAt ?? chat.updatedAt),
                     style: WayaTextStyles.titleMedium.copyWith(
-                      fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
+                      fontWeight:
+                          unread < 1 ? FontWeight.normal : FontWeight.w600,
                       overflow: TextOverflow.ellipsis,
                       color: unread < 1 ? WayaColors.black : WayaColors.primary,
                       fontSize: 13.sp,
@@ -449,19 +483,28 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
                     )
                   else if (isMine && chat.lastMessage?.readAt != null)
                     WayaAssets.icons.cRead.svg(
-                      color: WayaColors.primary,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.primary,
+                        BlendMode.srcIn,
+                      ),
                       height: 16,
                       width: 16,
                     )
                   else if (isMine && chat.lastMessage?.deliveredAt != null)
                     WayaAssets.icons.cRead.svg(
-                      color: WayaColors.greyColor400,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.greyColor400,
+                        BlendMode.srcIn,
+                      ),
                       height: 16,
                       width: 16,
                     )
                   else if (isMine && chat.lastMessage?.createdAt != null)
                     WayaAssets.icons.cSent.svg(
-                      color: WayaColors.greyColor400,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.greyColor400,
+                        BlendMode.srcIn,
+                      ),
                       height: 16,
                       width: 16,
                     ),

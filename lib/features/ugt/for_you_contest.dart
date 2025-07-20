@@ -63,7 +63,7 @@ class ForYouContest extends ConsumerStatefulWidget {
   const ForYouContest({super.key});
 
   @override
-  _ForYouContestState createState() => _ForYouContestState();
+  ConsumerState<ForYouContest> createState() => _ForYouContestState();
 }
 
 class _ForYouContestState extends ConsumerState<ForYouContest> {
@@ -179,9 +179,9 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                           context: context,
                                           onTap: () {
                                             WayaNav.goBack();
-                                           
-                                              postNotifier.updateFilter(e.text);
-                                            
+
+                                            postNotifier.updateFilter(e.text);
+
                                             /*   dashboardNotifier.fetchTotalEarnings(
                                             model?.id ?? "", e.text.toLowerCase()); */
 
@@ -209,8 +209,10 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                             selectPresentTap(e);
                                           },
                                           asset: WayaAssets.icons.mComments.svg(
-                                            color: wayaTheme
-                                                .colorScheme.customBlack,
+                                            colorFilter: ColorFilter.mode(
+                                              wayaTheme.colorScheme.customBlack,
+                                              BlendMode.srcIn,
+                                            ),
                                             height: 20,
                                           ),
                                           text: e.text,
@@ -241,9 +243,10 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       WayaAssets.icons.actionFilter.svg(
-                                        color:
-                                            wayaTheme.colorScheme.greyColor400,
-                                        //  color: wayaTheme.colorScheme.primary600,
+                                        colorFilter: ColorFilter.mode(
+                                          wayaTheme.colorScheme.greyColor400,
+                                          BlendMode.srcIn,
+                                        ),
                                       ),
                                       Gap(5),
                                       Text(
@@ -257,9 +260,10 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                       ),
                                       Gap(5),
                                       WayaAssets.icons.downArrow.svg(
-                                        color:
-                                            wayaTheme.colorScheme.greyColor400,
-                                        //color: wayaTheme.colorScheme.primary600,
+                                        colorFilter: ColorFilter.mode(
+                                          wayaTheme.colorScheme.greyColor400,
+                                          BlendMode.srcIn,
+                                        ),
                                       )
                                     ],
                                   ),

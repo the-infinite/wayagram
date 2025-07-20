@@ -128,7 +128,9 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
     return GestureDetector(
       onTap: downloaded ? _openFile : null,
       child: Padding(
-        padding: widget.index == min(widget.totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(bottom: 10),
+        padding: widget.index == min(widget.totalSize - 1, 2)
+            ? EdgeInsets.zero
+            : const EdgeInsets.only(bottom: 10),
         child: ClipPath(
           clipper: ShapeBorderClipper(
             shape: RoundedRectangleBorder(
@@ -193,7 +195,10 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                                       icon,
                                       height: 30,
                                       width: 30,
-                                      color: highlights,
+                                      colorFilter: ColorFilter.mode(
+                                        highlights,
+                                        BlendMode.srcIn,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -271,7 +276,10 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                                   icon,
                                   height: 30,
                                   width: 30,
-                                  color: highlights,
+                                  colorFilter: ColorFilter.mode(
+                                    highlights,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
 
                                 //* The text file.
@@ -324,7 +332,8 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                       right: 5,
                       child: IconButton(
                         padding: EdgeInsets.zero,
-                        onPressed: () => widget.controller?.removeFile(widget.index),
+                        onPressed: () =>
+                            widget.controller?.removeFile(widget.index),
                         constraints: BoxConstraints(
                           minHeight: 0,
                           minWidth: 0,
@@ -335,7 +344,10 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                           padding: EdgeInsets.all(2),
                         ),
                         icon: WayaAssets.icons.cMultiplyCircle.svg(
-                          color: WayaColors.greyColor400,
+                          colorFilter: ColorFilter.mode(
+                            WayaColors.greyColor400,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     )

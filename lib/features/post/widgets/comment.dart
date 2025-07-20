@@ -146,7 +146,10 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                                   child: WayaActionNav(
                                     context: context,
                                     asset: WayaAssets.images.pages.delete.svg(
-                                      color: wayaTheme.colorScheme.error500,
+                                      colorFilter: ColorFilter.mode(
+                                        wayaTheme.colorScheme.error500,
+                                        BlendMode.srcIn,
+                                      ),
                                       height: 20,
                                     ),
                                     text: "Delete Comment",
@@ -162,7 +165,10 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                                   child: WayaActionNav(
                                     context: context,
                                     asset: WayaAssets.icons.mEdit.svg(
-                                      color: wayaTheme.colorScheme.customBlack,
+                                      colorFilter: ColorFilter.mode(
+                                        wayaTheme.colorScheme.customBlack,
+                                        BlendMode.srcIn,
+                                      ),
                                       height: 20,
                                     ),
                                     text: "Edit Comment",
@@ -324,7 +330,9 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                     }
                   },
                   child: Text(
-                    commentCount == 1 ? "View reply" : "View $commentCount replies",
+                    commentCount == 1
+                        ? "View reply"
+                        : "View $commentCount replies",
                     style: wayaTheme.textTheme.bodyBold.copyWith(
                       color: wayaTheme.colorScheme.primary,
                       fontSize: 14.sp,

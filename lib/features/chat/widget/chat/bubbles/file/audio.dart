@@ -280,7 +280,10 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                     horizontalPadding: 10,
                                     verticalPadding: 10,
                                     centerWidget: WayaAssets.icons.cPause.svg(
-                                      color: WayaColors.white,
+                                      colorFilter: ColorFilter.mode(
+                                        WayaColors.white,
+                                        BlendMode.srcIn,
+                                      ),
                                       height: 18,
                                       width: 18,
                                     ),
@@ -299,7 +302,10 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                     horizontalPadding: 10,
                                     verticalPadding: 10,
                                     centerWidget: WayaAssets.icons.cPlay.svg(
-                                      color: WayaColors.white,
+                                      colorFilter: ColorFilter.mode(
+                                        WayaColors.white,
+                                        BlendMode.srcIn,
+                                      ),
                                       height: 18,
                                       width: 18,
                                     ),
@@ -372,7 +378,10 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                           padding: EdgeInsets.all(2),
                         ),
                         icon: WayaAssets.icons.cMultiplyCircle.svg(
-                          color: WayaColors.greyColor400,
+                          colorFilter: ColorFilter.mode(
+                            WayaColors.greyColor400,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     )

@@ -36,7 +36,10 @@ class ChatProfilePicture extends StatelessWidget {
     //? The theme.
     final theme = Theme.of(context);
     final isGroup = useGroup && chat?.chatType == ChatType.group;
-    final chatUser = chat?.chatMembers.where((member) => member.userId == user.id).firstOrNull?.chatUser;
+    final chatUser = chat?.chatMembers
+        .where((member) => member.userId == user.id)
+        .firstOrNull
+        ?.chatUser;
 
     //? This is the component.
     return Consumer(
@@ -44,7 +47,8 @@ class ChatProfilePicture extends StatelessWidget {
         onTap: isEdit
             ? () async {
                 final result = await WayaUtils.pickAndCropImage();
-                final conversationNotifier = ref.read(conversationProvider.notifier);
+                final conversationNotifier =
+                    ref.read(conversationProvider.notifier);
 
                 //? If you never chose an image
                 if (result == null) {
@@ -53,7 +57,8 @@ class ChatProfilePicture extends StatelessWidget {
 
                 //? If this is a group chat.
                 else if (isGroup) {
-                  await conversationNotifier.changeGroupProfilePicture(chat!.id, result);
+                  await conversationNotifier.changeGroupProfilePicture(
+                      chat!.id, result);
                 }
 
                 //? For now do nothing else.
@@ -61,7 +66,8 @@ class ChatProfilePicture extends StatelessWidget {
               }
             : canMove && user.profilePicture != null
                 ? () async {
-                    final result = await WayaNavigationHelper.toImageDetailsScreen(
+                    final result =
+                        await WayaNavigationHelper.toImageDetailsScreen(
                       null,
                       [user.profilePicture!],
                     );
@@ -81,19 +87,24 @@ class ChatProfilePicture extends StatelessWidget {
                   radius: radius,
                   backgroundColor: chat != null &&
                           ((isGroup && chat?.groupImage == null) ||
-                              (!isGroup && (!(chatUser?.canSeeProfilePicture ?? true) || user.profilePicture == null)))
+                              (!isGroup &&
+                                  (!(chatUser?.canSeeProfilePicture ?? true) ||
+                                      user.profilePicture == null)))
                       ? theme.colorScheme.primary50
                       : theme.colorScheme.greyColor200,
                   backgroundImage: isGroup
                       ? chat?.groupImage != null
                           ? NetworkImage(chat!.groupImage!)
                           : null
-                      : (chatUser?.canSeeProfilePicture ?? true) && user.profilePicture != null
+                      : (chatUser?.canSeeProfilePicture ?? true) &&
+                              user.profilePicture != null
                           ? NetworkImage(user.profilePicture!)
                           : null,
                   child: chat != null &&
                           ((isGroup && chat?.groupImage == null) ||
-                              (!isGroup && (!(chatUser?.canSeeProfilePicture ?? true) || user.profilePicture == null)))
+                              (!isGroup &&
+                                  (!(chatUser?.canSeeProfilePicture ?? true) ||
+                                      user.profilePicture == null)))
                       ? Text(
                           chat!.initials(useGroup, user.id),
                           style: theme.textTheme.headlineLarge?.copyWith(
@@ -129,7 +140,10 @@ class ChatProfilePicture extends StatelessWidget {
                           child: WayaAssets.icons.mEdit.svg(
                             height: 14.sp,
                             width: 14.sp,
-                            color: theme.colorScheme.primary,
+                            colorFilter: ColorFilter.mode(
+                              theme.colorScheme.primary,
+                              BlendMode.srcIn,
+                            ),
                           ),
                         )
                       : Container(

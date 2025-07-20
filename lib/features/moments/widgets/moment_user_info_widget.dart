@@ -110,7 +110,7 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                   );
 
                   widget.continues();
-              
+
                   // if (response) {
                   if (response == false) {
                     return WayaSnackBar.showToast(
@@ -124,11 +124,14 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
 
                   // }
 
-                // }
+                  // }
                 },
                 child: SvgPicture.asset(
                   WayaAssets.icons.mThreeDots.path,
-                  color: wayaTheme.colorScheme.white,
+                  colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
               )
           ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -34,7 +33,7 @@ class _SinglePostState extends ConsumerState<SinglePost> {
         if (singlePost != null) {
           setState(() {
             post = PostModel.fromJson(singlePost);
-               wayaPostCache.cacheAll([PostModel.fromJson(singlePost)]);
+            wayaPostCache.cacheAll([PostModel.fromJson(singlePost)]);
           });
         }
       });
@@ -44,7 +43,6 @@ class _SinglePostState extends ConsumerState<SinglePost> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     if (post == null) {
@@ -59,16 +57,14 @@ class _SinglePostState extends ConsumerState<SinglePost> {
     }
     return WayaScaffold(
         body: Column(
-          children: [
-             WayaPostWidget(
-      data: post!,
-      index: 0,
-      padded: false,
-      sourceType: post?.sourceType ?? '',
-    )
-    
-          ],
+      children: [
+        WayaPostWidget(
+          data: post!,
+          index: 0,
+          padded: false,
+          sourceType: post?.sourceType ?? '',
         )
-    );
+      ],
+    ));
   }
 }

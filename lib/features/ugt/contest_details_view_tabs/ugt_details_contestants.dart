@@ -14,7 +14,8 @@ class UgtDetailsContestants extends ConsumerStatefulWidget {
   const UgtDetailsContestants(this.model, {super.key});
 
   @override
-  _UgtDetailsContestantsState createState() => _UgtDetailsContestantsState();
+  ConsumerState<UgtDetailsContestants> createState() =>
+      _UgtDetailsContestantsState();
 }
 
 class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {

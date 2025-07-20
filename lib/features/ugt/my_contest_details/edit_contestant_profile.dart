@@ -67,18 +67,21 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
   }
 
   Future<void> _pickVideo() async {
-    final XFile? pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await picker.pickVideo(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       File videoFile = File(pickedFile.path);
       int fileSize = await videoFile.length(); // Get file size in bytes
-      DateTime creationDate = await _getFileCreationDate(videoFile); // Get creation date
+      DateTime creationDate =
+          await _getFileCreationDate(videoFile); // Get creation date
 
       if (fileSize > maxFileSize) {
         // Show an error message if the file is too large
         WayaSnackBar.showToast("Video size should be less than 25MB.");
       } else {
-        VideoPlayerController controller = VideoPlayerController.file(File(videoFile.path));
+        VideoPlayerController controller =
+            VideoPlayerController.file(File(videoFile.path));
         await controller.initialize();
 
         // Check video duration
@@ -87,7 +90,8 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
         } else {
           setState(() {
             _videoFile = videoFile;
-            videoSize = "${(fileSize / (1024 * 1024)).toStringAsFixed(2)} MB"; // Convert to MB
+            videoSize =
+                "${(fileSize / (1024 * 1024)).toStringAsFixed(2)} MB"; // Convert to MB
             videoDate = creationDate.toString(); // Format date
           });
         }
@@ -97,7 +101,9 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
   }
 
   Future<DateTime> _getFileCreationDate(File file) async {
-    return file.stat().then((stat) => stat.modified); // Get file creation/modification date
+    return file
+        .stat()
+        .then((stat) => stat.modified); // Get file creation/modification date
   }
 
   @override
@@ -143,7 +149,10 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
                           height: 100,
                           width: 100,
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle, border: Border.all(color: Colors.red.withOpacity(0.2), width: 3)),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                  color: Colors.red.withValues(alpha: 0.2),
+                                  width: 3)),
                           child: _imgFile == null
                               ? SizedBox(
                                   height: 103,
@@ -208,14 +217,18 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
                         line: 6,
                         maxLength: 500,
                         borderColor:
-                            formState.hasError && bioController.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                            formState.hasError && bioController.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
                       ),
                       if (formState.hasError && bioController.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText ?? "",
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -245,16 +258,20 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
                         label: "What you expect from the voters",
                         line: 6,
                         maxLength: 500,
-                        borderColor: formState.hasError && whatExpectVoterController.text.isEmpty
+                        borderColor: formState.hasError &&
+                                whatExpectVoterController.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                       ),
-                      if (formState.hasError && whatExpectVoterController.text.isEmpty)
+                      if (formState.hasError &&
+                          whatExpectVoterController.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText ?? "",
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -277,7 +294,8 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Change Your Intro Video", style: wayaTheme.textTheme.bodySmall),
+                Text("Change Your Intro Video",
+                    style: wayaTheme.textTheme.bodySmall),
                 SizedBox(height: 16),
                 Row(
                   children: [
@@ -292,7 +310,8 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
                                   _videoFile = null;
                                 });
                               },
-                              child: WayaAssets.images.deleteImg.image(height: 60, width: 60),
+                              child: WayaAssets.images.deleteImg
+                                  .image(height: 60, width: 60),
                             ),
                           if (_videoFile == null)
                             WayaAssets.images.upload.image(
@@ -307,7 +326,8 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Upload Intro Video.", style: wayaTheme.textTheme.bodyMedium),
+                          Text("Upload Intro Video.",
+                              style: wayaTheme.textTheme.bodyMedium),
                           SizedBox(height: 4),
                           _selectedImage == null
                               ? Column(
@@ -343,9 +363,10 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
                           }, */
                               ),
                         if (_videoFile != null)
-                          WayaAssets.images.eCheckEvent.image(height: 60, width: 60
-                              // color: WayaColors.black,
-                              ),
+                          WayaAssets.images.eCheckEvent
+                              .image(height: 60, width: 60
+                                  // color: WayaColors.black,
+                                  ),
                       ],
                     ),
                   ],
@@ -359,15 +380,18 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
               style: wayaTheme.textTheme.hintStyle),
           const Gap(40),
           WayaButton(
-            centerWidget: LoadingState(loading: isLoading.value, text: 'Submit'),
+            centerWidget:
+                LoadingState(loading: isLoading.value, text: 'Submit'),
             callback: !isLoading.value
                 ? () {
                     if (_imgFile == null) {
-                      WayaSnackBar.showToast("Please make sure an image is picked");
+                      WayaSnackBar.showToast(
+                          "Please make sure an image is picked");
                       return;
                     }
                     if (_videoFile == null) {
-                      WayaSnackBar.showToast("Please make sure video is picked");
+                      WayaSnackBar.showToast(
+                          "Please make sure video is picked");
                       return;
                     }
                     if (_formKey.currentState!.validate()) {
@@ -402,7 +426,8 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
             text: 'Go Back',
             color: wayaTheme.colorScheme.greyColor300,
             textColor: wayaTheme.colorScheme.customBlack,
-            border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            border:
+                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
               WayaNav.goBack();
             },

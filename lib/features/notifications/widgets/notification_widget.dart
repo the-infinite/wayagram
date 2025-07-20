@@ -30,10 +30,12 @@ class NotificationCardWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<NotificationCardWidget> createState() => _NotificationCardWidgetState();
+  ConsumerState<NotificationCardWidget> createState() =>
+      _NotificationCardWidgetState();
 }
 
-class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget> {
+class _NotificationCardWidgetState
+    extends ConsumerState<NotificationCardWidget> {
   late final chatNotifier = ref.read(conversationProvider.notifier);
   FollowStatusModel? _follow;
 
@@ -43,7 +45,8 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
       (_) async {
         //? If this is a follow request.
         if (widget.data.messageType == NotificationMessageType.followRequest) {
-          debugPrint("Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
+          debugPrint(
+              "Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
           final follow = await myFollowProvider.getFollowStatus(widget.data.id);
 
           //? If mounted...
@@ -75,7 +78,8 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
 
     //? If this is for comments
     if (widget.data.messageType == NotificationMessageType.comment) {
-      return widget.data.message.commentId != null && widget.data.message.postId != null;
+      return widget.data.message.commentId != null &&
+          widget.data.message.postId != null;
     }
 
     //? If this is for post...
@@ -111,7 +115,8 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
 
     //? If this is a quotation notification.
     if (widget.data.messageType == NotificationMessageType.getQuotation) {
-      return widget.data.message.requestId != null || widget.data.message.bidId != null;
+      return widget.data.message.requestId != null ||
+          widget.data.message.bidId != null;
     }
 
     //? If this is for a group notification.
@@ -157,7 +162,8 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
 
     //? If this in any way involves a chat...
     if (chatId != null) {
-      final chat = wayaChatsCache.getCachedData(chatId) ?? await chatNotifier.getChatDetails(chatId);
+      final chat = wayaChatsCache.getCachedData(chatId) ??
+          await chatNotifier.getChatDetails(chatId);
 
       if (chat == null) {
         WayaSnackBar.showToast("This chat has been deleted");
@@ -266,12 +272,18 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
                         padding: const EdgeInsets.all(7),
                         child: SvgPicture.asset(
                           switch (widget.data.messageType) {
-                            NotificationMessageType.chat => WayaAssets.icons.notifNewMessage.path,
-                            NotificationMessageType.comment => WayaAssets.icons.notifNewComment.path,
-                            NotificationMessageType.donation => WayaAssets.icons.notifNewDonation.path,
-                            NotificationMessageType.event => WayaAssets.icons.notifUpcomingEvent.path,
-                            NotificationMessageType.followRequest => WayaAssets.icons.notifNewFollower.path,
-                            NotificationMessageType.poll => WayaAssets.icons.notifPollResults.path,
+                            NotificationMessageType.chat =>
+                              WayaAssets.icons.notifNewMessage.path,
+                            NotificationMessageType.comment =>
+                              WayaAssets.icons.notifNewComment.path,
+                            NotificationMessageType.donation =>
+                              WayaAssets.icons.notifNewDonation.path,
+                            NotificationMessageType.event =>
+                              WayaAssets.icons.notifUpcomingEvent.path,
+                            NotificationMessageType.followRequest =>
+                              WayaAssets.icons.notifNewFollower.path,
+                            NotificationMessageType.poll =>
+                              WayaAssets.icons.notifPollResults.path,
                             NotificationMessageType.creditAlert ||
                             NotificationMessageType.debitAlert ||
                             NotificationMessageType.getQuotation =>
@@ -280,19 +292,28 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
                             NotificationMessageType.groups ||
                             NotificationMessageType.pages =>
                               WayaAssets.icons.notifGroupRequest.path,
-                            NotificationMessageType.calls => WayaAssets.icons.notifCall.path,
-                            NotificationMessageType.like => WayaAssets.icons.notifLike.path,
-                            NotificationMessageType.share => WayaAssets.icons.notifShare.path,
-                            NotificationMessageType.view => WayaAssets.icons.notifView.path,
-                            NotificationMessageType.liveStream => WayaAssets.icons.notifLivestream.path,
-                            NotificationMessageType.uncategorized => WayaAssets.icons.notifications.path,
+                            NotificationMessageType.calls =>
+                              WayaAssets.icons.notifCall.path,
+                            NotificationMessageType.like =>
+                              WayaAssets.icons.notifLike.path,
+                            NotificationMessageType.share =>
+                              WayaAssets.icons.notifShare.path,
+                            NotificationMessageType.view =>
+                              WayaAssets.icons.notifView.path,
+                            NotificationMessageType.liveStream =>
+                              WayaAssets.icons.notifLivestream.path,
+                            NotificationMessageType.uncategorized =>
+                              WayaAssets.icons.notifications.path,
                             NotificationMessageType.supportNotification ||
                             NotificationMessageType.disputeNotification =>
                               WayaAssets.icons.cAttachContact.path,
                           },
                           height: 22,
                           width: 22,
-                          color: wayaTheme.colorScheme.primary,
+                          colorFilter: ColorFilter.mode(
+                            wayaTheme.colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                     ),
@@ -317,16 +338,23 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
                           //* The notification body.
                           WayaRichText(
                             title1: "${widget.data.message.body}.",
-                            title2: !showActions || (widget.data.notificationAction?.isEmpty ?? true)
+                            title2: !showActions ||
+                                    (widget.data.notificationAction?.isEmpty ??
+                                        true)
                                 ? null
                                 : widget.data.notificationAction!,
-                            style1: wayaTheme.textTheme.mediumDescriptionStyle.copyWith(
+                            style1: wayaTheme.textTheme.mediumDescriptionStyle
+                                .copyWith(
                               fontSize: 12.sp,
                             ),
-                            style2: WayaTextStyles.smallActiveLinkStyle.copyWith(
+                            style2:
+                                WayaTextStyles.smallActiveLinkStyle.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
-                            onTap2: widget.data.notificationAction?.isEmpty ?? true ? null : _executeAction,
+                            onTap2:
+                                widget.data.notificationAction?.isEmpty ?? true
+                                    ? null
+                                    : _executeAction,
                           ),
 
                           // Some space.
@@ -334,8 +362,10 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
 
                           //* The notification time.
                           Text(
-                            WayaDateHelper.getFullTimestamp(widget.data.createdAt),
-                            style: wayaTheme.textTheme.descriptionStyle.copyWith(
+                            WayaDateHelper.getFullTimestamp(
+                                widget.data.createdAt),
+                            style:
+                                wayaTheme.textTheme.descriptionStyle.copyWith(
                               color: wayaTheme.colorScheme.greyColor400,
                               fontSize: 13.sp,
                             ),

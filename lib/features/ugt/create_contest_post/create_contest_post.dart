@@ -336,7 +336,8 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                   Container(
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.white.withOpacity(0.7),
+                                      color:
+                                          Colors.white.withValues(alpha: 0.7),
                                     ),
                                     padding: EdgeInsets.all(8),
                                     child: Icon(

@@ -15,7 +15,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as model;
 import 'package:wayagram/features/ugt/data/model/voter_contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/voter_user_list_model.dart';
 
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';

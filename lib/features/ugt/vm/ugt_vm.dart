@@ -20,7 +20,7 @@ import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 import 'package:wayagram/features/ugt/data/model/category_response.dart';
 import 'package:wayagram/features/ugt/data/model/contest_state.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';

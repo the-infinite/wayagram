@@ -48,34 +48,56 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
   void initState() {
     super.initState();
 
-      currentIndex = widget.index ?? 0;
- 
+    currentIndex = widget.index ?? 0;
+
     _pageController = PageController(initialPage: widget.index ?? 0);
     _animationController = AnimationController(
       vsync: this,
     );
   }
 
-void _startTimer() {
-  if (moments.isEmpty) return;
+  void _startTimer() {
+    if (moments.isEmpty) return;
 
-  _animationController.reset();
-  
-  //? Set duration based on content type
-  final duration = moments[currentIndex].contentType == 'text' 
-      ? Duration(seconds: 7) 
-      : Duration(seconds: 10);
-  
-  _animationController.duration = duration;
+    _animationController.reset();
 
-  _animationController.forward(from: 0.0).whenComplete(() {
-    if (!mounted || pauseController.value) return;
-    
+    //? Set duration based on content type
+    final duration = moments[currentIndex].contentType == 'text'
+        ? Duration(seconds: 7)
+        : Duration(seconds: 10);
+
+    _animationController.duration = duration;
+
+    _animationController.forward(from: 0.0).whenComplete(() {
+      if (!mounted || pauseController.value) return;
+
+      if (currentIndex < moments.length - 1) {
+        //? advance to next moment
+        _nextMoment();
+      } else {
+        //? At last moment - auto-route back after animation completes
+        if (!WayaNav.canPop()) return;
+        if (isMine) {
+          WayaNav.replaceNamed(MyMoments.route);
+        } else {
+          WayaNav.goBack();
+        }
+      }
+    });
+  }
+
+  void _nextMoment() async {
+    if (!mounted) return;
+    textController.clear();
+
     if (currentIndex < moments.length - 1) {
-      //? advance to next moment
-      _nextMoment();
+      //? Normal navigation between moments
+      setState(() {
+        currentIndex++;
+      });
+      _pageController.jumpToPage(currentIndex);
     } else {
-      //? At last moment - auto-route back after animation completes
+      //? At last moment - always route back regardless of animation state
       if (!WayaNav.canPop()) return;
       if (isMine) {
         WayaNav.replaceNamed(MyMoments.route);
@@ -83,65 +105,43 @@ void _startTimer() {
         WayaNav.goBack();
       }
     }
-  });
-}
+  }
 
-void _nextMoment() async {
-  if (!mounted) return;
-  textController.clear();
-  
-  if (currentIndex < moments.length - 1) {
-    //? Normal navigation between moments
-    setState(() {
-      currentIndex++;
-    });
-    _pageController.jumpToPage(currentIndex);
-  } else {
-    //? At last moment - always route back regardless of animation state
-    if (!WayaNav.canPop()) return;
-    if (isMine) {
-      WayaNav.replaceNamed(MyMoments.route);
+  void _previousMoment() {
+    textController.clear();
+
+    if (currentIndex > 0) {
+      //? Normal navigation between moments
+      setState(() {
+        currentIndex--;
+      });
+      _pageController.jumpToPage(currentIndex);
     } else {
+      //? At first moment - always route back regardless of animation state
       WayaNav.goBack();
     }
   }
-}
 
-void _previousMoment() {
-  textController.clear();
-  
-  if (currentIndex > 0) {
-    //? Normal navigation between moments
+  void _onPageChanged(int index) {
+    if (!mounted) return;
+
+    //? Update current index immediately
     setState(() {
-      currentIndex--;
+      currentIndex = index;
     });
-    _pageController.jumpToPage(currentIndex);
-  } else {
-    //? At first moment - always route back regardless of animation state
-    WayaNav.goBack();
+
+    //? Reset UI state
+    _commentFocusNode.unfocus();
+    textController.clear();
+
+    if (currentIndex < moments.length) {
+      final previousKey = "up-${moments[currentIndex].userId}-$currentIndex";
+      ref.read(replyMomentVmProvider(previousKey).notifier).updateComment('');
+    }
+
+    _animationController.reset();
+    _startTimer();
   }
-}
-
-void _onPageChanged(int index) {
-  if (!mounted) return;
-
-  //? Update current index immediately
-  setState(() {
-    currentIndex = index;
-  });
-
-  //? Reset UI state
-  _commentFocusNode.unfocus();
-  textController.clear();
-  
-  if (currentIndex < moments.length) {
-    final previousKey = "up-${moments[currentIndex].userId}-$currentIndex";
-    ref.read(replyMomentVmProvider(previousKey).notifier).updateComment('');
-  }
-
-  _animationController.reset();
-  _startTimer();
-}
 
   void pauseAnimation([bool hideControls = true]) {
     if (!_animationController.isAnimating) return;
@@ -206,7 +206,7 @@ void _onPageChanged(int index) {
                   onPageChanged: (index) => _onPageChanged(index),
                   itemBuilder: (context, index) {
                     //? Get the moment.
-                   
+
                     final moment = moments[index];
 
                     //? This is fine.
@@ -305,7 +305,7 @@ void _onPageChanged(int index) {
                                       borderRadius: BorderRadius.circular(12),
                                       value: progressValue,
                                       backgroundColor:
-                                          Colors.black.withOpacity(0.25),
+                                          Colors.black.withValues(alpha: 0.25),
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                           Colors.white),
                                     );
@@ -344,21 +344,21 @@ void _onPageChanged(int index) {
                 ),
 
                 //? This is fine.
-                 if (!isMine)
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: ReplyMomentWidget(
-                    textController: textController,
-                    pause: pauseAnimation,
-                    continues: continueAnimating,
-                    uniqueKey:
-                        "up-${moments[currentIndex].userId}-$currentIndex",
-                    moment: moments[currentIndex],
-                    focusNode: _commentFocusNode,
-                  ),
-                )
+                if (!isMine)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: ReplyMomentWidget(
+                      textController: textController,
+                      pause: pauseAnimation,
+                      continues: continueAnimating,
+                      uniqueKey:
+                          "up-${moments[currentIndex].userId}-$currentIndex",
+                      moment: moments[currentIndex],
+                      focusNode: _commentFocusNode,
+                    ),
+                  )
 
                 //? How we see our current moment metrics.
                 else
@@ -459,7 +459,7 @@ class __TextMomentState extends State<_TextMoment> {
         text: url,
         style: (baseStyle ?? const TextStyle()).copyWith(
           decoration: TextDecoration.underline,
-          backgroundColor: Colors.white.withOpacity(0.5),
+          backgroundColor: Colors.white.withValues(alpha: 0.5),
         ),
         recognizer: TapGestureRecognizer()
           ..onTap = () {
@@ -610,7 +610,7 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.customBlack.withOpacity(0.5),
+                color: wayaTheme.colorScheme.customBlack.withValues(alpha: 0.5),
               ),
               child: widget.moment.caption!.length < 100
                   ? Text(

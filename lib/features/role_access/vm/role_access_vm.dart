@@ -12,7 +12,7 @@ import 'package:wayagram/features/role_access/data/role_access_repo.dart';
 import 'package:wayagram/features/role_access/vm/states/role_access_state.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import '../../../core/data/local_data_source.dart';
 
 enum TypeRole {

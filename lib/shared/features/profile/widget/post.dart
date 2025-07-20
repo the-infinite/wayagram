@@ -106,8 +106,6 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     final wayaTheme = Theme.of(context);
     final screenSize = MediaQuery.sizeOf(context);
 
-   
-
     //? Listening to the consumer here might have the downside of every post
     //? that is spawned using this listening for state changes by itself. Might
     //? present scaling issues in the future but that is left to be seen.
@@ -216,7 +214,9 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(postData.pageId ?? ''));
+                                  WayaNav.toNamed(
+                                      WayaAppRoutes.getPageDetailsPage(
+                                          postData.pageId ?? ''));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +357,10 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                         context: context,
                                         asset:
                                             WayaAssets.images.pages.delete.svg(
-                                          color: wayaTheme.colorScheme.error500,
+                                          colorFilter: ColorFilter.mode(
+                                            wayaTheme.colorScheme.error500,
+                                            BlendMode.srcIn,
+                                          ),
                                           height: 20,
                                         ),
                                         text: "Delete Post",
@@ -563,7 +566,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
                                                     color: Colors.white
-                                                        .withOpacity(0.7),
+                                                        .withValues(alpha: 0.7),
                                                   ),
                                                   padding: EdgeInsets.all(8),
                                                   child: Icon(

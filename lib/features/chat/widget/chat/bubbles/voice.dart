@@ -59,7 +59,8 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
   final canPlay = ValueNotifier(true);
   final playbackSpeed = ValueNotifier(_PlaybackSpeed.normal);
   late final waveStyle = PlayerWaveStyle(
-    fixedWaveColor: (isSender ? WayaColors.white : WayaColors.primary).withAlpha(120),
+    fixedWaveColor:
+        (isSender ? WayaColors.white : WayaColors.primary).withAlpha(120),
     liveWaveColor: isSender ? WayaColors.white : WayaColors.primary,
     spacing: 4,
     waveThickness: 3,
@@ -126,9 +127,11 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
 
     //? Our color scheme.
     final buttonColor = widget.isSender ? WayaColors.primary : WayaColors.white;
-    final buttonBackground = widget.isSender ? WayaColors.white : WayaColors.primary;
+    final buttonBackground =
+        widget.isSender ? WayaColors.white : WayaColors.primary;
     // final trackColor = widget.isSender ? null : WayaColors.primary.withAlpha(10);
-    final durationColor = widget.isSender ? WayaColors.white : WayaColors.primary600;
+    final durationColor =
+        widget.isSender ? WayaColors.white : WayaColors.primary600;
 
     //? Return this here.
     return ClipPath(
@@ -144,7 +147,9 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
           return ValueListenableBuilder(
             valueListenable: isPlaying,
             builder: (context, isStreamPlaying, _) {
-              if (!downloaded && widget.data.dto == null && widget.data.media!.isNotEmpty) {
+              if (!downloaded &&
+                  widget.data.dto == null &&
+                  widget.data.media!.isNotEmpty) {
                 //? If this is undefined...
                 if (file == null) return const SizedBox();
 
@@ -221,8 +226,10 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
               return StreamBuilder(
                 stream: player.onCurrentDurationChanged,
                 builder: (context, data) {
-                  final currentPosition = Duration(milliseconds: data.data ?? 0);
-                  final totalDuration = Duration(milliseconds: player.maxDuration);
+                  final currentPosition =
+                      Duration(milliseconds: data.data ?? 0);
+                  final totalDuration =
+                      Duration(milliseconds: player.maxDuration);
 
                   //? Return the component.
                   return Row(
@@ -241,7 +248,9 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                         //? First, the pause/play icon.
                         AnimatedCrossFade(
                           duration: const Duration(milliseconds: 350),
-                          crossFadeState: isStreamPlaying ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                          crossFadeState: isStreamPlaying
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond,
                           firstChild: WayaButton(
                             callback: () {
                               player.pausePlayer();
@@ -253,7 +262,10 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                             horizontalPadding: 10,
                             verticalPadding: 10,
                             centerWidget: WayaAssets.icons.cPause.svg(
-                              color: buttonColor,
+                              colorFilter: ColorFilter.mode(
+                                buttonColor,
+                                BlendMode.srcIn,
+                              ),
                               height: 18,
                               width: 18,
                             ),
@@ -271,7 +283,10 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                             horizontalPadding: 10,
                             verticalPadding: 10,
                             centerWidget: WayaAssets.icons.cPlay.svg(
-                              color: buttonColor,
+                              colorFilter: ColorFilter.mode(
+                                buttonColor,
+                                BlendMode.srcIn,
+                              ),
                               height: 18,
                               width: 18,
                             ),
@@ -324,7 +339,8 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Text(
-                          WayaDateHelper.convertDurationToTimestamp((totalDuration - currentPosition)),
+                          WayaDateHelper.convertDurationToTimestamp(
+                              (totalDuration - currentPosition)),
                           style: WayaTextStyles.bodySmall.copyWith(
                             color: durationColor,
                             fontSize: 14.sp,

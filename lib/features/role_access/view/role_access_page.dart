@@ -89,7 +89,10 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
                             selectPresentTap(e);
                           },
                           asset: WayaAssets.icons.mComments.svg(
-                            color: wayaTheme.colorScheme.customBlack,
+                            colorFilter: ColorFilter.mode(
+                              wayaTheme.colorScheme.customBlack,
+                              BlendMode.srcIn,
+                            ),
                             height: 20,
                           ),
                           text: e.text,

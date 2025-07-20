@@ -8,8 +8,7 @@ class TransactionRepository extends BaseRepository {
   Future<WayaRequestResponse> getUserTransactions(
       {int? page = 1, int? limit = 100, String? filters}) {
     return get(
-        'wayagram-wallet/api/v2/client/transactions?page=$page&limit=$limit&${filters ??
-            ""}');
+        'wayagram-wallet/api/v2/client/transactions?page=$page&limit=$limit&${filters ?? ""}');
   }
 
   Future<WayaRequestResponse> getSingleTransactions(String transactionId) {
@@ -22,12 +21,11 @@ class TransactionRepository extends BaseRepository {
     final secureDataSource = WayaSecureDataSource();
 
     try {
-      String? value = await FileSaver.instance.saveAs(
+      String? _ = await FileSaver.instance.saveAs(
         name: "transaction",
         link: LinkDetails(
             link:
-            "${WayaConstants.baseUrl}/${WayaServiceUri
-                .wallet}/client/transactions/export",
+                "${WayaConstants.baseUrl}/${WayaServiceUri.wallet}/client/transactions/export",
             method: "GET",
             headers: {
               'Authorization': 'Bearer ${await secureDataSource.getToken()}'

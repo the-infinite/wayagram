@@ -27,7 +27,8 @@ class CommentReplyToWidget extends StatefulWidget {
   State<CommentReplyToWidget> createState() => _CommentReplyToWidgetState();
 }
 
-class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with SingleTickerProviderStateMixin {
+class _CommentReplyToWidgetState extends State<CommentReplyToWidget>
+    with SingleTickerProviderStateMixin {
   AnimationController? animationController;
 
   @override
@@ -67,7 +68,9 @@ class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with Single
               height: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(200),
-                color: widget.comment.userId == user.id ? WayaColors.primary : WayaColors.primary600,
+                color: widget.comment.userId == user.id
+                    ? WayaColors.primary
+                    : WayaColors.primary600,
               ),
             ),
 
@@ -85,7 +88,9 @@ class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with Single
                     //? First, the top row where this user happens to keep important
                     //? data.
                     Row(
-                      mainAxisAlignment: widget.interactive ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+                      mainAxisAlignment: widget.interactive
+                          ? MainAxisAlignment.spaceBetween
+                          : MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         //* User name.
@@ -94,9 +99,12 @@ class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with Single
                               ? "Edit comment"
                               : widget.comment.userId == user.id
                                   ? "You"
-                                  : widget.comment.user?.fullname ?? "WayaGram User",
+                                  : widget.comment.user?.fullname ??
+                                      "WayaGram User",
                           style: WayaTextStyles.titleMedium.copyWith(
-                            color: widget.comment.userId == user.id ? WayaColors.primary : WayaColors.primary600,
+                            color: widget.comment.userId == user.id
+                                ? WayaColors.primary
+                                : WayaColors.primary600,
                           ),
                         ),
 
@@ -104,14 +112,18 @@ class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with Single
                         if (widget.interactive)
                           IconButton(
                             onPressed: () {
-                              animationController!.reverse().then((_) => widget.controller.setReplyTo(null));
+                              animationController!.reverse().then(
+                                  (_) => widget.controller.setReplyTo(null));
                             },
                             style: IconButton.styleFrom(
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               padding: const EdgeInsets.all(2),
                             ),
                             icon: WayaAssets.icons.cMultiplyCircle.svg(
-                              color: WayaColors.greyColor400,
+                              colorFilter: ColorFilter.mode(
+                                WayaColors.greyColor400,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                       ],

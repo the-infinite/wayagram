@@ -32,7 +32,13 @@ class WayaDp extends ConsumerWidget {
 
     final avatar = !isSelf || (image?.isNotEmpty ?? false)
         ? image
-        : ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user?.profilePicture;
+        : ref
+            .watch(profileVmProvider)
+            .userAccountModel
+            ?.data
+            ?.userdata
+            ?.user
+            ?.profilePicture;
 
     return GestureDetector(
       onTap: isEdit
@@ -57,7 +63,8 @@ class WayaDp extends ConsumerWidget {
           CircleAvatar(
             radius: radius,
             backgroundColor: wayaTheme.colorScheme.greyColor200,
-            backgroundImage: avatar?.isNotEmpty == true ? NetworkImage(avatar!) : null,
+            backgroundImage:
+                avatar?.isNotEmpty == true ? NetworkImage(avatar!) : null,
             child: avatar?.isEmpty ?? true
                 ? Icon(
                     Icons.person,
@@ -69,7 +76,8 @@ class WayaDp extends ConsumerWidget {
             Positioned.fill(
               child: CircleAvatar(
                 radius: radius,
-                backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
+                backgroundColor:
+                    Colors.black.withValues(alpha: 0.1), // Transparent overlay
                 child: Icon(
                   Icons.camera_alt_outlined,
                   color: Colors.white,
@@ -108,7 +116,8 @@ class WayaImage2 extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    final coverImage =
+        ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
     return GestureDetector(
       onTap: isEdit
           ? () {
@@ -167,7 +176,10 @@ class WayaImage2 extends ConsumerWidget {
                   child: WayaAssets.images.pages.delete.svg(
                     height: 18.h,
                     width: 18.w,
-                    color: Colors.white,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
@@ -221,7 +233,8 @@ class WayaImage3 extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    final coverImage =
+        ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
     return coverImage == null
         ? errorWidget(wayaTheme)
         : GestureDetector(
@@ -233,7 +246,8 @@ class WayaImage3 extends ConsumerWidget {
                     () async {
                       if (imageUrl == null && coverImage == null) return;
 
-                      final result = await WayaNavigationHelper.toImageDetailsScreen(
+                      final result =
+                          await WayaNavigationHelper.toImageDetailsScreen(
                         null,
                         [imageUrl ?? coverImage!],
                       );
@@ -330,7 +344,8 @@ class WayaImage extends StatelessWidget {
           height: height,
           width: width,
           decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
+              color: wayaTheme.colorScheme.scaffoldColor,
+              borderRadius: radius ?? BorderRadius.circular(8)),
         ),
         errorWidget: (context, url, error) => AnimatedContainer(
           duration: const Duration(milliseconds: 700),

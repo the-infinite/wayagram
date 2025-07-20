@@ -37,7 +37,6 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final dynamic args = ModalRoute.of(context)!.settings.arguments;
 
@@ -80,7 +79,6 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     cancelTimer();
     super.dispose();
   }

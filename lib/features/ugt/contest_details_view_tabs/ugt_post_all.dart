@@ -13,7 +13,7 @@ import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 class UgtPostAllContestant extends ConsumerStatefulWidget {
   //final  MyContestContestantModel? contestApplicant;
   final Contest? model;
-  final canViewDashboard;
+  final bool canViewDashboard;
   const UgtPostAllContestant(this.model,
       {this.canViewDashboard = false, super.key});
 
@@ -118,8 +118,6 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
       ],
     );
   }
-
-
 
   Widget emptyWidget() {
     return UgtEmptyState(

@@ -107,7 +107,10 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
                     backgroundImage: state.image != null ? FileImage(state.image!) : null,
                     child: state.image == null
                         ? WayaAssets.icons.cAttachCamera.svg(
-                            color: theme.colorScheme.greyColor600,
+                            colorFilter: ColorFilter.mode(
+                              theme.colorScheme.greyColor600,
+                              BlendMode.srcIn,
+                            ),
                           )
                         : null,
                   ),

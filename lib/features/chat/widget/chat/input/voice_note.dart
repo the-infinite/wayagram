@@ -19,7 +19,8 @@ class ChatVoiceMessageInput extends StatefulWidget {
   State<ChatVoiceMessageInput> createState() => _ChatVoiceMessageInputState();
 }
 
-class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with SingleTickerProviderStateMixin {
+class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput>
+    with SingleTickerProviderStateMixin {
   AnimationController? animationController;
 
   @override
@@ -69,18 +70,21 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                   crossAxisAlignment: CrossAxisAlignment.center,
                   spacing: 10.w,
                   children: [
-                    //? First, the pause and record button. It also doubles as 
+                    //? First, the pause and record button. It also doubles as
                     //? the delete  button in times where the recording has been
                     //? completed.
-                    if (widget.controller.recorderState == RecorderState.stopped)
+                    if (widget.controller.recorderState ==
+                        RecorderState.stopped)
                       WayaButton(
                         callback: () async {
                           //? Cancel recording
-                          final result = await widget.controller.cancelRecording();
+                          final result =
+                              await widget.controller.cancelRecording();
 
                           //? If this failed.
                           if (!result) {
-                            WayaSnackBar.showToast("Failed to delete the voice message");
+                            WayaSnackBar.showToast(
+                                "Failed to delete the voice message");
                           }
                         },
                         shape: BoxShape.circle,
@@ -89,7 +93,10 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                         horizontalPadding: 7,
                         verticalPadding: 7,
                         centerWidget: WayaAssets.icons.cBin.svg(
-                          color: WayaColors.white,
+                          colorFilter: ColorFilter.mode(
+                            WayaColors.white,
+                            BlendMode.srcIn,
+                          ),
                           height: 18,
                           width: 18,
                         ),
@@ -97,31 +104,40 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                     else
                       AnimatedCrossFade(
                         duration: const Duration(milliseconds: 350),
-                        crossFadeState: widget.controller.recorderState == RecorderState.recording
+                        crossFadeState: widget.controller.recorderState ==
+                                RecorderState.recording
                             ? CrossFadeState.showFirst
                             : CrossFadeState.showSecond,
                         firstChild: WayaButton(
-                          callback: () async => await widget.controller.pauseRecording(),
+                          callback: () async =>
+                              await widget.controller.pauseRecording(),
                           shape: BoxShape.circle,
                           height: null,
                           color: WayaColors.primary,
                           horizontalPadding: 7,
                           verticalPadding: 7,
                           centerWidget: WayaAssets.icons.cPause.svg(
-                            color: WayaColors.white,
+                            colorFilter: ColorFilter.mode(
+                              WayaColors.white,
+                              BlendMode.srcIn,
+                            ),
                             height: 18,
                             width: 18,
                           ),
                         ),
                         secondChild: WayaButton(
-                          callback: () async => await widget.controller.resumeRecording(),
+                          callback: () async =>
+                              await widget.controller.resumeRecording(),
                           shape: BoxShape.circle,
                           height: null,
                           color: WayaColors.primary,
                           horizontalPadding: 7,
                           verticalPadding: 7,
                           centerWidget: WayaAssets.icons.cButtonVoicenote.svg(
-                            color: WayaColors.white,
+                            colorFilter: ColorFilter.mode(
+                              WayaColors.white,
+                              BlendMode.srcIn,
+                            ),
                             height: 18,
                             width: 18,
                           ),
@@ -151,11 +167,13 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                       WayaButton(
                         callback: () async {
                           //? Cancel recording
-                          final result = await widget.controller.cancelRecording();
+                          final result =
+                              await widget.controller.cancelRecording();
 
                           //? If this failed.
                           if (!result) {
-                            WayaSnackBar.showToast("Failed to delete the voice message");
+                            WayaSnackBar.showToast(
+                                "Failed to delete the voice message");
                           }
                         },
                         shape: BoxShape.circle,
@@ -164,7 +182,10 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                         horizontalPadding: 7,
                         verticalPadding: 7,
                         centerWidget: WayaAssets.icons.cBin.svg(
-                          color: WayaColors.white,
+                          colorFilter: ColorFilter.mode(
+                            WayaColors.white,
+                            BlendMode.srcIn,
+                          ),
                           height: 18,
                           width: 18,
                         ),

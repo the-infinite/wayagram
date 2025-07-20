@@ -14,7 +14,7 @@ class MediaCard extends StatefulWidget {
   const MediaCard({super.key, required this.mediaUrls, this.ontap});
 
   @override
-  _MediaCardState createState() => _MediaCardState();
+  State<StatefulWidget> createState() => _MediaCardState();
 }
 
 class _MediaCardState extends State<MediaCard> {

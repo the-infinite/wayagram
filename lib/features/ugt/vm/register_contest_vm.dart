@@ -7,7 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';

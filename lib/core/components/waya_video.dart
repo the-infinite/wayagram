@@ -243,7 +243,8 @@ class WayaVideoWidget extends StatefulWidget {
   }
 }
 
-class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderStateMixin {
+class _WayaVideoWidgetState extends State<WayaVideoWidget>
+    with TickerProviderStateMixin {
   AnimationController? animationController;
   bool _controlsHidden = false;
   Timer? _timer;
@@ -513,10 +514,15 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
                           padding: EdgeInsets.all(10),
                         ),
                         icon: SvgPicture.asset(
-                          isPlaying ? WayaAssets.icons.cPause.path : WayaAssets.icons.cPlay.path,
+                          isPlaying
+                              ? WayaAssets.icons.cPause.path
+                              : WayaAssets.icons.cPlay.path,
                           height: 26,
                           width: 26,
-                          color: theme.colorScheme.primary,
+                          colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       );
               },
@@ -559,10 +565,15 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
                         padding: EdgeInsets.all(2),
                       ),
                       icon: SvgPicture.asset(
-                        isMuted ? WayaAssets.icons.actionVolumeMute.path : WayaAssets.icons.actionVolumeUnmute.path,
+                        isMuted
+                            ? WayaAssets.icons.actionVolumeMute.path
+                            : WayaAssets.icons.actionVolumeUnmute.path,
                         height: 20,
                         width: 20,
-                        color: theme.colorScheme.primary,
+                        colorFilter: ColorFilter.mode(
+                          theme.colorScheme.primary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     );
             },
@@ -628,10 +639,15 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
                           padding: EdgeInsets.all(10),
                         ),
                         icon: SvgPicture.asset(
-                          isPlaying ? WayaAssets.icons.cPause.path : WayaAssets.icons.cPlay.path,
+                          isPlaying
+                              ? WayaAssets.icons.cPause.path
+                              : WayaAssets.icons.cPlay.path,
                           height: 26,
                           width: 26,
-                          color: theme.colorScheme.primary,
+                          colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       );
               },
@@ -676,10 +692,15 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
                           padding: EdgeInsets.all(2),
                         ),
                         icon: SvgPicture.asset(
-                          isMuted ? WayaAssets.icons.actionVolumeMute.path : WayaAssets.icons.actionVolumeUnmute.path,
+                          isMuted
+                              ? WayaAssets.icons.actionVolumeMute.path
+                              : WayaAssets.icons.actionVolumeUnmute.path,
                           height: 20,
                           width: 20,
-                          color: theme.colorScheme.primary,
+                          colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       );
               },

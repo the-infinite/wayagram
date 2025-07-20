@@ -9,7 +9,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'dart:io' show Platform;
 
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';

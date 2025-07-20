@@ -51,7 +51,10 @@ class SupportTypeDialog extends StatelessWidget {
                     backgroundColor: theme.colorScheme.greyColor200,
                   ),
                   icon: WayaAssets.icons.actonDismiss.svg(
-                    color: theme.colorScheme.black,
+                    colorFilter: ColorFilter.mode(
+                      theme.colorScheme.black,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ],

@@ -26,7 +26,8 @@ class ForwardMessageModal extends StatefulWidget {
   State<ForwardMessageModal> createState() => _ForwardMessageModalState();
 }
 
-class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTickerProviderStateMixin {
+class _ForwardMessageModalState extends State<ForwardMessageModal>
+    with SingleTickerProviderStateMixin {
   final selection = ValueNotifier<List<String>>([]);
   final controller = TextEditingController();
   final loadingController = ValueNotifier(false);
@@ -78,7 +79,8 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
         child: Consumer(
           builder: (context, ref, _) {
             final notifier = ref.watch(conversationProvider.notifier);
-            final chatNotifier = ref.watch(chatProvider(widget.message.chatId).notifier);
+            final chatNotifier =
+                ref.watch(chatProvider(widget.message.chatId).notifier);
             final state = ref.watch(conversationProvider);
             final results = state.results;
 
@@ -100,7 +102,9 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
                   children: [
                     //? First, this one.
                     SingleChildScrollView(
-                      physics: results.isEmpty ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+                      physics: results.isEmpty
+                          ? const NeverScrollableScrollPhysics()
+                          : const BouncingScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -124,12 +128,16 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
                               IconButton(
                                 onPressed: () => WayaNav.goBack(result: null),
                                 style: IconButton.styleFrom(
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                   padding: const EdgeInsets.all(2),
                                   backgroundColor: WayaColors.greyColor200,
                                 ),
                                 icon: WayaAssets.icons.actonDismiss.svg(
-                                  color: WayaColors.black,
+                                  colorFilter: ColorFilter.mode(
+                                    WayaColors.black,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
                             ],
@@ -151,7 +159,8 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
                                   notifier.setFilter(value);
                                 },
                                 prefixIcon: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 13),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 13),
                                   child: WayaAssets.icons.actionSearch.svg(
                                     fit: BoxFit.contain,
                                   ),
@@ -211,7 +220,8 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
                             //? Empty conversations
                             Center(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 17),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 17),
                                 child: EmptyConversationsWidget(),
                               ),
                             ),
@@ -249,7 +259,9 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
                                   isLoading: isLoading,
                                   callback: () async {
                                     loadingController.value = true;
-                                    final result = await chatNotifier.forwardMessage(widget.message.id, choices);
+                                    final result =
+                                        await chatNotifier.forwardMessage(
+                                            widget.message.id, choices);
                                     loadingController.value = false;
 
                                     //? If this went well...

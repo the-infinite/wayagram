@@ -98,7 +98,7 @@ class _MomentViewState extends ConsumerState<Moment> {
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                   decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.white.withOpacity(0.1),
+                    color: wayaTheme.colorScheme.white.withValues(alpha: 0.1),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -164,7 +164,7 @@ class _MomentViewState extends ConsumerState<Moment> {
                 counterText: '',
                 hintText: 'Type your moment',
                 hintStyle: status.textStyle.copyWith(
-                  color: wayaTheme.colorScheme.white.withOpacity(0.5),
+                  color: wayaTheme.colorScheme.white.withValues(alpha: 0.5),
                 ),
               ),
               textAlign: TextAlign.center,
@@ -216,7 +216,7 @@ class _TabButton extends StatelessWidget {
               style: TextStyle(
                 color: isSelected
                     ? wayaTheme.colorScheme.white
-                    : wayaTheme.colorScheme.white.withOpacity(0.5),
+                    : wayaTheme.colorScheme.white.withValues(alpha: 0.5),
                 fontSize: 16.sp,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),

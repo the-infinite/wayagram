@@ -222,7 +222,13 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
             //? Chat only works when you have not blocked a user.
             if (!conversationState.isBlocked(user.id))
               IconButton(
-                icon: WayaAssets.icons.chat.svg(fit: BoxFit.none, color: wayaTheme.colorScheme.customBlack),
+                icon: WayaAssets.icons.chat.svg(
+                  fit: BoxFit.none,
+                  colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.customBlack,
+                    BlendMode.srcIn,
+                  ),
+                ),
                 onPressed: _chatWithUser,
               ),
 

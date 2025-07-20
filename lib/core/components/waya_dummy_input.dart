@@ -3,19 +3,17 @@ import 'package:flutter/services.dart';
 
 /// Enum for Text Field
 enum TextFieldType {
-  EMAIL,
-  EMAIL_ENHANCED,
-  PASSWORD,
-  PASSWORD_ENHANCED,
-  NAME,
-  @Deprecated('Use MULTILINE instead. ADDRESS will be removed in major update')
-  ADDRESS,
-  MULTILINE,
-  OTHER,
-  PHONE,
-  URL,
-  NUMBER,
-  USERNAME
+  email,
+  emailEnhanced,
+  password,
+  passwordEnhanced,
+  name,
+  multiline,
+  other,
+  phone,
+  url,
+  number,
+  username,
 }
 
 /// Default Text Form Field
@@ -158,7 +156,7 @@ class AppTextField extends StatefulWidget {
   });
 
   @override
-  _AppTextFieldState createState() => _AppTextFieldState();
+  State<StatefulWidget> createState() => _AppTextFieldState();
 }
 
 class _AppTextFieldState extends State<AppTextField> {
@@ -168,7 +166,7 @@ class _AppTextFieldState extends State<AppTextField> {
   TextInputAction? applyTextInputAction() {
     if (widget.textInputAction != null) {
       return widget.textInputAction;
-    } else if (widget.textFieldType == TextFieldType.MULTILINE) {
+    } else if (widget.textFieldType == TextFieldType.multiline) {
       return TextInputAction.newline;
     } else if (widget.nextFocus != null) {
       return TextInputAction.next;
@@ -180,17 +178,17 @@ class _AppTextFieldState extends State<AppTextField> {
   TextInputType? applyTextInputType() {
     if (widget.keyboardType != null) {
       return widget.keyboardType;
-    } else if (widget.textFieldType == TextFieldType.EMAIL ||
-        widget.textFieldType == TextFieldType.EMAIL_ENHANCED) {
+    } else if (widget.textFieldType == TextFieldType.email ||
+        widget.textFieldType == TextFieldType.emailEnhanced) {
       return TextInputType.emailAddress;
-    } else if (widget.textFieldType == TextFieldType.MULTILINE) {
+    } else if (widget.textFieldType == TextFieldType.multiline) {
       return TextInputType.multiline;
-    } else if (widget.textFieldType == TextFieldType.PASSWORD) {
+    } else if (widget.textFieldType == TextFieldType.password) {
       return TextInputType.phone;
-    } else if (widget.textFieldType == TextFieldType.PHONE ||
-        widget.textFieldType == TextFieldType.NUMBER) {
+    } else if (widget.textFieldType == TextFieldType.phone ||
+        widget.textFieldType == TextFieldType.number) {
       return TextInputType.number;
-    } else if (widget.textFieldType == TextFieldType.URL) {
+    } else if (widget.textFieldType == TextFieldType.url) {
       return TextInputType.url;
     } else {
       return TextInputType.text;
@@ -203,8 +201,8 @@ class _AppTextFieldState extends State<AppTextField> {
   }
 
   Widget? suffixIcon() {
-    if (widget.textFieldType == TextFieldType.PASSWORD ||
-        widget.textFieldType == TextFieldType.PASSWORD_ENHANCED) {
+    if (widget.textFieldType == TextFieldType.password ||
+        widget.textFieldType == TextFieldType.passwordEnhanced) {
       if (widget.suffix != null) {
         return widget.suffix;
       } else {
@@ -236,10 +234,10 @@ class _AppTextFieldState extends State<AppTextField> {
   }
 
   Iterable<String>? applyAutofillHints() {
-    if (widget.textFieldType == TextFieldType.EMAIL ||
-        widget.textFieldType == TextFieldType.EMAIL_ENHANCED) {
+    if (widget.textFieldType == TextFieldType.email ||
+        widget.textFieldType == TextFieldType.emailEnhanced) {
       return [AutofillHints.email];
-    } else if (widget.textFieldType == TextFieldType.PASSWORD) {
+    } else if (widget.textFieldType == TextFieldType.password) {
       return [AutofillHints.password];
     }
     return null;
@@ -249,7 +247,7 @@ class _AppTextFieldState extends State<AppTextField> {
     return TextFormField(
       controller: widget.controller,
       obscureText:
-          widget.textFieldType == TextFieldType.PASSWORD && !isPasswordVisible,
+          widget.textFieldType == TextFieldType.password && !isPasswordVisible,
       textInputAction: applyTextInputAction(),
       onFieldSubmitted: (s) {
         if (widget.nextFocus != null) {

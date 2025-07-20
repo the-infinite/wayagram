@@ -530,7 +530,10 @@ class EventDetailAction extends StatelessWidget {
                 color: wayaTheme.colorScheme.customBlack,
                 asset: SvgPicture.asset(
                   WayaAssets.icons.mFire.path,
-                  color: wayaTheme.colorScheme.customBlack,
+                  colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.customBlack,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 text: "Promote Event",
               ),

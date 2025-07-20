@@ -104,7 +104,10 @@ class _MyBubbleWidget extends StatelessWidget {
                                     WayaAssets.icons.cCornerUpRight.svg(
                                       height: 20,
                                       width: 20,
-                                      color: WayaColors.white,
+                                      colorFilter: ColorFilter.mode(
+                                        WayaColors.white,
+                                        BlendMode.srcIn,
+                                      ),
                                     ),
 
                                     // Space.
@@ -138,7 +141,10 @@ class _MyBubbleWidget extends StatelessWidget {
                                     WayaAssets.icons.cPencil.svg(
                                       height: 20,
                                       width: 20,
-                                      color: WayaColors.white,
+                                      colorFilter: ColorFilter.mode(
+                                        WayaColors.white,
+                                        BlendMode.srcIn,
+                                      ),
                                     ),
 
                                     // Space.
@@ -344,7 +350,10 @@ class _YourBubbleWidget extends StatelessWidget {
                                     WayaAssets.icons.cCornerUpRight.svg(
                                       height: 20,
                                       width: 20,
-                                      color: WayaColors.primary600,
+                                      colorFilter: ColorFilter.mode(
+                                        WayaColors.primary600,
+                                        BlendMode.srcIn,
+                                      ),
                                     ),
 
                                     // Space.
@@ -378,7 +387,10 @@ class _YourBubbleWidget extends StatelessWidget {
                                     WayaAssets.icons.cPencil.svg(
                                       height: 20,
                                       width: 20,
-                                      color: WayaColors.primary600,
+                                      colorFilter: ColorFilter.mode(
+                                        WayaColors.primary600,
+                                        BlendMode.srcIn,
+                                      ),
                                     ),
 
                                     // Space.
@@ -635,7 +647,10 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                   leadingIcon: WayaAssets.icons.cCornerUpLeft.svg(
                     height: 20,
                     width: 20,
-                    color: WayaColors.black,
+                    colorFilter: ColorFilter.mode(
+                      WayaColors.black,
+                      BlendMode.srcIn,
+                    ),
                   ),
                   text: "Reply",
                   textStyle: WayaTextStyles.bodySemiBold.copyWith(
@@ -660,7 +675,10 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                   leadingIcon: WayaAssets.icons.cCornerUpRight.svg(
                     height: 20,
                     width: 20,
-                    color: WayaColors.black,
+                    colorFilter: ColorFilter.mode(
+                      WayaColors.black,
+                      BlendMode.srcIn,
+                    ),
                   ),
                   text: "Forward",
                   textStyle: WayaTextStyles.bodySemiBold.copyWith(
@@ -686,7 +704,10 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     leadingIcon: WayaAssets.icons.cCopy.svg(
                       height: 20,
                       width: 20,
-                      color: WayaColors.black,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     text: "Copy",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
@@ -712,7 +733,10 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     leadingIcon: WayaAssets.icons.cPencil.svg(
                       height: 20,
                       width: 20,
-                      color: WayaColors.black,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     text: "Edit",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
@@ -741,7 +765,10 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     leadingIcon: WayaAssets.icons.cBin.svg(
                       height: 20,
                       width: 20,
-                      color: WayaColors.error,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.error,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     text: "Delete for me",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
@@ -786,7 +813,10 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     leadingIcon: WayaAssets.icons.cMultiplyCircle.svg(
                       height: 20,
                       width: 20,
-                      color: WayaColors.error,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.error,
+                        BlendMode.srcIn,
+                      ),
                     ),
                     text: "Delete for everyone",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
@@ -1057,7 +1087,10 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                   children: [
                     //? First, the reply icon.
                     WayaAssets.icons.cCornerUpLeft.svg(
-                      color: WayaColors.primary,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.primary,
+                        BlendMode.srcIn,
+                      ),
                     ),
 
                     // Some space.

@@ -59,7 +59,8 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
       notifier.fetchHostedContest();
       userManagementField.clear();
       if (viewModel!.roles!.isNotEmpty) {
-        if (viewModel.roles?.first.permissionsWithActions?.length != 0) {
+        if (viewModel.roles?.first.permissionsWithActions?.isNotEmpty ??
+            false) {
           List<Action>? list =
               viewModel.roles?.first.permissionsWithActions?[0].actions ?? [];
           for (var model in list) {

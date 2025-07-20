@@ -37,7 +37,8 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
       required this.votingLink});
 
   @override
-  ConsumerState<AvailableBalanceModal> createState() => _AvailableBalanceModalState();
+  ConsumerState<AvailableBalanceModal> createState() =>
+      _AvailableBalanceModalState();
 }
 
 class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
@@ -64,10 +65,10 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
           children: [
             Text(
               'Pay for contest',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -75,7 +76,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Are you sure you want to pay for the contest that will cost ',
+                    text:
+                        'Are you sure you want to pay for the contest that will cost ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
                       fontSize: 14.sp,
@@ -153,7 +155,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                       height: 80,
                       decoration: BoxDecoration(
                         color: WayaColors.white,
-                        borderRadius: BorderRadius.circular(6), // Rounded corners
+                        borderRadius:
+                            BorderRadius.circular(6), // Rounded corners
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(15.0),
@@ -208,7 +211,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                             link: widget.votingLink,
                             model: widget.model,
                             onTap: widget.onTap,
-                            amount: '${num.parse(widget.voteCount) * num.parse(widget.voteFee)}',
+                            amount:
+                                '${num.parse(widget.voteCount) * num.parse(widget.voteFee)}',
                             numOfVote: widget.voteCount,
                           ) /* PinVoteModal(
                           voteFee: "4",
@@ -228,7 +232,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                 ddddd */
                     }
                   : null,
-              centerWidget: LoadingState(loading: isLoading.value, text: 'Yes, Pay'),
+              centerWidget:
+                  LoadingState(loading: isLoading.value, text: 'Yes, Pay'),
             ),
             SizedBox(height: 17.h),
             WayaButton(
@@ -266,7 +271,8 @@ class PinEntryBottomSheet extends StatefulHookConsumerWidget {
       super.key});
 
   @override
-  _PinEntryBottomSheetState createState() => _PinEntryBottomSheetState();
+  ConsumerState<PinEntryBottomSheet> createState() =>
+      _PinEntryBottomSheetState();
 }
 
 class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
@@ -294,8 +300,12 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       debugPrint("i dey here ee $_pin");
       //  WayaNav.goBack();
 
-      var isPass = await ref.read(votersContestNotifier.notifier).verifyAndPayForPaidContest(
-          isLoading, _pin, {"profileId": widget.model?.userId ?? "", "contestId": widget.model?.contestId ?? ""});
+      var isPass = await ref
+          .read(votersContestNotifier.notifier)
+          .verifyAndPayForPaidContest(isLoading, _pin, {
+        "profileId": widget.model?.userId ?? "",
+        "contestId": widget.model?.contestId ?? ""
+      });
       if (isPass) {
         WayaNav.goBack();
         /*  Future.delayed(Duration(seconds: 1), () {
@@ -316,7 +326,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
             onTap: (myContext, myRef) {
               //  WayaNav.goBack();
               debugPrint("i am cooking");
-              myRef.read(selectedAppliedContestProvider.notifier).state = widget.model;
+              myRef.read(selectedAppliedContestProvider.notifier).state =
+                  widget.model;
 
               WayaNav.goBack();
               WayaNav.toNamed("/create-profile-contest1");
@@ -339,7 +350,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-           Text(
+          Text(
             'Enter your PIN',
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
@@ -367,7 +378,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
               child: Center(
                 child: index < _pin.length
                     ? Text("*",
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ))
@@ -396,14 +407,18 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                   );
                 } else if (index == 10) {
                   return _buildKeypadButton(
-                    child:  Text('0', style: TextStyle(fontSize: 20.sp)),
+                    child: Text('0', style: TextStyle(fontSize: 20.sp)),
                     onPressed: () => _addDigit('0'),
                   );
                 } else if (index == 11) {
                   return _buildKeypadButton(
                     child: isLoading.value
-                        ? SizedBox(height: 40, width: 40, child: CircularProgressIndicator())
-                        : const Icon(Icons.arrow_forward, color: Colors.black54),
+                        ? SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: CircularProgressIndicator())
+                        : const Icon(Icons.arrow_forward,
+                            color: Colors.black54),
                     onPressed: isLoading.value
                         ? () {
                             debugPrint(" i am so here");
@@ -416,7 +431,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                   );
                 } else {
                   return _buildKeypadButton(
-                    child: Text('${index + 1}', style:  TextStyle(fontSize: 24.sp)),
+                    child:
+                        Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }
@@ -428,14 +444,17 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
     );
   }
 
-  Widget _buildKeypadButton({required Widget child, required VoidCallback onPressed}) {
+  Widget _buildKeypadButton(
+      {required Widget child, required VoidCallback onPressed}) {
     return Material(
       color: Colors.transparent,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
+          borderRadius: BorderRadius.circular(48),
+          side: BorderSide(color: Colors.grey[300]!, width: 1)),
       child: InkWell(
         customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
+            borderRadius: BorderRadius.circular(48),
+            side: BorderSide(color: Colors.grey[300]!, width: 1)),
         onTap: onPressed,
         child: Container(
           alignment: Alignment.center,

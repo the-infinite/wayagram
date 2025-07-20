@@ -105,7 +105,9 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
         Container(
           color: Colors.black,
           child: AspectRatio(
-            aspectRatio: insets.bottom == 0 ? _controller!.value.aspectRatio : size.aspectRatio,
+            aspectRatio: insets.bottom == 0
+                ? _controller!.value.aspectRatio
+                : size.aspectRatio,
             child: VideoPlayer(_controller!),
           ),
         ),
@@ -125,7 +127,7 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
               child: Icon(
                 _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
                 size: 60.0,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
               ),
             ),
           ),
@@ -192,13 +194,17 @@ Widget mediaPreview({
                   IconButton(
                     icon: SvgPicture.asset(WayaAssets.icons.mICrop.path),
                     onPressed: () {
-                      ref.read(momentVmProvider.notifier).cropImage(context, ref);
+                      ref
+                          .read(momentVmProvider.notifier)
+                          .cropImage(context, ref);
                     },
                   ),
                 IconButton(
                   icon: SvgPicture.asset(WayaAssets.icons.mICap.path),
                   onPressed: () {
-                    ref.read(momentVmProvider.notifier).toggleCaptionVisibility();
+                    ref
+                        .read(momentVmProvider.notifier)
+                        .toggleCaptionVisibility();
                   },
                 ),
               ],
@@ -243,7 +249,8 @@ Widget mediaPreview({
                   ref.read(momentVmProvider.notifier).updateCaption(value);
                 },
                 controller: TextEditingController(text: status.caption)
-                  ..selection = TextSelection.collapsed(offset: status.caption.length),
+                  ..selection =
+                      TextSelection.collapsed(offset: status.caption.length),
               ),
             ),
           ),

@@ -241,7 +241,8 @@ class ChatInputController {
 
   /// A helper function used to set the message that this input widget is
   /// supposed to be replying to.
-  void quoteMessage(MessageModel? message, [bool isEditing = false, String? momentId]) {
+  void quoteMessage(MessageModel? message,
+      [bool isEditing = false, String? momentId]) {
     _replyTo.value = message;
     _isEditing.value = isEditing;
     _momentId = momentId;
@@ -352,7 +353,8 @@ class ChatInputController {
 
   /// A stream used to monitor the sound recorder for when it makes any sizeable
   /// progress.
-  Stream<Duration>? get onRecordingProgress => _soundRecorder!.onCurrentDuration;
+  Stream<Duration>? get onRecordingProgress =>
+      _soundRecorder!.onCurrentDuration;
 
   /// The current state of the audio recorder.
   RecorderState get recorderState => _recorderState.value;
@@ -379,7 +381,10 @@ class ChatInputController {
       originalMessageId: _replyTo.value?.id,
       originalMessage: _replyTo.value,
       content: buildBody,
-      media: [if (_voiceMessage.value != null) _voiceMessage.value!, ..._files.value.map((file) => file.absolute.path)],
+      media: [
+        if (_voiceMessage.value != null) _voiceMessage.value!,
+        ..._files.value.map((file) => file.absolute.path)
+      ],
       contacts: _contacts.value.isEmpty ? null : _contacts.value,
     );
   }
@@ -432,7 +437,6 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
       //WayaSnackBar.showToast("You denied the storage permission");
       //return;
     }
-
     //? Okay.
     final result = await WayaUtils.showModalSheet<AttachmentResult>(
       context,
@@ -454,13 +458,15 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
       widget.controller._currentType.value = result.type;
 
       //? Add all of the files that need to be added.
-      widget.controller._files.value.addAll(result.files?.map((file) => File(file)) ?? []);
+      widget.controller._files.value
+          .addAll(result.files?.map((file) => File(file)) ?? []);
 
       //? Update the value of this thing's controller.
       widget.controller._files.value = [...widget.controller._files.value];
 
       //? Now, we can send, if this is not empty.
-      widget.controller._canSend.value = widget.controller._files.value.isNotEmpty;
+      widget.controller._canSend.value =
+          widget.controller._files.value.isNotEmpty;
     }
   }
 
@@ -472,7 +478,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
       //? Start recording audio.
       await widget.controller._soundRecorder!.record(
-        path: await WayaFileHelper.getVoiceNoteFilePath(widget.controller.chat.id),
+        path: await WayaFileHelper.getVoiceNoteFilePath(
+            widget.controller.chat.id),
         androidEncoder: AndroidEncoder.aac,
         androidOutputFormat: AndroidOutputFormat.mpeg4,
         iosEncoder: IosEncoder.kAudioFormatMPEG4AAC,
@@ -480,7 +487,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
       );
 
       //? Now notify the caller that you are recording.
-      widget.controller._recorderState.value = widget.controller._soundRecorder!.recorderState;
+      widget.controller._recorderState.value =
+          widget.controller._soundRecorder!.recorderState;
       widget.controller._currentType.value = MessageType.voiceNote;
       widget.controller._isRecorderOpen.value = true;
 
@@ -510,7 +518,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
     //? If this is editing a message.
     if (isEdit) {
       //? If this is greater than 5 minutes ago...
-      final result = await widget.notifier.editMessage(quoted!.id, message.content ?? '');
+      final result =
+          await widget.notifier.editMessage(quoted!.id, message.content ?? '');
 
       //? This is fine.
       if (!result) return;
@@ -561,13 +570,16 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
     //? Return your widget.
     return Padding(
-      padding: widget.padded ? const EdgeInsets.only(left: 15, right: 15, bottom: 12) : EdgeInsets.zero,
+      padding: widget.padded
+          ? const EdgeInsets.only(left: 15, right: 15, bottom: 12)
+          : EdgeInsets.zero,
       child: WayaErrorWidget(
         onError: (context, e) => const SizedBox(),
         builder: (context) => Consumer(
           builder: (context, ref, _) {
             final conversationState = ref.watch(conversationProvider);
-            final conversationNotifier = ref.read(conversationProvider.notifier);
+            final conversationNotifier =
+                ref.read(conversationProvider.notifier);
             final chat = widget.controller._chat;
 
             //? How fair enough.
@@ -608,7 +620,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                           child: WayaProgressiveButton(
                             notifier: deleteController,
                             callback: () async {
-                              final result = await WayaUtils.showModalSheet<bool>(
+                              final result =
+                                  await WayaUtils.showModalSheet<bool>(
                                 context,
                                 isDismissible: false,
                                 child: DeleteChatModal(
@@ -632,7 +645,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                           child: WayaProgressiveButton(
                             notifier: unblockController,
                             callback: () async {
-                              final result = await WayaUtils.showModalSheet<bool?>(
+                              final result =
+                                  await WayaUtils.showModalSheet<bool?>(
                                 context,
                                 child: UnblockUserDialog(
                                   user: chat.other.userData!,
@@ -646,7 +660,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
                               //? Then pop.
                               if (result) {
-                                WayaSnackBar.showToast("This user has been unblocked successfully");
+                                WayaSnackBar.showToast(
+                                    "This user has been unblocked successfully");
                               }
                             },
                             text: "Unblock user",
@@ -674,7 +689,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
                       //? Since there are people typing.
                       //? First, build the text.
-                      String text = "${chat!.find(usersTyping.first)!.userData!.fullname} is typing";
+                      String text =
+                          "${chat!.find(usersTyping.first)!.userData!.fullname} is typing";
 
                       //? If exactly two users are typing...
                       if (usersTyping.length == 2) {
@@ -682,24 +698,32 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                         final last = chat.find(usersTyping.last)!;
 
                         //? Now, let's look for others.
-                        text = "${first.userData!.fullname} and ${last.userData!.fullname} are typing";
+                        text =
+                            "${first.userData!.fullname} and ${last.userData!.fullname} are typing";
                       }
 
                       //? If this has three people exactly...
                       if (usersTyping.length == 3) {
-                        final first = chat.find(usersTyping.elementAt(0))!.userData;
-                        final second = chat.find(usersTyping.elementAt(1))!.userData;
-                        final last = chat.find(usersTyping.elementAt(2))!.userData;
+                        final first =
+                            chat.find(usersTyping.elementAt(0))!.userData;
+                        final second =
+                            chat.find(usersTyping.elementAt(1))!.userData;
+                        final last =
+                            chat.find(usersTyping.elementAt(2))!.userData;
 
                         //? Now, build it.
-                        text = "${first?.fullname}, ${second?.fullname} and ${last?.fullname} are typing";
+                        text =
+                            "${first?.fullname}, ${second?.fullname} and ${last?.fullname} are typing";
                       }
 
                       //? If this has more than 3 users...
                       if (usersTyping.length > 3) {
-                        final first = chat.find(usersTyping.elementAt(0))!.userData;
-                        final second = chat.find(usersTyping.elementAt(1))!.userData;
-                        final last = chat.find(usersTyping.elementAt(2))!.userData;
+                        final first =
+                            chat.find(usersTyping.elementAt(0))!.userData;
+                        final second =
+                            chat.find(usersTyping.elementAt(1))!.userData;
+                        final last =
+                            chat.find(usersTyping.elementAt(2))!.userData;
 
                         //? Now, build it.
                         text =
@@ -710,7 +734,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                       return IntrinsicWidth(
                         child: Container(
                           margin: EdgeInsets.symmetric(horizontal: 20.w),
-                          padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 20.w),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 5.h, horizontal: 20.w),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primary50,
                             borderRadius: BorderRadius.circular(100000.r),
@@ -782,8 +807,9 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                       //? message input field.
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment:
-                            messageType == MessageType.voiceNote ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+                        crossAxisAlignment: messageType == MessageType.voiceNote
+                            ? CrossAxisAlignment.center
+                            : CrossAxisAlignment.start,
                         children: [
                           //? First, the button for attaching content.
                           messageType == MessageType.voiceNote
@@ -791,11 +817,16 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                               : WayaButton(
                                   callback: () => _addAttachment(context),
                                   height: null,
-                                  color: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
+                                  color: widget.isDark
+                                      ? WayaColors.darkGrey
+                                      : WayaColors.greyColor200,
                                   horizontalPadding: 10,
                                   verticalPadding: 10,
-                                  centerWidget: WayaAssets.icons.cButtonAttach.svg(
-                                    color: widget.isDark ? Colors.white : WayaColors.black,
+                                  centerWidget:
+                                      WayaAssets.icons.cButtonAttach.svg(
+                                    color: widget.isDark
+                                        ? Colors.white
+                                        : WayaColors.black,
                                     height: 18,
                                     width: 18,
                                   ),
@@ -807,15 +838,18 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                           //? Second, the input text
                           Expanded(
                             child: AnimatedCrossFade(
-                              crossFadeState: messageType == MessageType.voiceNote
-                                  ? CrossFadeState.showFirst
-                                  : CrossFadeState.showSecond,
+                              crossFadeState:
+                                  messageType == MessageType.voiceNote
+                                      ? CrossFadeState.showFirst
+                                      : CrossFadeState.showSecond,
                               duration: const Duration(milliseconds: 350),
                               firstChild: messageType != MessageType.voiceNote
                                   ? const SizedBox()
                                   : ValueListenableBuilder(
-                                      valueListenable: widget.controller._recorderState,
-                                      builder: (context, _, __) => ChatVoiceMessageInput(
+                                      valueListenable:
+                                          widget.controller._recorderState,
+                                      builder: (context, _, __) =>
+                                          ChatVoiceMessageInput(
                                         controller: widget.controller,
                                       ),
                                     ),
@@ -827,8 +861,10 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                   //? If this is a text message, allowing a user to send
                                   //? a message would need to ENTIRELY depend on the
                                   //? contents of the message text.
-                                  if (widget.controller._currentType.value == MessageType.text) {
-                                    widget.controller._canSend.value = value.trim().isNotEmpty;
+                                  if (widget.controller._currentType.value ==
+                                      MessageType.text) {
+                                    widget.controller._canSend.value =
+                                        value.trim().isNotEmpty;
                                   }
 
                                   //? If this has no chat yet...
@@ -836,16 +872,21 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
                                   //? If this is not in the state we are thinking of...
                                   if (!widget.controller._isTyping.value) {
-                                    WayaSocketController.instance
-                                        .emit(WayaChatSocketArgs.typing(widget.controller.chat.id, true));
+                                    WayaSocketController.instance.emit(
+                                        WayaChatSocketArgs.typing(
+                                            widget.controller.chat.id, true));
                                     widget.controller._isTyping.value = true;
                                   }
 
                                   //? Since this is the case, emit the typing event so
                                   //? everyone knows this user is typing.
-                                  debounce(key: "control-typing", delay: const Duration(milliseconds: 800), () {
-                                    WayaSocketController.instance
-                                        .emit(WayaChatSocketArgs.typing(widget.controller.chat.id, false));
+                                  debounce(
+                                      key: "control-typing",
+                                      delay: const Duration(milliseconds: 800),
+                                      () {
+                                    WayaSocketController.instance.emit(
+                                        WayaChatSocketArgs.typing(
+                                            widget.controller.chat.id, false));
                                     widget.controller._isTyping.value = false;
                                   })();
                                 },
@@ -854,18 +895,22 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                 ),
                                 decoration: InputDecoration(
                                   isDense: true,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 9.h),
                                   border: OutlineInputBorder(
                                     borderSide: BorderSide.none,
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
-                                  fillColor: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
+                                  fillColor: widget.isDark
+                                      ? WayaColors.darkGrey
+                                      : WayaColors.greyColor200,
                                   filled: true,
                                   hintText: "Write a message here",
                                   hintStyle: WayaTextStyles.hintStyle.copyWith(
                                     color: widget.isDark ? Colors.white : null,
                                   ),
-                                  labelStyle: WayaTextStyles.labelSmall.copyWith(
+                                  labelStyle:
+                                      WayaTextStyles.labelSmall.copyWith(
                                     color: widget.isDark ? Colors.white : null,
                                   ),
                                 ),
@@ -887,7 +932,9 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                               if (!widget.voiceEnabled) {
                                 return AnimatedCrossFade(
                                   duration: const Duration(milliseconds: 350),
-                                  crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                  crossFadeState: canSend
+                                      ? CrossFadeState.showFirst
+                                      : CrossFadeState.showSecond,
                                   firstChild: WayaButton(
                                     callback: _sendMessage,
                                     height: null,
@@ -903,11 +950,15 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                   secondChild: WayaButton(
                                     callback: null,
                                     height: null,
-                                    color: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
+                                    color: widget.isDark
+                                        ? WayaColors.darkGrey
+                                        : WayaColors.greyColor200,
                                     horizontalPadding: 10,
                                     verticalPadding: 10,
                                     centerWidget: WayaAssets.icons.cSend.svg(
-                                      color: widget.isDark ? Colors.white : WayaColors.black,
+                                      color: widget.isDark
+                                          ? Colors.white
+                                          : WayaColors.black,
                                       height: 18,
                                       width: 18,
                                     ),
@@ -919,7 +970,9 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                               //? protocol icon.
                               return AnimatedCrossFade(
                                 duration: const Duration(milliseconds: 350),
-                                crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                crossFadeState: canSend
+                                    ? CrossFadeState.showFirst
+                                    : CrossFadeState.showSecond,
                                 firstChild: WayaButton(
                                   callback: _sendMessage,
                                   height: null,
@@ -933,34 +986,50 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                                   ),
                                 ),
                                 secondChild: ValueListenableBuilder(
-                                  valueListenable: widget.controller._recorderState,
+                                  valueListenable:
+                                      widget.controller._recorderState,
                                   builder: (context, recorderState, _) {
                                     return AnimatedCrossFade(
-                                      crossFadeState: recorderState == RecorderState.stopped ||
-                                              recorderState == RecorderState.initialized
+                                      crossFadeState: recorderState ==
+                                                  RecorderState.stopped ||
+                                              recorderState ==
+                                                  RecorderState.initialized
                                           ? CrossFadeState.showFirst
                                           : CrossFadeState.showSecond,
-                                      duration: const Duration(milliseconds: 350),
+                                      duration:
+                                          const Duration(milliseconds: 350),
                                       firstChild: WayaButton(
                                         callback: _recordVoiceNote,
                                         height: null,
-                                        color: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
+                                        color: widget.isDark
+                                            ? WayaColors.darkGrey
+                                            : WayaColors.greyColor200,
                                         horizontalPadding: 10,
                                         verticalPadding: 10,
-                                        centerWidget: WayaAssets.icons.cButtonVoicenote.svg(
-                                          color: widget.isDark ? Colors.white : WayaColors.black,
+                                        centerWidget: WayaAssets
+                                            .icons.cButtonVoicenote
+                                            .svg(
+                                          color: widget.isDark
+                                              ? Colors.white
+                                              : WayaColors.black,
                                           height: 18,
                                           width: 18,
                                         ),
                                       ),
                                       secondChild: WayaButton(
-                                        callback: widget.controller.stopRecording,
+                                        callback:
+                                            widget.controller.stopRecording,
                                         height: null,
-                                        color: widget.isDark ? WayaColors.darkGrey : WayaColors.greyColor200,
+                                        color: widget.isDark
+                                            ? WayaColors.darkGrey
+                                            : WayaColors.greyColor200,
                                         horizontalPadding: 10,
                                         verticalPadding: 10,
-                                        centerWidget: WayaAssets.icons.cStop.svg(
-                                          color: widget.isDark ? Colors.white : WayaColors.black,
+                                        centerWidget:
+                                            WayaAssets.icons.cStop.svg(
+                                          color: widget.isDark
+                                              ? Colors.white
+                                              : WayaColors.black,
                                           height: 18,
                                           width: 18,
                                         ),

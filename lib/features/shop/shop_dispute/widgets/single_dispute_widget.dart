@@ -25,7 +25,7 @@ class SingleDisputeWidget extends ConsumerWidget {
     void toDispute() async {
       conversationNotifier.dismissOverlay();
       notifier.setChat(
-          (await conversationNotifier.getChatDetails(dispute.chatId??""))!);
+          (await conversationNotifier.getChatDetails(dispute.chatId ?? ""))!);
       notifier.markAllAsRead().then((result) {
         if (!result) return;
         conversationNotifier.getChats(true);
@@ -77,7 +77,8 @@ class SingleDisputeWidget extends ConsumerWidget {
                   padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
                   decoration: BoxDecoration(
                       color: dispute.status == 'open'
-                          ? wayaTheme.colorScheme.primary75.withOpacity(0.3)
+                          ? wayaTheme.colorScheme.primary75
+                              .withValues(alpha: 0.3)
                           : wayaTheme.colorScheme.success50,
                       borderRadius: BorderRadius.circular(6)),
                   child: Text(

@@ -193,7 +193,8 @@ class BidNegotiationStatusCard extends StatelessWidget {
   final QuotationBidModel bid;
   final BidActionAuthor user;
 
-  const BidNegotiationStatusCard({super.key, required this.bid, required this.user});
+  const BidNegotiationStatusCard(
+      {super.key, required this.bid, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +207,8 @@ class BidNegotiationStatusCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
         decoration: BoxDecoration(
           color: switch (bid.status) {
-            BidActionType.negotiate => isMe ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.info,
+            BidActionType.negotiate =>
+              isMe ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.info,
             BidActionType.reject => wayaTheme.colorScheme.error,
             _ => wayaTheme.colorScheme.success,
           },
@@ -222,19 +224,25 @@ class BidNegotiationStatusCard extends StatelessWidget {
               switch (bid.status) {
                 BidActionType.accept => WayaAssets.icons.bid.path,
                 BidActionType.reject => WayaAssets.icons.bidError.path,
-                BidActionType.negotiate => isMe ? WayaAssets.icons.bidSent.path : WayaAssets.icons.bidReceived.path,
+                BidActionType.negotiate => isMe
+                    ? WayaAssets.icons.bidSent.path
+                    : WayaAssets.icons.bidReceived.path,
                 _ => bid.vendorId == ConversationState.self.id
                     ? WayaAssets.icons.bidSent.path
                     : WayaAssets.icons.bidReceived.path,
               },
-              color: wayaTheme.colorScheme.white,
+              colorFilter: ColorFilter.mode(
+                wayaTheme.colorScheme.white,
+                BlendMode.srcIn,
+              ),
               height: 12.sp,
             ),
 
             //? The text in this place.
             Text(
               switch (bid.status) {
-                BidActionType.negotiate => isMe ? "Counteroffer Sent" : "Counteroffer received",
+                BidActionType.negotiate =>
+                  isMe ? "Counteroffer Sent" : "Counteroffer received",
                 BidActionType.accept => "Accepted",
                 BidActionType.reject => isMe ? "Declined" : "Rejected",
                 _ => "Open Bid",

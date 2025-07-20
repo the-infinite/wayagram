@@ -33,7 +33,8 @@ class PrivateGroup extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PrivateGroupState();
 }
 
-class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerProviderStateMixin {
+class _PrivateGroupState extends ConsumerState<PrivateGroup>
+    with SingleTickerProviderStateMixin {
   late final groupProvider = singleGroupProvider("group-${widget.group.id}");
   late final notifier = ref.read(groupProvider.notifier);
   int _selectedIndex = 0;
@@ -54,17 +55,14 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
       appBarTrailing: Row(
         children: [
           InkWell(
-              onTap: ()=> WayaNav.toNamed('/searchGroupAndPage',
-                  arguments: {
-                    'groupId': widget.group.id,
-                    'name': 'group'
-                  }
-              ),
+              onTap: () => WayaNav.toNamed('/searchGroupAndPage',
+                  arguments: {'groupId': widget.group.id, 'name': 'group'}),
               child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           const Gap(12),
           InkWell(
             onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
+              WayaValueHelper.getShareableUrl(
+                  WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
               subject: 'Share ${widget.group.name}',
             ),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
@@ -79,9 +77,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                   value: 0,
                   onTap: () {
                     WayaNav.goBack();
-                    WayaNav.toNamed('/groupSetting', arguments: {
-                      'groupId': widget.group.id
-                    });
+                    WayaNav.toNamed('/groupSetting',
+                        arguments: {'groupId': widget.group.id});
                   },
                   child: WayaActionNav(
                     context: context,
@@ -93,7 +90,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                 PopupMenuItem<int>(
                   value: 1,
                   onTap: () => Share.share(
-                    WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
+                    WayaValueHelper.getShareableUrl(
+                        WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
                     subject: 'Share ${widget.group.name}',
                   ),
                   child: WayaActionNav(
@@ -145,7 +143,10 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                     context: context,
                     asset: SvgPicture.asset(
                       'assets/images/pages/delete.svg',
-                      color: wayaTheme.colorScheme.error500,
+                      colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.error500,
+                        BlendMode.srcIn,
+                      ),
                       height: 16,
                     ),
                     text: "Delete Group",
@@ -179,7 +180,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                               fit: BoxFit.cover,
                             )
                           : DecorationImage(
-                              image: AssetImage('assets/images/pages/image_placeholder.png'),
+                              image: AssetImage(
+                                  'assets/images/pages/image_placeholder.png'),
                               fit: BoxFit.cover,
                             ),
                     ),
@@ -202,14 +204,17 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                       margin: EdgeInsets.only(right: 20.w),
                       padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                        border: Border.all(
+                            color: wayaTheme.colorScheme.primary600,
+                            width: 1.5),
                         color: wayaTheme.colorScheme.white,
                         borderRadius: BorderRadius.circular(7.r),
                       ),
                       child: Text(
                         'Edit Group Info',
-                        style: wayaTheme.textTheme.labelSmall
-                            ?.wayaCopyWith(color: wayaTheme.colorScheme.primary600, fontWeight: FontWeight.w600),
+                        style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary600,
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
                   )
@@ -252,7 +257,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                     actionType(
                       WayaValueHelper.formatNumber(widget.group.memberCount),
                       'Members',
-                      onPressed: () => WayaNav.toNamed(WayaAppRoutes.getGroupMembersPage(widget.group.id)),
+                      onPressed: () => WayaNav.toNamed(
+                          WayaAppRoutes.getGroupMembersPage(widget.group.id)),
                     ),
                     const Gap(10),
                     actionType(
@@ -335,15 +341,16 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () => widget.group.mutedAt == null ?
-              WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(widget.group.id)):
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('This group is muted'),
-              backgroundColor: WayaColors.primary,
-              duration: Duration(seconds: 2),
-            ),
-          ),
+          callback: () => widget.group.mutedAt == null
+              ? WayaNav.toNamed(
+                  WayaAppRoutes.getGroupPostScreen(widget.group.id))
+              : ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('This group is muted'),
+                    backgroundColor: WayaColors.primary,
+                    duration: Duration(seconds: 2),
+                  ),
+                ),
           height: 50,
           centerWidget: Center(
             child: Icon(

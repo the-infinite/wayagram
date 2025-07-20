@@ -32,7 +32,6 @@ class _VerifyIdentityPageState
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final dynamic args = ModalRoute.of(context)!.settings.arguments;
 
@@ -74,7 +73,6 @@ class _VerifyIdentityPageState
 
   @override
   void dispose() {
-    // TODO: implement dispose
     cancelTimer();
     super.dispose();
   }

@@ -41,7 +41,7 @@ class _VideoThumbnailState extends State<VideoThumbnail> {
                   fit: BoxFit.cover,
                   child: SizedBox(
                     width: widget.width,
-                    height: widget.height ,
+                    height: widget.height,
                     child: VideoPlayer(_controller),
                   ),
                 ),
@@ -54,7 +54,7 @@ class _VideoThumbnailState extends State<VideoThumbnail> {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                     ),
                     padding: EdgeInsets.all(8),
                     child: Icon(

@@ -53,14 +53,20 @@ class ChatAttachmentDialog extends StatelessWidget {
 
                 //* The dismiss button.
                 IconButton(
-                  onPressed: () => WayaNav.goBack<AttachmentResult>(result: null),
+                  onPressed: () =>
+                      WayaNav.goBack<AttachmentResult>(result: null),
                   style: IconButton.styleFrom(
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: const EdgeInsets.all(2),
-                    backgroundColor: isDarkMode ? WayaColors.darkGrey : WayaColors.greyColor200,
+                    backgroundColor: isDarkMode
+                        ? WayaColors.darkGrey
+                        : WayaColors.greyColor200,
                   ),
                   icon: WayaAssets.icons.actonDismiss.svg(
-                    color: isDarkMode ? WayaColors.white : WayaColors.black,
+                    colorFilter: ColorFilter.mode(
+                      isDarkMode ? WayaColors.white : WayaColors.black,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ],
@@ -80,12 +86,13 @@ class ChatAttachmentDialog extends StatelessWidget {
                   title: "Camera",
                   description: "Send a video or photo from camera",
                   titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
-                  textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
+                  textColor: isDarkMode
+                      ? WayaColors.greyColor200
+                      : WayaColors.greyColor500,
                   callback: () async {
                     //? If it is not...
                     try {
                       //? First, request for camera permissions.
-                      
 
                       //? This is fine then.
                       final choice = await ImagePicker().pickImage(
@@ -106,7 +113,8 @@ class ChatAttachmentDialog extends StatelessWidget {
                       //? This means it is now media...
                       controller.setMedia(true);
                     } catch (e) {
-                      WayaSnackBar.showToast("Unable to open camera", showSuccess: false);
+                      WayaSnackBar.showToast("Unable to open camera",
+                          showSuccess: false);
                     }
                   },
                 ),
@@ -117,7 +125,9 @@ class ChatAttachmentDialog extends StatelessWidget {
                   title: "Media",
                   description: "Share photos and videos",
                   titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
-                  textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
+                  textColor: isDarkMode
+                      ? WayaColors.greyColor200
+                      : WayaColors.greyColor500,
                   callback: () async {
                     //? If it is not...
                     try {
@@ -144,27 +154,31 @@ class ChatAttachmentDialog extends StatelessWidget {
                   title: "Documents",
                   description: "Share a document or file",
                   titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
-                  textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
+                  textColor: isDarkMode
+                      ? WayaColors.greyColor200
+                      : WayaColors.greyColor500,
                   callback: () async {
                     //? If it is not...
                     try {
-                      final result = await FilePicker.platform
-                          .pickFiles(allowMultiple: true, type: FileType.custom, allowedExtensions: [
-                        // Text documents.
-                        ...WayaFileExtensions.textDocuments,
+                      final result = await FilePicker.platform.pickFiles(
+                          allowMultiple: true,
+                          type: FileType.custom,
+                          allowedExtensions: [
+                            // Text documents.
+                            ...WayaFileExtensions.textDocuments,
 
-                        // Spreadsheets
-                        ...WayaFileExtensions.spreadSheets,
+                            // Spreadsheets
+                            ...WayaFileExtensions.spreadSheets,
 
-                        // Presentations.
-                        ...WayaFileExtensions.presentations,
+                            // Presentations.
+                            ...WayaFileExtensions.presentations,
 
-                        // Archives.
-                        ...WayaFileExtensions.archives,
+                            // Archives.
+                            ...WayaFileExtensions.archives,
 
-                        // Markup and notation.
-                        ...WayaFileExtensions.markup,
-                      ]);
+                            // Markup and notation.
+                            ...WayaFileExtensions.markup,
+                          ]);
 
                       // If this failed.
                       if (result == null) return;
@@ -173,7 +187,10 @@ class ChatAttachmentDialog extends StatelessWidget {
                       //? This allows a maximum of 3.
                       WayaNav.goBack<AttachmentResult>(
                         result: AttachmentResult.file(
-                          result.files.takeWhile((file) => file.path != null).map((file) => file.xFile.path).toList(),
+                          result.files
+                              .takeWhile((file) => file.path != null)
+                              .map((file) => file.xFile.path)
+                              .toList(),
                         ),
                       );
 
@@ -189,7 +206,9 @@ class ChatAttachmentDialog extends StatelessWidget {
                   title: "Audio",
                   description: "Share a song or audio",
                   titleColor: isDarkMode ? WayaColors.white : WayaColors.black,
-                  textColor: isDarkMode ? WayaColors.greyColor200 : WayaColors.greyColor500,
+                  textColor: isDarkMode
+                      ? WayaColors.greyColor200
+                      : WayaColors.greyColor500,
                   callback: () async {
                     //? If it is not...
                     try {
@@ -205,7 +224,10 @@ class ChatAttachmentDialog extends StatelessWidget {
                       //? This allows a maximum of 3.
                       WayaNav.goBack<AttachmentResult>(
                         result: AttachmentResult.file(
-                          result.files.takeWhile((file) => file.path != null).map((file) => file.xFile.path).toList(),
+                          result.files
+                              .takeWhile((file) => file.path != null)
+                              .map((file) => file.xFile.path)
+                              .toList(),
                         ),
                       );
 

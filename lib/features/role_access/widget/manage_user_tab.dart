@@ -15,7 +15,7 @@ class ManageUserTab extends ConsumerStatefulWidget {
   const ManageUserTab({super.key});
 
   @override
-  _ForYouContestState createState() => _ForYouContestState();
+  ConsumerState<ManageUserTab> createState() => _ForYouContestState();
 }
 
 class _ForYouContestState extends ConsumerState<ManageUserTab> {

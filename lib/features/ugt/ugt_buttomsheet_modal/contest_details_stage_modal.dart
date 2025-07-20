@@ -453,7 +453,8 @@ class PinEntryBottomSheet extends StatefulHookConsumerWidget {
       super.key});
 
   @override
-  _PinEntryBottomSheetState createState() => _PinEntryBottomSheetState();
+  ConsumerState<PinEntryBottomSheet> createState() =>
+      _PinEntryBottomSheetState();
 }
 
 class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {

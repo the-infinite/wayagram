@@ -10,7 +10,7 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart'
-    as appliedContest;
+    as applied_contest;
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
@@ -38,7 +38,7 @@ class _UpcomingContestDetailsState
     var viewModel = ref.watch(votersContestNotifier.notifier);
     final hasProfile = useState(false);
     final appliedContestModel =
-        useState<appliedContest.AppliedContestModel?>(null);
+        useState<applied_contest.AppliedContestModel?>(null);
     debugPrint("my value ${model?.hasApplied}");
 
     useEffect(() {

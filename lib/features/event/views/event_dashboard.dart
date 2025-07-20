@@ -33,7 +33,6 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final transResponse = await ref
           .read(eventVmProvider.notifier)
@@ -79,7 +78,6 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
       );
     }
 
-    // TODO: implement build
     return WayaScaffold(
       title: "Event Dashboard",
       body: Column(
@@ -187,7 +185,7 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
           child: Text(
             "No transactions yet",
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ),

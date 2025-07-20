@@ -26,7 +26,8 @@ class AddUserToGroupModal extends StatefulWidget {
   State<AddUserToGroupModal> createState() => _AddUserToGroupModalState();
 }
 
-class _AddUserToGroupModalState extends State<AddUserToGroupModal> with SingleTickerProviderStateMixin {
+class _AddUserToGroupModalState extends State<AddUserToGroupModal>
+    with SingleTickerProviderStateMixin {
   final selection = ValueNotifier<List<UserDetailsModel>>([]);
   final controller = TextEditingController();
   final loadingController = ValueNotifier(false);
@@ -82,7 +83,9 @@ class _AddUserToGroupModalState extends State<AddUserToGroupModal> with SingleTi
             children: [
               //? First, this one.
               SingleChildScrollView(
-                physics: followState.friends.isEmpty ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
+                physics: followState.friends.isEmpty
+                    ? const NeverScrollableScrollPhysics()
+                    : const BouncingScrollPhysics(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -108,7 +111,10 @@ class _AddUserToGroupModalState extends State<AddUserToGroupModal> with SingleTi
                             backgroundColor: theme.colorScheme.greyColor200,
                           ),
                           icon: WayaAssets.icons.actonDismiss.svg(
-                            color: theme.colorScheme.black,
+                            colorFilter: ColorFilter.mode(
+                              theme.colorScheme.black,
+                              BlendMode.srcIn,
+                            ),
                           ),
                         ),
                       ],
@@ -165,7 +171,8 @@ class _AddUserToGroupModalState extends State<AddUserToGroupModal> with SingleTi
 
                               //? If this is no longer empty.
                               if (selection.value.length == 1) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) {
                                   try {
                                     animationController?.forward();
                                   } catch (_) {}
@@ -185,7 +192,8 @@ class _AddUserToGroupModalState extends State<AddUserToGroupModal> with SingleTi
                           padding: const EdgeInsets.symmetric(horizontal: 17),
                           child: EmptyConversationsWidget(
                             title: "No Friends Yet",
-                            text: "Follow your friends that follow you on Wayagram to get started",
+                            text:
+                                "Follow your friends that follow you on Wayagram to get started",
                           ),
                         ),
                       ),
@@ -220,12 +228,14 @@ class _AddUserToGroupModalState extends State<AddUserToGroupModal> with SingleTi
                       child: WayaProgressiveButton(
                         notifier: loadingController,
                         callback: () async {
-                          final result = await widget.notifier.addUserToGroup(widget.chat.id, selection.value.first.id);
+                          final result = await widget.notifier.addUserToGroup(
+                              widget.chat.id, selection.value.first.id);
 
                           //? The result of your efforts is needed for this much.
                           if (result) {
                             WayaNav.goBack();
-                            WayaSnackBar.showToast("This user has been added to the group successfully");
+                            WayaSnackBar.showToast(
+                                "This user has been added to the group successfully");
                           }
                         },
                         text: "Add member",

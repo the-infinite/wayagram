@@ -173,7 +173,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                     callback: _startConversation,
                     height: null,
                     centerWidget: WayaAssets.icons.cPlus.svg(
-                      color: WayaColors.white,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.white,
+                        BlendMode.srcIn,
+                      ),
                       height: 24,
                       width: 24,
                     ),

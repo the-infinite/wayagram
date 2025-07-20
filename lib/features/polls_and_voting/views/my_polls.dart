@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,8 +23,8 @@ class MyPolls extends ConsumerStatefulWidget {
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MyPollsState();
 }
-class _MyPollsState extends ConsumerState<MyPolls> {
 
+class _MyPollsState extends ConsumerState<MyPolls> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -39,7 +38,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
               child: Center(
                 child: CircularProgressIndicator(),
               )),
-          emptyState:PollEmptyState(),
+          emptyState: PollEmptyState(),
           fetchData: ref.read(createPollVotingProvider.notifier).getMyPolls,
           result: (data, s) {
             return ListView.builder(
@@ -48,85 +47,116 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                 itemCount: viewModel.fetchAllPols.length,
                 itemBuilder: (context, index) {
                   final poll = viewModel.fetchAllPols[index];
-                  int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
+                  int daysLeft = DateTime.parse('${poll.endDate}')
+                      .difference(DateTime.parse('${poll.startDate}'))
+                      .inHours;
 
                   DateTime expirationDate = DateTime.parse("${poll.endDate}");
-                  DateTime currentDate = DateTime.now(); // Get current date and time
+                  DateTime currentDate =
+                      DateTime.now(); // Get current date and time
 
-                  return  Container(
+                  return Container(
                     margin: EdgeInsets.only(bottom: 20.h),
-                    child:  Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(children: [
-                          CircleAvatar(
-                            backgroundImage: NetworkImage('${poll.userData?.profilePicture}'),
-                            radius: 10,
-                            backgroundColor: wayaTheme.colorScheme.greyColor200,
-                          ),
-                          const Gap(3),
-                          Text('${poll.userData?.firstName} ${poll.userData?.lastName}',
-                              style: wayaTheme.textTheme.titleLarge),
-                          const Gap(3),
-                          Text(' • ${ WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
-                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Theme.of(context).colorScheme.greyColor500 ),
-                          ),
-
-                          Spacer(),
-                          PopupMenuButton(
-                            onSelected: (value) {},
-                            iconColor: wayaTheme.colorScheme.greyColor400,
-                            position: PopupMenuPosition.under,
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem<int>(
-                                  value: 0,
-                                  child: _buildActionNav(
-                                    context: context,
-                                    onTap: () {
-                                      WayaNav.goBack();
-                                      Share.share(
-                                        WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage('${poll.id}')),
-                                        subject: 'Share Poll',
-                                      );
-                                    },
-                                    asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
-                                    text: " Share Poll link",
-                                    color: wayaTheme.colorScheme.customBlack,
-                                  ),
-                                ),
-                                PopupMenuItem<int>(
-                                  value: 1,
-                                  child: _buildActionNav(
-                                    context: context,
-                                    onTap: () {
-                                      ref.read(createPollVotingProvider.notifier).deletePoll(context, postId: '${poll.id}');
-                                      WayaNav.goBack();
-                                    },
-                                    asset: SvgPicture.asset(
-                                      'assets/images/pages/delete.svg',
-                                      color: wayaTheme.colorScheme.error500,
-                                      height: 16,
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  '${poll.userData?.profilePicture}'),
+                              radius: 10,
+                              backgroundColor:
+                                  wayaTheme.colorScheme.greyColor200,
+                            ),
+                            const Gap(3),
+                            Text(
+                                '${poll.userData?.firstName} ${poll.userData?.lastName}',
+                                style: wayaTheme.textTheme.titleLarge),
+                            const Gap(3),
+                            Text(
+                              ' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .wayaCopyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .greyColor500),
+                            ),
+                            Spacer(),
+                            PopupMenuButton(
+                              onSelected: (value) {},
+                              iconColor: wayaTheme.colorScheme.greyColor400,
+                              position: PopupMenuPosition.under,
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem<int>(
+                                    value: 0,
+                                    child: _buildActionNav(
+                                      context: context,
+                                      onTap: () {
+                                        WayaNav.goBack();
+                                        Share.share(
+                                          WayaValueHelper.getShareableUrl(
+                                              WayaAppRoutes.getPollDetailsPage(
+                                                  '${poll.id}')),
+                                          subject: 'Share Poll',
+                                        );
+                                      },
+                                      asset: WayaAssets.icons.genSet.share.svg(
+                                        fit: BoxFit.none,
+                                        height: 20,
+                                        colorFilter: ColorFilter.mode(
+                                          WayaColors.greyColor600,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                      text: " Share Poll link",
+                                      color: wayaTheme.colorScheme.customBlack,
                                     ),
-                                    text: "  Delete Poll",
-                                    color: wayaTheme.colorScheme.error500,
                                   ),
-                                ),
-                              ];
-                            },
-                            child: Image.asset('assets/images/polls/menu.png', height: 32.h,),
-                          ),
-
-
-                        ],),
+                                  PopupMenuItem<int>(
+                                    value: 1,
+                                    child: _buildActionNav(
+                                      context: context,
+                                      onTap: () {
+                                        ref
+                                            .read(createPollVotingProvider
+                                                .notifier)
+                                            .deletePoll(context,
+                                                postId: '${poll.id}');
+                                        WayaNav.goBack();
+                                      },
+                                      asset: SvgPicture.asset(
+                                        'assets/images/pages/delete.svg',
+                                        colorFilter: ColorFilter.mode(
+                                          wayaTheme.colorScheme.error500,
+                                          BlendMode.srcIn,
+                                        ),
+                                        height: 16,
+                                      ),
+                                      text: "  Delete Poll",
+                                      color: wayaTheme.colorScheme.error500,
+                                    ),
+                                  ),
+                                ];
+                              },
+                              child: Image.asset(
+                                'assets/images/polls/menu.png',
+                                height: 32.h,
+                              ),
+                            ),
+                          ],
+                        ),
                         const Gap(10),
 
-                        Text("${poll.question?.toLowerCase().capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
+                        Text("${poll.question?.toLowerCase().capitalizeFirst}",
+                            style: wayaTheme.textTheme.titleLarge),
                         const Gap(3),
-                       /* if(poll.choices != null)
+                        /* if(poll.choices != null)
                           ...poll.choices!.map((e)=>
                               Text(
                                 '${poll.description?.toLowerCase().capitalizeFirst}',
@@ -137,102 +167,119 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                               ),),*/
                         Text(
                           '${poll.description?.capitalizeFirst}',
-                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).colorScheme.greyColor500),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .wayaCopyWith(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .greyColor500),
                         ),
 
                         const Gap(10),
                         Text(
                           '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} •  $daysLeft hours remaining',
-                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).colorScheme.greyColor500 ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .wayaCopyWith(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .greyColor500),
                         ),
                         const Gap(10),
 
                         Column(
                           children: [
-                            if(poll.choices != null)
-                              ...poll.choices!.map((e)=>
-                                  presImage('${e.imageUrl}',
-                                      '${e.text?.toLowerCase().capitalizeFirst}', context, true,
-                                      '${poll.feePerVote}', e.id, e.pollId, e.text, poll.url,
-                                          (){
-
-                                        if(currentDate.isAfter(expirationDate)){
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                             SnackBar(
-                                              content: Text(
-                                                'The poll has ended.',
-                                                style:
-                                                TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
-                                              ),
-                                              backgroundColor: WayaColors.primary,
-                                              duration: Duration(seconds: 2),
-                                            ),
-                                          );
-                                        }else{
-                                          WayaUtils.showModalSheet(
-                                            context,
-                                            child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',
-                                              pollId: '${poll.id}',candidateName: '${e.text}',
-                                              votingLink: '${poll.url}',),
-                                          );
-                                        }
-                                      }))
+                            if (poll.choices != null)
+                              ...poll.choices!.map((e) => presImage(
+                                      '${e.imageUrl}',
+                                      '${e.text?.toLowerCase().capitalizeFirst}',
+                                      context,
+                                      true,
+                                      '${poll.feePerVote}',
+                                      e.id,
+                                      e.pollId,
+                                      e.text,
+                                      poll.url, () {
+                                    if (currentDate.isAfter(expirationDate)) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'The poll has ended.',
+                                            style: TextStyle(
+                                                fontFamily:
+                                                    WayaConstants.fontFamily,
+                                                fontSize: 12.sp),
+                                          ),
+                                          backgroundColor: WayaColors.primary,
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    } else {
+                                      WayaUtils.showModalSheet(
+                                        context,
+                                        child: VoteOptionModal(
+                                          voteFee: '${poll.feePerVote}',
+                                          choiceId: '${e.id}',
+                                          pollId: '${poll.id}',
+                                          candidateName: '${e.text}',
+                                          votingLink: '${poll.url}',
+                                        ),
+                                      );
+                                    }
+                                  }))
                           ],
                         ),
                         const Gap(10),
                         //...poll.choices!.map((e)=>
                         WayaButton(
-                          callback: (){
+                          callback: () {
                             //WayaNav.to(PollDashboard(pollId: '${poll.choices?[index].pollId}',));
                             WayaNav.toNamed('/poll-dashboard',
                                 arguments: '${poll.id}'
-                              // arguments: '${poll.choices?[index].pollId}'
-                            );
+                                // arguments: '${poll.choices?[index].pollId}'
+                                );
                           },
                           text: 'Manage Poll',
                         ),
                         //)
-                      ],),
+                      ],
+                    ),
                   );
                 });
           }),
-
-
-
     );
   }
 
   userIm(ctx, net) {
-    
-    return
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Stack(
         clipBehavior: Clip.none,
         children: [
           ClipOval(
-            child:
-
-            Image.network(
+            child: Image.network(
               net,
-              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Container(
                   color: Colors.white,
-                  height:MediaQuery.of(ctx).size.height /9,
-                  width: MediaQuery.of(ctx).size.height /9,
+                  height: MediaQuery.of(ctx).size.height / 9,
+                  width: MediaQuery.of(ctx).size.height / 9,
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(4),
                       child: CircularProgressIndicator(
-                        color: WayaColors.primary.withOpacity(0.5),
+                        color: WayaColors.primary.withValues(alpha: 0.5),
                         value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!.toInt()
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!.toInt()
                             : null,
                       ),
                     ),
@@ -247,26 +294,30 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                       border: Border.all(
                         color: Colors.white,
                       )),
-                  height: MediaQuery.of(ctx).size.height /9,
-                  width: MediaQuery.of(ctx).size.height /9,
-                  child:  Center(
-                      child: Image.asset('assets/images/home/profile_icon.png', height: 60.h, width: 70.w,)
-                    //Text('Image\nError', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 8)),
-                  ),
+                  height: MediaQuery.of(ctx).size.height / 9,
+                  width: MediaQuery.of(ctx).size.height / 9,
+                  child: Center(
+                      child: Image.asset(
+                    'assets/images/home/profile_icon.png',
+                    height: 60.h,
+                    width: 70.w,
+                  )
+                      //Text('Image\nError', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 8)),
+                      ),
                 );
               },
               fit: BoxFit.cover,
-              height: MediaQuery.of(ctx).size.height /8,
-              width: MediaQuery.of(ctx).size.height /8,
+              height: MediaQuery.of(ctx).size.height / 8,
+              width: MediaQuery.of(ctx).size.height / 8,
             ),
           ),
-
         ],
       ),
     ]);
   }
 
-  presImage(img, name, ctx, chk, voteFee, choiceId, pollId,candidateName, votingLink, onTap){
+  presImage(img, name, ctx, chk, voteFee, choiceId, pollId, candidateName,
+      votingLink, onTap) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -284,41 +335,45 @@ class _MyPollsState extends ConsumerState<MyPolls> {
           padding: EdgeInsets.only(left: 20.w, bottom: 0),
           height: 60.h,
           decoration: BoxDecoration(
-            border: Border.all(color: WayaColors.primary600, ),
+            border: Border.all(
+              color: WayaColors.primary600,
+            ),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: chk ? Row(children: [
-            WayaImage(
-              imageUrl:img,
-              height: 44.h,
-              width: 59.w,
-              radius: BorderRadius.circular(4),
-            ),
-            const Gap(30),
-            Expanded(
-              flex: 3,
-              child: Text(
-                name,
-                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(ctx).colorScheme.primary600 ),
-              ),
-            ),
-
-          ],) : Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-              Text(
-                name,
-                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(ctx).colorScheme.primary600 ),
-              ),
-
-            ],),
+          child: chk
+              ? Row(
+                  children: [
+                    WayaImage(
+                      imageUrl: img,
+                      height: 44.h,
+                      width: 59.w,
+                      radius: BorderRadius.circular(4),
+                    ),
+                    const Gap(30),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        name,
+                        style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(ctx).colorScheme.primary600),
+                      ),
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      name,
+                      style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(ctx).colorScheme.primary600),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
@@ -353,8 +408,6 @@ class _MyPollsState extends ConsumerState<MyPolls> {
       ),
     );
   }
-
-
 }
 
 class PollEmptyState extends StatelessWidget {
@@ -373,8 +426,8 @@ class PollEmptyState extends StatelessWidget {
             },
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter:
-              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

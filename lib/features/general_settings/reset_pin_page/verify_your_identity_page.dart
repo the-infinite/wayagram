@@ -31,7 +31,6 @@ class _VerifyIdentityPageState extends ConsumerState<VerifyYourIdentityPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final dynamic args = ModalRoute.of(context)!.settings.arguments;
 
@@ -74,7 +73,6 @@ class _VerifyIdentityPageState extends ConsumerState<VerifyYourIdentityPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     cancelTimer();
     super.dispose();
   }
@@ -164,7 +162,7 @@ class _VerifyIdentityPageState extends ConsumerState<VerifyYourIdentityPage> {
                           } else {
                             ref.read(verifyAccountProvider.notifier).requestOtp(
                                 purpose: "CHANGE_OF_PHONE",
-                                 phone: "234${args['initial']}");
+                                phone: "234${args['initial']}");
                           }
                         } else {
                           ref

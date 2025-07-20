@@ -129,7 +129,10 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                     context: context,
                     asset: SvgPicture.asset(
                       'assets/images/pages/delete.svg',
-                      color: wayaTheme.colorScheme.error500,
+                      colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.error500,
+                        BlendMode.srcIn,
+                      ),
                       height: 16,
                     ),
                     text: "Delete Page",
@@ -247,11 +250,9 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                 Row(
                   children: [
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         WayaNav.toNamed('/pageFollowerScreen',
-                            arguments: {
-                          'pageId': widget.page.id
-                            });
+                            arguments: {'pageId': widget.page.id});
                       },
                       child: actionType(
                         WayaValueHelper.formatNumber(widget.page.followerCount),

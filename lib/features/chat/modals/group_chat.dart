@@ -19,10 +19,13 @@ class StartConversationGroupModal extends StatefulWidget {
   const StartConversationGroupModal({super.key});
 
   @override
-  State<StartConversationGroupModal> createState() => _StartConversationGroupModalState();
+  State<StartConversationGroupModal> createState() =>
+      _StartConversationGroupModalState();
 }
 
-class _StartConversationGroupModalState extends State<StartConversationGroupModal> with SingleTickerProviderStateMixin {
+class _StartConversationGroupModalState
+    extends State<StartConversationGroupModal>
+    with SingleTickerProviderStateMixin {
   final selection = ValueNotifier<List<UserDetailsModel>>([]);
   final controller = TextEditingController();
   final loadingController = ValueNotifier(false);
@@ -111,12 +114,17 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
                               IconButton(
                                 onPressed: () => WayaNav.goBack(result: null),
                                 style: IconButton.styleFrom(
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                   padding: const EdgeInsets.all(2),
-                                  backgroundColor: theme.colorScheme.greyColor200,
+                                  backgroundColor:
+                                      theme.colorScheme.greyColor200,
                                 ),
                                 icon: WayaAssets.icons.actonDismiss.svg(
-                                  color: theme.colorScheme.black,
+                                  colorFilter: ColorFilter.mode(
+                                    theme.colorScheme.black,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
                             ],
@@ -172,7 +180,8 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
 
                                     //? If this is no longer empty.
                                     if (selection.value.length == 1) {
-                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
                                         try {
                                           animationController?.forward();
                                         } catch (_) {}
@@ -189,10 +198,12 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
                             //? Empty conversations
                             Center(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 17),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 17),
                                 child: EmptyConversationsWidget(
                                   title: "No Friends Yet",
-                                  text: "Follow your friends that follow you on Wayagram to get started",
+                                  text:
+                                      "Follow your friends that follow you on Wayagram to get started",
                                 ),
                               ),
                             ),
@@ -237,9 +248,12 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
                                 if (result == null) return;
 
                                 //? This is fine.
-                                final chatNotifier = ref.read(chatProvider(result.id).notifier);
+                                final chatNotifier =
+                                    ref.read(chatProvider(result.id).notifier);
                                 chatNotifier.setChat(result);
-                                WayaNav.replaceNamed(WayaAppRoutes.getSingleChatRoute(result.id));
+                                WayaNav.replaceNamed(
+                                    WayaAppRoutes.getSingleChatRoute(
+                                        result.id));
                               },
                               text: "Add ${choices.length} members",
                             ),

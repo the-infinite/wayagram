@@ -4,7 +4,7 @@ import 'package:wayagram/features/ugt/data/model/contest_transaction_model.dart'
 import 'package:wayagram/features/ugt/data/model/contestant_count_model.dart';
 import 'package:wayagram/features/ugt/data/model/contestant_transaction_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_dashboard_state.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 
 import '../../../core/data/local_data_source.dart';

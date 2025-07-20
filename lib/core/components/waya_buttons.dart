@@ -42,7 +42,13 @@ class WayaBackButton extends StatelessWidget {
                     HapticFeedback.lightImpact();
                   } catch (_) {}
                 },
-            child: SvgPicture.asset('assets/icons/arrow-back.svg', color: arrowColor, fit: BoxFit.none),
+            child: SvgPicture.asset(
+              'assets/icons/arrow-back.svg',
+              colorFilter: arrowColor != null
+                  ? ColorFilter.mode(arrowColor!, BlendMode.srcIn)
+                  : null,
+              fit: BoxFit.none,
+            ),
           ),
         )
       ],

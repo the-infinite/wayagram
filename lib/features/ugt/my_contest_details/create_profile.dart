@@ -164,7 +164,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: Colors.red.withOpacity(0.2),
+                                  color: Colors.red.withValues(alpha: 0.2),
                                   width: 3)),
                           child: _imgFile == null
                               ? SizedBox(

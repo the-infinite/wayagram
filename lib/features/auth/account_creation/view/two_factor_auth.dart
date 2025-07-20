@@ -1,17 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
-import 'package:flutter_screenutil/src/size_extension.dart';
 
 class TwoFactorAuth extends ConsumerStatefulWidget {
   static const route = "/two-factor-authentication";
@@ -29,7 +27,6 @@ class _TwoFactorAuthState extends ConsumerState<TwoFactorAuth> {
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final arg = ModalRoute.of(context)!.settings.arguments;
 
@@ -67,7 +64,6 @@ class _TwoFactorAuthState extends ConsumerState<TwoFactorAuth> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     cancelTimer();
     super.dispose();
   }
@@ -76,7 +72,6 @@ class _TwoFactorAuthState extends ConsumerState<TwoFactorAuth> {
   Widget build(BuildContext context) {
     final state = ref.watch(verifyAccountProvider);
     final wayaTheme = Theme.of(context);
-    // TODO: implement build
     return PopScope(
         onPopInvokedWithResult: (popping, _) {
           if (!popping) return;

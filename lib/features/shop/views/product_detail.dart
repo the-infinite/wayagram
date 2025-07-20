@@ -114,7 +114,10 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     fit: BoxFit.cover,
                     width: 18,
                     height: 18,
-                    color: wayaTheme.colorScheme.white,
+                    colorFilter: ColorFilter.mode(
+                      wayaTheme.colorScheme.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
@@ -159,7 +162,10 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                         fit: BoxFit.none,
                         width: 24,
                         height: 24,
-                        color: wayaTheme.colorScheme.customPrimary,
+                        colorFilter: ColorFilter.mode(
+                          wayaTheme.colorScheme.customPrimary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ),
