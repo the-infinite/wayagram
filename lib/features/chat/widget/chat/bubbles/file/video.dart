@@ -101,9 +101,9 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                     //! times the file might be lingering in memory as opposed
                     //! to storage.
                     await Future.delayed(const Duration(seconds: 4));
-                    if (await widget.video.exists()) {
-                      await WayaFileHelper.saveNetworkVideo(widget.video.uri.toString());
-                    }
+                    // if (await widget.video.exists()) {
+                    //   await WayaFileHelper.saveNetworkVideo(widget.video.uri.toString());
+                    // }
                     if (!mounted) return;
                     setState(() {
                       downloaded = true;

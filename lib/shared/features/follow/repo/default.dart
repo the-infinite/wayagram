@@ -10,6 +10,10 @@ class FollowRepository extends BaseRepository {
   // Construct.
   FollowRepository._();
 
+  Future<WayaRequestResponse> getFollowRequests(String userId, [int page = 1, int limit = 50]) {
+    return httpClient.getHttp("$serviceUri/follow/pending-follow-request/$userId?page=$page&limit=$limit");
+  }
+
   Future<WayaRequestResponse> getFollowers(String id, int page, int limit) {
     return httpClient.getHttp("$serviceUri/follow/followers/$id?page=$page&limit=$limit");
   }

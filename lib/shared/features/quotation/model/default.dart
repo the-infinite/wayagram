@@ -75,6 +75,16 @@ enum QuotationDeliveryStatus {
 
   final String value;
   const QuotationDeliveryStatus._(this.value);
+
+  static QuotationDeliveryStatus build(String value) {
+    return switch (value) {
+      'pending' => QuotationDeliveryStatus.pending,
+      'ready-for-dispatch' => QuotationDeliveryStatus.readyForDispatch,
+      'out-for-delivery' => QuotationDeliveryStatus.inTransit,
+      'delivered' => QuotationDeliveryStatus.delivered,
+      _ => throw '$value is not a valid value',
+    };
+  }
 }
 
 enum QuotationPickupStatus {
@@ -91,6 +101,45 @@ enum QuotationPickupStatus {
 
   final String value;
   const QuotationPickupStatus._(this.value);
+
+  static QuotationPickupStatus build(String value) {
+    return switch (value) {
+      'pending' => QuotationPickupStatus.pending,
+      'ready-for-pickup' => QuotationPickupStatus.ready,
+      'pickup-scheduled' => QuotationPickupStatus.scheduled,
+      'pickup-completed' => QuotationPickupStatus.collected,
+      _ => throw '$value is not a valid value',
+    };
+  }
+}
+
+@JsonSerializable()
+class BidOrderStatus {
+  final String id;
+  final String status;
+  final String orderId;
+  final String requestId;
+  final bool isDeleted;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  // Construct.
+  const BidOrderStatus({
+    required this.id,
+    required this.status,
+    required this.orderId,
+    required this.requestId,
+    required this.isDeleted,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  QuotationPickupStatus get pickupStatus => QuotationPickupStatus.build(status);
+  QuotationDeliveryStatus get deliveryStatus => QuotationDeliveryStatus.build(status);
+
+  factory BidOrderStatus.fromJson(Map<String, dynamic> json) => _$BidOrderStatusFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BidOrderStatusToJson(this);
 }
 
 @JsonSerializable()
