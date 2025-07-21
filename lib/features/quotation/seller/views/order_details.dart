@@ -123,7 +123,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
       isScrollable: !isUnavailable,
       title: 'Order Details',
       body: !_loaded
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : isUnavailable
