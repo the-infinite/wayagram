@@ -111,7 +111,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
           ref.watch(personalFirstStepProvider).phoneNumber.text;
       final response = await _authRepository.resendOtp(
           phone:
-              "234${personalPhone.length > 10 ? personalPhone.substring(1) : personalPhone}");
+              "234${personalPhone.length > 10 ? personalPhone.substring(1) : personalPhone}",
+          purpose: "PHONE_NUMBER_AUTH");
       _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(
@@ -150,7 +151,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
         if (type == 'account-creation') {
           await _authRepository.resendOtp(
               phone:
-                  "234${phoneNumber.length > 10 ? phoneNumber.substring(1) : phoneNumber}");
+                  "234${phoneNumber.length > 10 ? phoneNumber.substring(1) : phoneNumber}",
+              purpose: "PHONE_NUMBER_AUTH");
         }
 
         onSuccess();
@@ -343,6 +345,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
   void updateResend(bool value) {
     state = state.copyWith(isResend: value, isFromLogin: !value);
   }
