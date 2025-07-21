@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -72,7 +73,19 @@ class PushNotifications {
 
   /// Simple utility function used to listen for notifications that are sent when
   /// the app is open.
-  static Future<void> onReceiveNotification(RemoteMessage message) async {}
+  static Future<void> onReceiveNotification(RemoteMessage message) {
+    //? Then, we simply
+    if (message.notification != null) {
+      return showSimpleNotification(
+        title: message.notification!.title ?? 'WayaGram',
+        body: message.notification!.body ?? 'You have received a notification',
+        payload: jsonEncode(message.data),
+      );
+    }
+
+    //? This is empty then.
+    return Future.value(null);
+  }
 
   /// Simple utility function used to configure the app for the right startup
   /// activity and proportions if the notification just so happens to be what
@@ -81,6 +94,7 @@ class PushNotifications {
 
   /// Simple utility function used to listen for notifications that are send when
   /// the app is currently in a minimized state.
+  @pragma('vm:entry-point')
   static Future<void> onReceiveBackgroundNotification(RemoteMessage message) async {}
 
   /// Simple utility used to get th eFirebase Cloud Messaging device token of
@@ -93,8 +107,8 @@ class PushNotifications {
       deviceToken = (await FirebaseMessaging.instance.getToken())!;
     } catch (e) {
       if (maxRetires > 0) {
-        debugPrint("try after 2 sec  -------------=---------------------");
-        await Future.delayed(Duration(seconds: 2));
+        debugPrint("try after a little over half a sec  -------------=---------------------");
+        await Future.delayed(Duration(milliseconds: 650));
         return _getDeviceToken(maxRetires: maxRetires - 1);
       }
     }
@@ -163,13 +177,28 @@ class PushNotifications {
     required String body,
     required String payload,
   }) async {
-    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-        'your channel id', 'your channel name',
-        channelDescription: 'your channel description',
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker');
-    const NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);
-    await _flutterLocalNotificationsPlugin.show(0, title, body, notificationDetails, payload: payload);
+    const androidNotificationDetails = AndroidNotificationDetails(
+      'ng.wayagram',
+      'wayagram_notifications',
+      channelDescription: 'For Wayagram notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    const iOSNotificationDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+    );
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+      iOS: iOSNotificationDetails,
+    );
+    await _flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      notificationDetails,
+      payload: payload,
+    );
   }
 }

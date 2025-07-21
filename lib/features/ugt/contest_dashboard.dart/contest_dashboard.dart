@@ -16,6 +16,7 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/all_state_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
@@ -81,11 +82,13 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     final dashboardVm = ref.watch(ugtAdminDashboardVm);
     final walletViewModel = ref.watch(walletVmProvider);
     var model = ref.watch(selectedContestProvider);
+   
     useEffect(() {
       Future.delayed(Duration.zero, () {
         dashboardNotifier.fetchTotalContestant(model?.id ?? "");
         dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
         ref.read(walletVmProvider.notifier).getPayoutMethod();
+          ref.read(createPollVotingProvider.notifier).getPayoutCommission();
       });
 
       Future.delayed(Duration(seconds: 2), () {

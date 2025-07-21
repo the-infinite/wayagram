@@ -40,11 +40,11 @@ class ActivityLogsState {
   List<DonationDocs> donationDocs;
   List<WalletActivityDocs> walletActivityDocs;
   List<DonationDocs> donationDocs1;
-  List<PageDocs> shopDocs;
+  List<EventLogDocs> shopDocs;
   List<PageDocs> shopDocs1;
   List<PageDocs> walletDocs;
   List<PageDocs> walletDocs1;
-  List<PageDocs> quotationDocs;
+  List<EventLogDocs> quotationDocs;
   List<PageDocs> quotationDocs1;
   List<UgtLogDocs> ugtLogDocs;
 
@@ -130,17 +130,13 @@ class ActivityLogsState {
     List<LoginHistoryDocs>? loginHistoryDocs,
     List<UgtLogDocs>? ugtLogDocs,
     List<PageDocs>? walletDocs,
-    List<PageDocs>? walletDocs1,
-    List<PageDocs>? shopDocs,
-    List<PageDocs>? shopDocs1,
-    List<PageDocs>? quotationDocs,
+    List<EventLogDocs>? shopDocs,
+    List<EventLogDocs>? quotationDocs,
     List<PageDocs>? quotationDocs1,
     List<PollsActivityDocs>? pollDocs,
     List<PollsActivityDocs>? pollDocs1,
     List<EventLogDocs>? eventDocs,
-    List<PageDocs>? eventDocs1,
     List<PageDocs>? socialDocs,
-    List<PageDocs>? socialDocs1,
     List<CmsDocs>? cmsDocs,
     List<CmsDocs>? cmsDocs1,
     List<DonationDocs>? donationDocs,
@@ -149,19 +145,12 @@ class ActivityLogsState {
     List<PageDocs>? pageDocs,
     List<PageDocs>? pageDocs1,
     List<GroupDocs>? groupDocs,
-    List<GroupDocs>? groupDocs1,
     List<AccountActivityDocs>? accountActivityDocs,
-    List<AccountActivityDocs>? accountActivityDocs1,
     List<PaymentActivityDocs>? paymentActivityDocs,
-    List<PaymentActivityDocs>? paymentActivityDocs1,
     List<SearchLogDocs>? searchLogDocs,
-    List<SearchLogDocs>? searchLogDocs1,
     List<UserActionsDocs>? userActionsDocs,
-    List<UserActionsDocs>? userActionsDocs1,
     List<UserInteractionDocs>? userInteractionDocs,
-    List<UserInteractionDocs>? userInteractionDocs1,
     List<VisitedPagesDocs>? visitedPagesDocs,
-    List<VisitedPagesDocs>? visitedPagesDocs1,
     VisitedPagesModel? visitedPagesModel,
     bool? isLoading,
     int? totalSize,
@@ -182,13 +171,9 @@ class ActivityLogsState {
       pollDocs: pollDocs ?? this.pollDocs,
       pollDocs1: pollDocs1 ?? this.pollDocs1,
       walletDocs: walletDocs ?? this.walletDocs,
-      walletDocs1: walletDocs1 ?? this.walletDocs1,
       socialDocs: socialDocs ?? this.socialDocs,
-      socialDocs1: socialDocs1 ?? this.socialDocs1,
       groupDocs: groupDocs ?? this.groupDocs,
-      groupDocs1: groupDocs1 ?? this.groupDocs1,
       eventDocs: eventDocs ?? this.eventDocs,
-      eventDocs1: eventDocs1 ?? this.eventDocs1,
       ugtLogDocs: ugtLogDocs ?? this.ugtLogDocs,
       pageDocs: pageDocs ?? this.pageDocs,
       pageDocs1: pageDocs1 ?? this.pageDocs1,
@@ -196,17 +181,11 @@ class ActivityLogsState {
       donationDocs1: donationDocs1 ?? this.donationDocs1,
       walletActivityDocs: walletActivityDocs ?? this.walletActivityDocs,
       accountActivityDocs: accountActivityDocs ?? this.accountActivityDocs,
-      accountActivityDocs1: accountActivityDocs1 ?? this.accountActivityDocs1,
       paymentActivityDocs: paymentActivityDocs ?? this.paymentActivityDocs,
-      paymentActivityDocs1: paymentActivityDocs1 ?? this.paymentActivityDocs1,
       searchLogDocs: searchLogDocs ?? this.searchLogDocs,
-      searchLogDocs1: searchLogDocs1 ?? this.searchLogDocs1,
       userActionsDocs: userActionsDocs ?? this.userActionsDocs,
-      userActionsDocs1: userActionsDocs1 ?? this.userActionsDocs1,
       userInteractionDocs: userInteractionDocs ?? this.userInteractionDocs,
-      userInteractionDocs1: userInteractionDocs1 ?? this.userInteractionDocs1,
       visitedPagesDocs: visitedPagesDocs ?? this.visitedPagesDocs,
-      visitedPagesDocs1: visitedPagesDocs1 ?? this.visitedPagesDocs1,
       visitedPagesModel: visitedPagesModel ?? this.visitedPagesModel,
     );
   }
@@ -364,6 +343,46 @@ class ActivityLogsState {
     //? end date.
     result = result.where((ugt) {
       final timestamp = DateTime.parse(ugt.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<EventLogDocs> filterShopDocs(DateTime start, DateTime end) {
+    Iterable<EventLogDocs> result = shopDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((shop) {
+      final timestamp = DateTime.parse(shop.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((shop) {
+      final timestamp = DateTime.parse(shop.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<EventLogDocs> filterQuotationDocs(DateTime start, DateTime end) {
+    Iterable<EventLogDocs> result = quotationDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((quotation) {
+      final timestamp = DateTime.parse(quotation.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((quotation) {
+      final timestamp = DateTime.parse(quotation.createdAt!);
       return !timestamp.isAfter(end);
     });
 

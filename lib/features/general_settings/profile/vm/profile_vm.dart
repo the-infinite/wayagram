@@ -15,6 +15,7 @@ import 'package:wayagram/features/general_settings/profile/data/model/profile_st
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
+import 'package:wayagram/features/notifications/vm/default.dart';
 import 'package:wayagram/shared/cache/comment.dart';
 import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/cache/page.dart';
@@ -28,9 +29,10 @@ import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {
   final ProfileRepo _profileRepo;
+  final Ref _ref;
   final WayaSecureDataSource _secureDataSource;
   final WayaLocalDataSource _localDataSource;
-  ProfileVm(this._profileRepo, this._localDataSource, this._secureDataSource) : super(ProfileState());
+  ProfileVm(this._profileRepo, this._localDataSource, this._secureDataSource, this._ref) : super(ProfileState());
 
   void refetchUserData() {
     getUserData();
@@ -170,6 +172,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
 
   //? Log out properly in the future.
   Future<void> logOutUser() async {
+    await _ref.read(notificationProvider.notifier).deleteDeviceToken();
     await _secureDataSource.deleteAll();
     await _localDataSource.wayaFastStorageService.deleteAll();
 
@@ -297,5 +300,6 @@ final profileVmProvider = StateNotifierProvider<ProfileVm, ProfileState>((ref) {
     ProfileRepo(),
     WayaLocalDataSource(),
     WayaSecureDataSource(),
+    ref,
   );
 });

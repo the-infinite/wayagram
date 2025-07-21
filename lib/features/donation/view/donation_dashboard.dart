@@ -8,6 +8,7 @@ import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
@@ -16,6 +17,7 @@ import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
@@ -23,17 +25,17 @@ import '../../../shared/features/user/models/default.dart';
 import '../../auth/upgrade_to_business/views/upgrade_to_business.dart';
 import '../../chat/state/default.dart';
 
-class DonationManagement extends ConsumerStatefulWidget {
-  static const route = '/donationManagement';
-  const DonationManagement({
+class DonationDashboard extends ConsumerStatefulWidget {
+  static const route = '/donationDashboard';
+  const DonationDashboard({
     super.key,
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _DonationManagementState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DonationDashboardState();
 }
 
-class _DonationManagementState extends ConsumerState<DonationManagement> with SingleTickerProviderStateMixin {
+class _DonationDashboardState extends ConsumerState<DonationDashboard> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -49,6 +51,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
     final walletViewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    debugPrint('DAYSLEFT Is DASHBOARD ===>> ${args['daysLeft']}');
     return WayaScaffold(
       title: "Donation Dashboard",
       isLoading: viewModel.isLoading,
@@ -106,40 +109,95 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
           _reviewText('Impact Statement', '${args['impact']}'),
         ],
       ),
-      bottomNavigationBar: args['daysLeft'] == 0
-          ? WayaButton(
-              callback: !viewModel.isLoading
-                  ? () {
-                final percentage =
-                    '${(double.parse(viewModel.commission) / 100) * num.parse('${args['amountRaised']}')}';
-                final amountDue = double.parse('${args['amountRaised']}') - double.parse(percentage);
+      bottomNavigationBar: args['daysLeft'] == '0'
+          ? Container(
+        height: 120.h,
+        padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+            child: Column(
+              children: [
+                WayaButton(
+
+                    callback: !viewModel.isLoading
+                        ? () {
+                      final percentage =
+                          '${(double.parse(viewModel.commission) / 100) * num.parse('${args['amountRaised']}')}';
+                      final amountDue = double.parse('${args['amountRaised']}') - double.parse(percentage);
+
+                      if(walletViewModel.payoutMethod.isEmpty){
+                        WayaUtils.showModalSheet(
+                          context,
+                          child: AddPayoutModal(),
+                        );
+                      }else if(args['amountRaised'] == 0){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'No revenue was generated from this donation.' ,
+                              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                            ),
+                            backgroundColor: WayaColors.primary,
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }else{
+                        ref
+                            .read(credentialInputProvider.notifier)
+                            .onSubmitPayoutPin(() => WayaNav.toNamed('/payoutVerification', arguments: {
+                          "id": args['id'],
+                          "Module": PayoutModule.donation,
+                          "Model": PayoutReviewModel(
+                              comission: percentage,
+                              amount: '${args['amountRaised']}',
+                              amountDue: '$amountDue',
+                              endDate: args['endDate'])
+                        }));
+                      }
 
 
-                if(walletViewModel.payoutMethod.isEmpty){
-                  WayaUtils.showModalSheet(
-                    context,
-                    child: AddPayoutModal(),
-                  );
-                }else{
-                  ref
-                      .read(credentialInputProvider.notifier)
-                      .onSubmitPayoutPin(() => WayaNav.toNamed('/payoutVerification', arguments: {
-                    "id": args['id'],
-                    "Module": PayoutModule.donation,
-                    "Model": PayoutReviewModel(
-                        comission: percentage,
-                        amount: '${args['amountRaised']}',
-                        amountDue: '$amountDue',
-                        endDate: args['endDate'])
-                  }));
-                }
 
-
-
-                    }
-                  : null,
-              centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Request Payout'),
-            )
+                          }
+                        : null,
+                    centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Request Payout'),
+                  ),
+                Gap(10),
+                GestureDetector(
+                  onTap: () {
+                    // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+                    WayaNav.toNamed(PayoutHistory.route, arguments: {
+                      "referenceId": args['id'] ?? "",
+                      "Module": 'DONATION'
+                    });
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: REdgeInsets.symmetric(
+                        vertical: 8.dg, horizontal: 12.dg),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: wayaTheme.colorScheme.primary600,
+                        width: 1.5,
+                      ),
+                      color: wayaTheme.colorScheme.white,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Payout History',
+                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary600,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
           : Container(
               width: double.infinity,
               padding: EdgeInsets.fromLTRB(10, 4, 10, 10),

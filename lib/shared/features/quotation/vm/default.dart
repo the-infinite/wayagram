@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -243,6 +244,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? Update the buy request in the list of buy requests.
         final index = state.requests.indexWhere((element) => element.id == id);
+        wayaQuotationsCache.cache(id, doc);
 
         //? This is fine.
         if (index != -1) {
@@ -251,7 +253,6 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
           state = state.copyWith(
             requests: [...previous],
           );
-          wayaQuotationsCache.cache(id, doc);
         }
 
         //? Return the document.
@@ -277,23 +278,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
       //? If it was fine...
       if (response.success) {
-        final found = state.requests.indexWhere((request) => request.id == id);
-
-        //? If this is in this place.
-        if (found != -1) {
-          final current = state.requests[found];
-          final copy = state.requests;
-
-          // This is fine.
-          copy[found] = current.copyWith(
-            status: BuyRequestStatus.cancelled,
-          );
-
-          //? This is fine.
-          state = state.copyWith(
-            requests: copy,
-          );
-        }
+        await getBuyRequest(id);
       }
 
       //? Return this value if it was fine.
@@ -649,6 +634,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? This is fine.
       return response.success;
     } catch (e) {
+      debugPrint("Error: $e");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
@@ -692,6 +678,33 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   Future<bool> completeOrder(String id, String token) async {
     try {
       final response = await repo.completeOrder(orderId: id, token: token);
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaSnackBar.showToast(WayaDebugHelpers.getMessage(e));
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return false;
+  }
+
+  /// Helper function used to complete an order. This is useful when we want to
+  /// complete an order in the system.
+  Future<bool> trackDelivery(String id) async {
+    try {
+      final response = await repo.trackDelivery(requestId: id);
+
+      //? If this went well...
+      if (response.success) {
+        debugPrint("Result: ${response.data}");
+      }
 
       //? This is fine.
       return response.success;

@@ -35,7 +35,11 @@ class QuotationRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> verifyPaymentStatus(String id, bool value) {
-    return patch("$serviceUrl/order/payment-status/$id", {"status": value}, showErrors: true);
+    return patch(
+      "$serviceUrl/order/payment-status/$id",
+      {"status": value},
+      showErrors: true,
+    );
   }
 
   Future<WayaRequestResponse> updateRequestAmount({

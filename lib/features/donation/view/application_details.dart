@@ -166,7 +166,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: (){
-              WayaNav.toNamed('/donationManagement', arguments: {
+              WayaNav.toNamed('/donationDashboard', arguments: {
                 'title': widget.causeTitle,
                 'image': widget.image,
                 'amountRaised': widget.amountRaised.replaceAll('.00', ''),

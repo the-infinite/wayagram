@@ -36,16 +36,6 @@ class _SeeAllLiveDonationsState extends ConsumerState<SeeAllLiveDonations> with 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    //final wayaTheme = Theme.of(context);
-
-    // Filter the myDonations
-    // final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
-    //   viewModel.approvedDonations!,
-    //   [
-    //     'title',
-    //   ],
-    //   searchController.text,
-    // );
 
     return WayaScaffold(
         resizeToAvoidBottomInset: false,
@@ -56,7 +46,6 @@ class _SeeAllLiveDonationsState extends ConsumerState<SeeAllLiveDonations> with 
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //viewModel.approvedDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have approved donations yet',):
             viewModel.myDonationDocs.isEmpty
                 ? ActivityLogsEmptyState(
                     text: 'You don\'t have approved donations yet',
@@ -66,8 +55,6 @@ class _SeeAllLiveDonationsState extends ConsumerState<SeeAllLiveDonations> with 
                         padding: EdgeInsets.only(bottom: 20),
                         shrinkWrap: true,
                         itemCount: viewModel.myDonationDocs.length,
-                        //viewModel.myDonationDocs?.length,
-                        //filteredMyDonations.length,
                         itemBuilder: (context, index) {
                           final donation = viewModel.myDonationDocs[index];
                           int daysLeft = DateTime.parse('${donation.expirationDate}')
@@ -89,7 +76,7 @@ class _SeeAllLiveDonationsState extends ConsumerState<SeeAllLiveDonations> with 
                       donationCount: donation.donationCount!,
                       rangeRatio: ratioLeft,
                       onTap: () {
-                        WayaNav.toNamed('/donationManagement', arguments: {
+                        WayaNav.toNamed('/donationDashboard', arguments: {
                           'title': '${donation.title?.capitalizeFirst}',
                           'image': '${donation.imageURL}',
                           'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',

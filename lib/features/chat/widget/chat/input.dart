@@ -421,6 +421,19 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
 
   /// Helper function used to add an attachment.
   void _addAttachment(BuildContext context) async {
+    //? Try to access all of the storage here.
+    if (!await Permission.manageExternalStorage.request().isGranted) {
+      //WayaSnackBar.showToast("You denied the storage permission");
+      //return;
+    }
+
+    //? Ask for the camera permission too.
+    if (!await Permission.camera.request().isGranted) {
+      //WayaSnackBar.showToast("You denied the storage permission");
+      //return;
+    }
+
+    //? Okay.
     final result = await WayaUtils.showModalSheet<AttachmentResult>(
       context,
       backgroundColor: widget.backgroundColor,

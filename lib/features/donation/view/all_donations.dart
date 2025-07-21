@@ -136,21 +136,24 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
           ),
           const Gap(30),
           filteredAllDonations.isEmpty
+
               ? DonationEmptyState(
                   title: "You haven't added any donations yet",
                 )
               : ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: filteredAllDonations.length,
+                  itemCount:filteredAllDonations.length,
+                  //viewModel.allDonationDocs?.length,
+                  //filteredAllDonations.length,
                   itemBuilder: (context, index) {
                     final donation = filteredAllDonations[index];
                     int daysLeft = DateTime.parse('${donation.expirationDate}')
                         .difference(DateTime.parse('${donation.startDate}'))
                         .inDays;
-                    int amountRaised = double.parse(donation.amountRaised!).toInt();
+                    int amountRaised = double.parse('${donation.amountRaised}').toInt();
 
-                    int targetedAmount = double.parse(donation.targetAmount!).toInt();
+                    int targetedAmount = double.parse('${donation.targetAmount}').toInt();
 
                     double ratioLeft = amountRaised / targetedAmount;
 

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/features/chat/controller/message.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/model/media.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/repo/message.dart';
 import 'package:wayagram/features/chat/state/chat.dart';
@@ -106,6 +108,48 @@ class ChatNotifier extends StateNotifier<ChatState> {
         page: int.tryParse(data['nextPage'].toString()) ?? 1,
       );
     }
+
+    //? Return this collated result.
+    return result;
+  }
+
+  /// Retrieves a list of media items associated with the chat.
+  ///
+  /// Returns a [Future] that completes with a list of [ChatMediaModel] objects.
+  ///
+  /// Throws an exception if the media retrieval fails.
+  Future<List<ChatMediaModel>> getChatMedia() async {
+    final result = <ChatMediaModel>[];
+
+    //? Show the preloader
+    WayaPreloaderController.instance.show();
+
+    try {
+      //? This is fine.
+      final response = await repo.getChatMedia(state.chatId);
+
+      //? This is fine.
+      if (response.success) {
+        // The data.
+        final data = response.data['data'];
+
+        //? Parse the conversations as they are in the response object...
+        final docs = (data['docs'] as List).map((doc) => ChatMediaModel.fromJson(doc));
+
+        //? Add our new messages
+        result.addAll(docs);
+
+        //? Update state.
+        state = state.copyWith(
+          media: result,
+        );
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+    }
+
+    //? Dismiss the preloader
+    WayaPreloaderController.instance.hide();
 
     //? Return this collated result.
     return result;

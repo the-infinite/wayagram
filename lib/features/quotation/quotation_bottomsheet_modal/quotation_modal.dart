@@ -606,12 +606,14 @@ class NumPadButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color? backgroundColor;
   final Color? iconColor;
+  final bool enabled;
 
   const NumPadButton({
     super.key,
+    required this.onTap,
+    this.enabled = true,
     this.text,
     this.icon,
-    required this.onTap,
     this.backgroundColor,
     this.iconColor,
   });
@@ -627,7 +629,7 @@ class NumPadButton extends StatelessWidget {
         ),
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: enabled ? onTap : null,
         borderRadius: BorderRadius.circular(32),
         child: Center(
           child: icon != null
@@ -848,24 +850,24 @@ class UpdateOrderStatusModal extends StatelessWidget {
               Gap(30.h),
 
               //? The first order option.
-              WayaMultipleSelectionButton(
-                name: "In Progress",
-                controller: controller,
-                value: QuotationOrderStatus.inProgress,
-              ),
+              //   WayaMultipleSelectionButton(
+              //     name: "In Progress",
+              //     controller: controller,
+              //     value: QuotationOrderStatus.inProgress,
+              //   ),
 
               // Some space.
-              Gap(5.h),
+              //   Gap(5.h),
 
               //? The second order option.
-              WayaMultipleSelectionButton(
-                name: "Delivered",
-                controller: controller,
-                value: QuotationOrderStatus.completed,
-              ),
+              //   WayaMultipleSelectionButton(
+              //     name: "Delivered",
+              //     controller: controller,
+              //     value: QuotationOrderStatus.completed,
+              //   ),
 
               // Some space.
-              Gap(5.h),
+              //  Gap(5.h),
 
               //? The second order option.
               WayaMultipleSelectionButton(

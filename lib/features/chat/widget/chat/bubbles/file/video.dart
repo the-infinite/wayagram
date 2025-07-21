@@ -79,6 +79,8 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
   Widget build(BuildContext context) {
     //? This is fine.
     final size = MediaQuery.sizeOf(context);
+    final width = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
+    final height = !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100.0;
 
     //? Return this here.
     return Padding(
@@ -94,11 +96,14 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                 widget.video,
                 (result) async {
                   if (result) {
-                    //! DO NOT REMOVE THIS LINE. It is us giving the operating 
+                    //! DO NOT REMOVE THIS LINE. It is us giving the operating
                     //! system enough time to flush the file to storage. Some
                     //! times the file might be lingering in memory as opposed
                     //! to storage.
                     await Future.delayed(const Duration(seconds: 4));
+                    if (await widget.video.exists()) {
+                      await WayaFileHelper.saveNetworkVideo(widget.video.uri.toString());
+                    }
                     if (!mounted) return;
                     setState(() {
                       downloaded = true;
@@ -179,9 +184,13 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: SizedBox(
-                width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: height,
+                  minHeight: height,
+                  maxWidth: width,
+                  minWidth: width,
+                ),
                 child: WayaVideoWidget.file(
                   widget.video,
                   controller: controller,
