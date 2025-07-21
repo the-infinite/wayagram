@@ -440,7 +440,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       WayaSelectField<String>(
                         height: 0.3,
                         value: priceForWinner.value,
-                        label: "Is there price for the winner",
+                        label: "Is there a prize for the winner",
                         hintText: 'Choose',
                         items: [Select(label: "Yes", value: "1"), Select(label: "No", value: "0")],
                         onSelected: (value) {
@@ -468,7 +468,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 if (priceForWinner.value == "Yes")
                   FormField<String>(validator: (value) {
                     if (_contestController.contestPrizeWinnerTextController.text.isEmpty) {
-                      return 'Winner Price is required';
+                      return 'Winner Prize is required';
                     }
                     // String value = _contestController
                     //     .contestPrizeWinnerTextController.text;
