@@ -115,6 +115,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
     final subtotal = (request?.quantity ?? 0) * (bid?.usedAmount ?? 0);
     final isUnavailable = order == null || request == null;
     final isBuyer = order?.buyerId == ConversationState.self.id;
+    final hasArrived = request?.deliveryType == BuyRequestDeliveryType.pickup ? true : false;
 
     //? Return the component.
     return WayaScaffold(
@@ -122,7 +123,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
       isScrollable: !isUnavailable,
       title: 'Order Details',
       body: !_loaded
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : isUnavailable
@@ -521,7 +522,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
                       //? If this is for the buyer and the order has gotten to the
                       //? final step that needs confirmation...
-                      if (!isBuyer && order?.orderStatus == QuotationOrderStatus.completed) ...[
+                      if (!isBuyer && order?.orderStatus == QuotationOrderStatus.inProgress && hasArrived) ...[
                         // Some space.
                         Gap(30.h),
 
@@ -549,7 +550,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                       ]
 
                       //? The button to change the order status.
-                      else if (!isBuyer)
+                      else if (!isBuyer && order?.orderStatus == QuotationOrderStatus.inProgress)
                         WayaButton(
                           color: wayaTheme.colorScheme.transparent,
                           textColor: wayaTheme.colorScheme.greyColor900,
