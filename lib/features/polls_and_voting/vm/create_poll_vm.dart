@@ -717,14 +717,12 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
       }
     } catch (e) {
-
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
         WayaDebugEventModule.polls,
         WayaDebugHelpers.getStackTrace(e),
       );
-
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -798,14 +796,14 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        AccountTypeModel responseModel = AccountTypeModel.fromJson(response.data);
+        AccountTypeModel responseModel =
+            AccountTypeModel.fromJson(response.data);
         state = state.copyWith(accountType: responseModel.data?[0].name);
       } else {}
     } catch (e) {
       debugPrint(e.toString());
     } finally {}
   }
-
 
   Future<void> getActivePolls(int page) async {
     try {
@@ -949,8 +947,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } finally {}
   }
 
-
-
   Future<PaginatedResult<Docs>?> getAllPolls({required int page}) async {
     try {
       //state = state.copyWith(isLoading: true);
@@ -984,7 +980,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _pollAndVotingRepository.getAllPendingPolls(page, ConversationState.self.id);
+      final response = await _pollAndVotingRepository.getAllPendingPolls(
+          page, ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
@@ -1014,15 +1011,56 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<GetAllPollModel?> getPollsById(String pollId) async {
+  Future<GetAllPollModel?> getPrivatePollsById(String pollId) async {
     state = state.copyWith(isLoading: true);
-    final response = await _pollAndVotingRepository.getAllPollsById(pollId);
+    final response = await _pollAndVotingRepository.getPrivatePollsById(pollId);
     state = state.copyWith(isLoading: false);
     if (response.statusCode == 200) {
       SinglePollModel responseModel = SinglePollModel.fromJson(response.data);
       _logger.i('GENERATED ${responseModel.data}');
 
-      state = state.copyWith(singlePollModelDocs: responseModel.data?.docs);
+      state = state.copyWith(
+          singlePollChoices: responseModel.data?.choices,
+          desc: responseModel.data?.description,
+          question: responseModel.data?.question,
+          fName: responseModel.data?.userData?.firstName,
+          lName: responseModel.data?.userData?.lastName,
+          picture: responseModel.data?.userData?.profilePicture,
+          startDate: responseModel.data?.startDate,
+          endDate: responseModel.data?.endDate,
+          pollUrl: responseModel.data?.url,
+          pollId: responseModel.data?.id,
+          voteCount: '${responseModel.data?.voteCount}',
+          hoursLeft:
+              '${DateTime.parse('${responseModel.data?.endDate}').difference(DateTime.parse('${responseModel.data?.startDate}')).inDays}');
+    } else {
+      state = state.copyWith(isLoading: false);
+    }
+    return null;
+  }
+
+  Future<GetAllPollModel?> getPublicPollsById(String pollId) async {
+    state = state.copyWith(isLoading: true);
+    final response = await _pollAndVotingRepository.getPublicPollsById(pollId);
+    state = state.copyWith(isLoading: false);
+    if (response.statusCode == 200) {
+      SinglePollModel responseModel = SinglePollModel.fromJson(response.data);
+      _logger.i('GENERATED ${responseModel.data}');
+
+      state = state.copyWith(
+          singlePollChoices: responseModel.data?.choices,
+          desc: responseModel.data?.description,
+          question: responseModel.data?.question,
+          fName: responseModel.data?.userData?.firstName,
+          lName: responseModel.data?.userData?.lastName,
+          picture: responseModel.data?.userData?.profilePicture,
+          startDate: responseModel.data?.startDate,
+          endDate: responseModel.data?.endDate,
+          pollUrl: responseModel.data?.url,
+          pollId: responseModel.data?.id,
+          voteCount: '${responseModel.data?.voteCount}',
+          hoursLeft:
+              '${DateTime.parse('${responseModel.data?.endDate}').difference(DateTime.parse('${responseModel.data?.startDate}')).inDays}');
     } else {
       state = state.copyWith(isLoading: false);
     }
@@ -1114,9 +1152,12 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.getPollPayoutRequest();
 
       if (response.success) {
-        GetAllPayoutModel responseModel = GetAllPayoutModel.fromJson(response.data);
+        GetAllPayoutModel responseModel =
+            GetAllPayoutModel.fromJson(response.data);
 
-        state = state.copyWith(pollPayoutDocs: responseModel.data?.docs,);
+        state = state.copyWith(
+          pollPayoutDocs: responseModel.data?.docs,
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

@@ -13,6 +13,8 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
+import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
+import 'package:wayagram/features/polls_and_voting/views/single_poll_screen2.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/polls_and_voting/widgets/poll_radio_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
@@ -62,7 +64,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
 
                     return InkWell(
                       onTap: () {
-                        WayaNav.toNamed('/singlePollScreen', arguments: {'id': poll.id});
+                        WayaNav.to(SinglePollScreen(id: '${poll.id}',));
+                       // WayaNav.toNamed('/poll-details', arguments: {'id': poll.id});
                       },
                       child: Container(
                         margin: EdgeInsets.only(bottom: 40.h),

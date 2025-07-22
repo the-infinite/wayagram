@@ -133,7 +133,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                 UpcomingWidget(
                     title: "Talent\nCategory",
                     content: 
-                        appliedContestModel.value?.contest?.category ?? ""),
+                        appliedContestModel.value?.categoryName ?? ""),
                 //  const Gap(20),
                 UpcomingWidget(
                     title: "Submission\nDate",

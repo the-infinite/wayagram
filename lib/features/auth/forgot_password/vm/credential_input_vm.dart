@@ -126,6 +126,52 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     }
   }
 
+    Future<void> onToChangeTransactionPin({VoidCallback? onSuccess}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _authRepository.resendOtp(
+        email: '${ConversationState.self.email}',
+        purpose: 'Change-Transaction-Pin',
+      );
+
+      if (response.data["statusCode"] == 200) {
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message: " Otp has been sent to ${ConversationState.self.email}");
+        if (onSuccess != null) {
+          onSuccess();
+        }
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+      Future<void> onToChangePassword({VoidCallback? onSuccess}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _authRepository.resendOtp(
+        email: '${ConversationState.self.email}',
+        purpose: 'Change-Password',
+      );
+
+      if (response.data["statusCode"] == 200) {
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message: " Otp has been sent to ${ConversationState.self.email}");
+        if (onSuccess != null) {
+          onSuccess();
+        }
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
 
   Future<void> onResendPayoutOtp() async {
     try {

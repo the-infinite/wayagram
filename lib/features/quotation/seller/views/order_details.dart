@@ -40,6 +40,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
   late final notifier = ref.read(userQuotationsProvider.notifier);
   Timer? _timer;
   bool _loaded = false;
+  BidOrderStatus? status;
   BidOrderModel? order;
   CachedUserDataTuple? user;
   BuyRequestModel? request;
@@ -47,6 +48,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
   void _ingestOrder() async {
     final foundOrder = await notifier.getOrderDetails(widget.requestId);
+    final foundStatus = await notifier.trackDelivery(widget.requestId);
     final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
     final foundBid =
         foundOrder == null ? null : notifier.getBid(foundOrder.bidId) ?? await notifier.getSingleBid(foundOrder.bidId);
@@ -56,7 +58,8 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
       setState(() {
         request = foundQuote;
         order = foundOrder;
-        bid = foundBid;
+        bid = foundBid ?? bid;
+        status = foundStatus ?? status;
       });
     }
   }
@@ -71,6 +74,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
         //? This is fine.
         final foundOrder = await notifier.getOrderDetails(widget.requestId);
         final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
+        final foundStatus = await notifier.trackDelivery(widget.requestId);
         final foundUser = foundQuote != null
             ? await UserResource.getUserDetails(
                 ConversationState.self.id == foundQuote.buyerId ? (foundOrder?.vendorId ?? "") : foundQuote.buyerId)
@@ -91,6 +95,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
             user = foundUser;
             order = foundOrder;
             bid = foundBid;
+            status = foundStatus;
             _loaded = true;
           });
         }
@@ -115,6 +120,9 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
     final subtotal = (request?.quantity ?? 0) * (bid?.usedAmount ?? 0);
     final isUnavailable = order == null || request == null;
     final isBuyer = order?.buyerId == ConversationState.self.id;
+    final hasArrived = request?.deliveryType == BuyRequestDeliveryType.pickup
+        ? status?.deliveryStatus == QuotationDeliveryStatus.delivered
+        : status?.pickupStatus == QuotationPickupStatus.collected;
 
     //? Return the component.
     return WayaScaffold(
@@ -122,7 +130,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
       isScrollable: !isUnavailable,
       title: 'Order Details',
       body: !_loaded
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : isUnavailable
@@ -362,7 +370,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     //? The bid's amount.
                     OrderInfoWidget(
                       title: "Bid Amount",
-                      description: WayaValueHelper.formatPrice(order!.amount),
+                      description: WayaValueHelper.formatPrice(bid?.usedAmount ?? 0),
                     ),
 
                     // Some space.
@@ -377,11 +385,17 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                     // Some space.
                     Gap(8.h),
 
-                    //? The delivery date.
-                    OrderInfoWidget(
-                      title: "Delivery Date",
-                      description: "-",
-                    ),
+                    //? The status.
+                    if (request!.deliveryType == BuyRequestDeliveryType.delivery)
+                      OrderInfoWidget(
+                        title: "Delivery Status",
+                        child: DeliveryStatusCard(status: status?.deliveryStatus ?? QuotationDeliveryStatus.pending),
+                      )
+                    else
+                      OrderInfoWidget(
+                        title: "Pickup Status",
+                        child: PickupStatusCard(status: status?.pickupStatus ?? QuotationPickupStatus.pending),
+                      ),
 
                     //? When this is for the seller, please include whether or
                     //? not this has been paid for.
@@ -521,7 +535,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
                       //? If this is for the buyer and the order has gotten to the
                       //? final step that needs confirmation...
-                      if (!isBuyer && order?.orderStatus == QuotationOrderStatus.completed) ...[
+                      if (!isBuyer && order?.orderStatus == QuotationOrderStatus.inProgress && hasArrived) ...[
                         // Some space.
                         Gap(30.h),
 
@@ -549,7 +563,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
                       ]
 
                       //? The button to change the order status.
-                      else if (!isBuyer)
+                      else if (!isBuyer && order?.orderStatus == QuotationOrderStatus.inProgress)
                         WayaButton(
                           color: wayaTheme.colorScheme.transparent,
                           textColor: wayaTheme.colorScheme.greyColor900,

@@ -1,4 +1,4 @@
-import 'package:sqfentity_gen/sqfentity_gen.dart';
+// import 'package:sqfentity_gen/sqfentity_gen.dart';
 
 /// An enum that contains all possible synchronization states of any record
 /// inside of an on-device database. Useful, yes. Yes it is. This way, we can
@@ -25,21 +25,21 @@ enum WayagramDatabaseSyncStatus {
 ///
 /// It adds the default behavior and fields to each table so that all
 /// implementations are not expected to generate the data manually.
-class WayagramDatabaseTable extends SqfEntityTable {
-  const WayagramDatabaseTable({
-    super.primaryKeyName = 'resourceId',
-    super.primaryKeyType = PrimaryKeyType.integer_auto_incremental,
-    super.objectType = ObjectType.table,
-    super.tableName,
-    super.useSoftDeleting,
-    super.defaultJsonUrl,
-    super.modelName,
-    super.customCode,
-    super.relationType,
-    super.formListTitleField,
-    super.formListSubTitleField,
-    super.sqlStatement,
-    super.abstractModelName,
-    required super.fields,
-  });
-}
+// class WayagramDatabaseTable extends SqfEntityTable {
+//   const WayagramDatabaseTable({
+//     super.primaryKeyName = 'resourceId',
+//     super.primaryKeyType = PrimaryKeyType.integer_auto_incremental,
+//     super.objectType = ObjectType.table,
+//     super.tableName,
+//     super.useSoftDeleting,
+//     super.defaultJsonUrl,
+//     super.modelName,
+//     super.customCode,
+//     super.relationType,
+//     super.formListTitleField,
+//     super.formListSubTitleField,
+//     super.sqlStatement,
+//     super.abstractModelName,
+//     required super.fields,
+//   });
+// }
