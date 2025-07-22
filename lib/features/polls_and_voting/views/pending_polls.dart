@@ -57,7 +57,7 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
                 DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
             return InkWell(
               onTap: (){
-                WayaNav.toNamed('/singlePollScreen',arguments: {
+                WayaNav.toNamed('/poll-details',arguments: {
                   'id':poll.id
                 });
               },

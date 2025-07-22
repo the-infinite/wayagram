@@ -104,8 +104,12 @@ class PollAndVotingRepository extends BaseRepository {
         "$walletServiceUrl/client/commission/commission-rates");
   }
 
-  Future<WayaRequestResponse> getAllPollsById(String id) {
-    return get("$serviceUrl/client/polls?id=$id");
+  Future<WayaRequestResponse> getPrivatePollsById(String id) {
+    return get("$serviceUrl/client/polls/$id");
+  }
+
+  Future<WayaRequestResponse> getPublicPollsById(String id) {
+    return get("$serviceUrl/client/polls/public/$id");
   }
 
   Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {
