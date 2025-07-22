@@ -93,6 +93,102 @@ class OrderStatusCard extends StatelessWidget {
   }
 }
 
+class DeliveryStatusCard extends StatelessWidget {
+  final QuotationDeliveryStatus status;
+
+  // Construct.
+  const DeliveryStatusCard({super.key, required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+
+    //? Return the status card.
+    return Container(
+      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      decoration: BoxDecoration(
+        color: switch (status) {
+          QuotationDeliveryStatus.pending ||
+          QuotationDeliveryStatus.processing ||
+          QuotationDeliveryStatus.readyForDispatch =>
+            wayaTheme.colorScheme.info50,
+          QuotationDeliveryStatus.outForDelivery ||
+          QuotationDeliveryStatus.inTransit =>
+            wayaTheme.colorScheme.primary50,
+          QuotationDeliveryStatus.delivered => wayaTheme.colorScheme.success50,
+        },
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        switch (status) {
+          QuotationDeliveryStatus.pending => "Pending",
+          QuotationDeliveryStatus.processing => "Processing",
+          QuotationDeliveryStatus.readyForDispatch => "Ready for Dispatch",
+          QuotationDeliveryStatus.inTransit => throw "In Transit",
+          QuotationDeliveryStatus.outForDelivery => "Out for Delivery",
+          QuotationDeliveryStatus.delivered => "Delivered",
+        },
+        style: wayaTheme.textTheme.bodyMedium?.copyWith(
+          color: switch (status) {
+            QuotationDeliveryStatus.pending ||
+            QuotationDeliveryStatus.processing ||
+            QuotationDeliveryStatus.readyForDispatch =>
+              wayaTheme.colorScheme.info,
+            QuotationDeliveryStatus.outForDelivery ||
+            QuotationDeliveryStatus.inTransit =>
+              wayaTheme.colorScheme.primary,
+            QuotationDeliveryStatus.delivered => wayaTheme.colorScheme.success,
+          },
+          fontWeight: FontWeight.w500,
+          fontSize: 11.sp,
+        ),
+      ),
+    );
+  }
+}
+
+class PickupStatusCard extends StatelessWidget {
+  final QuotationPickupStatus status;
+
+  // Construct.
+  const PickupStatusCard({super.key, required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+
+    //? Return the status card.
+    return Container(
+      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      decoration: BoxDecoration(
+        color: switch (status) {
+          QuotationPickupStatus.pending => wayaTheme.colorScheme.info50,
+          QuotationPickupStatus.ready || QuotationPickupStatus.scheduled => wayaTheme.colorScheme.primary50,
+          QuotationPickupStatus.collected => wayaTheme.colorScheme.success50,
+        },
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        switch (status) {
+          QuotationPickupStatus.pending => "Pending",
+          QuotationPickupStatus.ready => "Ready for Pickup",
+          QuotationPickupStatus.scheduled => "Pickup Scheduled",
+          QuotationPickupStatus.collected => "Picked Up",
+        },
+        style: wayaTheme.textTheme.bodyMedium?.copyWith(
+          color: switch (status) {
+            QuotationPickupStatus.pending => wayaTheme.colorScheme.info,
+            QuotationPickupStatus.ready || QuotationPickupStatus.scheduled => wayaTheme.colorScheme.primary,
+            QuotationPickupStatus.collected => wayaTheme.colorScheme.success,
+          },
+          fontWeight: FontWeight.w500,
+          fontSize: 11.sp,
+        ),
+      ),
+    );
+  }
+}
+
 class BidNegotiationStatusCard extends StatelessWidget {
   final QuotationBidModel bid;
   final BidActionAuthor user;

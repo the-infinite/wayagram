@@ -38,6 +38,8 @@ class QuotationBuyRequestWidget extends ConsumerStatefulWidget {
 }
 
 class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestWidget> {
+  BidOrderModel? order;
+  QuotationBidModel? bid;
   final timeNotifier = ValueNotifier(Duration.zero);
   final loadingController = ValueNotifier(false);
   Timer? timer;
@@ -50,6 +52,16 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
 
       //? This is fine.
       final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+      widget.notifier.getOrderDetails(widget.data.id).then(
+        (value) {
+          //
+          if (value != null && mounted) {
+            setState(() {
+              order = value;
+            });
+          }
+        },
+      );
 
       //? If the status is not started, then we need to calculate the time left
       //? until the bid starts.
@@ -64,19 +76,7 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
       }
 
       //? Now, let the timer keep ticking.
-      timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-        final cachedRequest = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
-        final eval = timeNotifier.value - const Duration(seconds: 1);
-
-        //? Update this guy in the list.
-        if (eval.isNegative) {
-          await widget.notifier.getBuyRequest(cachedRequest.id);
-          return;
-        }
-
-        //? Update the time we think it would take.
-        timeNotifier.value = eval;
-      });
+      timer = Timer.periodic(const Duration(seconds: 1), (_) async => await _ingestOrder());
     });
     super.initState();
   }
@@ -86,6 +86,32 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     timeNotifier.dispose();
     timer?.cancel();
     super.dispose();
+  }
+
+  Future<void> _ingestOrder() async {
+    final cachedRequest = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+    final eval = timeNotifier.value - const Duration(seconds: 1);
+
+    //? Update this guy in the list.
+    if (eval.isNegative || eval.inSeconds == 0) {
+      await widget.notifier.getBuyRequest(cachedRequest.id);
+      return;
+    }
+
+    try {
+      //? Get the order value and update it.
+      final value = await widget.notifier.getOrderDetails(widget.data.id);
+
+      //? This is fine too.
+      if (value != null && mounted) {
+        setState(() {
+          order = value;
+        });
+      }
+    } catch (_) {}
+
+    //? Update the time we think it would take.
+    timeNotifier.value = eval;
   }
 
   Future<void> _placeBid() async {
@@ -171,6 +197,26 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
   }
 
+  Future<void> _viewOrder() async {
+    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+  }
+
+  Future<void> _checkoutOrder() async {
+    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+    final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+    final bid = request.bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
+
+    //? This is fine
+    if (bid != null && widget.data.buyerId == ConversationState.self.id) {
+      WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId);
+    }
+
+    //? Are you the right vendor?
+    else if (bid?.vendorId == ConversationState.self.id) {
+      WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+    }
+  }
+
   Future<void> _viewBids() async {
     final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(request.id));
@@ -188,6 +234,8 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
 
     //? Proceed to get all the utilities needed to render the views.
     final wayaTheme = Theme.of(context);
+    final participatedOrder =
+        order?.buyerId == ConversationState.self.id || order?.vendorId == ConversationState.self.id;
     final vendoredBid = request.bids
         ?.where((bid) => bid.vendorId == ConversationState.self.id && bid.status != BidActionType.reject)
         .firstOrNull;
@@ -348,14 +396,34 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
               // Some space.
               const Gap(20),
 
+              //? The button that we use to view an order.
+              if (participatedOrder && order!.isPaid)
+                WayaProgressiveButton(
+                  callback: _viewOrder,
+                  text: 'View Order',
+                  height: 48,
+                  notifier: loadingController,
+                )
+
+              //? The button that we use to checkout an order.
+              else if (participatedOrder && !order!.isPaid)
+                WayaProgressiveButton(
+                  callback: _checkoutOrder,
+                  text: 'Complete Order',
+                  height: 48,
+                  notifier: loadingController,
+                )
+
               //? The button that we use to place a bid.
-              if (vendoredBid != null)
+              else if (vendoredBid != null)
                 WayaProgressiveButton(
                   callback: () => _viewSellerBid(vendoredBid),
                   text: 'View bid',
                   height: 48,
                   notifier: loadingController,
                 )
+
+              //? Then you can view bids.
               else
                 WayaProgressiveButton(
                   callback: request.buyerId == ConversationState.self.id ? _viewBids : _placeBid,

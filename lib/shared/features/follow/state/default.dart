@@ -26,6 +26,16 @@ class FollowState {
   final int followingTotalPages;
   final List<FollowModel> following;
 
+  // For request.
+  final bool hasLoadedRequests;
+  final bool isLoadingRequests;
+  final int? requestsNextPage;
+  final int requestsPage;
+  final bool requestsHasNextPage;
+  final int requestsTotalSize;
+  final int requestsTotalPages;
+  final List<FollowModel> requests;
+
   // For suggested friends.
   final List<SuggestionModel> suggestions;
   final bool hasLoadedSuggestions;
@@ -61,6 +71,16 @@ class FollowState {
     required this.followingTotalPages,
     required this.following,
 
+    // For requests.
+    required this.hasLoadedRequests,
+    required this.isLoadingRequests,
+    required this.requestsNextPage,
+    required this.requestsPage,
+    required this.requestsHasNextPage,
+    required this.requestsTotalSize,
+    required this.requestsTotalPages,
+    required this.requests,
+
     // For suggestions.
     required this.suggestions,
     required this.hasLoadedSuggestions,
@@ -91,6 +111,14 @@ class FollowState {
     followingTotalSize: 0,
     followingTotalPages: 0,
     following: [],
+    hasLoadedRequests: false,
+    isLoadingRequests: false,
+    requestsNextPage: 1,
+    requestsPage: 0,
+    requestsHasNextPage: true,
+    requestsTotalSize: 0,
+    requestsTotalPages: 0,
+    requests: [],
     suggestions: [],
     hasLoadedSuggestions: false,
     isLoadingSuggestions: false,
@@ -156,6 +184,14 @@ class FollowState {
     int? followingTotalSize,
     int? followingTotalPages,
     List<FollowModel>? following,
+    bool? hasLoadedRequests,
+    bool? isLoadingRequests,
+    int? requestsNextPage,
+    int? requestsPage,
+    bool? requestsHasNextPage,
+    int? requestsTotalSize,
+    int? requestsTotalPages,
+    List<FollowModel>? requests,
     List<SuggestionModel>? suggestions,
     bool? hasLoadedSuggestions,
     bool? isLoadingSuggestions,
@@ -185,6 +221,14 @@ class FollowState {
       followingTotalPages: followingTotalPages ?? this.followingTotalPages,
       following: following ?? this.following,
       suggestions: suggestions ?? this.suggestions,
+      hasLoadedRequests: hasLoadedRequests ?? this.hasLoadedRequests,
+      isLoadingRequests: isLoadingRequests ?? this.isLoadingRequests,
+      requestsNextPage: requestsNextPage ?? this.requestsNextPage,
+      requestsPage: requestsPage ?? this.requestsPage,
+      requestsHasNextPage: requestsHasNextPage ?? this.requestsHasNextPage,
+      requestsTotalSize: requestsTotalSize ?? this.requestsTotalSize,
+      requestsTotalPages: requestsTotalPages ?? this.requestsTotalPages,
+      requests: requests ?? this.requests,
       hasLoadedSuggestions: hasLoadedSuggestions ?? this.hasLoadedSuggestions,
       isLoadingSuggestions: isLoadingSuggestions ?? this.isLoadingSuggestions,
       suggestionsHasNextPage: suggestionsHasNextPage ?? this.suggestionsHasNextPage,
