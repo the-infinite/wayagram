@@ -35,7 +35,7 @@ class _CartCardState extends ConsumerState<CartCard> {
 //? check if the delveryCharge is true and there is no delivery date set by the seller,
 //or if the deliveryOption is delivery and the seller has not set the delivery date
     final bool isDeliveryCharge = widget.cartItem.products.any((prod) =>
-        (prod.deliveryCharge && widget.cartItem.deliveryDate == null) ||
+        (prod.deliveryCharge && widget.cartItem.deliveryDate == null && prod.deliveryOptions != 'Both') ||
         (prod.deliveryOptions == 'Delivery' &&
             widget.cartItem.deliveryDate == null));
 
