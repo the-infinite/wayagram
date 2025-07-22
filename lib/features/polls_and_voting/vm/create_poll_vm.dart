@@ -1062,7 +1062,12 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         picture: responseModel.data?.userData?.profilePicture,
         startDate: responseModel.data?.startDate,
         endDate: responseModel.data?.endDate,
-        pollUrl: responseModel.data?.url
+        pollUrl: responseModel.data?.url,
+          pollId: responseModel.data?.id,
+          voteCount: '${responseModel.data?.voteCount}',
+          hoursLeft:  '${ DateTime.parse('${responseModel.data?.endDate}')
+              .difference(DateTime.parse('${responseModel.data?.startDate}'))
+              .inDays}'
       );
     } else {
       state = state.copyWith(isLoading: false);

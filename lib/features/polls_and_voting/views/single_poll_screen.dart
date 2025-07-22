@@ -32,6 +32,8 @@ class _SinglePollScreenState extends ConsumerState<SinglePollScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
        ref.read(createPollVotingProvider.notifier).getPrivatePollsById(widget.id);
+
+      /// if token is invalid call this
       ref.read(createPollVotingProvider.notifier).getPublicPollsById(widget.id);
     });
   }
