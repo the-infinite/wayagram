@@ -26,6 +26,55 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     this.value = value;
   }
 
+  Future<List<FollowModel>> getFollowRequests() async {
+    final result = <FollowModel>[];
+
+    //? This is wonderful.
+    try {
+      // This is fine too.
+      final response = await repo.getFollowRequests(
+          ConversationState.self.id, state.requestsNextPage ?? state.requestsPage, state.limit);
+
+      // If this was fine...
+      if (response.success) {
+        final data = response.data["data"];
+
+        //? Parse the posts as they are in the response object...
+        final docs = (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.followersHasNextPage) {
+          result.addAll(state.followers);
+        }
+
+        //? Now, add these to what we have here.
+        result.addAll(docs);
+
+        //? This is fine.
+        state = state.copyWith(
+          requests: result,
+          requestsTotalSize: data['totalDocs'],
+          requestsTotalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
+          requestsHasNextPage: data['hasNextPage'],
+          requestsPage: int.tryParse(data['page'].toString()) ?? 1,
+          requestsNextPage: int.tryParse(data['nextPage'].toString()) ?? 1,
+          hasLoadedRequests: true,
+        );
+      }
+
+      //? After getting these posts...
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return result;
+  }
+
   Future<List<FollowModel>> getFollowersOf() async {
     final result = <FollowModel>[];
 
