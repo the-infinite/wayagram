@@ -20,28 +20,12 @@ class GroupSetting extends ConsumerStatefulWidget {
 class _GroupSettingState extends ConsumerState<GroupSetting>
     with SingleTickerProviderStateMixin {
 
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     myGroupNotifier.getCreatedGroups();
-  //   });
-  //   searchController = TextEditingController();
-  //   searchController.addListener(() {
-  //     setState(() {});
-  //   });
-  //
-  //   // That's fine.
-  //   super.initState();
-  // }
-
-
   @override
   Widget build(BuildContext context) {
 
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
-    debugPrint('MY Seeting Group ID ==>> ${args['groupId']}');
 
     /// if approveJoinRequest is false they can join the group and vice versa
 
@@ -61,7 +45,6 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
           ),
           Gap(20),
 
-
           accessType(
               "Open to Everyone",
               "Allow anyone to join without restrictions for a more inclusive community", viewModel.openToEveryone,
@@ -79,7 +62,6 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
                 ref.read(createGroupProvider.notifier).updateGroupSetting(context,viewModel.approveJoinRequest,
                     value, args['groupId']);
               }
-
           ),
 
           Gap(20),

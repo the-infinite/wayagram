@@ -11,6 +11,7 @@ class GroupModel extends BaseModel<GroupModel> {
   final int memberCount;
   final String description;
   final bool isOpen;
+  final bool approveJoinRequest;
   final List<String>? categories;
   final String? url;
   final bool isPrivate;
@@ -30,6 +31,7 @@ class GroupModel extends BaseModel<GroupModel> {
     required this.description,
     required this.memberCount,
     required this.isOpen,
+    required this.approveJoinRequest,
     required this.ownerId,
     required this.categories,
     required this.isPrivate,

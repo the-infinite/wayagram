@@ -383,7 +383,8 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                 ]
 
                 //? Since the user has not joined and it is private
-                else if (group.isPrivate) ...[
+                //else if (group.isPrivate) ...[
+                else if (group.approveJoinRequest) ...[
                   Gap(100.h),
 
                   //? Fair enough.
