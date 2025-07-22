@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:image_picker/image_picker.dart';
@@ -100,6 +101,17 @@ class PageVm extends StateNotifier<PageState> {
 
   void selectCategory(Select value) {
     state = state.copyWith(category: value.value);
+  }
+
+  void updateOpenCommentToEveryone(bool value) {
+    state = state.copyWith(comment: value);
+  }
+  void updateOpenToEveryone(bool value) {
+    state = state.copyWith(openToEveryone: value);
+  }
+
+  void updateAdminCanCreate(bool value) {
+    state = state.copyWith(adminCanCreate: value);
   }
 
   Future<void> fetchCategory() async {
@@ -1168,19 +1180,39 @@ class PageVm extends StateNotifier<PageState> {
 
   Future<bool> updatePageSetting(
     BuildContext ctx,
-    bool isPublic,
+    bool isOpen,
     bool everyoneCanComment,
+    bool adminsCanCreate,
     String pageId,
   ) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.updatePageSetting(
-        isPublic,
+        isOpen,
         everyoneCanComment,
+        adminsCanCreate,
         pageId,
       );
       state = state.copyWith(isLoading: false);
-      return response.success;
+      if (response.success || ctx.mounted) {
+
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Page setting updated successfully!',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        debugPrint('Update group');
+        _logger.i(response.data['data']);
+      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),

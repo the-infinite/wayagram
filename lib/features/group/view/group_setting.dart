@@ -42,6 +42,9 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
     final viewModel = ref.watch(createGroupProvider);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
     debugPrint('MY Seeting Group ID ==>> ${args['groupId']}');
+
+    /// if approveJoinRequest is false they can join the group and vice versa
+
     return WayaScaffold(
       backgroundColor: Theme.of(context).colorScheme.greyColor50,
       isLoading: viewModel.isLoading,
@@ -58,14 +61,24 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
           ),
           Gap(20),
 
+
           accessType(
               "Open to Everyone",
               "Allow anyone to join without restrictions for a more inclusive community", viewModel.openToEveryone,
-                  //(value) => ref.read(createGroupProvider.notifier).updateOpenToEveryone(value)
                   (value) {
                     ref.read(createGroupProvider.notifier).updateOpenToEveryone(value);
-                    ref.read(createGroupProvider.notifier).updateGroupSetting(context, viewModel.openToEveryone, args['groupId']);
+                    ref.read(createGroupProvider.notifier).updateGroupSetting(context, value, viewModel.openToEveryone, args['groupId']);
                   }
+          ),
+
+          accessType(
+              "Approve join request",
+              "Allow join request approval", viewModel.approveJoinRequest,
+                  (value) {
+                ref.read(createGroupProvider.notifier).updateApproveJoinRequest(value);
+                ref.read(createGroupProvider.notifier).updateGroupSetting(context,viewModel.approveJoinRequest,
+                    value, args['groupId']);
+              }
 
           ),
 
