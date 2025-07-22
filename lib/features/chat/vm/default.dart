@@ -82,9 +82,12 @@ class ConversationVm extends StateNotifier<ConversationState> {
       for (var c = 0; c < docs.length; c++) {
         //? Now, it is time to sort the chat members in the order that they should show up on the front-end.
         final members = <ChatMember>[];
+        final example = docs[c].self;
 
         //? First one, is the one where the user is me.
-        members.add(docs[c].self);
+        if (example != null) {
+          members.add(example);
+        }
 
         //? Second, add all group admins.
         members.addAll(docs[c].allOthers.where((member) => member.role != ChatMemberRole.member));
@@ -193,7 +196,9 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final members = <ChatMember>[];
 
       //? First one, is the one where the user is me.
-      members.add(result.self);
+      if (result.self != null) {
+        members.add(result.self!);
+      }
 
       //? Second, add all group admins.
       members.addAll(result.allOthers.where((member) => member.role != ChatMemberRole.member));
@@ -534,9 +539,12 @@ class ConversationVm extends StateNotifier<ConversationState> {
       for (var c = 0; c < docs.length; c++) {
         //? Now, it is time to sort the chat members in the order that they should show up on the front-end.
         final members = <ChatMember>[];
+        final example = docs[c].self;
 
         //? First one, is the one where the user is me.
-        members.add(docs[c].self);
+        if (example != null) {
+          members.add(example);
+        }
 
         //? Second, add all group admins.
         members.addAll(docs[c].allOthers.where((member) => member.role != ChatMemberRole.member));

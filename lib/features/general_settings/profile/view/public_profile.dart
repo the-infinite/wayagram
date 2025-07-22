@@ -166,7 +166,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
   void _shareProfile() async {
     final result = await Share.share(
-      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id, 'profile', widget.data.$2.username)),
+      WayaValueHelper.getShareableUrl(
+          WayaAppRoutes.getProfileRoute(widget.data.$1.id, 'profile', widget.data.$2.username)),
       subject: 'Share Profile',
     );
 
@@ -310,7 +311,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                     }
 
                     //? If this is already muted...
-                    if (chat!.self.isMuted) {
+                    if (chat!.self?.isMuted ?? false) {
                       await conversationNotifier.muteOrUnmuteGroup(chat!.id, null);
                     }
 
@@ -484,7 +485,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                                 spacing: 10.w,
                                 children: [
                                   //? If this is muted.
-                                  if (chat?.self.isMuted ?? false)
+                                  if (chat?.self?.isMuted ?? false)
                                     WayaAssets.icons.cProfileUnmute.svg(
                                       height: 24.sp,
                                       width: 24.sp,

@@ -112,10 +112,10 @@ class ConversationState {
   );
 
   /// Utility used to retrieve the list of pinned chats from this one.
-  List<ChatModel> get pinned => conversations.where((chat) => chat.self.isPined).toList();
+  List<ChatModel> get pinned => conversations.where((chat) => chat.self?.isPined ?? false).toList();
 
   /// Utility used to retrieve the list of chats that are not pinned.
-  List<ChatModel> get unpinned => conversations.where((chat) => !chat.self.isPined).toList();
+  List<ChatModel> get unpinned => conversations.where((chat) => !(chat.self?.isPined ?? false)).toList();
 
   /// The results displayed whenever you are looking at a list of conversations
   /// arranged in no particular order.
