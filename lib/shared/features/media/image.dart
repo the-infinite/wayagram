@@ -36,14 +36,10 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
   Widget build(BuildContext context) {
     //? The both parameters cannot be null.
     assert(widget.imageUrl != null || widget.file != null, "This must contain either a file or a network URL");
-    assert(widget.imageUrl == null || widget.file == null, "The two properties cannot have non-null values");
+    //assert(widget.imageUrl == null || widget.file == null, "The two properties cannot have non-null values");
 
     // Then get the theme.
     final wayaTheme = Theme.of(context);
-
-    //? This is fine.
-    debugPrint("Files: ${widget.file}");
-    debugPrint("URLs: ${widget.imageUrl}");
 
     //? Show the widget.
     return WayaScaffold(
@@ -101,8 +97,19 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
         color: Colors.black,
         child: SafeArea(
           child: Center(
-            child: widget.file != null
+            child: widget.file == null
                 ? PageView(
+                    controller: pageController,
+                    children: List.generate(
+                      widget.imageUrl!.length,
+                      (index) => PhotoView(
+                        imageProvider: NetworkImage(widget.imageUrl![index]),
+                        minScale: PhotoViewComputedScale.contained * 1,
+                        maxScale: PhotoViewComputedScale.covered * 5,
+                      ),
+                    ),
+                  )
+                : PageView(
                     controller: pageController,
                     children: List.generate(
                       widget.file!.length,
@@ -118,17 +125,6 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
                             color: wayaTheme.colorScheme.greyColor300,
                           );
                         },
-                        minScale: PhotoViewComputedScale.contained * 1,
-                        maxScale: PhotoViewComputedScale.covered * 5,
-                      ),
-                    ),
-                  )
-                : PageView(
-                    controller: pageController,
-                    children: List.generate(
-                      widget.imageUrl!.length,
-                      (index) => PhotoView(
-                        imageProvider: NetworkImage(widget.imageUrl![index]),
                         minScale: PhotoViewComputedScale.contained * 1,
                         maxScale: PhotoViewComputedScale.covered * 5,
                       ),

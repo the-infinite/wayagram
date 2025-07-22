@@ -181,7 +181,7 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                   : () async {
                       final result = await WayaNavigationHelper.toImageDetailsScreen(
                         [widget.image],
-                        null,
+                        widget.message?.media?.map((media) => media.mediaUrl).toList() ?? [],
                       );
 
                       //? Do nothing.

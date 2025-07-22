@@ -11,7 +11,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
@@ -56,7 +55,7 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
-    DateTime currentDate = DateTime.now();
+    //DateTime currentDate = DateTime.now();
 
     return WayaScaffold(
         title: "Poll Details",
@@ -70,7 +69,7 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(viewModel.picture ?? ''),
+                    backgroundImage: NetworkImage(viewModel.picture),
                     radius: 10,
                     backgroundColor: wayaTheme.colorScheme.greyColor200,
                   ),

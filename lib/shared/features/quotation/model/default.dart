@@ -59,22 +59,23 @@ enum QuotationOrderStatus {
 }
 
 enum QuotationDeliveryStatus {
-  pending._('pending'),
-  processing._('processing'),
+  pending._('pending', 1),
+  processing._('processing', 2),
 
   @JsonValue('ready-for-dispatch')
-  readyForDispatch._('ready-for-dispatch'),
+  readyForDispatch._('ready-for-dispatch', 3),
 
   @JsonValue('in-transit')
-  inTransit._('in-transit'),
+  inTransit._('in-transit', 4),
 
   @JsonValue('out-for-delivery')
-  outForDelivery._('out-for-delivery'),
+  outForDelivery._('out-for-delivery', 5),
 
-  delivered._('delivered');
+  delivered._('delivered', 6);
 
   final String value;
-  const QuotationDeliveryStatus._(this.value);
+  final int rank;
+  const QuotationDeliveryStatus._(this.value, this.rank);
 
   static QuotationDeliveryStatus build(String value) {
     return switch (value) {
@@ -88,19 +89,20 @@ enum QuotationDeliveryStatus {
 }
 
 enum QuotationPickupStatus {
-  pending._('pending'),
+  pending._('pending', 1),
 
   @JsonValue('ready-for-pickup')
-  ready._('ready-for-pickup'),
+  ready._('ready-for-pickup', 2),
 
   @JsonValue('pickup-scheduled')
-  scheduled._('pickup-scheduled'),
+  scheduled._('pickup-scheduled', 3),
 
   @JsonValue('pickup-completed')
-  collected._('pickup-completed');
+  collected._('pickup-completed', 4);
 
   final String value;
-  const QuotationPickupStatus._(this.value);
+  final int rank;
+  const QuotationPickupStatus._(this.value, this.rank);
 
   static QuotationPickupStatus build(String value) {
     return switch (value) {

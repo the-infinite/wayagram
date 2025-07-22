@@ -99,8 +99,8 @@ class ChatModel {
   }
 
   /// Helper function  used to return the user that is currently using the app.
-  ChatMember get self {
-    return chatMembers.where((user) => user.userId == ConversationState.self.id).first;
+  ChatMember? get self {
+    return chatMembers.where((user) => user.userId == ConversationState.self.id).firstOrNull;
   }
 
   /// Helper function used to get the other people in the chat.
