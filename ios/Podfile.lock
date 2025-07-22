@@ -40,13 +40,6 @@ PODS:
   - DKPhotoGallery/Resource (0.0.19):
     - SDWebImage
     - SwiftyGif
-  - ffmpeg-kit-ios-https (6.0)
-  - ffmpeg_kit_flutter (6.0.3):
-    - ffmpeg_kit_flutter/https (= 6.0.3)
-    - Flutter
-  - ffmpeg_kit_flutter/https (6.0.3):
-    - ffmpeg-kit-ios-https (= 6.0)
-    - Flutter
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
@@ -162,12 +155,15 @@ PODS:
     - Flutter
   - flutter_native_splash (2.4.3):
     - Flutter
+  - flutter_native_video_trimmer (1.0.0):
+    - Flutter
   - flutter_secure_storage (6.0.0):
     - Flutter
-  - FMDB/SQLCipher (2.7.11):
-    - SQLCipher (~> 4.0)
   - gallery_saver_plus (0.0.1):
     - Flutter
+  - get_thumbnail_video (0.0.1):
+    - Flutter
+    - libwebp
   - Google-Maps-iOS-Utils (5.0.0):
     - GoogleMaps (~> 8.0)
   - google_maps_flutter_ios (0.0.1):
@@ -294,15 +290,6 @@ PODS:
   - sqflite_darwin (0.0.4):
     - Flutter
     - FlutterMacOS
-  - sqflite_sqlcipher (0.0.1):
-    - Flutter
-    - FMDB/SQLCipher (~> 2.7.5)
-    - SQLCipher (= 4.5.4)
-  - SQLCipher (4.5.4):
-    - SQLCipher/standard (= 4.5.4)
-  - SQLCipher/common (4.5.4)
-  - SQLCipher/standard (4.5.4):
-    - SQLCipher/common
   - SwiftyGif (5.4.5)
   - TOCropViewController (2.7.4)
   - url_launcher_ios (0.0.1):
@@ -310,9 +297,6 @@ PODS:
   - video_player_avfoundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - video_thumbnail (0.0.1):
-    - Flutter
-    - libwebp
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -320,7 +304,6 @@ PODS:
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
   - audio_waveforms (from `.symlinks/plugins/audio_waveforms/ios`)
-  - ffmpeg_kit_flutter (from `.symlinks/plugins/ffmpeg_kit_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - file_saver (from `.symlinks/plugins/file_saver/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -331,8 +314,10 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
+  - flutter_native_video_trimmer (from `.symlinks/plugins/flutter_native_video_trimmer/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - gallery_saver_plus (from `.symlinks/plugins/gallery_saver_plus/ios`)
+  - get_thumbnail_video (from `.symlinks/plugins/get_thumbnail_video/ios`)
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
@@ -345,10 +330,8 @@ DEPENDENCIES:
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
-  - sqflite_sqlcipher (from `.symlinks/plugins/sqflite_sqlcipher/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
-  - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
@@ -356,7 +339,6 @@ SPEC REPOS:
     - AppAuth
     - DKImagePickerController
     - DKPhotoGallery
-    - ffmpeg-kit-ios-https
     - Firebase
     - FirebaseAnalytics
     - FirebaseAppCheckInterop
@@ -370,7 +352,6 @@ SPEC REPOS:
     - FirebaseMessaging
     - FirebaseRemoteConfigInterop
     - FirebaseSessions
-    - FMDB
     - Google-Maps-iOS-Utils
     - GoogleAppMeasurement
     - GoogleDataTransport
@@ -385,7 +366,6 @@ SPEC REPOS:
     - PromisesSwift
     - RecaptchaInterop
     - SDWebImage
-    - SQLCipher
     - SwiftyGif
     - TOCropViewController
 
@@ -394,8 +374,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/app_links/ios"
   audio_waveforms:
     :path: ".symlinks/plugins/audio_waveforms/ios"
-  ffmpeg_kit_flutter:
-    :path: ".symlinks/plugins/ffmpeg_kit_flutter/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   file_saver:
@@ -416,10 +394,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_native_splash:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
+  flutter_native_video_trimmer:
+    :path: ".symlinks/plugins/flutter_native_video_trimmer/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   gallery_saver_plus:
     :path: ".symlinks/plugins/gallery_saver_plus/ios"
+  get_thumbnail_video:
+    :path: ".symlinks/plugins/get_thumbnail_video/ios"
   google_maps_flutter_ios:
     :path: ".symlinks/plugins/google_maps_flutter_ios/ios"
   google_sign_in_ios:
@@ -444,14 +426,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
   sqflite_darwin:
     :path: ".symlinks/plugins/sqflite_darwin/darwin"
-  sqflite_sqlcipher:
-    :path: ".symlinks/plugins/sqflite_sqlcipher/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
     :path: ".symlinks/plugins/video_player_avfoundation/darwin"
-  video_thumbnail:
-    :path: ".symlinks/plugins/video_thumbnail/ios"
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
@@ -461,8 +439,6 @@ SPEC CHECKSUMS:
   audio_waveforms: cd736909ebc6b6a164eb74701d8c705ce3241e1c
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
-  ffmpeg-kit-ios-https: ac1fbdb6095fc1595b446084a3447de2c6d78347
-  ffmpeg_kit_flutter: b4ca70cac3fc1d8ac14cdc660754b60870358732
   file_picker: b159e0c068aef54932bb15dc9fd1571818edaf49
   file_saver: 503e386464dbe118f630e17b4c2e1190fa0cf808
   Firebase: d80354ed7f6df5f9aca55e9eb47cc4b634735eaf
@@ -486,9 +462,10 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_local_notifications: df98d66e515e1ca797af436137b4459b160ad8c9
   flutter_native_splash: df59bb2e1421aa0282cb2e95618af4dcb0c56c29
+  flutter_native_video_trimmer: 3a81cd49c8b789ed448a5d1606617633550496b5
   flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
-  FMDB: 57486c1117fd8e0e6b947b2f54c3f42bf8e57a4e
   gallery_saver_plus: c4b59c605df1049a02d036ef81d82972b6dfd606
+  get_thumbnail_video: b9a180957daed3e9179e66268db51d8798e41f65
   Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
   google_maps_flutter_ios: e31555a04d1986ab130f2b9f24b6cdc861acc6d3
   google_sign_in_ios: 4111e87aa5e24a4404f00ea13479f35e571969cc
@@ -515,13 +492,10 @@ SPEC CHECKSUMS:
   share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
-  sqflite_sqlcipher: 2f7e72fbda46fe3255493ba3f21ebe232ff9a243
-  SQLCipher: 905b145f65f349f26da9e60a19901ad24adcd381
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
-  video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
 
 PODFILE CHECKSUM: 8c75790a861b242da89827bfa494306a4bc7aa35
