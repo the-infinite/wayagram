@@ -232,11 +232,11 @@ class _PayoutVerificationState extends ConsumerState<PayoutVerification> {
           WayaButton(
             callback: !viewModelState.isLoading
                 ? () {
-                    /*  WayaNav.to(PollReview(
+                    /*   WayaNav.to(PollReview(
                         id: '${args['id']}',
                         module: args['Module'] as PayoutModule,
-                        model: args['Model'] as PayoutReviewModel));
- */
+                        model: args['Model'] as PayoutReviewModel)); */
+
                     final code = ref.watch(verifyAccountProvider).inputCode;
                     viewModel.verifyPayout(
                         onSuccess: () {

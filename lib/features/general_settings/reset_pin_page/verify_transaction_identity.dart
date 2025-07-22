@@ -34,7 +34,19 @@ class _VerifyIdentityPageState
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(credentialInputProvider.notifier).onToTransactionPin();
+      final dynamic args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args != null) {
+        if (args == 'change-transaction-pin') {
+          await ref
+              .read(credentialInputProvider.notifier)
+              .onToChangeTransactionPin();
+        } else if (args == 'change-password') {
+          await ref.read(credentialInputProvider.notifier).onToChangePassword();
+        }
+      } else {
+        await ref.read(credentialInputProvider.notifier).onToTransactionPin();
+      }
       startCountdown();
     });
     super.initState();
@@ -142,9 +154,19 @@ class _VerifyIdentityPageState
                         });
                         startCountdown();
 
-                        ref
-                            .read(credentialInputProvider.notifier)
-                            .onToTransactionPin();
+                        if (args == 'change-transaction-pin') {
+                          ref
+                              .read(credentialInputProvider.notifier)
+                              .onToChangeTransactionPin();
+                        } else if (args == 'change-password') {
+                          ref
+                              .read(credentialInputProvider.notifier)
+                              .onToChangePassword();
+                        } else {
+                          ref
+                              .read(credentialInputProvider.notifier)
+                              .onToTransactionPin();
+                        }
                       }
                     },
                     child: Container(
@@ -203,8 +225,15 @@ class _VerifyIdentityPageState
                         .verifySetTransactionPin(
                             onSuccess: () {
                               if (args != null) {
-                                WayaNav.replaceNamed(TransactionPinView.route,
-                                    arguments: "account-setting");
+                                if (args == 'change-transaction-pin') {
+                                  WayaNav.replaceNamed('/change-pin-page');
+                                } else if (args == 'change-password') {
+                                  WayaNav.replaceNamed(
+                                      '/change-password-gen-set');
+                                } else {
+                                  WayaNav.replaceNamed(TransactionPinView.route,
+                                      arguments: "account-setting");
+                                }
 
                                 return;
                               }
@@ -227,3 +256,4 @@ class _VerifyIdentityPageState
     );
   }
 }
+

@@ -43,12 +43,12 @@ class _PollReviewState extends ConsumerState<PollReview> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createPollVotingProvider);
+   // final viewModel = ref.watch(createPollVotingProvider);
     final walletViewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
 
     return WayaScaffold(
-        isLoading: viewModel.isLoading,
+        isLoading: walletViewModel.isLoading!,
         isScrollable: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -56,16 +56,13 @@ class _PollReviewState extends ConsumerState<PollReview> {
           children: [
             const Gap(10),
             Text(
-              'Poll and voting Payout Review',
+              '${toTitleCase(widget.module.name)} Payout Review',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
             ),
-
             const Gap(5),
-
-
             Row(
               children: [
                 pollCard('₦${formatMoney(widget.model.amount ?? "0")}',
@@ -78,10 +75,9 @@ class _PollReviewState extends ConsumerState<PollReview> {
                     'Payout Due Amount'),
               ],
             ),
-
             const Gap(50),
             WayaButton(
-              callback: !viewModel.isLoading
+              callback: !walletViewModel.isLoading!
                   ? () {
                       showModalBottomSheet(
                           context: context,
@@ -175,7 +171,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
                     }
                   : null,
               centerWidget:
-                  LoadingState(loading: viewModel.isLoading, text: 'Continue'),
+                  LoadingState(loading: walletViewModel.isLoading!, text: 'Continue'),
             ),
           ],
         ));
@@ -217,5 +213,17 @@ class _PollReviewState extends ConsumerState<PollReview> {
         ),
       ),
     );
+  }
+
+  String toTitleCase(String text) {
+    if (text.isEmpty) return text;
+
+    return text
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.isNotEmpty
+            ? '${word[0].toUpperCase()}${word.substring(1)}'
+            : '')
+        .join(' ');
   }
 }

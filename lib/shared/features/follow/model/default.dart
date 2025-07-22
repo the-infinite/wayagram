@@ -8,6 +8,7 @@ part 'default.g.dart';
 enum FollowRelationship {
   accepted,
   none,
+  pending,
   rejected,
 }
 
