@@ -99,7 +99,7 @@ class GroupNotifier extends ValueNotifier<int> {
     final result = <GroupModel>[];
 
     //? If there is nothing to see or get, leave.
-    if (!hasMoreCreatedGroups) return createdGroups;
+    //if (!hasMoreCreatedGroups) return createdGroups;
 
     //? This is loading.
     isLoading = true;
