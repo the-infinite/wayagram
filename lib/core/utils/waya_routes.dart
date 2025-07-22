@@ -91,6 +91,7 @@ import 'package:wayagram/features/polls_and_voting/views/payout_verification.dar
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
 import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
+import 'package:wayagram/features/polls_and_voting/views/single_poll_screen2.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';

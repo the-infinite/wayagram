@@ -32,16 +32,27 @@ class CreatePollVotingState {
   final VoteUrlData? voteUrlData;
   final List<PollDashboardModelDocs> pollDashboardModelDocs;
   final List<PollDashboardChoices> pollDashboardChoices;
-  List<SinglePollModelDocs> singlePollDocs;
+  List<SinglePollChoices> singlePollChoices;
 
+  final String desc;
+  final String fName;
+  final String lName;
+  final String question;
+  final String picture;
+  final String pollUrl;
+  final String pollId;
+  final String pollFee;
+  final String? hoursLeft;
 
   final String totalAmount;
+  final String kycStatus;
   final String wayaCommission;
   final String dueAmount;
   final String moneyGenerated;
   final String voteCount;
   final String? accountType;
   final String numberOfPeopleVoted;
+  final String createdAt;
   final String startDate;
   final String endDate;
   final String startDateString;
@@ -63,7 +74,6 @@ class CreatePollVotingState {
   List<PollData> getMyPollModel;
   List<CastVoteData> castVoteModel;
   List<Docs> activePolls;
-  List<SinglePollModelDocs> singlePollModelDocs;
 
   CreatePollVotingState({
     TextEditingController? pollTitle,
@@ -75,10 +85,21 @@ class CreatePollVotingState {
     TextEditingController? secondChoice,
     TextEditingController? firstChoiceDescription,
     TextEditingController? secondChoiceDescription,
+    this.desc = '',
+    this.fName = '',
+    this.lName = '',
+    this.picture = '',
+    this.question = '',
+    this.pollUrl = '',
+    this.pollId = '',
+    this.createdAt = '',
+    this.hoursLeft = '',
     this.totalAmount = '',
     this.wayaCommission = '',
     this.dueAmount = '',
     this.voteCount = '',
+    this.pollFee = '',
+    this.kycStatus = '',
     this.moneyGenerated = '',
     this.numberOfPeopleVoted = '',
     this.pollType = '',
@@ -107,8 +128,8 @@ class CreatePollVotingState {
     this.votes = const [],
     this.castVoteModel = const [],
     this.pollTypes = const [],
-    this.singlePollModelDocs = const [],
-    this.singlePollDocs = const [],
+    this.singlePollChoices = const [],
+    //this.singlePollDocs = const [],
     this.feedPolls = const [],
     this.uploadedDocuments = const [],
     this.activePolls = const [],
@@ -137,6 +158,13 @@ class CreatePollVotingState {
     TextEditingController? firstChoiceDescription,
     TextEditingController? secondChoiceDescription,
     List<DocType>? uploadedDocuments,
+    String? desc,
+    String? fName,
+    String? lName,
+    String? picture,
+    String? question,
+    String? pollUrl,
+    String? pollId,
     String? totalAmount,
     String? wayaCommission,
     String? dueAmount,
@@ -144,6 +172,9 @@ class CreatePollVotingState {
     String? voteCount,
     String? commission,
     String? accountType,
+    String? kycStatus,
+    String? hoursLeft,
+    String? createdAt,
     String? numberOfPeopleVoted,
     String? startDate,
     String? startDateString,
@@ -152,6 +183,7 @@ class CreatePollVotingState {
     String? dateIsoFormat,
     String? endDate,
     String? pollType,
+    String? pollFee,
     File? candidateImage,
     VoteUrlData? voteUrlData,
     String? pollTypeId,
@@ -171,7 +203,7 @@ class CreatePollVotingState {
     List<Select>? pollTypes,
     List<Docs>? feedPolls,
     List<PollDashboardChoices>? pollDashboardChoices,
-    List<SinglePollModelDocs>? singlePollModelDocs,
+    List<SinglePollChoices>? singlePollChoices,
   }) {
     return CreatePollVotingState(
         activePolls: activePolls ?? this.activePolls,
@@ -204,6 +236,7 @@ class CreatePollVotingState {
         isLoading: isLoading ?? this.isLoading,
         pollStatus: pollStatus ?? this.pollStatus,
         commission: commission ?? this.commission,
+        kycStatus: kycStatus ?? this.kycStatus,
         isLoadingPollWithStatus:
             isLoadingPollWithStatus ?? this.isLoadingPollWithStatus,
         fetchAllPols: fetchAllPols ?? this.fetchAllPols,
@@ -225,7 +258,17 @@ class CreatePollVotingState {
         numberOfPeopleVoted: numberOfPeopleVoted ?? this.numberOfPeopleVoted,
         moneyGenerated: moneyGenerated ?? this.moneyGenerated,
         pollDashboardChoices: pollDashboardChoices ?? this.pollDashboardChoices,
-        singlePollModelDocs: singlePollModelDocs ?? this.singlePollModelDocs
+        singlePollChoices: singlePollChoices ?? this.singlePollChoices,
+        desc: desc ?? this.desc,
+      fName: fName ?? this.fName,
+      lName: lName ?? this.lName,
+      question: question ?? this.question,
+      picture: picture ?? this.picture,
+      pollUrl: pollUrl ?? this.pollUrl,
+      pollFee: pollFee ?? this.pollFee,
+      pollId: pollId ?? this.pollId,
+      createdAt: createdAt ?? this.createdAt,
+      hoursLeft: hoursLeft ?? this.hoursLeft
     );
   }
 }

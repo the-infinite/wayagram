@@ -12,11 +12,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class SinglePollScreen extends ConsumerStatefulWidget {
-  static const route = '/singlePollScreen';
+  static const route = '/poll-details';
   final String id;
   const SinglePollScreen({super.key, required this.id});
 
@@ -30,166 +31,167 @@ class _SinglePollScreenState extends ConsumerState<SinglePollScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      ref.read(createPollVotingProvider.notifier).getPollsById('${args['id']}');
-
+       ref.read(createPollVotingProvider.notifier).getPrivatePollsById(widget.id);
+      ref.read(createPollVotingProvider.notifier).getPublicPollsById(widget.id);
     });
   }
+
+  // int hoursLeft = DateTime.parse(viewModel.endDate).difference(DateTime.parse(viewModel.startDate)).inHours;
+  // DateTime expirationDate = DateTime.parse(viewModel.endDate);
+  //  DateTime currentDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
+    DateTime currentDate = DateTime.now();
+
     return WayaScaffold(
       title: "Poll Details",
       isLoading: viewModel.isLoading,
       isScrollable: true,
-      body:ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: viewModel.singlePollModelDocs.length,
-          itemBuilder: (context, index) {
-            final poll = viewModel.singlePollModelDocs[index];
-            int hoursLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-            DateTime expirationDate = DateTime.parse("${poll.endDate}");
-            DateTime currentDate = DateTime.now(); // Get current date and time
-
-            return Container(
-              margin: EdgeInsets.only(bottom: 40.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(poll.userData?.profilePicture ?? ''),
-                        radius: 10,
-                        backgroundColor: wayaTheme.colorScheme.greyColor200,
-                      ),
-                      const Gap(3),
-                      Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
-                      const Gap(3),
-                      Text(
-                        ' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                            color: Theme.of(context).colorScheme.greyColor500),
-                      ),
-                      Spacer(),
-                      PopupMenuButton(
-                        onSelected: (value) {},
-                        iconColor: wayaTheme.colorScheme.greyColor400,
-                        position: PopupMenuPosition.under,
-                        itemBuilder: (context) {
-                          return [
-                            PopupMenuItem<int>(
-                              value: 0,
-                              child: _buildActionNav(
-                                context: context,
-                                onTap: () {
-                                  WayaNav.goBack();
-                                  Share.share(
-                                    WayaValueHelper.getShareableUrl(
-                                        WayaAppRoutes.getPollDetailsPage('${poll.id}')),
-                                    subject: 'Share Poll',
-                                  );
-                                },
-                                asset: WayaAssets.icons.genSet.share
-                                    .svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
-                                text: "Share Poll link",
-                                color: wayaTheme.colorScheme.customBlack,
-                              ),
-                            ),
-                          ];
-                        },
-                        child: Image.asset(
-                          'assets/images/polls/menu.png',
-                          height: 32.h,
+      body: Container(
+        margin: EdgeInsets.only(bottom: 40.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(viewModel.picture ?? ''),
+                  radius: 10,
+                  backgroundColor: wayaTheme.colorScheme.greyColor200,
+                ),
+                const Gap(3),
+                Text('${viewModel.fName.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
+                const Gap(3),
+                Text('',
+                  //' • ${WayaHelpers.formatTimeAgo(viewModel.createdAt)}',
+                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Theme.of(context).colorScheme.greyColor500),
+                ),
+                Spacer(),
+                PopupMenuButton(
+                  onSelected: (value) {},
+                  iconColor: wayaTheme.colorScheme.greyColor400,
+                  position: PopupMenuPosition.under,
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem<int>(
+                        value: 0,
+                        child: _buildActionNav(
+                          context: context,
+                          onTap: () {
+                            WayaNav.goBack();
+                            Share.share(
+                              WayaValueHelper.getShareableUrl(
+                                  //WayaAppRoutes.getPollDetailsPage(viewModel.pollId)),
+                                  WayaAppRoutes.getPollDetailsPage(widget.id)),
+                              subject: 'Share Poll',
+                            );
+                          },
+                          asset: WayaAssets.icons.genSet.share
+                              .svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
+                          text: "Share Poll link",
+                          color: wayaTheme.colorScheme.customBlack,
                         ),
                       ),
-                    ],
+                    ];
+                  },
+                  child: Image.asset(
+                    'assets/images/polls/menu.png',
+                    height: 32.h,
                   ),
-                  const Gap(10),
+                ),
+              ],
+            ),
+            const Gap(10),
 
-                  Text("${poll.question?.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
-                  const Gap(3),
-                  if (poll.description != null)
-                    Text(
-                      '${poll.description?.capitalizeFirst}',
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.greyColor500),
-                    ),
-                  const Gap(10),
-                  Text(
-                    '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} • $hoursLeft hours remaining',
-                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).colorScheme.greyColor500),
-                  ),
-                  const Gap(10),
-                  //[vote(choice)/vote(poll)] * 100
-                  Column(
-                    spacing: 10.h,
-                    children: [
-                      if (poll.choices != null)
-                        ...poll.choices!.map(
-                              (e) => InkWell(
-                            onTap: () {
-                              if (currentDate.isAfter(expirationDate)) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'The poll has ended.',
-                                      style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
-                                    ),
-                                    backgroundColor: WayaColors.primary,
-                                    duration: Duration(seconds: 2),
-                                  ),
-                                );
-                              } else if (poll.pollType == 'free') {
-                                ref.read(createPollVotingProvider.notifier).castFreeVote(
-                                    1, '${e.id}', '${poll.id}', context, '${e.text}', '${poll.url}');
-                              } else {
-                                WayaUtils.showModalSheet(
-                                  context,
-                                  child: VoteOptionModal(
-                                    voteFee: '${poll.feePerVote}',
-                                    choiceId: '${e.id}',
-                                    pollId: '${poll.id}',
-                                    candidateName: '${e.text}',
-                                    votingLink: '${poll.url}',
-                                  ),
-                                );
-                              }
-                            },
-                            child: WayaInformativeProgressBar(
-                              title: '${e.text?.capitalizeFirst}',
-                              text: '${e.text?.capitalizeFirst}',
-                              subtitle: '',
-                              // progress: 0,
-                              progress: viewModel.singlePollModelDocs[index].voteCount == 0 ? 0 :double.parse(((e.voteCount!) / viewModel.singlePollModelDocs[index].voteCount!).toStringAsFixed(2)),
-                              height: 60.0,
-                              filledRegion: wayaTheme.colorScheme.customPrimary,
-                              unfilledRegion: wayaTheme.colorScheme.greyColor200,
-                              count: int.parse('${e.voteCount}'),
-                              //e.voteCount,
-                              fontSize: 12,
-                              activeTextColor: wayaTheme.colorScheme.white,
-                              inactiveTextColor: wayaTheme.colorScheme.primary500,
-                              imageUrl: e.imageUrl,
-                            ),
-                          ),
-                        ),
-                    ],
-                  )
-                ],
+            Text("${viewModel.question.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
+            const Gap(3),
+            if (viewModel.desc != null)
+              Text(
+                '${viewModel.desc.capitalizeFirst}',
+                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Theme.of(context).colorScheme.greyColor500),
               ),
-            );
-          }),
+            const Gap(10),
+            Text(
+              '${viewModel.voteCount} ${viewModel.voteCount == '0' || viewModel.voteCount == '1' ? 'Vote' : 'Votes'} • ${viewModel.hoursLeft} hours remaining',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.greyColor500),
+            ),
+            const Gap(10),
+            //[vote(choice)/vote(poll)] * 100
+            Column(
+              spacing: 10.h,
+              children: [
+
+                if (viewModel.singlePollChoices != null)
+                  ...viewModel.singlePollChoices.map(
+                        (e) => InkWell(
+                      onTap: () {
+                        // if (currentDate.isAfter('${}')) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       content: Text(
+                        //         'The poll has ended.',
+                        //         style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                        //       ),
+                        //       backgroundColor: WayaColors.primary,
+                        //       duration: Duration(seconds: 2),
+                        //     ),
+                        //   );
+                        // } else
+                          if (viewModel.pollType == 'free') {
+                          ref.read(createPollVotingProvider.notifier).castFreeVote(
+                              1, '${e.id}', viewModel.pollId, context, '${e.text}', viewModel.pollUrl);
+
+                          // ref.read(createPollVotingProvider.notifier).castFreeVote(
+                          //     1, '${e.id}', '${poll.id}', context, '${e.text}', '${viewModel.pollUrl}');
+
+                        } else {
+                          WayaUtils.showModalSheet(
+                            context,
+                            child: VoteOptionModal(
+                              voteFee: viewModel.pollFee,
+                              choiceId: '${e.id}',
+                              pollId: viewModel.pollId,
+                              candidateName: '${e.text}',
+                              votingLink: viewModel.pollUrl,
+                            ),
+                          );
+                        }
+                      },
+                      child: WayaInformativeProgressBar(
+                        title: '${e.text?.capitalizeFirst}',
+                        text: '${e.text?.capitalizeFirst}',
+                        subtitle: '',
+                        //progress: viewModel.singlePollChoices[index].voteCount == 0 ? 0 :double.parse(((e.voteCount!) / viewModel.singlePollChoices[index].voteCount!).toStringAsFixed(2)),
+                        progress: e.voteCount == 0 ? 0 :double.parse(((e.voteCount!) / e.voteCount!).toStringAsFixed(2)),
+                        height: 60.0,
+                        filledRegion: wayaTheme.colorScheme.customPrimary,
+                        unfilledRegion: wayaTheme.colorScheme.greyColor200,
+                        count: int.parse('${e.voteCount}'),
+                        //e.voteCount,
+                        fontSize: 12,
+                        activeTextColor: wayaTheme.colorScheme.white,
+                        inactiveTextColor: wayaTheme.colorScheme.primary500,
+                        imageUrl: e.imageUrl,
+                      ),
+                    ),
+                  ),
+              ],
+            )
+          ],
+        ),
+      )
     );
 
   }
