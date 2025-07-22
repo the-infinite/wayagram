@@ -15,17 +15,17 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-class SinglePollScreen extends ConsumerStatefulWidget {
+class PollDetailScreen extends ConsumerStatefulWidget {
   static const route = '/poll-details';
   final String id;
-  const SinglePollScreen({super.key, required this.id});
+  const PollDetailScreen({super.key, required this.id});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _SinglePollScreenState();
 }
 
-class _SinglePollScreenState extends ConsumerState<SinglePollScreen> {
+class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
   @override
   void initState() {
     super.initState();

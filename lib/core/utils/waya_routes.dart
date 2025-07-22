@@ -90,7 +90,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/payout_review_mode
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
-import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_detail_screen.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
@@ -388,7 +388,7 @@ class WayaAppRoutes {
     SearchView.route: () => SearchView(),
     EditGroupMemberInfo.route: () => EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
     EditPageMemberInfo.route: () => EditPageMemberInfo(id: WayaNav.search['id'].toString()),
-    SinglePollScreen.route: () => SinglePollScreen(id: WayaNav.search['id'].toString()),
+    PollDetailScreen.route: () => PollDetailScreen(id: WayaNav.search['id'].toString()),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
     DonationDetails.route: () => DonationDetails(id: WayaNav.search['id'].toString()),
@@ -566,7 +566,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
-  static String getPollDetailsPage(String id) => "${SinglePollScreen.route}?id=$id";
+  static String getPollDetailsPage(String id) => "${PollDetailScreen.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
