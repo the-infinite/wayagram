@@ -1223,7 +1223,7 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.getPageGeneralSettings();
 
       if (response.success) {
-        return (response.data["data"]["allowComments"]=="everyone", response.data["data"]["allowFollow"] == "everyone");
+        return (response.data["data"]["allowComments"] as bool, response.data["data"]["allowFollow"] as bool);
       }
       return (false, false);
     } catch (e) {

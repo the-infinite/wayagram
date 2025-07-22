@@ -339,8 +339,8 @@ class PageRepository extends BaseRepository {
   //Page general settings
   Future<WayaRequestResponse> updatePageGeneralSettings(bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
     return patch("$serviceUrl/user/page-settings", {
-      "allowFollow": isEveryOneAllowFollow ? "everyone" : "friends",
-      "allowComments": isEveryOneAllowComment ? "everyone" : "friends"
+      "allowFollow": isEveryOneAllowFollow ,
+      "allowComments": isEveryOneAllowComment 
     });
   }
 
