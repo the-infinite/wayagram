@@ -23,6 +23,7 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
   final BuyRequestModel request;
   final QuotationBidModel bid;
   final BidActionAuthor negotiator;
+  final BidOrderModel? order;
   final Timer? timer;
   final FutureOr<void> Function()? onBidReacted;
 
@@ -32,6 +33,7 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
     required this.bid,
     required this.timer,
     this.negotiator = BidActionAuthor.buyer,
+    this.order,
     this.onBidReacted,
   });
 
@@ -370,8 +372,12 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                 // Some space.
                 const Gap(10),
 
+                //? For
+                if (widget.order != null)
+                  const SizedBox()
+
                 //? For the buttons we would be using to
-                if (![BidActionType.accept, BidActionType.reject].contains(widget.bid.status))
+                else if (![BidActionType.accept, BidActionType.reject].contains(widget.bid.status))
                   FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Row(

@@ -15,7 +15,7 @@ class GroupRepository extends BaseRepository {
       "name": groupName,
       "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
-      "isOpen": isOpen, // this defaults to true if it is not inserted
+      //"isOpen": isOpen, // this defaults to true if it is not inserted
       "coverImage": coverImage,
       "profileImage": profileImage,
       "categories": [category]
@@ -64,7 +64,7 @@ class GroupRepository extends BaseRepository {
       "name": groupName,
       "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
-      "isOpen": isOpen, // this defaults to true if it is not inserted
+      //"isOpen": isOpen, // this defaults to true if it is not inserted
       "coverImage": coverImage,
       "profileImage": profileImage
     };
@@ -103,7 +103,7 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/posts?groupId=$groupId&page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
-  Future<WayaRequestResponse> getMyGroups([int page = 1, int limit = 15]) {
+  Future<WayaRequestResponse> getMyGroups([int page = 1, int limit = 150]) {
     return get("$serviceUrl/groups/user-groups?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
@@ -218,8 +218,12 @@ class GroupRepository extends BaseRepository {
     return delete("$serviceUrl/posts/$commentId/comment");
   }
 
-  Future<WayaRequestResponse> updateGroupSetting(bool isPrivate, groupId) {
-    final payload = { "isPrivate": isPrivate};
+  Future<WayaRequestResponse> updateGroupSetting(bool isOpen, bool approveJoinRequest, groupId) {
+    //final payload = { "isPrivate": isPrivate};
+    final payload = {
+      "approveJoinRequest": approveJoinRequest,
+      "isOpen": isOpen
+    };
     return patch("$serviceUrl/groups/update-setting/$groupId", payload);
   }
 

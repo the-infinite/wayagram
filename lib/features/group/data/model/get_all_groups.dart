@@ -145,6 +145,7 @@ class GetAllGroupDocs extends BaseModel<GetAllGroupDocs> {
     this.description,
     this.memberCount,
     this.isOpen,
+    this.approveJoinRequest,
     this.isPrivate,
     this.coverImage,
     this.profileImage,
@@ -160,6 +161,7 @@ class GetAllGroupDocs extends BaseModel<GetAllGroupDocs> {
     description = json['description'];
     memberCount = json['memberCount'];
     isOpen = json['isOpen'];
+    approveJoinRequest = json['approveJoinRequest'];
     isPrivate = json['isPrivate'];
     coverImage = json['coverImage'];
     profileImage = json['profileImage'];
@@ -175,6 +177,7 @@ class GetAllGroupDocs extends BaseModel<GetAllGroupDocs> {
   String? description;
   num? memberCount;
   bool? isOpen;
+  bool? approveJoinRequest;
   bool? isPrivate;
   String? coverImage;
   String? profileImage;
@@ -189,6 +192,7 @@ class GetAllGroupDocs extends BaseModel<GetAllGroupDocs> {
     String? description,
     num? memberCount,
     bool? isOpen,
+    bool? approveJoinRequest,
     bool? isPrivate,
     String? coverImage,
     String? profileImage,
@@ -203,6 +207,7 @@ class GetAllGroupDocs extends BaseModel<GetAllGroupDocs> {
         description: description ?? this.description,
         memberCount: memberCount ?? this.memberCount,
         isOpen: isOpen ?? this.isOpen,
+        approveJoinRequest: approveJoinRequest ?? this.approveJoinRequest,
         isPrivate: isPrivate ?? this.isPrivate,
         coverImage: coverImage ?? this.coverImage,
         profileImage: profileImage ?? this.profileImage,
@@ -218,6 +223,7 @@ class GetAllGroupDocs extends BaseModel<GetAllGroupDocs> {
     map['description'] = description;
     map['memberCount'] = memberCount;
     map['isOpen'] = isOpen;
+    map['approveJoinRequest'] = approveJoinRequest;
     map['isPrivate'] = isPrivate;
     map['coverImage'] = coverImage;
     map['profileImage'] = profileImage;

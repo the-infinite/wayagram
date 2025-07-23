@@ -113,11 +113,11 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               textColor: WayaColors.black,
               color: Colors.transparent,
               leadingIcon: Icon(
-                chat.self.isPined ? CupertinoIcons.pin_slash_fill : CupertinoIcons.pin_fill,
+                chat.self?.isPined ?? false ? CupertinoIcons.pin_slash_fill : CupertinoIcons.pin_fill,
                 size: 20,
                 color: WayaColors.black,
               ),
-              text: chat.self.isPined ? "Unpin" : "Pin",
+              text: chat.self?.isPined ?? false ? "Unpin" : "Pin",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
                 fontSize: 13.sp,
               ),
@@ -137,11 +137,11 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               textColor: WayaColors.black,
               color: Colors.transparent,
               leadingIcon: Icon(
-                chat.self.isArchived ? CupertinoIcons.archivebox : CupertinoIcons.archivebox_fill,
+                chat.self?.isArchived ?? false ? CupertinoIcons.archivebox : CupertinoIcons.archivebox_fill,
                 size: 20,
                 color: WayaColors.black,
               ),
-              text: chat.self.isArchived ? "Unarchive" : "Archive",
+              text: chat.self?.isArchived ?? false ? "Unarchive" : "Archive",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
                 fontSize: 13.sp,
               ),
@@ -152,7 +152,7 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               callback: () {
                 sizeNotifier.dispose();
                 entry.remove();
-                if (chat.self.isMuted) {
+                if (chat.self?.isMuted ?? false) {
                   widget.conversationNotifier.muteOrUnmuteGroup(chat.id, null);
                 } else {
                   WayaUtils.showModalSheet(
@@ -168,14 +168,14 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
               alignment: Alignment.centerLeft,
               verticalPadding: 8,
               horizontalPadding: 8,
-              textColor: chat.self.isMuted ? WayaColors.black : WayaColors.error,
+              textColor: chat.self?.isMuted ?? false ? WayaColors.black : WayaColors.error,
               color: Colors.transparent,
               leadingIcon: SvgPicture.asset(
-                chat.self.isMuted ? WayaAssets.icons.cProfileUnmute.path : WayaAssets.icons.cProfileMute.path,
+                chat.self?.isMuted ?? false ? WayaAssets.icons.cProfileUnmute.path : WayaAssets.icons.cProfileMute.path,
                 height: 20.sp,
-                color: chat.self.isMuted ? WayaColors.black : WayaColors.error,
+                color: chat.self?.isMuted ?? false ? WayaColors.black : WayaColors.error,
               ),
-              text: chat.self.isMuted ? "Unmute" : "Mute",
+              text: chat.self?.isMuted ?? false ? "Unmute" : "Mute",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
                 fontSize: 13.sp,
               ),
@@ -423,7 +423,7 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
                   // This is fine.
                   if (isBlocked || isDeleted)
                     const SizedBox.shrink()
-                  else if (chat.self.isMuted)
+                  else if (chat.self?.isMuted ?? false)
                     WayaAssets.icons.cProfileUnmute.svg(
                       height: 16.sp,
                       width: 16.sp,

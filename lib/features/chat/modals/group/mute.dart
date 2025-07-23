@@ -120,7 +120,7 @@ class _MuteChatGroupModalState extends State<MuteChatGroupModal> {
                 //? Get the result.
                 final result = await widget.notifier.muteOrUnmuteGroup(
                   widget.chat.id,
-                  widget.chat.self.mutedUntil == null && valueNotifier.value != null
+                  widget.chat.self?.mutedUntil == null && valueNotifier.value != null
                       ? DateTime.now().add(valueNotifier.value!)
                       : null,
                 );
@@ -132,7 +132,7 @@ class _MuteChatGroupModalState extends State<MuteChatGroupModal> {
                 }
               },
               notifier: loadingController,
-              text: widget.chat.self.mutedUntil == null ? "Mute" : "Unmute",
+              text: widget.chat.self?.mutedUntil == null ? "Mute" : "Unmute",
             ),
 
             // Some space.

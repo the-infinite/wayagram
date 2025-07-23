@@ -325,7 +325,8 @@ class Group {
       this.memberCount, 
       this.description, 
       this.isOpen, 
-      this.categories, 
+      this.approveJoinRequest,
+      this.categories,
       this.url, 
       this.isPrivate, 
       this.coverImage, 
@@ -342,6 +343,7 @@ class Group {
     memberCount = json['memberCount'];
     description = json['description'];
     isOpen = json['isOpen'];
+    approveJoinRequest = json['approveJoinRequest'];
     categories = json['categories'];
     // if (json['categories'] != null) {
     //   categories = [];
@@ -372,6 +374,7 @@ class Group {
   num? memberCount;
   String? description;
   bool? isOpen;
+  bool? approveJoinRequest;
   List<dynamic>? categories;
   String? url;
   bool? isPrivate;
@@ -387,6 +390,7 @@ Group copyWith({  String? id,
   num? memberCount,
   String? description,
   bool? isOpen,
+  bool? approveJoinRequest,
   List<dynamic>? categories,
   String? url,
   bool? isPrivate,
@@ -402,6 +406,7 @@ Group copyWith({  String? id,
   memberCount: memberCount ?? this.memberCount,
   description: description ?? this.description,
   isOpen: isOpen ?? this.isOpen,
+  approveJoinRequest: approveJoinRequest ?? this.approveJoinRequest,
   categories: categories ?? this.categories,
   url: url ?? this.url,
   isPrivate: isPrivate ?? this.isPrivate,
@@ -420,6 +425,7 @@ Group copyWith({  String? id,
     map['memberCount'] = memberCount;
     map['description'] = description;
     map['isOpen'] = isOpen;
+    map['approveJoinRequest'] = approveJoinRequest;
     if (categories != null) {
       map['categories'] = categories?.map((v) => v.toJson()).toList();
     }

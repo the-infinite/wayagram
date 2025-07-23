@@ -11,21 +11,20 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-class SinglePollScreen extends ConsumerStatefulWidget {
+class PollDetailScreen extends ConsumerStatefulWidget {
   static const route = '/poll-details';
   final String id;
-  const SinglePollScreen({super.key, required this.id});
+  const PollDetailScreen({super.key, required this.id});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _SinglePollScreenState();
 }
 
-class _SinglePollScreenState extends ConsumerState<SinglePollScreen> {
+class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
   @override
   void initState() {
     super.initState();
@@ -56,7 +55,7 @@ class _SinglePollScreenState extends ConsumerState<SinglePollScreen> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
-    DateTime currentDate = DateTime.now();
+    //DateTime currentDate = DateTime.now();
 
     return WayaScaffold(
         title: "Poll Details",
@@ -70,7 +69,7 @@ class _SinglePollScreenState extends ConsumerState<SinglePollScreen> {
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(viewModel.picture ?? ''),
+                    backgroundImage: NetworkImage(viewModel.picture),
                     radius: 10,
                     backgroundColor: wayaTheme.colorScheme.greyColor200,
                   ),
@@ -151,7 +150,13 @@ class _SinglePollScreenState extends ConsumerState<SinglePollScreen> {
                 children: [
                   ...viewModel.singlePollChoices.map(
                     (e) => InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        final secureDataSource = WayaSecureDataSource();
+                        final token = await secureDataSource.getToken();
+                        if (token == null) {
+                          WayaNav.removeUntilNamed(LoginPage.route);
+                          return;
+                        }
                         // if (currentDate.isAfter('${}')) {
                         //   ScaffoldMessenger.of(context).showSnackBar(
                         //     const SnackBar(

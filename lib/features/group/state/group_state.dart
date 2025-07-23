@@ -45,6 +45,8 @@ class GroupState {
   final bool isLoading;
   final bool isPrivate;
   final bool openToEveryone;
+  final bool approveJoinRequest;
+  final bool comment;
   final bool requireApproval;
   final String roleType;
 
@@ -63,7 +65,9 @@ class GroupState {
     this.isFocused = false,
     this.isPrivate = false,
     this.isLoading = false,
+    this.approveJoinRequest = false,
     this.muteAndUnMute = false,
+    this.comment = false,
     this.openToEveryone = false,
     this.requireApproval = false,
     this.isReportingGroup = false,
@@ -99,6 +103,7 @@ class GroupState {
     TextEditingController? content,
     TextEditingController? email,
     bool? hasNextPage,
+    bool? comment,
     List<Select>? categories,
     List<JoinRequestDocs>? joinRequestDocs,
     List<GroupModel>? getAllGroups,
@@ -113,6 +118,7 @@ class GroupState {
     List<MediaModelDocs>? mediaModelDocs,
     bool? isReportingGroup,
     bool? isFocused,
+    bool? approveJoinRequest,
     bool? isLoading,
     bool? joinGroupLoading,
     bool? openToEveryone,
@@ -135,10 +141,12 @@ class GroupState {
       username: username ?? this.username,
       content: content ?? this.content,
       email: email ?? this.email,
+      comment: comment ?? this.comment,
       postCount: postCount ?? this.postCount,
       foundUserId: foundUserId ?? this.foundUserId,
       joinRequestDocs: joinRequestDocs ?? this.joinRequestDocs,
       category: category ?? this.category,
+      approveJoinRequest: approveJoinRequest ?? this.approveJoinRequest,
       categories: categories ?? this.categories,
       mediaModelDocs: mediaModelDocs ?? this.mediaModelDocs,
       groupPopularPostdocs: groupPopularPostdocs ?? this.groupPopularPostdocs,
