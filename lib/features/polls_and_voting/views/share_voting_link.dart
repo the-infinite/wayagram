@@ -166,7 +166,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink> {
 //     );
 //   }
 
-  screenshotNSend(ctx) async {
+  void screenshotNSend(BuildContext ctx) async {
     final directory = (await getApplicationDocumentsDirectory()).path;
     String fileName = '${DateTime.now().microsecondsSinceEpoch.toString()}.png';
     String path = directory;
@@ -178,12 +178,15 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink> {
       XFile file = XFile(fil);
 
       if (fil != '') {
-        Share.shareXFiles([file], text: '');
+        SharePlus.instance.share(ShareParams(
+          files: [file],
+        ));
       }
     });
   }
 
-  voteCount(img, name, ctx, count, width) {
+  Widget voteCount(
+      String img, String name, BuildContext ctx, String count, double width) {
     return Row(
       children: [
         Container(
@@ -211,20 +214,22 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink> {
               ],
             )),
         const Gap(10),
-        // Text(
-        //   '$count%',
-        //   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-        //       fontSize: 20,
-        //       fontWeight: FontWeight.w700,
-        //       color: Theme.of(context).colorScheme.white ),
-        //   textAlign: TextAlign.center,
-        // ),
       ],
     );
   }
 
-  choiceStatistics(img, name, ctx, chk, voteFee, choiceId, pollId,
-      candidateName, votingLink, votePercentage, voteCount) {
+  Widget choiceStatistics(
+      String img,
+      String name,
+      BuildContext ctx,
+      bool chk,
+      String voteFee,
+      String choiceId,
+      String pollId,
+      String candidateName,
+      String votingLink,
+      String votePercentage,
+      String voteCount) {
     return voteCount == '0'
         ? Padding(
             padding: const EdgeInsets.only(bottom: 8),

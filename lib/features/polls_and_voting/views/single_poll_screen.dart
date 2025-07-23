@@ -94,11 +94,13 @@ class _SinglePollScreenState extends ConsumerState<SinglePollScreen> {
                                 context: context,
                                 onTap: () {
                                   WayaNav.goBack();
-                                  Share.share(
-                                    WayaValueHelper.getShareableUrl(
-                                        WayaAppRoutes.getPollDetailsPage(
-                                            '${poll.id}')),
-                                    subject: 'Share Poll',
+                                  SharePlus.instance.share(
+                                    ShareParams(
+                                      text: WayaValueHelper.getShareableUrl(
+                                          WayaAppRoutes.getPollDetailsPage(
+                                              '${poll.id}')),
+                                      subject: 'Share Poll',
+                                    ),
                                   );
                                 },
                                 asset: WayaAssets.icons.genSet.share.svg(

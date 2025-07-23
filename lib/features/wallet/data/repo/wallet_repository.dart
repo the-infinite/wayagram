@@ -96,7 +96,7 @@ class WalletRepository extends BaseRepository {
     return post('$serviceUrl/client/payout/methods', payload);
   }
 
-  Future<WayaRequestResponse> deletePayoutMethod(id) {
+  Future<WayaRequestResponse> deletePayoutMethod(String id) {
     return delete("$serviceUrl/client/payout/methods/$id", showErrors: true);
   }
 

@@ -89,7 +89,7 @@ class WayaUtils {
     return result ?? [];
   }
 
-  static copyText(String text) async {
+  static Future<void> copyText(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
     WayaSnackBar.showToast('Copied');
   }
@@ -118,7 +118,8 @@ class WayaUtils {
     );
   }
 
-  static showModalSheetUgt(BuildContext context, {required Widget child}) {
+  static Future<void> showModalSheetUgt(BuildContext context,
+      {required Widget child}) {
     // Get the theme.
     final theme = Theme.of(context);
 
@@ -136,7 +137,7 @@ class WayaUtils {
     );
   }
 
-  static showModalSheetQuotation(BuildContext context,
+  static Future<void> showModalSheetQuotation(BuildContext context,
       {required Widget child}) {
     // Get the theme.
     final theme = Theme.of(context);
@@ -268,11 +269,9 @@ class WayaUtils {
     String searchTerm, {
     List<List<String>>? combinedFields,
   }) {
-   
     if (searchTerm.isEmpty) {
       return [];
     }
-    
 
     final lowerSearchTerm = searchTerm.toLowerCase();
 
@@ -281,7 +280,7 @@ class WayaUtils {
 
       final hasMatchInIndividualFields = accessorKeys.any((key) {
         final value = map[key];
-      
+
         return _checkValueMatch(value, lowerSearchTerm);
       });
 

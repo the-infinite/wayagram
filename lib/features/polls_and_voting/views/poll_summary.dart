@@ -59,8 +59,6 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
             child: WayaButton(
               callback: !viewModel.isLoading
                   ? () async {
-                      //debugPrint('DIALA POLL ==>> ${ConversationState.self.accountType}');
-                      //debugPrint('DIALA ACCOUNT TYPE ==>> ${viewModel.accountType }');
                       if (viewModel.pollType == 'paid' &&
                           ConversationState.self.accountType ==
                               UserAccountType.personal) {
@@ -215,7 +213,8 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
         ));
   }
 
-  summary(title, subTitle, title2, subTitle2) {
+  Widget summary(
+      String title, String subTitle, String title2, String subTitle2) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -285,7 +284,7 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
     }
   }
 
-  presImage(img, name, ctx, chk) {
+  Widget presImage(String img, String? name, BuildContext ctx, bool chk) {
     return Container(
         margin: EdgeInsets.only(
           bottom: 10,
@@ -317,7 +316,7 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
             ),
             const Gap(40),
             Text(
-              name,
+              name ?? '',
               style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w500,
@@ -369,7 +368,7 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
   //     ),
   //   );
   // }
-  confirmPoll(BuildContext context) {
+  void confirmPoll(BuildContext context) {
     WayaUtils.showNotice(
         context: context,
         title: 'Payment Information',

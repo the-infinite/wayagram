@@ -133,17 +133,17 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                                 child: _buildActionNav(
                                     context: context,
                                     onTap: () async {
-                                      await Share.share(
-                                        WayaValueHelper.getShareableUrl(
-                                            WayaAppRoutes
-                                                .getContestantProfileRoute(
-                                          widget.post.contestantProfile?.id ??
-                                              "",
-                                          widget.post.contestId ?? "",
-                                        )),
-                                        subject: "Share Contestant Profile",
-
-                                        // https://staging.wayagram.ng/contest-profile-page?id=acabf193-dd12-48c5-9030-157efa4c012a&contestId=10c8c1b5-f720-4633-a14e-646313230192
+                                      await SharePlus.instance.share(
+                                        ShareParams(
+                                          text: WayaValueHelper.getShareableUrl(
+                                              WayaAppRoutes
+                                                  .getContestantProfileRoute(
+                                            widget.post.contestantProfileId ??
+                                                "",
+                                            widget.post.contestId ?? "",
+                                          )),
+                                          subject: "Share Contestant Profile",
+                                        ),
                                       );
                                     },
                                     asset: WayaAssets.icons.genSet.share
@@ -288,13 +288,14 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             hasClickedShared.value = true;
                             //?do the sharing stuff
 
-                            final result = await Share.share(
-                              WayaValueHelper.getShareableUrl(
+                            final result =
+                                await SharePlus.instance.share(ShareParams(
+                              text: WayaValueHelper.getShareableUrl(
                                   WayaAppRoutes.getContestantProfileRoute(
                                       widget.post.contestantProfileId ?? "",
                                       widget.post.contestId ?? "")),
                               subject: "Share Contestant Profile",
-                            );
+                            ));
 
                             //?if shared increase the count
                             if (result.status == ShareResultStatus.success) {

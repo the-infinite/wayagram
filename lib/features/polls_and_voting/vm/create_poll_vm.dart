@@ -199,9 +199,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
 
     DateTime now = DateTime.now().toUtc();
-    debugPrint("Given Date: $givenDate");
-    debugPrint("Now: $now");
-    debugPrint("Now: ${givenDate.isBefore(now)}");
 
     return givenDate.isBefore(now);
   }
@@ -225,7 +222,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     super.dispose();
   }
 
-  formatDate(String inputDate) {
+  String formatDate(String inputDate) {
     // Parse the input date string
     DateTime parsedDate = DateTime.parse(inputDate);
 
@@ -258,7 +255,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return '$day$suffix of $month, $year';
   }
 
-  static getMonthName(String mon) {
+  static String getMonthName(String mon) {
     var def = '';
     if (mon == '01' || mon == '1') {
       def = 'January,';
@@ -288,7 +285,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return def;
   }
 
-  static getMonthNameMini(String mon) {
+  static String getMonthNameMini(String mon) {
     var def = '';
     if (mon == '01' || mon == '1') {
       def = 'Jan';
@@ -318,7 +315,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return def;
   }
 
-  static getDayAbbreviation(String day) {
+  static String getDayAbbreviation(String day) {
     var def = '';
     if (day == '01' || day == '1') {
       def = '1st';
@@ -354,7 +351,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return def;
   }
 
-  formatDt(j) {
+  String formatDt(String? j) {
     String dt = '';
     if (j != null) {
       if (j.contains('-')) {
@@ -370,7 +367,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return dt;
   }
 
-  formatDonationDate(j) {
+  String formatDonationDate(String? j) {
     String dt = '';
     if (j != null) {
       if (j.toString().contains('T')) {
@@ -391,7 +388,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return dt;
   }
 
-  formatDt1(j) {
+  String formatDt1(String? j) {
     String dt = '';
     if (j != null) {
       if (j.toString().contains('T')) {
@@ -412,7 +409,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return dt;
   }
 
-  formatDt2(j) {
+  String formatDt2(String? j) {
     String dt = '';
     if (j != null) {
       if (j.toString().contains('T')) {
@@ -433,7 +430,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return dt;
   }
 
-  formatAm(j) {
+  String formatAm(String? j) {
     String am = '';
     if (j != '' && j != null) {
       if (j == '0') {
@@ -792,8 +789,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.getAccountType();
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         AccountTypeModel responseModel =
@@ -812,8 +807,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.getActivePolls(
           ConversationState.self.id, page);
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
@@ -832,8 +825,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.getInActivePolls(
           ConversationState.self.id, page);
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
@@ -844,7 +835,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } finally {}
   }
 
-  Future<void> deletePoll(ctx, {required String postId}) async {
+  Future<void> deletePoll(BuildContext ctx, {required String postId}) async {
     try {
       final response = await _pollAndVotingRepository.deletePoll(postId);
       if (response.success && ctx.mounted) {
@@ -901,7 +892,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> requestSettlement(ctx, String pollId) async {
+  Future<void> requestSettlement(BuildContext ctx, String pollId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.requestSettlement(pollId);
@@ -935,8 +926,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.getAllRequestPayout(page);
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
@@ -983,8 +972,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.getAllPendingPolls(
           page, ConversationState.self.id);
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
@@ -1067,7 +1054,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return null;
   }
 
-  Future<void> getSinglePollDashboard(pollId) async {
+  Future<void> getSinglePollDashboard(String pollId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.getDashboardPolls(pollId);
@@ -1096,7 +1083,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } finally {}
   }
 
-  Future<void> getDashboard(pollId) async {
+  Future<void> getDashboard(String pollId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.getDashboard(pollId);

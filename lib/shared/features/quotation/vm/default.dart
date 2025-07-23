@@ -45,7 +45,8 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? This is fine.
       final response = !state.isUser && ShopResource.hasSelectedShop
           ? await repo.getAllAvailableQuotation(state.limit, state.requestPage)
-          : await repo.getBuyerRequest(state.limit, state.requestPage, state.requestStatus, state.isUser);
+          : await repo.getBuyerRequest(state.limit, state.requestPage,
+              state.requestStatus, state.isUser);
 
       //? This is fine.
       if (response.success) {
@@ -58,7 +59,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final data = response.data['data'];
 
         //? Parse the conversations as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
+        final docs = (data['docs'] as List)
+            .map((doc) => BuyRequestModel.fromJson(doc))
+            .toList();
 
         //? This is fine.
         result.addAll(docs);
@@ -124,7 +127,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final data = response.data['data'];
 
         //? Parse the conversations as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
+        final docs = (data['docs'] as List)
+            .map((doc) => BuyRequestModel.fromJson(doc))
+            .toList();
 
         //? This is fine.
         result.addAll(docs);
@@ -315,7 +320,8 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   }
 
   /// Helper function used to place a bid so that we can enter a quote auction.
-  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId, double? deliveryCost) async {
+  Future<QuotationBidModel?> sendBid(String requestId, double amount,
+      String shopId, double? deliveryCost) async {
     try {
       final response = await repo.placeBid(
         requestId: requestId,
@@ -373,7 +379,8 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       state = state.copyWith(isLoadingRequests: true);
 
       //? This is fine.
-      final response = await repo.getVendorQuotation(shopId, state.limit, state.bidPage);
+      final response =
+          await repo.getVendorQuotation(shopId, state.limit, state.bidPage);
 
       //? This is fine.
       if (response.success) {
@@ -387,12 +394,16 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final data = response.data['data'];
 
         //? Parse the buy requests first so we can extrapolate what we need.
-        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
+        final docs = (data['docs'] as List)
+            .map((doc) => BuyRequestModel.fromJson(doc))
+            .toList();
 
         //? Next, we can parse and add the bids to this place that they might be
         //? worth generating and using.
         for (final quote in docs) {
-          result.addAll(quote.bids?.where((bid) => bid.vendorId == ConversationState.self.id) ?? []);
+          result.addAll(quote.bids
+                  ?.where((bid) => bid.vendorId == ConversationState.self.id) ??
+              []);
         }
 
         //? Then add all the quotes (buy requests)
@@ -523,7 +534,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final data = response.data['data'];
 
         //? Parse the buy requests first so we can extrapolate what we need.
-        final docs = (data['docs'] as List).map((doc) => BidOrderModel.fromJson(doc)).toList();
+        final docs = (data['docs'] as List)
+            .map((doc) => BidOrderModel.fromJson(doc))
+            .toList();
 
         //? Then add all the quotes (buy requests)
         result.addAll(docs);
@@ -580,7 +593,8 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
   /// Helper function used to update the delivery status of a single order. This is
   ///  useful when we want to update the status of a single order in the system.
-  Future<bool> updateDeliveryStatus(String id, QuotationDeliveryStatus status) async {
+  Future<bool> updateDeliveryStatus(
+      String id, QuotationDeliveryStatus status) async {
     try {
       final response = await repo.updateDeliveryStatus(id, status.value);
 
@@ -601,7 +615,8 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
   /// Helper function used to update the pickup status of a single order. This is
   ///  useful when we want to update the status of a single order in the system.
-  Future<bool> updatePickupStatus(String id, QuotationPickupStatus status) async {
+  Future<bool> updatePickupStatus(
+      String id, QuotationPickupStatus status) async {
     try {
       final response = await repo.updatePickupStatus(id, status.value);
 
@@ -651,7 +666,8 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   /// when we want to update the amount of a single request in the system.
   Future<bool> updateRequestAmount(String id, double amount) async {
     try {
-      final response = await repo.updateRequestAmount(id: id, amount: amount.toStringAsFixed(2));
+      final response = await repo.updateRequestAmount(
+          id: id, amount: amount.toStringAsFixed(2));
 
       //? When this was fine, update the buy request in question.
       if (response.success) {
@@ -700,7 +716,6 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   Future<List<BidOrderStatus>?> trackDelivery(String id) async {
     try {
       final response = await repo.trackDelivery(requestId: id);
-
       //? If this went well...
       if (response.success) {
         debugPrint("Result: ${response.data}");
@@ -759,10 +774,12 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   }
 }
 
-final userQuotationsProvider = StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
+final userQuotationsProvider =
+    StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
   return QuotationsNotifier(QuotationsState.self);
 });
 
-final othersQuotationsProvider = StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
+final othersQuotationsProvider =
+    StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
   return QuotationsNotifier(QuotationsState.others);
 });

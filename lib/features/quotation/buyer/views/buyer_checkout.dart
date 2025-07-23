@@ -289,13 +289,14 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                 ),
                 const Gap(15),
                 DottedBorder(
-                  borderType: BorderType.RRect,
-                  color: wayaTheme.colorScheme.greyColor300,
-                  radius: Radius.circular(8),
-                  padding: EdgeInsets.all(14),
-                  dashPattern: [5, 5],
+                  options: RoundedRectDottedBorderOptions(
+                      strokeWidth: 1,
+                      color: wayaTheme.colorScheme.greyColor300,
+                      radius: const Radius.circular(8),
+                      padding: const EdgeInsets.all(14),
+                      dashPattern: const [5, 5]),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: SizedBox(
                       width: double.infinity,
                       child: Row(
@@ -322,11 +323,12 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                 ),
                 const Gap(10),
                 DottedBorder(
-                  borderType: BorderType.RRect,
-                  color: wayaTheme.colorScheme.greyColor300,
-                  radius: Radius.circular(8),
-                  padding: EdgeInsets.all(14),
-                  dashPattern: [5, 5],
+                  options: RoundedRectDottedBorderOptions(
+                    color: wayaTheme.colorScheme.greyColor300,
+                    radius: Radius.circular(8),
+                    padding: EdgeInsets.all(14),
+                    dashPattern: [5, 5],
+                  ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     child: Container(
@@ -356,11 +358,12 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                 ),
                 const Gap(10),
                 DottedBorder(
-                  borderType: BorderType.RRect,
-                  color: wayaTheme.colorScheme.greyColor300,
-                  radius: Radius.circular(8),
-                  padding: EdgeInsets.all(14),
-                  dashPattern: [5, 5],
+                  options: RoundedRectDottedBorderOptions(
+                    color: wayaTheme.colorScheme.greyColor300,
+                    radius: Radius.circular(8),
+                    padding: EdgeInsets.all(14),
+                    dashPattern: [5, 5],
+                  ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     child: Container(

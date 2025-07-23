@@ -346,11 +346,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     Expanded(
                       child: WayaButton(
                         callback: () {
-                          Share.share(
+                          SharePlus.instance.share(ShareParams(
                             subject: "Share event",
-                            WayaValueHelper.getShareableUrl(
+                            text: WayaValueHelper.getShareableUrl(
                                 WayaAppRoutes.getEventDetailsScreen(event.id)),
-                          );
+                          ));
                         },
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
@@ -427,11 +427,11 @@ class EventDetailAction extends StatelessWidget {
           PopupMenuItem<int>(
             value: 0,
             onTap: () {
-              Share.share(
+              SharePlus.instance.share(ShareParams(
                 subject: "Share event",
-                WayaValueHelper.getShareableUrl(
+                text: WayaValueHelper.getShareableUrl(
                     WayaAppRoutes.getEventDetailsScreen(event.id)),
-              );
+              ));
             },
             child: WayaActionNav(
                 context: context,

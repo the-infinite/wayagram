@@ -77,7 +77,8 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
     );
   }
 
-  Widget accessType(title, subTitle, chk, onPressed) {
+  Widget accessType(
+      String title, String? subTitle, bool chk, Function(bool)? onPressed) {
     final wayaTheme = Theme.of(context);
     return Container(
       height: 88.h,
@@ -89,7 +90,7 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
         contentPadding: EdgeInsets.zero,
         title: Text(title, style: wayaTheme.textTheme.titleSmall),
         subtitle: Text(
-          subTitle,
+          subTitle ?? '',
           style: TextStyle().wayaCopyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,

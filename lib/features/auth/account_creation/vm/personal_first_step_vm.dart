@@ -227,7 +227,6 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       state = state.copyWith(isLoading: true);
       final accountState = ref.watch(selectAccountProvider);
       final bool isPersonal = accountState.selectedType!.type == 'PERSONAL';
-      // debugPrint("isPersonal $isPersonal");
       final response = await _authRepository.register(Register(
         email: state.email.text,
         password: state.password.text,

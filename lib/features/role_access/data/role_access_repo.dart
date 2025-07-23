@@ -14,11 +14,13 @@ class RoleAccessRepo extends BaseRepository {
     return get('$serviceUrl1/admin/role/get-roles');
   }
 
-  Future<WayaRequestResponse> addContestTeamMember(payLoad) {
+  Future<WayaRequestResponse> addContestTeamMember(
+      Map<String, dynamic>? payLoad) {
     return post('$serviceUrl1/judges/create', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> editContestTeamMember(String judgeId, payLoad) {
+  Future<WayaRequestResponse> editContestTeamMember(
+      String judgeId, Map<String, dynamic>? payLoad) {
     return patch('$serviceUrl1/judges/update/$judgeId', payLoad,
         formdata: false);
   }
@@ -39,7 +41,7 @@ class RoleAccessRepo extends BaseRepository {
     return get('$serviceUrl2/shopMember/role-management/$vendorId');
   }
 
-  Future<WayaRequestResponse> addTeamMember(payLoad) {
+  Future<WayaRequestResponse> addTeamMember(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/shopMember/create', payLoad, formdata: false);
   }
 

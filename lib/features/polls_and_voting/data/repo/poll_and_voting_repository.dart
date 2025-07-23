@@ -18,18 +18,17 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> requestSettlement(String pollId) {
-    final payload = {
-      "pollId": pollId
-    };
-    return post('$serviceUrl/client/polls/request/payouts', payload, showErrors: true);
+    final payload = {"pollId": pollId};
+    return post('$serviceUrl/client/polls/request/payouts', payload,
+        showErrors: true);
   }
 
-  Future<WayaRequestResponse> getAllRequestPayout(int page,
-      [int limit = 15,]) {
-    return get(
-        "$serviceUrl/client/polls/all/payouts?limit=$limit&page=$page");
+  Future<WayaRequestResponse> getAllRequestPayout(
+    int page, [
+    int limit = 15,
+  ]) {
+    return get("$serviceUrl/client/polls/all/payouts?limit=$limit&page=$page");
   }
-
 
   Future<WayaRequestResponse> castVote(
       dynamic amountPaid, String qty, String choiceId, String pollId) {
@@ -59,7 +58,7 @@ class PollAndVotingRepository extends BaseRepository {
         showErrors: true);
   }
 
-  Future<WayaRequestResponse> deletePoll(pollId) {
+  Future<WayaRequestResponse> deletePoll(String pollId) {
     return delete("$serviceUrl/client/polls/$pollId", showErrors: true);
   }
 
@@ -69,8 +68,11 @@ class PollAndVotingRepository extends BaseRepository {
         "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=ongoing");
   }
 
-  Future<WayaRequestResponse> getAllPendingPolls(int page,String creatorId,
-      [int limit = 15, ]) {
+  Future<WayaRequestResponse> getAllPendingPolls(
+    int page,
+    String creatorId, [
+    int limit = 15,
+  ]) {
     return get(
         "$serviceUrl/client/polls?page=$page&creatorId=$creatorId&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=pending");
   }
@@ -100,8 +102,7 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getPayoutCommission() {
-    return get(
-        "$walletServiceUrl/client/commission/commission-rates");
+    return get("$walletServiceUrl/client/commission/commission-rates");
   }
 
   Future<WayaRequestResponse> getPrivatePollsById(String id) {
@@ -127,8 +128,7 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getPollPayoutRequest() {
-    return get(
-        "$serviceUrl/client/polls/all/payouts?limit=10&page=1");
+    return get("$serviceUrl/client/polls/all/payouts?limit=10&page=1");
   }
 
   Future<WayaRequestResponse> getSinglePollById({required String id}) {

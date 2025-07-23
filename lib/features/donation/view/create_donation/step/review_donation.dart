@@ -42,8 +42,6 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
     final viewModel = ref.watch(donationVmProvider);
     final donation = ref.watch(donationVmProvider.notifier);
 
-    debugPrint('AMOUNt RAISEd ==>>>> ${viewModel.showAmountRaised}');
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +165,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
     );
   }
 
-  _reviewText(title, subTitle) {
+  Widget _reviewText(String title, String? subTitle) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -180,7 +178,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
               color: Theme.of(context).colorScheme.greyColor500),
         ),
         Text(
-          subTitle,
+          subTitle ?? '',
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,

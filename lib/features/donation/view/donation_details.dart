@@ -139,11 +139,13 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                   width: 1,
                   color: wayaTheme.colorScheme.primary500,
                 ),
-                callback: () => Share.share(
-                  WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getDonationDetailsPage(
-                          viewModel.donationId)),
-                  subject: 'Share Donation',
+                callback: () => SharePlus.instance.share(
+                  ShareParams(
+                    title: WayaValueHelper.getShareableUrl(
+                        WayaAppRoutes.getDonationDetailsPage(
+                            viewModel.donationId)),
+                    subject: 'Share Donation',
+                  ),
                 ),
                 color: wayaTheme.colorScheme.white,
               ),
@@ -156,7 +158,6 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                   color: wayaTheme.colorScheme.primary500,
                   textStyle: TextStyle(color: wayaTheme.colorScheme.white),
                   callback: () {
-                    debugPrint("SHUTDOWN ${viewModel.donationId}");
                     int daysLeft = DateTime.parse(viewModel.endDate)
                         .difference(DateTime.parse(viewModel.startDate))
                         .inDays;
@@ -185,7 +186,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
     );
   }
 
-  _detailCard(number, name, color) {
+  Widget _detailCard(String number, String name, Color color) {
     return Container(
       width: 122.w,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
@@ -221,7 +222,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
     );
   }
 
-  _reviewText(title, subTitle) {
+  Widget _reviewText(String title, String? subTitle) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -233,7 +234,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
               color: Theme.of(context).colorScheme.greyColor500),
         ),
         Text(
-          subTitle,
+          subTitle ?? '',
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.w500,

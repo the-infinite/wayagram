@@ -288,15 +288,15 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
 
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName = 'transactions_$timestamp.csv';
-      final result = await Share.shareXFiles(
-        [
+      final result = await SharePlus.instance.share(ShareParams(
+        text:
+            'Attached is the transactions export for ${payouts[0].eventPayouts.title}',
+        subject: 'Event Transactions Export',
+        files: [
           XFile.fromData(Uint8List.fromList(csvData.codeUnits),
               name: fileName, mimeType: 'text/csv')
         ],
-        subject: 'Event Transactions Export',
-        text:
-            'Attached is the transactions export for ${payouts[0].eventPayouts.title}',
-      );
+      ));
 
       if (result.status == ShareResultStatus.success) {
         WayaSnackBar.showToast("Transactions exported successfully");

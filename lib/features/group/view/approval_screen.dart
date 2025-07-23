@@ -38,7 +38,6 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(widget.provider);
     final request = ref.watch(widget.provider.notifier);
-    debugPrint('APPROVAL GROYUPID ${widget.groupId}');
 
     return Container(
       width: double.infinity,

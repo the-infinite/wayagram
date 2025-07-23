@@ -103,11 +103,11 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                   arguments: {'groupId': widget.id, 'name': 'group'}),
               child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
-            onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(
+            onTap: () => SharePlus.instance.share(ShareParams(
+              text: WayaValueHelper.getShareableUrl(
                   WayaAppRoutes.getGroupDetailsPage(widget.id)),
               subject: 'Share ${group.name}',
-            ),
+            )),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
           PopupMenuButton(
@@ -138,11 +138,11 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                 ),
                 PopupMenuItem<int>(
                   value: 1,
-                  onTap: () => Share.share(
-                    WayaValueHelper.getShareableUrl(
+                  onTap: () => SharePlus.instance.share(ShareParams(
+                    text: WayaValueHelper.getShareableUrl(
                         WayaAppRoutes.getGroupDetailsPage(widget.id)),
                     subject: 'Share ${group.name}',
-                  ),
+                  )),
                   child: WayaActionNav(
                     context: context,
                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
@@ -480,7 +480,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     );
   }
 
-  actionType(txt, txt2, {onPressed}) {
+  Widget actionType(String txt, String txt2, {Function()? onPressed}) {
     final wayaTheme = Theme.of(context);
     return InkWell(
       splashFactory: NoSplash.splashFactory,
@@ -502,7 +502,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     );
   }
 
-  cancelRequest(onTap, cancel) {
+  Widget cancelRequest(Function()? onTap, Function()? cancel) {
     final wayaTheme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,

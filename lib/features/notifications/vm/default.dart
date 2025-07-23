@@ -97,7 +97,8 @@ class NotificationVm extends StateNotifier<NotificationState> {
   }
 
   /// Helper function used to get all notifications.
-  Future<List<NotificationModel>> getUserNotifications([bool reset = true]) async {
+  Future<List<NotificationModel>> getUserNotifications(
+      [bool reset = true]) async {
     final result = <NotificationModel>[];
 
     //? First, notify this guy that we are loading.
@@ -120,7 +121,8 @@ class NotificationVm extends StateNotifier<NotificationState> {
       //? If this went well...
       if (response.success) {
         final data = NotificationResponseModel.fromJson(response.data['data']);
-        result.addAll(data.docs); //? Notify our listeners that the game has been switched up.
+        result.addAll(data
+            .docs); //? Notify our listeners that the game has been switched up.
         state = state.copyWith(
           notifications: result,
           page: data.nextPage,
@@ -135,13 +137,6 @@ class NotificationVm extends StateNotifier<NotificationState> {
         );
       }
     } catch (e) {
-      debugPrint("${WayaDebugHelpers.getStackTrace(e)}");
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.notifications,
-        WayaDebugHelpers.getStackTrace(e),
-      );
       _logger.e(e, stackTrace: WayaDebugHelpers.getStackTrace(e));
     }
 
@@ -159,7 +154,8 @@ class NotificationVm extends StateNotifier<NotificationState> {
   }
 }
 
-final notificationProvider = StateNotifierProvider<NotificationVm, NotificationState>(
+final notificationProvider =
+    StateNotifierProvider<NotificationVm, NotificationState>(
   (ref) {
     return NotificationVm(
       NotificationRepository.instance,

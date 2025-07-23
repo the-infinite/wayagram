@@ -57,14 +57,23 @@ class ShareService {
   Future<void> shareViaInstagram(String shareUrl) async {
     // Instagram doesn't support direct sharing via URL scheme
     // We'll use the general share dialog instead
-    await Share.share(shareUrl, subject: 'Check this out');
+    await SharePlus.instance.share(ShareParams(
+      text: shareUrl,
+      subject: 'Check this out',
+    ));
   }
 
   Future<void> shareViaContacts(String shareUrl) async {
-    await Share.share(shareUrl, subject: 'Check this out');
+    await SharePlus.instance.share(ShareParams(
+      text: shareUrl,
+      subject: 'Check this out',
+    ));
   }
 
   Future<void> shareViaSystem(String shareUrl) async {
-    await Share.share(shareUrl, subject: 'Check this out');
+    await SharePlus.instance.share(ShareParams(
+      text: shareUrl,
+      subject: 'Check this out',
+    ));
   }
 }

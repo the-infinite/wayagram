@@ -39,7 +39,6 @@ class PromotedService extends StatelessWidget {
         highlightColor: theme.colorScheme.primary.withAlpha(30),
         onTap: id != null
             ? () {
-                debugPrint(id);
                 WayaAppRoutes.getPromotionDetailScreen(id ?? '');
               }
             : null,

@@ -99,11 +99,15 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                                       context: context,
                                       onTap: () {
                                         WayaNav.goBack();
-                                        Share.share(
-                                          WayaValueHelper.getShareableUrl(
-                                              WayaAppRoutes.getPollDetailsPage(
-                                                  '${poll.id}')),
-                                          subject: 'Share Poll',
+                                        SharePlus.instance.share(
+                                          ShareParams(
+                                            text:
+                                                WayaValueHelper.getShareableUrl(
+                                                    WayaAppRoutes
+                                                        .getPollDetailsPage(
+                                                            '${poll.id}')),
+                                            subject: 'Share Poll',
+                                          ),
                                         );
                                       },
                                       asset: WayaAssets.icons.genSet.share.svg(
@@ -257,7 +261,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
     );
   }
 
-  userIm(ctx, net) {
+  Widget userIm(BuildContext ctx, net) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Stack(
         clipBehavior: Clip.none,
@@ -316,8 +320,17 @@ class _MyPollsState extends ConsumerState<MyPolls> {
     ]);
   }
 
-  presImage(img, name, ctx, chk, voteFee, choiceId, pollId, candidateName,
-      votingLink, onTap) {
+  Widget presImage(
+      String img,
+      String name,
+      BuildContext ctx,
+      bool chk,
+      String voteFee,
+      String? choiceId,
+      String? pollId,
+      String? candidateName,
+      String? votingLink,
+      Function()? onTap) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(

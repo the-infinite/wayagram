@@ -30,7 +30,7 @@ class TransactionRepository extends BaseRepository {
             headers: {
               'Authorization': 'Bearer ${await secureDataSource.getToken()}'
             }),
-        ext: 'pdf',
+        fileExtension: 'pdf',
         mimeType: MimeType.pdf,
       );
 

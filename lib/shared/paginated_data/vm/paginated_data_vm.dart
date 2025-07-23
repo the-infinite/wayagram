@@ -65,7 +65,6 @@ class PaginatedDataVm<T> extends StateNotifier<PaginatedDataState<T>> {
   Future<void> loadMoreItems(
       Future<PaginatedResult<T>?> Function({required int page})
           fetchData) async {
-    debugPrint("testing");
     if (!state.hasNextPage || state.isLoading) return;
     state = state.copyWith(isLoading: true);
 
@@ -78,8 +77,6 @@ class PaginatedDataVm<T> extends StateNotifier<PaginatedDataState<T>> {
           hasNextPage: result.hasNextPage,
           isLoading: false,
         );
-        debugPrint("???");
-        debugPrint(state.data.length.toString());
       } else {
         state = state.copyWith(isLoading: false);
       }

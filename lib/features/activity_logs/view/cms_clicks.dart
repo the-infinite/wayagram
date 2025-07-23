@@ -50,9 +50,11 @@ class _CmsClicksState extends ConsumerState<CmsClicks> {
             alignment: Alignment.center,
             width: 102.w,
             height: 36.h,
-            padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+            padding:
+                const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: WayaColors.greyColor300)),
             child: DropdownButton(
                 underline: Container(),
                 borderRadius: BorderRadius.circular(8),
@@ -96,18 +98,24 @@ class _CmsClicksState extends ConsumerState<CmsClicks> {
                 emptyState: ActivityLogsEmptyState(
                   text: 'You don\'t have Cms clicks yet',
                 ),
-                fetchData: ref.read(activityLogsVmProvider.notifier).getCmsClicks,
+                fetchData:
+                    ref.read(activityLogsVmProvider.notifier).getCmsClicks,
                 result: (data, s) {
                   for (int i = 0; i < viewModel.cmsDocs.length; i++) {
-                    if (!dates.contains(viewModel.cmsDocs[i].createdAt.toString().split('T')[0])) {
-                      dates.add(viewModel.cmsDocs[i].createdAt.toString().split('T')[0]);
+                    if (!dates.contains(viewModel.cmsDocs[i].createdAt
+                        .toString()
+                        .split('T')[0])) {
+                      dates.add(viewModel.cmsDocs[i].createdAt
+                          .toString()
+                          .split('T')[0]);
                       viewModel.cmsDocs.add(viewModel.cmsDocs[i]);
                     }
                   }
                   return SingleChildScrollView(
                     child: viewModel.cmsDocs.isEmpty
                         ? ActivityLogsEmptyState(
-                            text: 'You don\'t have Cms clicks for this week yet',
+                            text:
+                                'You don\'t have Cms clicks for this week yet',
                           )
                         : ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -119,7 +127,13 @@ class _CmsClicksState extends ConsumerState<CmsClicks> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.cmsDocs[i].createdAt.toString().split('T')[0])}',
+                                      ref
+                                          .read(
+                                              createPollVotingProvider.notifier)
+                                          .formatDt(viewModel
+                                              .cmsDocs[i].createdAt
+                                              .toString()
+                                              .split('T')[0]),
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -130,13 +144,21 @@ class _CmsClicksState extends ConsumerState<CmsClicks> {
                                   ListView.builder(
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
-                                    padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                                    padding:
+                                        EdgeInsets.only(bottom: 20.h, top: 0),
                                     itemCount: viewModel.cmsDocs.length,
                                     itemBuilder: (context, index) {
-                                      final cmsClicks = viewModel.cmsDocs[index];
-                                      String dateTimeString = "${cmsClicks.createdAt}";
-                                      DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if (viewModel.cmsDocs[index].createdAt.toString().split('T')[0] == dates[i]) {
+                                      final cmsClicks =
+                                          viewModel.cmsDocs[index];
+                                      String dateTimeString =
+                                          "${cmsClicks.createdAt}";
+                                      DateTime dateTime =
+                                          DateTime.parse(dateTimeString)
+                                              .toLocal();
+                                      if (viewModel.cmsDocs[index].createdAt
+                                              .toString()
+                                              .split('T')[0] ==
+                                          dates[i]) {
                                         return ActivityCardWidget(
                                           title: '${cmsClicks.description}',
                                           subTitle:
@@ -159,10 +181,9 @@ class _CmsClicksState extends ConsumerState<CmsClicks> {
     );
   }
 
-  sortList(s) {
+  void sortList(String s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.cmsDocs = [];
-    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if (s == 'all time') {
         viewModel.cmsDocs = viewModel.cmsDocs1;
@@ -174,31 +195,33 @@ class _CmsClicksState extends ConsumerState<CmsClicks> {
         List<String> allWeekDays = [];
 
         for (int i = 0; i < w; i++) {
-          String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
+          String a =
+              DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
-          String a = DateTime.now().subtract(Duration(days: i + 1)).toString().split(' ')[0];
+          String a = DateTime.now()
+              .subtract(Duration(days: i + 1))
+              .toString()
+              .split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('?? $b');
         }
 
-        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.cmsDocs1.length; i++) {
-          String week = viewModel.cmsDocs1[i].createdAt.toString().split('T')[0];
+          String week =
+              viewModel.cmsDocs1[i].createdAt.toString().split('T')[0];
           if (allWeekDays.contains(week.split('-')[2])) {
             viewModel.cmsDocs.add(viewModel.cmsDocs1[i]);
           }
         }
-        debugPrint('??? ${viewModel.cmsDocs.length}');
       } else if (s == 'this month') {
         String m = DateTime.now().month.toString().padLeft(2, '0');
         for (int i = 0; i < viewModel.cmsDocs1.length; i++) {
-          String month = viewModel.cmsDocs1[i].createdAt.toString().split('T')[0];
+          String month =
+              viewModel.cmsDocs1[i].createdAt.toString().split('T')[0];
           if (m == month.split('-')[1]) {
             viewModel.cmsDocs.add(viewModel.cmsDocs1[i]);
           }
@@ -206,14 +229,16 @@ class _CmsClicksState extends ConsumerState<CmsClicks> {
       } else if (s == 'this year') {
         String y = DateTime.now().year.toString();
         for (int i = 0; i < viewModel.cmsDocs1.length; i++) {
-          String month = viewModel.cmsDocs1[i].createdAt.toString().split('T')[0];
+          String month =
+              viewModel.cmsDocs1[i].createdAt.toString().split('T')[0];
           if (y == month.split('-')[0]) {
             viewModel.cmsDocs.add(viewModel.cmsDocs1[i]);
           }
         }
       } else {
         for (int i = 0; i < viewModel.cmsDocs1.length; i++) {
-          if (s.toString().trim() == viewModel.cmsDocs1[i].createdAt.toString()) {
+          if (s.toString().trim() ==
+              viewModel.cmsDocs1[i].createdAt.toString()) {
             viewModel.cmsDocs.add(viewModel.cmsDocs1[i]);
           }
         }

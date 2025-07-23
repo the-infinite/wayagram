@@ -99,8 +99,6 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
         final businessId = responseModel.business.id;
         await _secureDataSource.saveBusinessId(businessId);
         WayaNav.toNamed(AddBusinessAccountView.route);
-        // get the business data
-        debugPrint(response.data.toString());
       }
     } catch (e) {
       _logger.e(e);

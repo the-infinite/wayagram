@@ -51,7 +51,7 @@ class AddEventState {
       this.image,
       this.eventImage = const [],
       this.startDateString = '',
-      this.ticketStartDate= '',
+      this.ticketStartDate = '',
       this.ticketEndDate = '',
       this.ticketStartDateString = '',
       this.ticketEndDateString = '',
@@ -68,38 +68,35 @@ class AddEventState {
         link = link ?? TextEditingController(),
         maxCapacity = maxCapacity ?? TextEditingController();
 
-  AddEventState copyWith(
-      {bool? isLoading,
-      TextEditingController? title,
-      TextEditingController? organizer,
-      TextEditingController? description,
-      String? location,
-      TextEditingController? address,
-      TextEditingController? link,
-      String? eventType,
-      TextEditingController? eventFee,
-      TextEditingController? maxCapacity,
-      String? privacyOption,
-      String? startDate,
-      String? startTime,
-      String? endDate,
-      String? endTime,
-      List<DocType>? eventImage,
-      String? startDateString,
-      String? image,
-      String? userId,
-      bool? isEditingMode,
-      String? imageUrl,
-      String? eventId,
-      String? endDateString,
-      String? ticketStartDateString,
-      String? ticketEndDateString,
-      String? ticketStartDate,
-      String? ticketEndDate,
-
-      
-      
-      }) {
+  AddEventState copyWith({
+    bool? isLoading,
+    TextEditingController? title,
+    TextEditingController? organizer,
+    TextEditingController? description,
+    String? location,
+    TextEditingController? address,
+    TextEditingController? link,
+    String? eventType,
+    TextEditingController? eventFee,
+    TextEditingController? maxCapacity,
+    String? privacyOption,
+    String? startDate,
+    String? startTime,
+    String? endDate,
+    String? endTime,
+    List<DocType>? eventImage,
+    String? startDateString,
+    String? image,
+    String? userId,
+    bool? isEditingMode,
+    String? imageUrl,
+    String? eventId,
+    String? endDateString,
+    String? ticketStartDateString,
+    String? ticketEndDateString,
+    String? ticketStartDate,
+    String? ticketEndDate,
+  }) {
     return AddEventState(
         isLoading: isLoading ?? this.isLoading,
         title: title ?? this.title,
@@ -126,9 +123,9 @@ class AddEventState {
         endDateString: endDateString ?? this.endDateString,
         ticketEndDate: ticketEndDate ?? this.ticketEndDate,
         ticketStartDate: ticketStartDate ?? this.ticketStartDate,
-        ticketStartDateString: ticketStartDateString ?? this.ticketStartDateString,
-        ticketEndDateString: ticketEndDateString ?? this.ticketEndDateString
-        );
+        ticketStartDateString:
+            ticketStartDateString ?? this.ticketStartDateString,
+        ticketEndDateString: ticketEndDateString ?? this.ticketEndDateString);
   }
 
   Map<String, dynamic> toJson() {
@@ -184,7 +181,6 @@ class AddEventState {
 
   // add the creation model
   AddEventRequestModel get addEvent {
-    debugPrint("wfefer");
     return AddEventRequestModel(
         title: title.text,
         organizerName: organizer.text,
@@ -211,14 +207,13 @@ class AddEventState {
 
   //>
   UpdateEventRequestModel get updateEvent {
-    debugPrint("wfefer");
     return UpdateEventRequestModel(
       title: title.text,
       location: location.toLowerCase(),
       startDate: startDate,
       endDate: endDate,
       ticketSalesEndDate: ticketEndDate,
-        ticketSalesStartDate: ticketStartDate,
+      ticketSalesStartDate: ticketStartDate,
       description: description.text,
       endTime: endTime,
       startTime: startTime,

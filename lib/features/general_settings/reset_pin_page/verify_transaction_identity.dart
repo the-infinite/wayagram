@@ -216,36 +216,30 @@ class _VerifyIdentityPageState
             callback: !viewModelState.isLoading
                 ? () {
                     final code = ref.watch(verifyAccountProvider).inputCode;
-                    debugPrint('DARLINGTON Code ==> $code');
-
                     if (args == 'change-transaction-pin') {
                       ref
                           .read(verifyAccountProvider.notifier)
                           .verifyChangeTransactionPin(
-                            onSuccess: () => {
-                              WayaNav.replaceNamed('/change-pin-page')
-                            },
-                            code: code,
-                            email: ConversationState.self.email ?? ''
-                          );
+                              onSuccess: () =>
+                                  {WayaNav.replaceNamed('/change-pin-page')},
+                              code: code,
+                              email: ConversationState.self.email ?? '');
 
-                          return;
+                      return;
                     }
-
 
                     if (args == 'change-password') {
                       ref
                           .read(verifyAccountProvider.notifier)
                           .verifyChangePassword(
-                            onSuccess: () => {
-                            WayaNav.replaceNamed(
-                                      '/change-password-gen-set')
-                            },
-                            code: code,
-                            email: ConversationState.self.email ?? ''
-                          );
+                              onSuccess: () => {
+                                    WayaNav.replaceNamed(
+                                        '/change-password-gen-set')
+                                  },
+                              code: code,
+                              email: ConversationState.self.email ?? '');
 
-                          return;
+                      return;
                     }
 
                     ref
@@ -253,10 +247,8 @@ class _VerifyIdentityPageState
                         .verifySetTransactionPin(
                             onSuccess: () {
                               if (args != null) {
-                             
-                                  WayaNav.replaceNamed(TransactionPinView.route,
-                                      arguments: "account-setting");
-                              
+                                WayaNav.replaceNamed(TransactionPinView.route,
+                                    arguments: "account-setting");
 
                                 return;
                               }

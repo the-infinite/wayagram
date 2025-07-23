@@ -59,7 +59,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
     // final dynamic args = ModalRoute.of(context)?.settings.arguments;
-    // debugPrint('DONATION ARGS $args');
 
     // Filter the allDonations
     final filteredAllDonations = WayaUtils.search<AllDonationDocs>(
@@ -95,7 +94,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             ),
             callback: () async {
               await ref.read(donationVmProvider.notifier).getMyKYC();
-              debugPrint('KYc STATUS ==> ${viewModel.kycStatus}');
               if (ConversationState.self.accountType ==
                   UserAccountType.personal) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -184,7 +182,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       donationCount: donation.donationCount,
                       rangeRatio: ratioLeft,
                       onTap: () {
-                        debugPrint('MY RATIO $daysLeft');
                         WayaNav.to(DonationDetails(
                           id: '${donation.id}',
                         ));
@@ -220,116 +217,123 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 color: Theme.of(context).colorScheme.greyColor500),
           ),
           const Gap(10),
-          SizedBox(
-            height: 50.h,
-            child: ListView.builder(
-              itemCount: 1 + viewModel.categories.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                //? For you kini, shey you get?
-                if (index == 0) {
-                  // First
-                  return Row(
-                    children: [
-                      const Gap(6),
-                      WayaButton(
-                        callback: () {
-                          ref
-                              .read(donationVmProvider.notifier)
-                              .getAllDonation(page: 1);
-                        },
-                        border: Border.all(
-                            color: viewModel.selected
-                                    .contains(viewModel.categories[0].value)
-                                ? wayaTheme.colorScheme.primary50
-                                : wayaTheme.colorScheme.greyColor300),
-                        horizontalPadding: 8,
-                        color: viewModel.selected
-                                .contains(viewModel.categories[0].value)
-                            ? wayaTheme.colorScheme.primary50
-                            : wayaTheme.colorScheme.transparent,
-                        radius: 10,
-                        height: 40,
-                        centerWidget: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+          viewModel.categories.isEmpty
+              ? SizedBox()
+              : SizedBox(
+                  height: 50.h,
+                  child: ListView.builder(
+                    itemCount: 1 + viewModel.categories.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      //? For you kini, shey you get?
+                      if (index == 0) {
+                        // First
+                        return Row(
                           children: [
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            Text('All Category',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
+                            const Gap(6),
+                            WayaButton(
+                              callback: () {
+                                ref
+                                    .read(donationVmProvider.notifier)
+                                    .getAllDonation(page: 1);
+                              },
+                              border: Border.all(
                                   color: viewModel.selected.contains(
-                                          viewModel.categories[index].value)
-                                      ? wayaTheme.colorScheme.customPrimary
-                                      : WayaColors.greyColor400,
-                                  fontFamily: WayaConstants.fontFamily,
-                                  // overflow: TextOverflow.ellipsis,
-                                ))
-                          ],
-                        ),
-                      ),
-                      const Gap(6),
-                    ],
-                  );
-                }
-
-                //? For the other user's kini.
-                else {
-                  // Others
-                  final donation = viewModel.categories[index - 1];
-
-                  //? Return this like this.
-                  return Row(
-                    children: [
-                      WayaButton(
-                        callback: () {
-                          ref
-                              .read(donationVmProvider.notifier)
-                              .updateSelectedCategory(donation);
-                          ref
-                              .read(donationVmProvider.notifier)
-                              .fetchDonationBasedOnCategory(donation.label);
-                        },
-                        border: Border.all(
-                            color: viewModel.selected.contains(donation.value)
-                                ? wayaTheme.colorScheme.primary50
-                                : wayaTheme.colorScheme.greyColor300),
-                        horizontalPadding: 8,
-                        color: viewModel.selected.contains(donation.value)
-                            ? wayaTheme.colorScheme.primary50
-                            : wayaTheme.colorScheme.transparent,
-                        radius: 10,
-                        height: 40,
-                        centerWidget: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 2.w,
+                                          viewModel.categories[0].value)
+                                      ? wayaTheme.colorScheme.primary50
+                                      : wayaTheme.colorScheme.greyColor300),
+                              horizontalPadding: 8,
+                              color: viewModel.selected
+                                      .contains(viewModel.categories[0].value)
+                                  ? wayaTheme.colorScheme.primary50
+                                  : wayaTheme.colorScheme.transparent,
+                              radius: 10,
+                              height: 40,
+                              centerWidget: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 2.w,
+                                  ),
+                                  Text('All Category',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: viewModel.selected.contains(
+                                                viewModel
+                                                    .categories[index].value)
+                                            ? wayaTheme
+                                                .colorScheme.customPrimary
+                                            : WayaColors.greyColor400,
+                                        fontFamily: WayaConstants.fontFamily,
+                                        // overflow: TextOverflow.ellipsis,
+                                      ))
+                                ],
+                              ),
                             ),
-                            Text(donation.label,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
+                            const Gap(6),
+                          ],
+                        );
+                      }
+
+                      //? For the other user's kini.
+                      else {
+                        // Others
+                        final donation = viewModel.categories[index - 1];
+
+                        //? Return this like this.
+                        return Row(
+                          children: [
+                            WayaButton(
+                              callback: () {
+                                ref
+                                    .read(donationVmProvider.notifier)
+                                    .updateSelectedCategory(donation);
+                                ref
+                                    .read(donationVmProvider.notifier)
+                                    .fetchDonationBasedOnCategory(
+                                        donation.label);
+                              },
+                              border: Border.all(
                                   color: viewModel.selected
                                           .contains(donation.value)
-                                      ? wayaTheme.colorScheme.customPrimary
-                                      : WayaColors.greyColor400,
-                                  fontFamily: WayaConstants.fontFamily,
-                                ))
+                                      ? wayaTheme.colorScheme.primary50
+                                      : wayaTheme.colorScheme.greyColor300),
+                              horizontalPadding: 8,
+                              color: viewModel.selected.contains(donation.value)
+                                  ? wayaTheme.colorScheme.primary50
+                                  : wayaTheme.colorScheme.transparent,
+                              radius: 10,
+                              height: 40,
+                              centerWidget: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 2.w,
+                                  ),
+                                  Text(donation.label,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: viewModel.selected
+                                                .contains(donation.value)
+                                            ? wayaTheme
+                                                .colorScheme.customPrimary
+                                            : WayaColors.greyColor400,
+                                        fontFamily: WayaConstants.fontFamily,
+                                      ))
+                                ],
+                              ),
+                            ),
+                            const Gap(6),
                           ],
-                        ),
-                      ),
-                      const Gap(6),
-                    ],
-                  );
-                }
-              },
-            ),
-          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
           const Gap(10),
           viewModel.myDonationDocs.isEmpty
               ? DonationEmptyState(

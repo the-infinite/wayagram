@@ -106,7 +106,6 @@ class LoginVm extends StateNotifier<LoginState> {
       ],
     );
 
-    debugPrint(credential.identityToken.toString());
     oauthSignIn(token: credential.identityToken.toString(), authType: 'APPLE');
   }
 
@@ -140,7 +139,6 @@ class LoginVm extends StateNotifier<LoginState> {
       final response = await _authRepository.oauth(token, authType);
 
       if (response.success) {
-        debugPrint(response.data.toString());
         await getUserInfo(data: response.data);
       } else {
         if (response.data['responseCode'] == 404) {
@@ -201,10 +199,7 @@ class LoginVm extends StateNotifier<LoginState> {
         remoteUserData.data?.token == null) {
       final email =
           Uri.encodeComponent(remoteUserData.data?.userdata?.user?.email ?? '');
-      WayaNav.toNamed(
-          WayaAppRoutes.get2FaScreen(
-              email),
-          arguments: "login");
+      WayaNav.toNamed(WayaAppRoutes.get2FaScreen(email), arguments: "login");
       WayaPreloaderController.instance.hide();
       return;
     }

@@ -45,9 +45,6 @@ class _WayaSocialNotificationsScreenState
     final state = ref.watch(socialNotificationProvider);
     final currentNotifications = state.currentNotifications();
 
-    //? Get the filters.
-    debugPrint("Filter: ${state.filters}");
-
     // Build the current screen.
     return WayaScaffold(
       isLoading: false,

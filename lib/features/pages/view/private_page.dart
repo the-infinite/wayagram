@@ -64,11 +64,11 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
               },
               child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
-            onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(
+            onTap: () => SharePlus.instance.share(ShareParams(
+              text: WayaValueHelper.getShareableUrl(
                   WayaAppRoutes.getPageDetailsPage(widget.page.id)),
               subject: 'Share ${widget.page.name}',
-            ),
+            )),
             child: WayaAssets.icons.genSet.share.svg(
               fit: BoxFit.none,
             ),
@@ -320,7 +320,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
     );
   }
 
-  actionType(txt, txt2, {onPressed}) {
+  Widget actionType(String txt, String txt2, {Function()? onPressed}) {
     final wayaTheme = Theme.of(context);
     return InkWell(
       splashFactory: NoSplash.splashFactory,

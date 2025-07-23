@@ -74,7 +74,6 @@ class _DonationsState extends ConsumerState<Donations>
         child: WayaButton(
           callback: () async {
             await ref.read(donationVmProvider.notifier).getMyKYC();
-            debugPrint('KYc STATUS ==> ${viewModel.kycStatus}');
             if (ConversationState.self.accountType ==
                 UserAccountType.personal) {
               WidgetsBinding.instance.addPostFrameCallback((_) {

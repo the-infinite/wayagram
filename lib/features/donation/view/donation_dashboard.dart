@@ -53,7 +53,6 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
     final walletViewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
-    debugPrint('DAYSLEFT Is DASHBOARD ===>> ${args['daysLeft']}');
     return WayaScaffold(
       title: "Donation Dashboard",
       isLoading: viewModel.isLoading,
@@ -249,7 +248,12 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
                       border: Border.all(
                           width: 1, color: wayaTheme.colorScheme.primary500),
                       callback: () {
-                        Share.share('${args['url']}', subject: 'Share Options');
+                        SharePlus.instance.share(
+                          ShareParams(
+                            title: '${args['url']}',
+                            subject: 'Share Options',
+                          ),
+                        );
                       },
                       color: wayaTheme.colorScheme.white,
                     ),
@@ -313,7 +317,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
     );
   }
 
-  _detailCard(number, name, color) {
+  Widget _detailCard(String number, String name, Color color) {
     return Container(
       width: 122.w,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
@@ -349,7 +353,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
     );
   }
 
-  _reviewText(title, subTitle) {
+  Widget _reviewText(String title, String? subTitle) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -361,7 +365,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
               color: Theme.of(context).colorScheme.greyColor500),
         ),
         Text(
-          subTitle,
+          subTitle ?? '',
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.w500,

@@ -24,7 +24,8 @@ class PaymentActivity extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PaymentActivityState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PaymentActivityState();
 }
 
 class _PaymentActivityState extends ConsumerState<PaymentActivity> {
@@ -50,9 +51,11 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
             alignment: Alignment.center,
             width: 102.w,
             height: 36.h,
-            padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+            padding:
+                const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: WayaColors.greyColor300)),
             child: DropdownButton(
                 underline: Container(),
                 borderRadius: BorderRadius.circular(8),
@@ -96,18 +99,29 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                 emptyState: ActivityLogsEmptyState(
                   text: 'You don\'t have payment activity yet',
                 ),
-                fetchData: ref.read(activityLogsVmProvider.notifier).getPaymentActivity,
+                fetchData: ref
+                    .read(activityLogsVmProvider.notifier)
+                    .getPaymentActivity,
                 result: (data, s) {
-                  for (int i = 0; i < viewModel.paymentActivityDocs.length; i++) {
-                    if (!dates.contains(viewModel.paymentActivityDocs[i].createdAt.toString().split('T')[0])) {
-                      dates.add(viewModel.paymentActivityDocs[i].createdAt.toString().split('T')[0]);
-                      viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs[i]);
+                  for (int i = 0;
+                      i < viewModel.paymentActivityDocs.length;
+                      i++) {
+                    if (!dates.contains(viewModel
+                        .paymentActivityDocs[i].createdAt
+                        .toString()
+                        .split('T')[0])) {
+                      dates.add(viewModel.paymentActivityDocs[i].createdAt
+                          .toString()
+                          .split('T')[0]);
+                      viewModel.paymentActivityDocs
+                          .add(viewModel.paymentActivityDocs[i]);
                     }
                   }
                   return SingleChildScrollView(
                     child: viewModel.paymentActivityDocs.isEmpty
                         ? ActivityLogsEmptyState(
-                            text: 'You don\'t have payment activity for this week yet',
+                            text:
+                                'You don\'t have payment activity for this week yet',
                           )
                         : ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -119,7 +133,13 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.paymentActivityDocs[i].createdAt.toString().split('T')[0])}',
+                                      ref
+                                          .read(
+                                              createPollVotingProvider.notifier)
+                                          .formatDt(viewModel
+                                              .paymentActivityDocs[i].createdAt
+                                              .toString()
+                                              .split('T')[0]),
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -130,16 +150,26 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                                   ListView.builder(
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
-                                    padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.paymentActivityDocs.length,
+                                    padding:
+                                        EdgeInsets.only(bottom: 20.h, top: 0),
+                                    itemCount:
+                                        viewModel.paymentActivityDocs.length,
                                     itemBuilder: (context, index) {
-                                      final paymentActivity = viewModel.paymentActivityDocs[index];
-                                      String dateTimeString = "${paymentActivity.createdAt}";
-                                      DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if (viewModel.paymentActivityDocs[index].createdAt.toString().split('T')[0] ==
+                                      final paymentActivity =
+                                          viewModel.paymentActivityDocs[index];
+                                      String dateTimeString =
+                                          "${paymentActivity.createdAt}";
+                                      DateTime dateTime =
+                                          DateTime.parse(dateTimeString)
+                                              .toLocal();
+                                      if (viewModel.paymentActivityDocs[index]
+                                              .createdAt
+                                              .toString()
+                                              .split('T')[0] ==
                                           dates[i]) {
                                         return ActivityCardWidget(
-                                          title: '${paymentActivity.description}',
+                                          title:
+                                              '${paymentActivity.description}',
                                           subTitle:
                                               '${ref.read(createPollVotingProvider.notifier).formatDt2(paymentActivity.createdAt)}, '
                                               '${DateFormat.jm().format(dateTime)}',
@@ -160,10 +190,9 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
     );
   }
 
-  sortList(s) {
+  void sortList(String s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.paymentActivityDocs = [];
-    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if (s == 'all time') {
         viewModel.paymentActivityDocs = viewModel.paymentActivityDocs1;
@@ -175,47 +204,58 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
         List<String> allWeekDays = [];
 
         for (int i = 0; i < w; i++) {
-          String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
+          String a =
+              DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
-          String a = DateTime.now().subtract(Duration(days: i + 1)).toString().split(' ')[0];
+          String a = DateTime.now()
+              .subtract(Duration(days: i + 1))
+              .toString()
+              .split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('??? $b');
         }
 
-        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.paymentActivityDocs1.length; i++) {
-          String week = viewModel.paymentActivityDocs1[i].createdAt.toString().split('T')[0];
+          String week = viewModel.paymentActivityDocs1[i].createdAt
+              .toString()
+              .split('T')[0];
           if (allWeekDays.contains(week.split('-')[2])) {
-            viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs1[i]);
+            viewModel.paymentActivityDocs
+                .add(viewModel.paymentActivityDocs1[i]);
           }
         }
-        debugPrint('???? ${viewModel.paymentActivityDocs.length}');
       } else if (s == 'this month') {
         String m = DateTime.now().month.toString().padLeft(2, '0');
         for (int i = 0; i < viewModel.paymentActivityDocs1.length; i++) {
-          String month = viewModel.paymentActivityDocs1[i].createdAt.toString().split('T')[0];
+          String month = viewModel.paymentActivityDocs1[i].createdAt
+              .toString()
+              .split('T')[0];
           if (m == month.split('-')[1]) {
-            viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs1[i]);
+            viewModel.paymentActivityDocs
+                .add(viewModel.paymentActivityDocs1[i]);
           }
         }
       } else if (s == 'this year') {
         String y = DateTime.now().year.toString();
         for (int i = 0; i < viewModel.paymentActivityDocs1.length; i++) {
-          String month = viewModel.paymentActivityDocs1[i].createdAt.toString().split('T')[0];
+          String month = viewModel.paymentActivityDocs1[i].createdAt
+              .toString()
+              .split('T')[0];
           if (y == month.split('-')[0]) {
-            viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs1[i]);
+            viewModel.paymentActivityDocs
+                .add(viewModel.paymentActivityDocs1[i]);
           }
         }
       } else {
         for (int i = 0; i < viewModel.paymentActivityDocs1.length; i++) {
-          if (s.toString().trim() == viewModel.paymentActivityDocs1[i].createdAt.toString()) {
-            viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs1[i]);
+          if (s.toString().trim() ==
+              viewModel.paymentActivityDocs1[i].createdAt.toString()) {
+            viewModel.paymentActivityDocs
+                .add(viewModel.paymentActivityDocs1[i]);
           }
         }
       }

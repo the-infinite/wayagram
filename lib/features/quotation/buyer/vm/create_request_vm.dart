@@ -80,25 +80,30 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 
   List<Select> restructuredBidTime() {
     return bidTimes.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.bidTime);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.bidTime);
     }).toList();
   }
 
   List<Select> restructuredState() {
     return states.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.state);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.state);
     }).toList();
   }
 
   List<Select> restructuredCondition() {
     return productConditions.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.productCondition);
+      return Select(
+          value: entries.value.id.toString(),
+          label: entries.value.productCondition);
     }).toList();
   }
 
   List<Select> restructuredLga() {
     return lgas.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.lga);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.lga);
     }).toList();
   }
 
@@ -118,7 +123,8 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
+        state =
+            state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       debugPrint(error.toString());
@@ -170,10 +176,12 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     }
   }
 
-  Future<BuyRequestModel?> createBuyerRequest(CreateBuyerRequest createBuyerRequest) async {
+  Future<BuyRequestModel?> createBuyerRequest(
+      CreateBuyerRequest createBuyerRequest) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _quotationRepository.createBuyerRequest(createBuyerRequest);
+      final response =
+          await _quotationRepository.createBuyerRequest(createBuyerRequest);
 
       //? Since this can be fine.
       if (response.success) {
@@ -197,17 +205,18 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     final response = await _quotationRepository.getBuyerRequest();
     state = state.copyWith(isLoading: false);
     if (response.success) {
-      BuyerRequestModel responseModel = BuyerRequestModel.fromJson(response.data);
+      BuyerRequestModel responseModel =
+          BuyerRequestModel.fromJson(response.data);
 
       state = state.copyWith(buyerRequest: responseModel.data?.buyerRequests);
-      //debugPrint(state.productDescription);
     } else {
       state = state.copyWith(isLoading: false);
     }
   }
 }
 
-final createRequestProvider = StateNotifierProvider<CreateRequestVm, CreateRequestState>(
+final createRequestProvider =
+    StateNotifierProvider<CreateRequestVm, CreateRequestState>(
   (ref) {
     return CreateRequestVm();
   },

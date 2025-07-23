@@ -109,12 +109,15 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                           context: context,
                                           onTap: () {
                                             WayaNav.goBack();
-                                            Share.share(
-                                              WayaValueHelper.getShareableUrl(
-                                                  WayaAppRoutes
-                                                      .getPollDetailsPage(
-                                                          '${poll.id}')),
-                                              subject: 'Share Poll',
+                                            SharePlus.instance.share(
+                                              ShareParams(
+                                                text: WayaValueHelper
+                                                    .getShareableUrl(
+                                                        WayaAppRoutes
+                                                            .getPollDetailsPage(
+                                                                '${poll.id}')),
+                                                subject: 'Share Poll',
+                                              ),
                                             );
                                           },
                                           asset:
@@ -259,8 +262,16 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
     );
   }
 
-  presImage(img, name, ctx, chk, voteFee, choiceId, pollId, candidateName,
-      votingLink) {
+  Widget presImage(
+      String img,
+      String name,
+      BuildContext ctx,
+      bool chk,
+      String voteFee,
+      String choiceId,
+      String pollId,
+      String candidateName,
+      String votingLink) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -383,8 +394,20 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
     );
   }
 
-  choiceStatistics(img, name, ctx, chk, voteFee, choiceId, pollId,
-      candidateName, votingLink, votePercentage, voteCount, dateCheck, onTap) {
+  Widget choiceStatistics(
+      String? img,
+      String name,
+      BuildContext ctx,
+      bool chk,
+      String voteFee,
+      String choiceId,
+      String pollId,
+      String candidateName,
+      String votingLink,
+      String votePercentage,
+      String voteCount,
+      bool dateCheck,
+      onTap) {
     return voteCount == '0'
         ? Padding(
             padding: const EdgeInsets.only(bottom: 8),
@@ -393,7 +416,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               splashFactory: NoSplash.splashFactory,
               onTap: onTap,
               //     (){
-              //   debugPrint('DIALA CHECKING DATE $dateCheck');
               //   WayaUtils.showModalSheet(
               //     ctx,
               //     child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
@@ -418,7 +440,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           chk && img != null
                               ? Container()
                               : WayaImage(
-                                  imageUrl: img,
+                                  imageUrl: img!,
                                   height: 44.h,
                                   width: 59.w,
                                   radius: BorderRadius.circular(4),
@@ -495,7 +517,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                               chk && img != null
                                   ? Container()
                                   : WayaImage(
-                                      imageUrl: img,
+                                      imageUrl: img!,
                                       height: 44.h,
                                       width: 59.w,
                                       radius: BorderRadius.circular(4),
@@ -556,21 +578,21 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
           );
   }
 
-  choiceStatisticsSecond(
-      chkImg,
-      img,
-      name,
-      ctx,
-      chk,
-      voteFee,
-      choiceId,
-      pollId,
-      candidateName,
-      votingLink,
-      votePercentage,
-      voteCount,
-      dateCheck,
-      onTap,
+  Widget choiceStatisticsSecond(
+      bool chkImg,
+      String img,
+      String name,
+      BuildContext ctx,
+      bool chk,
+      String voteFee,
+      String choiceId,
+      String pollId,
+      String candidateName,
+      String votingLink,
+      String votePercentage,
+      String voteCount,
+      bool dateCheck,
+      Function()? onTap,
       double range) {
     final wayaTheme = Theme.of(context);
     return SizedBox(

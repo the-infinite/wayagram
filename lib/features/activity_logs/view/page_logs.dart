@@ -15,12 +15,11 @@ import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
-
 import '../widget/activity_card_widget.dart';
 
 class PageLogs extends ConsumerStatefulWidget {
   static const route = '/pageLogs';
-  const PageLogs ({
+  const PageLogs({
     super.key,
   });
 
@@ -28,7 +27,7 @@ class PageLogs extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PageLogsState();
 }
 
-class _PageLogsState extends ConsumerState<PageLogs > {
+class _PageLogsState extends ConsumerState<PageLogs> {
   List<String> dates = [];
 
   String selTransact = 'All Time';
@@ -51,9 +50,11 @@ class _PageLogsState extends ConsumerState<PageLogs > {
             alignment: Alignment.center,
             width: 102.w,
             height: 36.h,
-            padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+            padding:
+                const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: WayaColors.greyColor300)),
             child: DropdownButton(
                 underline: Container(),
                 borderRadius: BorderRadius.circular(8),
@@ -97,63 +98,77 @@ class _PageLogsState extends ConsumerState<PageLogs > {
                 emptyState: ActivityLogsEmptyState(
                   text: 'You don\'t have Pages yet',
                 ),
-                fetchData: ref.read(activityLogsVmProvider.notifier).getPageLogs,
+                fetchData:
+                    ref.read(activityLogsVmProvider.notifier).getPageLogs,
                 result: (data, s) {
                   for (int i = 0; i < viewModel.pageDocs.length; i++) {
-                    if (!dates.contains(viewModel.pageDocs[i].createdAt.toString().split('T')[0])) {
-                      dates.add(viewModel.pageDocs[i].createdAt.toString().split('T')[0]);
+                    if (!dates.contains(viewModel.pageDocs[i].createdAt
+                        .toString()
+                        .split('T')[0])) {
+                      dates.add(viewModel.pageDocs[i].createdAt
+                          .toString()
+                          .split('T')[0]);
                       viewModel.pageDocs.add(viewModel.pageDocs[i]);
                     }
                   }
                   return SingleChildScrollView(
                     child: viewModel.pageDocs.isEmpty
                         ? ActivityLogsEmptyState(
-                      text: 'You don\'t have Page for this week yet',
-                    )
+                            text: 'You don\'t have Page for this week yet',
+                          )
                         : ListView.builder(
-                        padding: EdgeInsets.only(bottom: 80.h, top: 0),
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: dates.length,
-                        itemBuilder: (context, i) {
-
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
-                                  //'${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pageDocs[i].createdAt.toString().split('T')[0])}',
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontFamily: WayaConstants.fontFamily,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  )),
-                              Gap(10),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const ClampingScrollPhysics(),
-                                padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                itemCount: viewModel.pageDocs.length,
-                                itemBuilder: (context, index) {
-                                  final page = viewModel.pageDocs[index];
-                                  String dateTimeString = "${page.createdAt}";
-                                  DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                  if (viewModel.pageDocs[index].createdAt.toString().split('T')[0] == dates[i]) {
-                                    return ActivityCardWidget(
-                                      title: '${page.description}',
-                                      subTitle:
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt2(page.createdAt)}, '
-                                          '${DateFormat.jm().format(dateTime)}',
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                },
-                              )
-                            ],
-                          );
-                        }),
+                            padding: EdgeInsets.only(bottom: 80.h, top: 0),
+                            physics: const ClampingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: dates.length,
+                            itemBuilder: (context, i) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      ref
+                                          .read(
+                                              createPollVotingProvider.notifier)
+                                          .formatDt(dates[i]),
+                                      //'${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pageDocs[i].createdAt.toString().split('T')[0])}',
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontFamily: WayaConstants.fontFamily,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
+                                      )),
+                                  Gap(10),
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const ClampingScrollPhysics(),
+                                    padding:
+                                        EdgeInsets.only(bottom: 20.h, top: 0),
+                                    itemCount: viewModel.pageDocs.length,
+                                    itemBuilder: (context, index) {
+                                      final page = viewModel.pageDocs[index];
+                                      String dateTimeString =
+                                          "${page.createdAt}";
+                                      DateTime dateTime =
+                                          DateTime.parse(dateTimeString)
+                                              .toLocal();
+                                      if (viewModel.pageDocs[index].createdAt
+                                              .toString()
+                                              .split('T')[0] ==
+                                          dates[i]) {
+                                        return ActivityCardWidget(
+                                          title: '${page.description}',
+                                          subTitle:
+                                              '${ref.read(createPollVotingProvider.notifier).formatDt2(page.createdAt)}, '
+                                              '${DateFormat.jm().format(dateTime)}',
+                                        );
+                                      } else {
+                                        return Container();
+                                      }
+                                    },
+                                  )
+                                ],
+                              );
+                            }),
                   );
                 }),
           ),
@@ -162,10 +177,9 @@ class _PageLogsState extends ConsumerState<PageLogs > {
     );
   }
 
-  sortList(s) {
+  void sortList(String s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.pageDocs = [];
-    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if (s == 'all time') {
         viewModel.pageDocs = viewModel.pageDocs1;
@@ -177,31 +191,33 @@ class _PageLogsState extends ConsumerState<PageLogs > {
         List<String> allWeekDays = [];
 
         for (int i = 0; i < w; i++) {
-          String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
+          String a =
+              DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
-          String a = DateTime.now().subtract(Duration(days: i + 1)).toString().split(' ')[0];
+          String a = DateTime.now()
+              .subtract(Duration(days: i + 1))
+              .toString()
+              .split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('?? $b');
         }
 
-        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.pageDocs1.length; i++) {
-          String week = viewModel.pageDocs1[i].createdAt.toString().split('T')[0];
+          String week =
+              viewModel.pageDocs1[i].createdAt.toString().split('T')[0];
           if (allWeekDays.contains(week.split('-')[2])) {
             viewModel.pageDocs.add(viewModel.pageDocs1[i]);
           }
         }
-        debugPrint('??? ${viewModel.pageDocs.length}');
       } else if (s == 'this month') {
         String m = DateTime.now().month.toString().padLeft(2, '0');
         for (int i = 0; i < viewModel.pageDocs1.length; i++) {
-          String month = viewModel.pageDocs1[i].createdAt.toString().split('T')[0];
+          String month =
+              viewModel.pageDocs1[i].createdAt.toString().split('T')[0];
           if (m == month.split('-')[1]) {
             viewModel.pageDocs.add(viewModel.pageDocs1[i]);
           }
@@ -209,14 +225,16 @@ class _PageLogsState extends ConsumerState<PageLogs > {
       } else if (s == 'this year') {
         String y = DateTime.now().year.toString();
         for (int i = 0; i < viewModel.pageDocs1.length; i++) {
-          String month = viewModel.pageDocs1[i].createdAt.toString().split('T')[0];
+          String month =
+              viewModel.pageDocs1[i].createdAt.toString().split('T')[0];
           if (y == month.split('-')[0]) {
             viewModel.pageDocs.add(viewModel.pageDocs1[i]);
           }
         }
       } else {
         for (int i = 0; i < viewModel.pageDocs1.length; i++) {
-          if (s.toString().trim() == viewModel.pageDocs1[i].createdAt.toString()) {
+          if (s.toString().trim() ==
+              viewModel.pageDocs1[i].createdAt.toString()) {
             viewModel.pageDocs.add(viewModel.pageDocs1[i]);
           }
         }

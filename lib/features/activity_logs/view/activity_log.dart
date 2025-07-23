@@ -696,7 +696,10 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                            '${ref.read(createPollVotingProvider.notifier).formatDt(dates[i])}',
+                                            ref
+                                                .read(createPollVotingProvider
+                                                    .notifier)
+                                                .formatDt(dates[i]),
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                               fontFamily:
@@ -1786,7 +1789,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
         }));
   }
 
-  sortList(s, log1, log2) {
+  void sortList(String s, log1, log2) {
     //final viewModel = ref.watch(activityLogsVmProvider);
     log1 = [];
     setState(() {

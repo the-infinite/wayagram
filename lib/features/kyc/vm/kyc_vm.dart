@@ -34,7 +34,6 @@ class KycVm extends StateNotifier<KycState> {
     List<DocType> e = List.from(state.kycImage);
     e = e.where((i) => i.type != 'kyc-image').toList();
     state = state.copyWith(kycImage: e);
-    debugPrint("???");
     debugPrint(state.toString());
   }
 
@@ -58,8 +57,6 @@ class KycVm extends StateNotifier<KycState> {
 
       final response = await _kycRepository.getMyKYC(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         KycModel responseModel = KycModel.fromJson(response.data);

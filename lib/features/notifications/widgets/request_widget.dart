@@ -6,7 +6,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
@@ -32,8 +31,6 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   Future<void> _getStatus() async {
     //? If this is a follow request.
     if (widget.data.messageType == NotificationMessageType.followRequest) {
-      debugPrint(
-          "Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
       final follow = await myFollowProvider.getFollowStatus(widget.data.id);
 
       if (mounted) {

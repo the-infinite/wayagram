@@ -100,6 +100,7 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
         state = state.copyWith(listShop: getContestsSelect(list));
       }
     } catch (e) {
+      debugPrint(e.toString());
     } finally {}
   }
 

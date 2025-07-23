@@ -176,7 +176,7 @@ class _PollReviewState extends ConsumerState<PollReview> {
         ));
   }
 
-  pollCard(number, name) {
+  Widget pollCard(String number, String name) {
     return Expanded(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.25, // 25% of screen width

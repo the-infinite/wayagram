@@ -23,7 +23,6 @@ class _MuteGroupState extends ConsumerState<MuteGroup>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
-    debugPrint('MY Seeting Group ID ==>> ${args['groupId']}');
     return WayaScaffold(
       backgroundColor: Theme.of(context).colorScheme.greyColor50,
       isLoading: viewModel.isLoading,
@@ -53,7 +52,8 @@ class _MuteGroupState extends ConsumerState<MuteGroup>
     );
   }
 
-  Widget accessType(title, subTitle, chk, onPressed) {
+  Widget accessType(
+      String title, String? subTitle, bool chk, Function(bool)? onPressed) {
     final wayaTheme = Theme.of(context);
     return Container(
       height: 88.h,
@@ -65,7 +65,7 @@ class _MuteGroupState extends ConsumerState<MuteGroup>
         contentPadding: EdgeInsets.zero,
         title: Text(title, style: wayaTheme.textTheme.titleSmall),
         subtitle: Text(
-          subTitle,
+          subTitle ?? '',
           style: TextStyle().wayaCopyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,

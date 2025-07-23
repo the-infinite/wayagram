@@ -214,7 +214,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> fetchSavedPosts(userId) async {
+  Future<void> fetchSavedPosts(String userId) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
@@ -247,7 +247,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> getAllPosts(id) async {
+  Future<void> getAllPosts(String id) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
@@ -434,8 +434,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> createPost(ctx, content, postType, List<XFile> images) async {
-  
+  Future<void> createPost(
+      BuildContext ctx, content, postType, List<XFile> images) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
@@ -445,7 +445,7 @@ class PageVm extends StateNotifier<PageState> {
       MediaUploadModel mediaUploadModel =
           MediaUploadModel.fromJson(uploadImageResponse.data);
       urls.add(UploadedImage(
-          url: mediaUploadModel.data?.url ??'',
+          url: mediaUploadModel.data?.url ?? '',
           file: image.path,
           fileName: image.name));
       publicUrl.add(mediaUploadModel.data?.publicUrl ?? '');
@@ -558,7 +558,7 @@ class PageVm extends StateNotifier<PageState> {
     return null;
   }
 
-  Future<void> createPagePost(ctx, String content, String postType,
+  Future<void> createPagePost(BuildContext ctx, String content, String postType,
       List<XFile> images, String pageId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
@@ -689,7 +689,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> deletePost(ctx,
+  Future<void> deletePost(BuildContext ctx,
       {required String postId,
       required String userId,
       bool notify = true}) async {
@@ -720,7 +720,7 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   Future<void> deletePage(
-    ctx, {
+    BuildContext ctx, {
     required String pageId,
   }) async {
     try {
@@ -749,7 +749,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> sharePost(ctx, {required String postId}) async {
+  Future<void> sharePost(BuildContext ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.sharePost(postId);
@@ -769,7 +769,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<bool> bookmarkPost(ctx, {required String postId}) async {
+  Future<bool> bookmarkPost(BuildContext ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.bookMarkPost(postId);
@@ -792,7 +792,7 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<bool> likePost(ctx,
+  Future<bool> likePost(BuildContext ctx,
       {required String postId, required String userId}) async {
     try {
       //state = state.copyWith(isLoading: true);
@@ -817,7 +817,7 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<bool> unlikePost(ctx, {required String postId}) async {
+  Future<bool> unlikePost(BuildContext ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.unlikePost(postId);
@@ -839,8 +839,8 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<void> editPost(ctx, content, postType, List<XFile> images, postId,
-      List<String>? prevouslySelectedMedia) async {
+  Future<void> editPost(BuildContext ctx, content, postType, List<XFile> images,
+      postId, List<String>? prevouslySelectedMedia) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
@@ -940,7 +940,7 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> getPageMember(pageId) async {
+  Future<void> getPageMember(String pageId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.getPageMembers(pageId);
@@ -1071,7 +1071,8 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> acceptPageInvitation(ctx, String invitationId) async {
+  Future<void> acceptPageInvitation(
+      BuildContext ctx, String invitationId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.acceptPageInvitation(invitationId);
@@ -1098,7 +1099,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> rejectPageInvitation(ctx, String invitationId) async {
+  Future<void> rejectPageInvitation(
+      BuildContext ctx, String invitationId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.rejectPageInvitation(invitationId);

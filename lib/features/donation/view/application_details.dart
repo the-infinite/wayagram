@@ -222,7 +222,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
     );
   }
 
-  _reviewText(title, subTitle) {
+  Widget _reviewText(String title, String? subTitle) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -234,7 +234,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
               color: Theme.of(context).colorScheme.greyColor500),
         ),
         Text(
-          subTitle,
+          subTitle ?? '',
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,

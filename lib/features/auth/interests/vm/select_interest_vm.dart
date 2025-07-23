@@ -106,8 +106,6 @@ class SelectInterestVm extends StateNotifier<States> {
             prevSelected:
                 responseModel.data.map((el) => el.interest.id).toList(),
             selected: responseModel.data.map((el) => el.interest.id).toList());
-
-        debugPrint(response.data.toString());
       }
     } catch (error) {
       debugPrint(error.toString());

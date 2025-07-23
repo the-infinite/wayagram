@@ -13,7 +13,6 @@ class DioInterceptor extends Interceptor {
       RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await secureDataSource.getToken();
     options.headers['Authorization'] = 'Bearer $token';
-    debugPrint('options: $options');
     return handler.next(options);
   }
 

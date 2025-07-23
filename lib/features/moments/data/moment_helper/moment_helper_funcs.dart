@@ -14,7 +14,7 @@ class MomentHelper {
     );
   }
 
-  static _parseFontWeight(String fontWeight) {
+  static FontWeight _parseFontWeight(String fontWeight) {
     switch (fontWeight) {
       case 'w100':
         return FontWeight.w100;

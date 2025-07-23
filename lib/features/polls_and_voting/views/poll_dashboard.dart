@@ -42,7 +42,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
     });
   }
 
-  void _startCountdown(context) {
+  void _startCountdown(BuildContext context) {
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
     countdownTimer?.cancel(); // Cancel existing timer if any
     final pollEndTime = DateTime.parse('${args['endDate']}').toLocal();
@@ -345,7 +345,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
         ));
   }
 
-  statisticCard(vote, position, name, color, positionColor) {
+  Widget statisticCard(String vote, String position, String name, Color color,
+      Color positionColor) {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       height: 32.h,
@@ -389,7 +390,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
     );
   }
 
-  pollCard(number, name) {
+  Widget pollCard(String number, String name) {
     return Container(
       width: 122.w,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),

@@ -27,7 +27,7 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/contest-payout/get-payouts?contestId=$contestId');
   }
 
-  Future<WayaRequestResponse> createContest(payLoad) {
+  Future<WayaRequestResponse> createContest(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/contests/create', payLoad, formdata: false);
   }
 
@@ -36,7 +36,7 @@ class ContestRepo extends BaseRepository {
         formdata: false);
   }
 
-  Future<WayaRequestResponse> registerContest(payLoad) {
+  Future<WayaRequestResponse> registerContest(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/application/', payLoad, formdata: false);
   }
 
@@ -75,22 +75,22 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/profile/votes/$userId');
   }
 
-  Future<WayaRequestResponse> likeContest(payLoad) {
+  Future<WayaRequestResponse> likeContest(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/contestInteraction/like', payLoad,
         formdata: false);
   }
 
-  Future<WayaRequestResponse> followContest(payLoad) {
+  Future<WayaRequestResponse> followContest(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/contestInteraction/follow', payLoad,
         formdata: false);
   }
 
-  Future<WayaRequestResponse> shareContest(payLoad) {
+  Future<WayaRequestResponse> shareContest(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/contestInteraction/share', payLoad,
         formdata: false);
   }
 
-  Future<WayaRequestResponse> createProfile(payLoad) {
+  Future<WayaRequestResponse> createProfile(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/profile/create', payLoad, formdata: false);
   }
 
@@ -98,11 +98,11 @@ class ContestRepo extends BaseRepository {
     return put('$serviceUrl2/profile/profiles/$id', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> createContestPost(payLoad) {
+  Future<WayaRequestResponse> createContestPost(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/gallery/upload', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> voteContestant(payLoad) {
+  Future<WayaRequestResponse> voteContestant(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/vote', payLoad, formdata: false);
   }
 
@@ -135,7 +135,7 @@ class ContestRepo extends BaseRepository {
         formdata: false);
   }
 
-  Future<WayaRequestResponse> payForPaidContest(payLoad) {
+  Future<WayaRequestResponse> payForPaidContest(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/profile/pay-for-contest', payLoad,
         formdata: false);
   }
@@ -145,19 +145,21 @@ class ContestRepo extends BaseRepository {
         formdata: false);
   } */
 
-  Future<WayaRequestResponse> startStage(payLoad) {
+  Future<WayaRequestResponse> startStage(Map<String, dynamic>? payLoad) {
     return patch('$serviceUrl2/contests/start-stage', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> qualifyDisqualify(payLoad) {
+  Future<WayaRequestResponse> qualifyDisqualify(Map<String, dynamic>? payLoad) {
     return put('$serviceUrl2/profile/status', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> acceptFreeStageContest(payLoad) {
+  Future<WayaRequestResponse> acceptFreeStageContest(
+      Map<String, dynamic>? payLoad) {
     return patch('$serviceUrl2/profile/accept-stage', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> acceptPaidStageContest(payLoad) {
+  Future<WayaRequestResponse> acceptPaidStageContest(
+      Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/profile/pay-for-satge', payLoad, formdata: false);
   }
 

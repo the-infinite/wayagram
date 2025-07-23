@@ -61,7 +61,6 @@ class _PublicPageState extends ConsumerState<PublicPage>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      debugPrint('DIALA PAGEID ${widget.id}');
       if (wayaPageCache.getCachedData(widget.id) != null) return;
 
       final result = await myPageNotifier.getSinglePage(widget.id);
@@ -113,11 +112,11 @@ class _PublicPageState extends ConsumerState<PublicPage>
               },
               child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
-            onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(
+            onTap: () => SharePlus.instance.share(ShareParams(
+              text: WayaValueHelper.getShareableUrl(
                   WayaAppRoutes.getPageDetailsPage(widget.id)),
               subject: 'Share ${page.name}',
-            ),
+            )),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
           PopupMenuButton(
@@ -149,11 +148,11 @@ class _PublicPageState extends ConsumerState<PublicPage>
                   ),
                 PopupMenuItem<int>(
                   value: 1,
-                  onTap: () => Share.share(
-                    WayaValueHelper.getShareableUrl(
+                  onTap: () => SharePlus.instance.share(ShareParams(
+                    text: WayaValueHelper.getShareableUrl(
                         WayaAppRoutes.getPageDetailsPage(widget.id)),
                     subject: 'Share ${page.name}',
-                  ),
+                  )),
                   child: WayaActionNav(
                     context: context,
                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
@@ -432,10 +431,10 @@ class _PublicPageState extends ConsumerState<PublicPage>
     );
   }
 
-  actionType2(
-    txt,
-    txt2, {
-    onPressed,
+  Widget actionType2(
+    String txt,
+    String txt2, {
+    Function()? onPressed,
   }) {
     final wayaTheme = Theme.of(context);
     return InkWell(

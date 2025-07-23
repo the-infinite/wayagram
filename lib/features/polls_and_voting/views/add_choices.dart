@@ -64,7 +64,6 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                       );
                     } else if (!_formKey.currentState!.validate()) {
                       WayaNav.toNamed("/poll-summary");
-                      debugPrint('CREATE POLL');
                     } else {
                       WayaNav.toNamed("/poll-summary");
                     }
@@ -335,7 +334,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
   }
 
   Widget createPoll(
-    ctx,
+    BuildContext ctx,
   ) {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(

@@ -214,7 +214,7 @@ class WayaNav<T> {
 
   //close the whole app
   // use case, when the app is opened with link
-  static closeApp() {
+  static void closeApp() {
     if (Platform.isAndroid) {
       SystemNavigator.pop();
     } else if (Platform.isIOS) {

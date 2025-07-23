@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -134,7 +133,6 @@ class ShopRepository extends BaseRepository {
 
     if (productId != null) payload['productId'] = productId;
     if (shopId != null) payload['shopId'] = shopId;
-    debugPrint("??? $payload");
     return post("$serviceUrl/rating/create", payload);
   }
 

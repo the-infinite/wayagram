@@ -400,8 +400,9 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                                 items: regionsData.areaItems,
                                 value: viewModel.lga,
                                 onSelected: (value) {
-                                  if (value.isNotEmpty)
+                                  if (value.isNotEmpty) {
                                     notifier.update(value.first, "lga");
+                                  }
                                 },
                               ),
 

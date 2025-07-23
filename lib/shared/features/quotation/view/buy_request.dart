@@ -19,10 +19,12 @@ class SharedUserBuyRequestsWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SharedUserBuyRequestsWidget> createState() => _SharedUserBuyRequestsWidgetState();
+  ConsumerState<SharedUserBuyRequestsWidget> createState() =>
+      _SharedUserBuyRequestsWidgetState();
 }
 
-class _SharedUserBuyRequestsWidgetState extends ConsumerState<SharedUserBuyRequestsWidget> {
+class _SharedUserBuyRequestsWidgetState
+    extends ConsumerState<SharedUserBuyRequestsWidget> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
 
   @override
@@ -93,10 +95,12 @@ class SharedOthersBuyRequestsWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SharedOthersBuyRequestsWidget> createState() => _SharedOthersBuyRequestsWidgetState();
+  ConsumerState<SharedOthersBuyRequestsWidget> createState() =>
+      _SharedOthersBuyRequestsWidgetState();
 }
 
-class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyRequestsWidget> {
+class _SharedOthersBuyRequestsWidgetState
+    extends ConsumerState<SharedOthersBuyRequestsWidget> {
   late final notifier = ref.read(othersQuotationsProvider.notifier);
 
   static Timer? _timer;
@@ -112,7 +116,6 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
       const Duration(seconds: 7),
       (timer) async {
         await notifier.reloadQuotationsOrder();
-        debugPrint("Reloaded quotations order");
       },
     );
   }

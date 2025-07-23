@@ -218,14 +218,12 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   }
 
   void doshare(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.copyWith(
           listContestForYou: state.listContestForYou.map((post) {
         if (post.id == postId) {

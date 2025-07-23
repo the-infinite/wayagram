@@ -268,7 +268,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
     );
   }
 
-  Widget _permissionType(title, subTitle) {
+  Widget _permissionType(String title, String? subTitle) {
     return FittedBox(
       fit: BoxFit.fitWidth,
       child: Row(
@@ -296,7 +296,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(
-                  subTitle,
+                  subTitle ?? '',
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,

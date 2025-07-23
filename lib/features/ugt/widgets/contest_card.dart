@@ -384,15 +384,12 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     image: WayaAssets.images.pages.share2.path,
                     color: wayaTheme.colorScheme.primary,
                     onPressed: () async {
-                      final result = await Share.share(
-                        WayaValueHelper.getShareableUrl(
+                      final result = await SharePlus.instance.share(ShareParams(
+                        text: WayaValueHelper.getShareableUrl(
                             WayaAppRoutes.getContestDetailRoute(
                                 widget.post.id ?? "")),
                         subject: "Share Contest",
-
-                        /* Uri.parse(
-                          "http://wayagram.ng/contest-details-page?id=${widget.post.id}") */
-                      );
+                      ));
 
                       if (result.status == ShareResultStatus.success) {
                         if (hasClickedShared.value == false) {

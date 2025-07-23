@@ -167,16 +167,11 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         children: [
           GestureDetector(
               onTap: () async {
-                await Share.share(
-                  WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getContestantProfileRoute(
-                    id,
-                    contestId,
-                  )),
+                await SharePlus.instance.share(ShareParams(
+                  text: WayaValueHelper.getShareableUrl(
+                      WayaAppRoutes.getContestantProfileRoute(id, contestId)),
                   subject: "Share Contestant Profile",
-
-                  // https://staging.wayagram.ng/contest-profile-page?id=acabf193-dd12-48c5-9030-157efa4c012a&contestId=10c8c1b5-f720-4633-a14e-646313230192
-                );
+                ));
               },
               child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none)),
           const Gap(20),

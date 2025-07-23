@@ -123,7 +123,6 @@ class CartVm extends StateNotifier<CartState> {
               quantity: updatedProducts[j].quantity + count,
             );
             productAdded = true;
-            debugPrint("updating");
             success = await updateCartItem(id: productId, shopId: shopId);
             break;
           }
@@ -144,7 +143,6 @@ class CartVm extends StateNotifier<CartState> {
                 deliveryOptions: ''),
           );
           productAdded = true;
-          debugPrint("add item for a shop ");
           final success = await postCartItem(id: productId, shopId: shopId);
 
           if (!success) return;

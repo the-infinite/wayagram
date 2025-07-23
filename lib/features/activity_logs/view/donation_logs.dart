@@ -79,9 +79,11 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
             alignment: Alignment.center,
             width: 102.w,
             height: 36.h,
-            padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+            padding:
+                const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: WayaColors.greyColor300)),
             child: DropdownButton(
               underline: Container(),
               borderRadius: BorderRadius.circular(8),
@@ -129,12 +131,14 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
               emptyState: ActivityLogsEmptyState(
                 text: 'You don\'t have Donation yet',
               ),
-              fetchData: ref.read(activityLogsVmProvider.notifier).getDonationLogs,
+              fetchData:
+                  ref.read(activityLogsVmProvider.notifier).getDonationLogs,
               result: (data, s) {
                 return SingleChildScrollView(
                   child: filteredDonations.isEmpty
                       ? ActivityLogsEmptyState(
-                          text: 'You don\'t have donation logs for ${_filterBy.name.toLowerCase()} yet',
+                          text:
+                              'You don\'t have donation logs for ${_filterBy.name.toLowerCase()} yet',
                         )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,8 +146,8 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
                             Padding(
                               padding: EdgeInsets.only(top: 30.h),
                               child: Text(
-                                  WayaDateHelper.getDailyTimestamp(
-                                      DateTime.parse('${filteredDonations.first.createdAt}')),
+                                  WayaDateHelper.getDailyTimestamp(DateTime.parse(
+                                      '${filteredDonations.first.createdAt}')),
                                   style: TextStyle(
                                     fontSize: 20.sp,
                                     fontFamily: WayaConstants.fontFamily,
@@ -159,11 +163,14 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
                               separatorBuilder: (context, first) {
                                 final previous = filteredDonations[first];
                                 final next = filteredDonations[first + 1];
-                                final firstDate = DateTime.parse('${previous.createdAt}');
-                                final secondDate = DateTime.parse('${next.createdAt}');
+                                final firstDate =
+                                    DateTime.parse('${previous.createdAt}');
+                                final secondDate =
+                                    DateTime.parse('${next.createdAt}');
 
                                 //? If this happened on the same day as the other one.
-                                if (WayaDateHelper.isSameDay(firstDate, secondDate)) {
+                                if (WayaDateHelper.isSameDay(
+                                    firstDate, secondDate)) {
                                   return SizedBox();
                                 }
 
@@ -171,7 +178,8 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
                                 return Padding(
                                   padding: EdgeInsets.only(top: 30.h),
                                   child: Text(
-                                    WayaDateHelper.getDailyTimestamp(secondDate),
+                                    WayaDateHelper.getDailyTimestamp(
+                                        secondDate),
                                     style: TextStyle(
                                       fontSize: 20.sp,
                                       fontFamily: WayaConstants.fontFamily,
@@ -184,8 +192,8 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
                               itemBuilder: (context, index) {
                                 final donation = filteredDonations[index];
                                 final dateTimeString = "${donation.createdAt}";
-                                final dateTime = DateTime.parse(dateTimeString).toLocal();
-                                //debugPrint('DATE CHECK ==> $dateCheck, ${dates[i]}');
+                                final dateTime =
+                                    DateTime.parse(dateTimeString).toLocal();
 
                                 return ActivityCardWidget(
                                   title: '${donation.description}',

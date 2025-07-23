@@ -3,12 +3,14 @@ import 'package:wayagram/core/service/storage_service/secure/waya_secure_storage
 class WayaSecureDataSource extends WayaSecureStorageService {
   final wayaSecureDataSource = WayaSecureStorageService();
 
-  saveToken(String? token) async {
-    return await wayaSecureDataSource.write<String?>(key: 'token', value: token);
+  Future<void> saveToken(String? token) async {
+    return await wayaSecureDataSource.write<String?>(
+        key: 'token', value: token);
   }
 
-  saveRefreshToken(String? token) {
-    return wayaSecureDataSource.write<String?>(key: 'refresh-token', value: token);
+  Future<void> saveRefreshToken(String? token) {
+    return wayaSecureDataSource.write<String?>(
+        key: 'refresh-token', value: token);
   }
 
   Future<String?> getToken() async {
@@ -19,7 +21,7 @@ class WayaSecureDataSource extends WayaSecureStorageService {
     return wayaSecureDataSource.read(key: 'refresh-token');
   }
 
-  saveUserId(String? user) {
+  Future<void> saveUserId(String? user) {
     return wayaSecureDataSource.write(key: 'userId', value: user);
   }
 
@@ -27,7 +29,7 @@ class WayaSecureDataSource extends WayaSecureStorageService {
     return wayaSecureDataSource.read(key: 'userId');
   }
 
-  saveBusinessId(String? user) {
+  Future<void> saveBusinessId(String? user) {
     return wayaSecureDataSource.write(key: 'businessId', value: user);
   }
 

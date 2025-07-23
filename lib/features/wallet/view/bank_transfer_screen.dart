@@ -24,7 +24,7 @@ class BankTransferScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => WayaNav.goBack(),
         ),
-        title:  Text(
+        title: Text(
           'Fund With Bank Transfer',
           style: TextStyle(color: Colors.black, fontSize: 18.sp),
         ),
@@ -44,7 +44,7 @@ class BankTransferScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Amount:',
-                      style:  TextStyle(
+                      style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                       ),
@@ -78,10 +78,9 @@ class BankTransferScreen extends StatelessWidget {
                   onPressed: () {
                     // if (args?['redirect'] != null &&
                     //     (args?['redirect'] as String).isNotEmpty) {
-                    
+
                     // }
-                      WayaNav.removeUntilNamed(
-                          BottomView.route);
+                    WayaNav.removeUntilNamed(BottomView.route);
                   },
                   child: Text("I have Funded My Account")),
               const Gap(32),
@@ -97,13 +96,13 @@ class BankTransferScreen extends StatelessWidget {
       String nameLabel, String name, BuildContext context) {
     final wayaTheme = Theme.of(context);
     final args =
-    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           numberLabel,
-          style:  TextStyle(
+          style: TextStyle(
             color: Colors.grey,
             fontSize: 14.sp,
           ),
@@ -111,7 +110,7 @@ class BankTransferScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           number,
-          style:  TextStyle(
+          style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -119,7 +118,7 @@ class BankTransferScreen extends StatelessWidget {
         const SizedBox(height: 16),
         Text(
           nameLabel,
-          style:  TextStyle(
+          style: TextStyle(
             color: Colors.grey,
             fontSize: 14.sp,
           ),
@@ -127,7 +126,7 @@ class BankTransferScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           name,
-          style:  TextStyle(
+          style: TextStyle(
             fontSize: 24.sp,
           ),
         ),
@@ -137,12 +136,16 @@ class BankTransferScreen extends StatelessWidget {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Clipboard.setData(ClipboardData(text: '${args?["accountNumber"]}\n${args?["accountName"]}\n${args?["provider"]}'));
+                  Clipboard.setData(ClipboardData(
+                      text:
+                          '${args?["accountNumber"]}\n${args?["accountName"]}\n${args?["provider"]}'));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
                         'Link copied to clipboard',
-                        style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                        style: TextStyle(
+                            fontFamily: WayaConstants.fontFamily,
+                            fontSize: 12.sp),
                       ),
                       backgroundColor: WayaColors.primary,
                       duration: Duration(seconds: 2),
@@ -161,9 +164,13 @@ class BankTransferScreen extends StatelessWidget {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Share.share(
-                    WayaValueHelper.getShareableUrl(WayaAppRoutes.getWalletDetailsPage('${args?["accountNumber"]}')),
-                    subject: 'Share Poll',
+                  SharePlus.instance.share(
+                    ShareParams(
+                      subject: 'Share Account Details',
+                      text: WayaValueHelper.getShareableUrl(
+                          WayaAppRoutes.getWalletDetailsPage(
+                              '${args?["accountNumber"]}')),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.share, size: 18),
@@ -235,7 +242,7 @@ class BankTransferScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           description,
-          style:  TextStyle(
+          style: TextStyle(
             color: Colors.grey,
             fontSize: 14.sp,
           ),

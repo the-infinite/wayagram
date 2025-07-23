@@ -32,7 +32,6 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
     final viewModel = ref.read(roleAccessVm);
 
     //  ConversationState.self.id
-    // debugPrint("UGT HOME ${ConversationState.self.role?.name}");
 
     //? init necessary data with useEffect
     useEffect(() {

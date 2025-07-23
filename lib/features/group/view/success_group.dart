@@ -27,7 +27,6 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
     final wayaTheme = Theme.of(context);
     //final type  = ModalRoute.of(context)?.settings.arguments as String?;
     //final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-    //debugPrint("GROUP TYPE ID  ${args['id']}");
     return WayaScaffold(
       removeAppBar: false,
       isLoading: viewModel.isLoading,

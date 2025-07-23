@@ -204,10 +204,11 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                 ),
                 InkWell(
                   onTap: () {
-                    Share.share(
-                        subject: "Share Product",
-                        WayaValueHelper.getShareableUrl(
-                            WayaAppRoutes.getProductDetailScreen(widget.id)));
+                    SharePlus.instance.share(ShareParams(
+                      text: WayaValueHelper.getShareableUrl(
+                          WayaAppRoutes.getProductDetailScreen(widget.id)),
+                      subject: 'Share Product',
+                    ));
                   },
                   splashFactory: NoSplash.splashFactory,
                   child: Container(

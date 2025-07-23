@@ -32,11 +32,7 @@ class EventVm extends StateNotifier<EventState> {
 
   Future<void> getEvents() async {
     try {
-      final response = await _eventRepository.getEvents();
-
-      if (response.success) {
-        debugPrint(response.data.toString());
-      }
+      final _ = await _eventRepository.getEvents();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -174,7 +170,7 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<void> requestForEventPayout(ctx, String eventId) async {
+  Future<void> requestForEventPayout(BuildContext ctx, String eventId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _eventRepository.requestForEventPayout(eventId);
@@ -265,7 +261,6 @@ class EventVm extends StateNotifier<EventState> {
       bool hasNextPage = false;
       if (response.success) {
         //  final data = response.data["data"]['docs'];
-
 
         // JoinedEventResponse eventResponse =
         //     JoinedEventResponse.fromJson(response.data);
@@ -390,7 +385,6 @@ class EventVm extends StateNotifier<EventState> {
                   'Your report has been submitted. Our team will review the issue and take appropriate action.',
               buttonText: 'Go to Event Page');
         }
-        debugPrint(response.data.toString());
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

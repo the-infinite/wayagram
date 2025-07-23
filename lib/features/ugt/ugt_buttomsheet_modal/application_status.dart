@@ -132,8 +132,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
               children: [
                 UpcomingWidget(
                     title: "Talent\nCategory",
-                    content: 
-                        appliedContestModel.value?.categoryName ?? ""),
+                    content: appliedContestModel.value?.categoryName ?? ""),
                 //  const Gap(20),
                 UpcomingWidget(
                     title: "Submission\nDate",
@@ -328,7 +327,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
     );
   }
 
-  _lineThick() {
+  Widget _lineThick() {
     return Column(
       children: [
         const Gap(5),

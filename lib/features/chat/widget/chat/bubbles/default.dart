@@ -25,7 +25,8 @@ import 'package:wayagram/features/general_settings/chat_settings/vm.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 bool _isMediaFile(MessageModel data) {
-  return [MessageType.file, MessageType.image, MessageType.video].contains(data.messageType);
+  return [MessageType.file, MessageType.image, MessageType.video]
+      .contains(data.messageType);
 }
 
 class _MyBubbleWidget extends StatelessWidget {
@@ -78,11 +79,14 @@ class _MyBubbleWidget extends StatelessWidget {
                     children: [
                       //? First, the message container.
                       Container(
-                        padding: _isMediaFile(data) && (data.content?.isEmpty ?? true)
+                        padding: _isMediaFile(data) &&
+                                (data.content?.isEmpty ?? true)
                             ? const EdgeInsets.all(2)
                             : const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: isDark ? WayaColors.primary600 : WayaColors.primary,
+                          color: isDark
+                              ? WayaColors.primary600
+                              : WayaColors.primary,
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
                             topLeft: Radius.circular(10),
@@ -116,7 +120,8 @@ class _MyBubbleWidget extends StatelessWidget {
                                     //* Text.
                                     Text(
                                       "Forwarded",
-                                      style: WayaTextStyles.bodySemiBold.copyWith(
+                                      style:
+                                          WayaTextStyles.bodySemiBold.copyWith(
                                         fontSize: 13.sp,
                                         color: WayaColors.white,
                                       ),
@@ -124,13 +129,16 @@ class _MyBubbleWidget extends StatelessWidget {
                                   ],
 
                                   //? If this was edited...
-                                  if (data.forwardedFrom != null && data.edited) ...[
+                                  if (data.forwardedFrom != null &&
+                                      data.edited) ...[
                                     Container(
                                       width: 5,
                                       height: 10,
-                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(200),
+                                        borderRadius:
+                                            BorderRadius.circular(200),
                                         color: WayaColors.white,
                                       ),
                                     )
@@ -153,7 +161,8 @@ class _MyBubbleWidget extends StatelessWidget {
                                     //* Text.
                                     Text(
                                       "Edited",
-                                      style: WayaTextStyles.bodySemiBold.copyWith(
+                                      style:
+                                          WayaTextStyles.bodySemiBold.copyWith(
                                         fontSize: 13.sp,
                                         color: WayaColors.white,
                                       ),
@@ -173,7 +182,9 @@ class _MyBubbleWidget extends StatelessWidget {
                                 margin: const EdgeInsets.only(bottom: 10),
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                  color: isDark ? WayaColors.darkGrey : WayaColors.white,
+                                  color: isDark
+                                      ? WayaColors.darkGrey
+                                      : WayaColors.white,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: ChatReplyToWidget(
@@ -196,14 +207,18 @@ class _MyBubbleWidget extends StatelessWidget {
                                   data: data,
                                   isSender: true,
                                 ),
-                              MessageType.file || MessageType.image || MessageType.video => FileMessageWidget(
+                              MessageType.file ||
+                              MessageType.image ||
+                              MessageType.video =>
+                                FileMessageWidget(
                                   data: data,
                                   textColor: WayaColors.white,
                                 ),
                               _ => Text(
                                   data.contentDescription,
                                   style: WayaTextStyles.bodyMedium.copyWith(
-                                    fontSize: 15.sp * ChatSettingsNotifier.instance.textScale,
+                                    fontSize: 15.sp *
+                                        ChatSettingsNotifier.instance.textScale,
                                     fontWeight: FontWeight.normal,
                                     color: WayaColors.white,
                                   ),
@@ -214,7 +229,8 @@ class _MyBubbleWidget extends StatelessWidget {
                       ),
 
                       //? Second, the reaction part of things.
-                      if (interactive && (data.messageReaction?.isNotEmpty ?? false))
+                      if (interactive &&
+                          (data.messageReaction?.isNotEmpty ?? false))
                         Positioned(
                           left: 5,
                           top: -15,
@@ -229,7 +245,8 @@ class _MyBubbleWidget extends StatelessWidget {
                               children: List.generate(
                                 data.reactionPairs.length,
                                 (index) {
-                                  final part = data.reactionPairs.entries.elementAt(index);
+                                  final part = data.reactionPairs.entries
+                                      .elementAt(index);
 
                                   //? This is fine.
                                   return ReactionWidgetBubble(
@@ -253,7 +270,9 @@ class _MyBubbleWidget extends StatelessWidget {
                               ? "Sending"
                               : timeString,
                       style: WayaTextStyles.labelSmall.copyWith(
-                        color: data.isError ?? false ? WayaColors.error : grayColor,
+                        color: data.isError ?? false
+                            ? WayaColors.error
+                            : grayColor,
                       ),
                     ),
                 ],
@@ -290,7 +309,9 @@ class _YourBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = chat.chatMembers.firstWhere((member) => member.userId == data.senderId).combined;
+    final user = chat.chatMembers
+        .firstWhere((member) => member.userId == data.senderId)
+        .combined;
 
     // This is fine.
     return Padding(
@@ -324,11 +345,14 @@ class _YourBubbleWidget extends StatelessWidget {
                     children: [
                       //? First, the message box.
                       Container(
-                        padding: _isMediaFile(data) && (data.content?.isEmpty ?? true)
+                        padding: _isMediaFile(data) &&
+                                (data.content?.isEmpty ?? true)
                             ? const EdgeInsets.all(2)
                             : const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: isDark ? WayaColors.white50 : WayaColors.greyColor200,
+                          color: isDark
+                              ? WayaColors.white50
+                              : WayaColors.greyColor200,
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(10),
                             bottomRight: Radius.circular(10),
@@ -362,7 +386,8 @@ class _YourBubbleWidget extends StatelessWidget {
                                     //* Text.
                                     Text(
                                       "Forwarded",
-                                      style: WayaTextStyles.bodySemiBold.copyWith(
+                                      style:
+                                          WayaTextStyles.bodySemiBold.copyWith(
                                         fontSize: 13.sp,
                                         color: WayaColors.primary600,
                                       ),
@@ -370,13 +395,16 @@ class _YourBubbleWidget extends StatelessWidget {
                                   ],
 
                                   //? If this was edited...
-                                  if (data.forwardedFrom != null && data.edited) ...[
+                                  if (data.forwardedFrom != null &&
+                                      data.edited) ...[
                                     Container(
                                       width: 5,
                                       height: 10,
-                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(200),
+                                        borderRadius:
+                                            BorderRadius.circular(200),
                                         color: WayaColors.primary600,
                                       ),
                                     )
@@ -399,7 +427,8 @@ class _YourBubbleWidget extends StatelessWidget {
                                     //* Text.
                                     Text(
                                       "Edited",
-                                      style: WayaTextStyles.bodySemiBold.copyWith(
+                                      style:
+                                          WayaTextStyles.bodySemiBold.copyWith(
                                         fontSize: 13.sp,
                                         color: WayaColors.primary600,
                                       ),
@@ -434,21 +463,31 @@ class _YourBubbleWidget extends StatelessWidget {
                             switch (data.messageType) {
                               MessageType.text => TextMessageWidget(
                                   data: data,
-                                  textColor: isDark ? WayaColors.white : WayaColors.black,
+                                  textColor: isDark
+                                      ? WayaColors.white
+                                      : WayaColors.black,
                                 ),
                               MessageType.voiceNote => VoiceMessageWidget(
                                   data: data,
                                   isSender: false,
                                 ),
-                              MessageType.file || MessageType.image || MessageType.video => FileMessageWidget(
+                              MessageType.file ||
+                              MessageType.image ||
+                              MessageType.video =>
+                                FileMessageWidget(
                                   data: data,
-                                  textColor: isDark ? WayaColors.white : WayaColors.black,
+                                  textColor: isDark
+                                      ? WayaColors.white
+                                      : WayaColors.black,
                                 ),
                               _ => Text(
                                   data.contentDescription,
                                   style: WayaTextStyles.bodyMedium.copyWith(
-                                    fontSize: 15.sp * ChatSettingsNotifier.instance.textScale,
-                                    color: isDark ? WayaColors.white : WayaColors.black,
+                                    fontSize: 15.sp *
+                                        ChatSettingsNotifier.instance.textScale,
+                                    color: isDark
+                                        ? WayaColors.white
+                                        : WayaColors.black,
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),
@@ -458,7 +497,8 @@ class _YourBubbleWidget extends StatelessWidget {
                       ),
 
                       //? Second, the reaction part of things.
-                      if (interactive && (data.messageReaction?.isNotEmpty ?? false))
+                      if (interactive &&
+                          (data.messageReaction?.isNotEmpty ?? false))
                         Positioned(
                           right: 5,
                           top: -15,
@@ -473,7 +513,8 @@ class _YourBubbleWidget extends StatelessWidget {
                               children: List.generate(
                                 data.reactionPairs.length,
                                 (index) {
-                                  final part = data.reactionPairs.entries.elementAt(index);
+                                  final part = data.reactionPairs.entries
+                                      .elementAt(index);
 
                                   //? This is fine.
                                   return ReactionWidgetBubble(
@@ -560,7 +601,8 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
 
 class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   OverlayEntry? _entry;
-  late final notifier = ref.read(chatProvider(widget.chat?.id ?? widget.data.chatId).notifier);
+  late final notifier =
+      ref.read(chatProvider(widget.chat?.id ?? widget.data.chatId).notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
 
   /// This is the message we are replying to.
@@ -687,7 +729,8 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                 ),
 
                 //* Third, the copy button.
-                if (widget.data.content != null && (widget.data.content?.isNotEmpty ?? false))
+                if (widget.data.content != null &&
+                    (widget.data.content?.isNotEmpty ?? false))
                   WayaButton(
                     callback: () {
                       widget.controller.clearFocus();
@@ -751,7 +794,8 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                       widget.controller.clearFocus();
 
                       //? Delete this message.
-                      await notifier.deleteMessage(widget.data.id, MessageDeleteAction.deleteForMe);
+                      await notifier.deleteMessage(
+                          widget.data.id, MessageDeleteAction.deleteForMe);
 
                       //? Finally, refetch the conversation.
                       conversationNotifier.getChatDetails(widget.data.chatId);
@@ -795,11 +839,16 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                       }
 
                       //? Then delete this message.
-                      notifier.deleteMessage(widget.data.id, MessageDeleteAction.deleteForEveryone).then(
+                      notifier
+                          .deleteMessage(widget.data.id,
+                              MessageDeleteAction.deleteForEveryone)
+                          .then(
                         (success) {
                           if (success) {
-                            conversationNotifier.getChatDetails(widget.data.chatId);
-                            widget.controller.setText(widget.data.content ?? '');
+                            conversationNotifier
+                                .getChatDetails(widget.data.chatId);
+                            widget.controller
+                                .setText(widget.data.content ?? '');
                           }
                         },
                       );
@@ -859,7 +908,8 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                 valueListenable: sizeNotifier,
                 builder: (context, popupSize, _) {
                   //? First, calculate the extent to which this thing is going to stretch on screen.
-                  final popupExtent = offset.dy + size.height + popupSize.height + 5 + 60;
+                  final popupExtent =
+                      offset.dy + size.height + popupSize.height + 5 + 60;
 
                   //? If this is lower than a quarter of the screen...
                   if (popupExtent > screenSize.height) {
@@ -871,7 +921,9 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                          crossAxisAlignment: isMe
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
                           children: [
                             //? First, the actions that are available on this
                             //? message.
@@ -910,7 +962,9 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                        crossAxisAlignment: isMe
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
                         children: [
                           //? First the reaction side of things.
                           ChatReactionInput(
@@ -973,8 +1027,6 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
   /// Utility runnable used to resend this message when it failed.
   Future<void> _resendMessage() async {
-    debugPrint("Resending ${widget.data.chatId}");
-
     final notifier = ref.read(chatProvider(widget.chat!.id).notifier);
 
     //? If this is actually fine.
@@ -1066,10 +1118,13 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               //? The date separator.
-              if (widget.interactive && !WayaDateHelper.isSameDay(widget.data.createdAt, widget.previousDate))
+              if (widget.interactive &&
+                  !WayaDateHelper.isSameDay(
+                      widget.data.createdAt, widget.previousDate))
                 WayaTextStrip(
                   WayaDateHelper.getSocialDate(widget.data.createdAt),
-                  backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
+                  backgroundColor:
+                      widget.backgroundColor ?? WayaColors.scaffoldColor2,
                   style: WayaTextStyles.bodyMedium.copyWith(
                     fontSize: 14.sp,
                     color: widget.grayColor,
@@ -1106,8 +1161,11 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     ),
                   ],
                 ),
-                onVerticalSwipe: widget.interactive ? () => widget.inputFocus.unfocus() : null,
-                onRightSwipe: widget.interactive ? (details) => _replyTo() : null,
+                onVerticalSwipe: widget.interactive
+                    ? () => widget.inputFocus.unfocus()
+                    : null,
+                onRightSwipe:
+                    widget.interactive ? (details) => _replyTo() : null,
                 child: widget.data.senderId == user.id
                     ? _MyBubbleWidget(
                         data: messageController.data,
@@ -1115,7 +1173,8 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                         controller: widget.controller,
                         interactive: widget.interactive,
                         isDark: widget.isDark,
-                        backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
+                        backgroundColor:
+                            widget.backgroundColor ?? WayaColors.scaffoldColor2,
                         grayColor: widget.grayColor ?? WayaColors.greyColor500,
                         textScale: widget.textScale ?? 1,
                       )
@@ -1125,7 +1184,8 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                         controller: widget.controller,
                         interactive: widget.interactive,
                         isDark: widget.isDark,
-                        backgroundColor: widget.backgroundColor ?? WayaColors.scaffoldColor2,
+                        backgroundColor:
+                            widget.backgroundColor ?? WayaColors.scaffoldColor2,
                         grayColor: widget.grayColor ?? WayaColors.greyColor500,
                         textScale: widget.textScale ?? 1,
                       ),

@@ -221,7 +221,6 @@ class _VerifyIdentityPageState extends ConsumerState<VerifyYourIdentityPage> {
             callback: !viewModelState.isLoading
                 ? () {
                     final code = ref.watch(verifyAccountProvider).inputCode;
-                    debugPrint('DARLINGTON Code ==> $code');
 
                     //viewModel.verifyYourIdentity(() => WayaNav.to(const ResetPinPage()), code);
                     // viewModel.verifyYourIdentity((){

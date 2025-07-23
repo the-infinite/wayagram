@@ -149,7 +149,7 @@ Future<void> convertContestantToPDF(
     name: "Contestants Details",
     bytes: pdfBytes,
     file: contestantFile,
-    ext: 'pdf',
+    fileExtension: 'pdf',
     mimeType: MimeType.pdf,
   );
 }

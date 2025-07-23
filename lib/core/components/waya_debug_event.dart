@@ -54,7 +54,9 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
         .captureAndSave(directory, fileName: fileName)
         .then((value) {
       final file = XFile('$path/$fileName');
-      Share.shareXFiles([file], text: '');
+      SharePlus.instance.share(ShareParams(
+        files: [file],
+      ));
     });
   }
 

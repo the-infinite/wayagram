@@ -243,11 +243,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
           Text("Cost Breakdown", style: wayaTheme.textTheme.bodyMedium),
           const Gap(10),
           DottedBorder(
-            borderType: BorderType.RRect,
-            color: wayaTheme.colorScheme.greyColor300,
-            radius: Radius.circular(8),
-            padding: EdgeInsets.all(14),
-            dashPattern: [5, 5],
+            options: RoundedRectDottedBorderOptions(
+              color: wayaTheme.colorScheme.greyColor300,
+              radius: Radius.circular(8),
+              padding: EdgeInsets.all(14),
+              dashPattern: [5, 5],
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: SizedBox(
@@ -276,11 +277,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
           ),
           const Gap(10),
           DottedBorder(
-            borderType: BorderType.RRect,
-            color: wayaTheme.colorScheme.greyColor300,
-            radius: Radius.circular(8),
-            padding: EdgeInsets.all(14),
-            dashPattern: [5, 5],
+            options: RoundedRectDottedBorderOptions(
+              color: wayaTheme.colorScheme.greyColor300,
+              radius: Radius.circular(8),
+              padding: EdgeInsets.all(14),
+              dashPattern: [5, 5],
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: Container(
@@ -328,11 +330,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
           ],
           const Gap(10),
           DottedBorder(
-            borderType: BorderType.RRect,
-            color: wayaTheme.colorScheme.greyColor300,
-            radius: Radius.circular(8),
-            padding: EdgeInsets.all(14),
-            dashPattern: [5, 5],
+            options: RoundedRectDottedBorderOptions(
+              color: wayaTheme.colorScheme.greyColor300,
+              radius: Radius.circular(8),
+              padding: EdgeInsets.all(14),
+              dashPattern: [5, 5],
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: Container(

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
@@ -25,7 +24,7 @@ class AuthRepository extends BaseRepository {
     return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
   }
 
-    Future<WayaRequestResponse> verifySetPin(VerifyOtp payload) {
+  Future<WayaRequestResponse> verifySetPin(VerifyOtp payload) {
     final data = {...payload.toJson(), "purpose": "Transaction-Pin"};
     return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
   }
@@ -42,10 +41,9 @@ class AuthRepository extends BaseRepository {
 
 
   Future<WayaRequestResponse> verifyPayout(String email, String otp) {
-    final payload = {
-      "email": email,
-      "otp": otp, "purpose": "PAYOUT"};
-    return post('$serviceUrl/client/auth/verify-otp', payload, showErrors: true);
+    final payload = {"email": email, "otp": otp, "purpose": "PAYOUT"};
+    return post('$serviceUrl/client/auth/verify-otp', payload,
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> resendOtp(
@@ -54,8 +52,6 @@ class AuthRepository extends BaseRepository {
 
     if (email != null) payload['email'] = email;
     if (phone != null) payload['phoneNumber'] = phone;
-
-    debugPrint("$payload");
 
     return post('$serviceUrl/client/auth/resend-otp', payload);
   }
@@ -66,9 +62,9 @@ class AuthRepository extends BaseRepository {
   }
 
 //
-///
- Future<WayaRequestResponse> toggle2Fa(
-      { required String code, String? purpose}) {
+  ///
+  Future<WayaRequestResponse> toggle2Fa(
+      {required String code, String? purpose}) {
     final payload = {"code": code};
 
     if (purpose != null) payload['purpose'] = purpose;

@@ -46,9 +46,7 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
 
     useEffect(() {
       viewModelNotifier.getChatSettings().then((value) {
-        debugPrint("value: $value");
         if (value != null) {
-          debugPrint("value: $value");
           readReceipt.value = value.canSeeReadReceipt ?? false;
           lastSeen.value = value.canSeeLastSeen ?? false;
           showOnline.value = value.canSeeOnlineStatus ?? false;

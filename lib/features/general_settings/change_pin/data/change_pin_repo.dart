@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -6,7 +5,10 @@ import 'package:wayagram/features/chat/state/default.dart';
 class ChangePinRepo extends BaseRepository {
   String get serviceUrl => 'wayagram-wallet/api/v2';
 
-  Future<WayaRequestResponse> changePin({required String userId, required String oldPin, required String confirmPin}) {
+  Future<WayaRequestResponse> changePin(
+      {required String userId,
+      required String oldPin,
+      required String confirmPin}) {
     final payload = {'userId': userId, 'oldPin': oldPin, 'newPin': confirmPin};
     return patch('$serviceUrl/client/wallet-pin/update', payload);
   }
@@ -25,7 +27,6 @@ class ChangePinRepo extends BaseRepository {
       "confirmPin": confirmPin,
       "purpose": 'Reset_PIN'
     };
-    debugPrint(payload.toString());
     return post('$serviceUrl/client/wallet-pin/reset-pin', payload);
   }
 }

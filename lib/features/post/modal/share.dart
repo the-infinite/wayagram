@@ -195,10 +195,12 @@ class SharePostModal extends StatelessWidget {
                     //? The fifth option, is to share outward.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => Share.share(
-                                WayaValueHelper.getShareableUrl(
-                                    WayaAppRoutes.getSinglePostScreen(post.id)),
-                                subject: 'Share Post URL')
+                        onTap: () async => SharePlus.instance
+                            .share(ShareParams(
+                          text: WayaValueHelper.getShareableUrl(
+                              WayaAppRoutes.getSinglePostScreen(post.id)),
+                          subject: 'Share Post URL',
+                        ))
                             .then(
                           (value) {
                             if (value.status == ShareResultStatus.success) {

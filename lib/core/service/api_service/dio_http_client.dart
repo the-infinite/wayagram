@@ -4,14 +4,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/service/api_service/dio_exceptions.dart';
+import 'package:wayagram/core/service/api_service/dio_interceptor.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_storage_interface.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
@@ -30,7 +31,7 @@ class RequestRepeater {
 class DioHttpClient implements WayaHttpClientInterface {
   late final Dio dio;
   final String baseURL = WayaConstants.baseUrl;
-  final _logger = getLogger('DioHttpClient');
+  // final _logger = getLogger('DioHttpClient');
   final secureDataSource = WayaSecureDataSource();
   static final _instance = DioHttpClient._internal();
   //removing the snackbar
@@ -52,16 +53,16 @@ class DioHttpClient implements WayaHttpClientInterface {
       receiveTimeout: const Duration(seconds: 30),
     );
     final dio = Dio(options);
-    //  dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
+    dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
     //for proper logging of dio request and response
-    /* dio.interceptors.add(PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-        maxWidth: 90)); */
+    // dio.interceptors.add(PrettyDioLogger(
+    //     requestHeader: true,
+    //     requestBody: true,
+    //     responseBody: true,
+    //     responseHeader: false,
+    //     error: true,
+    //     compact: true,
+    //     maxWidth: 90));
     return dio;
   }
 
@@ -83,7 +84,6 @@ class DioHttpClient implements WayaHttpClientInterface {
         );
         params?.removeWhere((key, value) => value == null);
         final fullRoute = '${useBase ? baseURL : ''}$route';
-        _logger.i('fullRoute: $fullRoute');
         final result = await _makeRequest(
           dio.get(
             fullRoute,
@@ -124,7 +124,6 @@ class DioHttpClient implements WayaHttpClientInterface {
         //? Since it is form data.
         if (formdata) {
           body = FormData.fromMap(body as Map<String, dynamic>);
-          _logger.d("FormData =: ${(body as FormData).fields}, ${body.files}");
         }
 
         //? This is fine.late
@@ -136,9 +135,6 @@ class DioHttpClient implements WayaHttpClientInterface {
 
         //? Finished this.
         final fullRoute = '$baseURL$route';
-        _logger.i('fullRoute: $fullRoute');
-        _logger.i('headers: ${dio.options.headers}');
-        _logger.i('body: $body');
 
         params?.removeWhere((key, value) => value == null);
 
@@ -268,7 +264,6 @@ class DioHttpClient implements WayaHttpClientInterface {
         //? This is fine.
         params?.removeWhere((key, value) => value == null);
         final fullRoute = '${isWgUrl ? baseURL : ''}$route';
-        _logger.i('fullRoute: $fullRoute $body');
 
         //? If this is formdata but not binary.
         if (!isBinary && formdata) {
@@ -321,7 +316,6 @@ class DioHttpClient implements WayaHttpClientInterface {
         if (formdata) {
           body = FormData.fromMap(body as Map<String, dynamic>);
         }
-        _logger.i('fullRoute: $fullRoute');
         final result = await _makeRequest(
           dio.patch(
             fullRoute,
@@ -386,8 +380,6 @@ class DioHttpClient implements WayaHttpClientInterface {
       [bool showErrors = false]) async {
     try {
       final response = await future;
-      _logger.i('Request URI: ${response.requestOptions.uri.toString()}');
-      _logger.i('data: ${response.data}');
       return WayaRequestResponse(
         data: response.data,
         success: response.statusCode?.toString().startsWith('2') ?? false,
@@ -436,16 +428,12 @@ class DioHttpClient implements WayaHttpClientInterface {
         }
 
         //? Since this is something else.
-        _logger.e('URI: ${e.requestOptions.uri.toString()}');
-        _logger.e('statusCode: ${e.response?.statusCode}');
 
         try {
           message = e.response?.data['errors'] != null
               ? e.response?.data['errors'][0]
               : e.response?.data['message'];
-          _logger.e('errors: ${e.response?.data['errors']}');
         } catch (_) {}
-        _logger.e('message: $message, ${e.response?.data}');
 
         //? If this should show errors.
         if (showErrors) {
@@ -495,14 +483,12 @@ class DioHttpClient implements WayaHttpClientInterface {
       //> access the token from the response
       final newToken = response.data['data']['token']['token'];
       final newRefreshToken = response.data['data']['token']['refreshToken'];
-      _logger.i("New token acquired");
 
       //> persist the tokens
       await secureDataSource.saveToken(newToken);
       await secureDataSource.saveRefreshToken(newRefreshToken);
       return true;
     } catch (e) {
-      _logger.e("Token refresh failed: $e");
       return false;
     }
   }

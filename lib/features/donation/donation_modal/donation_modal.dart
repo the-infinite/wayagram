@@ -274,7 +274,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
     );
   }
 
-  calculateAmount() {
+  num calculateAmount() {
     num x = 0;
     //x = num.parse(widget.voteFee)*num.parse(amount);
     return x;
@@ -529,7 +529,7 @@ class _DonationSuccessModalState extends ConsumerState<DonationSuccessModal> {
               color: Colors.white,
               callback: () async {
                 WayaNav.goBack();
-                Share.share(widget.url);
+                SharePlus.instance.share(ShareParams(title: widget.url));
               },
               text: "Share Donation Link",
               textColor: WayaColors.black,
@@ -668,12 +668,14 @@ class _DonationGenerosityModalState
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                Share.share(
-                  WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getDonationDetailsPage(widget.campaignId)),
-                  subject: 'Share Invite',
+                SharePlus.instance.share(
+                  ShareParams(
+                    title: WayaValueHelper.getShareableUrl(
+                        WayaAppRoutes.getDonationDetailsPage(
+                            widget.campaignId)),
+                    subject: 'Share Invite',
+                  ),
                 );
-                //Share.share(widget);
               },
               text: "Share Invite to Other",
               textColor: WayaColors.black,

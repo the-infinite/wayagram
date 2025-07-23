@@ -52,7 +52,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
         userId: _localDataSource.getUserId().toString(), pin: pin));
     if (response.success) {
-      debugPrint(map.toString());
       return await voteContestant(isLoading, map);
     } else {
       if (response.data["message"] == null) {
@@ -76,7 +75,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       ConfirmWalletPin(
           userId: _localDataSource.getUserId().toString(), pin: pin),
     );
-    debugPrint(map.toString());
     if (response.success) {
       // map[] =  _localDataSource.getUserId().toString();
       return await payForPaidContest(isLoading, map);
@@ -94,7 +92,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     isLoading.value = true;
     final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
         userId: _localDataSource.getUserId().toString(), pin: pin));
-    debugPrint(map.toString());
     if (response.success) {
       // map[] =  _localDataSource.getUserId().toString();
       return await acceptPaidStageContest(isLoading, contestID, map);
@@ -189,7 +186,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   Future<bool> startStageContest(
       String stageName, Map<String, String> map) async {
-    debugPrint("mapkkkk $map");
     final response = await _contestRepository.startStage(map);
 
     //  isLoading.value = false;
@@ -444,7 +440,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         }
       }
     } catch (e) {
-      //debugPrint(e.toString());
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -464,12 +460,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         state = state.copyWith(pendingPostCount: contestList.length);
       }
     } catch (e) {
-      //debugPrint(e.toString());
+      debugPrint(e.toString());
     } finally {}
   }
 
   void approveDisapprovePost(String galleryId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.approveDisapprovePost(galleryId);
 
     if (response.success) {
@@ -477,7 +472,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           showSuccess: true);
     } else {
       WayaSnackBar.showToast("unable to update post status");
-      //  debugPrint("Contest already liked");
     }
   }
 
@@ -498,7 +492,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
             myFilteredContestApplicantList: myFilteredListt);
       }
     } catch (e) {
-      //debugPrint(e.toString());
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -546,23 +540,19 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       state = state.copyWith(isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
-      //debugPrint(e.toString());
     } finally {}
   }
 
   void searchList(String value) {
     if (value.trim().isEmpty) {
-      debugPrint("i am here $value");
       state = state.copyWith(myContestList: state.myContestListCopy);
     } else {
-      debugPrint("i am yyyyyy $value");
       var myList = state.myContestListCopy;
       state = state.copyWith(
           myContestList: myList.where((e) {
         String name = e.contestApplicant?.fullName ?? "";
         return name.toLowerCase().contains(value.toLowerCase());
       }).toList());
-      debugPrint("i am rrrrrr $value");
     }
   }
 
@@ -619,7 +609,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       "description": text,
       "mediaContent": listMap
     };
-    debugPrint('wert $map');
     final response = await _contestRepository.createContestPost(map);
     isLoading.value = false;
     if (response.success) {
@@ -648,12 +637,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   void toggleLike(String postId, String galleryId) {
     // Contest? contestPost = null;
-    debugPrint("Contest for you");
     //state.copyWith(myPostList: contestList)
     var list = state.myPostList.map((post) {
-      debugPrint("i dey here 11");
       if (post.id == galleryId) {
-        debugPrint("i dey here 2");
         bool isMyLiked = post.hasLiked ?? false;
         // if (isMyLiked) {
         doOnLikeLike(postId, galleryId);
@@ -669,7 +655,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   void doOnLikeLike(String postId, String galleryId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.likeContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId,
@@ -677,11 +662,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       var list = state.myPostList.map((post) {
-        debugPrint("i dey here 3");
         if (post.id == postId) {
-          debugPrint("i dey here 3");
           bool isMyLiked = post.hasLiked ?? false;
           return post.copyWith(
             hasLiked: !isMyLiked,
@@ -694,7 +676,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       // WayaSnackBar.showToast("Contest already liked");
-      debugPrint("Contest already liked");
     }
   }
 
@@ -702,9 +683,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     // Contest? contestPost = null;
 
     var list = state.myPostList.map((post) {
-      debugPrint("i dey here wwww");
       if (post.id == postId) {
-            return post.copyWith(
+        return post.copyWith(
           // isLiked: true,
           shares: post.shares! + 1,
         );
@@ -716,7 +696,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   void doshare(String postId, String galleryId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId,
@@ -724,8 +703,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
-
       var list = state.myPostList.map((post) {
         if (post.id == postId) {
           return post.copyWith(
@@ -746,15 +723,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   void doFollow(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.followContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (response.success) {
-      //  debugPrint("do like stuff Fail");
-
       WayaSnackBar.showToast("Contest Followed", showSuccess: true);
     } else {
       debugPrint("do like stuff Success");
@@ -764,13 +738,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
 /* 
   Future<void> createPost(ctx, content, postType, List<XFile> images) async {
-    debugPrint("before the loop");
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     final choiceMap = <String>[];
     // get url
     for (XFile image in images) {
-      debugPrint("In the loop ${image.name} ${image.path} ${image.mimeType}");
 
       final uploadImageResponse =
           await _pageRepository.getUploadImage(image.name);
@@ -800,9 +772,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         );
         break;
       }
-
-      //? This is fine.
-      debugPrint("Data ${putImageResponse.data}");
     }
     //WayaHelpers.
 
@@ -825,7 +794,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       //? If it failed...
       else {
         _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        debugPrint('Create post');
         _logger.i(response.data['data']);
       }
     } catch (e) {

@@ -21,15 +21,14 @@ class WalletPage extends ConsumerStatefulWidget {
 }
 
 class _WalletPageState extends ConsumerState<WalletPage> {
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.watch(transactionVmProvider.notifier).getTransaction();
     });
-
   }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -43,23 +42,30 @@ class _WalletPageState extends ConsumerState<WalletPage> {
         children: [
           WalletBalanceCard(),
           Gap(10),
-          SizedBox(width: 10,),
-          Image.asset('assets/images/wallet/marks.png', height: 24,),
+          SizedBox(
+            width: 10,
+          ),
+          Image.asset(
+            'assets/images/wallet/marks.png',
+            height: 24,
+          ),
           Gap(10),
           Row(
             children: [
-              Text('Total Balance: ₦${ref.watch(createPollVotingProvider.notifier).formatAm('${state.data?.balance}') ?? '0.00'}',
+              Text(
+                'Total Balance: ₦${ref.watch(createPollVotingProvider.notifier).formatAm('${state.data?.balance}')}',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.greyColor600 ),
+                    color: Theme.of(context).colorScheme.greyColor600),
               ),
               Spacer(),
-              Text('Payout-Eligible: ₦0.00',
+              Text(
+                'Payout-Eligible: ₦0.00',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.greyColor600 ),
+                    color: Theme.of(context).colorScheme.greyColor600),
               ),
             ],
           ),

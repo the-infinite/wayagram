@@ -60,11 +60,11 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
               child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           const Gap(12),
           InkWell(
-            onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(
+            onTap: () => SharePlus.instance.share(ShareParams(
+              text: WayaValueHelper.getShareableUrl(
                   WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
               subject: 'Share ${widget.group.name}',
-            ),
+            )),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
           PopupMenuButton(
@@ -89,11 +89,11 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                 ),
                 PopupMenuItem<int>(
                   value: 1,
-                  onTap: () => Share.share(
-                    WayaValueHelper.getShareableUrl(
+                  onTap: () => SharePlus.instance.share(ShareParams(
+                    text: WayaValueHelper.getShareableUrl(
                         WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
                     subject: 'Share ${widget.group.name}',
-                  ),
+                  )),
                   child: WayaActionNav(
                     context: context,
                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),

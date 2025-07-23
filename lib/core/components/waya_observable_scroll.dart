@@ -106,8 +106,9 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
     final current = _scrollController.offset;
 
     //? Stop if this is at the end.
-    if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled)
+    if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) {
       return;
+    }
 
     //? If we should scroll.
     if (current >= target) {

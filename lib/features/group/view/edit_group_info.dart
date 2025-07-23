@@ -78,8 +78,6 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
     final viewModel = ref.watch(groupProvider);
     final wayaTheme = Theme.of(context);
 
-    debugPrint('MY grOUP TYPE is ${widget.group.isPrivate}');
-
     //? Return this page's edit feature.
     return WayaScaffold(
       padding: EdgeInsets.zero,

@@ -280,15 +280,12 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
               showCopyLink: true,
               buttonText: null,
               onShareTap: () async {
-                await Share.share(
-                  WayaValueHelper.getShareableUrl(
+                await SharePlus.instance.share(ShareParams(
+                  text: WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getContestDetailRoute(
                           response?.data["data"]["contest"]["id"] ?? "")),
                   subject: "Share Contest",
-
-                  /* Uri.parse(
-                          "http://wayagram.ng/contest-details-page?id=${widget.post.id}") */
-                );
+                ));
               },
               onTap: (_, __) {
                 // WayaNav.removeUntilNamed("/ugt-home");
@@ -425,7 +422,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     }
   }
 
-  Future<void> requestPayout(ctx, String contestId) async {
+  Future<void> requestPayout(BuildContext ctx, String contestId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _contestRepository.requestPayout(contestId);
@@ -463,7 +460,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      }
+      debugPrint(error.toString());
+    }
   }
 
   Future<void> showDatePickerDialog2(BuildContext context) async {
@@ -476,7 +474,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         state = state.copyWith(endDate: endDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      }
+      debugPrint(error.toString());
+    }
   }
 
   Future<DateTime?> pickerDialog(BuildContext context,
@@ -492,7 +491,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         return response;
       }
     } catch (error) {
-      }
+      debugPrint(error.toString());
+    }
     return null;
   }
 
@@ -509,7 +509,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         return response;
       }
     } catch (error) {
-      }
+      debugPrint(error.toString());
+    }
     return null;
   }
 
@@ -531,7 +532,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             state.copyWith(endDate: endDate, endDateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      }
+      debugPrint(error.toString());
+    }
   }
 
   List<Select> ugtCategory() {
@@ -579,7 +581,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         selectedCategory: Select(label: value.label, value: value.value));
   }
 
-  updateEdit(String value) {
+  void updateEdit(String value) {
     var returnedState = state.category
         .asMap()
         .entries
@@ -640,7 +642,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     await allCategories();
   }
 
-  selectStateEdit(String value) {
+  void selectStateEdit(String value) {
     var selectedState = states
         .asMap()
         .entries
@@ -675,6 +677,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         state = state.copyWith(category: allCategory);
       }
     } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
@@ -744,7 +747,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             contestTimelineStartDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      }
+      debugPrint(error.toString());
+    }
   }
 
   Future<void> showDateContestEnd(BuildContext context) async {
@@ -763,7 +767,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             contestTimelineEndDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      }
+      debugPrint(error.toString());
+    }
   }
 
   Future<String?> showDatePickerMain(BuildContext context,
@@ -778,7 +783,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         return startDate;
       }
     } catch (error) {
-      }
+      debugPrint(error.toString());
+    }
     return null;
   }
 
@@ -833,7 +839,7 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-invalidateUGTVm(WidgetRef ref) {
+void invalidateUGTVm(WidgetRef ref) {
   ref.invalidate(contestNotifierProvider);
   ref.invalidate(stateRequirementProvider);
   ref.invalidate(stateContactProvider);
@@ -878,8 +884,6 @@ bool isInPast(String dateString) {
     return true;
   }
   return false; /* else if (inputDate.isAtSameMomentAs(today)) {
-    debugPrint("The date is today.");
   } else {
-    debugPrint("The date is in the future.");
   } */
 }

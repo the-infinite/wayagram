@@ -50,9 +50,11 @@ class _SearchLogState extends ConsumerState<SearchLog> {
             alignment: Alignment.center,
             width: 102.w,
             height: 36.h,
-            padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+            padding:
+                const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4), border: Border.all(color: WayaColors.greyColor300)),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: WayaColors.greyColor300)),
             child: DropdownButton(
                 underline: Container(),
                 borderRadius: BorderRadius.circular(8),
@@ -96,18 +98,24 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                 emptyState: ActivityLogsEmptyState(
                   text: 'You don\'t have search logs yet',
                 ),
-                fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
+                fetchData:
+                    ref.read(activityLogsVmProvider.notifier).getSearchLog,
                 result: (data, s) {
                   for (int i = 0; i < viewModel.searchLogDocs.length; i++) {
-                    if (!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])) {
-                      dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
+                    if (!dates.contains(viewModel.searchLogDocs[i].createdAt
+                        .toString()
+                        .split('T')[0])) {
+                      dates.add(viewModel.searchLogDocs[i].createdAt
+                          .toString()
+                          .split('T')[0]);
                       viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
                     }
                   }
                   return SingleChildScrollView(
                     child: viewModel.searchLogDocs.isEmpty
                         ? ActivityLogsEmptyState(
-                            text: 'You don\'t have Search Logs for this week yet',
+                            text:
+                                'You don\'t have Search Logs for this week yet',
                           )
                         : ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -119,7 +127,13 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                      ref
+                                          .read(
+                                              createPollVotingProvider.notifier)
+                                          .formatDt(viewModel
+                                              .searchLogDocs[i].createdAt
+                                              .toString()
+                                              .split('T')[0]),
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -130,13 +144,21 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                                   ListView.builder(
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
-                                    padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                                    padding:
+                                        EdgeInsets.only(bottom: 20.h, top: 0),
                                     itemCount: viewModel.searchLogDocs.length,
                                     itemBuilder: (context, index) {
-                                      final searchLog = viewModel.searchLogDocs[index];
-                                      String dateTimeString = "${searchLog.createdAt}";
-                                      DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if (viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] ==
+                                      final searchLog =
+                                          viewModel.searchLogDocs[index];
+                                      String dateTimeString =
+                                          "${searchLog.createdAt}";
+                                      DateTime dateTime =
+                                          DateTime.parse(dateTimeString)
+                                              .toLocal();
+                                      if (viewModel
+                                              .searchLogDocs[index].createdAt
+                                              .toString()
+                                              .split('T')[0] ==
                                           dates[i]) {
                                         return ActivityImageWidget(
                                           title: '${searchLog.description}',
@@ -161,10 +183,9 @@ class _SearchLogState extends ConsumerState<SearchLog> {
     );
   }
 
-  sortList(s) {
+  void sortList(String s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.searchLogDocs = [];
-    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if (s == 'all time') {
         viewModel.searchLogDocs = viewModel.searchLogDocs1;
@@ -176,31 +197,33 @@ class _SearchLogState extends ConsumerState<SearchLog> {
         List<String> allWeekDays = [];
 
         for (int i = 0; i < w; i++) {
-          String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
+          String a =
+              DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
-          String a = DateTime.now().subtract(Duration(days: i + 1)).toString().split(' ')[0];
+          String a = DateTime.now()
+              .subtract(Duration(days: i + 1))
+              .toString()
+              .split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2, '0'));
-          debugPrint('???? $b');
         }
 
-        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.searchLogDocs1.length; i++) {
-          String week = viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
+          String week =
+              viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
           if (allWeekDays.contains(week.split('-')[2])) {
             viewModel.searchLogDocs.add(viewModel.searchLogDocs1[i]);
           }
         }
-        debugPrint('??? ${viewModel.searchLogDocs.length}');
       } else if (s == 'this month') {
         String m = DateTime.now().month.toString().padLeft(2, '0');
         for (int i = 0; i < viewModel.searchLogDocs1.length; i++) {
-          String month = viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
+          String month =
+              viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
           if (m == month.split('-')[1]) {
             viewModel.searchLogDocs.add(viewModel.searchLogDocs1[i]);
           }
@@ -208,14 +231,16 @@ class _SearchLogState extends ConsumerState<SearchLog> {
       } else if (s == 'this year') {
         String y = DateTime.now().year.toString();
         for (int i = 0; i < viewModel.searchLogDocs1.length; i++) {
-          String month = viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
+          String month =
+              viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
           if (y == month.split('-')[0]) {
             viewModel.searchLogDocs.add(viewModel.searchLogDocs1[i]);
           }
         }
       } else {
         for (int i = 0; i < viewModel.searchLogDocs1.length; i++) {
-          if (s.toString().trim() == viewModel.searchLogDocs1[i].createdAt.toString()) {
+          if (s.toString().trim() ==
+              viewModel.searchLogDocs1[i].createdAt.toString()) {
             viewModel.searchLogDocs.add(viewModel.searchLogDocs1[i]);
           }
         }

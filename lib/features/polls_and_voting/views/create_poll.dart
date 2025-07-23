@@ -376,7 +376,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
         ));
   }
 
-  Widget createPoll(ctx, color) {
+  Widget createPoll(BuildContext ctx, Color color) {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(
       onTap: () {

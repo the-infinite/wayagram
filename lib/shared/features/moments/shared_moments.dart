@@ -39,7 +39,6 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
         (_) async {
           notifier.getUserMoments(1);
           await otherUserMoments.getAllMoments();
-          debugPrint("Reloaded moments");
         },
       );
     });

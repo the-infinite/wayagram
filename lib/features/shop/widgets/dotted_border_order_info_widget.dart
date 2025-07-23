@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+
 class DottedBorderOrderInfoWidget extends StatelessWidget {
   final String title;
   final String description;
@@ -14,38 +15,37 @@ class DottedBorderOrderInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return        DottedBorder(
-            borderType: BorderType.RRect,
-            color: wayaTheme.colorScheme.greyColor300,
-            radius: Radius.circular(8),
-            padding: EdgeInsets.all(14),
-            dashPattern: [5, 5],
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13.sp),
-                    ),
-                    const Gap(6),
-                    Text(
-                      description,
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14.sp),
-                    )
-                  ],
-                ),
+    return DottedBorder(
+      options: RoundedRectDottedBorderOptions(
+        color: wayaTheme.colorScheme.greyColor300,
+        radius: Radius.circular(8),
+        padding: EdgeInsets.all(14),
+        dashPattern: [5, 5],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                style: TextStyle().wayaCopyWith(
+                    color: wayaTheme.colorScheme.greyColor400, fontSize: 13.sp),
               ),
-            ),
-          );
+              const Gap(6),
+              Text(
+                description,
+                style: TextStyle().wayaCopyWith(
+                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

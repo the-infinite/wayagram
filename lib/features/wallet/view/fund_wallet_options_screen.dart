@@ -37,7 +37,6 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(walletFundingOptionsVmProvider);
     final wayaTheme = Theme.of(context);
-    debugPrint('FUNDING OPTION ${viewModel.fundingOptions}');
 
     final redirectRoute = ModalRoute.of(context)!.settings.arguments;
     return WayaScaffold(

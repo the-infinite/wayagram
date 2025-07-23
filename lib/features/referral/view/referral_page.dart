@@ -145,11 +145,10 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
               children: [
                 GestureDetector(
                     onTap: () async {
-                      await Share.share(
-                        WayaValueHelper.getShareableUrl(url),
-                        //  ConversationState.profile.referenceCode ?? "",
+                      await SharePlus.instance.share(ShareParams(
+                        text: WayaValueHelper.getShareableUrl(url),
                         subject: 'Share link',
-                      );
+                      ));
                     },
                     child:
                         _actionButton(context, Icons.share_outlined, "Share")),

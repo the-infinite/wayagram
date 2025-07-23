@@ -146,8 +146,6 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getPayoutMethod();
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         PayoutMethodModel responseModel =
@@ -160,7 +158,7 @@ class WalletVm extends StateNotifier<WalletState> {
   }
 
   Future<void> deletePayoutMethod(
-    ctx, {
+    BuildContext ctx, {
     required String id,
   }) async {
     try {
@@ -188,13 +186,12 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
-  Future<void> verifyAccountName(ctx,
+  Future<void> verifyAccountName(BuildContext ctx,
       {required String acctNumber, required String bankCode}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.verifyName(acctNumber, bankCode);
       state = state.copyWith(isLoading: false);
-      //debugPrint("DARLINGTON ACCOUNT NAME ${response.data}" );
       if (response.success) {
         VerifyAccountNameModel responseModel =
             VerifyAccountNameModel.fromJson(response.data);
@@ -202,7 +199,6 @@ class WalletVm extends StateNotifier<WalletState> {
             accountName: responseModel.data?.name,
             acctNameController:
                 TextEditingController(text: responseModel.data?.name));
-        debugPrint("DARLINGTON ACCOUNT NAME ${responseModel.data?.name}");
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -217,8 +213,6 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getSingleRequest(id);
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         SingleRequestModel responseModel =
@@ -244,8 +238,6 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getSinglePayoutMethod(id);
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         SinglePayoutMethodModel responseModel =
@@ -343,7 +335,7 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
-  Future<void> requestPayoutMethod(ctx,
+  Future<void> requestPayoutMethod(BuildContext ctx,
       {required String purpose,
       required String referenceId,
       required String accountNumber,
@@ -406,7 +398,7 @@ class WalletVm extends StateNotifier<WalletState> {
             state.copyWith(payoutHistoryList: responseModel.data?.docs ?? []);
       }
     } catch (e) {
-      //debugPrint(e.toString());
+      debugPrint(e.toString());
     } finally {}
   }
 }

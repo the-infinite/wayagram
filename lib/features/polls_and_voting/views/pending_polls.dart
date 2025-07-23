@@ -43,80 +43,96 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
 
-    return viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any pending polls"):
-    SizedBox(
-      height: 478.h,
-      child: ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: viewModel.fetchAllPols.length,
-          itemBuilder: (context, index) {
-            final poll = viewModel.fetchAllPols[index];
-            int hoursLeft =
-                DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-            return InkWell(
-              onTap: (){
-                WayaNav.toNamed('/singlePollScreen',arguments: {
-                  'id':poll.id
-                });
-              },
-              child: Container(
-                margin: EdgeInsets.only(bottom: 40.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(poll.userData?.profilePicture ?? ''),
-                          radius: 10,
-                          backgroundColor: wayaTheme.colorScheme.greyColor200,
-                        ),
-                        const Gap(3),
-                        Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
-                        const Gap(3),
-                        Text(
-                          ' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
-                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).colorScheme.greyColor500),
-                        ),
-                        Spacer(),
-                        PopupMenuButton(
-                          onSelected: (value) {},
-                          iconColor: wayaTheme.colorScheme.greyColor400,
-                          position: PopupMenuPosition.under,
-                          itemBuilder: (context) {
-                            return [
-                              PopupMenuItem<int>(
-                                value: 0,
-                                child: _buildActionNav(
-                                  context: context,
-                                  onTap: () {
-                                    WayaNav.goBack();
-                                    Share.share(
-                                      WayaValueHelper.getShareableUrl(
-                                          WayaAppRoutes.getPollDetailsPage('${poll.id}')),
-                                      subject: 'Share Poll',
-                                    );
-                                  },
-                                  asset: WayaAssets.icons.genSet.share
-                                      .svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
-                                  text: "Share Poll link",
-                                  color: wayaTheme.colorScheme.customBlack,
+    return viewModel.fetchAllPols.isEmpty
+        ? ActivityLogsEmptyState(text: "You don'\t have any pending polls")
+        : SizedBox(
+            height: 478.h,
+            child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: viewModel.fetchAllPols.length,
+                itemBuilder: (context, index) {
+                  final poll = viewModel.fetchAllPols[index];
+                  int hoursLeft = DateTime.parse('${poll.endDate}')
+                      .difference(DateTime.parse('${poll.startDate}'))
+                      .inHours;
+                  return InkWell(
+                    onTap: () {
+                      WayaNav.toNamed('/singlePollScreen',
+                          arguments: {'id': poll.id});
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 40.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    poll.userData?.profilePicture ?? ''),
+                                radius: 10,
+                                backgroundColor:
+                                    wayaTheme.colorScheme.greyColor200,
+                              ),
+                              const Gap(3),
+                              Text(
+                                  '${poll.userData?.firstName?.capitalizeFirst}',
+                                  style: wayaTheme.textTheme.titleLarge),
+                              const Gap(3),
+                              Text(
+                                ' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .wayaCopyWith(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .greyColor500),
+                              ),
+                              Spacer(),
+                              PopupMenuButton(
+                                onSelected: (value) {},
+                                iconColor: wayaTheme.colorScheme.greyColor400,
+                                position: PopupMenuPosition.under,
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem<int>(
+                                      value: 0,
+                                      child: _buildActionNav(
+                                        context: context,
+                                        onTap: () {
+                                          WayaNav.goBack();
+                                          Share.share(
+                                            WayaValueHelper.getShareableUrl(
+                                                WayaAppRoutes
+                                                    .getPollDetailsPage(
+                                                        '${poll.id}')),
+                                            subject: 'Share Poll',
+                                          );
+                                        },
+                                        asset: WayaAssets.icons.genSet.share
+                                            .svg(
+                                                fit: BoxFit.none,
+                                                height: 20,
+                                                color: WayaColors.greyColor600),
+                                        text: "Share Poll link",
+                                        color:
+                                            wayaTheme.colorScheme.customBlack,
+                                      ),
+                                    ),
+                                  ];
+                                },
+                                child: Image.asset(
+                                  'assets/images/polls/menu.png',
+                                  height: 32.h,
                                 ),
                               ),
-                            ];
-                          },
-                          child: Image.asset(
-                            'assets/images/polls/menu.png',
-                            height: 32.h,
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    const Gap(10),
+                          const Gap(10),
 
                           Text("${poll.question?.capitalizeFirst}",
                               style: wayaTheme.textTheme.titleLarge),

@@ -46,7 +46,6 @@ class CreateNewPasswordVm extends ChangeNotifier {
   }
 
   Future<void> onSubmit(String email, String otp) async {
-    debugPrint("$email $otp");
     try {
       _isLoading = true;
       notifyListeners();

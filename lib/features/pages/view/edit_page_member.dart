@@ -237,7 +237,7 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
     );
   }
 
-  Widget _permissionType(title, subTitle) {
+  Widget _permissionType(String title, String? subTitle) {
     return FittedBox(
       fit: BoxFit.fitWidth,
       child: Row(
@@ -265,7 +265,7 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(
-                  subTitle,
+                  subTitle ?? '',
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,

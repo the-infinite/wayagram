@@ -29,11 +29,12 @@ class UploadImage extends StatelessWidget {
 
     //? The component.
     return DottedBorder(
-      borderType: BorderType.RRect,
-      color: wayaTheme.colorScheme.greyColor300,
-      radius: Radius.circular(12),
-      padding: EdgeInsets.all(18.dg),
-      dashPattern: [5, 5],
+      options: RoundedRectDottedBorderOptions(
+        color: wayaTheme.colorScheme.greyColor300,
+        radius: Radius.circular(12),
+        padding: EdgeInsets.all(18.dg),
+        dashPattern: [5, 5],
+      ),
       child: SizedBox(
         width: double.infinity,
         child: Column(
@@ -225,11 +226,12 @@ class UploadProductImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return DottedBorder(
-        borderType: BorderType.RRect,
-        color: wayaTheme.colorScheme.greyColor300,
-        radius: Radius.circular(12),
-        padding: EdgeInsets.all(12),
-        dashPattern: [5, 5],
+        options: RoundedRectDottedBorderOptions(
+          color: wayaTheme.colorScheme.greyColor300,
+          radius: Radius.circular(12),
+          padding: EdgeInsets.all(12),
+          dashPattern: [5, 5],
+        ),
         child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(12)),
             child: SizedBox(

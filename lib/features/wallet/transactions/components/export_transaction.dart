@@ -127,11 +127,9 @@ class _ExportTransactionState extends ConsumerState<ExportTransaction> {
             child: ElevatedButton(
               onPressed: () async {
                 // Handle export logic here
-                debugPrint(
-                    'Exporting transactions from $startDate to $endDate');
                 WayaNav.goBack();
                 await notifier.downloadPdf('transaction');
-                 ScaffoldMessenger.of(context).showSnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Transaction was exported successfully!'),
                     backgroundColor: WayaColors.primary,

@@ -254,8 +254,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                         : const Icon(Icons.arrow_forward,
                             color: Colors.black54),
                     onPressed: isLoading.value
-                        ? () {
-                            }
+                        ? () {}
                         : () {
                             _submitPin(isLoading);
                           },
@@ -439,7 +438,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                       height: 56.h,
                     )),
                 Text(
-                  '${ref.read(createPollVotingProvider.notifier).formatAm(amount)}',
+                  ref.read(createPollVotingProvider.notifier).formatAm(amount),
                   //amount,
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                       fontSize: 48.sp,
@@ -511,10 +510,10 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
     );
   }
 
-  calculateAmount() {
+  String calculateAmount() {
     num x = 0;
     x = num.parse(widget.voteFee) * num.parse(amount);
-    return x;
+    return x.toString();
   }
 }
 
@@ -1012,8 +1011,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
                   ),
                 );
 
-                if (result != null) {
-                }
+                if (result != null) {}
 
                 WayaNav.removeAllUntil(
                     AdminContestDetails(id: ""), "/contest-details-page");

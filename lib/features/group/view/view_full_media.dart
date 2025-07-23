@@ -82,7 +82,10 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
                   child: WayaActionNav(
                       context: context,
                       onTap: () {
-                        Share.share('${args['url']}', subject: 'Share Options');
+                        SharePlus.instance.share(ShareParams(
+                          text: '${args['url']}',
+                          subject: 'Share Options',
+                        ));
                       },
                       asset:
                           WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),

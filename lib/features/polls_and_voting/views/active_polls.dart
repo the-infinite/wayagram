@@ -98,11 +98,15 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
                                       context: context,
                                       onTap: () {
                                         WayaNav.goBack();
-                                        Share.share(
-                                          WayaValueHelper.getShareableUrl(
-                                              WayaAppRoutes.getPollDetailsPage(
-                                                  '${poll.id}')),
-                                          subject: 'Share Poll',
+                                        SharePlus.instance.share(
+                                          ShareParams(
+                                            text:
+                                                WayaValueHelper.getShareableUrl(
+                                                    WayaAppRoutes
+                                                        .getPollDetailsPage(
+                                                            '${poll.id}')),
+                                            subject: 'Share Poll',
+                                          ),
                                         );
                                       },
                                       asset: WayaAssets.icons.genSet.share.svg(
@@ -244,7 +248,6 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
 
                         WayaButton(
                           callback: () {
-                            debugPrint('ENDINg date ===>>>${poll.endDate}');
                             WayaNav.toNamed('/poll-dashboard', arguments: {
                               'id': '${poll.id}',
                               'endDate': '${poll.endDate}',
@@ -259,7 +262,7 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
                 }));
   }
 
-  userIm(ctx, net) {
+  Widget userIm(BuildContext ctx, String net) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Stack(
         clipBehavior: Clip.none,
@@ -318,8 +321,8 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
     ]);
   }
 
-  presImage(img, name, ctx, chk, voteFee, choiceId, pollId, candidateName,
-      votingLink, onTap) {
+  Widget presImage(String img, String name, BuildContext ctx, bool chk, voteFee,
+      choiceId, pollId, candidateName, votingLink, onTap) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -381,8 +384,8 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
     );
   }
 
-  choiceStatisticsSecond(
-      chkImg,
+  Widget choiceStatisticsSecond(
+      bool chkImg,
       img,
       name,
       ctx,

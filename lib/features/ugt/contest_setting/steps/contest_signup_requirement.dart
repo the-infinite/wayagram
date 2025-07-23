@@ -473,7 +473,7 @@ class _ContestSignupRequirementState
     );
   }
 
-  _mygrayInput(String name) {
+  Widget _mygrayInput(String name) {
     return Container(
       width: context.width,
       height: 45,

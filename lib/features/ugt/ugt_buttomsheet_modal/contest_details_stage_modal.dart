@@ -177,7 +177,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
     );
   }
 
-  _lineThick() {
+  Widget _lineThick() {
     return Column(
       children: [
         const Gap(5),

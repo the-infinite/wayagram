@@ -131,8 +131,9 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                 child: _buildActionNav(
                                     context: context,
                                     onTap: () async {
-                                      await Share.share(
-                                        WayaValueHelper.getShareableUrl(
+                                      await SharePlus.instance
+                                          .share(ShareParams(
+                                        text: WayaValueHelper.getShareableUrl(
                                             WayaAppRoutes
                                                 .getContestantProfileRoute(
                                                     widget.post
@@ -141,7 +142,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                                     widget.post.contestId ??
                                                         "")),
                                         subject: "Share Contestant Profile",
-                                      );
+                                      ));
                                     },
                                     asset: WayaAssets.icons.genSet.share
                                         .svg(fit: BoxFit.none),
@@ -298,14 +299,17 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                         color: wayaTheme.colorScheme.primary,
                         onPressed: () async {
                           // if (hasClickedShared.value == false) {
-                          final result = await Share.share(
-                            WayaValueHelper.getShareableUrl(
-                                WayaAppRoutes.getContestantProfileRoute(
-                              widget.contestApplicant?.profileId ?? "",
-                              widget.contestApplicant?.contestId ?? "",
-                            )),
-                            subject: "Share Post",
+                          final result = await SharePlus.instance.share(
+                            ShareParams(
+                              text: WayaValueHelper.getShareableUrl(
+                                  WayaAppRoutes.getContestantProfileRoute(
+                                widget.contestApplicant?.profileId ?? "",
+                                widget.contestApplicant?.contestId ?? "",
+                              )),
+                              subject: "Share Post",
+                            ),
                           );
+
                           if (result.status == ShareResultStatus.success) {
                             notifier.toggleShare(widget.post.id!);
                           }

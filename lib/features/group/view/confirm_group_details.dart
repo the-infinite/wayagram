@@ -130,7 +130,7 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
     );
   }
 
-  details(title, subTitle) {
+  Widget details(String title, String? subTitle) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -149,7 +149,7 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
           child: Padding(
             padding: EdgeInsets.only(left: 15.h),
             child: Text(
-              subTitle,
+              subTitle ?? '',
               maxLines: 2,
               textAlign: TextAlign.right,
               style: TextStyle(

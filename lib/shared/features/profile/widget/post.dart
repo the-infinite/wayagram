@@ -87,8 +87,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     if (result == null) return;
   }
 
-  void _sharePost(
-      engagementMonitor, pageNotifier, serviceNotifier, WidgetRef ref) async {
+  void _sharePost(PostEngagementMonitor engagementMonitor, pageNotifier,
+      serviceNotifier, WidgetRef ref) async {
     //? Acknowledge this user's choice to share the post.
     postEngagement(engagementMonitor, widget.data, PostPoints.sharePoint.value);
 
