@@ -104,7 +104,7 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?userId=$userId&status=active");
   }
 
-  Future<WayaRequestResponse> fetchSinglePost(postId) {
+  Future<WayaRequestResponse> fetchSinglePost(String postId) {
     return get("$serviceUrl/posts?id=$postId");
   }
 
