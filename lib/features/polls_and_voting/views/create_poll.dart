@@ -50,11 +50,9 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
+
               if(_formKey.currentState!.validate()) {
-
-                debugPrint('PAID POLL =>>>> ${viewModel.pollType}');
                 WayaNav.toNamed("/add-choices");
-
               }
             } : null,
             text: 'Create',
@@ -67,7 +65,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                 color: Theme.of(context).colorScheme.white ),
           ),
         ),
-        //createPoll(context, sel ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
