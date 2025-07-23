@@ -129,7 +129,7 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
               ProfileActionButton(
                 onTap: () {
                   //? This is muted.
-                  if (widget.chat.self.isMuted) {
+                  if (widget.chat.self?.isMuted ?? false) {
                     notifier.muteOrUnmuteGroup(widget.chat.id, null);
                   }
 
@@ -144,11 +144,11 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
                     );
                   }
                 },
-                icon: widget.chat.self.isMuted
+                icon: widget.chat.self?.isMuted ?? false
                     ? WayaAssets.icons.cProfileUnmute.path
                     : WayaAssets.icons.cProfileMute.path,
-                isBad: !widget.chat.self.isMuted,
-                text: widget.chat.self.isMuted ? "Unmute" : "Mute",
+                isBad: !(widget.chat.self?.isMuted ?? false),
+                text: widget.chat.self?.isMuted ?? false ? "Unmute" : "Mute",
               ),
 
               //* Next, report a user.

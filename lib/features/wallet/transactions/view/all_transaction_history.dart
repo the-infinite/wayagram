@@ -52,7 +52,6 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
   Future<void> _applyFilter(DateFilter filter) async {
     String? appliedFilter;
 
-
     if (filter == DateFilter.customRange) {
       final firstDate = DateTime.now().year;
       // Show date range picker
@@ -65,15 +64,19 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
       );
 
       if (dateRange != null) {
-        final startDate = dateRange.start.subtract(Duration(days: 1));
-        final endDate = dateRange.end.add(Duration(days: 1));
+        var startDate = dateRange.start.toLocal();
+        var endDate = dateRange.end.toLocal();
 
-        print('START  DATE $startDate');
-        print('END DATE $endDate');
+        if (startDate == endDate) {
+          endDate = dateRange.end
+              .add(const Duration(hours: 11, minutes: 59, seconds: 59));
+        }
+        print('START  DATE1 $startDate');
+        print('END DATE1 $endDate');
 
         appliedFilter =
-            "startDate=${DateFormat('yyyy-MM-dd').format(startDate)}&endDate=${DateFormat('yyyy-MM-dd').format(endDate)}";
-            //"startDate=${DateFormat('yyyy-MM-dd').format(dateRange.start)}&endDate=${DateFormat('yyyy-MM-dd').format(dateRange.end)}";
+            "startDate=${DateFormat('yyyy-MM-dd hh:mm a').format(startDate)}&endDate=${DateFormat('yyyy-MM-dd hh:mm a').format(endDate)}";
+        //"startDate=${DateFormat('yyyy-MM-dd').format(dateRange.start)}&endDate=${DateFormat('yyyy-MM-dd').format(dateRange.end)}";
       } else {
         return;
       }

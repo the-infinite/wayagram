@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/quotation/widgets/single_negotiation_bid.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
@@ -37,11 +38,18 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
   final extendNotifier = ValueNotifier(false);
   final requestState = ValueNotifier<BuyRequestModel?>(null);
   Timer? _timer;
+  BidOrderModel? order;
 
   Future<void> _ingestBid() async {
     //? Update this guy in the list.
     final result = await notifier.getBuyRequest(widget.id);
+    final finalOrder = await notifier.getOrderDetails(widget.id);
+    order = finalOrder;
     if (result != null) requestState.value = result;
+  }
+
+  Future<void> _viewOrder() async {
+    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.id));
   }
 
   @override
@@ -102,6 +110,9 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final _ = ref.watch(userQuotationsProvider);
+
+    final participatedOrder =
+        order?.buyerId == ConversationState.self.id || order?.vendorId == ConversationState.self.id;
 
     //? This is fine too.
     return WayaScaffold(
@@ -189,6 +200,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                         request: request,
                         timer: _timer,
                         bid: bid,
+                        order: order,
                         onBidReacted: _ingestBid,
                       );
                     },
@@ -197,14 +209,15 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
 
               //? This is fine.
               if (request?.hasAcceptedBid ?? false)
-                //? The button for proceeding to payment for a quote.
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: WayaButton(
-                    callback: () async => WayaNav.offNamed(
-                      WayaAppRoutes.getQuotationCheckoutScreen(request!.acceptedBid!.id, request.id),
-                    ),
-                    text: "Proceed to Payment",
+                    callback: participatedOrder && order!.isPaid
+                        ? _viewOrder
+                        : () async => WayaNav.offNamed(
+                              WayaAppRoutes.getQuotationCheckoutScreen(request!.acceptedBid!.id, request.id),
+                            ),
+                    text: participatedOrder && order!.isPaid ? "View Order" : "Proceed to Payment",
                   ),
                 )
               else

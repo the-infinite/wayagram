@@ -44,6 +44,9 @@ class PageState {
   final bool isLoading;
   final bool isReportingPage;
   final bool isReportingPost;
+  final bool openToEveryone;
+  final bool adminCanCreate;
+  final bool comment;
 
   //? If this has more posts, continue.
   bool get hasMorePosts => allPostData?.data?.hasNextPage ?? true;
@@ -59,6 +62,9 @@ class PageState {
     this.isLoading = false,
     this.isReportingPage = false,
     this.isReportingPost = false,
+    this.openToEveryone = false,
+    this.adminCanCreate = false,
+    this.comment = false,
     this.postCount,
     this.images = const [],
     this.fetchAllPostData = const [],
@@ -104,6 +110,9 @@ class PageState {
     List<PostModel>? pagePopularPostDocs,
     List<CommentModel>? comments,
     String? category,
+    bool? openToEveryone,
+    bool? adminCanCreate,
+    bool? comment,
     List<dynamic>? docs,
     MediaUploadData? data,
     num? postCount,
@@ -127,7 +136,8 @@ class PageState {
       category: category ?? this.category,
       categories: categories ?? this.categories,
       pageMediaModelDocs: pageMediaModelDocs ?? this.pageMediaModelDocs,
-      pageInvitationModelDocs: pageInvitationModelDocs ?? this.pageInvitationModelDocs,
+      pageInvitationModelDocs:
+          pageInvitationModelDocs ?? this.pageInvitationModelDocs,
       pageFollowerDocs: pageFollowerDocs ?? this.pageFollowerDocs,
       postCount: postCount ?? this.postCount,
       recommendedPages: recommendedPages ?? this.recommendedPages,
@@ -144,6 +154,9 @@ class PageState {
       isLoading: isLoading ?? this.isLoading,
       isReportingPage: isReportingPage ?? this.isReportingPage,
       isReportingPost: isReportingPost ?? this.isReportingPost,
+      openToEveryone: openToEveryone ?? this.openToEveryone,
+      adminCanCreate: adminCanCreate ?? this.adminCanCreate,
+      comment: comment ?? this.comment,
     );
   }
 
@@ -153,15 +166,20 @@ class PageState {
       'pageDescription': pageDescription.text,
       'content': content.text,
       'images': images.map((image) => {'image': image.image?.path}).toList(),
-      'fetchAllPostData': fetchAllPostData?.map((post) => post.toJson()).toList(),
+      'fetchAllPostData':
+          fetchAllPostData?.map((post) => post.toJson()).toList(),
       'getAllPost': getAllPost?.map((post) => post.toJson()).toList(),
       'comments': comments?.map((comment) => comment.toJson()).toList(),
       'postCount': postCount,
       'allPostData': allPostData?.toJson(),
-      'recommendedPages': recommendedPages?.map((page) => page.toJson()).toList(),
-      'allPageModelDocs': allPageModelDocs?.map((page) => page.toJson()).toList(),
-      'getPageMemberDocs': getPageMemberDocs?.map((member) => member.toJson()).toList(),
-      'pagePopularPostDocs': pagePopularPostDocs?.map((post) => post.toJson()).toList(),
+      'recommendedPages':
+          recommendedPages?.map((page) => page.toJson()).toList(),
+      'allPageModelDocs':
+          allPageModelDocs?.map((page) => page.toJson()).toList(),
+      'getPageMemberDocs':
+          getPageMemberDocs?.map((member) => member.toJson()).toList(),
+      'pagePopularPostDocs':
+          pagePopularPostDocs?.map((post) => post.toJson()).toList(),
       'data': data?.toJson(),
       'docs': docs,
       'shareModelData': shareModelData?.toJson(),

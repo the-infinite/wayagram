@@ -319,8 +319,10 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/recommended?page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> updatePageSetting(bool isPublic, bool everyoneCanComment, pageId) {
-    final payload = {"isPublic": isPublic, "everyoneCanComment": everyoneCanComment};
+  Future<WayaRequestResponse> updatePageSetting(bool isOpen, bool everyoneCanComment, bool adminsCanCreate, pageId) {
+    final payload = {"isOpen": isOpen, "everyoneCanComment": everyoneCanComment,
+      "adminsCanCreate": adminsCanCreate};
+    print('MY PAYLOAD $payload');
     return patch("$serviceUrl/pages/update-setting/$pageId", payload);
   }
 
@@ -339,8 +341,8 @@ class PageRepository extends BaseRepository {
   //Page general settings
   Future<WayaRequestResponse> updatePageGeneralSettings(bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
     return patch("$serviceUrl/user/page-settings", {
-      "allowFollow": isEveryOneAllowFollow ? "everyone" : "friends",
-      "allowComments": isEveryOneAllowComment ? "everyone" : "friends"
+      "allowFollow": isEveryOneAllowFollow ,
+      "allowComments": isEveryOneAllowComment 
     });
   }
 

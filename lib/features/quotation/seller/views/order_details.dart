@@ -48,10 +48,17 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
 
   void _ingestOrder() async {
     final foundOrder = await notifier.getOrderDetails(widget.requestId);
-    final foundStatus = await notifier.trackDelivery(widget.requestId);
     final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
     final foundBid =
         foundOrder == null ? null : notifier.getBid(foundOrder.bidId) ?? await notifier.getSingleBid(foundOrder.bidId);
+    final statusList = await notifier.trackDelivery(widget.requestId);
+    foundQuote?.deliveryType == BuyRequestDeliveryType.pickup
+        ? statusList?.sort((first, second) => first.pickupStatus.rank.compareTo(second.pickupStatus.rank))
+        : statusList?.sort((first, second) => first.deliveryStatus.rank.compareTo(second.deliveryStatus.rank));
+    final foundStatus = statusList?.firstOrNull;
+
+    //? Emit this one.
+    debugPrint("Order: ${foundStatus?.id}");
 
     //? This is fine.
     if (foundOrder != null && foundQuote != null && mounted) {
@@ -74,7 +81,11 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
         //? This is fine.
         final foundOrder = await notifier.getOrderDetails(widget.requestId);
         final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
-        final foundStatus = await notifier.trackDelivery(widget.requestId);
+        final statusList = await notifier.trackDelivery(widget.requestId);
+        foundQuote?.deliveryType == BuyRequestDeliveryType.pickup
+            ? statusList?.sort((first, second) => first.pickupStatus.rank.compareTo(second.pickupStatus.rank))
+            : statusList?.sort((first, second) => first.deliveryStatus.rank.compareTo(second.deliveryStatus.rank));
+        final foundStatus = statusList?.firstOrNull;
         final foundUser = foundQuote != null
             ? await UserResource.getUserDetails(
                 ConversationState.self.id == foundQuote.buyerId ? (foundOrder?.vendorId ?? "") : foundQuote.buyerId)
@@ -120,7 +131,7 @@ class _QuotationOrderDetailsScreenState extends ConsumerState<QuotationOrderDeta
     final subtotal = (request?.quantity ?? 0) * (bid?.usedAmount ?? 0);
     final isUnavailable = order == null || request == null;
     final isBuyer = order?.buyerId == ConversationState.self.id;
-    final hasArrived = request?.deliveryType == BuyRequestDeliveryType.pickup
+    final hasArrived = request?.deliveryType != BuyRequestDeliveryType.pickup
         ? status?.deliveryStatus == QuotationDeliveryStatus.delivered
         : status?.pickupStatus == QuotationPickupStatus.collected;
 

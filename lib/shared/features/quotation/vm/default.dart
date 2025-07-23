@@ -697,16 +697,18 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
   /// Helper function used to complete an order. This is useful when we want to
   /// complete an order in the system.
-  Future<BidOrderStatus?> trackDelivery(String id) async {
+  Future<List<BidOrderStatus>?> trackDelivery(String id) async {
     try {
       final response = await repo.trackDelivery(requestId: id);
 
       //? If this went well...
       if (response.success) {
         debugPrint("Result: ${response.data}");
-        return BidOrderStatus.fromJson(response.data['data']);
+        final data = response.data['data'] as List;
+        return [...data.map((payload) => BidOrderStatus.fromJson(payload))];
       }
     } catch (e) {
+      debugPrint("Order: Error: $e");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,

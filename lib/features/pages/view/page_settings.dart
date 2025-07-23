@@ -5,12 +5,9 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class PageSetting extends StatefulHookConsumerWidget {
@@ -26,7 +23,7 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
   Widget build(BuildContext context) {
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createGroupProvider);
+    final viewModel = ref.watch(createPageProvider);
     final viewModel2 = ref.watch(wayaSelectFieldViewModelProvider(Uuid().v4()));
     final pageNotifier = ref.read(createPageProvider.notifier);
 
@@ -61,7 +58,12 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
             style: wayaTheme.textTheme.hintStyle,
           ),
           Gap(20),
-          GestureDetector(
+
+          /// everyoneCanComment  --->
+          /// isOpen              --->
+          /// adminsCanCreate     --->
+
+       /*   GestureDetector(
             onTap: () {
               viewModel2.selectValue(context, "Who Can Contact Me", [
                 Select(label: "Everyone", value: "1"),
@@ -75,18 +77,13 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
               }, false);
             },
             child: PrivacyWidget(
-                title: "Follow Permissions",
+                title: "Is Open permission",
                 value: "Allow anyone to follow without restrictions for a more inclusive community",
                 showSwitch: false,
                 whoCanContactMe: followPermission,
                 switchValue: lastSeen),
           ),
-          Gap(10),
-
-          /*  accessType(
-              "Follow Permissions",
-              "Allow anyone to follow without restrictions for a more inclusive community", viewModel.openToEveryone,
-                  (value) => ref.read(createGroupProvider.notifier).updateOpenToEveryone(value)), */
+          //Gap(10),
 
           Gap(20),
           GestureDetector(
@@ -108,11 +105,39 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
                 showSwitch: false,
                 whoCanContactMe: commentPermission,
                 switchValue: lastSeen),
+          ),*/
+
+          /// New UI
+
+          accessType(
+              "Everyone can comment",
+              "Allow anyone to follow without restrictions for a more inclusive community", viewModel.comment,
+                  (value) {
+                    ref.read(createPageProvider.notifier).updateOpenCommentToEveryone(value);
+                    ref.read(createPageProvider.notifier).updatePageSetting(context, viewModel.openToEveryone, value, viewModel.adminCanCreate, args['pageId']);
+
+                  }
           ),
-          /*  accessType(
-              "Comment Permissions",
-              "Choose who you want to comment on page posts to have more control over your page ", viewModel.requireApproval,
-                  (value) => ref.read(createGroupProvider.notifier).updateRequireApproval(value)), */
+          Gap(10),
+            accessType(
+              "Is Open permission",
+              "Allow anyone to follow without restrictions for a more inclusive community", viewModel.openToEveryone,
+                  (value) {
+                  ref.read(createPageProvider.notifier).updateOpenToEveryone(value);
+                  ref.read(createPageProvider.notifier).updatePageSetting(context, value, viewModel.comment, viewModel.adminCanCreate, args['pageId']);
+              }
+            ),
+          Gap(10),
+          accessType(
+              "Admins can create",
+              "Allow invited admins to manage/create post", viewModel.adminCanCreate,
+                  (value) {
+                    ref.read(createPageProvider.notifier).updateAdminCanCreate(value);
+                    ref.read(createPageProvider.notifier).updatePageSetting(context, viewModel.openToEveryone, viewModel.comment, value, args['pageId']);
+                  }
+              ),
+
+
         ],
       ),
     );
