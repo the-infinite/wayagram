@@ -37,17 +37,18 @@ class EventRepository extends BaseRepository {
         "$serviceUrl/events/get-event?eventstatus=$status&status=active&page=$page&limit=$limit");
   }
 
-      Future<WayaRequestResponse> requestForEventPayout(String eventId) {
-    return post('$serviceUrl/events-transactions', {"eventId": eventId}, formdata: false);
+  Future<WayaRequestResponse> requestForEventPayout(String eventId) {
+    return post('$serviceUrl/events-transactions', {"eventId": eventId},
+        formdata: false);
   }
 
-
-        Future<WayaRequestResponse> getPayoutTransactions(String eventId) {
-    return get('$serviceUrl/events-transactions/get-transactions?eventId=$eventId');
+  Future<WayaRequestResponse> getPayoutTransactions(String eventId) {
+    return get(
+        '$serviceUrl/events-transactions/get-transactions?eventId=$eventId');
   }
 
   ///events-transactions/get-payouts
-          Future<WayaRequestResponse> getPayouts(String eventId) {
+  Future<WayaRequestResponse> getPayouts(String eventId) {
     return get('$serviceUrl/events-transactions/get-payouts?eventId=$eventId');
   }
 
@@ -77,7 +78,21 @@ class EventRepository extends BaseRepository {
   Future<WayaRequestResponse> joinedUsers(
       {required String id, int? page = 100, int? limit = 10}) {
     return get(
-        "$serviceUrl/join-events/get?eventId=$id&page=$page&limit=$limit");
+        "$serviceUrl/join-events/get?eventId=$id&page=$page&limit=$limit&status=completed");
+  }
+
+  Future<WayaRequestResponse> pendingApprovals(
+      {required String id, int? page = 100, int? limit = 10}) {
+    return get(
+        "$serviceUrl/join-events/get?eventId=$id&page=$page&limit=$limit&status=completed&approved=false");
+  }
+
+  Future<WayaRequestResponse> updateApprovalStatus(
+      {required String userId,
+      required String eventId,
+      required String status}) {
+    final payload = {"userId": userId, "eventId": eventId, "action": status};
+    return patch("$serviceUrl/join-events/update-member", payload);
   }
 
   Future<WayaRequestResponse> eventsJoined(

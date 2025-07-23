@@ -154,7 +154,7 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.resendOtp(
         email: '${ConversationState.self.email}',
-        purpose: 'Change-Password',
+        purpose: 'Reset-Password',
       );
 
       if (response.data["statusCode"] == 200) {
@@ -171,6 +171,7 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
 
 
   Future<void> onResendPayoutOtp() async {

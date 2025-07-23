@@ -183,6 +183,26 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     }
   }
 
+
+    Future<void> verifyChangePassword(
+      {required VoidCallback onSuccess,
+      required String code,
+      required String email}) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final response = await _authRepository
+          .verifyChangePassword(VerifyOtp(email: email, otp: code));
+      if (response.success) {
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<void> verifySetTransactionPin(
       {required VoidCallback onSuccess,
       required String code,
@@ -201,7 +221,24 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       state = state.copyWith(isLoading: false);
     }
   }
+  Future<void> verifyChangeTransactionPin(
+      {required VoidCallback onSuccess,
+      required String code,
+      required String email}) async {
+    state = state.copyWith(isLoading: true);
 
+    try {
+      final response = await _authRepository
+          .verifyChangePin(VerifyOtp(email: email, otp: code));
+      if (response.success) {
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
   Future<void> verifyPayout(
       {required VoidCallback onSuccess,
       required String code,
