@@ -150,7 +150,13 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
                 children: [
                   ...viewModel.singlePollChoices.map(
                     (e) => InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        final secureDataSource = WayaSecureDataSource();
+                        final token = await secureDataSource.getToken();
+                        if (token == null) {
+                          WayaNav.removeUntilNamed(LoginPage.route);
+                          return;
+                        }
                         // if (currentDate.isAfter('${}')) {
                         //   ScaffoldMessenger.of(context).showSnackBar(
                         //     const SnackBar(
