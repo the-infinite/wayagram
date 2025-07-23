@@ -93,6 +93,14 @@ class GroupVm extends StateNotifier<GroupState> {
     state = state.copyWith(openToEveryone: value);
   }
 
+  void updateApproveJoinRequest(bool value) {
+    state = state.copyWith(approveJoinRequest: value);
+  }
+
+  void updateOpenCommentToEveryone(bool value) {
+    state = state.copyWith(comment: value);
+  }
+
   void toggleMute(bool value) {
     state = state.copyWith(muteAndUnMute: value);
   }
@@ -342,11 +350,11 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> updateGroupSetting(BuildContext ctx,bool isPrivate, String groupId,) async {
+  Future<void> updateGroupSetting(BuildContext ctx,bool isOpen, bool approveJoinRequest, String groupId,) async {
 
     try {
       //state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.updateGroupSetting(isPrivate, groupId);
+      final response = await _groupRepository.updateGroupSetting(isOpen, approveJoinRequest, groupId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {

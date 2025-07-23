@@ -419,6 +419,7 @@ class Group {
     this.memberCount,
     this.description,
     this.isOpen,
+    this.approveJoinRequest,
     this.categories,
     this.url,
     this.isPrivate,
@@ -436,6 +437,7 @@ class Group {
     memberCount = json['memberCount'];
     description = json['description'];
     isOpen = json['isOpen'];
+    approveJoinRequest = json['approveJoinRequest'];
     categories = json['categories'];
     url = json['url'];
     isPrivate = json['isPrivate'];
@@ -453,6 +455,7 @@ class Group {
   num? memberCount;
   String? description;
   bool? isOpen;
+  bool? approveJoinRequest;
   dynamic categories;
   dynamic url;
   bool? isPrivate;
@@ -468,6 +471,7 @@ class Group {
     num? memberCount,
     String? description,
     bool? isOpen,
+    bool? approveJoinRequest,
     dynamic categories,
     dynamic url,
     bool? isPrivate,
@@ -484,6 +488,7 @@ class Group {
         memberCount: memberCount ?? this.memberCount,
         description: description ?? this.description,
         isOpen: isOpen ?? this.isOpen,
+        approveJoinRequest: approveJoinRequest ?? this.approveJoinRequest,
         categories: categories ?? this.categories,
         url: url ?? this.url,
         isPrivate: isPrivate ?? this.isPrivate,
@@ -501,6 +506,7 @@ class Group {
     map['memberCount'] = memberCount;
     map['description'] = description;
     map['isOpen'] = isOpen;
+    map['approveJoinRequest'] = approveJoinRequest;
     map['categories'] = categories;
     map['url'] = url;
     map['isPrivate'] = isPrivate;
