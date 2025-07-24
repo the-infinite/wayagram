@@ -109,10 +109,7 @@ class ShopRepository extends BaseRepository {
   ///
   Future<WayaRequestResponse> addToken(
       {required String deliveryToken,
-      required String accountNumber,
-      required String accountName,
-      required String bankName,
-      required String bankCode}) {
+      }) {
     return post(
         "$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
   }
