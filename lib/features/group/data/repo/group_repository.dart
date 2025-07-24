@@ -224,7 +224,6 @@ class GroupRepository extends BaseRepository {
       "approveJoinRequest": approveJoinRequest,
       "isOpen": isOpen
     };
-    print('GROUP SETTING $payload');
     return patch("$serviceUrl/groups/update-setting/$groupId", payload);
   }
 
