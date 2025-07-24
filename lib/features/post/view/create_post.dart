@@ -49,15 +49,15 @@ class _CreatePostState extends ConsumerState<CreatePost>
         controller.dispose();
       }
 
-      final images = await _pickers.pickMultiImage(
-        imageQuality: 80, // Adjust image quality (0-100)
-        maxWidth: 1200, // Max width of images
-        maxHeight: 1200, // Max height of images
-      );
+      final images = await _pickers.pickImage(
+          imageQuality: 80, // Adjust image quality (0-100)
+          maxWidth: 1200, // Max width of images
+          maxHeight: 1200, // Max height of images
+          source: ImageSource.camera);
 
-      if (images.isNotEmpty) {
+      if (images != null) {
         setState(() {
-          _selectedImages = images.take(5).toList();
+          _selectedImages = [images];
         });
       }
     } catch (e) {
@@ -67,8 +67,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
   }
 
   Future<void> pickVideo() async {
-    final XFile? pickedFile =
-        await _pickers.pickVideo(source: ImageSource.gallery);
+    final XFile? pickedFile = await _pickers.pickMedia();
     if (pickedFile != null) {
       //? Dispose the older video controllers
       for (final controller in videoControllers) {
@@ -106,46 +105,49 @@ class _CreatePostState extends ConsumerState<CreatePost>
               child: SizedBox(
                 width: context.width * 0.15,
                 child:
-                // !isTyping
-                //     ? WayaButton(
-                //         callback: viewModel.isLoading
-                //             ? () async {
-                //                 if (_formKey.currentState!.validate()) {}
-                //               }
-                //             : null,
-                //         height: 30,
-                //         text: 'Post',
-                //         isLoading: viewModel.isLoading,
-                //         textStyle: WayaTextStyles.bodySmall.copyWith(
-                //             fontSize: 12.sp,
-                //             fontWeight: FontWeight.w600,
-                //             color: Theme.of(context).colorScheme.white),
-                //       )
-                   // :
-                  WayaButton(
-                        callback: !viewModel.isLoading
-                            ? () async {
-                                if (_formKey.currentState!.validate()) {
-                                  await notifier.createPost(
-                                    context,
-                                    viewModel.content.text,
-                                    sel ? "public" : "private",
-                                    _selectedImages,
-                                  );
-                                  notifier.reset();
-                                  WayaNav.goBack();
-                                }
-                              }
-                            : null,
-                        height: 30,
-                        text: 'Post',
-                        isLoading: viewModel.isLoading,
-                        textStyle: WayaTextStyles.bodySmall.copyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.white,
-                        ),
-                      ),
+                    // !isTyping
+                    //     ? WayaButton(
+                    //         callback: viewModel.isLoading
+                    //             ? () async {
+                    //                 if (_formKey.currentState!.validate()) {}
+                    //               }
+                    //             : null,
+                    //         height: 30,
+                    //         text: 'Post',
+                    //         isLoading: viewModel.isLoading,
+                    //         textStyle: WayaTextStyles.bodySmall.copyWith(
+                    //             fontSize: 12.sp,
+                    //             fontWeight: FontWeight.w600,
+                    //             color: Theme.of(context).colorScheme.white),
+                    //       )
+                    // :
+                    WayaButton(
+                  callback: !viewModel.isLoading
+                      ? () async {
+                          if (_selectedImages.isNotEmpty ||
+                              viewModel.content.text.isNotEmpty) {
+                            await notifier.createPost(
+                              context,
+                              viewModel.content.text.isNotEmpty
+                                  ? viewModel.content.text
+                                  : '',
+                              sel ? "public" : "private",
+                              _selectedImages,
+                            );
+                            notifier.reset();
+                            WayaNav.goBack();
+                          }
+                        }
+                      : null,
+                  height: 30,
+                  text: 'Post',
+                  isLoading: viewModel.isLoading,
+                  textStyle: WayaTextStyles.bodySmall.copyWith(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.white,
+                  ),
+                ),
               ),
             ),
           ],
@@ -348,7 +350,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                 InkWell(
                   onTap: pickVideo,
                   child: Image.asset(
-                    'assets/images/pages/sn.png',
+                    'assets/images/pages/gallery.png',
                     height: 32.h,
                   ),
                 ),
@@ -356,7 +358,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                 InkWell(
                   onTap: _pickImages,
                   child: Image.asset(
-                    'assets/images/pages/gallery.png',
+                    'assets/images/pages/sn.png',
                     height: 32.h,
                   ),
                 ),

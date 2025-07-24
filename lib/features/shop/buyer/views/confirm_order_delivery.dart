@@ -101,27 +101,24 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                     child: PinKeyboard(
                         onKeyTap: viewModel.handleKeyPress,
                         onSubmit: () {
-                          if (walletViewModel.payoutMethod.isEmpty) {
-                            WayaSnackBar.showToast(
-                                'Cannot Checkout. Contact the Shop Owner');
-                            return;
-                          }
+                          // if (walletViewModel.payoutMethod.isEmpty) {
+                          //   WayaSnackBar.showToast(
+                          //       'Cannot Checkout. Contact the Shop Owner');
+                          //   return;
+                          // }
 
-                          final String acctNumber =
-                              walletViewModel.payoutMethod[0].accountNumber ??
-                                  '';
-                          final String acctName =
-                              walletViewModel.payoutMethod[0].accountName ?? '';
-                          final String bankName =
-                              walletViewModel.payoutMethod[0].bankName ?? '';
-                          final String bankCode =
-                              walletViewModel.payoutMethod[0].bankCode ?? '';
+                          // final String acctNumber =
+                          //     walletViewModel.payoutMethod[0].accountNumber ??
+                          //         '';
+                          // final String acctName =
+                          //     walletViewModel.payoutMethod[0].accountName ?? '';
+                          // final String bankName =
+                          //     walletViewModel.payoutMethod[0].bankName ?? '';
+                          // final String bankCode =
+                          //     walletViewModel.payoutMethod[0].bankCode ?? '';
 
                           viewModel.submitPins(context: context, order: arg,
-                              bankCode: bankCode,
-                              acctNumber: acctNumber,
-                              bankName: bankName,
-                              acctName: acctName);
+                             );
                         },
                         onBackspace: viewModel.handleBackspace)),
                 const Gap(20),

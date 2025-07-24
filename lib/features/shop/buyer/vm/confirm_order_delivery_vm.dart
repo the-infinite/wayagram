@@ -46,10 +46,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
   Future<void> submitPins(
       {required BuildContext context,
       required Order order,
-      required String bankCode,
-      required String acctNumber,
-      required String bankName,
-      required String acctName}) async {
+     }) async {
     final pin = ref.read(orderPinProvider);
 
     try {
@@ -70,10 +67,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
       state = state.copyWith(isLoading: true);
       final response = await _shopRepository.addToken(
           deliveryToken: pin.toString(),
-          accountNumber: acctNumber,
-          accountName: acctName,
-          bankName: bankName,
-          bankCode: bankCode);
+          );
 
       if (response.success && context.mounted) {
         clearPins();
