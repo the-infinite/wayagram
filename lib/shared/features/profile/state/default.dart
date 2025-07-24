@@ -299,11 +299,11 @@ class SavedPostState {
     );
   }
 
-  BookmarkModel? find(String id) {
-    return bookmarks.where((post) => post.postId == id).firstOrNull;
+  PostModel? find(String id) {
+    return docs.where((post) => post.id == id).firstOrNull;
   }
 
   bool isSaved(String id) {
-    return bookmarks.any((post) => post.postId == id);
+    return docs.any((post) => post.id == id);
   }
 }

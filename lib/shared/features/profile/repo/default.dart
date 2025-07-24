@@ -8,19 +8,23 @@ class UserProfileRepository extends BaseRepository {
 
   UserProfileRepository._();
 
-  Future<WayaRequestResponse> getPostsForUser(String userId, int page, int limit) async {
+  Future<WayaRequestResponse> getPostsForUser(
+      String userId, int page, int limit) async {
     return httpClient.getHttp(
       "$serviceUri/posts/users/posts?userId=$userId&orderBy=createdAt&orderDirection=DESC&limit=$limit&page=$page",
     );
   }
 
-  Future<WayaRequestResponse> getRepostsForUser(String userId, int page, int limit) async {
-    return httpClient
-        .getHttp("$serviceUri/posts/?isRepost=true&userId=$userId&orderBy=createdAt&orderDirection=DESC&limit=$limit&page=$page");
+  Future<WayaRequestResponse> getRepostsForUser(
+      String userId, int page, int limit) async {
+    return httpClient.getHttp(
+        "$serviceUri/posts/?isRepost=true&userId=$userId&orderBy=createdAt&orderDirection=DESC&limit=$limit&page=$page");
   }
 
-  Future<WayaRequestResponse> getBookmarksForUser(String userId, int page, int limit) async {
-    return httpClient.getHttp("$serviceUri/posts/users/feed?isBookmarked=true&limit=$limit&page=$page");
+  Future<WayaRequestResponse> getBookmarksForUser(
+      String userId, int page, int limit) async {
+    return httpClient.getHttp(
+        "$serviceUri/posts/users/feed?isBookmarked=true&limit=$limit&page=$page");
   }
 
   Future<WayaRequestResponse> bookMarkPost(String postId) {
@@ -32,15 +36,20 @@ class UserProfileRepository extends BaseRepository {
     return delete("$serviceUri/posts/bookmarks/$bookmarkId");
   }
 
-  Future<WayaRequestResponse> getEventsForUser(String userId, int page, int limit) async {
+  Future<WayaRequestResponse> getEventsForUser(
+      String userId, int page, int limit) async {
     return httpClient.getHttp("$serviceUri/events/get-event?userId=$userId");
   }
 
-  Future<WayaRequestResponse> getGroupsForUser(String userId, int page, int limit) async {
-    return httpClient.getHttp("$serviceUri/groups?ownerId=$userId&page=$page&limit=$limit");
+  Future<WayaRequestResponse> getGroupsForUser(
+      String userId, int page, int limit) async {
+    return httpClient
+        .getHttp("$serviceUri/groups?ownerId=$userId&page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> getPagesForUser(String userId, int page, int limit) async {
-    return httpClient.getHttp("$serviceUri/pages?ownerId=$userId&page=$page&limit=$limit");
+  Future<WayaRequestResponse> getPagesForUser(
+      String userId, int page, int limit) async {
+    return httpClient
+        .getHttp("$serviceUri/pages?ownerId=$userId&page=$page&limit=$limit");
   }
 }
