@@ -123,7 +123,7 @@ class GroupVm extends StateNotifier<GroupState> {
 
         final List<Select>? categories = responseModel.data?.map((val) {
           return Select(
-              label: '${val.name?.capitalizeFirst}', value: '${val.id}');
+              label: '${val.name?.capitalizeFirst}', value: '${val.name}');
         }).toList();
         state = state.copyWith(categories: categories);
       }

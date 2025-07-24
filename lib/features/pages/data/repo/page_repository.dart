@@ -322,7 +322,6 @@ class PageRepository extends BaseRepository {
   Future<WayaRequestResponse> updatePageSetting(bool isOpen, bool everyoneCanComment, bool adminsCanCreate, pageId) {
     final payload = {"isOpen": isOpen, "everyoneCanComment": everyoneCanComment,
       "adminsCanCreate": adminsCanCreate};
-    print('MY PAYLOAD $payload');
     return patch("$serviceUrl/pages/update-setting/$pageId", payload);
   }
 

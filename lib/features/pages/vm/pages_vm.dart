@@ -124,7 +124,7 @@ class PageVm extends StateNotifier<PageState> {
 
         final List<Select>? categories = responseModel.data?.map((val) {
           return Select(
-              label: '${val.name?.capitalizeFirst}', value: '${val.id}');
+              label: '${val.name?.capitalizeFirst}', value: '${val.name}');
         }).toList();
         state = state.copyWith(categories: categories);
       }
