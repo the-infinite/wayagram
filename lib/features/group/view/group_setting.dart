@@ -49,9 +49,9 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
               "Open to Everyone",
               "Allow anyone to join without restrictions for a more inclusive community", viewModel.openToEveryone,
                   (value) {
-                    ref.read(createGroupProvider.notifier).updateOpenToEveryone(value);
-                    ref.read(createGroupProvider.notifier).updateGroupSetting(context, value, viewModel.openToEveryone, args['groupId']);
-                  }
+                ref.read(createGroupProvider.notifier).updateOpenToEveryone(value);
+                ref.read(createGroupProvider.notifier).updateGroupSetting(context, value, viewModel.approveJoinRequest, args['groupId']);
+              }
           ),
 
           accessType(
@@ -59,10 +59,11 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
               "Allow join request approval", viewModel.approveJoinRequest,
                   (value) {
                 ref.read(createGroupProvider.notifier).updateApproveJoinRequest(value);
-                ref.read(createGroupProvider.notifier).updateGroupSetting(context,viewModel.approveJoinRequest,
+                ref.read(createGroupProvider.notifier).updateGroupSetting(context,viewModel.openToEveryone,
                     value, args['groupId']);
               }
           ),
+
 
           Gap(20),
           accessType(
