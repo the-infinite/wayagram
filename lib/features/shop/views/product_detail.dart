@@ -41,6 +41,7 @@ class ProductDetail extends ConsumerStatefulWidget {
 
 class _ProductDetailState extends ConsumerState<ProductDetail> {
   bool isLiked = false;
+
   late final notifier = ref.read(productDetailVmProvider.notifier);
   late final shopNotifier = ref.read(shopVmProvider.notifier);
 
@@ -165,10 +166,19 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                 InkWell(
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    setState(() {
-                      isLiked = true;
-                    });
-                    ref.read(productDetailVmProvider.notifier).likeProduct();
+
+                    if (isLiked) {
+                      setState(() {
+                        isLiked = false;
+                      });
+                      
+                      ref.read(productDetailVmProvider.notifier).unlikeProduct();
+                    } else {
+                      setState(() {
+                        isLiked = true;
+                      });
+                      ref.read(productDetailVmProvider.notifier).likeProduct();
+                    }
                   },
                   child: Container(
                     decoration: BoxDecoration(

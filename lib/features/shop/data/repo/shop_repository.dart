@@ -101,8 +101,15 @@ class ShopRepository extends BaseRepository {
     return post("$serviceUrl/favorites/add/$userId", {"productId": productId});
   }
 
+  Future<WayaRequestResponse> removeFromFavorite({required String favoriteId}) {
+    print("favorite thing $favoriteId");
+    return put("$serviceUrl/favorites/remove", {"productId": favoriteId});
+  }
+
   ///
-  Future<WayaRequestResponse> addToken({required String deliveryToken, required String accountNumber, required String accountName, required String bankName, required String bankCode}) {
+  Future<WayaRequestResponse> addToken({
+    required String deliveryToken,
+  }) {
     return post(
         "$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
   }

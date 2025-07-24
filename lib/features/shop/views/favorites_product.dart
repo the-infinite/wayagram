@@ -77,8 +77,7 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
         isScrollable: true,
         isLoading: isLoading,
         title: "Favorite Products",
-        body: Expanded(
-            child: RefreshIndicator(
+        body: RefreshIndicator(
                 onRefresh: () async {},
                 child: SingleChildScrollView(
                   child: Column(
@@ -97,7 +96,7 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
                         ProductsGrid(products: searchFilteredProducts)
                     ],
                   ),
-                ))));
+                )));
   }
 
   Widget _favoriteProductLoadingState({required BuildContext context}) {
@@ -158,7 +157,7 @@ class ProductsGrid extends StatelessWidget {
               Expanded(child: FavoriteProductCard(product: products[i])),
               if (i + 1 < products.length) ...[
                 const SizedBox(width: 12),
-                Expanded(child: FavoriteProductCard(product: products[i])),
+                Expanded(child: FavoriteProductCard(product: products[i + 1])),
               ] else ...[
                 const SizedBox(width: 12),
                 Expanded(child: SizedBox()),

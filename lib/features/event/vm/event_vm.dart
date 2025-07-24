@@ -345,6 +345,9 @@ class EventVm extends StateNotifier<EventState> {
                 onCancel: () => WayaNav.toNamed(EventView.route),
               );
             }
+          } else if (response.data['responseCode'] == 1806) {
+            WayaSnackBar.showToast(
+                'Only the organizer follower can join this event');
           } else {
             WayaNav.goBack();
             String? message = response.data['message'];
@@ -471,6 +474,62 @@ class EventVm extends StateNotifier<EventState> {
       return null;
     } finally {
       state = state.copyWith(isLoadingAttendees: false);
+    }
+  }
+
+  Future<PaginatedResult<Doc>?> getAttendeesAwaitingApproval(
+      {required int page, String? id}) async {
+    try {
+      state = state.copyWith(isLoadingAttendees: true);
+      final userId = await _secureDataSource.getUserId();
+      state = state.copyWith(userId: userId);
+      final response = await _eventRepository.pendingApprovals(
+          id: id ?? state.singleEvent!.id, page: page);
+      List<Doc> attendees = [];
+      bool hasNextPage = false;
+
+      //? This is fine.
+      if (response.success) {
+        AttendeeResponse attendeeResponse =
+            AttendeeResponse.fromJson(response.data);
+        attendees = attendeeResponse.data.docs;
+        hasNextPage = attendeeResponse.data.hasNextPage;
+        state = state.copyWith(attendees: attendees, isLoadingAttendees: false);
+      }
+
+      //? This is fine.
+      return PaginatedResult(
+        hasNextPage: hasNextPage,
+        items: attendees,
+      );
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.events,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+      return null;
+    } finally {
+      state = state.copyWith(isLoadingAttendees: false);
+    }
+  }
+
+  Future<void> updateApproval(
+      {required String userId,
+      required String eventId,
+      required String status}) async {
+    try {
+      
+      final response = await _eventRepository.updateApprovalStatus(
+          userId: userId, eventId: eventId, status: status);
+
+      if (response.success) {
+        await getAttendeesAwaitingApproval(page: 1);
+        WayaSnackBar.showToast("Request successfully ${status}ed");
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

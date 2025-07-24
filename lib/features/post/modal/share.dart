@@ -152,7 +152,10 @@ class SharePostModal extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () async {
                           if (post.url != null) {
-                            await WayaUtils.copyText(post.url!);
+                            await WayaUtils.copyText(
+                                WayaValueHelper.getShareableUrl(
+                                    WayaAppRoutes.getSinglePostScreen(
+                                        post.id)));
                             WayaSnackBar.showToast("Copied ${post.url}");
                             WayaNav.goBack(
                                 result: ShareResult(
@@ -192,7 +195,9 @@ class SharePostModal extends StatelessWidget {
                     //? The fifth option, is to share outward.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => Share.share('${post.url}',
+                        onTap: () async => Share.share(
+                                WayaValueHelper.getShareableUrl(
+                                    WayaAppRoutes.getSinglePostScreen(post.id)),
                                 subject: 'Share Post URL')
                             .then(
                           (value) {
@@ -252,7 +257,8 @@ class SharePostModal extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
                 child: ShareChatsWidget(
-                  url: post.url,
+                  url: WayaValueHelper.getShareableUrl(
+                      WayaAppRoutes.getSinglePostScreen(post.id)),
                   notifier: pageNotifier,
                   entityId: post.originalPostId ?? post.id,
                 ),

@@ -40,7 +40,7 @@ class GroupRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> createGroupPost(String content, List<String> images, String postType, String groupId) {
-    final payload = {"content": content, "groupId": groupId, "type": "generic", "media": images, "privacy": postType};
+    final payload = {"content": content , "groupId": groupId, "type": "generic", "media": images, "privacy": postType};
 
     return post("$serviceUrl/posts", payload, showErrors: true);
   }
