@@ -48,6 +48,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+     await notifier.getGroupMembers(widget.id);
       final result = await myGroupNotifier.getSingleGroup(widget.id);
       setState(() {
         _thisGroup = result;
@@ -66,16 +67,19 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
     final wayaTheme = Theme.of(context);
     final state = ref.watch(groupProvider);
 
+   final members =  state.allGroupMemberDocs ?? [];
+
     //? You can now return this.
     final group = wayaGroupCache.getCachedData(widget.id) ?? _thisGroup;
 
     //? If the page is not yet found.
-    if (group == null) {
+    if (group == null || members.isEmpty) {
       return const ColoredBox(color: Colors.white);
     }
 
     //? Fetch the data of this page.
-    if (group.ownerId == ConversationState.self.id) {
+    if (group.ownerId == ConversationState.self.id || members.where((member)=>
+    member.userId == ConversationState.self.id && member.role != 'member').firstOrNull != null) {
       return PrivateGroup(group: group);
     }
 
