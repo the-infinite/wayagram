@@ -87,7 +87,7 @@ class PageState {
   })  : username = username ?? TextEditingController(),
         pageName = pageName ?? TextEditingController(),
         pageDescription = pageDescription ?? TextEditingController(),
-        content = content ?? TextEditingController();
+        content = content ?? TextEditingController(text: '');
 
   PageState copyWith({
     TextEditingController? pageName,

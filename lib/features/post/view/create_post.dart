@@ -124,10 +124,13 @@ class _CreatePostState extends ConsumerState<CreatePost>
                     WayaButton(
                   callback: !viewModel.isLoading
                       ? () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (_selectedImages.isNotEmpty ||
+                              viewModel.content.text.isNotEmpty) {
                             await notifier.createPost(
                               context,
-                              viewModel.content.text,
+                              viewModel.content.text.isNotEmpty
+                                  ? viewModel.content.text
+                                  : '',
                               sel ? "public" : "private",
                               _selectedImages,
                             );
