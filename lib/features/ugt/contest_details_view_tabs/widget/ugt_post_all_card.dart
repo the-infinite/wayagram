@@ -332,7 +332,6 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           "contest": widget.post.contestId ?? "",
                         },
                       );
-                      //  debugPrint(widget.model.endDate ?? "");
                       /*     if (isPresentIsPast(widget.model.endDate ?? "")) {
                         WayaSnackBar.showToast("Contest has ended");
                         return;

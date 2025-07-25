@@ -26,22 +26,6 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
   final _contestController = Get.put(ContestController());
   List<Map<String, dynamic>> stages = [];
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-//   void _addStage() {
-//     debugPrint(
-//         'i dey ghhhhhhhh ${ref.read(contestNotifierProvider.notifier).getEditStageList()}');
-//     ref
-//         .read(contestNotifierProvider.notifier)
-//         .updateEditStagePrefListValue(StagePrefModel(id: 1));
-//     /* setState(() {
-//       stages.add({"id": stages.length + 1, "stageName": "Stage Name"});
-//     }); */
-//   }
-
   void _removeStage(int index) {
     ref.read(stateContactProvider.notifier).state.removeAt(index);
     ref.read(stateContactProvider.notifier).state = [
@@ -245,8 +229,6 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
             border:
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              debugPrint(
-                  "stages  ${_contestController.contestStages.toString()}");
               WayaNav.goBack();
             })
       ],

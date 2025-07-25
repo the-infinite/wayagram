@@ -1239,12 +1239,6 @@ class PageVm extends StateNotifier<PageState> {
           ),
         );
       }
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        debugPrint('Update group');
-        _logger.i(response.data['data']);
-      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),

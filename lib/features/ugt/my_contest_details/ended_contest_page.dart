@@ -35,7 +35,6 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
     final data = Get.arguments;
 
     useEffect(() {
-      debugPrint("id card ${widget.id}");
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref
             .read(postProvider.notifier)

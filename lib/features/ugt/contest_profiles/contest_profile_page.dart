@@ -88,12 +88,9 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         //? check if viewer is the owner of the contest
         if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
           model?.stages?.forEach((element) {
-            //  debugPrint("i am looping");
             if (element.entryType?.toLowerCase() != "free" &&
                 element.isActive == true &&
                 element.hasPaid != true) {
-              //  debugPrint("looping and have picked one");
-
               selectedStage = element;
               Future.delayed(Duration(seconds: 2), () {
                 WayaUtils.showModalSheetUgt(
@@ -337,7 +334,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
             const Gap(15),
             GestureDetector(
               onTap: () {
-                // debugPrint("Edit Profile");
                 if (id != viewModel.getLoggedInUserId()) return;
                 WayaNav.toNamed('/edit-profile-contest');
               },

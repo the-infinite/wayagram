@@ -43,7 +43,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         args != null ? args["canViewDashboard"] ?? false : false;
 
     var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
-    //  debugPrint("COntest DI $myPassedContestId");
     var model = ref.watch(selectedContestProvider.notifier).state;
     final String myPassedContestId = Get.parameters['id'] ?? model?.id ?? "";
     final myContestId = useState(myPassedContestId);
@@ -55,7 +54,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         // myContestId.value = contestId;
       });
 
-      // debugPrint("COntest DI  5 ${args["id"]}");
       ref
           .read(postProvider.notifier)
           .fetchSingleContest(contestId: myContestId.value, ref: ref);

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,8 +47,6 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
 
   void _submitPin() async {
     if (_pin.length == _pinLength) {
-      // TODO: Submit PIN
-      log('PIN submitted: $_pin');
       final response = await _walletRepository.confirmWalletPin(
           ConfirmWalletPin(userId: ConversationState.self.id, pin: _pin));
 
@@ -61,9 +57,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
 
         WayaNav.goBack(result: false);
       } else {
-     WayaSnackBar.showToast("Incorrect Pin");
+        WayaSnackBar.showToast("Incorrect Pin");
         //> incorrect pin
-        
       }
     }
   }

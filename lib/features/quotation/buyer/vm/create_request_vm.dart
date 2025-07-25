@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
@@ -13,7 +12,6 @@ import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
   final _quotationRepository = QuotationRepository.instance;
-  final _logger = getLogger('CreateRequestVm');
 
   CreateRequestVm() : super(CreateRequestState());
 
@@ -192,7 +190,6 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       return null;
     } catch (e) {
       debugPrint('${WayaDebugHelpers.getStackTrace(e)}');
-      _logger.e(e, stackTrace: WayaDebugHelpers.getStackTrace(e));
     } finally {
       state = state.copyWith(isLoading: false);
     }

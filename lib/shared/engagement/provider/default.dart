@@ -32,12 +32,7 @@ class EngagementNotifier
           .map((entry) => {"category": entry.key, "score": entry.value})
           .toList();
 
-      debugPrint("Sending postCategory data to backend: $postCategoryData");
-
-      final response = await AuthRepository().selectInterest(postCategoryData);
-      if (response.success) {
-        debugPrint("Post category data sent successfully.");
-      }
+      await AuthRepository().selectInterest(postCategoryData);
     } catch (error) {
       debugPrint("Error sending data: $error");
     }

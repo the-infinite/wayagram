@@ -84,25 +84,25 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
         isLoading: isLoading,
         title: "Favorite Products",
         body: RefreshIndicator(
-                onRefresh: () async {},
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FilterWidget(
-                        isPopFilter: false,
-                        hintText: 'Search Product',
-                        search: searchController,
-                      ),
-                      const Gap(5),
-                      const Gap(25),
-                      if (isLoading)
-                        _favoriteProductLoadingState(context: context)
-                      else
-                        ProductsGrid(products: searchFilteredProducts)
-                    ],
+            onRefresh: () async {},
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FilterWidget(
+                    isPopFilter: false,
+                    hintText: 'Search Product',
+                    search: searchController,
                   ),
-                )));
+                  const Gap(5),
+                  const Gap(25),
+                  if (isLoading)
+                    _favoriteProductLoadingState(context: context)
+                  else
+                    ProductsGrid(products: searchFilteredProducts)
+                ],
+              ),
+            )));
   }
 
   Widget _favoriteProductLoadingState({required BuildContext context}) {
@@ -195,8 +195,6 @@ class FavoriteProductCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final String image = product.images.isEmpty ? "" : product.images[0];
-    debugPrint(
-        "${product.discountPercentage} ${product.name} ${product.discountPercentage.toString() == "0"}");
 
     return GestureDetector(
       onTap: () {

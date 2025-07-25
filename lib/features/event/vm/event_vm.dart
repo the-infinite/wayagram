@@ -508,7 +508,6 @@ class EventVm extends StateNotifier<EventState> {
       required String eventId,
       required String status}) async {
     try {
-      
       final response = await _eventRepository.updateApprovalStatus(
           userId: userId, eventId: eventId, status: status);
 
@@ -517,7 +516,7 @@ class EventVm extends StateNotifier<EventState> {
         WayaSnackBar.showToast("Request successfully ${status}ed");
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 

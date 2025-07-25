@@ -140,8 +140,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
       );
     }
 
-    debugPrint(isBothDeliveryOption.toString());
-    debugPrint(selectedOption);
     return WayaScaffold(
       title: "Checkout",
       isLoading: viewModel.isLoading || isLoading,

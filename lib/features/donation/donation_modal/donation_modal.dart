@@ -334,6 +334,7 @@ class _DonationPinEntryBottomSheetState
             );
       } else {
         WayaNav.goBack();
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

@@ -149,9 +149,6 @@ class SocialNotificationState {
     // Remove the oddities.
     shown.remove(NotificationMessageType.donation);
 
-    //? Remove this
-    debugPrint("Filter: Started at ${aggregate.length}");
-
     //? If we are filtering by notification search query, do the needful.
     if (searchQuery.trim().isNotEmpty) {
       aggregate = aggregate.where((notif) =>
@@ -166,31 +163,26 @@ class SocialNotificationState {
 
     //? First, if the filter is applied and we are filtering out likes.
     if (!filters.showLikes) {
-      debugPrint("Filter: Removed likes");
       shown.remove(NotificationMessageType.like);
     }
 
     //? Second, filter out comment notifications.
     if (!filters.showComments) {
-      debugPrint("Filter: Removed comments");
       shown.remove(NotificationMessageType.comment);
     }
 
     //? Third, filter out follow request notifications.
     if (!filters.showFollowRequests) {
-      debugPrint("Filter: Removed follow requests");
       shown.remove(NotificationMessageType.followRequest);
     }
 
     //? Fourth, filter out livestream notifications.
     if (!filters.showLivestream) {
-      debugPrint("Filter: Removed livestream");
       shown.remove(NotificationMessageType.liveStream);
     }
 
     //? Fifth, filter out group invite notifications.
     if (!filters.showGroupInvite) {
-      debugPrint("Filter: Removed group invitations");
       shown.remove(NotificationMessageType.groupInvite);
       shown.remove(NotificationMessageType.groups);
       shown.remove(NotificationMessageType.pages);
@@ -198,41 +190,32 @@ class SocialNotificationState {
 
     //? Sixth, filter out call notifications.
     if (!filters.showCalls) {
-      debugPrint("Filter: Removed calls");
       shown.remove(NotificationMessageType.calls);
       shown.remove(NotificationMessageType.chat);
     }
 
     //? Seventh, filter out follow request notifications.
     if (!filters.showPolls) {
-      debugPrint("Filter: Removed polls");
       shown.remove(NotificationMessageType.poll);
     }
 
     //? Eighth, filter out follow event notifications.
     if (!filters.showEvents) {
-      debugPrint("Filter: Removed events");
       shown.remove(NotificationMessageType.event);
     }
 
     //? Ninth, filter out shares notifications.
     if (!filters.showShares) {
-      debugPrint("Filter: Removed shares");
       shown.remove(NotificationMessageType.share);
     }
 
     //? Finally, filter out follow view notifications.
     if (!filters.showView) {
-      debugPrint("Filter: Removed view");
       shown.remove(NotificationMessageType.view);
     }
 
     //? Update the aggregate using only what is in shown.
     aggregate = aggregate.where((e) => shown.contains(e.messageType));
-
-    //? Remove this
-    debugPrint("Filter: Ended at ${aggregate.length}");
-    debugPrint("Filter: Showing $shown");
 
     // This is fine.
     return aggregate.toList();

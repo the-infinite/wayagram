@@ -256,16 +256,6 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                           WayaTextFormField(
                                             line: 5,
                                             showBorder: false,
-                                            onChanged: (value) {
-                                              debugPrint(value);
-                                              /* if (value.trim().isEmpty) {
-                                                debugPrint("ff   $value");
-                                                isEmptyTest.value = false;
-                                              } else {
-                                                debugPrint("bbb   $value");
-                                                isEmptyTest.value = true;
-                                              } */
-                                            },
                                             keyboardType:
                                                 TextInputType.multiline,
                                             controller: textField,

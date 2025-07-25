@@ -77,7 +77,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
   void initState() {
     super.initState();
 
-    debugPrint("user ${ConversationState.self.accountType}");
     // Scroll listener for pagination
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.addListener(_scrollListener);
@@ -95,7 +94,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         // 👇 Scrolled to the top
         if (!isAtTop) {
           setState(() => isAtTop = true);
-          debugPrint("Scrolled to the top!");
         }
       } else {
         if (isAtTop) {
@@ -106,13 +104,11 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
       if (currentOffset < _previousScrollOffset) {
         // ✅ Scrolling Up (Show Widget)
         if (!isScrollingUp) {
-          debugPrint("Scrolling Up - Show Widget");
           setState(() => isScrollingUp = true);
         }
       } else if (currentOffset > _previousScrollOffset) {
         // ✅ Scrolling Down (Hide Widget)
         if (isScrollingUp) {
-          debugPrint("Scrolling Down - Hide Widget");
           setState(() => isScrollingUp = false);
         }
       }
@@ -122,7 +118,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
     if (currentOffset > _previousScrollOffset &&
         _scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent - 150) {
-      // debugPrint("fetching .....${_scrollController.position.pixels}");
       ref.read(postProvider.notifier).fetchContestForYou(false);
     }
     _previousScrollOffset = currentOffset;

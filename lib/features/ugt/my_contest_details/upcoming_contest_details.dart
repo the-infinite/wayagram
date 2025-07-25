@@ -55,12 +55,9 @@ class _UpcomingContestDetailsState
               ref, model?.id ?? "", viewModel.getLoggedInUserId() ?? "")
           .then((model) {
         if (model != null) {
-          debugPrint("i am here");
           if (model.data?.totalDocs == 1) {
-            debugPrint("i am here 2");
             if (model.data?.docs?.first.profilePhoto != null &&
                 model.data?.docs?.first.bio != null) {
-              debugPrint("i am here 3");
               hasProfile.value = true;
             }
           } else {

@@ -34,7 +34,6 @@ class KycVm extends StateNotifier<KycState> {
     List<DocType> e = List.from(state.kycImage);
     e = e.where((i) => i.type != 'kyc-image').toList();
     state = state.copyWith(kycImage: e);
-    debugPrint(state.toString());
   }
 
   Future<void> getMyKYC() async {

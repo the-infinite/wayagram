@@ -1471,6 +1471,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                       final dateTime =
                                           DateTime.parse(dateTimeString)
                                               .toLocal();
+                                      //debugPrint('DATE CHECK ==> $dateCheck, ${dates[i]}');
 
                                       return ActivityCardWidget(
                                         title: '${donation.description}',
@@ -1789,7 +1790,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
         }));
   }
 
-  void sortList(String s, log1, log2) {
+  sortList(s, log1, log2) {
     //final viewModel = ref.watch(activityLogsVmProvider);
     log1 = [];
     setState(() {

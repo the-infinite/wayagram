@@ -35,7 +35,7 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
     final viewModel = ref.read(confirmOrderDeliveryVmProvider.notifier);
     final wayaTheme = Theme.of(context);
     final state = ref.watch(confirmOrderDeliveryVmProvider);
-    final walletViewModel = ref.watch(walletVmProvider);
+    // final walletViewModel = ref.watch(walletVmProvider);
 
     final Order? arg = ModalRoute.of(context)?.settings.arguments as Order?;
 

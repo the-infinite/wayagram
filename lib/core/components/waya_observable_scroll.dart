@@ -112,8 +112,6 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
 
     //? If we should scroll.
     if (current >= target) {
-      debugPrint(
-          "observable-scroll> Fetching because (T: $target, X: $current)");
       _getPage();
     }
   }

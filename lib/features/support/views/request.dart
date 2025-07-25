@@ -133,8 +133,6 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                 if (notifier.email.text.isEmpty) {
                   return 'Email is required';
                 }
-
-                // TODO: Streamline this by making it a helper.
                 final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                 if (!regexp.hasMatch(notifier.email.text)) {
                   return 'Invalid email address';

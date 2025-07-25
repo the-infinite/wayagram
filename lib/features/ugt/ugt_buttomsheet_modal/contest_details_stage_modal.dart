@@ -123,9 +123,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                       // model: widget.model,
                       stageName: widget.post?.stageName ?? "",
                       votingLink: "",
-                      onTap: () {
-                        debugPrint("i am on the verge");
-                      },
+                      onTap: () {},
                       candidateName: "",
                     ),
                   );
@@ -146,7 +144,6 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                       buttonText: "Go to Contest Dashboard",
                       onTap: (myContext, myRef) {
                         //  WayaNav.goBack();
-                        debugPrint("i am cooking");
 
                         // WayaNav.goBack();
 
@@ -479,7 +476,6 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
 
   void _submitPin(BuildContext context1, ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
-      debugPrint("i dey here ee $_pin");
       //  WayaNav.goBack();
 
       var isPass = await ref
@@ -507,7 +503,6 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
             buttonText: "Go to Contest Dashboard",
             onTap: (myContext, myRef) {
               //  WayaNav.goBack();
-              debugPrint("i am cooking");
               myRef
                   .read(votersContestNotifier.notifier)
                   .fetchAllContestApplicant(widget.model?.contestId ?? "");
@@ -605,12 +600,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                         : const Icon(Icons.arrow_forward,
                             color: Colors.black54),
                     onPressed: isLoading.value
-                        ? () {
-                            debugPrint(" i am so here");
-                          }
+                        ? () {}
                         : () {
-                            debugPrint(" i am so noooooooot here");
-                            //   widget.onTap();
                             _submitPin(context, isLoading);
                           },
                   );

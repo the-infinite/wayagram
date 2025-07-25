@@ -675,8 +675,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         Switch(
                             value: e.isActive ?? false,
                             onChanged: (bool value) {
-                              debugPrint("map ${e.toString()}");
-
                               if (DateTime.now().isAfter(DateTime.parse(
                                   e.endDate ?? "2096-01-01T00:00:00.000Z"))) {
                                 WayaSnackBar.showToast(

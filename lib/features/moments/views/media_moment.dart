@@ -21,10 +21,12 @@ class MediaMoment extends ConsumerWidget {
     final status = ref.watch(momentVmProvider);
     final wayaTheme = Theme.of(context);
 
-    return WillPopScope(
-      onWillPop: () async {
-        ref.read(momentVmProvider.notifier).setImagePickerState(true);
-        return true;
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          ref.read(momentVmProvider.notifier).setImagePickerState(true);
+        }
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,

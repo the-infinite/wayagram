@@ -128,8 +128,6 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
 
   void _submitPin(ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
-      // TODO: Submit PIN
-      // log('PIN submitted: $_pin');
       // WayaNav.goBack();
       var isPass = await ref
           .read(votersContestNotifier.notifier)

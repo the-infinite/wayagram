@@ -54,7 +54,6 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
 /*   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-     debugPrint("Contest hosted contest");
     state = state.map((post) {
       if (post.id == postId) {
         if (!post.hasLiked!) {
@@ -72,7 +71,6 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-    debugPrint("Contest for you");
     state = state.map((post) {
       if (post.id == postId) {
         doOnLikeLike(postId);
@@ -88,14 +86,12 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   }
 
   void doOnLikeLike(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.likeContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
           bool value = post.hasLiked == null ? false : post.hasLiked ?? false;
@@ -110,12 +106,10 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       //WayaSnackBar.showToast("Contest already liked");
-      //  debugPrint("Contest already liked");
     }
   }
 
   void doFollow(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.followContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
@@ -134,12 +128,8 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
     doShare(postId);
 
     if (response.success) {
-      //  debugPrint("do like stuff Fail");
-
       // WayaSnackBar.showToast("Contest followed", showSuccess: true);
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   void toggleShare(String postId) {
@@ -157,14 +147,12 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   }
 
   void doShare(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
@@ -175,9 +163,7 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
         return post;
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   // Toggle Follow

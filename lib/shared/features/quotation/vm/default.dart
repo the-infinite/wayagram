@@ -718,7 +718,6 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       final response = await repo.trackDelivery(requestId: id);
       //? If this went well...
       if (response.success) {
-        debugPrint("Result: ${response.data}");
         final data = response.data['data'] as List;
         return [...data.map((payload) => BidOrderStatus.fromJson(payload))];
       }

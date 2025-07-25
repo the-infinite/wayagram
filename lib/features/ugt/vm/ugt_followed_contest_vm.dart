@@ -56,14 +56,12 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   }
 
   void doOnLikeLike(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.likeContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
@@ -74,9 +72,6 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
         return post;
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      // WayaSnackBar.showToast("Contest already liked");
-      debugPrint("Contest already liked");
     }
   }
 
@@ -95,14 +90,12 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   }
 
   void doShare(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
@@ -113,25 +106,18 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
         return post;
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   void doFollow(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.followContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (response.success) {
-      //  debugPrint("do like stuff Fail");
-
       WayaSnackBar.showToast("Contest Followed", showSuccess: true);
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   // Toggle Follow

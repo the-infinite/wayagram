@@ -34,7 +34,6 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
     StagePrefModel model = ref.read(stateContactProvider.notifier).state[
         _contestController
             .selectedIndex]; /* state.firstWhere((value) {
-        debugPrint("${value.toJson()}");
       return _contestController.selectedIndex == value.id;
     }); */
     final entryType = useState(model.entryType ?? "Paid");
@@ -511,7 +510,6 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           Select(label: "No", value: "0")
                         ],
                         onSelected: (value) {
-                          debugPrint(" i am poo ${value.first.label}");
                           if (value.first.label == "Free") {
                             _contestController
                                 .contestPrizeWinnerTextController.text = "0";

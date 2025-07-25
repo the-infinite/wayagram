@@ -131,7 +131,6 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                       .read(contestNotifierProvider.notifier)
                       .ugtPaymentType(),
                   onSelected: (value) {
-                    debugPrint(" i am poo ${value.first.label}");
                     if (value.first.label == "Free") {
                       viewModel2.amount.text = "0";
                     }

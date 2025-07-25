@@ -207,9 +207,6 @@ class CartVm extends StateNotifier<CartState> {
       ),
     );
     getTotalProductQuantity();
-    // Update cart
-    //
-    debugPrint(state.cart?.toJson().toString());
   }
 
   void removeFromCart(
@@ -218,8 +215,6 @@ class CartVm extends StateNotifier<CartState> {
       bool isNotWayaDeal = true}) async {
     final existingCart = state.cart;
     if (existingCart == null) return;
-    debugPrint(productId);
-    debugPrint(existingCart.toJson().toString());
     final updatedItems = existingCart.items
         .map((item) {
           final updatedProducts = item.products
@@ -283,7 +278,6 @@ class CartVm extends StateNotifier<CartState> {
       bool isSuccess = false;
       if (response.success) {
         isSuccess = true;
-        debugPrint(response.data.toString());
       } else if (response.data['responseCode'] == 703) {
         isSuccess = false;
         removeFromCart(productId: id, shopId: shopId, isNotWayaDeal: false);
@@ -330,14 +324,11 @@ class CartVm extends StateNotifier<CartState> {
     try {
       final userId = await _secureDataSource.getUserId();
 
-      final response = await _cartRepository.decreaseQuantity(
+      await _cartRepository.decreaseQuantity(
         productId: id,
         userId: userId!,
         shopId: shopId,
       );
-      if (response.success) {
-        debugPrint(response.data.toString());
-      }
     } catch (e) {
       debugPrint(e.toString());
     }

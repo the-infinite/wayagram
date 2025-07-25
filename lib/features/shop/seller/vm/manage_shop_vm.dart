@@ -52,7 +52,6 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       if (businessProfile.success) {
         businessData =
             BusinessAccountData.fromJson(businessProfile.data['data']);
-        debugPrint(businessProfile.data.toString());
 
         state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
       } else {
@@ -102,8 +101,6 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
             SharedShopResponse.fromJson(response.data);
         sharedShop = sharedShopResponse.data;
         state = state.copyWith(sharedShop: sharedShopResponse.data);
-
-        //debugPrint(response.data.toString());
       }
 
       return sharedShop;
@@ -181,7 +178,8 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
   Future<PaginatedResult<Order>?> getOrders({required String shopId}) async {
     try {
-      final response = await _orderRepository.getSellerOrders(shopId: shopId, page:  1);
+      final response =
+          await _orderRepository.getSellerOrders(shopId: shopId, page: 1);
       List<Order> orders = [];
       bool hasNextPage = false;
       if (response.success) {

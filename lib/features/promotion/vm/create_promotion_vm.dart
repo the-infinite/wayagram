@@ -134,14 +134,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
       }
 
       int budget = numberOfDays * selectedPlan.price;
-      debugPrint(budget.toString());
       state = state.copyWith(budget: budget);
       state = state.copyWith(selectedAgeRanges: "18-25");
-
-      debugPrint(state.createPromotionModel.toJson().toString());
-
-      // return;
-
       await WayaUtils.showModalSheet(context,
           child: PayForPromotion(title: state.contentType, budget: budget));
     } catch (error) {

@@ -317,7 +317,7 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
     try {
       final profileId = await _secureDataSource.getUserId();
 
-      if (profileId == userId) return debugPrint("working but it's yours");
+      if (profileId == userId) return;
       final response = await _momentRepository.viewMoments(
         // profileId: profileId!,
         momentId: momentId,

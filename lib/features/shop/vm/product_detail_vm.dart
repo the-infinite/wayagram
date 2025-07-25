@@ -81,12 +81,9 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
   }
 
   Future<void> unlikeProduct() async {
-     print("going -------------");
     try {
-      final response =
-          await _shopRepository.removeFromFavorite(favoriteId: state.product!.id);
-
-      print("response ---------------> ${response.success} ${response.message}");
+      final response = await _shopRepository.removeFromFavorite(
+          favoriteId: state.product!.id);
       if (response.success) {
         WayaSnackBar.showToast("Removed from your favorites");
       }

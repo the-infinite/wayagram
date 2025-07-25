@@ -80,7 +80,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     ]; */
 
     for (var model in model) {
-      //  debugPrint("Model type ${model.requirementType}");
       if (model.requirementType == "TEXT") {
         fieldList.add(
           DynamicField(
@@ -110,7 +109,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     List<Map<String, dynamic>> detailsList = state.map(
       (model) {
         String? image = model.imagePath;
-        // debugPrint("Mean  sow ${model.textController?.text}");
         /*  if(model.type== FieldType.image ){
             image = await WayaFileRepository.instance.uploadFile(
       File(image!),
@@ -135,7 +133,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
         // detailsListRight.add({oldMap["title"]: oldMap["data"]});
       }
     }
-
 
     var map = {
       "userId": _localDataSource.getUserId().toString(),

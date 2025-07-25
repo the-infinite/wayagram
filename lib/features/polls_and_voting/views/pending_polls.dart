@@ -34,7 +34,6 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
 
   @override
   void dispose() {
-    searchController.dispose();
     super.dispose();
   }
 
@@ -58,7 +57,7 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
                       .inHours;
                   return InkWell(
                     onTap: () {
-                      WayaNav.toNamed('/singlePollScreen',
+                      WayaNav.toNamed('/poll-details',
                           arguments: {'id': poll.id});
                     },
                     child: Container(
@@ -105,19 +104,23 @@ class _PendingPollsState extends ConsumerState<PendingPolls> {
                                         context: context,
                                         onTap: () {
                                           WayaNav.goBack();
-                                          Share.share(
-                                            WayaValueHelper.getShareableUrl(
-                                                WayaAppRoutes
-                                                    .getPollDetailsPage(
-                                                        '${poll.id}')),
-                                            subject: 'Share Poll',
+                                          SharePlus.instance.share(
+                                            ShareParams(
+                                              text: WayaValueHelper
+                                                  .getShareableUrl(WayaAppRoutes
+                                                      .getPollDetailsPage(
+                                                          '${poll.id}')),
+                                              subject: 'Share Poll',
+                                            ),
                                           );
                                         },
                                         asset: WayaAssets.icons.genSet.share
                                             .svg(
                                                 fit: BoxFit.none,
                                                 height: 20,
-                                                color: WayaColors.greyColor600),
+                                                colorFilter: ColorFilter.mode(
+                                                    WayaColors.greyColor600,
+                                                    BlendMode.srcIn)),
                                         text: "Share Poll link",
                                         color:
                                             wayaTheme.colorScheme.customBlack,

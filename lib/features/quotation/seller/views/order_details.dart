@@ -64,9 +64,6 @@ class _QuotationOrderDetailsScreenState
             first.deliveryStatus.rank.compareTo(second.deliveryStatus.rank));
     final foundStatus = statusList?.firstOrNull;
 
-    //? Emit this one.
-    debugPrint("Order: ${foundStatus?.id}");
-
     //? This is fine.
     if (foundOrder != null && foundQuote != null && mounted) {
       setState(() {

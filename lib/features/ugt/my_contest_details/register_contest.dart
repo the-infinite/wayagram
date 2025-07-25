@@ -331,10 +331,10 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     value: selectedState.value,
                     label: "State",
                     hintText: 'Select State',
-                    items:
-                        ref.read(contestNotifierProvider.notifier).ugtStatesExcludedAllState(),
+                    items: ref
+                        .read(contestNotifierProvider.notifier)
+                        .ugtStatesExcludedAllState(),
                     onSelected: (value) {
-                      debugPrint(" heree $value");
                       selectedState.value = value.first.label;
                       return ref
                           .read(contestNotifierProvider.notifier)
@@ -479,7 +479,6 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                               WayaTextFormField(
                                 controller: field.textController,
                                 onChanged: (value) {
-                                  // debugPrint("Mean kkkkkk  $value");
                                   // field.textController!.text = value;
                                   ref
                                       .read(registerFormProvider.notifier)
@@ -526,15 +525,10 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                   loading: isLoading.value, text: 'Apply Now & Join the Fun!'),
               callback: !isLoading.value
                   ? () {
-                      debugPrint("2222");
                       if (_formKey.currentState!.validate()) {
-                        debugPrint("1");
                         for (var model in viewModel) {
-                          debugPrint("2");
                           if (model.isRequired) {
-                            debugPrint("3");
                             if (model.type == FieldType.image) {
-                              debugPrint("4");
                               if (model.imagePath == null ||
                                   model.imagePath!.trim().isEmpty) {
                                 WayaSnackBar.showToast(
@@ -549,8 +543,6 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                             context, isLoading, selectedState.value, () {
                           WayaNav.goBack();
                         });
-                      } else {
-                        debugPrint(_formKey.currentState!.toString());
                       }
                     }
                   : null,

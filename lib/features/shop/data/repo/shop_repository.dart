@@ -101,7 +101,6 @@ class ShopRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> removeFromFavorite({required String favoriteId}) {
-    print("favorite thing $favoriteId");
     return put("$serviceUrl/favorites/remove", {"productId": favoriteId});
   }
 

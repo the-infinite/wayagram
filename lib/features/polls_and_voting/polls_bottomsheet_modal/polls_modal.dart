@@ -596,7 +596,6 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
               bankName: widget.bankName,
               bankCode: widget.bankCode, goBackTo: () {
             WayaNav.removeAllUntil(PollAndVoting(), PollAndVoting.route);
-            //TODO Poll navigate to on success
           });
         } else if (widget.module == PayoutModule.contest) {
           /*  ref
@@ -624,7 +623,6 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
             goBackTo: () {
               WayaNav.removeAllUntil(
                   EventDashboard(id: widget.id), EventDashboard.route);
-              //TODO Event navigate to on success
             },
           );
           /*  ref
@@ -641,7 +639,6 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
             bankCode: widget.bankCode,
             goBackTo: () {
               WayaNav.removeAllUntil(Donations(), Donations.route);
-              //TODO Event navigate to on success
             },
           );
           /*   ref

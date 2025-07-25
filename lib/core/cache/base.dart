@@ -54,11 +54,6 @@ abstract class WayaCacheUtility<T> extends ValueNotifier<int> {
   @protected
   void refresh() {
     value = value + 1;
-
-    //? If this is debug mode.
-    if (kDebugMode) {
-      // debugPrint("$runtimeType.Engine: Rebuilt $value times");
-    }
   }
 
   /// Adds or replaces an item in the cache using the specified ID.
@@ -78,12 +73,6 @@ abstract class WayaCacheUtility<T> extends ValueNotifier<int> {
   @protected
   void putOrReplace(String id, T data) {
     _data[id] = data;
-
-    //? If this is debug mode.
-    if (kDebugMode) {
-      // debugPrint(
-      // "$runtimeType.Engine: Updated the cached value of ${data.runtimeType} $id no notify");
-    }
   }
 
   /// Remove an item with given [id] from the cache. This would naturally notify
@@ -95,12 +84,6 @@ abstract class WayaCacheUtility<T> extends ValueNotifier<int> {
 
     //? Refresh this notifier.
     refresh();
-
-    //? If this is debug mode.
-    if (kDebugMode) {
-      // debugPrint(
-      //     "$runtimeType.Engine: Removed the cached value of ${result.runtimeType} $id no notify.");
-    }
 
     //? Notify dependents.
     return result;

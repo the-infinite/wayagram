@@ -395,13 +395,6 @@ class GroupVm extends StateNotifier<GroupState> {
           ),
         );
       }
-
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        debugPrint('Mute group');
-        _logger.i(response.data['data']);
-      }
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -433,13 +426,6 @@ class GroupVm extends StateNotifier<GroupState> {
             duration: Duration(seconds: 2),
           ),
         );
-      }
-
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        debugPrint('Update group');
-        _logger.i(response.data['data']);
       }
     } catch (e) {
       _logger.e(e);
@@ -989,8 +975,6 @@ class GroupVm extends StateNotifier<GroupState> {
         JoinRequestModel responseModel =
             JoinRequestModel.fromJson(response.data);
         state = state.copyWith(joinRequestDocs: responseModel.data?.docs);
-      } else {
-        debugPrint('Error: Status code ${response.statusCode}');
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

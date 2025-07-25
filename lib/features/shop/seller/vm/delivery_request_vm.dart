@@ -24,7 +24,6 @@ class DeliveryRequestVm extends StateNotifier<DeliveryRequestState> {
             DeliveryRequestResponseModel.fromJson(response.data);
         requests = responseModel.data;
         state = state.copyWith(deliveryRequest: requests);
-        debugPrint(response.data.toString());
       }
       return requests;
     } catch (e) {

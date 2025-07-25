@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -146,8 +144,6 @@ class _PayoutPinEntryBottomSheetState
 
   void _submitPin() async {
     if (_pin.length == _pinLength) {
-      // TODO: Submit PIN
-      log('PIN submitted: $_pin');
       final response = await _walletRepository.confirmWalletPin(
           ConfirmWalletPin(userId: ConversationState.self.id, pin: _pin));
 

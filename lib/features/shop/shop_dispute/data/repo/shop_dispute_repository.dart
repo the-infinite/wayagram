@@ -33,12 +33,11 @@ class ShopDisputeRepository extends BaseRepository {
     if (media != null) payload['media'] = media;
     if (metadata.isNotEmpty) payload['metadata'] = metadata;
 
-    debugPrint(payload.toString());
-
     return post("$serviceUrl/client/dispute", payload);
   }
 
-  Future<WayaRequestResponse> getUserDisputes({int? page = 1, int? limit = 10}) async {
+  Future<WayaRequestResponse> getUserDisputes(
+      {int? page = 1, int? limit = 10}) async {
     return get("$serviceUrl/client/dispute?limit=1000&page=$page");
   }
 
@@ -81,7 +80,9 @@ class ShopDisputeRepository extends BaseRepository {
     return patch("$serviceUrl/client/dispute/$disputeId", payload);
   }
 
-  Future<WayaRequestResponse> escalate({required String id, required String escalatedBy}) async {
-    return post("$serviceUrl/client/dispute/escalate-to-mediator/$id", {"escalatedBy": escalatedBy});
+  Future<WayaRequestResponse> escalate(
+      {required String id, required String escalatedBy}) async {
+    return post("$serviceUrl/client/dispute/escalate-to-mediator/$id",
+        {"escalatedBy": escalatedBy});
   }
 }

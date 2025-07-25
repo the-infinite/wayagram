@@ -10,7 +10,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
@@ -45,8 +44,6 @@ class _NotificationCardWidgetState
       (_) async {
         //? If this is a follow request.
         if (widget.data.messageType == NotificationMessageType.followRequest) {
-          debugPrint(
-              "Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
           final follow = await myFollowProvider.getFollowStatus(widget.data.id);
 
           //? If mounted...

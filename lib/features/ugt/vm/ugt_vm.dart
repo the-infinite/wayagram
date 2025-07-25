@@ -119,7 +119,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       List<NewRequirementModel> newRequirementList,
       List<StagePrefModel> stageList,
       bool isEditing) async {
-    //  debugPrint(' sss ${_localDataSource.getUserId().toString()}');
     //final userTypeProvider = ref.watch(localDataSourceProvider);
     /* 
       "requirementType": "TEXT",
@@ -192,7 +191,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
     //NGN8.00
     try {
-      //  debugPrint("wwwww ${amountPerVote.text}");
       String participationEndDate =
           _convertToISO(state.endDate).replaceAll("T00:00:00", "T23:59:59");
 
@@ -399,7 +397,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       "profilePhoto": imageUrl
     };
 
-    //debugPrint("My Map $map");
     final response = await _contestRepository.editProfile(id, map);
 
     isLoading.value = false;

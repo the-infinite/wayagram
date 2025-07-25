@@ -34,7 +34,7 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
     });
   }
 
-  checkIfTokenIsNull() async {
+  void checkIfTokenIsNull() async {
     final secureDataSource = WayaSecureDataSource();
     final token = await secureDataSource.getToken();
 
@@ -98,18 +98,18 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
                             context: context,
                             onTap: () {
                               WayaNav.goBack();
-                              Share.share(
-                                WayaValueHelper.getShareableUrl(
-                                    //WayaAppRoutes.getPollDetailsPage(viewModel.pollId)),
+                              SharePlus.instance.share(ShareParams(
+                                text: WayaValueHelper.getShareableUrl(
                                     WayaAppRoutes.getPollDetailsPage(
                                         widget.id)),
                                 subject: 'Share Poll',
-                              );
+                              ));
                             },
                             asset: WayaAssets.icons.genSet.share.svg(
                                 fit: BoxFit.none,
                                 height: 20,
-                                color: WayaColors.greyColor600),
+                                colorFilter: ColorFilter.mode(
+                                    WayaColors.greyColor600, BlendMode.srcIn)),
                             text: "Share Poll link",
                             color: wayaTheme.colorScheme.customBlack,
                           ),

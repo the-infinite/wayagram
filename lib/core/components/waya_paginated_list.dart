@@ -124,8 +124,6 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
     //? If we should scroll.
     if (current >= target) {
-      debugPrint(
-          "paginated-list-builder> Fetching because (T: $target, X: $current)");
       getPage(widget.nextPage);
     }
   }

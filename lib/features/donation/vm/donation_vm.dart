@@ -654,7 +654,6 @@ class DonationVm extends StateNotifier<DonationState> {
           notifyFriends, makeDonationsPublic);
       bool isSuccess = false;
       if (response.success) {
-        debugPrint(response.data.toString());
         isSuccess = true;
       } else {
         isSuccess = false;

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 
@@ -17,7 +16,6 @@ class OrderRepository extends BaseRepository {
     };
 
     if (pickupAddress != null) payload['pickupAddress'] = pickupAddress;
-    debugPrint(payload.toString());
     return post("$serviceUrl/orders/place-order", payload);
   }
 
@@ -26,7 +24,7 @@ class OrderRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getSellerOrders(
-     {  required String shopId, required int page, String? status}) async {
+      {required String shopId, required int page, String? status}) async {
     final queryParams = [
       'shopId=$shopId',
       'page=$page',

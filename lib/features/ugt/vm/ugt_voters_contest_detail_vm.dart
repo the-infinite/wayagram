@@ -713,9 +713,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       }).toList();
       state = state.copyWith(myPostList: [...list]);
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   void addStages(List<model.Stage> stages) {
@@ -730,9 +728,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
     if (response.success) {
       WayaSnackBar.showToast("Contest Followed", showSuccess: true);
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 }
 

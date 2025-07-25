@@ -82,7 +82,6 @@ class DisputeVm extends StateNotifier<States> {
           disputes: responseModel.data.docs,
           disputesCopy: responseModel.data.docs,
         );
-        debugPrint(response.data.toString());
       }
     } catch (error) {
       debugPrint(error.toString());
@@ -138,7 +137,6 @@ class DisputeVm extends StateNotifier<States> {
       String disputeId = '';
       String chatId = '';
       if (response.success) {
-        debugPrint(response.data['data']['ticket']['id']);
         disputeId = response.data['data']['ticket']['id'];
         chatId = response.data['data']['ticket']['chatId'];
       }
@@ -182,7 +180,6 @@ class DisputeVm extends StateNotifier<States> {
 
         await getSDispute(id: disputeId);
         isSuccess = true;
-        debugPrint(response.data['data']['ticket']['id']);
       }
 
       return isSuccess;
@@ -203,9 +200,7 @@ class DisputeVm extends StateNotifier<States> {
         // DisputeResponseModel responseModel =
         //     DisputeResponseModel.fromJson(response.data);
         final ticket = DisputeModel.fromJson(response.data['data']);
-        debugPrint(ticket.toString());
         state = state.copyWith(dispute: ticket);
-        debugPrint(response.data.toString());
       }
     } catch (error) {
       debugPrint(error.toString());

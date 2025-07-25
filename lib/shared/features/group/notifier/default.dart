@@ -55,7 +55,8 @@ class GroupNotifier extends ValueNotifier<int> {
 
     //? Now, try actually fetching the groups.
     try {
-      final response = await repo.getGroupsForUser(ConversationState.self.id, createdGroupPage, limit);
+      final response = await repo.getGroupsForUser(
+          ConversationState.self.id, createdGroupPage, limit);
 
       //? If this was successful.
       if (!response.success) return createdGroups;
@@ -289,29 +290,31 @@ class GroupNotifier extends ValueNotifier<int> {
   /// ```dart
   /// final group = await createGroup(name: 'My Group', description: 'A new group');
   /// if (group != null) {
-  ///   debugPrint('Group created successfully');
   /// }
   /// ```
   Future<GroupModel?> createGroup(
-    String groupName,
-    String groupDesc,
-    groupType,
-    String coverImage,
-    String profileImage,
-    String category,
-      bool isOpen
-  ) async {
-    final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage));
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage));
+      String groupName,
+      String groupDesc,
+      groupType,
+      String coverImage,
+      String profileImage,
+      String category,
+      bool isOpen) async {
+    final coverImageUrl =
+        await WayaFileRepository.instance.uploadFile(File(coverImage));
+    final profileImageUrl =
+        await WayaFileRepository.instance.uploadFile(File(profileImage));
 
     //? If either of this fails.
     if (coverImageUrl == null || profileImageUrl == null) {
-      WayaSnackBar.showToast("Sorry, we cannot upload your group at this time.", showSuccess: false);
+      WayaSnackBar.showToast("Sorry, we cannot upload your group at this time.",
+          showSuccess: false);
       return null;
     }
 
     try {
-      final response = await repo.createGroup(groupName, groupDesc, groupType, coverImageUrl, profileImageUrl, category, isOpen);
+      final response = await repo.createGroup(groupName, groupDesc, groupType,
+          coverImageUrl, profileImageUrl, category, isOpen);
 
       //? If this is fine...
       if (response.success) {

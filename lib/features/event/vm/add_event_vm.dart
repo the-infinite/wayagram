@@ -89,7 +89,6 @@ class AddEventVm extends StateNotifier<AddEventState> {
     List<DocType> e = List.from(state.eventImage);
     e = e.where((i) => i.type != 'event-image').toList();
     state = state.copyWith(eventImage: e);
-    debugPrint(state.toString());
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {

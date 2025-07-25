@@ -69,7 +69,6 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
               search: searchController,
               hintText: 'Search Dispute by status (pending, resolved)',
               onTextChanged: (value) {
-                // TODO: Filter this.
                 notifier.filterList(searchController.text);
               },
             ),

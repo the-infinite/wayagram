@@ -76,8 +76,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
               file: file, type: 'image', name: file.path.split('/').last));
         }
         state = state.copyWith(uploadedDocuments: updatedDocuments);
-      } else {
-        debugPrint("No images were selected.");
       }
     }).catchError((error) {
       debugPrint("Error picking images: $error");
@@ -270,7 +268,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
         }
 
         WayaSnackBar.showToast("${response.data["data"]}");
-        //debugPrint(response.data.toString());
       }
       //
     } catch (e) {

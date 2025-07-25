@@ -57,13 +57,6 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
         ? viewModel.donationDocs
         : viewModel.filterDonationDocs(startingBound, endingBound);
 
-    //? Log the starting and ending time.
-    if (startingBound != null && endingBound != null) {
-      debugPrint(
-        "Time Bounds: (${WayaDateHelper.getDailyTimestamp(startingBound)}, ${WayaDateHelper.getDailyTimestamp(endingBound)})",
-      );
-    }
-
     //? Build the entire screen.
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,

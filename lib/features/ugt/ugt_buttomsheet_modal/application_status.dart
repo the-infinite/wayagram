@@ -280,9 +280,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                             "0",
                         // model: widget.model,
                         votingLink: "",
-                        onTap: () {
-                          debugPrint("i am on the verge");
-                        },
+                        onTap: () {},
                         candidateName: "",
                       ),
                     );
