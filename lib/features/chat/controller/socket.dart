@@ -267,7 +267,7 @@ class WayaSocketController {
       _retryDuration,
       (_) async {
         //? This is fine.
-        if (_socket!.connected) return;
+        if (_socket?.connected == true) return;
 
         //? If this is not
         await connect(ref);

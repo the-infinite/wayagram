@@ -34,11 +34,13 @@ class _AllBuyRequestsScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<_AllBuyRequestsScreen> createState() => _AllBuyRequestsScreenState();
+  ConsumerState<_AllBuyRequestsScreen> createState() =>
+      _AllBuyRequestsScreenState();
 }
 
 class _AllBuyRequestsScreenState extends ConsumerState<_AllBuyRequestsScreen> {
-  late final provider = widget.isSelf ? userQuotationsProvider : othersQuotationsProvider;
+  late final provider =
+      widget.isSelf ? userQuotationsProvider : othersQuotationsProvider;
   final controller = TextEditingController();
   late final notifier = ref.read(provider.notifier);
   final handler = WayaObservableScrollController();
@@ -46,7 +48,8 @@ class _AllBuyRequestsScreenState extends ConsumerState<_AllBuyRequestsScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => notifier.setSyncingState(true));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => notifier.setSyncingState(true));
     super.initState();
   }
 

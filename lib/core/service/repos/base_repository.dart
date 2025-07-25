@@ -14,7 +14,8 @@ abstract class BaseRepository {
     bool useBase = true,
     bool showErrors = false,
   }) {
-    return httpClient.getHttp(route, params: params, useBase: useBase, showErrors: showErrors);
+    return httpClient.getHttp(route,
+        params: params, useBase: useBase, showErrors: showErrors);
   }
 
   Future<WayaRequestResponse> post(
@@ -39,7 +40,8 @@ abstract class BaseRepository {
     );
   }
 
-  Future<WayaRequestResponse> download(String url, String outputPath, WayaDownloadListener onData) {
+  Future<void> download(
+      String url, String outputPath, WayaDownloadListener onData) {
     _logger.i("Downloading a file $url");
     return httpClient.downloadHttp(url, outputPath, onData);
   }

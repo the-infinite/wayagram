@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
@@ -138,10 +138,10 @@ class WayaImage2 extends ConsumerWidget {
               },
       child: Stack(
         children: [
-          imageUrl == null && coverImage == null
+          imageUrl == null && coverImage == null && imageUrl?.isEmpty == true
               ? errorWidget(wayaTheme)
-              : CachedNetworkImage(
-                  errorWidget: (context, url, error) => errorWidget(wayaTheme),
+              : SafeCachedNetworkImage(
+                  errorWidget: errorWidget(wayaTheme),
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: height,
@@ -255,8 +255,8 @@ class WayaImage3 extends ConsumerWidget {
                       //? Do nothing.
                       if (result == null) return;
                     },
-            child: CachedNetworkImage(
-              errorWidget: (context, url, error) => errorWidget(wayaTheme),
+            child: SafeCachedNetworkImage(
+              errorWidget: errorWidget(wayaTheme),
               fit: BoxFit.fill,
               width: double.infinity,
               height: height,
@@ -323,8 +323,7 @@ class WayaImage extends StatelessWidget {
         //? Do nothing.
         if (result == null) return;
       },
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
+      child: SafeCachedNetworkImage(
         imageBuilder: (context, imageProvider) => Container(
           height: height,
           width: width,
@@ -338,7 +337,11 @@ class WayaImage extends StatelessWidget {
           ),
           child: overlay ?? SizedBox.shrink(),
         ),
-        placeholder: (context, url) => AnimatedContainer(
+        imageUrl: imageUrl,
+        width: width,
+        height: height,
+        fit: fit ?? BoxFit.cover,
+        placeholderBuilder: (context, url) => AnimatedContainer(
           duration: const Duration(milliseconds: 700),
           curve: Curves.easeInOut,
           height: height,
@@ -347,7 +350,7 @@ class WayaImage extends StatelessWidget {
               color: wayaTheme.colorScheme.scaffoldColor,
               borderRadius: radius ?? BorderRadius.circular(8)),
         ),
-        errorWidget: (context, url, error) => AnimatedContainer(
+        errorWidgetBuilder: (context, url, error) => AnimatedContainer(
           duration: const Duration(milliseconds: 700),
           curve: Curves.easeInOut,
           height: height,

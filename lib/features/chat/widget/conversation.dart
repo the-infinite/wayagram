@@ -52,14 +52,15 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
   /// Helper function used to navigate to the current chat screen.
   void _toChat() async {
     final chat = wayaChatsCache.getCachedData(widget.chatId)!;
+    final data = await widget.conversationNotifier.getChatDetails(chat.id);
     widget.conversationNotifier.dismissOverlay();
-    widget.notifier.setChat(
-        (await widget.conversationNotifier.getChatDetails(chat.id)) ?? chat);
+    widget.notifier.setChat(data ?? chat);
     widget.notifier.markAllAsRead().then((result) {
       if (!result) return;
       widget.conversationNotifier.getChats(true);
       widget.conversationNotifier.getArchivedChats(true);
     });
+
     WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
   }
 

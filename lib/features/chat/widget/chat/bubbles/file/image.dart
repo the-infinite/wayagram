@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
@@ -245,7 +245,7 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                         ),
                       );
                     },
-                    errorBuilder: (context, e, _) => CachedNetworkImage(
+                    errorBuilder: (context, e, _) => SafeCachedNetworkImage(
                       imageUrl: widget.message?.media?.first.mediaUrl ?? "",
                       width: !widget.interactive && widget.totalSize < 3
                           ? size.width / widget.totalSize

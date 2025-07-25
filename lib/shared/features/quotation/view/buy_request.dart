@@ -103,7 +103,7 @@ class _SharedOthersBuyRequestsWidgetState
     extends ConsumerState<SharedOthersBuyRequestsWidget> {
   late final notifier = ref.read(othersQuotationsProvider.notifier);
 
-  static Timer? _timer;
+  Timer? _timer;
 
   void _restartTimer() {
     //? First, cancel the timer if it exists.
@@ -115,7 +115,9 @@ class _SharedOthersBuyRequestsWidgetState
     _timer ??= Timer.periodic(
       const Duration(seconds: 7),
       (timer) async {
-        await notifier.reloadQuotationsOrder();
+        if (mounted) {
+          await notifier.reloadQuotationsOrder();
+        }
       },
     );
   }

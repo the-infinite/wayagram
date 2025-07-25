@@ -5,8 +5,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:wayagram/core/controller/debug_console.dart';
-
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
 import 'package:wayagram/core/components/modals/error.dart';
@@ -50,15 +48,15 @@ class DioHttpClient implements WayaHttpClientInterface {
       baseUrl: baseURL,
       receiveDataWhenStatusError: true,
       connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      // receiveTimeout: const Duration(seconds: 30),
     );
     final dio = Dio(options);
     dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
-    //for proper logging of dio request and response
+    // for proper logging of dio request and response
     // dio.interceptors.add(PrettyDioLogger(
     //     requestHeader: true,
     //     requestBody: true,
-    //     responseBody: true,
+    //     responseBody: false,
     //     responseHeader: false,
     //     error: true,
     //     compact: true,
@@ -198,6 +196,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             outputPath,
             deleteOnError: true,
             options: Options(
+              responseType: ResponseType.bytes,
               headers: {
                 HttpHeaders.acceptEncodingHeader: '*',
               },
@@ -446,20 +445,6 @@ class DioHttpClient implements WayaHttpClientInterface {
           WayaUtils.showModalSheet(WayaNav.context,
               child: WayaErrorDialog(title: message));
         }
-
-        //? If this is in the staging environment.
-        WayaDebugConsoleController.instance.addDebugEvent(
-          WayaDebugEvent(
-            type: WayaDebugEventType.http,
-            module: WayaDebugEventModule.unknown,
-            message: e.response?.data['errors'] != null
-                ? e.response?.data['errors'][0]
-                : e.response?.data['message'] ?? e.message ?? e.toString(),
-            raw: e,
-            stackTrace: e.stackTrace,
-            timestamp: DateTime.now(),
-          ),
-        );
       }
 
       //? Handle this error.

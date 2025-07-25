@@ -39,6 +39,7 @@ import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
 import 'firebase_options.dart';
 
+
 void main() async {
   //? First, set up all Firebase services so we can report all crashes to firebase,
   //? have analytics, crashlytics, and push notifications set up.
@@ -115,9 +116,11 @@ void main() async {
           WayaDebugEvent(
             type: WayaDebugEventType.runtime,
             module: WayaDebugEventModule.unknown,
-            message: errorAndStacktrace.first.toString().split("\n").first.trim(),
+            message:
+                errorAndStacktrace.first.toString().split("\n").first.trim(),
             raw: errorAndStacktrace.first,
-            stackTrace: StackTrace.fromString(errorAndStacktrace.last.toString()),
+            stackTrace:
+                StackTrace.fromString(errorAndStacktrace.last.toString()),
             timestamp: DateTime.now(),
           ),
         );
@@ -138,7 +141,8 @@ void main() async {
   FlutterNativeSplash.remove();
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 50);
+  VisibilityDetectorController.instance.updateInterval =
+      const Duration(milliseconds: 50);
 
   //? Sixth, load the chat settings into memory so we can update this correctly.
   ChatSettingsNotifier.instance.reload();
@@ -170,8 +174,10 @@ class _WayagramState extends ConsumerState<Wayagram> {
         }
 
         //? This is fine.
-        final notificationSettings = ref.read(notificationSettingsProvider.notifier);
-        await notificationSettings.getSettings(NotificationSettingsController.instance);
+        final notificationSettings =
+            ref.read(notificationSettingsProvider.notifier);
+        await notificationSettings
+            .getSettings(NotificationSettingsController.instance);
       } catch (_) {}
     });
     super.initState();
@@ -186,7 +192,6 @@ class _WayagramState extends ConsumerState<Wayagram> {
     //? else it will throw an error
     ScreenUtil.init(
       context,
-      // designSize: Size(428, 926),
       designSize: Size(size.width, size.height),
       minTextAdapt: true,
       splitScreenMode: true,
@@ -207,13 +212,8 @@ class _WayagramState extends ConsumerState<Wayagram> {
         valueListenable: WayaPreloaderController.instance.notifier,
         builder: (context, showPreloader, _) => Stack(
           children: [
-            //? First, the widget that is being laid out.
             child!,
-
-            //? Second, our preloader widget.
             if (showPreloader) WayaPreloaderOverlay(),
-
-            //? Third, the debug console.
             if (!WayaConstants.isProduction) WayaDebugConsole(),
           ],
         ),
@@ -246,7 +246,8 @@ Future<String?> getUserData() async {
 
     //? This was fine so move forward.
     if (response.success) {
-      UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
+      UserAccountModel userAccountModel =
+          UserAccountModel.fromJson(response.data);
 
       // _setupVm.state =  _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
@@ -282,14 +283,18 @@ Future<String?> getUserData() async {
         );
       }
 
-      if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != 'PERSONAL') {
-        final bizResponse = await profileRepo.getBusinessDataRepo(userId: userId);
+      if (userAccountModel.data != null &&
+          userAccountModel.data!.userdata!.user!.role != 'PERSONAL') {
+        final bizResponse =
+            await profileRepo.getBusinessDataRepo(userId: userId);
 
         if (bizResponse.success) {
-          BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
+          BusinessAccountData bizData =
+              BusinessAccountData.fromJson(bizResponse.data["data"]);
           //? Update the business configuration when there is a need to.
           ConversationState.setSelf(
-            ConversationState.self.copyWith(accountType: UserAccountType.business),
+            ConversationState.self
+                .copyWith(accountType: UserAccountType.business),
             null,
             BusinessDetailsModel.fromJson(bizResponse.data["data"]),
           );

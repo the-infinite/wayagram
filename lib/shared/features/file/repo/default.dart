@@ -20,12 +20,12 @@ class WayaFileRepository extends BaseRepository {
   }
 
   /// A helper function used when downloading a file over the network.
+  /// Returns a stream of (progress_percentage, total_bytes) tuples.
   Stream<(double, int)> downloadFile(
       String url, File output, void Function(bool) onComplete) {
     //? First, we are not downloading this at the moment.
     late final StreamController<(double, int)> controller;
 
-    //? Now, start downloading this file to this path.
     void startDownload() async {
       //? First, do this so that the listeners obtain the zeroth feed.
       controller.add((0, 0));
@@ -54,8 +54,6 @@ class WayaFileRepository extends BaseRepository {
       onCancel: () => onComplete(false),
       onListen: startDownload,
     );
-
-    //? Start the download itself.
     return controller.stream;
   }
 

@@ -174,7 +174,9 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
     try {
       //? We are currently loading this up.
       widget.handler.hasScrolled = true;
-      _loadingController.value = true;
+      if (mounted) {
+        _loadingController.value = true;
+      }
 
       //? Get the items on the current page.
       debounce(
@@ -191,9 +193,11 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
           //? Now, notify the listeners of a change in state.
           try {
-            _itemsNotifier.value = _itemsNotifier.value + 1;
+            if (mounted) {
+              _itemsNotifier.value = _itemsNotifier.value + 1;
+              _loadingController.value = false;
+            }
           } catch (_) {}
-          _loadingController.value = false;
         },
       )();
     } catch (_) {}
