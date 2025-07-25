@@ -97,7 +97,7 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
                     return AspectRatio(
                       aspectRatio: 1,
                       child: Center(
-                        child: CircularProgressIndicator(),
+                        child: const CircularProgressIndicator(),
                       ),
                     );
                   }
@@ -131,7 +131,8 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
                               focusColor: WayaColors.primary.withAlpha(30),
                               highlightColor: WayaColors.primary.withAlpha(30),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 15),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -158,7 +159,8 @@ class _UserSearchBarState extends ConsumerState<UserSearchBarWidget> {
     Overlay.of(context).insert(_entry!);
 
     //* Finally, call the function to put this in place and debounce it.
-    debounce(key: "search-user", delay: const Duration(milliseconds: 700), () async {
+    debounce(key: "search-user", delay: const Duration(milliseconds: 700),
+        () async {
       await notifier.getSearchResults(text);
     })();
   }

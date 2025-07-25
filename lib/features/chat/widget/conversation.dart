@@ -20,6 +20,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/shared/cache/chat.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class ConversationWidget extends ConsumerStatefulWidget {
@@ -45,8 +46,8 @@ class ConversationWidget extends ConsumerStatefulWidget {
   ConsumerState<ConversationWidget> createState() => _ConversationWidgetState();
 }
 
-class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
-  //? How we update each chat periodically to get the online state of each user.
+class _ConversationWidgetState extends ConsumerState<ConversationWidget>
+    with AutomaticKeepAliveClientMixin<ConversationWidget> {
   Timer? _timer;
 
   /// Helper function used to navigate to the current chat screen.
@@ -326,8 +327,11 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
-    _timer ??= Timer.periodic(
+    _timer = Timer.periodic(
       const Duration(seconds: 8),
       (_) => widget.conversationNotifier.getChatDetails(widget.chatId),
     );
@@ -337,15 +341,226 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
   @override
   void dispose() {
     _timer?.cancel();
-    _timer = null;
     super.dispose();
   }
 
-  // This is fine too.
   @override
   Widget build(BuildContext context) {
-    final chat = wayaChatsCache.getCachedData(widget.chatId)!;
+    super.build(context);
+    return ValueListenableBuilder(
+      valueListenable: wayaChatsCache,
+      builder: (context, redraws, _) {
+        final chat = wayaChatsCache.getCachedData(widget.chatId);
+        if (chat == null) return const SizedBox.shrink();
+
+        return _ConversationContent(
+          chat: chat,
+          widget: widget,
+          onTap: widget.canClick ? _toChat : null,
+          onLongPress: widget.canClick ? () => _showActions(context) : null,
+        );
+      },
+    );
+  }
+}
+
+class _ConversationContent extends ConsumerWidget {
+  final ChatModel chat;
+  final ConversationWidget widget;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+
+  const _ConversationContent({
+    required this.chat,
+    required this.widget,
+    this.onTap,
+    this.onLongPress,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final consumerState = ref.watch(conversationProvider);
+    final chatData = _ChatDisplayData.fromChat(chat, consumerState);
+
+    return InkWell(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      splashColor: WayaColors.primary.withAlpha(30),
+      focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+      highlightColor: WayaColors.primary.withAlpha(30),
+      child: Padding(
+        padding: widget.isInteractive
+            ? const EdgeInsets.symmetric(horizontal: 20, vertical: 5)
+            : const EdgeInsets.symmetric(vertical: 5),
+        child: Row(
+          children: [
+            _buildProfilePicture(chatData),
+            const Gap(10),
+            Expanded(child: _buildMessageContent(chatData)),
+            const Gap(10),
+            _buildTimingColumn(chatData),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfilePicture(_ChatDisplayData data) {
+    return ChatProfilePicture(
+      user: data.otherUserData,
+      lastSeen: data.lastSeen,
+      showActive: data.shouldShowActive,
+      chat: chat,
+      radius: 25.r,
+    );
+  }
+
+  Widget _buildMessageContent(_ChatDisplayData data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          data.displayName,
+          maxLines: 1,
+          style: WayaTextStyles.titleMedium.copyWith(
+            fontWeight: data.hasUnread ? FontWeight.w600 : FontWeight.normal,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (data.lastMessageContent != null)
+          Text(
+            data.lastMessageContent!,
+            maxLines: 1,
+            style: WayaTextStyles.titleMedium.copyWith(
+              fontWeight: data.hasUnread ? FontWeight.w600 : FontWeight.normal,
+              overflow: TextOverflow.ellipsis,
+              fontStyle: data.isItalic ? FontStyle.italic : null,
+              color: data.hasUnread
+                  ? WayaColors.greyColor500
+                  : WayaColors.greyColor400,
+              fontSize: 14.sp,
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildTimingColumn(_ChatDisplayData data) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          WayaDateHelper.getSocialTimeAgo(data.lastUpdateTime),
+          style: WayaTextStyles.titleMedium.copyWith(
+            fontWeight: data.hasUnread ? FontWeight.w600 : FontWeight.normal,
+            overflow: TextOverflow.ellipsis,
+            color: data.hasUnread ? WayaColors.primary : WayaColors.black,
+            fontSize: 13.sp,
+          ),
+        ),
+        const Gap(2),
+        _buildStatusIndicator(data),
+      ],
+    );
+  }
+
+  Widget _buildStatusIndicator(_ChatDisplayData data) {
+    if (data.isBlocked || data.isDeleted) {
+      return const SizedBox.shrink();
+    }
+
+    if (data.isMuted) {
+      return WayaAssets.icons.cProfileUnmute.svg(
+        height: 16.sp,
+        width: 16.sp,
+        colorFilter: const ColorFilter.mode(
+          WayaColors.error,
+          BlendMode.srcIn,
+        ),
+      );
+    }
+
+    if (data.hasUnread) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9),
+        decoration: BoxDecoration(
+          color: WayaColors.primary,
+          borderRadius: BorderRadius.circular(500),
+        ),
+        child: Text(
+          data.unreadText,
+          style: WayaTextStyles.bodyMedium.copyWith(
+            color: WayaColors.white,
+            fontSize: 14.sp,
+          ),
+        ),
+      );
+    }
+
+    return _buildMessageStatusIcon(data);
+  }
+
+  Widget _buildMessageStatusIcon(_ChatDisplayData data) {
+    if (!data.isMineMessage || data.lastMessage == null) {
+      return const SizedBox.shrink();
+    }
+
+    Widget? statusIcon;
+    Color iconColor = WayaColors.greyColor400;
+
+    if (data.lastMessage?.readAt != null) {
+      statusIcon = WayaAssets.icons.cRead.svg(height: 16, width: 16);
+      iconColor = WayaColors.primary;
+    } else if (data.lastMessage?.deliveredAt != null) {
+      statusIcon = WayaAssets.icons.cRead.svg(height: 16, width: 16);
+    } else if (data.lastMessage?.createdAt != null) {
+      statusIcon = WayaAssets.icons.cSent.svg(height: 16, width: 16);
+    }
+
+    return statusIcon != null
+        ? ColorFiltered(
+            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+            child: statusIcon,
+          )
+        : const SizedBox.shrink();
+  }
+}
+
+class _ChatDisplayData {
+  final bool isMineMessage;
+  final bool isDeleted;
+  final bool isBlocked;
+  final bool hasUnread;
+  final bool isMuted;
+  final bool shouldShowActive;
+  final bool isItalic;
+  final String displayName;
+  final String? lastMessageContent;
+  final String unreadText;
+  final DateTime lastUpdateTime;
+  final UserDetailsModel otherUserData;
+  final DateTime? lastSeen;
+  final MessageModel? lastMessage;
+
+  const _ChatDisplayData({
+    required this.isMineMessage,
+    required this.isDeleted,
+    required this.isBlocked,
+    required this.hasUnread,
+    required this.isMuted,
+    required this.shouldShowActive,
+    required this.isItalic,
+    required this.displayName,
+    required this.lastMessageContent,
+    required this.unreadText,
+    required this.lastUpdateTime,
+    required this.otherUserData,
+    required this.lastSeen,
+    required this.lastMessage,
+  });
+
+  factory _ChatDisplayData.fromChat(
+      ChatModel chat, ConversationState consumerState) {
     final isMine = chat.lastMessage?.senderId == ConversationState.self.id;
     final isDeleted =
         chat.lastMessage?.myStatus?.status == MessageStatusCode.deleted ||
@@ -356,165 +571,37 @@ class _ConversationWidgetState extends ConsumerState<ConversationWidget> {
     final unread = chat.unreadCount;
     final userStatus = chat.other.chatUser?.onlineStatus;
 
-    // The thing that you are sending.
-    return ValueListenableBuilder(
-      valueListenable: wayaChatsCache,
-      builder: (context, redraws, _) => InkWell(
-        onTap: widget.canClick ? _toChat : null,
-        onLongPress: widget.canClick ? () => _showActions(context) : null,
-        splashColor: WayaColors.primary.withAlpha(30),
-        focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
-        highlightColor: WayaColors.primary.withAlpha(30),
-        child: Padding(
-          padding: !widget.isInteractive
-              ? const EdgeInsets.symmetric(vertical: 5)
-              : const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // The user's chat profile picture.
-              ChatProfilePicture(
-                user: chat.other.userData!,
-                lastSeen: chat.other.chatUser?.lastSeen,
-                showActive: chat.chatType != ChatType.group &&
-                    userStatus == ChatUserActivity.online,
-                chat: chat,
-                radius: 25.r,
-              ),
+    String? messageContent;
+    if (chat.lastMessage != null) {
+      if (isBlocked) {
+        messageContent = "This user was blocked";
+      } else if (isDeleted) {
+        messageContent = "This message was deleted";
+      } else {
+        messageContent =
+            "${isMine ? "You: " : ""}${chat.lastMessage?.contentDescription ?? ''}";
+      }
+    }
 
-              // Some space.
-              const Gap(10),
-
-              //* For the messages part.
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //* For the other person's name.
-                    Text(
-                      chat.name ??
-                          chat.other.userData?.fullname ??
-                          chat.other.chatUser?.displayName ??
-                          "WayaGram User",
-                      maxLines: 1,
-                      style: WayaTextStyles.titleMedium.copyWith(
-                        fontWeight:
-                            unread < 1 ? FontWeight.normal : FontWeight.w600,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-
-                    //? For the message content...
-                    if (chat.lastMessage != null)
-                      Text(
-                        isBlocked
-                            ? "This user was blocked"
-                            : isDeleted
-                                ? "This message was deleted"
-                                : "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
-                        maxLines: 1,
-                        style: WayaTextStyles.titleMedium.copyWith(
-                          fontWeight:
-                              unread < 1 ? FontWeight.normal : FontWeight.w600,
-                          overflow: TextOverflow.ellipsis,
-                          fontStyle:
-                              isBlocked || isDeleted ? FontStyle.italic : null,
-                          color: unread < 1
-                              ? WayaColors.greyColor400
-                              : WayaColors.greyColor500,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-
-              // Some space
-              const Gap(10),
-
-              //* The timing for the messages.
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // First, the time.
-                  Text(
-                    WayaDateHelper.getSocialTimeAgo(
-                        chat.lastMessage?.updatedAt ?? chat.updatedAt),
-                    style: WayaTextStyles.titleMedium.copyWith(
-                      fontWeight:
-                          unread < 1 ? FontWeight.normal : FontWeight.w600,
-                      overflow: TextOverflow.ellipsis,
-                      color: unread < 1 ? WayaColors.black : WayaColors.primary,
-                      fontSize: 13.sp,
-                    ),
-                  ),
-
-                  // Some space.
-                  const Gap(2),
-
-                  // This is fine.
-                  if (isBlocked || isDeleted)
-                    const SizedBox.shrink()
-                  else if (chat.self?.isMuted ?? false)
-                    WayaAssets.icons.cProfileUnmute.svg(
-                      height: 16.sp,
-                      width: 16.sp,
-                      colorFilter: ColorFilter.mode(
-                        WayaColors.error,
-                        BlendMode.srcIn,
-                      ),
-                    )
-                  else if (unread > 0)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 9),
-                      decoration: BoxDecoration(
-                        color: WayaColors.primary,
-                        borderRadius: BorderRadius.circular(500),
-                      ),
-                      child: Text(
-                        chat.unreadText,
-                        style: WayaTextStyles.bodyMedium.copyWith(
-                          color: WayaColors.white,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    )
-                  else if (isMine && chat.lastMessage?.readAt != null)
-                    WayaAssets.icons.cRead.svg(
-                      colorFilter: ColorFilter.mode(
-                        WayaColors.primary,
-                        BlendMode.srcIn,
-                      ),
-                      height: 16,
-                      width: 16,
-                    )
-                  else if (isMine && chat.lastMessage?.deliveredAt != null)
-                    WayaAssets.icons.cRead.svg(
-                      colorFilter: ColorFilter.mode(
-                        WayaColors.greyColor400,
-                        BlendMode.srcIn,
-                      ),
-                      height: 16,
-                      width: 16,
-                    )
-                  else if (isMine && chat.lastMessage?.createdAt != null)
-                    WayaAssets.icons.cSent.svg(
-                      colorFilter: ColorFilter.mode(
-                        WayaColors.greyColor400,
-                        BlendMode.srcIn,
-                      ),
-                      height: 16,
-                      width: 16,
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+    return _ChatDisplayData(
+      isMineMessage: isMine,
+      isDeleted: isDeleted,
+      isBlocked: isBlocked,
+      hasUnread: unread > 0,
+      isMuted: chat.self?.isMuted ?? false,
+      shouldShowActive: chat.chatType != ChatType.group &&
+          userStatus == ChatUserActivity.online,
+      isItalic: isBlocked || isDeleted,
+      displayName: chat.name ??
+          chat.other.userData?.fullname ??
+          chat.other.chatUser?.displayName ??
+          "WayaGram User",
+      lastMessageContent: messageContent,
+      unreadText: chat.unreadText,
+      lastUpdateTime: chat.lastMessage?.updatedAt ?? chat.updatedAt,
+      otherUserData: chat.other.userData!,
+      lastSeen: chat.other.chatUser?.lastSeen,
+      lastMessage: chat.lastMessage,
     );
   }
 }

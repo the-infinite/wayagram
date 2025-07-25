@@ -33,15 +33,18 @@ class SingleChatScreen extends ConsumerStatefulWidget {
   ConsumerState<SingleChatScreen> createState() => _SingleChatScreenState();
 }
 
-class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
-  late final notifier = ref.read(chatProvider(widget.chatId).notifier);
-  late final conversationNotifier = ref.read(conversationProvider.notifier);
+class _SingleChatScreenState extends ConsumerState<SingleChatScreen>
+    with AutomaticKeepAliveClientMixin {
+  late final ChatNotifier notifier;
+  late final ConversationVm conversationNotifier;
   final focusNode = FocusNode();
   final handler = WayaObservableScrollController();
   bool _initialized = false;
 
   @override
   void initState() {
+    notifier = ref.read(chatProvider(widget.chatId).notifier);
+    conversationNotifier = ref.read(conversationProvider.notifier);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         ChatInputController.instance.setRef(ref);
@@ -54,8 +57,12 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void dispose() {
     focusNode.dispose();
+    handler.dispose();
     super.dispose();
   }
 
@@ -89,359 +96,374 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   // This is fine.
   @override
   Widget build(BuildContext context) {
-    // Get the theme.
-    final theme = Theme.of(context);
-
-    // This is fine.
+    super.build(context);
     return ValueListenableBuilder(
       valueListenable: ChatSettingsNotifier.instance,
       builder: (context, redraws, _) => Consumer(
         builder: (context, ref, _) {
-          final provider = chatProvider(widget.chatId);
-          final state = ref.watch(provider);
-          final config = ChatSettingsNotifier.instance;
-          final backgroundColor = config.isDarkMode ? Color(0xFF121212) : null;
-          final grayTextColor = config.isDarkMode
-              ? WayaColors.greyColor300
-              : WayaColors.greyColor500;
+          final state = ref.watch(chatProvider(widget.chatId));
+          if (state.chat == null) return const SizedBox.shrink();
 
-          //? If this is after the state of this has been reset.
-          if (state.chat == null) return const SizedBox();
+          return _ChatScreen(
+            chatId: widget.chatId,
+            state: state,
+            notifier: notifier,
+            focusNode: focusNode,
+            handler: handler,
+            onInitialized: _handleInitialization,
+            onStartVideoCall: _startVideoCall,
+            onStartAudioCall: _startAudioCall,
+            onCreateChat: _startConversation,
+          );
+        },
+      ),
+    );
+  }
 
-          //? Since there is something to be seen here.
-          final chat = state.chat!;
-          final inputController = ChatInputController.instance;
+  void _handleInitialization(ChatModel chat) {
+    if (!_initialized) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _initialized = true;
+        ChatInputController.instance.setChat(chat);
+      });
+    }
+  }
+}
 
-          // Set this up.
-          if (!_initialized) {
-            WidgetsBinding.instance.addPostFrameCallback(
-              (_) {
-                _initialized = true;
-                inputController.setChat(chat);
-              },
-            );
-          }
+class _ChatScreen extends StatelessWidget {
+  final String chatId;
+  final dynamic state;
+  final ChatNotifier notifier;
+  final FocusNode focusNode;
+  final WayaObservableScrollController handler;
+  final Function(ChatModel) onInitialized;
+  final VoidCallback onStartVideoCall;
+  final VoidCallback onStartAudioCall;
+  final Future<ChatModel?> Function() onCreateChat;
 
-          //? This is fine.
-          return PopScope(
-            onPopInvokedWithResult: (popping, _) {
-              if (!popping) return;
-              inputController.reset();
-              notifier.setInactive();
-            },
-            child: WayaScaffold(
-              isLoading: false,
-              isScrollable: false,
-              padding: EdgeInsets.zero,
-              resizeToAvoidBottomInset: true,
-              backgroundColor: backgroundColor,
-              appBar: AppBar(
-                toolbarHeight: kToolbarHeight,
-                leadingWidth: double.infinity,
-                backgroundColor: backgroundColor,
-                surfaceTintColor: Colors.transparent,
-                leading: Container(
-                  height: double.infinity,
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //* The back button, first.
-                      WayaBackButton(
-                        buttonBackgroundColor: config.isDarkMode
-                            ? WayaColors.darkGrey
-                            : WayaColors.greyColor200,
-                        arrowColor:
-                            config.isDarkMode ? Colors.white : WayaColors.black,
-                      ),
+  const _ChatScreen({
+    required this.chatId,
+    required this.state,
+    required this.notifier,
+    required this.focusNode,
+    required this.handler,
+    required this.onInitialized,
+    required this.onStartVideoCall,
+    required this.onStartAudioCall,
+    required this.onCreateChat,
+  });
 
-                      // Some space.
-                      const Gap(10),
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final config = ChatSettingsNotifier.instance;
+    final chat = state.chat!;
+    final inputController = ChatInputController.instance;
+    final themeData = _ChatThemeData.fromConfig(config);
 
-                      //* Second the profile picture and name.
-                      Expanded(
-                        child: InkWell(
-                          splashColor: theme.colorScheme.primary.withAlpha(30),
-                          focusColor: theme.colorScheme.primary.withAlpha(30),
-                          highlightColor:
-                              theme.colorScheme.primary.withAlpha(30),
-                          customBorder: StadiumBorder(),
-                          splashFactory: NoSplash.splashFactory,
-                          onTap: () => WayaNav.toNamed(
-                              WayaAppRoutes.getChatProfile(chat.id)),
-                          child: ValueListenableBuilder(
-                            valueListenable: wayaChatsCache,
-                            builder: (context, redraws, _) {
-                              // Ensure we area always using the most up to date version of this chat.
-                              final chat =
-                                  wayaChatsCache.getCachedData(widget.chatId) ??
-                                      state.chat!;
-                              final chatUser = chat.other.chatUser;
-                              final userStatus =
-                                  (chatUser?.canSeeOnlineStatus ?? true)
-                                      ? chatUser?.onlineStatus
-                                      : ChatUserActivity.offline;
-                              final lastSeenText = chatUser?.lastSeen != null &&
-                                      (chatUser?.canSeeLastSeen ?? true)
-                                  ? "Last seen ${WayaDateHelper.getSocialTimestamp(chat.other.chatUser!.lastSeen).toLowerCase()}"
-                                  : null;
+    onInitialized(chat);
 
-                              //? This is the correct chat.
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                spacing: 5.w,
-                                children: [
-                                  // First, the user's profile picture.
-                                  ChatProfilePicture(
-                                    user: chat.other.userData ??
-                                        ConversationState.self,
-                                    showActive: chat.chatType !=
-                                            ChatType.group &&
-                                        userStatus == ChatUserActivity.online,
-                                    lastSeen: chat.other.chatUser?.lastSeen,
-                                    chat: chat,
-                                    radius: 16,
+    return PopScope(
+      onPopInvokedWithResult: (popping, _) {
+        if (!popping) return;
+        inputController.reset();
+        notifier.setInactive();
+      },
+      child: WayaScaffold(
+        isLoading: false,
+        isScrollable: false,
+        padding: EdgeInsets.zero,
+        resizeToAvoidBottomInset: true,
+        backgroundColor: themeData.backgroundColor,
+        appBar: _buildAppBar(theme, chat, themeData),
+        body: _buildBody(chat, inputController, themeData),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(
+    ThemeData theme,
+    ChatModel chat,
+    _ChatThemeData themeData,
+  ) {
+    return AppBar(
+      toolbarHeight: kToolbarHeight,
+      leadingWidth: double.infinity,
+      backgroundColor: themeData.backgroundColor,
+      surfaceTintColor: Colors.transparent,
+      leading: Container(
+        height: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            WayaBackButton(
+              buttonBackgroundColor: themeData.buttonBackgroundColor,
+              arrowColor: themeData.arrowColor,
+            ),
+            const Gap(10),
+            Expanded(
+              child: InkWell(
+                splashColor: theme.colorScheme.primary.withAlpha(30),
+                focusColor: theme.colorScheme.primary.withAlpha(30),
+                highlightColor: theme.colorScheme.primary.withAlpha(30),
+                customBorder: const StadiumBorder(),
+                splashFactory: NoSplash.splashFactory,
+                onTap: () =>
+                    WayaNav.toNamed(WayaAppRoutes.getChatProfile(chat.id)),
+                child: ValueListenableBuilder(
+                  valueListenable: wayaChatsCache,
+                  builder: (context, redraws, _) {
+                    final currentChat =
+                        wayaChatsCache.getCachedData(chatId) ?? chat;
+                    final chatUser = currentChat.other.chatUser;
+                    final userStatus = (chatUser?.canSeeOnlineStatus ?? true)
+                        ? chatUser?.onlineStatus ?? ChatUserActivity.offline
+                        : ChatUserActivity.offline;
+
+                    String? subtitle;
+                    if (currentChat.chatType == ChatType.group) {
+                      subtitle =
+                          "${WayaValueHelper.formatNumber(currentChat.chatMembers.length)} members";
+                    } else if (userStatus == ChatUserActivity.online) {
+                      subtitle = "Online";
+                    } else if (chatUser?.lastSeen != null &&
+                        (chatUser?.canSeeLastSeen ?? true)) {
+                      subtitle =
+                          "Last seen ${WayaDateHelper.getSocialTimestamp(chatUser!.lastSeen).toLowerCase()}";
+                    }
+
+                    return Row(
+                      spacing: 5.w,
+                      children: [
+                        ChatProfilePicture(
+                          user: currentChat.other.userData ??
+                              ConversationState.self,
+                          showActive: currentChat.chatType != ChatType.group &&
+                              userStatus == ChatUserActivity.online,
+                          lastSeen: currentChat.other.chatUser?.lastSeen,
+                          chat: currentChat,
+                          radius: 16,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  currentChat.name ??
+                                      currentChat.other.userData?.fullname ??
+                                      currentChat.other.chatUser?.displayName ??
+                                      "WayaGram User",
+                                  maxLines: 1,
+                                  style: WayaTextStyles.titleMedium.copyWith(
+                                    fontSize: 15.sp,
+                                    color: themeData.textColor,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-
-                                  // Second, the user's name.
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 10),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          //* For the other person's name.
-                                          Text(
-                                            chat.name ??
-                                                chat.other.userData?.fullname ??
-                                                chat.other.chatUser
-                                                    ?.displayName ??
-                                                "WayaGram User",
-                                            maxLines: 1,
-                                            style: WayaTextStyles.titleMedium
-                                                .copyWith(
-                                              fontSize: 15.sp,
-                                              color: config.isDarkMode
-                                                  ? Colors.white
-                                                  : null,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-
-                                          //? For the message content...
-                                          if (chat.chatType == ChatType.group)
-                                            Text(
-                                              "${WayaValueHelper.formatNumber(chat.chatMembers.length)} members",
-                                              maxLines: 1,
-                                              style: WayaTextStyles.titleMedium
-                                                  .copyWith(
-                                                fontWeight: FontWeight.normal,
-                                                overflow: TextOverflow.ellipsis,
-                                                color: grayTextColor,
-                                                fontSize: 13.sp,
-                                              ),
-                                            )
-                                          else if (userStatus ==
-                                              ChatUserActivity.online)
-                                            Text(
-                                              "Online",
-                                              maxLines: 1,
-                                              style: WayaTextStyles.titleMedium
-                                                  .copyWith(
-                                                fontWeight: FontWeight.normal,
-                                                overflow: TextOverflow.ellipsis,
-                                                color: grayTextColor,
-                                                fontSize: 13.sp,
-                                              ),
-                                            )
-                                          else if (lastSeenText != null)
-                                            Text(
-                                              lastSeenText,
-                                              maxLines: 1,
-                                              style: WayaTextStyles.titleMedium
-                                                  .copyWith(
-                                                fontWeight: FontWeight.normal,
-                                                overflow: TextOverflow.ellipsis,
-                                                color: grayTextColor,
-                                                fontSize: 13.sp,
-                                              ),
-                                            ),
-                                        ],
-                                      ),
+                                ),
+                                if (subtitle != null)
+                                  Text(
+                                    subtitle,
+                                    maxLines: 1,
+                                    style: WayaTextStyles.titleMedium.copyWith(
+                                      fontWeight: FontWeight.normal,
+                                      overflow: TextOverflow.ellipsis,
+                                      color: themeData.grayTextColor,
+                                      fontSize: 13.sp,
                                     ),
                                   ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-
-                      //* Third, the video call button.
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: IntrinsicHeight(
-                          child: WayaButton(
-                            callback: _startVideoCall,
-                            height: null,
-                            color: config.isDarkMode
-                                ? WayaColors.darkGrey
-                                : WayaColors.greyColor200,
-                            horizontalPadding: 8,
-                            verticalPadding: 8,
-                            centerWidget: WayaAssets.icons.cCallVideo.svg(
-                              color: config.isDarkMode
-                                  ? Colors.white
-                                  : WayaColors.black,
-                              height: 15,
-                              width: 15,
+                              ],
                             ),
                           ),
                         ),
-                      ),
-
-                      //* Fourth, the audio call button.
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: IntrinsicHeight(
-                          child: WayaButton(
-                            callback: _startAudioCall,
-                            height: null,
-                            color: config.isDarkMode
-                                ? WayaColors.darkGrey
-                                : WayaColors.greyColor200,
-                            horizontalPadding: 8,
-                            verticalPadding: 8,
-                            centerWidget: WayaAssets.icons.cCallVoice.svg(
-                              color: config.isDarkMode
-                                  ? Colors.white
-                                  : WayaColors.black,
-                              height: 15,
-                              width: 15,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  },
                 ),
               ),
-              body: SafeArea(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onPanUpdate: (details) => focusNode.unfocus(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      //? First, the divider.
-                      Divider(color: WayaColors.greyColor200, height: 1),
-
-                      //? Second, the chat messages.
-                      if (state.messages.isEmpty && state.hasLoaded)
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              //* First, the image.
-                              WayaAssets.images.cSayHello.image(
-                                height: 70,
-                                width: 70,
-                                fit: BoxFit.cover,
-                              ),
-
-                              // Some space.
-                              const Gap(20),
-
-                              //* Some text
-                              Text(
-                                "Send the first message",
-                                style: WayaTextStyles.titleLarge.copyWith(
-                                  color:
-                                      config.isDarkMode ? Colors.white : null,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 24.sp,
-                                ),
-                              ),
-
-                              // Some space.
-                              const Gap(10),
-
-                              //* Some text
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 40),
-                                child: Text(
-                                  chat.chatType == ChatType.group
-                                      ? "Start the conversation in ${chat.name ?? "Group Chat"} with your friends!"
-                                      : "Start the conversation with ${chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User"}",
-                                  maxLines: 3,
-                                  textAlign: TextAlign.center,
-                                  style: WayaTextStyles.hintStyle.copyWith(
-                                    color: grayTextColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      else
-                        Expanded(
-                          child: WayaPaginatedListView<MessageModel>(
-                            handler: handler,
-                            nextPage: state.page,
-                            itemCount: state.messages.length,
-                            isAtEnd: !state.hasNextPage,
-                            shouldFetch: !state.isLoading,
-                            direction: Axis.vertical,
-                            onScroll: (controller) => focusNode.unfocus(),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 12),
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            reverse: true,
-                            getPage: (page) async => notifier.getMessages(),
-                            builder: (context, index) => ChatBubbleWidget(
-                              index: index,
-                              inputFocus: focusNode,
-                              previousDate: index == 0
-                                  ? DateTime(1970)
-                                  : state.messages[index - 1].createdAt,
-                              data: state.messages[index],
-                              chat: chat,
-                              controller: inputController,
-                              isLast: index == state.messages.length - 1,
-                              isDark: config.isDarkMode,
-                              grayColor: grayTextColor,
-                              backgroundColor: backgroundColor,
-                              textScale: config.textScale,
-                            ),
-                          ),
-                        ),
-
-                      //? Third, the chat input widget... probably?
-                      ChatInputWidget(
-                        controller: inputController,
-                        notifier: notifier,
-                        createChat: _startConversation,
-                        focusNode: focusNode,
-                        isDark: config.isDarkMode,
-                        grayColor: grayTextColor,
-                        backgroundColor: backgroundColor,
-                      ),
-                    ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: IntrinsicHeight(
+                child: WayaButton(
+                  callback: onStartVideoCall,
+                  height: null,
+                  color: themeData.buttonBackgroundColor,
+                  horizontalPadding: 8,
+                  verticalPadding: 8,
+                  centerWidget: WayaAssets.icons.cCallVideo.svg(
+                    color: themeData.arrowColor,
+                    height: 15,
+                    width: 15,
                   ),
                 ),
               ),
             ),
-          );
-        },
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: IntrinsicHeight(
+                child: WayaButton(
+                  callback: onStartAudioCall,
+                  height: null,
+                  color: themeData.buttonBackgroundColor,
+                  horizontalPadding: 8,
+                  verticalPadding: 8,
+                  centerWidget: WayaAssets.icons.cCallVoice.svg(
+                    color: themeData.arrowColor,
+                    height: 15,
+                    width: 15,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildBody(
+    ChatModel chat,
+    dynamic inputController,
+    _ChatThemeData themeData,
+  ) {
+    return SafeArea(
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onPanUpdate: (details) => focusNode.unfocus(),
+        child: Column(
+          children: [
+            Divider(color: WayaColors.greyColor200, height: 1),
+            _buildChatContent(chat, inputController, themeData),
+            _buildChatInput(inputController, themeData),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChatContent(
+    ChatModel chat,
+    dynamic inputController,
+    _ChatThemeData themeData,
+  ) {
+    if (state.messages.isEmpty && state.hasLoaded) {
+      return Expanded(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            WayaAssets.images.cSayHello.image(
+              height: 70,
+              width: 70,
+              fit: BoxFit.cover,
+            ),
+            const Gap(20),
+            Text(
+              "Send the first message",
+              style: WayaTextStyles.titleLarge.copyWith(
+                color: themeData.textColor,
+                fontWeight: FontWeight.w700,
+                fontSize: 24.sp,
+              ),
+            ),
+            const Gap(10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+                chat.chatType == ChatType.group
+                    ? "Start the conversation in ${chat.name ?? "Group Chat"} with your friends!"
+                    : "Start the conversation with ${chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User"}",
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                style: WayaTextStyles.hintStyle.copyWith(
+                  color: themeData.grayTextColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Expanded(
+      child: WayaPaginatedListView<MessageModel>(
+        handler: handler,
+        nextPage: state.page,
+        itemCount: state.messages.length,
+        isAtEnd: !state.hasNextPage,
+        shouldFetch: !state.isLoading,
+        direction: Axis.vertical,
+        onScroll: (controller) => focusNode.unfocus(),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        physics: const AlwaysScrollableScrollPhysics(),
+        reverse: true,
+        getPage: (page) async => notifier.getMessages(),
+        builder: (context, index) => ChatBubbleWidget(
+          index: index,
+          inputFocus: focusNode,
+          previousDate:
+              index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+          data: state.messages[index],
+          chat: chat,
+          controller: inputController,
+          isLast: index == state.messages.length - 1,
+          isDark: themeData.isDarkMode,
+          grayColor: themeData.grayTextColor,
+          backgroundColor: themeData.backgroundColor,
+          textScale: themeData.textScale,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChatInput(
+    dynamic inputController,
+    _ChatThemeData themeData,
+  ) {
+    return ChatInputWidget(
+      controller: inputController,
+      notifier: notifier,
+      createChat: onCreateChat,
+      focusNode: focusNode,
+      isDark: themeData.isDarkMode,
+      grayColor: themeData.grayTextColor,
+      backgroundColor: themeData.backgroundColor,
+    );
+  }
+}
+
+class _ChatThemeData {
+  final bool isDarkMode;
+  final Color? backgroundColor;
+  final Color grayTextColor;
+  final Color? textColor;
+  final Color buttonBackgroundColor;
+  final Color arrowColor;
+  final double textScale;
+
+  const _ChatThemeData({
+    required this.isDarkMode,
+    required this.backgroundColor,
+    required this.grayTextColor,
+    required this.textColor,
+    required this.buttonBackgroundColor,
+    required this.arrowColor,
+    required this.textScale,
+  });
+
+  factory _ChatThemeData.fromConfig(dynamic config) {
+    return _ChatThemeData(
+      isDarkMode: config.isDarkMode,
+      backgroundColor: config.isDarkMode ? const Color(0xFF121212) : null,
+      grayTextColor:
+          config.isDarkMode ? WayaColors.greyColor300 : WayaColors.greyColor500,
+      textColor: config.isDarkMode ? Colors.white : null,
+      buttonBackgroundColor:
+          config.isDarkMode ? WayaColors.darkGrey : WayaColors.greyColor200,
+      arrowColor: config.isDarkMode ? Colors.white : WayaColors.black,
+      textScale: config.textScale,
     );
   }
 }

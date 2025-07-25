@@ -141,7 +141,7 @@ class LoginVm extends StateNotifier<LoginState> {
       if (response.success) {
         await getUserInfo(data: response.data);
       } else {
-        if (response.data['responseCode'] == 404) {
+        if (response.data != null && response.data['responseCode'] == 404) {
           return WayaSnackBar.showToast("User does not exist");
         } else {
           throw "Error";
@@ -171,7 +171,7 @@ class LoginVm extends StateNotifier<LoginState> {
       if (response.success) {
         await getUserInfo(data: response.data);
       } else {
-        if (response.data['responseCode'] == 625) {
+        if (response.data != null && response.data['responseCode'] == 625) {
           await ref
               .read(verifyAccountProvider.notifier)
               .resendOtpForRegisteredButNotVerifiedUser(

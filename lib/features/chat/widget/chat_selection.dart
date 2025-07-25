@@ -62,10 +62,8 @@ class SelectConversationWidget extends StatelessWidget {
                 radius: 27,
               ),
 
-              // Some space.
               const Gap(10),
 
-              //* For the messages part.
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -215,16 +213,12 @@ class SelectUserWidget extends StatelessWidget {
                       showActive: false,
                     ),
 
-                    // Some space.
                     const Gap(10),
-
-                    //* For the messages part.
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          //* For the other person's name.
                           Text(
                             data.$1.fullname,
                             maxLines: 1,

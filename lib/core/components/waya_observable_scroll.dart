@@ -39,6 +39,12 @@ class WayaObservableScrollController {
     /// Set the flag to false.
     hasScrolled = false;
   }
+
+  void dispose() {
+    _scrollView = null;
+    paginatedListView = null;
+    hasScrolled = false;
+  }
 }
 
 class WayaObservableScrollView extends StatefulWidget {

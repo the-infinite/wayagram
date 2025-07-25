@@ -37,7 +37,10 @@ class UserResource {
   }
 
   static Future<CachedUserDataTuple?> getByUsername(String username) async {
-    final found = userCache.entries.where((data) => data.value.$2.username == username).firstOrNull?.value;
+    final found = userCache.entries
+        .where((data) => data.value.$2.username == username)
+        .firstOrNull
+        ?.value;
     final now = DateTime.now();
 
     //? Since this is here.
@@ -58,7 +61,8 @@ class UserResource {
     return _getFromNetworkByUsername(username);
   }
 
-  static Future<CachedUserDataTuple?> _getFromNetworkByUsername(String username) async {
+  static Future<CachedUserDataTuple?> _getFromNetworkByUsername(
+      String username) async {
     final response = await repo.getUserByUsername(username);
 
     //? If it failed, return nothing.
@@ -68,7 +72,10 @@ class UserResource {
 
     //? Retrieve this too.
     final data = response.data['data']['userdata'];
-    final result = (UserDetailsModel.fromJson(data['user']), SocialProfileModel.fromJson(data['profile']));
+    final result = (
+      UserDetailsModel.fromJson(data['user']),
+      SocialProfileModel.fromJson(data['profile'])
+    );
 
     //? Cache this.
     await _save(result.$1.id, result);
@@ -87,7 +94,10 @@ class UserResource {
 
     //? Retrieve this too.
     final data = response.data['data']['userdata'];
-    final result = (UserDetailsModel.fromJson(data['user']), SocialProfileModel.fromJson(data['profile']));
+    final result = (
+      UserDetailsModel.fromJson(data['user']),
+      SocialProfileModel.fromJson(data['profile'])
+    );
 
     //? Cache this.
     _save(id, result);
@@ -105,7 +115,7 @@ class UserResource {
     await logger.init;
 
     //? Now, log this.
-    logger.i("Invalidated cache for user ${details.$1.fullname}", time: cachedTimestamps[id]);
+    // logger.i("Invalidated cache for user ${details.$1.fullname}", time: cachedTimestamps[id]);
 
     //? Always return true for now.
     return true;

@@ -51,7 +51,9 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
       //? First, we try to retrieve the order information.
       widget.notifier.getOrderDetails(widget.data.id).then(
         (value) {
-          orderController.value = value;
+          if (mounted) {
+            orderController.value = value;
+          }
         },
       );
 
@@ -81,12 +83,16 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
 
   @override
   void dispose() {
-    timeNotifier.dispose();
     timer?.cancel();
+    orderController.dispose();
+    timeNotifier.dispose();
+    loadingController.dispose();
     super.dispose();
   }
 
   Future<void> _ingestOrder() async {
+    if (!mounted) return;
+    
     final cachedRequest = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final eval = timeNotifier.value - const Duration(seconds: 1);
 
@@ -95,7 +101,9 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
       final value = await widget.notifier.getOrderDetails(widget.data.id);
 
       //? This is fine too.
-      orderController.value = value;
+      if (mounted) {
+        orderController.value = value;
+      }
     } catch (_) {}
 
     //? Update this guy in the list.
@@ -105,7 +113,9 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     }
 
     //? Update the time we think it would take.
-    timeNotifier.value = eval;
+    if (mounted) {
+      timeNotifier.value = eval;
+    }
   }
 
   Future<void> _placeBid() async {

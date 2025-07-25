@@ -23,18 +23,13 @@ class FileMessageWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //? First, the actual media message.
         ChatFileListWidget(
           interactive: false,
           message: data,
         ),
-
-        //? If this has any text...
         if (data.content != null && data.content!.isNotEmpty) ...[
           // Some space.
           const Gap(10),
-
-          // The text,
           Text(
             data.content!,
             style: WayaTextStyles.bodyMedium.copyWith(

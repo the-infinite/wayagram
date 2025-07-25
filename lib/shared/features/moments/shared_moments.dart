@@ -23,33 +23,37 @@ class SharedMoments extends ConsumerStatefulWidget {
 }
 
 class _SharedMomentsState extends ConsumerState<SharedMoments> {
-  late final notifier = ref.read(momentVmProvider.notifier);
+  late final MomentVm notifier = ref.read(momentVmProvider.notifier);
   Timer? _timer;
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifier.getUserMoments(1);
-      otherUserMoments.getAllMoments();
-
-      //? This is fine.
-
-      _timer ??= Timer.periodic(
-        const Duration(seconds: 15),
-        (_) async {
-          notifier.getUserMoments(1);
-          await otherUserMoments.getAllMoments();
-        },
-      );
-    });
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadInitialData();
+      _startPeriodicRefresh();
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
-    _timer = null;
     super.dispose();
+  }
+
+  void _loadInitialData() {
+    notifier.getUserMoments(1);
+    otherUserMoments.getAllMoments();
+  }
+
+  void _startPeriodicRefresh() {
+    _timer = Timer.periodic(
+      const Duration(seconds: 15),
+      (_) async {
+        notifier.getUserMoments(1);
+        await otherUserMoments.getAllMoments();
+      },
+    );
   }
 
   @override
@@ -57,7 +61,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
     final momentState = ref.watch(momentVmProvider);
 
     if (momentState.isLoadingUserMoment) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return SizedBox(
@@ -68,9 +72,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
           itemCount: 1 + otherUserMoments.moments.length,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
-            //? For you kini, shey you get?
             if (index == 0) {
-              // First
               return Row(
                 children: [
                   const Gap(6),
@@ -92,22 +94,14 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                           ),
                         );
                       }
-
-                      //? By default, create a new moment.
                       WayaNav.toNamed(MyMoments.route);
                     },
                   ),
                   const Gap(6),
                 ],
               );
-            }
-
-            //? For the other user's kini.
-            else {
-              // Others
+            } else {
               final moment = otherUserMoments.moments[index - 1];
-
-              //? Return this like this.
               return Row(
                 children: [
                   MomentsWidget(
@@ -163,7 +157,7 @@ class PopModal extends StatelessWidget {
                     fontWeight: FontWeight.w500),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextButton(
               onPressed: () {
                 WayaNav.goBack();

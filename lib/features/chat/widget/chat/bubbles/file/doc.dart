@@ -76,7 +76,6 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
         WayaSnackBar.showToast("Unable to open document");
       }
     } catch (e) {
-      debugPrint("Error: $e");
       WayaSnackBar.showToast("Unable to open document");
     }
   }
@@ -124,7 +123,6 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
       icon = WayaAssets.icons.fileDocument.path;
     }
 
-    //? Return this here.
     return GestureDetector(
       onTap: downloaded ? _openFile : null,
       child: Padding(
@@ -171,7 +169,6 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            //? First, the download stream
                             Container(
                               height: 50,
                               decoration: BoxDecoration(
@@ -184,7 +181,6 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                                 aspectRatio: 1,
                                 child: Stack(
                                   children: [
-                                    //? The progress things.
                                     CircularProgressIndicator(
                                       value: progress / 100,
                                       color: highlights,
@@ -204,11 +200,7 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                                 ),
                               ),
                             ),
-
-                            // Some space.
                             const Gap(10),
-
-                            //? Second, the file's name.
                             Expanded(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -234,8 +226,6 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                                 ],
                               ),
                             ),
-
-                            //? Finally, the playback duration button.
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: Text(
@@ -257,9 +247,8 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        //? First, the file icon.
                         Container(
-                          height: 50,
+                          height: 60,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: highlights,
@@ -281,8 +270,6 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                                     BlendMode.srcIn,
                                   ),
                                 ),
-
-                                //* The text file.
                                 Text(
                                   widget.extension.toUpperCase(),
                                   style: WayaTextStyles.bodySemiBold.copyWith(
@@ -314,7 +301,6 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
 
                   //* Only if this is interactive...
                   if (widget.interactive) ...[
-                    //? Second, the overlay..
                     ClipPath(
                       clipper: ShapeBorderClipper(
                         shape: RoundedRectangleBorder(

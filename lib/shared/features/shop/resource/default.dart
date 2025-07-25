@@ -17,7 +17,8 @@ class ShopResource {
 
   /// Helper function used to get the list of shops for the currently logged in
   /// user.
-  static List<ShopModel> get userShops => _vendorsCache[ConversationState.self.id] ?? [];
+  static List<ShopModel> get userShops =>
+      _vendorsCache[ConversationState.self.id] ?? [];
 
   /// Helper function used to get the value of the currently selected shop. Any
   /// sane early adopter should have just one shop so this should be safe and
@@ -181,7 +182,7 @@ class ShopResource {
     await _logger.init;
 
     //? Now, log this.
-    _logger.i("Invalidated cache for the shop ${details.shop.name}", time: _cachedTimestamps[id]);
+    // _logger.i("Invalidated cache for the shop ${details.shop.name}", time: _cachedTimestamps[id]);
 
     //? Always return true for now.
     return true;

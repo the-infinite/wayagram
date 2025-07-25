@@ -31,9 +31,15 @@ class DioInterceptor extends Interceptor {
     if (responseData is Map<String, dynamic>) {
       errData = responseData['data'];
       statusCodeFromData = responseData['statusCode'];
+    } else if (responseData != null) {
+      if (kDebugMode) {
+        debugPrint(
+            'DioInterceptor: Unexpected response data type: ${responseData.runtimeType}');
+      }
+      errData = null;
+      statusCodeFromData = null;
     } else {
-      debugPrint(
-          'DioInterceptor: Unexpected response data type: ${responseData.runtimeType}');
+      // Handle null response data gracefully
       errData = null;
       statusCodeFromData = null;
     }
@@ -54,19 +60,25 @@ class DioInterceptor extends Interceptor {
           // Safely access nested response data
           dynamic tokenResponseData = response.data;
           if (tokenResponseData is! Map<String, dynamic>) {
-            debugPrint('DioInterceptor: Invalid token response data type');
+            if (kDebugMode) {
+              debugPrint('DioInterceptor: Invalid token response data type');
+            }
             return handler.next(err);
           }
 
           final tokenData = tokenResponseData['data'];
           if (tokenData is! Map<String, dynamic>) {
-            debugPrint('DioInterceptor: Invalid token data structure');
+            if (kDebugMode) {
+              debugPrint('DioInterceptor: Invalid token data structure');
+            }
             return handler.next(err);
           }
 
           final tokenInfo = tokenData['token'];
           if (tokenInfo is! Map<String, dynamic>) {
-            debugPrint('DioInterceptor: Invalid token info structure');
+            if (kDebugMode) {
+              debugPrint('DioInterceptor: Invalid token info structure');
+            }
             return handler.next(err);
           }
 
@@ -74,7 +86,10 @@ class DioInterceptor extends Interceptor {
           final newrefreshToken = tokenInfo['refreshToken']?.toString();
 
           if (newtoken == null || newrefreshToken == null) {
-            debugPrint('DioInterceptor: Missing token information in response');
+            if (kDebugMode) {
+              debugPrint(
+                  'DioInterceptor: Missing token information in response');
+            }
             return handler.next(err);
           }
 
@@ -95,7 +110,9 @@ class DioInterceptor extends Interceptor {
 
           return handler.resolve(retryResponse);
         } catch (e) {
-          debugPrint(" new token $e");
+          if (kDebugMode) {
+            debugPrint("DioInterceptor: Token refresh failed - $e");
+          }
           return handler.next(err);
         }
       }
