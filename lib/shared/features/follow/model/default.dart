@@ -100,6 +100,7 @@ class UserSettingsDto {
   final bool? showPeopleFollowing;
   final bool? restrictRequestToPeopleFollow;
 
+  // Construct.
   UserSettingsDto({
     required this.showPeopleFollowMe,
     required this.showPeopleFollowing,
