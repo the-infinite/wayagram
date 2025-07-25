@@ -98,7 +98,6 @@ class FollowStatusModel {
 class UserSettingsDto {
   final bool? showPeopleFollowMe;
   final bool? showPeopleFollowing;
-
   final bool? restrictRequestToPeopleFollow;
 
   UserSettingsDto({
