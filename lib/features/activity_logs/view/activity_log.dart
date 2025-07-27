@@ -1790,7 +1790,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
         }));
   }
 
-  sortList(s, log1, log2) {
+  void sortList(String s, List log1, log2) {
     //final viewModel = ref.watch(activityLogsVmProvider);
     log1 = [];
     setState(() {

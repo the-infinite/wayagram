@@ -96,6 +96,7 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
                       args['groupId'],
                       args['id'],
                     )) {
+                      if (!context.mounted) return;
                       await showCustomDialog(
                         context,
                         'Success!',

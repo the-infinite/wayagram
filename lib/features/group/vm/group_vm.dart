@@ -195,7 +195,8 @@ class GroupVm extends StateNotifier<GroupState> {
       final putImageResponse = await _groupRepository.putImage(url.url, file);
 
       //? This is fine.
-      if (!(putImageResponse.success && ctx.mounted)) {
+      if (!putImageResponse.success) {
+        if (!ctx.mounted) return;
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Failed to create post'),
@@ -229,6 +230,7 @@ class GroupVm extends StateNotifier<GroupState> {
         );
 
         //? This is fine.
+        if (!ctx.mounted) return;
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
             content: Text('Post created successfully!'),
@@ -341,9 +343,10 @@ class GroupVm extends StateNotifier<GroupState> {
           isOpen);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
-      if (response.success && ctx.mounted) {
+      if (response.success) {
         await getSingleGroup(groupId);
         WayaNav.toNamed('/groups');
+        if (!ctx.mounted) return;
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
             content: Text(

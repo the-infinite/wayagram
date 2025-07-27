@@ -629,6 +629,7 @@ class _ConfirmVoteOptionModalState
                                       ?.id ??
                                   "");
                           WayaNav.goBack();
+                          if (!context.mounted) return;
                           WayaUtils.showModalSheet(context,
                               child: VoteSuccessModal(
                                 candidateName: widget.candidateName,

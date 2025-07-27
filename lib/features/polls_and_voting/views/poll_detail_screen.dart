@@ -178,6 +178,7 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
                           // ref.read(createPollVotingProvider.notifier).castFreeVote(
                           //     1, '${e.id}', '${poll.id}', context, '${e.text}', '${viewModel.pollUrl}');
                         } else {
+                          if (!context.mounted) return;
                           WayaUtils.showModalSheet(
                             context,
                             child: VoteOptionModal(

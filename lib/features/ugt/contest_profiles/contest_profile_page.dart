@@ -93,6 +93,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 element.hasPaid != true) {
               selectedStage = element;
               Future.delayed(Duration(seconds: 2), () {
+                if (!context.mounted) return;
                 WayaUtils.showModalSheetUgt(
                   context,
                   child: SuccessfulModal(
@@ -370,6 +371,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       contestModel, contestModel?.contestSettings?.stages);
 
                   if (contestModel?.amountPerVote == 0) {
+                    if (!context.mounted) return;
                     WayaUtils.showModalSheet(
                       context,
                       child: ConfirmVoteOptionModal(
@@ -392,7 +394,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
                     return;
                   }
-
+                  if (!context.mounted) return;
                   WayaUtils.showModalSheet(
                     context,
                     child: VoteOptionModal(

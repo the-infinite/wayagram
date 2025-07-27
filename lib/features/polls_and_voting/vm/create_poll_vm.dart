@@ -596,6 +596,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
             CreatePollResponse.fromJson(response.data);
         await getAllPolls(page: 1);
         await getMyPolls(page: 1);
+        if (!context.mounted) return;
         WayaUtils.showModalSheet(
           context,
           child: PollsModal(url: '${createPollResponse.data!.url}'),
@@ -667,9 +668,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
-      if (response.success && context.mounted) {
+      if (response.success) {
         await getAllPolls(page: 1);
         await getMyPolls(page: 1);
+        if (!context.mounted) return;
         showDialog(
             useRootNavigator: false,
             context: context,

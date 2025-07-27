@@ -324,6 +324,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           contestModel2?.contestSettings?.stages);
 
                       if (contestModel2?.amountPerVote == 0) {
+                        if (!context.mounted) return;
                         WayaUtils.showModalSheet(
                           context,
                           child: ConfirmVoteOptionModal(
@@ -349,7 +350,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
 
                         return;
                       }
-
+                      if (!context.mounted) return;
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(

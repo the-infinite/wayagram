@@ -45,7 +45,12 @@ class MomentHelper {
   }
 
   static String colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).padLeft(8, '0')}';
+    // Convert ARGB color to hex string (format: AARRGGBB)
+    final argb = (color.a.round() << 24) |
+                 (color.r.round() << 16) |
+                 (color.g.round() << 8) |
+                 color.b.round();
+    return '#${argb.toRadixString(16).padLeft(8, '0').toUpperCase()}';
   }
 
   static String textStyleToJson(TextStyle textStyle) {

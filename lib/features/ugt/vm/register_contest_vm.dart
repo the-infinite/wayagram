@@ -151,6 +151,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     isLoading.value = false;
 
     if (response.success) {
+      if (!context.mounted) return;
       WayaUtils.showModalSheetUgt(
         context,
         child: SuccessfulModal(

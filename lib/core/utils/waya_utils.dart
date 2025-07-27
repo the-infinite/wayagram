@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -102,19 +100,21 @@ class WayaUtils {
   }) {
     // Get the theme.
     final theme = Theme.of(context);
+    final screenHeight = MediaQuery.of(context).size.height;
 
     // Return the modal.
-    return Get.bottomSheet(
-      ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-        child: child,
-      ),
+    return showModalBottomSheet<T>(
+      context: context,
       backgroundColor: backgroundColor ?? theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       isDismissible: isDismissible,
       useRootNavigator: true,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      builder: (context) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
+        child: child,
+      ),
     );
   }
 
@@ -122,18 +122,20 @@ class WayaUtils {
       {required Widget child}) {
     // Get the theme.
     final theme = Theme.of(context);
+    final screenHeight = MediaQuery.of(context).size.height;
 
     // Return the modal.
-    return Get.bottomSheet(
-      ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-        child: child,
-      ),
+    return showModalBottomSheet<void>(
+      context: context,
       backgroundColor: theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       useRootNavigator: true,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      builder: (context) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
+        child: child,
+      ),
     );
   }
 
@@ -141,18 +143,20 @@ class WayaUtils {
       {required Widget child}) {
     // Get the theme.
     final theme = Theme.of(context);
+    final screenHeight = MediaQuery.of(context).size.height;
 
     // Return the modal.
-    return Get.bottomSheet(
-      ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-        child: child,
-      ),
+    return showModalBottomSheet<void>(
+      context: context,
       backgroundColor: theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       useRootNavigator: true,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      builder: (context) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
+        child: child,
+      ),
     );
   }
 

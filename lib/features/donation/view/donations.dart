@@ -92,7 +92,7 @@ class _DonationsState extends ConsumerState<Donations>
               });
               return;
             }
-            if (viewModel.kycStatus != 'APPROVED') {
+            if (viewModel.kycStatus != 'APPROVED' && context.mounted) {
               WayaUtils.showNotice(
                   context: context,
                   title: "Update KYC Information ",

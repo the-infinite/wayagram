@@ -474,7 +474,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
     }
   }
 
-  void _submitPin(BuildContext context1, ValueNotifier<bool> isLoading) async {
+  void _submitPin(BuildContext context, ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
       //  WayaNav.goBack();
 
@@ -492,7 +492,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
         if (WayaNav.canPop()) {
           WayaNav.goBack();
         }
-
+        if (!context.mounted) return;
         WayaUtils.showModalSheetUgt(
           context,
           child: SuccessfulModal(

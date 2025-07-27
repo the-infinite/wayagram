@@ -129,6 +129,7 @@ class _ExportTransactionState extends ConsumerState<ExportTransaction> {
                 // Handle export logic here
                 WayaNav.goBack();
                 await notifier.downloadPdf('transaction');
+                if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Transaction was exported successfully!'),

@@ -437,6 +437,10 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
       //WayaSnackBar.showToast("You denied the storage permission");
       //return;
     }
+
+    //? Check if widget is still mounted before using context
+    if (!context.mounted) return;
+
     //? Okay.
     final result = await WayaUtils.showModalSheet<AttachmentResult>(
       context,

@@ -80,6 +80,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                       viewModel.roleType,
                       viewModel.foundUserId!,
                     )) {
+                      if (!context.mounted) return;
                       await showCustomDialog(
                         context,
                         'Success!',

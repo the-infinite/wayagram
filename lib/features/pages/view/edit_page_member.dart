@@ -73,6 +73,7 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
                           args['pageId'],
                           args['id'],
                         )) {
+                      if (!context.mounted) return;
                       await showCustomDialog(
                         context,
                         'Success!',

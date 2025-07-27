@@ -269,6 +269,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         ref.read(postProvider.notifier).fetchContestForYou(true);
         //  ref.read(postProvider.notifier).fetchPosts();
         // ref.read(postProvider.notifier).fetchPosts();
+        if (!context.mounted) return;
         WayaUtils.showModalSheetUgt(
           context,
           child: SuccessfulModal(
@@ -335,6 +336,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     isLoading.value = false;
     if (response.success) {
       // WayaNav.goBack();
+      if (!context.mounted) return;
       WayaUtils.showModalSheetUgt(
         context,
         child: SuccessfulModal(

@@ -702,7 +702,7 @@ class _TransactionDetailsScreenState
                               .verifyTransaction(
                                   state.transaction!.transactionId,
                                   state.transaction!.paymentMethod);
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           WayaLoadingDialog.show(context);
                           if (state.verified!) {
                             await ref
@@ -712,6 +712,7 @@ class _TransactionDetailsScreenState
                                 .read(walletVmProvider.notifier)
                                 .getUserWallet();
                           }
+                          if (!context.mounted) return;
                           WayaLoadingDialog.hide(context);
                         },
                         style: ElevatedButton.styleFrom(
