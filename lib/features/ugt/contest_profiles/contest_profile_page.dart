@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -49,16 +48,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
   Future<String> getImageUrl(String videoLink) async {
     return '';
-    // XFile thumbnailFile = await VideoThumbnail.thumbnailFile(
-    //   video: videoLink,
-    //   thumbnailPath: (await getTemporaryDirectory()).path,
-    //   imageFormat: ImageFormat.WEBP,
-    //   maxHeight:
-    //       200, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
-    //   quality: 70,
-    // );
-    //
-    // return thumbnailFile.path;
   }
 
   @override
@@ -66,10 +55,10 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final wayaTheme = Theme.of(context);
     //var model = ref.watch(selectedContestProvider.notifier).state;
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
-    final String id = Get.parameters['id'] ?? args['id'] ?? "";
+    final String id = args['id'] ?? "";
     var model = ref.watch(selectedContestantProfile);
 
-    final String contestId = Get.parameters['contest'] ?? args['contest'] ?? "";
+    final String contestId = args['contest'] ?? "";
     var viewModel = ref.watch(votersContestNotifier.notifier);
     var notifier = ref.watch(postProvider.notifier);
     final imagePath = useState("");
@@ -189,22 +178,12 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                     GestureDetector(
                       onTap: () {
                         WayaNav.to(
-                          transition: Transition.circularReveal,
+                          transition: WayaTransition.circularReveal,
                           WayaVideoDetailScreen(
                             file: null,
                             videoUrl: model?.introVideo ?? "",
                           ),
                         );
-                        /*   WayaNav.toNamed(FullVideoView.route, arguments: {
-                          "url": model?.introVideo ?? "",
-                          "title": "",
-                          "createdAt": "",
-                          "likeCount": "",
-                          "isLike": "",
-                          "showDescription": false,
-                          "discription": "",
-                          "shareCount": "",
-                        }); */
                       },
                       child: AbsorbPointer(
                         child: Stack(children: [

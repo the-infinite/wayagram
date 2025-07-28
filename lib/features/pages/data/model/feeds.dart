@@ -1,6 +1,3 @@
-import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
 class PostsResponse {
   final int currentPage;
   final int totalPages;
@@ -28,15 +25,15 @@ class Post {
   final String content;
   final List<String?> media;
   final List<String> tags;
-  late final RxInt commentCount;
+  late final int commentCount;
   final List<Comment> comments;
   final Map<String, Reaction> reactions;
-  final RxBool isReposted;
+  final bool isReposted;
   final DateTime createdAt;
   final DateTime? updatedAt;
-  final _isLiked = Rx<bool?>(null);
-  final RxInt isLikedCount;
-  final RxInt repostCount;
+  bool? _isLiked;
+  final int isLikedCount;
+  final int repostCount;
 
   Post({
     required this.id,
@@ -76,7 +73,7 @@ class Post {
         reactions: {
           for (var r in json['reactions'] ?? [])
             getReactionUserId(r['userId']): Reaction.fromJson(r)
-        }.obs,
+        },
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.tryParse(json["updatedAt"] ?? ''),
 //shareLink: json['shareLink'],
@@ -85,21 +82,14 @@ class Post {
         isLikedCount: ((json['isLikedCount'] ?? 0)),
       );
 
-  Rx<bool?> getIsLiked() {
-    if (_isLiked.value == null) {
-//Get.find<ProfileController>().getProfile().value.data;
-// if (user != null) {
-// _isLiked.value = reactions[user.id!] != null;
-// } else {
-// //debugPrint('Error:: User data has not been fetched!!');
-// }
-    }
+  bool? getIsLiked() {
+    if (_isLiked == null) {}
     return _isLiked;
   }
 
   void toggleLike() {
     getIsLiked();
-    _isLiked.toggle();
+    _isLiked = !(_isLiked ?? false);
   }
 
   static String getReactionUserId(dynamic data) {
@@ -112,107 +102,6 @@ class Post {
 
   String? getReactionId(String userId) => reactions[userId]?.id;
 }
-
-/*class Post {
-  final String? id;
-  Author? author;
-  final String title;
-  final String content;
-  final List<String?> media;
-  final List<String> tags;
-  late final RxInt commentCount;
-  final List<Comment> comments;
-  final RxMap<String, Reaction> reactions;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final String? shareLink;
-  final RxBool isReposted;
-  final _isLiked = Rx<bool?>(null);
-  final RxInt isLikedCount;
-  final RxInt repostCount;
-
-  Post({
-    required this.id,
-    required this.author,
-    required this.title,
-    required this.content,
-    required this.media,
-    required this.tags,
-    required this.commentCount,
-    required this.comments,
-    required this.reactions,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.shareLink,
-    required this.isReposted,
-    required this.repostCount,
-    required this.isLikedCount,
-  });
-
-  factory Post.fromJson(Map<String, dynamic> json) => Post(
-        id: json["_id"],
-        author: json["author"] == null || json["author"] is String
-            ? null
-            : Author.fromJson(json["author"]),
-        title: json['title'] ?? '',
-        content: json['content'] ?? '',
-        media: (json['media'] as List<dynamic>?)
-                ?.map((media) => media as String)
-                .toList() ??
-            [],
-        tags: (json['tags'] as List<dynamic>?)
-                ?.map((tag) => tag as String)
-                .toList() ??
-            [],
-        commentCount: ((json['commentCount'] ?? 0) as int).obs,
-        comments: List<Comment>.from((json['comments'] ?? []).map((comment) =>
-            comment is String?
-                ? Comment(
-                    content: [],
-                    commenter: Commenter(
-                        firstName: '', lastName: '', profilePicture: ''))
-                : Comment.fromJson(comment))),
-        reactions: {
-          for (var r in json['reactions']??[])
-            getReactionUserId(r['userId']): Reaction.fromJson(r)
-        }.obs,
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.tryParse(json["updatedAt"] ?? ''),
-        shareLink: json['shareLink'],
-        isReposted: ((json['isRepost'] ?? false) as bool).obs,
-        repostCount: ((json['repostCount'] ?? 0) as int).obs,
-        isLikedCount: ((json['isLikedCount'] ?? 0) as int).obs,
-      );
-
-  Rx<bool?> getIsLiked() {
-    WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
-    if (_isLiked.value == null) {
-      final user = _wayaLocalDataSource.getUser().user;
-          //Get.find<ProfileController>().getProfile().value.data;
-      if (user != null) {
-        _isLiked.value = reactions[user.id!] != null;
-      } else {
-       //debugPrint('Error:: User data has not been fetched!!');
-      }
-    }
-    return _isLiked;
-  }
-
-  void toggleLike() {
-    getIsLiked();
-    _isLiked.toggle();
-  }
-
-  static String getReactionUserId(dynamic data) {
-    if (data is String?) {
-      return data ?? '';
-    } else {
-      return data['_id'];
-    }
-  }
-
-  String? getReactionId(String userId) => reactions[userId]?.id;
-}*/
 
 class Author {
   final String? id;

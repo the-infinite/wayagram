@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
@@ -88,16 +88,16 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
           },
           title: 'Donation Information ',
         ),
-        _reviewText('Cause Title', '${viewModel.title.text.capitalizeFirst}'),
-        const Gap(10),
-        _reviewText('Cause Description',
-            '${viewModel.description.text.capitalizeFirst}'),
+        _reviewText('Cause Title', viewModel.title.text.capitalizeFirst),
         const Gap(10),
         _reviewText(
-            'Proposed Solution', '${viewModel.solution.text.capitalizeFirst}'),
+            'Cause Description', viewModel.description.text.capitalizeFirst),
         const Gap(10),
         _reviewText(
-            'Impact Statement', '${viewModel.statement.text.capitalizeFirst}'),
+            'Proposed Solution', viewModel.solution.text.capitalizeFirst),
+        const Gap(10),
+        _reviewText(
+            'Impact Statement', viewModel.statement.text.capitalizeFirst),
         const Gap(10),
         _reviewText(
             'Target Amount',
@@ -113,7 +113,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         ),
         const Gap(10),
         _reviewText(
-            'Fundraiser Details', '${viewModel.details.text.capitalizeFirst}'),
+            'Fundraiser Details', viewModel.details.text.capitalizeFirst),
         const Gap(10),
         _reviewText(
             'Privacy Settings', viewModel.privacyOption.capitalizeFirst),

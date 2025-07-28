@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
@@ -107,7 +107,8 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
                 itemCount: arg?.items.length,
                 itemBuilder: (context, index) {
                   CartProduct order = CartProduct(
-                      price: double.parse(arg?.items[index].price ?? '0').toInt(),
+                      price:
+                          double.parse(arg?.items[index].price ?? '0').toInt(),
                       quantity: arg?.items[index].quantity ?? 0,
                       productId: arg?.items[index].productId ?? '',
                       productName: arg?.items[index].productName ?? '',
@@ -119,19 +120,27 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
                 }),
             const Gap(10),
             DottedBorderOrderInfoWidget(
-                title: "Sub Total", description: WayaHelpers.formatPrice(double.parse(arg?.total ?? '0').toInt())),
+                title: "Sub Total",
+                description: WayaHelpers.formatPrice(
+                    double.parse(arg?.total ?? '0').toInt())),
             const Gap(25),
             Text("Customer Details", style: wayaTheme.textTheme.bodyMedium),
             const Gap(15),
-            OrderInfoWidget(title: "Customer's Name", description: userName.capitalizeFirst!),
-            const Gap(8),
-            OrderInfoWidget(title: "Order ID", description: '#${arg?.id.substring(0, 6)}'),
+            OrderInfoWidget(
+                title: "Customer's Name",
+                description: userName.capitalizeFirst),
             const Gap(8),
             OrderInfoWidget(
-                title: "Date Ordered", description: WayaHelpers.formatDateString(arg?.updatedAt.toIso8601String())),
+                title: "Order ID", description: '#${arg?.id.substring(0, 6)}'),
+            const Gap(8),
+            OrderInfoWidget(
+                title: "Date Ordered",
+                description: WayaHelpers.formatDateString(
+                    arg?.updatedAt.toIso8601String())),
             const Gap(8),
 
-            OrderInfoWidget(title: "Delivery Type", description: arg?.deliveryType ?? ''),
+            OrderInfoWidget(
+                title: "Delivery Type", description: arg?.deliveryType ?? ''),
             const Gap(25),
             WayaButton(
               centerWidget: Row(
@@ -147,7 +156,9 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
                   Text(
                     "Send Message",
                     style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
                   ),
                 ],
               ),
@@ -160,19 +171,26 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Gap(25),
-                  Text("Delivery Details", style: wayaTheme.textTheme.bodyMedium),
+                  Text("Delivery Details",
+                      style: wayaTheme.textTheme.bodyMedium),
                   const Gap(25),
-                  OrderInfoWidget(title: "Delivery Address", description: arg?.deliveryAddress ?? '-'),
+                  OrderInfoWidget(
+                      title: "Delivery Address",
+                      description: arg?.deliveryAddress ?? '-'),
                   const Gap(8),
                   // OrderInfoWidget(
                   //     title: "Delivery Status",
                   //     description: arg?.deliveryStatus ?? '-'),
                   const Gap(8),
-                  OrderInfoWidget(title: "Delivery Price", description: WayaHelpers.formatPrice(arg?.deliveryFee ?? 0)),
+                  OrderInfoWidget(
+                      title: "Delivery Price",
+                      description:
+                          WayaHelpers.formatPrice(arg?.deliveryFee ?? 0)),
                   const Gap(8),
                   OrderInfoWidget(
                       title: "Delivery Date",
-                      description: WayaHelpers.formatDateString(arg?.deliveryDate?.toIso8601String())),
+                      description: WayaHelpers.formatDateString(
+                          arg?.deliveryDate?.toIso8601String())),
                 ],
               ),
             ),
@@ -185,16 +203,19 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
             // ),
             if (arg?.status == 'cancelled' ||
                 ((arg?.deliveryStatusHistory.isNotEmpty == true &&
-                        arg?.deliveryStatusHistory.last.status == 'completed') ||
+                        arg?.deliveryStatusHistory.last.status ==
+                            'completed') ||
                     (arg?.pickupStatusHistory.isNotEmpty == true &&
-                        arg?.pickupStatusHistory.last.status == 'completed'))) ...[
+                        arg?.pickupStatusHistory.last.status ==
+                            'completed'))) ...[
               SizedBox.shrink()
             ] else ...[
               if (arg?.deliveryType == 'Delivery')
                 WayaButton(
                   color: wayaTheme.colorScheme.transparent,
                   textColor: wayaTheme.colorScheme.greyColor900,
-                  border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300),
                   callback: () {
                     if (arg != null) {
                       viewModel.updateDeliveryStatus(
@@ -207,7 +228,8 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
                   text: "Change Delivery Status",
                   leadingIcon: SvgPicture.asset(
                     'assets/icons/van-icon.svg',
-                    colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
                     width: 20,
                   ),
                 ),
@@ -215,18 +237,21 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
                 WayaButton(
                   color: wayaTheme.colorScheme.transparent,
                   textColor: wayaTheme.colorScheme.greyColor900,
-                  border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300),
                   callback: () {
                     viewModel.updateOrderStatus(
                         shopId: arg?.shopId ?? '',
-                        current: arg?.pickupStatusHistory.last.status ?? 'pending',
+                        current:
+                            arg?.pickupStatusHistory.last.status ?? 'pending',
                         context: context,
                         orderId: arg!.id);
                   },
                   text: "Change Pickup Status",
                   leadingIcon: SvgPicture.asset(
                     'assets/icons/button-icon.svg',
-                    colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
                     width: 20,
                   ),
                 ),
@@ -234,7 +259,8 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
               WayaButton(
                 color: wayaTheme.colorScheme.transparent,
                 textColor: wayaTheme.colorScheme.greyColor900,
-                border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                border: Border.all(
+                    width: 1, color: wayaTheme.colorScheme.greyColor300),
                 callback: () {
                   viewModel.rejectOrder(
                     context,

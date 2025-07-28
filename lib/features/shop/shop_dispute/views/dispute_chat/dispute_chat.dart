@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -13,6 +12,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/buyer_dispute/modals/report.dart';
 import 'package:wayagram/features/chat/model/default.dart';
@@ -389,7 +389,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                                   .copyWith(fontWeight: FontWeight.w600)),
                           const Gap(2),
                           Text(
-                              "Dispute ${disputeState.dispute!.status.capitalizeFirst!}",
+                              "Dispute ${disputeState.dispute!.status.capitalizeFirst}",
                               style: theme.textTheme.bodySemiBold.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color:
@@ -446,7 +446,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                             : theme.colorScheme.error700.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(6)),
                 child: Text(
-                  dispute.status.capitalizeFirst!,
+                  dispute.status.capitalizeFirst,
                   style: TextStyle().wayaCopyWith(
                       color: dispute.status == 'open'
                           ? theme.colorScheme.primary600

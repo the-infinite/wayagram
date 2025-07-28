@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -23,7 +22,7 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/media_card.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/my_full_media_type.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -59,6 +58,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
       return null;
     }, []);
     final hasClickedLiked = useState(false);
+    final width = MediaQuery.of(context).size.width;
+
     //final hasClickedShared = useState(false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +99,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(
-                              width: context.width * 0.4,
+                              width: width * 0.4,
                               child: Text(
                                 widget.contestApplicant?.contestApplicant
                                         ?.fullName ??
@@ -117,9 +118,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           ],
                         ),
                         // Spacer(),
-                        Gap(
-                          context.width * 0.15,
-                        ),
+                        Gap(width * 0.15),
                         //  post.isFollowing!
                         PopupMenuButton(
                           onSelected: (value) {},
@@ -229,7 +228,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                         }); */
                       } else {
                         WayaNav.to(
-                          transition: Transition.circularReveal,
+                          transition: WayaTransition.circularReveal,
                           WayaVideoDetailScreen(
                             file: null,
                             videoUrl: url,

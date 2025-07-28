@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -179,6 +178,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
 
     //? This is fine.
     return WayaScaffold(
@@ -525,7 +525,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: context.width * 0.35,
+                width: width * 0.35,
                 height: 50,
                 child: Stack(
                   alignment: Alignment.centerLeft,
@@ -558,7 +558,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                 width: 40.w,
               ),
               SizedBox(
-                width: context.width * 0.45,
+                width: width * 0.45,
                 child: WayaProgressiveButton(
                   notifier: loadingController,
                   callback: _checkout,

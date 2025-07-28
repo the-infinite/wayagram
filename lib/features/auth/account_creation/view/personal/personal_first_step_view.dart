@@ -2,13 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/gender_data.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
@@ -833,7 +833,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               style: WayaTextStyles.smallActiveLinkStyle,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async => await WayaNav.to(
-                                      transition: Transition.circularReveal,
+                                      transition: WayaTransition.circularReveal,
                                       duration:
                                           const Duration(milliseconds: 500),
                                       WayaBrowserView(
@@ -849,7 +849,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               style: WayaTextStyles.smallActiveLinkStyle,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async => await WayaNav.to(
-                                      transition: Transition.circularReveal,
+                                      transition: WayaTransition.circularReveal,
                                       duration:
                                           const Duration(milliseconds: 500),
                                       WayaBrowserView(

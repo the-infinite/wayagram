@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/modals/warning.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/shared/features/profile/model/poll.dart';
@@ -32,7 +32,8 @@ class SinglePollWidget extends ConsumerWidget {
     //? This is fine.
     return Container(
       margin: EdgeInsets.only(bottom: 40.h),
-      padding: padded ? EdgeInsets.symmetric(horizontal: 10.w) : EdgeInsets.zero,
+      padding:
+          padded ? EdgeInsets.symmetric(horizontal: 10.w) : EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,7 +47,7 @@ class SinglePollWidget extends ConsumerWidget {
 
               const Gap(10),
               Text(
-                "${user.firstName.capitalizeFirst}",
+                user.firstName.capitalizeFirst,
                 style: wayaTheme.textTheme.bodyBold.copyWith(
                   fontSize: 16.sp,
                 ),
@@ -69,7 +70,7 @@ class SinglePollWidget extends ConsumerWidget {
           ),
           const Gap(12),
           Text(
-            "${poll.question.capitalizeFirst}",
+            poll.question.capitalizeFirst,
             style: wayaTheme.textTheme.bodyBold.copyWith(
               fontSize: 16.sp,
             ),
@@ -97,8 +98,10 @@ class SinglePollWidget extends ConsumerWidget {
           const Gap(10),
           Text(
             '${poll.maxVotesPerUser ?? 0} Votes • ${daysLeft < 0 ? 'This poll has expired' : '$daysLeft hours remaining'}',
-            style: wayaTheme.textTheme.bodyMedium!
-                .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w400, color: wayaTheme.colorScheme.greyColor500),
+            style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: wayaTheme.colorScheme.greyColor500),
           ),
           const Gap(10),
           // index == 0?
@@ -113,7 +116,8 @@ class SinglePollWidget extends ConsumerWidget {
                   splashFactory: NoSplash.splashFactory,
                   onTap: () {
                     DateTime expirationDate = poll.endDate;
-                    DateTime currentDate = DateTime.now(); // Get current date and time
+                    DateTime currentDate =
+                        DateTime.now(); // Get current date and time
 
                     //? If this has expired.
                     if (currentDate.isAfter(expirationDate)) {
@@ -138,7 +142,8 @@ class SinglePollWidget extends ConsumerWidget {
                     }
                   },
                   child: Container(
-                      padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.w, bottom: 10.w),
+                      padding: EdgeInsets.only(
+                          left: 10.w, right: 10.w, top: 10.w, bottom: 10.w),
                       margin: EdgeInsets.only(bottom: 4),
                       // height: 60.h,
                       decoration: BoxDecoration(
@@ -148,7 +153,9 @@ class SinglePollWidget extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
-                        mainAxisAlignment: choice.imageUrl != null ? MainAxisAlignment.start : MainAxisAlignment.center,
+                        mainAxisAlignment: choice.imageUrl != null
+                            ? MainAxisAlignment.start
+                            : MainAxisAlignment.center,
                         children: [
                           choice.imageUrl != null
                               ? WayaImage(
@@ -158,11 +165,15 @@ class SinglePollWidget extends ConsumerWidget {
                                   width: 60,
                                 )
                               : SizedBox.shrink(),
-                          choice.imageUrl != null ? const Gap(40) : SizedBox.shrink(),
+                          choice.imageUrl != null
+                              ? const Gap(40)
+                              : SizedBox.shrink(),
                           Text(
                             choice.text,
                             style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                                fontSize: 14.sp, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: wayaTheme.colorScheme.primary600),
                           ),
                         ],
                       )),

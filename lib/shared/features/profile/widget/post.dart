@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/report_group_post.dart';
@@ -76,7 +76,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
   void showComments(BuildContext context) async {
     final result = await WayaNav.to(
-      transition: Transition.downToUp,
+      transition: WayaTransition.downToUp,
       PostCommentsWidget(
         id: widget.data.id,
         post: widget.data,
@@ -462,8 +462,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                         //? For the post description.
                         WayaCollapsibleText(
-                          removeHashtags(
-                              '${postData.content}'.capitalizeFirst!),
+                          removeHashtags('${postData.content}'.capitalizeFirst),
                           maxLines: 2,
                           fontSize: 14.sp,
                           style: wayaTheme.textTheme.bodyMedium!.copyWith(
@@ -550,8 +549,6 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                             child: GestureDetector(
                                               onTap: () async {
                                                 final result = await WayaNav.to(
-                                                  transition:
-                                                      Transition.circularReveal,
                                                   WayaVideoDetailScreen(
                                                     file: null,
                                                     videoUrl: resource,

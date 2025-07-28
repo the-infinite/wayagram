@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -84,6 +83,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
     final month = WayaDateHelper.getCurrentMonthBounds();
     final year = WayaDateHelper.getCurrentYearBounds();
     final week = WayaDateHelper.getCurrentWeekBounds();
+    final height = MediaQuery.of(context).size.height;
 
     //? First, get the boundaries we use to filter
     final startingBound = switch (_filterBy) {
@@ -219,7 +219,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<EventLogDocs>(
                     uniqueKey: 'Shop',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -366,7 +366,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<WalletActivityDocs>(
                     uniqueKey: 'Wallet',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -513,7 +513,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<EventLogDocs>(
                     uniqueKey: 'Event',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -657,7 +657,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<PageDocs>(
                       uniqueKey: 'chat-logs',
                       loadingState: SizedBox(
-                          height: context.height * 0.4,
+                          height: height * 0.4,
                           child: Center(
                             child: CircularProgressIndicator(),
                           )),
@@ -806,7 +806,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<PollsActivityDocs>(
                     uniqueKey: 'Polls',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -953,7 +953,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<AccountActivityDocs>(
                     uniqueKey: 'Account',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -1101,7 +1101,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'Page',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -1248,7 +1248,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<GroupDocs>(
                     uniqueKey: 'Group',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -1395,7 +1395,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<DonationDocs>(
                     uniqueKey: 'Donation',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -1544,7 +1544,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<UgtLogDocs>(
                     uniqueKey: 'Ugt',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
@@ -1690,7 +1690,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                   child: PaginatedDataView<EventLogDocs>(
                     uniqueKey: 'Quotation-logs',
                     loadingState: SizedBox(
-                        height: context.height * 0.4,
+                        height: height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),

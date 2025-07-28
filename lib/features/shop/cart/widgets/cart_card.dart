@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -30,12 +29,16 @@ class _CartCardState extends ConsumerState<CartCard> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     //  final viewModel = ref.watch(cartCardVmProvider);
 
 //? check if the delveryCharge is true and there is no delivery date set by the seller,
 //or if the deliveryOption is delivery and the seller has not set the delivery date
     final bool isDeliveryCharge = widget.cartItem.products.any((prod) =>
-        (prod.deliveryCharge && widget.cartItem.deliveryDate == null && prod.deliveryOptions != 'Both') ||
+        (prod.deliveryCharge &&
+            widget.cartItem.deliveryDate == null &&
+            prod.deliveryOptions != 'Both') ||
         (prod.deliveryOptions == 'Delivery' &&
             widget.cartItem.deliveryDate == null));
 
@@ -154,7 +157,7 @@ class _CartCardState extends ConsumerState<CartCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: context.width * 0.40,
+                width: width * 0.40,
                 child: Center(
                   child: Text(
                       WayaHelpers.formatPrice(widget.cartItem.totalFee ?? 0),
@@ -162,7 +165,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                 ),
               ),
               SizedBox(
-                width: context.width * 0.40,
+                width: width * 0.40,
                 child: WayaButton(
                     callback: () {
                       if (isDeliveryCharge) {
@@ -201,6 +204,8 @@ class CartProductCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     //)
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         Container(
@@ -228,7 +233,7 @@ class CartProductCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: context.width * 0.3,
+                        width: width * 0.3,
                         child: Text(
                           cartProduct.productName,
                           style: TextStyle().wayaCopyWith(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -19,7 +18,7 @@ import 'package:wayagram/features/promotion/data/models/promotion_service_type.d
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/my_full_media_type.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
@@ -58,6 +57,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
     final voteNotifier = ref.read(votersContestNotifier.notifier);
     final hasClickedLiked = useState(false);
     final hasClickedShared = useState(false);
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -116,8 +117,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                             SizedBox(
                               width: widget.post.profileId ==
                                       voteNotifier.getLoggedInUserId()
-                                  ? context.width * 0.38
-                                  : context.width * 0.45,
+                                  ? width * 0.38
+                                  : width * 0.45,
                               child: Text(
                                 //"you are going to print the form help me now qwerty",
                                 widget.post.title ?? "Title",
@@ -214,7 +215,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       ? WayaImage(
                           imageUrl: widget.post.uploadCoverImages ?? "",
                           height: 200,
-                          width: context.width,
+                          width: width,
                           fit: BoxFit.cover,
                           radius: BorderRadius.circular(10),
                         )

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/preloader.dart';
@@ -604,7 +603,7 @@ class _QuotationOrderDetailsScreenState
                               width: 1,
                               color: wayaTheme.colorScheme.greyColor300),
                           callback: () async => await WayaNav.to(
-                            transition: Transition.rightToLeftWithFade,
+                            transition: WayaTransition.rightToLeftWithFade,
                             ConfirmQuotationOrder(
                               request: request!,
                               bid: bid!,

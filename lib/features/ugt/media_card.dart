@@ -4,7 +4,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/my_full_media_type.dart';
 
 class MediaCard extends StatefulWidget {
   final List<CardMediaContent> mediaUrls;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -53,6 +52,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
     final walletViewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final width = MediaQuery.of(context).size.width;
     return WayaScaffold(
       title: "Donation Dashboard",
       isLoading: viewModel.isLoading,
@@ -223,7 +223,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: context.width * 0.45,
+                    width: width * 0.45,
                     child: WayaButton(
                       centerWidget: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -250,7 +250,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
                       callback: () {
                         SharePlus.instance.share(
                           ShareParams(
-                            title: '${args['url']}',
+                            text: '${args['url']}',
                             subject: 'Share Options',
                           ),
                         );
@@ -260,7 +260,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
                   ),
                   const Gap(8),
                   SizedBox(
-                    width: context.width * 0.45,
+                    width: width * 0.45,
                     child: WayaButton(
                         text: 'Set Minimum amount',
                         color: wayaTheme.colorScheme.primary500,

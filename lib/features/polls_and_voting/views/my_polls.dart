@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -10,6 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
@@ -29,12 +29,13 @@ class _MyPollsState extends ConsumerState<MyPolls> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPollVotingProvider);
+    final height = MediaQuery.of(context).size.height;
 
     return Expanded(
       child: PaginatedDataView<Docs>(
           uniqueKey: 'my-polls',
           loadingState: SizedBox(
-              height: context.height * 0.4,
+              height: height * 0.4,
               child: Center(
                 child: CircularProgressIndicator(),
               )),

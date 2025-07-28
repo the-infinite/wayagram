@@ -3,82 +3,91 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/route_manager.dart';
 
 class WayaNav<T> {
-  static String get currentRoute => Get.currentRoute;
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static VoidCallback? onChange;
-  static BuildContext get context => Get.context!;
-  static bool get isDialogOpen =>
-      (Get.isBottomSheetOpen ?? false) || (Get.isDialogOpen ?? false);
+  
+  static NavigatorState get _navigator => navigatorKey.currentState!;
+  static BuildContext get context => navigatorKey.currentContext!;
+  static String get currentRoute => ModalRoute.of(context)?.settings.name ?? '/';
+  static bool get isDialogOpen => ModalRoute.of(context)?.isCurrent != true;
 
   WayaNav._();
 
-  static Future<T> to<T>(
+  static Future<T?> to<T>(
     Widget page, {
-    Function(T)? onResult,
+    Function(T?)? onResult,
     bool preventDuplicates = false,
-    Transition transition = Transition.cupertino,
     Duration duration = const Duration(milliseconds: 500),
+    WayaTransition transition = WayaTransition.rightToLeft,
   }) {
-    final completer = Completer<T>();
     try {
       onChange?.call();
       onChange = null;
     } catch (_) {}
-    Get.to(
-      () => page,
-      transition: transition,
-      preventDuplicates: preventDuplicates,
-      duration: duration,
-    )?.then((result) {
+    
+    return _navigator.push<T>(
+      WayaPageRoute<T>(
+        page: page,
+        transition: transition,
+        duration: duration,
+      ),
+    ).then((result) {
       if (onResult != null) {
         onResult(result);
       }
-      completer.complete(result);
+      return result;
     });
-    return completer.future;
   }
 
   // This remove all screens on the stack leaving just one screen
   static Future<T?>? removeUntil<T>(
     Widget page, [
     Duration duration = const Duration(milliseconds: 500),
-    Transition transition = Transition.cupertino,
   ]) {
-    return Get.offAll(
-      () => page,
-      transition: transition,
-      duration: duration,
+    return _navigator.pushAndRemoveUntil<T>(
+      PageRouteBuilder<T>(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionDuration: duration,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: animation.drive(
+              Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                  .chain(CurveTween(curve: Curves.easeInOut)),
+            ),
+            child: child,
+          );
+        },
+      ),
+      (route) => false, // Remove all previous routes
     );
   }
 
   // Remove all screens on the stack until the target route
   static Future<T?>? removeAllUntil<T extends Widget>(
       Widget newScreen, String targetRoute) {
-    return Get.offUntil(
-      GetPageRoute(page: () => newScreen),
+    return _navigator.pushAndRemoveUntil<T>(
+      MaterialPageRoute<T>(builder: (context) => newScreen),
       ModalRoute.withName(targetRoute),
     );
   }
 
   // This remove all screens on the stack leaving just one screen
-  static Future<T> removeUntilNamed<T>(String route,
+  static Future<T?> removeUntilNamed<T>(String route,
       {dynamic arguments,
       Function(dynamic)? onResult,
       RoutePredicate? predicate}) {
-    final completer = Completer<T>();
-    Get.offAllNamed(
+    return _navigator.pushNamedAndRemoveUntil<T>(
       route,
+      predicate ?? (route) => false,
       arguments: arguments,
-      predicate: predicate,
-    )?.then((result) {
+    ).then((result) {
       if (onResult != null) {
         onResult(result);
       }
-      completer.complete(result);
+      return result;
     });
-    return completer.future;
   }
 
   /// Closes routes in the navigation stack until a route matches the given [predicate].
@@ -90,13 +99,12 @@ class WayaNav<T> {
   /// Example:
   /// ```dart
   /// // Close until we find a route named 'home'
-  /// WayaNav.closeUntil((route) => route.settings.name == 'home');
+  /// WayaNav.popUntil((route) => route.settings.name == 'home');
   /// ```
   static void popUntil(bool Function(Route<dynamic>) predicate) {
-    return Get.until(predicate);
+    return _navigator.popUntil(predicate);
   }
 
-  //
   /// Navigates back in the application's navigation stack.
   ///
   /// This method removes the current route from the navigation stack and returns
@@ -114,10 +122,15 @@ class WayaNav<T> {
   /// WayaNav.goBack(closeOverlays: true); // Navigate back and close overlays
   /// ```
   static void goBack<T>({T? result, bool closeOverlays = false}) {
-    return Get.back(
-      result: result,
-      closeOverlays: closeOverlays,
-    );
+    if (closeOverlays) {
+      // Close any open dialogs or modals first
+      while (_navigator.canPop() && ModalRoute.of(context)?.isCurrent != true) {
+        _navigator.pop();
+      }
+    }
+    if (_navigator.canPop()) {
+      _navigator.pop<T>(result);
+    }
   }
 
   /// Navigates to a named route asynchronously.
@@ -129,55 +142,58 @@ class WayaNav<T> {
   /// ```dart
   /// WayaNav.toNamed('/home');
   /// ```
-  static Future<T> toNamed<T>(String route,
+  static Future<T?> toNamed<T>(String route,
       {dynamic arguments,
       Function(dynamic)? onResult,
       bool preventDuplicates = true}) {
-    final completer = Completer<T>();
     try {
       onChange?.call();
       onChange = null;
     } catch (_) {}
-    Get.toNamed(
+    
+    return _navigator.pushNamed<T>(
       route,
       arguments: arguments,
-      preventDuplicates: preventDuplicates,
-    )?.then((result) {
+    ).then((result) {
       if (onResult != null) {
         onResult(result);
       }
-      completer.complete(result);
+      return result;
     });
-    return completer.future;
   }
 
   static Future<T?> replaceNamed<T>(String route,
       {dynamic arguments, Function(dynamic)? onResult}) {
-    final completer = Completer<T>();
-    Get.offNamed(
+    return _navigator.pushReplacementNamed<T, void>(
       route,
       arguments: arguments,
-    )?.then((result) {
+    ).then((result) {
       if (onResult != null) {
         onResult(result);
       }
-      completer.complete(result);
+      return result;
     });
-    return completer.future;
   }
 
-  static Future<T?>? off<T>(
-    Widget page, {
-    Transition transition = Transition.cupertino,
-  }) {
-    return Get.off(
-      () => page,
-      transition: transition,
+  static Future<T?>? off<T>(Widget page) {
+    return _navigator.pushReplacement<T, void>(
+      PageRouteBuilder<T>(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: animation.drive(
+              Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                  .chain(CurveTween(curve: Curves.easeInOut)),
+            ),
+            child: child,
+          );
+        },
+      ),
     );
   }
 
   static Future<T?>? offNamed<T>(String route, {dynamic arguments}) {
-    return Get.offNamed(
+    return _navigator.pushReplacementNamed<T, void>(
       route,
       arguments: arguments,
     );
@@ -189,31 +205,27 @@ class WayaNav<T> {
     dynamic arguments,
     Function(dynamic)? onResult,
   }) {
-    final completer = Completer<T>();
-
-    //> Remove the specified number of screens from the stack
+    // Remove the specified number of screens from the stack
     int removed = 0;
-    Get.until((route) {
+    _navigator.popUntil((route) {
       removed++;
-      return removed > removeCount;
+      return removed >= removeCount;
     });
 
-    //> Navigate to the specified route
-    Get.offNamed(
+    // Navigate to the specified route
+    return _navigator.pushReplacementNamed<T, void>(
       route,
       arguments: arguments,
-    )?.then((result) {
+    ).then((result) {
       if (onResult != null) {
         onResult(result);
       }
-      completer.complete(result);
+      return result;
     });
-
-    return completer.future;
   }
 
-  //close the whole app
-  // use case, when the app is opened with link
+  // Close the whole app
+  // Use case: when the app is opened with link
   static void closeApp() {
     if (Platform.isAndroid) {
       SystemNavigator.pop();
@@ -222,7 +234,202 @@ class WayaNav<T> {
     }
   }
 
-  static bool canPop() => Navigator.canPop(context);
+  static bool canPop() => _navigator.canPop();
 
-  static Map<String, String?> get search => Get.parameters;
+  // Get route parameters (arguments)
+  static Map<String, dynamic> get parameters {
+    final route = ModalRoute.of(context);
+    if (route?.settings.arguments is Map<String, dynamic>) {
+      return route!.settings.arguments as Map<String, dynamic>;
+    }
+    return {};
+  }
+
+  // Legacy alias for parameters
+  static Map<String, dynamic> get search => parameters;
+}
+
+// Custom route transition types (replacing GetX Transition enum)
+enum WayaTransition {
+  fade,
+  fadeIn,
+  rightToLeft,
+  leftToRight,
+  upToDown,
+  downToUp,
+  rightToLeftWithFade,
+  leftToRightWithFade,
+  zoom,
+  topLevel,
+  noTransition,
+  cupertino,
+  cupertinoDialog,
+  size,
+  circularReveal,
+  native,
+}
+
+// Helper class for creating custom page routes with transitions
+class WayaPageRoute<T> extends PageRouteBuilder<T> {
+  final Widget page;
+  final WayaTransition transition;
+  final Duration duration;
+
+  WayaPageRoute({
+    required this.page,
+    this.transition = WayaTransition.rightToLeft,
+    this.duration = const Duration(milliseconds: 300),
+  }) : super(
+          pageBuilder: (context, animation, secondaryAnimation) => page,
+          transitionDuration: duration,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return _buildTransition(transition, animation, child);
+          },
+        );
+
+  static Widget _buildTransition(
+    WayaTransition transition,
+    Animation<double> animation,
+    Widget child,
+  ) {
+    switch (transition) {
+      case WayaTransition.fade:
+        return FadeTransition(opacity: animation, child: child);
+      
+      case WayaTransition.fadeIn:
+        return FadeTransition(
+          opacity: animation.drive(
+            Tween(begin: 0.0, end: 1.0)
+                .chain(CurveTween(curve: Curves.easeIn)),
+          ),
+          child: child,
+        );
+      
+      case WayaTransition.rightToLeft:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut)),
+          ),
+          child: child,
+        );
+      
+      case WayaTransition.leftToRight:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(-1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut)),
+          ),
+          child: child,
+        );
+      
+      case WayaTransition.upToDown:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(0.0, -1.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut)),
+          ),
+          child: child,
+        );
+      
+      case WayaTransition.downToUp:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(0.0, 1.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut)),
+          ),
+          child: child,
+        );
+      
+      case WayaTransition.rightToLeftWithFade:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut)),
+          ),
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      
+      case WayaTransition.leftToRightWithFade:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(-1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeInOut)),
+          ),
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      
+      case WayaTransition.zoom:
+        return ScaleTransition(
+          scale: animation.drive(
+            Tween(begin: 0.8, end: 1.0)
+                .chain(CurveTween(curve: Curves.easeOutQuart)),
+          ),
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      
+      case WayaTransition.topLevel:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(0.0, -1.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.easeOut)),
+          ),
+          child: child,
+        );
+      
+      case WayaTransition.noTransition:
+        return child;
+      
+      case WayaTransition.cupertino:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.linearToEaseOut)),
+          ),
+          child: child,
+        );
+      
+      case WayaTransition.cupertinoDialog:
+        return ScaleTransition(
+          scale: animation.drive(
+            Tween(begin: 1.3, end: 1.0)
+                .chain(CurveTween(curve: Curves.easeOut)),
+          ),
+          child: FadeTransition(
+            opacity: animation.drive(
+              Tween(begin: 0.0, end: 1.0)
+                  .chain(CurveTween(curve: Curves.easeOut)),
+            ),
+            child: child,
+          ),
+        );
+      
+      case WayaTransition.size:
+        return SizeTransition(sizeFactor: animation, child: child);
+      
+      case WayaTransition.circularReveal:
+        return ScaleTransition(
+          scale: animation.drive(
+            Tween(begin: 0.0, end: 1.0)
+                .chain(CurveTween(curve: Curves.fastOutSlowIn)),
+          ),
+          child: FadeTransition(
+            opacity: animation.drive(
+              Tween(begin: 0.0, end: 1.0)
+                  .chain(CurveTween(curve: Curves.easeIn)),
+            ),
+            child: child,
+          ),
+        );
+      
+      case WayaTransition.native:
+        return SlideTransition(
+          position: animation.drive(
+            Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+                .chain(CurveTween(curve: Curves.fastOutSlowIn)),
+          ),
+          child: child,
+        );
+    }
+  }
 }

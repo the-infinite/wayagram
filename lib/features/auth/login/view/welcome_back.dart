@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
@@ -34,7 +34,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
   @override
   Widget build(BuildContext context) {
     final setUp = ref.watch(successfulSetupVmProvider);
-
+    final height = MediaQuery.of(context).size.height;
     final viewModel = ref.watch(loginVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
@@ -149,7 +149,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                                         wayaTheme.colorScheme.customPrimary)),
                       ),
                     ),
-                    Gap(Get.height * 0.15),
+                    Gap(height * 0.15),
                     WayaButton(
                       text: 'Login',
                       callback: () {
@@ -164,7 +164,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                     ),
                   ],
                 )),
-            Gap(Get.height * 0.03),
+            Gap(height * 0.03),
             InkWell(
               onTap: () {
                 WayaNav.toNamed("/account-creation");

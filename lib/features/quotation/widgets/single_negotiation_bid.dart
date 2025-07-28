@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -197,6 +196,7 @@ class _SingleNegotiationBidWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final wayaTheme = Theme.of(context);
     final sentBid = widget.bid.usedAmount != widget.request.bidStartingAmount;
 
@@ -403,7 +403,7 @@ class _SingleNegotiationBidWidgetState
                       children: [
                         //? The button to decline a proposal.
                         SizedBox(
-                          width: context.width * 0.45,
+                          width: width * 0.45,
                           child: WayaButton(
                             callback: _rejectBid,
                             text: 'Decline',
@@ -419,7 +419,7 @@ class _SingleNegotiationBidWidgetState
 
                         //? The button to renegotiate this proposal.
                         SizedBox(
-                          width: context.width * 0.45,
+                          width: width * 0.45,
                           child: WayaButton(
                             callback: _negotiateBid,
                             text: 'Negotiate',
@@ -435,7 +435,7 @@ class _SingleNegotiationBidWidgetState
 
                         //? The button to accept this proposal.
                         SizedBox(
-                          width: context.width * 0.45,
+                          width: width * 0.45,
                           child: WayaButton(
                             callback: _acceptBid,
                             text: 'Accept',

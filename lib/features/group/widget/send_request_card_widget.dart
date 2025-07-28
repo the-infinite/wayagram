@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 
 class SendRequestCardWidget extends StatefulWidget {
   final String memberCount;
@@ -29,9 +29,12 @@ class SendRequestCardWidget extends StatefulWidget {
 
 class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
@@ -52,14 +55,14 @@ class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
                 backgroundImage: NetworkImage(widget.image)),
             title: Row(
               children: [
-                Text('${widget.groupName.capitalizeFirst}',
+                Text(widget.groupName.capitalizeFirst,
                     style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.black)),
                 Spacer(),
                 SizedBox(
-                  width: context.width * 0.30,
+                  width: width * 0.30,
                   child: WayaButton(
                     callback: () async {
                       setState(() {
@@ -96,7 +99,7 @@ class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
             ),
           ),
           Text(
-            '${widget.groupDesc.capitalizeFirst}',
+            widget.groupDesc.capitalizeFirst,
             style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,

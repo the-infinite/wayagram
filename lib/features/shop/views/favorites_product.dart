@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
@@ -231,7 +231,7 @@ class FavoriteProductCard extends ConsumerWidget {
           //       ],
           //     )),
           SizedBox(height: 3),
-          Text(product.name.capitalizeFirst!,
+          Text(product.name.capitalizeFirst,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: wayaTheme.textTheme.bodyXtraMedium),

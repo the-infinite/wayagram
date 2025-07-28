@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -381,7 +380,7 @@ class _SearchState extends ConsumerState<SearchView> {
                   SearchedMoment(
                     onTap: () {
                       WayaNav.to(
-                          transition: Transition.downToUp,
+                          transition: WayaTransition.downToUp,
                           duration: const Duration(milliseconds: 600),
                           ViewMoment(moments: [data[index]], isMine: false));
                     },

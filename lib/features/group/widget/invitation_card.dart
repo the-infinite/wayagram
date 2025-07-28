@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/features/group/data/model/group_invitation_model.dart';
 
 class InvitationCard extends StatelessWidget {

@@ -671,7 +671,7 @@ class _DonationGenerosityModalState
               callback: () async {
                 SharePlus.instance.share(
                   ShareParams(
-                    title: WayaValueHelper.getShareableUrl(
+                    text: WayaValueHelper.getShareableUrl(
                         WayaAppRoutes.getDonationDetailsPage(
                             widget.campaignId)),
                     subject: 'Share Invite',

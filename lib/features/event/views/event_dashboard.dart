@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/event/data/model/payout_response_model.dart';
@@ -66,12 +66,14 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     if (payouts.isEmpty) {
       return Container(
         color: wayaTheme.colorScheme.white,
-        width: context.width,
-        height: context.height,
+        width: width,
+        height: height,
         child: Center(
           child: CircularProgressIndicator(),
         ),
@@ -136,7 +138,7 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
                 title: "Commission",
               ),
               InventoryWidget(
-                metrics: payouts[0].status.capitalizeFirst ?? '',
+                metrics: payouts[0].status.capitalizeFirst,
                 color: const Color.fromARGB(255, 236, 242, 213),
                 title: "Payout Status",
               ),
@@ -178,6 +180,7 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
   }
 
   Widget _buildTransactionList(ThemeData theme) {
+    final width = MediaQuery.of(context).size.width;
     if (transactions.isEmpty) {
       return Center(
         child: Padding(
@@ -196,7 +199,7 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
       scrollDirection: Axis.horizontal,
       child: Container(
         constraints: BoxConstraints(
-          minWidth: context.width,
+          minWidth: width,
         ),
         child: DataTable(
           columnSpacing: 15.w,

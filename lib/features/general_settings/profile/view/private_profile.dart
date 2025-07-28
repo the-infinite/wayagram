@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -859,7 +859,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                       WayaNav.toNamed('/donation-details',
                                           arguments: {
                                             'title':
-                                                '${donation.title.capitalizeFirst}',
+                                                donation.title.capitalizeFirst,
                                             'image': '${donation.imageURL}',
                                             'amountRaised':
                                                 '${donation.amountRaised?.replaceAll('.00', '')}',

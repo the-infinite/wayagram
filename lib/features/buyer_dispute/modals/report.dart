@@ -24,7 +24,10 @@ class ReportDisputeModal extends ConsumerStatefulWidget {
   final String disputeId;
   final String tobeEscalatedBy;
   const ReportDisputeModal(
-      {super.key, required this.order, required this.disputeId, required  this.tobeEscalatedBy});
+      {super.key,
+      required this.order,
+      required this.disputeId,
+      required this.tobeEscalatedBy});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -76,13 +79,8 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
         mediaDoc: mediaDoc.isNotEmpty ? mediaDoc[0] : null,
         details: details);
 
-    //? After sending this one...
     if (result) {
       WayaNav.goBack();
-      // await WayaUtils.showModalSheet(
-      //   context,
-      //   child: BuyerDisputeSuccessModal(),
-      // );
     }
 
     //? Await this one.

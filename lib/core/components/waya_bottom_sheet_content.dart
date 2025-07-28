@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
@@ -50,9 +49,10 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return Container(
-      height: widget.contextHeight ??
-          context.height * (widget.contextHeight ?? 0.3),
+      height: widget.contextHeight ?? height * (widget.contextHeight ?? 0.3),
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       decoration: BoxDecoration(
@@ -76,7 +76,7 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
                   Text(widget.title, style: wayaTheme.textTheme.titleLarge),
                   if (widget.subTitle != null)
                     SizedBox(
-                      width: context.width - 50,
+                      width: width - 50,
                       child: Text(widget.subTitle ?? "",
                           style: wayaTheme.textTheme.hintStyleBold),
                     ),

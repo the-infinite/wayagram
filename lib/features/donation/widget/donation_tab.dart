@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 
 class DonationTabButton extends StatelessWidget {
@@ -25,7 +23,8 @@ class DonationTabButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final screenWidth = context.width;
+
+    final screenWidth = MediaQuery.of(context).size.width;
     double fontSize = 0;
     if (isLongerTab) {
       fontSize = screenWidth * 0.030;
@@ -41,15 +40,15 @@ class DonationTabButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
-            color: isSelected ? theme.colorScheme.primary50
-                : theme.colorScheme.white,
-            border: Border.all(
+              borderRadius: BorderRadius.circular(6),
+              color: isSelected
+                  ? theme.colorScheme.primary50
+                  : theme.colorScheme.white,
+              border: Border.all(
                 color: isSelected
-                      ? theme.colorScheme.primary50
-                      : theme.colorScheme.greyColor300,
-            )
-          ),
+                    ? theme.colorScheme.primary50
+                    : theme.colorScheme.greyColor300,
+              )),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,

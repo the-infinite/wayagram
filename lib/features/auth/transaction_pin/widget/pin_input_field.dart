@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 
@@ -23,13 +22,16 @@ class PinInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null)
           Text(
             label!,
-            style: WayaTextStyles.hintStyleSemiBold.wayaCopyWith(color: WayaColors.greyColor900),
+            style: WayaTextStyles.hintStyleSemiBold
+                .wayaCopyWith(color: WayaColors.greyColor900),
           ),
         const Gap(8),
         Row(
@@ -38,7 +40,7 @@ class PinInputField extends StatelessWidget {
             digits,
             (index) => Container(
               margin: EdgeInsets.symmetric(horizontal: margin),
-              width: context.width * ratio,
+              width: width * ratio,
               height: height,
               decoration: BoxDecoration(
                 border: Border.all(color: WayaColors.greyColor300, width: 1),

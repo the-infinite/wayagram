@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -20,13 +19,15 @@ class _ExploreHeaderState extends ConsumerState<ExploreHeader> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(exploreHeaderProvider);
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Gap(1),
         SizedBox(
-          width: context.width * 0.45,
+          width: width * 0.45,
           child: WayaTextFormField(
             onTap: () => WayaNav.toNamed(SearchView.route),
             padding: EdgeInsets.fromLTRB(12, 0, 12, 0),

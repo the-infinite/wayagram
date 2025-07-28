@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
@@ -110,7 +110,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           //? The brand name of the product.
           AboutProduct(
             title: 'Brand Name',
-            content: '${viewModel.brandName.text.capitalizeFirst}',
+            content: viewModel.brandName.text.capitalizeFirst,
           ),
         ],
 
@@ -142,7 +142,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         //? The description of the product.
         AboutProduct(
             title: 'Product Description',
-            content: '${viewModel.productDescription.text.capitalizeFirst}'),
+            content: viewModel.productDescription.text.capitalizeFirst),
 
         // Some more space.
         const Gap(15),
@@ -234,8 +234,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
               Expanded(
                 child: AboutProduct(
                     title: 'Delivery Address',
-                    content:
-                        '${viewModel.deliveryAddress.text.capitalizeFirst}'),
+                    content: viewModel.deliveryAddress.text.capitalizeFirst),
               )
             ],
           ),
@@ -250,13 +249,13 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
               Expanded(
                 child: AboutProduct(
                   title: 'State',
-                  content: '${viewModel.deliveryState.capitalizeFirst}',
+                  content: viewModel.deliveryState.capitalizeFirst,
                 ),
               ),
               Expanded(
                 child: AboutProduct(
                   title: 'LGA',
-                  content: '${viewModel.deliveryLga.capitalizeFirst}',
+                  content: viewModel.deliveryLga.capitalizeFirst,
                 ),
               )
             ],

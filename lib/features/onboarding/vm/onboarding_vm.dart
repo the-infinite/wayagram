@@ -31,10 +31,22 @@ class OnboardingVm extends StateNotifier<AccountState> {
 
   void nextPage() {
     if (state.currentPage < onboardingViewData.length - 1) {
-      pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      final nextPageIndex = state.currentPage + 1;
+      changePage(nextPageIndex);
+      
+      // Check if PageController is properly attached to avoid assertion error
+      try {
+        if (pageController.hasClients && pageController.positions.length == 1) {
+          pageController.animateToPage(
+            nextPageIndex,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      } catch (e) {
+        // If PageController has issues, just update the state manually
+        // The PageView will rebuild with the new state
+      }
     } else {
       WayaNav.toNamed('/login-cover-page');
     }

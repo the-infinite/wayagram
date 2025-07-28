@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -198,16 +197,18 @@ class _WayagramState extends ConsumerState<Wayagram> {
     );
 
     //? Return the widget.
-    return GetMaterialApp(
+    return MaterialApp(
       //? If deepLink path is null, means it normally open
       //? else means it through a link the app is opened
+      navigatorKey: WayaNav.navigatorKey,
       initialRoute: widget.path,
       title: WayaConstants.appName,
       theme: WayaTheme.lightTheme,
       darkTheme: WayaTheme.darkTheme,
       themeMode: themeMode,
       debugShowCheckedModeBanner: false,
-      getPages: WayaAppRoutes.getPages,
+      routes: WayaAppRoutes.routes,
+      onGenerateRoute: WayaAppRoutes.onGenerateRoute,
       builder: (context, child) => ValueListenableBuilder(
         valueListenable: WayaPreloaderController.instance.notifier,
         builder: (context, showPreloader, _) => Stack(

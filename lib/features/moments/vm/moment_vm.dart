@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +15,7 @@ import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
@@ -410,7 +410,7 @@ class MomentVm extends StateNotifier<MomentState> {
           ? await _momentRepository.editMoment(
               userId: ConversationState.self.id,
               name:
-                  "${ConversationState.self.firstName.capitalizeFirst ?? ''} ${ConversationState.self.lastName.capitalizeFirst ?? ''}",
+                  "${ConversationState.self.firstName.capitalizeFirst} ${ConversationState.self.lastName.capitalizeFirst}",
               image: ConversationState.self.profilePicture ?? '',
               content: content,
               caption: caption,
@@ -422,7 +422,7 @@ class MomentVm extends StateNotifier<MomentState> {
           : await _momentRepository.createMoment(
               userId: ConversationState.self.id,
               name:
-                  "${ConversationState.self.firstName.capitalizeFirst ?? ''} ${ConversationState.self.lastName.capitalizeFirst ?? ''}",
+                  "${ConversationState.self.firstName.capitalizeFirst} ${ConversationState.self.lastName.capitalizeFirst}",
               image: ConversationState.self.profilePicture ?? '',
               content: content,
               caption: caption,

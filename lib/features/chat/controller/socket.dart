@@ -254,6 +254,7 @@ class WayaSocketController {
     _socket!.disconnect();
     _socket!.dispose();
     _socket = null;
+    ref = null; // Clear the ref to prevent further usage
   }
 
   /// Our utility that is required ot help us ensure that our socket is always
@@ -332,14 +333,18 @@ class WayaSocketController {
     socket.on(
       "messageRead",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
+        try {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? Since we are in this chat...
-        await chatNotifier.getMessages(true);
+          //? Since we are in this chat...
+          await chatNotifier.getMessages(true);
 
-        //? Wait for this to finish
-        await updateChats();
+          //? Wait for this to finish
+          await updateChats();
+        } catch (e) {
+          debugPrint('Socket messageRead error: $e');
+        }
       },
     );
 
@@ -347,14 +352,18 @@ class WayaSocketController {
     socket.on(
       "start-typing",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
+        try {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.senderId == ConversationState.self.id) return;
+          //? If this is not fine.
+          if (args.senderId == ConversationState.self.id) return;
 
-        // This is fine.
-        chatNotifier.startTyping(args.senderId);
+          // This is fine.
+          chatNotifier.startTyping(args.senderId);
+        } catch (e) {
+          debugPrint('Socket start-typing error: $e');
+        }
       },
     );
 
@@ -362,14 +371,18 @@ class WayaSocketController {
     socket.on(
       "stop-typing",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
+        try {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.senderId == ConversationState.self.id) return;
+          //? If this is not fine.
+          if (args.senderId == ConversationState.self.id) return;
 
-        // This is fine.
-        chatNotifier.stopTyping(args.senderId);
+          // This is fine.
+          chatNotifier.stopTyping(args.senderId);
+        } catch (e) {
+          debugPrint('Socket stop-typing error: $e');
+        }
       },
     );
 
@@ -377,17 +390,21 @@ class WayaSocketController {
     socket.on(
       "messageDeleted",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
+        try {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.messageId == null) return;
+          //? If this is not fine.
+          if (args.messageId == null) return;
 
-        // This is fine.
-        chatNotifier.removeMessage(args.messageId!);
+          // This is fine.
+          chatNotifier.removeMessage(args.messageId!);
 
-        //? Wait for this to finish
-        await updateChats();
+          //? Wait for this to finish
+          await updateChats();
+        } catch (e) {
+          debugPrint('Socket messageDeleted error: $e');
+        }
       },
     );
 
@@ -395,23 +412,27 @@ class WayaSocketController {
     socket.on(
       "recieveMessage",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
+        try {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.messageId == null) return;
+          //? If this is not fine.
+          if (args.messageId == null) return;
 
-        // This is fine.
-        await chatNotifier.getMessage(args.messageId!);
-        await chatNotifier.updateMessageStatus(
-          chatNotifier.isActive
-              ? MessageStatusCode.read
-              : MessageStatusCode.delivered,
-          args.messageId!,
-        );
+          // This is fine.
+          await chatNotifier.getMessage(args.messageId!);
+          await chatNotifier.updateMessageStatus(
+            chatNotifier.isActive
+                ? MessageStatusCode.read
+                : MessageStatusCode.delivered,
+            args.messageId!,
+          );
 
-        //? Wait for this to finish
-        await updateChats();
+          //? Wait for this to finish
+          await updateChats();
+        } catch (e) {
+          debugPrint('Socket recieveMessage error: $e');
+        }
       },
     );
 
@@ -419,17 +440,21 @@ class WayaSocketController {
     socket.on(
       "readMessages",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
+        try {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? Ban this user from triggering infinite refreshes.
-        if (args.senderId == ConversationState.self.id) return;
+          //? Ban this user from triggering infinite refreshes.
+          if (args.senderId == ConversationState.self.id) return;
 
-        // This is fine.
-        await chatNotifier.markAllAsRead();
+          // This is fine.
+          await chatNotifier.markAllAsRead();
 
-        // This is fine.
-        await updateChats();
+          // This is fine.
+          await updateChats();
+        } catch (e) {
+          debugPrint('Socket readMessages error: $e');
+        }
       },
     );
 

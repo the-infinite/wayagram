@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_utils/src/extensions/context_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -27,7 +26,7 @@ class _MutualsState extends ConsumerState<Mutuals>
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    // final viewModel = ref.watch(createPageProvider);
+    final width = MediaQuery.of(context).size.width;
 
     //? Our view.
     return ListView.builder(
@@ -70,7 +69,7 @@ class _MutualsState extends ConsumerState<Mutuals>
                             style: wayaTheme.textTheme.bodyMedium),
                         Spacer(),
                         SizedBox(
-                          width: context.width * 0.25,
+                          width: width * 0.25,
                           child: WayaButton(
                             callback: () {},
                             text: 'Following',

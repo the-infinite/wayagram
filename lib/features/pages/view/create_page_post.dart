@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -102,6 +101,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost>
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(pageProvider);
+    final width = MediaQuery.of(context).size.width;
 
     //? Return the scaffold.
     return WayaScaffold(
@@ -113,49 +113,49 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost>
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(
-                width: context.width * 0.15,
+                width: width * 0.15,
                 child:
-                // viewModel.content.text.isEmpty
-                //     ? WayaButton(
-                //         callback: viewModel.isLoading
-                //             ? () async {
-                //                 if (_formKey.currentState!.validate()) {}
-                //               }
-                //             : null,
-                //         height: 30,
-                //         text: 'Post',
-                //         isLoading: viewModel.isLoading,
-                //         textStyle: WayaTextStyles.bodySmall.copyWith(
-                //           fontSize: 12.sp,
-                //           fontWeight: FontWeight.w600,
-                //           color: wayaTheme.colorScheme.white,
-                //         ),
-                //       )
-                //     :
-                WayaButton(
-                        callback: !viewModel.isLoading
-                            ? () async {
-                                if (_formKey.currentState!.validate()) {
-                                  await notifier.createPagePost(
-                                    context,
-                                    viewModel.content.text,
-                                    sel ? "public" : "private",
-                                    _selectedImages,
-                                    widget.id,
-                                  );
-                                  notifier.reset();
-                                  WayaNav.goBack(closeOverlays: true);
-                                }
-                              }
-                            : null,
-                        height: 30,
-                        text: 'Post',
-                        isLoading: viewModel.isLoading,
-                        textStyle: WayaTextStyles.bodySmall.copyWith(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
-                            color: wayaTheme.colorScheme.white),
-                      ),
+                    // viewModel.content.text.isEmpty
+                    //     ? WayaButton(
+                    //         callback: viewModel.isLoading
+                    //             ? () async {
+                    //                 if (_formKey.currentState!.validate()) {}
+                    //               }
+                    //             : null,
+                    //         height: 30,
+                    //         text: 'Post',
+                    //         isLoading: viewModel.isLoading,
+                    //         textStyle: WayaTextStyles.bodySmall.copyWith(
+                    //           fontSize: 12.sp,
+                    //           fontWeight: FontWeight.w600,
+                    //           color: wayaTheme.colorScheme.white,
+                    //         ),
+                    //       )
+                    //     :
+                    WayaButton(
+                  callback: !viewModel.isLoading
+                      ? () async {
+                          if (_formKey.currentState!.validate()) {
+                            await notifier.createPagePost(
+                              context,
+                              viewModel.content.text,
+                              sel ? "public" : "private",
+                              _selectedImages,
+                              widget.id,
+                            );
+                            notifier.reset();
+                            WayaNav.goBack(closeOverlays: true);
+                          }
+                        }
+                      : null,
+                  height: 30,
+                  text: 'Post',
+                  isLoading: viewModel.isLoading,
+                  textStyle: WayaTextStyles.bodySmall.copyWith(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: wayaTheme.colorScheme.white),
+                ),
               ),
             ),
           ],

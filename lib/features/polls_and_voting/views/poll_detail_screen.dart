@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -10,6 +9,7 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -74,7 +74,7 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
                     backgroundColor: wayaTheme.colorScheme.greyColor200,
                   ),
                   const Gap(3),
-                  Text('${viewModel.fName.capitalizeFirst}',
+                  Text(viewModel.fName.capitalizeFirst,
                       style: wayaTheme.textTheme.titleLarge),
                   const Gap(3),
                   Text(
@@ -125,11 +125,11 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
               ),
               const Gap(10),
 
-              Text("${viewModel.question.capitalizeFirst}",
+              Text(viewModel.question.capitalizeFirst,
                   style: wayaTheme.textTheme.titleLarge),
               const Gap(3),
               Text(
-                '${viewModel.desc.capitalizeFirst}',
+                viewModel.desc.capitalizeFirst,
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,

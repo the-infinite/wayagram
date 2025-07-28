@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -9,6 +8,7 @@ import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
@@ -72,7 +72,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.shopName.capitalizeFirst!,
+                        widget.shopName.capitalizeFirst,
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontSize: 14.sp),

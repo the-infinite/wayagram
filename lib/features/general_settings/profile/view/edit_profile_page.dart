@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -38,6 +37,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);
+    final height = MediaQuery.of(context).size.height;
+
     return WayaScaffold(
       isScrollable: true,
       isLoading: userState.isLoading,
@@ -51,12 +52,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             clipBehavior: Clip.none,
             children: [
               SizedBox(
-                height: Get.height * 0.24,
+                height: height * 0.24,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     WayaImage2(
-                      height: Get.height * 0.2,
+                      height: height * 0.2,
                       imageUrl: userState.userAccountModel?.data?.userdata
                           ?.profile?.coverImage,
                       isEdit: true,
@@ -285,6 +286,8 @@ class ProfileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -299,7 +302,7 @@ class ProfileTile extends StatelessWidget {
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
             Spacer(),
             SizedBox(
-              width: title == 'Bio' ? Get.width * 0.65 : Get.width * 0.5,
+              width: title == 'Bio' ? width * 0.65 : width * 0.5,
               child: Text(value,
                   textAlign: TextAlign.end,
                   style: wayaTheme.textTheme.bodyXtraMedium

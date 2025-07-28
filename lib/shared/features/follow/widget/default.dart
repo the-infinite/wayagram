@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
@@ -63,7 +62,8 @@ class SharedSuggestedFriendsWidget extends ConsumerWidget {
           children: [
             //? First, the section header.
             GroupedWidgetHeader(
-              onTap: () => WayaNav.to(const SuggestedFriendsScreen(), transition: Transition.rightToLeftWithFade),
+              onTap: () => WayaNav.to(const SuggestedFriendsScreen(),
+                  transition: WayaTransition.rightToLeftWithFade),
               subTitle: 'Follow your friends and meet new people',
               title: 'Suggested Friends',
             ),

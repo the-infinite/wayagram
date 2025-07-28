@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
@@ -170,7 +170,7 @@ class _DisputeChatState extends ConsumerState<InitDispute> {
                               //* For the other person's name.
                               Text(
                                 orderDetail != null
-                                    ? orderDetail!.shopName.capitalizeFirst!
+                                    ? orderDetail!.shopName.capitalizeFirst
                                     : "Seller",
                                 maxLines: 1,
                                 style: WayaTextStyles.titleMedium.copyWith(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 
 class UpcomingWidget extends StatelessWidget {
   final String title;
@@ -18,23 +17,23 @@ class UpcomingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: isFromDetailsPage ? null : context.width * 0.15,
-          child: Text(title,
-              style: wayaTheme.textTheme.bodyMedium),
+          width: isFromDetailsPage ? null : width * 0.15,
+          child: Text(title, style: wayaTheme.textTheme.bodyMedium),
         ),
         const Gap(5),
         if (!status)
           SizedBox(
-            width: isFromDetailsPage ? null : context.width * 0.15,
+            width: isFromDetailsPage ? null : width * 0.15,
             child: Text(content,
                 // overflow: TextOverflow.ellipsis,
-                style:wayaTheme.textTheme.bodyMedium),
+                style: wayaTheme.textTheme.bodyMedium),
           ),
         if (status)
           Container(
@@ -58,8 +57,6 @@ class UpcomingWidget extends StatelessWidget {
       ],
     );
   }
-
-  
 
   Color getColor(bool isText, String text) {
     if (text == "pending") {

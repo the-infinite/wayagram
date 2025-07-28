@@ -16,7 +16,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   open_file: ^3.5.10
-  get: ^4.6.6
   flutter_otp_text_field: ^1.5.1+1
   flutter_riverpod: ^2.6.1
   get_storage: ^2.1.1

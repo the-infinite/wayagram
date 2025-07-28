@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -355,7 +354,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget>
 
   void _viewVideo() async {
     final result = await WayaNav.to(
-      transition: Transition.circularReveal,
+      transition: WayaTransition.circularReveal,
       WayaVideoDetailScreen(
         file: widget.file,
         videoUrl: widget.networkUrl?.toString(),

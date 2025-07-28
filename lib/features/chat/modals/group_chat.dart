@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -240,7 +239,8 @@ class _StartConversationGroupModalState
                               callback: () async {
                                 notifier.saveUsers(choices);
                                 final result = await WayaNav.to<ChatModel?>(
-                                  transition: Transition.rightToLeftWithFade,
+                                  transition:
+                                      WayaTransition.rightToLeftWithFade,
                                   CreateConversationGroupScreen(),
                                 );
 

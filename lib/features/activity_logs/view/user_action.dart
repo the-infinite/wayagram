@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/src/extensions/context_extensions.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -35,6 +34,8 @@ class _UserActionState extends ConsumerState<UserAction> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(activityLogsVmProvider);
+    final height = MediaQuery.of(context).size.height;
+
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
       title: "User Actions    ",
@@ -90,7 +91,7 @@ class _UserActionState extends ConsumerState<UserAction> {
             child: PaginatedDataView<UserActionsDocs>(
                 uniqueKey: 'user-actions',
                 loadingState: SizedBox(
-                    height: context.height * 0.4,
+                    height: height * 0.4,
                     child: Center(
                       child: CircularProgressIndicator(),
                     )),

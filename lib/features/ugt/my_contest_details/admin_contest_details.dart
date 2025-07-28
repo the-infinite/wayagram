@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -44,7 +43,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
 
     var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     var model = ref.watch(selectedContestProvider.notifier).state;
-    final String myPassedContestId = Get.parameters['id'] ?? model?.id ?? "";
+
+    final String myPassedContestId = model?.id ?? "";
     final myContestId = useState(myPassedContestId);
     useEffect(() {
       // viewModelNotifier.changeActive(true);

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/files.dart';
@@ -144,6 +143,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
     final viewModel = ref.watch(createPageProvider);
     final wayaTheme = Theme.of(context);
     //final postId = ModalRoute.of(context)?.settings.arguments as String?;
+    final width = MediaQuery.of(context).size.width;
 
     return WayaScaffold(
         resizeToAvoidBottomInset: true,
@@ -155,7 +155,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: SizedBox(
-                  width: context.width * 0.26,
+                  width: width * 0.26,
                   child: _contentController.text.isEmpty
                       ? WayaButton(
                           callback: viewModel.isLoading

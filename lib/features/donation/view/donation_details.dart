@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -40,6 +39,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
 
     return WayaScaffold(
       title: "Donation Details",
@@ -114,7 +114,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: context.width * 0.45,
+              width: width * 0.45,
               child: WayaButton(
                 centerWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +141,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                 ),
                 callback: () => SharePlus.instance.share(
                   ShareParams(
-                    title: WayaValueHelper.getShareableUrl(
+                    text: WayaValueHelper.getShareableUrl(
                         WayaAppRoutes.getDonationDetailsPage(
                             viewModel.donationId)),
                     subject: 'Share Donation',
@@ -152,7 +152,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
             ),
             const Gap(8),
             SizedBox(
-              width: context.width * 0.45,
+              width: width * 0.45,
               child: WayaButton(
                   text: 'Donate',
                   color: wayaTheme.colorScheme.primary500,

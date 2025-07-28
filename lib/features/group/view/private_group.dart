@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -190,7 +189,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   GestureDetector(
                     onTap: () async {
                       final result = await WayaNav.to(
-                        transition: Transition.circularReveal,
+                        transition: WayaTransition.circularReveal,
                         duration: const Duration(milliseconds: 500),
                         EditGroupInfo(
                           group: widget.group,

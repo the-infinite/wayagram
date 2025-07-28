@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/deal_application_status.dart';
@@ -26,26 +26,11 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
     BuildContext context,
   ) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     final String image =
         widget.product.images.isEmpty ? "" : widget.product.images[0];
     String status = widget.product.wayagramDeal;
-
-    // if (widget.product.wayagramDealApprove == false &&
-    //     widget.product.wayagramDealRejectedReason == null) {
-    //   setState(() {
-    //     status = 'Pending';
-    //   });
-    // } else if (widget.product.wayagramDealApprove == false &&
-    //     widget.product.wayagramDealRejectedReason != null) {
-    //   setState(() {
-    //     status = 'Rejected';
-    //   });
-    // } else if (widget.product.wayagramDealApprove == true) {
-    //   setState(() {
-    //     status = 'Approved';
-    //   });
-    // }
-
     return Column(
       children: [
         GestureDetector(
@@ -79,7 +64,7 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: context.width * 0.3,
+                          width: width * 0.3,
                           child: Text(
                             widget.product.name,
                             style: TextStyle().wayaCopyWith(
@@ -91,7 +76,7 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
                         ),
                         const Gap(5),
                         Text(
-                          status.toString().capitalizeFirst!,
+                          status.capitalizeFirst,
                           style: TextStyle().wayaCopyWith(
                               color: status == 'approved'
                                   ? wayaTheme.colorScheme.success

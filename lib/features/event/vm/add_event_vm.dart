@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';

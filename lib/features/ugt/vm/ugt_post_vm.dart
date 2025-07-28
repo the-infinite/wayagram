@@ -114,11 +114,13 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
         SingleContestProfileBase responseModel =
             SingleContestProfileBase.fromJson(response.data);
 
-        ref.read(selectedContestantProfile.notifier).state =
-            responseModel.data?.docs?.first;
-
-        ref.watch(ugtContestantProfileVm.notifier).fetchSingleContestantPosts(
-            responseModel.data?.docs?.first.id ?? "");
+        final docs = responseModel.data?.docs;
+        if (docs != null && docs.isNotEmpty) {
+          ref.read(selectedContestantProfile.notifier).state = docs.first;
+          
+          ref.watch(ugtContestantProfileVm.notifier).fetchSingleContestantPosts(
+              docs.first.id ?? "");
+        }
 
         return responseModel;
       }

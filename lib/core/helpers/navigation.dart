@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/modals/coming_soon.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -14,9 +13,10 @@ import 'package:wayagram/shared/features/profile/model/post.dart';
 class WayaNavigationHelper {
   WayaNavigationHelper._();
 
-  static Future<T> toImageDetailsScreen<T>(List<File>? media, List<String>? urls) {
+  static Future<T?> toImageDetailsScreen<T>(
+      List<File>? media, List<String>? urls) {
     return WayaNav.to(
-      transition: Transition.circularReveal,
+      transition: WayaTransition.circularReveal,
       duration: const Duration(milliseconds: 500),
       WayaImageDetailScreen(
         file: media,

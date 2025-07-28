@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
@@ -306,7 +305,7 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
 
                       //? Now, let us continue.
                       final result = await WayaNav.to(
-                        transition: Transition.leftToRightWithFade,
+                        transition: WayaTransition.leftToRightWithFade,
                         preventDuplicates: false,
                         WayaCommentRepliesScreen(
                           comment: widget.comment,

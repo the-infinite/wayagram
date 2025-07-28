@@ -76,11 +76,20 @@ class WayaHelpers {
   static void countFormCharacters(
       TextEditingController controller, int length) {
     if (controller.text.length >= length) {
-      controller.text = controller.text.substring(0, length);
-
-      controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: controller.text.length),
-      );
+      final truncatedText = controller.text.substring(0, length);
+      
+      try {
+        // Update text and selection together to avoid race conditions
+        controller.value = TextEditingValue(
+          text: truncatedText,
+          selection: TextSelection.fromPosition(
+            TextPosition(offset: truncatedText.length),
+          ),
+        );
+      } catch (e) {
+        // Fallback: just set the text if selection setting fails
+        controller.text = truncatedText;
+      }
     }
   }
 

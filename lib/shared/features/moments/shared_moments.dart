@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -86,7 +85,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                           builder: (context) => PopModal(
                             create: () => WayaNav.toNamed(MyMoments.route),
                             view: () => WayaNav.to(
-                              transition: Transition.downToUp,
+                              transition: WayaTransition.downToUp,
                               duration: const Duration(milliseconds: 600),
                               ViewMoment(
                                   moments: momentState.myMoments, isMine: true),
@@ -109,7 +108,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                     hasMoment:
                         !notifier.hasViewedMoment(moment.moments.first.id),
                     onTap: () => WayaNav.to(
-                      transition: Transition.downToUp,
+                      transition: WayaTransition.downToUp,
                       duration: const Duration(milliseconds: 600),
                       ViewMoment(moments: moment.moments, isMine: false),
                     ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -32,16 +31,17 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
 
     final notifier = ref.read(votersContestNotifier.notifier);
 
-    final data = Get.arguments;
+    final data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref
             .read(postProvider.notifier)
-            .fetchSingleContest(contestId: data["id"] ?? "", ref: ref);
+            .fetchSingleContest(contestId: data?["id"] ?? "", ref: ref);
         ref
             .read(votersContestNotifier.notifier)
-            .getContestantProfileVoteDetails(data["id"] ?? "");
+            .getContestantProfileVoteDetails(data?["id"] ?? "");
       });
       return null;
     }, []);

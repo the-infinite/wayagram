@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -154,11 +154,11 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text("${viewModel.pollTitle.text.capitalizeFirst}",
+            Text(viewModel.pollTitle.text.capitalizeFirst,
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
-              '${viewModel.pollDescription.text.capitalizeFirst}',
+              viewModel.pollDescription.text.capitalizeFirst,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,

@@ -506,7 +506,6 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
               myRef
                   .read(votersContestNotifier.notifier)
                   .fetchAllContestApplicant(widget.model?.contestId ?? "");
-              // WayaNav.removeUntil(AdminContestDetails());
               WayaNav.removeAllUntil(
                   AdminContestDetails(id: ""), AdminContestDetails.route);
               // WayaNav.goBack();

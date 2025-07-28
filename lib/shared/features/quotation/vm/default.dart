@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -354,8 +353,6 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         return doc;
       }
     } catch (e) {
-      Get.log('Error sending bid: $e');
-      Get.log('Stack trace: ${WayaDebugHelpers.getStackTrace(e)}');
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
@@ -427,7 +424,6 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         state = state.copyWith(isLoadingBids: false);
       }
     } catch (e) {
-      Get.log('Error sending bid: $e');
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,

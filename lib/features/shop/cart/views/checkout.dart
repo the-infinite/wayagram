@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -79,6 +78,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final wayaTheme = Theme.of(context);
     final key = "checkout";
     final viewModel = ref.watch(checkoutVmProvider);
@@ -462,7 +462,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-                width: context.width * 0.35,
+                width: width * 0.35,
                 height: 50,
                 child: Stack(
                   alignment: Alignment.centerLeft,
@@ -488,7 +488,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
                   ],
                 )),
             SizedBox(
-              width: context.width * 0.45,
+              width: width * 0.45,
               child: WayaButton(
                 callback: (selectedOption == 'Delivery' &&
                         arg?.cartItem.deliveryAddress == null)

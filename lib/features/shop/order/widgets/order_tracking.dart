@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -81,7 +80,7 @@ class _OrderTrackingState extends State<OrderTracking> {
         final int statusIndex = expectedStatuses.indexOf(s);
         final bool isActive = statusIndex <= lastActiveIndex;
         final CartOrderStatus? cartStatus = widget.currentStatuses
-            ?.firstWhereOrNull((c) => c.status.toLowerCase() == s);
+            ?.where((c) => c.status.toLowerCase() == s).firstOrNull;
         final DateTime? updatedAt =
             cartStatus != null ? DateTime.tryParse(cartStatus.updatedAt) : null;
         final String formattedDate =
@@ -165,6 +164,7 @@ class StepWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,7 +177,7 @@ class StepWidget extends StatelessWidget {
                 status: orderStatus.status, showStraightLine: isNotLast),
             const Gap(12),
             SizedBox(
-              width: context.width * 0.6,
+              width: width * 0.6,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

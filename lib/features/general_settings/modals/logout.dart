@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -37,11 +36,12 @@ class _LogoutDialogState extends State<LogoutDialog> {
   Widget build(BuildContext context) {
     //? First, we obtain all things needed to build this widget.
     final theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
-        width: Get.width,
+        width: width,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(

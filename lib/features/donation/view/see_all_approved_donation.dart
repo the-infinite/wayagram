@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';

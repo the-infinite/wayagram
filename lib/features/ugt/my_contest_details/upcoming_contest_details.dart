@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart'
     as applied_contest;
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
@@ -129,12 +130,18 @@ class _UpcomingContestDetailsState
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
                       )
-                    : Image.network(
-                        model?.uploadCoverImages ?? "",
+                    : SafeCachedNetworkImage(
+                        imageUrl: model?.uploadCoverImages ?? "",
                         width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
+                        errorWidget: Container(
+                          width: context.width,
+                          height: 200,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.error),
+                        ),
                       ),
               ),
               const Gap(15),

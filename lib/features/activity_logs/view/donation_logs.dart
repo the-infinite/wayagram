@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -56,7 +55,7 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
     final filteredDonations = startingBound == null || endingBound == null
         ? viewModel.donationDocs
         : viewModel.filterDonationDocs(startingBound, endingBound);
-
+    final height = MediaQuery.of(context).size.height;
     //? Build the entire screen.
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
@@ -117,7 +116,7 @@ class _DonationLogsState extends ConsumerState<DonationLogs> {
             child: PaginatedDataView<DonationDocs>(
               uniqueKey: 'Donation',
               loadingState: SizedBox(
-                  height: context.height * 0.4,
+                  height: height * 0.4,
                   child: Center(
                     child: CircularProgressIndicator(),
                   )),

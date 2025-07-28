@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
@@ -82,7 +82,7 @@ class SingleDisputeWidget extends ConsumerWidget {
                           : wayaTheme.colorScheme.success50,
                       borderRadius: BorderRadius.circular(6)),
                   child: Text(
-                    dispute.status.capitalizeFirst!,
+                    dispute.status.capitalizeFirst,
                     style: TextStyle().wayaCopyWith(
                         color: dispute.status == 'open'
                             ? wayaTheme.colorScheme.primary600

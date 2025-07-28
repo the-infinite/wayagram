@@ -145,7 +145,7 @@ class WayaImage2 extends ConsumerWidget {
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: height,
-                  imageUrl: imageUrl ?? coverImage,
+                  imageUrl: imageUrl ?? coverImage ?? '',
                 ),
 
           //? If this is in edit mode...

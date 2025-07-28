@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -141,7 +140,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
     final isLoading = useState(false);
     final isEmptyTest = useState(false);
     var model = ref.watch(selectedContestProvider.notifier).state;
-
+    final width = MediaQuery.of(context).size.width;
     // final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return WayaScaffold(
@@ -153,7 +152,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(
-                width: context.width * 0.15,
+                width: width * 0.15,
                 child: /* !isEmptyTest.value
                     ? WayaButton(
                         callback: isLoading.value

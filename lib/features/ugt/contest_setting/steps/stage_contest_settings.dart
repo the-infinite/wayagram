@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
@@ -11,7 +10,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../../core/utils/waya_navigation.dart';
-import '../../data/controller/contest_controller.dart';
+import '../../data/controller/contest_controller.dart' as contest_ctrl;
 
 class StageContestSettings extends StatefulHookConsumerWidget {
   final VoidCallback goToNextTab;
@@ -23,7 +22,6 @@ class StageContestSettings extends StatefulHookConsumerWidget {
 }
 
 class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
-  final _contestController = Get.put(ContestController());
   List<Map<String, dynamic>> stages = [];
 
   void _removeStage(int index) {
@@ -39,10 +37,10 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
 
   @override
   Widget build(BuildContext context) {
-    // final viewModel = ref.watch(personalFirstStepProvider);
-    // final viewModel2 = ref.watch(contestNotifierProvider);
     final viewModel3 = ref.watch(stateContactProvider);
     final wayaTheme = Theme.of(context);
+    final contestController =
+        ref.read(contest_ctrl.contestControllerProvider.notifier);
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
 
     var isEditing = ref.watch(stateIsEditingContestProvider);
@@ -150,7 +148,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                                 ),
                                 //Icon(Icons.edit, color: Colors.grey),
                                 onPressed: () {
-                                  _contestController.selectedIndex = index;
+                                  contestController.updateSelectedIndex(index);
                                   WayaNav.toNamed("/edit-stage-preference");
                                 },
                               ),

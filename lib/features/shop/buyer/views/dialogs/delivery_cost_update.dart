@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -10,15 +9,20 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
 
 class DeliveryCostUpdate extends StatelessWidget {
- // final List<Product> orders;
+  // final List<Product> orders;
   final VoidCallback onPress;
 
-  const DeliveryCostUpdate(
-      {super.key, required this.onPress, });
+  const DeliveryCostUpdate({
+    super.key,
+    required this.onPress,
+  });
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -26,8 +30,8 @@ class DeliveryCostUpdate extends StatelessWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-          width: context.width,
-          height: context.height * 0.8,
+          width: width,
+          height: height * 0.8,
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
@@ -129,8 +133,7 @@ class DeliveryCostUpdate extends StatelessWidget {
                 const Gap(10),
                 WayaButton(
                     callback: () {
-                       WayaNav.goBack();
-                  
+                      WayaNav.goBack();
                     },
                     textColor: wayaTheme.colorScheme.greyColor500,
                     color: wayaTheme.colorScheme.transparent,

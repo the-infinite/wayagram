@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -39,6 +38,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
     final wayaTheme = Theme.of(context);
     final dashboardVm = ref.watch(ugtAdminDashboardVm);
     final notifier = ref.read(ugtAdminDashboardVm.notifier);
+    final width = MediaQuery.of(context).size.width;
     //final viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestProvider);
     //? for commission
@@ -66,7 +66,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                 if (ConversationState.self.accountType ==
                     UserAccountType.business)
                   SizedBox(
-                    width: context.width / 2.8,
+                    width: width / 2.8,
                     child: WayaButton(
                         horizontalPadding: 10,
                         fontSize: 14.sp,

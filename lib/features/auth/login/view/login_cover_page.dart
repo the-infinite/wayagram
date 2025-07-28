@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -20,6 +19,8 @@ class LoginCoverPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(loginVmProvider.notifier);
     final wayaTheme = Theme.of(context);
+    final height = MediaQuery.of(context).size.height;
+
     return WayaScaffold(
       removeAppBar: true,
       isScrollable: true,
@@ -28,7 +29,7 @@ class LoginCoverPage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Gap(Get.height * 0.2),
+          Gap(height * 0.2),
           WayaAssets.images.wayalogoUnlabelled.image(
             scale: 2,
           ),
@@ -45,7 +46,7 @@ class LoginCoverPage extends ConsumerWidget {
               color: wayaTheme.colorScheme.greyColor600,
             ),
           ),
-          Gap(Get.height * 0.25),
+          Gap(height * 0.25),
           if (!WayaConstants.isProduction || kDebugMode) ...[
             Platform.isAndroid
                 ? WayaButton(

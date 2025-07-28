@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -36,6 +35,8 @@ class _LoginActivityState extends ConsumerState<AccountActivity> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(activityLogsVmProvider);
+    final height = MediaQuery.of(context).size.height;
+
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
       title: "Account    ",
@@ -91,7 +92,7 @@ class _LoginActivityState extends ConsumerState<AccountActivity> {
             child: PaginatedDataView<AccountActivityDocs>(
                 uniqueKey: 'account-activity',
                 loadingState: SizedBox(
-                    height: context.height * 0.4,
+                    height: height * 0.4,
                     child: Center(
                       child: CircularProgressIndicator(),
                     )),

@@ -6,8 +6,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -15,6 +13,7 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/data/model/group_category_model.dart';
@@ -78,14 +77,6 @@ class PageVm extends StateNotifier<PageState> {
   String _errorMessage2 = '';
   List<SavedPost> get savedPosts => _savedPosts;
   String get errorMessage2 => _errorMessage2;
-
-  void updateValue(RxInt value, bool isIncreased) {
-    if (isIncreased) {
-      value.value++;
-    } else {
-      value.value--;
-    }
-  }
 
   void clearText() {
     state.content.clear();

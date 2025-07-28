@@ -2,12 +2,8 @@ import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
-// import 'package:wayagram/core/theme/vm/theme_vm.dart';
 
 class WayaScaffold extends ConsumerWidget {
   final Widget body;
@@ -56,7 +52,6 @@ class WayaScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
-    // final themeNotifier = ref.read(themeProvider.notifier);
     final paddedBody =
         padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
 
@@ -179,13 +174,12 @@ class _WayaScaffoldWithProgressBarState
   @override
   void dispose() {
     widget.tabController.removeListener(_onTabChanged);
-    widget.tabController.dispose();
     super.dispose();
   }
 
   void goBack() {
     if (widget.tabController.index == 0) {
-      WayaNav.goBack();
+      Navigator.of(context).pop();
     } else {
       widget.tabController.animateTo(widget.tabController.index - 1);
     }
@@ -196,6 +190,8 @@ class _WayaScaffoldWithProgressBarState
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return WayaScaffold(
       isScrollable: widget.isScrollable,
       padding: widget.padding,
@@ -206,7 +202,7 @@ class _WayaScaffoldWithProgressBarState
           onTap: goBack,
         ),
         title: SizedBox(
-          width: Get.width * 0.65,
+          width: screenWidth * 0.65,
           child: Stack(
             alignment: Alignment.centerLeft,
             children: [
@@ -225,7 +221,7 @@ class _WayaScaffoldWithProgressBarState
                 ),
                 duration: Duration(milliseconds: 300),
                 height: _progressBarHeight,
-                width: Get.width * _progress,
+                width: screenWidth * _progress,
               ),
             ],
           ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
@@ -33,12 +33,13 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(eventVmProvider);
+    final height = MediaQuery.of(context).size.height;
     return Expanded(
         child: ListView(
       children: [
         if (viewModel.isLoadingSingleEvent) ...[
           SizedBox(
-            height: context.height * 0.1,
+            height: height * 0.1,
             child: Center(
               child: CircularProgressIndicator(),
             ),

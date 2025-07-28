@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
@@ -38,6 +38,8 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
     final viewModel = ref.watch(createPageProvider);
     final viewModel2 = ref.watch(createPageProvider.notifier);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final height = MediaQuery.of(context).size.height;
+
     return WayaScaffold(
       title: "Confirm Details",
       isLoading: viewModel.isLoading,
@@ -88,14 +90,14 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                   args['coverImage'] == null
                       ? Image.asset(
                           'assets/images/pages/image_placeholder.png',
-                          height: Get.height * 0.2,
+                          height: height * 0.2,
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           fit: BoxFit.fitWidth,
                         )
                       : Image.file(
                           File('${args['image'].absolute.path}'),
-                          height: Get.height * 0.2,
+                          height: height * 0.2,
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           fit: BoxFit.fitWidth,

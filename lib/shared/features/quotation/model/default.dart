@@ -1,4 +1,3 @@
-import 'package:get/get_utils/get_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'default.g.dart';
@@ -137,9 +136,11 @@ class BidOrderStatus {
   });
 
   QuotationPickupStatus get pickupStatus => QuotationPickupStatus.build(status);
-  QuotationDeliveryStatus get deliveryStatus => QuotationDeliveryStatus.build(status);
+  QuotationDeliveryStatus get deliveryStatus =>
+      QuotationDeliveryStatus.build(status);
 
-  factory BidOrderStatus.fromJson(Map<String, dynamic> json) => _$BidOrderStatusFromJson(json);
+  factory BidOrderStatus.fromJson(Map<String, dynamic> json) =>
+      _$BidOrderStatusFromJson(json);
 
   Map<String, dynamic> toJson() => _$BidOrderStatusToJson(this);
 }
@@ -200,13 +201,16 @@ class BuyRequestModel {
     this.bids,
   });
 
-  QuotationBidModel? get acceptedBid => bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
+  QuotationBidModel? get acceptedBid =>
+      bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
 
   bool get hasAcceptedBid => acceptedBid != null;
 
-  String get fullname => '${brand?.isNotEmpty ?? false ? '${brand!.capitalize} ' : ''}${productName.capitalize}';
+  String get fullname =>
+      '${brand?.isNotEmpty ?? false ? '${brand!.toUpperCase()} ' : ''}${productName.toUpperCase()}';
 
-  factory BuyRequestModel.fromJson(Map<String, dynamic> json) => _$BuyRequestModelFromJson(json);
+  factory BuyRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$BuyRequestModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$BuyRequestModelToJson(this);
 
@@ -250,7 +254,8 @@ class BuyRequestModel {
       deliveryDetails: deliveryDetails ?? this.deliveryDetails,
       stateOfPurchase: stateOfPurchase ?? this.stateOfPurchase,
       lga: lga ?? this.lga,
-      vendorsCanSeeBidFromAnyDistance: vendorsCanSeeBidFromAnyDistance ?? this.vendorsCanSeeBidFromAnyDistance,
+      vendorsCanSeeBidFromAnyDistance: vendorsCanSeeBidFromAnyDistance ??
+          this.vendorsCanSeeBidFromAnyDistance,
       deliveryType: deliveryType ?? this.deliveryType,
       deliveryAddress: deliveryAddress ?? this.deliveryAddress,
       deliveryState: deliveryState ?? this.deliveryState,
@@ -283,11 +288,13 @@ class QuotationBidModel {
 
   double get amount => double.tryParse(bidAmount.replaceAll(",", "")) ?? 0.0;
 
-  double? get counterValue => double.tryParse(counterAmount.toString().replaceAll(",", ""));
+  double? get counterValue =>
+      double.tryParse(counterAmount.toString().replaceAll(",", ""));
 
   double get usedAmount => counterValue ?? amount;
 
-  double? get deliveryCharge => double.tryParse(deliveryCost.toString().replaceAll(",", ""));
+  double? get deliveryCharge =>
+      double.tryParse(deliveryCost.toString().replaceAll(",", ""));
 
   double get totalAmount => (deliveryCharge ?? 0) + usedAmount;
 
@@ -307,7 +314,8 @@ class QuotationBidModel {
     this.counterAmount,
   });
 
-  factory QuotationBidModel.fromJson(Map<String, dynamic> json) => _$QuotationBidModelFromJson(json);
+  factory QuotationBidModel.fromJson(Map<String, dynamic> json) =>
+      _$QuotationBidModelFromJson(json);
   Map<String, dynamic> toJson() => _$QuotationBidModelToJson(this);
 }
 
@@ -414,6 +422,7 @@ class BidOrderModel {
 
   double get amount => double.tryParse(totalAmount.replaceAll(",", "")) ?? 0.0;
 
-  factory BidOrderModel.fromJson(Map<String, dynamic> json) => _$BidOrderModelFromJson(json);
+  factory BidOrderModel.fromJson(Map<String, dynamic> json) =>
+      _$BidOrderModelFromJson(json);
   Map<String, dynamic> toJson() => _$BidOrderModelToJson(this);
 }

@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
@@ -23,7 +23,6 @@ class TransactionHistory extends ConsumerStatefulWidget {
 }
 
 class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
-
   int page = 1;
   int limit = 10;
   bool hasNextPage = true;
@@ -39,6 +38,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
       _loadInitialData();
     });
   }
+
   Future<void> _loadInitialData() async {
     try {
       await ref
@@ -65,24 +65,24 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
       }
     }
   }
+
   void _scrollListener() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       _loadMoreData();
     }
   }
+
   Future<void> _loadMoreData() async {
     if (!hasNextPage || isLoadingMore) return;
     setState(() {
       isLoadingMore = true;
     });
     try {
-
       page++;
       await ref
           .read(transactionVmProvider.notifier)
           .getTransaction(limit: limit, page: page);
-
 
       if (mounted) {
         final viewModel = ref.read(transactionVmProvider);
@@ -115,6 +115,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
       }
     }
   }
+
   @override
   void dispose() {
     _scrollController.removeListener(_scrollListener);
@@ -152,7 +153,8 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
                 purpose: '${trans.purpose?.capitalizeFirst}',
                 transactionType: '${trans.type}',
                 amount: trans.amount.toString(),
-                date: '${ref.read(createPollVotingProvider.notifier).formatDt2(trans.updatedAt)},${DateFormat.jm().format(dateTime)}',
+                date:
+                    '${ref.read(createPollVotingProvider.notifier).formatDt2(trans.updatedAt)},${DateFormat.jm().format(dateTime)}',
               );
             },
           ),
@@ -166,7 +168,6 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
               ),
             ),
           ),
-
       ],
     );
   }

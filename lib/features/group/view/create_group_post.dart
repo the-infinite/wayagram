@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -105,6 +104,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(groupProvider);
+    final width = MediaQuery.of(context).size.width;
 
     //? Return the scaffold.
     return WayaScaffold(
@@ -116,7 +116,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: SizedBox(
-                  width: context.width * 0.15,
+                  width: width * 0.15,
                   child:
                       // viewModel.content.text.isEmpty
                       //     ? WayaButton(

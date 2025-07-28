@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -10,7 +9,6 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
-
 class UgtGetStarted extends ConsumerWidget {
   static const route = "/ugt-get-started";
   const UgtGetStarted({super.key});
@@ -18,7 +16,9 @@ class UgtGetStarted extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-     final ugt = WayaLocalDataSource();
+    final ugt = WayaLocalDataSource();
+    final height = MediaQuery.of(context).size.height;
+
     return WayaScaffold(
         removeAppBar: true,
         isScrollable: true,
@@ -27,7 +27,7 @@ class UgtGetStarted extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(context.height * 0.1),
+            Gap(height * 0.1),
             Image.asset('assets/images/u-start.png'),
             const Gap(30),
             Text("Welcome to Contests \n (UGT)! 🎓✨",
@@ -75,9 +75,7 @@ class UgtGetStarted extends ConsumerWidget {
             const Gap(30),
             WayaButton(
               callback: () async {
-                 
-       
-            ugt.saveSeenUGT(true);
+                ugt.saveSeenUGT(true);
                 WayaNav.toNamed("/ugt-home");
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                   ref.read(contestNotifierProvider.notifier).allCategories();

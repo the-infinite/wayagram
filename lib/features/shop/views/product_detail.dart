@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -11,6 +10,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
@@ -78,11 +78,13 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
     final shopState = ref.watch(shopVmProvider);
     final addState = ref.watch(addProductProvider('add-product'));
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     if (viewModel.product == null && viewModel.isLoading) {
       return Container(
-        height: context.height,
-        width: context.width,
+        height: height,
+        width: width,
         decoration: BoxDecoration(color: wayaTheme.colorScheme.white),
         child: Center(
           child: CircularProgressIndicator(),
@@ -133,9 +135,9 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: context.width * 0.6,
+                  width: width * 0.6,
                   child: Text(
-                    viewModel.product!.name.capitalizeFirst!,
+                    viewModel.product!.name.capitalizeFirst,
                     style: wayaTheme.textTheme.bodyMedium,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -177,8 +179,10 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                       setState(() {
                         isLiked = false;
                       });
-                      
-                      ref.read(productDetailVmProvider.notifier).unlikeProduct();
+
+                      ref
+                          .read(productDetailVmProvider.notifier)
+                          .unlikeProduct();
                     } else {
                       setState(() {
                         isLiked = true;
@@ -320,7 +324,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                             ),
                             const Gap(6),
                             Text(
-                              viewModel.product!.shopName.capitalizeFirst!,
+                              viewModel.product!.shopName.capitalizeFirst,
                               style: wayaTheme.textTheme.labelMedium,
                             )
                           ],
@@ -389,9 +393,9 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                        width: context.width * 0.45,
+                        width: width * 0.45,
                         child: SizedBox(
-                          width: context.width * 0.45,
+                          width: width * 0.45,
                           child: WayaButton(
                             callback: () {
                               final SellerProduct sellerProduct =
@@ -406,7 +410,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           ),
                         )),
                     SizedBox(
-                      width: context.width * 0.45,
+                      width: width * 0.45,
                       child: WayaButton(
                         callback: !addState.isDeleting
                             ? () {
@@ -425,8 +429,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                   ],
                 )
               : SizedBox(
-                  //alignment: Alignment.bottomCenter,
-                  width: context.width * 0.95,
+                  width: width * 0.95,
                   child: WayaButton(
                     callback: () {
                       final product = viewModel.product!;

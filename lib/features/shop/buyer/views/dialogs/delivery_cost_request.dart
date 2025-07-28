@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,7 +71,7 @@ class DeliveryCostRequest extends ConsumerWidget {
                     ),
                     const Gap(6),
                     Text(
-                      shopName.capitalizeFirst!,
+                      shopName.capitalizeFirst,
                       style: wayaTheme.textTheme.labelMedium,
                     )
                   ],
