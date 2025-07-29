@@ -68,7 +68,8 @@ class PromotionCard extends ConsumerWidget {
         showTimeLeft: showTimeLeft,
         timeLeft: timeLeft,
         id: id,
-        description: WayaHelpers.formatPrice(double.parse(data.price).toInt()),
+        description:
+            WayaHelpers.formatPrice(double.parse(data.price ?? '').toInt()),
         image: image);
   }
 

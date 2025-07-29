@@ -5,8 +5,7 @@ import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-
-import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 
 class OrderedProductCard extends StatelessWidget {
   final CartProduct orders;
@@ -58,7 +57,7 @@ class OrderedProductCard extends StatelessWidget {
                       SizedBox(
                         width: width * 0.4,
                         child: Text(
-                          "Quantity: ${orders.quantity} x ${WayaHelpers.formatPrice(double.parse(orders.unitPrice).toInt())}",
+                          "Quantity: ${orders.quantity} x ${WayaHelpers.formatPrice(double.parse(orders.unitPrice ?? '').toInt())}",
                           style: wayaTheme.textTheme.hintStyle,
                         ),
                       )

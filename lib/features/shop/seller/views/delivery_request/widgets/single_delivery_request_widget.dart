@@ -7,13 +7,12 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
-
 
 class DeliveryRequestCard extends ConsumerStatefulWidget {
   final DeliveryRequestData data;

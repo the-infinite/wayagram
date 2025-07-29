@@ -267,7 +267,7 @@ class FavoriteProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   Text(
                     WayaHelpers.formatPrice(
-                        double.parse(product.price).toInt()),
+                        double.parse(product.price ?? '').toInt()),
                     style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -283,7 +283,7 @@ class FavoriteProductCard extends ConsumerWidget {
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage)
                   : WayaHelpers.formatPrice(
-                      double.parse(product.price).toInt()),
+                      double.parse(product.price ?? '').toInt()),
               style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -297,7 +297,7 @@ class FavoriteProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   WayaButton(
                     callback: () async {
-                      int intPrice = double.parse(product.price).toInt();
+                      int intPrice = double.parse(product.price ?? '').toInt();
                       int price = product.discountPercentage > 0
                           ? (intPrice -
                                   (intPrice * product.discountPercentage / 100))

@@ -356,7 +356,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         materialType: TextEditingController(text: product.materialType),
         selectedColor: product.color,
         pricePerUnit: TextEditingController(
-            text: double.parse(product.price).toInt().toString()),
+            text: double.parse(product.price ?? '').toInt().toString()),
         pickUpAddress: TextEditingController(text: product.pickupAddress),
         productCategory: product.categoryId,
         shopId: product.shopId,

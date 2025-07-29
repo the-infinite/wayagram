@@ -83,7 +83,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
                     child: AboutProductApplication(
                         title: 'Price Per Unit',
                         content: WayaHelpers.formatPrice(
-                            double.parse(widget.product.price).toInt())),
+                            double.parse(widget.product.price ?? '').toInt())),
                   ),
                   const Gap(2),
                   Expanded(

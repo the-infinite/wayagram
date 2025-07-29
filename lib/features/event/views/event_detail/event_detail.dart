@@ -16,7 +16,7 @@ import 'package:wayagram/features/event/bottom_sheets/join_event.dart';
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/bottom_sheets/report_event.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/features/event/data/model/payout_response_model.dart';
+import 'package:wayagram/features/event/data/model/payout/payout.dart';
 import 'package:wayagram/features/event/views/event_detail/awaiting_approval.dart';
 import 'package:wayagram/features/event/views/event_detail/event_attendees.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail_widget.dart';
@@ -202,7 +202,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                   text: 'Attendees',
                   onTap: () => setState(() => _selectedIndex = 1),
                 ),
-                  WayaTabButton(
+                WayaTabButton(
                   isSelected: _selectedIndex == 2,
                   text: 'Awaitng Approval',
                   onTap: () => setState(() => _selectedIndex = 2),
@@ -212,7 +212,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
             const Gap(10),
             if (_selectedIndex == 0) EventDetailWidget(event: event),
             if (_selectedIndex == 1) EventAttendees(eventId: event.id),
-             if (_selectedIndex == 2) AwaitingApproval(eventId: event.id),
+            if (_selectedIndex == 2) AwaitingApproval(eventId: event.id),
           ],
         ),
         bottomNavigationBar: Container(

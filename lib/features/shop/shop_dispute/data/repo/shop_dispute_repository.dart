@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
@@ -74,8 +73,6 @@ class ShopDisputeRepository extends BaseRepository {
     if (sellerId != null) payload['sellerId'] = sellerId;
     if (media != null) payload['media'] = media;
     if (metadata.isNotEmpty) payload['metadata'] = metadata;
-
-    debugPrint(payload.toString());
 
     return patch("$serviceUrl/client/dispute/$disputeId", payload);
   }

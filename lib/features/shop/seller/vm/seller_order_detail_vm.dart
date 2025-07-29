@@ -114,8 +114,6 @@ class SellerOrderDetailVm extends ChangeNotifier {
       String? current,
       required BuildContext context,
       required String orderId}) async {
-    debugPrint("wefvewfew");
-
     delivery = current ?? 'pending';
     notifyListeners();
     final response = await WayaUtils.showModalSheet(context,

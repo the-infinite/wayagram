@@ -672,7 +672,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                           if (!dates.contains(viewModel.socialDocs[i].createdAt
                               .toString()
                               .split('T')[0])) {
-                            dates.add(viewModel.searchLogDocs[i].createdAt
+                            dates.add(viewModel.socialDocs[i].createdAt
                                 .toString()
                                 .split('T')[0]);
                             viewModel.socialDocs.add(viewModel.socialDocs[i]);

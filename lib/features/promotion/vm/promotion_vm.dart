@@ -28,7 +28,6 @@ class PromotionVm extends StateNotifier<PromotionState> {
 
       List<PromotionPlanDoc> promoPlans = [];
       if (response.success) {
-        debugPrint(response.data.toString());
         PromotionPlanResponse plansResponse =
             PromotionPlanResponse.fromJson(response.data);
         promoPlans = plansResponse.data.docs;

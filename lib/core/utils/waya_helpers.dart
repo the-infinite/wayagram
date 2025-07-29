@@ -66,9 +66,9 @@ class WayaHelpers {
     }
   }
 
-  static String formatPrice(int price) {
+  static String formatPrice(int? price) {
     final formattedCurrency =
-        NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
+        NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price ?? 0);
 
     return formattedCurrency;
   }
@@ -77,7 +77,7 @@ class WayaHelpers {
       TextEditingController controller, int length) {
     if (controller.text.length >= length) {
       final truncatedText = controller.text.substring(0, length);
-      
+
       try {
         // Update text and selection together to avoid race conditions
         controller.value = TextEditingValue(
@@ -145,8 +145,8 @@ class WayaHelpers {
     }
   }
 
-  static String calculatedDiscountPrice(String price, int pct) {
-    int intPrice = double.parse(price).toInt();
+  static String calculatedDiscountPrice(String? price, int pct) {
+    int intPrice = double.parse(price ?? '').toInt();
 
     double discount = intPrice - (intPrice * (pct / 100));
 

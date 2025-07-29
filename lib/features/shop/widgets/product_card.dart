@@ -129,7 +129,7 @@ class ProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   Text(
                     WayaHelpers.formatPrice(
-                        double.parse(product.price).toInt()),
+                        double.parse(product.price ?? '').toInt()),
                     style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -145,7 +145,7 @@ class ProductCard extends ConsumerWidget {
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage)
                   : WayaHelpers.formatPrice(
-                      double.parse(product.price).toInt()),
+                      double.parse(product.price ?? '').toInt()),
               style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -159,7 +159,7 @@ class ProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   WayaButton(
                     callback: () async {
-                      int intPrice = double.parse(product.price).toInt();
+                      int intPrice = double.parse(product.price ?? '').toInt();
                       int price = product.discountPercentage > 0
                           ? (intPrice -
                                   (intPrice * product.discountPercentage / 100))
@@ -303,7 +303,7 @@ class SellerProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   Text(
                     WayaHelpers.formatPrice(
-                        double.parse(product.price).toInt()),
+                        double.parse(product.price ?? '').toInt()),
                     style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -319,7 +319,7 @@ class SellerProductCard extends ConsumerWidget {
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage.toInt())
                   : WayaHelpers.formatPrice(
-                      double.parse(product.price).toInt()),
+                      double.parse(product.price ?? '').toInt()),
               style: TextStyle().wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -338,7 +338,8 @@ class SellerProductCard extends ConsumerWidget {
                             arguments: UpdateProductArg(
                                 uniqueKey: Uuid().v4(), product: product));
                       } else {
-                        int intPrice = double.parse(product.price).toInt();
+                        int intPrice =
+                            double.parse(product.price ?? '').toInt();
                         int price = product.discountPercentage > 0
                             ? (intPrice -
                                     (intPrice *

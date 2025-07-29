@@ -92,7 +92,7 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
                 ),
                 Text(
                   WayaHelpers.formatPrice(
-                      double.parse(widget.product.price).toInt()),
+                      double.parse(widget.product.price ?? '').toInt()),
                   style: wayaTheme.textTheme.bodyXtraMedium
                       .copyWith(fontWeight: FontWeight.w600),
                 )

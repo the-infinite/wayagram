@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 
 /// Safe wrapper for CachedNetworkImage that properly handles network errors
 class SafeCachedNetworkImage extends StatelessWidget {
@@ -35,7 +36,7 @@ class SafeCachedNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Validate URL first to prevent unnecessary network calls
-    if (!_isValidUrl(imageUrl)) {
+    if (!imageUrl.validImageUrl) {
       return _buildErrorWidget(context, imageUrl, 'Invalid URL');
     }
 
@@ -53,41 +54,6 @@ class SafeCachedNetworkImage extends StatelessWidget {
             : (context, url) => placeholder ?? _buildDefaultPlaceholder(),
         errorWidget: (context, url, error) =>
             _buildErrorWidget(context, url, error));
-  }
-
-  /// Validates if the provided URL is properly formatted and not a placeholder
-  bool _isValidUrl(String url) {
-    if (url.isEmpty) return false;
-
-    try {
-      final uri = Uri.parse(url);
-
-      // Check basic URL structure
-      if (!uri.hasScheme || !uri.hasAuthority || uri.host.isEmpty) {
-        return false;
-      }
-
-      // Only allow http and https schemes
-      if (uri.scheme != 'http' && uri.scheme != 'https') {
-        return false;
-      }
-
-      // Block known placeholder domains
-      final blockedDomains = [
-        'example.com',
-        'placeholder.com',
-        'test.com',
-        'localhost',
-      ];
-
-      if (blockedDomains.any((domain) => uri.host.contains(domain))) {
-        return false;
-      }
-
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 
   /// Builds the error widget with fallback options

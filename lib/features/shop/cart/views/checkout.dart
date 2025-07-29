@@ -94,7 +94,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
             0,
             (prodSum, prod) =>
                 prodSum +
-                (double.parse(prod.unitPrice).toInt() * prod.quantity),
+                (double.parse(prod.unitPrice ?? '').toInt() * prod.quantity),
           );
     final int deliveryCharge = arg?.cartItem.deliveryFee ?? 0;
 

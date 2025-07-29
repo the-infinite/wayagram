@@ -65,6 +65,12 @@ class WayaDp extends ConsumerWidget {
             backgroundColor: wayaTheme.colorScheme.greyColor200,
             backgroundImage:
                 avatar?.isNotEmpty == true ? NetworkImage(avatar!) : null,
+            onBackgroundImageError: avatar?.isNotEmpty == true
+                ? (exception, stackTrace) {
+                    // Log error but don't crash
+                    debugPrint('Avatar image failed to load: $exception');
+                  }
+                : null,
             child: avatar?.isEmpty ?? true
                 ? Icon(
                     Icons.person,
@@ -260,7 +266,7 @@ class WayaImage3 extends ConsumerWidget {
               fit: BoxFit.fill,
               width: double.infinity,
               height: height,
-              imageUrl: imageUrl ?? coverImage,
+              imageUrl: imageUrl ?? coverImage ?? '',
             ),
           );
   }
@@ -333,6 +339,9 @@ class WayaImage extends StatelessWidget {
             image: DecorationImage(
               image: imageProvider,
               fit: fit ?? BoxFit.cover,
+              onError: (error, stackTrace) {
+                debugPrint('Image decoration error: $error');
+              },
             ),
           ),
           child: overlay ?? SizedBox.shrink(),

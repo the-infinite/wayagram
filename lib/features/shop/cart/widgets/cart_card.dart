@@ -10,6 +10,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_item.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
@@ -245,13 +247,13 @@ class CartProductCard extends ConsumerWidget {
                       ),
                       const Gap(5),
                       Text(
-                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice((double.parse(cartProduct.unitPrice)).toInt())}",
+                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice((double.parse(cartProduct.unitPrice ?? '')).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       const Gap(5),
                       Text(
                         WayaHelpers.formatPrice(
-                            double.parse(cartProduct.unitPrice).toInt() *
+                            double.parse(cartProduct.unitPrice ?? '').toInt() *
                                 cartProduct.quantity),
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
@@ -270,7 +272,8 @@ class CartProductCard extends ConsumerWidget {
                           count: 1,
                           productId: cartProduct.productId,
                           shopId: shopId,
-                          price: double.parse(cartProduct.unitPrice).toInt(),
+                          price:
+                              double.parse(cartProduct.unitPrice ?? '').toInt(),
                           productImage: cartProduct.productImage ?? '',
                           productName: cartProduct.productName);
                     },

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_data.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_item.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:uuid/uuid.dart';
@@ -154,7 +157,8 @@ class CartVm extends StateNotifier<CartState> {
               0,
               (sum, product) =>
                   sum +
-                  (double.parse(product.unitPrice).toInt() * product.quantity),
+                  (double.parse(product.unitPrice ?? '').toInt() *
+                      product.quantity),
             );
         updatedItems[i] = updatedItems[i].copyWith(totalFee: totalFee);
 
@@ -191,16 +195,6 @@ class CartVm extends StateNotifier<CartState> {
       if (!success) return;
     }
 
-    // final total = updatedItems.fold<double>(
-    //   0,
-    //   (sum, item) =>
-    //       sum +
-    //       item.products.fold(
-    //         0,
-    //         (prodSum, prod) => prodSum + (prod.price * prod.quantity),
-    //       ),
-    // );
-
     state = state.copyWith(
       cart: existingCart.copyWith(
         items: updatedItems,
@@ -234,24 +228,14 @@ class CartVm extends StateNotifier<CartState> {
             0,
             (sum, product) =>
                 sum +
-                (double.parse(product.unitPrice).toInt() * product.quantity),
+                (double.parse(product.unitPrice ?? '').toInt() *
+                    product.quantity),
           );
 
           return item.copyWith(products: updatedProducts, totalFee: totalFee);
         })
         .where((item) => item.products.isNotEmpty)
         .toList();
-
-    // // Calculate total
-    // final total = updatedItems.fold<double>(
-    //   0,
-    //   (sum, item) =>
-    //       sum +
-    //       item.products.fold(
-    //         0,
-    //         (prodSum, prod) => prodSum + (prod.price * prod.quantity),
-    //       ),
-    // );
 
     state = state.copyWith(
       cart: existingCart.copyWith(
@@ -305,7 +289,6 @@ class CartVm extends StateNotifier<CartState> {
       bool isSuccess = false;
       if (response.success) {
         isSuccess = true;
-        debugPrint(response.data.toString());
       } else if (response.data['responseCode'] == 703) {
         isSuccess = false;
         removeFromCart(productId: id, shopId: shopId, isNotWayaDeal: false);
@@ -347,8 +330,6 @@ class CartVm extends StateNotifier<CartState> {
             (productSum, product) => productSum + product.quantity,
           ),
     );
-    debugPrint(totalQuantity.toString());
-    debugPrint(existingCart.toJson().toString());
     state = state.copyWith(totalItem: totalQuantity);
   }
 
@@ -366,7 +347,6 @@ class CartVm extends StateNotifier<CartState> {
       if (response.success) {
         WayaSnackBar.showToast(
             "You have successfully requested for the delivery price");
-        debugPrint(response.data.toString());
       }
     } catch (e) {
       debugPrint(e.toString());

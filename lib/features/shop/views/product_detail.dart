@@ -435,7 +435,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                       final product = viewModel.product!;
                       final String image =
                           product.images.isEmpty ? "" : product.images[0];
-                      int intPrice = double.parse(product.price).toInt();
+                      int intPrice = double.parse(product.price ?? '').toInt();
                       int price = product.discountPercentage > 0
                           ? (intPrice -
                                   (intPrice * product.discountPercentage / 100))
