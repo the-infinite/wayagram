@@ -324,7 +324,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
-
+       myGroupNotifier.createdGroups;
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
             content: Text(
@@ -443,6 +443,33 @@ class GroupVm extends StateNotifier<GroupState> {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Request approved successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> removeTeamMember(ctx, String memberId, String groupId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.removeTeamMember(groupId, memberId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+       await getGroupMembers(groupId);
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Member removed successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),

@@ -958,6 +958,34 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
+  Future<void> removeTeamMember(ctx, String memberId, String pageId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.removePageTeamMember(pageId, memberId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        await getPageMember(pageId);
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Member removed successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+
   Future<void> getRecommendedPages() async {
     try {
       state = state.copyWith(isLoading: true);

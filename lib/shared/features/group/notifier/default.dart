@@ -25,6 +25,7 @@ class GroupNotifier extends ValueNotifier<int> {
   int totalJoinedGroups = 0;
   List<GroupModel> createdGroups = [];
   List<GroupModel> joinedGroups = [];
+  List<GroupModel> groupMembers = [];
   List<PostModel> popularPosts = [];
   List<PostModel> latestPosts = [];
   List<PostModel> recentPosts = [];
@@ -261,6 +262,40 @@ class GroupNotifier extends ValueNotifier<int> {
 
         //? Now report.
         WayaSnackBar.showToast("Group deleted successfully");
+      }
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return false.
+    return false;
+  }
+
+  Future<bool> removeGroupMember(String groupId, String memberId) async {
+    try {
+      final response = await repo.removeTeamMember(groupId, memberId);
+
+      //? This is fine.
+      if (response.success) {
+        final found = groupMembers.indexWhere((group) => group.id == groupId);
+        wayaGroupCache.deleteItem(groupId);
+
+        //? If this was found, remove it and update.
+        if (!found.isNegative) {
+          groupMembers.removeAt(found);
+          refresh();
+        }
+
+        //? Now report.
+        WayaSnackBar.showToast("Member removed successfully");
       }
 
       //? This is fine.

@@ -91,7 +91,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                             await showCustomDialog(
                               context,
                               'Success!',
-                              '${viewModel.username.text} has been added as a Moderator. You can now collaborate seamlessly and manage the page together.',
+                              '${viewModel.username.text} has been added as a ${viewModel.roleType}. You can now collaborate seamlessly and manage the page together.',
                             );
                             notifier.reset();
                             WayaNav.goBack();
@@ -203,7 +203,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                       ],
                     )
                   :
-        /*  viewModel.roleType == 'moderator'
+          viewModel.roleType == 'member'
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -214,14 +214,13 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                                   color: WayaColors.greyColor700,
                                 )),
                             const Gap(15),
-                            _permissionType(
-                                "Community Safety", "Manage and moderate comments to keep discussions civil."),
+                            _permissionType("Content Focused", "Create and manage all page posts and media"),
                             const Gap(15),
-                            _permissionType("User Management", "Block or ban users if necessary"),
+                            _permissionType("Comment & Message Handling", "Respond to user comments and messages"),
                             const Gap(15),
                           ],
                         )
-                      : */
+                      :
           viewModel.roleType == 'editor'
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

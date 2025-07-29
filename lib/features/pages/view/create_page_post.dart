@@ -111,23 +111,25 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(
                 width: context.width * 0.15,
-                child: viewModel.content.text.isEmpty
-                    ? WayaButton(
-                        callback: viewModel.isLoading
-                            ? () async {
-                                if (_formKey.currentState!.validate()) {}
-                              }
-                            : null,
-                        height: 30,
-                        text: 'Post',
-                        isLoading: viewModel.isLoading,
-                        textStyle: WayaTextStyles.bodySmall.copyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: wayaTheme.colorScheme.white,
-                        ),
-                      )
-                    : WayaButton(
+                child:
+                // viewModel.content.text.isEmpty
+                //     ? WayaButton(
+                //         callback: viewModel.isLoading
+                //             ? () async {
+                //                 if (_formKey.currentState!.validate()) {}
+                //               }
+                //             : null,
+                //         height: 30,
+                //         text: 'Post',
+                //         isLoading: viewModel.isLoading,
+                //         textStyle: WayaTextStyles.bodySmall.copyWith(
+                //           fontSize: 12.sp,
+                //           fontWeight: FontWeight.w600,
+                //           color: wayaTheme.colorScheme.white,
+                //         ),
+                //       )
+                //     :
+                WayaButton(
                         callback: !viewModel.isLoading
                             ? () async {
                                 if (_formKey.currentState!.validate()) {

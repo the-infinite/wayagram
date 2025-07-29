@@ -7,6 +7,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
+import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/widget/muted_post.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 import '../../../assetsgen/assets.gen.dart';
@@ -29,6 +31,8 @@ class GroupPost extends ConsumerStatefulWidget {
 }
 
 class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProviderStateMixin {
+  GroupModel? group;
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +71,10 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.getAllPost?.length ?? 0,
-            itemBuilder: (_, index) => WayaPostWidget(
+            itemBuilder: (_, index) => group?.mutedAt == null  ? WayaPostWidget(
+              data: viewModel.getAllPost![index],
+              index: index,
+            ) : WayaMutedPostWidget(
               data: viewModel.getAllPost![index],
               index: index,
             ),
