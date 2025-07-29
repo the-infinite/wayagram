@@ -72,11 +72,8 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
         endDate = dateRange.end
             .add(const Duration(hours: 11, minutes: 59, seconds: 59));
         appliedFilter =
-            "startDate=${DateFormat('yyyy-MM-dd hh:mm a').format(startDate)}&endDate=${DateFormat('yyyy-MM-dd hh:mm a').format(endDate)}";
+            "startDate=${DateFormat('yyyy-MM-dd').format(startDate)}&endDate=${DateFormat('yyyy-MM-dd hh:mm a').format(endDate)}";
 
-
-
-        //"startDate=${DateFormat('yyyy-MM-dd').format(dateRange.start)}&endDate=${DateFormat('yyyy-MM-dd').format(dateRange.end)}";
       } else {
         return;
       }
@@ -99,7 +96,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
         filters: appliedFilter, isFirst: true, page: 1, limit: 10);
 
     ref.read(transactionVmProvider.notifier).setModelList(list);
-    //.fetchTransactions(filters: appliedFilter);
+   
   }
 
   @override
