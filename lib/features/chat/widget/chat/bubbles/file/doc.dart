@@ -327,7 +327,7 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(2),
                         ),
                         icon: WayaAssets.icons.cMultiplyCircle.svg(
                           colorFilter: ColorFilter.mode(

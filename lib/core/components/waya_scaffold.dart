@@ -53,7 +53,7 @@ class WayaScaffold extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final paddedBody =
-        padding ?? EdgeInsets.only(left: 15, right: 15, bottom: 20);
+        padding ?? const EdgeInsets.only(left: 15, right: 15, bottom: 20);
 
     //? This is fine.
     return BlurryModalProgressHUD(
@@ -237,7 +237,7 @@ class _WayaScaffoldWithProgressBarState
               ),
             )
           : TabBarView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               controller: widget.tabController,
               children: widget.tabsView,
             ),

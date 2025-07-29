@@ -41,18 +41,16 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   text: "Continue with Google",
                   textColor: wayaTheme.colorScheme.black,
                 )
-              :
-              //Gap(10),
-              WayaButton(
+              : WayaButton(
                   color: wayaTheme.colorScheme.black,
                   callback: notifier.signinWithApple,
                   leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
                   text: "Continue with Apple",
                   textColor: wayaTheme.colorScheme.onPrimary,
                 ),
-          Gap(25),
+          const Gap(25),
           WayaTextStrip("OR"),
-          Gap(25),
+          const Gap(25),
         ],
         Form(
             key: _formKey,
@@ -149,7 +147,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                     ],
                   );
                 }),
-                Gap(15),
+                const Gap(15),
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
@@ -160,7 +158,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                             color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),
-                Gap(30),
+                const Gap(30),
                 WayaButton(
                   color: wayaTheme.colorScheme.primary500,
                   callback: !viewModel.isLoading
@@ -178,7 +176,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                 ),
               ],
             )),
-        Gap(25),
+        const Gap(25),
         InkWell(
           onTap: () {
             WayaNav.toNamed("/account-creation");
@@ -225,9 +223,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                 text: "Continue with Google",
                 textColor: wayaTheme.colorScheme.black,
               )
-            :
-            //Gap(10),
-            WayaButton(
+            : WayaButton(
                 color: wayaTheme.colorScheme.black,
                 callback: () {
                   ref.watch(loginVmProvider.notifier).signinWithApple();
@@ -236,7 +232,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                 text: "Continue with Apple",
                 textColor: wayaTheme.colorScheme.onPrimary,
               ),
-        Gap(25),
+        const Gap(25),
         Row(
           children: [
             Expanded(
@@ -245,14 +241,14 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                 thickness: 1,
               ),
             ),
-            Gap(10),
+            const Gap(10),
             Text(
               "OR",
               style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                 color: wayaTheme.colorScheme.greyColor600,
               ),
             ),
-            Gap(15),
+            const Gap(15),
             Expanded(
               child: Divider(
                 color: wayaTheme.colorScheme.greyColor200,
@@ -261,7 +257,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
             ),
           ],
         ),
-        Gap(25),
+        const Gap(25),
         Form(
             key: _formKey,
             child: Column(
@@ -301,7 +297,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                     ],
                   );
                 }),
-                Gap(10),
+                const Gap(10),
                 FormField<String>(validator: (value) {
                   return WayaValidators.passwordValidator(
                       viewModel.passwordController.text);
@@ -354,7 +350,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                     ],
                   );
                 }),
-                Gap(15),
+                const Gap(15),
                 Align(
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
@@ -365,7 +361,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                             color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),
-                Gap(25),
+                const Gap(25),
                 WayaButton(
                   color: wayaTheme.colorScheme.primary500,
                   callback: !viewModel.isLoading
@@ -383,7 +379,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                 ),
               ],
             )),
-        Gap(30),
+        const Gap(30),
         InkWell(
           onTap: () {
             WayaNav.toNamed("/account-creation");

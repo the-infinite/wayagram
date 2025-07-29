@@ -47,7 +47,7 @@ class _SeeAllClosedDonationsState extends ConsumerState<SeeAllClosedDonations>
                   )
                 : Expanded(
                     child: ListView.builder(
-                        padding: EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.only(bottom: 20),
                         shrinkWrap: true,
                         itemCount: viewModel.closedDonations.length,
                         itemBuilder: (context, index) {

@@ -37,7 +37,7 @@ class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
       child: Stack(
         children: [
           Container(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             width: 1.sw,
             decoration: BoxDecoration(
               color: wayaTheme.colorScheme.primary50,

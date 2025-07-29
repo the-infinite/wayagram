@@ -305,7 +305,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
                         loading: viewModel.isLoading, text: 'Request Payout'),
                   )
                 : Container(),
-            Gap(10),
+            const Gap(10),
             GestureDetector(
               onTap: () {
                 // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",

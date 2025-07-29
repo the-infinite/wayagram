@@ -9,7 +9,6 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
-
 class ManageDonationWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final String text;
@@ -23,7 +22,6 @@ class ManageDonationWidget extends ConsumerWidget {
   final double rangeRatio;
   const ManageDonationWidget({
     super.key,
-
     required this.onTap,
     required this.text,
     required this.donationCount,
@@ -45,8 +43,10 @@ class ManageDonationWidget extends ConsumerWidget {
         Container(
             decoration: BoxDecoration(
               color: wayaTheme.colorScheme.white,
-              border: Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+              border: Border.all(
+                  color: wayaTheme.colorScheme.greyColor200, width: 1),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12), topRight: Radius.circular(12)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,10 +55,12 @@ class ManageDonationWidget extends ConsumerWidget {
                   imageUrl: '$image',
                   height: 180.h,
                   width: double.infinity,
-                  radius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                  radius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
                 ),
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -76,8 +78,10 @@ class ManageDonationWidget extends ConsumerWidget {
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
                                       fontFamily: WayaConstants.fontFamily,
-                                      color: Theme.of(context).colorScheme.black ),
-                                  overflow: TextOverflow.ellipsis,),
+                                      color:
+                                          Theme.of(context).colorScheme.black),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                                 SizedBox(
                                   height: 3.h,
                                 ),
@@ -87,9 +91,11 @@ class ManageDonationWidget extends ConsumerWidget {
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w400,
                                       fontFamily: WayaConstants.fontFamily,
-                                      color: Theme.of(context).colorScheme.greyColor600 ),
-                                  overflow: TextOverflow.ellipsis,),
-
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .greyColor600),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ],
                             ),
                           ),
@@ -103,7 +109,8 @@ class ManageDonationWidget extends ConsumerWidget {
                                   Text(
                                     text,
                                     style: TextStyle().wayaCopyWith(
-                                        color: wayaTheme.colorScheme.customPrimary,
+                                        color:
+                                            wayaTheme.colorScheme.customPrimary,
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.w500),
                                   ),
@@ -123,9 +130,9 @@ class ManageDonationWidget extends ConsumerWidget {
                       EngagementRange(
                           bottomLeft:
                               '$donationCount ${donationCount == 0 || donationCount == 1 ? 'Donation' : 'Donations'}',
-                          bottomRight: "$dayLeft ${dayLeft == '1' ? 'day' : 'days'} left",
-                          range: rangeRatio
-                      )
+                          bottomRight:
+                              "$dayLeft ${dayLeft == '1' ? 'day' : 'days'} left",
+                          range: rangeRatio)
                     ],
                   ),
                 )

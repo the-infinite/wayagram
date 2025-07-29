@@ -25,7 +25,6 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);
-    //final user = ConversationState.self.
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -44,8 +43,9 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
             leading: WayaDp(
               radius: 25,
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10)
-                .copyWith(bottom: 0),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 15, vertical: 10)
+                    .copyWith(bottom: 0),
             title: Text(
               userState
                       .userAccountModel?.data?.userdata?.profile?.displayName ??
@@ -66,9 +66,10 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                     color: wayaTheme.colorScheme.greyColor500,
                   ),
                 ),
-                Gap(5),
+                const Gap(5),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   decoration: BoxDecoration(
                     color: wayaTheme.colorScheme.primary50,
                     borderRadius: BorderRadius.circular(10),
@@ -92,7 +93,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
               ? Row(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 15),
+                      padding: const EdgeInsets.only(left: 15),
                       child: SizedBox(
                         child: WayaButton(
                           textStyle: wayaTheme.textTheme.bodyBold.wayaCopyWith(
@@ -109,7 +110,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                   ],
                 )
               : SizedBox.shrink(),
-          Gap(15)
+          const Gap(15)
         ],
       ),
     );
@@ -131,14 +132,14 @@ class GeneralSettingsOptionTile extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: wayaTheme.colorScheme.cardBackgroudColor2),
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
       child: Column(
         children: [
           for (var option in genSettingsOption)
             InkWell(
               onTap: option.onTap,
               child: Padding(
-                padding: EdgeInsets.only(bottom: 10.0, top: 10),
+                padding: const EdgeInsets.only(bottom: 10.0, top: 10),
                 child: Row(
                   children: [
                     SvgPicture.asset(
@@ -153,7 +154,7 @@ class GeneralSettingsOptionTile extends StatelessWidget {
                             )
                           : null,
                     ),
-                    Gap(10),
+                    const Gap(10),
                     Text(option.title,
                         style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                             color: wayaTheme.colorScheme.greyColor700)),

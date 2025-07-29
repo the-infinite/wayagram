@@ -56,13 +56,13 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w700),
           ),
-          Gap(10),
+          const Gap(10),
           WayaImage(
               imageUrl: viewModel.donationImageUrl,
               height: 180.h,
               width: double.infinity,
               radius: BorderRadius.all(Radius.circular(12))),
-          Gap(10),
+          const Gap(10),
           EngagementRange(
               topLeft: '',
               bottomLeft: "${viewModel.donationCount} Donations",
@@ -72,21 +72,21 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
               range: viewModel.donationCount == '0' ? 0.0 : 0.4
               //ratioLeft,
               ),
-          Gap(10),
+          const Gap(10),
           Row(
             children: [
               Expanded(
                 child: _detailCard('N${viewModel.donationAmountRaised}',
                     'Amount Raised', wayaTheme.colorScheme.success50),
               ),
-              Gap(10),
+              const Gap(10),
               Expanded(
                 child: _detailCard('N${viewModel.donationTargetAmount}',
                     'Target Amount', wayaTheme.colorScheme.pendingColor),
               )
             ],
           ),
-          Gap(20),
+          const Gap(20),
           Text(
             "Donation Information",
             style: TextStyle().wayaCopyWith(
@@ -94,19 +94,19 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400),
           ),
-          Gap(20),
+          const Gap(20),
           _reviewText('Cause Title', viewModel.donationTitle),
-          Gap(10),
+          const Gap(10),
           _reviewText('Cause  Description', viewModel.donationDescription),
-          Gap(10),
+          const Gap(10),
           _reviewText('Proposed Solution', viewModel.donationSolution),
-          Gap(10),
+          const Gap(10),
           _reviewText('Impact Statement', viewModel.donationImpact),
         ],
       ),
       bottomNavigationBar: Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+        padding: const EdgeInsets.fromLTRB(10, 4, 10, 10),
         decoration: BoxDecoration(
           color: wayaTheme.colorScheme.white,
         ),
@@ -189,7 +189,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
   Widget _detailCard(String number, String name, Color color) {
     return Container(
       width: 122.w,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 17),
       decoration:
           BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
       child: Column(

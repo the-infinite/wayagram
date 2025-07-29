@@ -227,7 +227,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         ),
                 ),
               ),
-
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
@@ -299,12 +298,9 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     alignment: Alignment.bottomCenter,
                     child: AboutUgtWidget(
                         title: "Prize", content: "${widget.post.winnerPrize}"),
-                    //  const Gap(30),
                   )
                 ],
               ),
-              // const Gap(20),
-
               WayaButton(
                 callback: () {
                   ref.read(selectedContestProvider.notifier).state =

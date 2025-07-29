@@ -97,7 +97,7 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
                 },
               ),
             ),
-            Gap(100)
+            const Gap(100)
           ],
         ),
       ),

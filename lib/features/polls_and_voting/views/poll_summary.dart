@@ -305,9 +305,7 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: chk
-                  ?
-                  //Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
-                  Container()
+                  ? Container()
                   : Image.file(
                       File(img),
                       height: 66.h,
@@ -326,48 +324,6 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
         ));
   }
 
-  // Widget createPoll(ctx,){
-  //   final wayaTheme = Theme.of(ctx);
-  //   return GestureDetector(
-  //     onTap: () {
-  //       WayaUtils.showModalSheet(
-  //         context,
-  //         child: PollsModal(url: '',),
-  //       );
-  //      // confirmPoll(context);
-  //     },
-  //     child: Row(
-  //       children: [
-  //         Container(
-  //           height: 35,
-  //           padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
-  //           decoration: BoxDecoration(
-  //               color: wayaTheme.colorScheme.customPrimary,
-  //               borderRadius: BorderRadius.circular(10)),
-  //           child: Center(
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 const Gap(5),
-  //                 Text(
-  //                   "Create",
-  //                   style: TextStyle().wayaCopyWith(
-  //                       color: wayaTheme.colorScheme.white,
-  //                       fontWeight: FontWeight.w600,
-  //                       fontSize: 14),
-  //                 ),
-  //
-  //
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //         const Gap(15)
-  //       ],
-  //     ),
-  //   );
-  // }
   void confirmPoll(BuildContext context) {
     WayaUtils.showNotice(
         context: context,
@@ -400,15 +356,6 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
                     color: Theme.of(context).colorScheme.greyColor500),
               ),
             )
-            /*  WayaButton(
-                text: 'Go Back',
-                // color: wayaTheme.colorScheme.transparent,
-                // textColor: wayaTheme.colorScheme.customBlack,
-                //border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {
-                  //  ref.read(addProductProvider.notifier).submit();
-                  //widget.gotoPreviousTab();
-                })*/
           ],
         ));
   }

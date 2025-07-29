@@ -92,7 +92,6 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink> {
                             ),
                         textAlign: TextAlign.center,
                       ),
-
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -106,14 +105,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink> {
                                 '',
                                 50.w);
                           }),
-
                       const Gap(40),
-                      // voteCount('assets/images/polls/azikwe.png', 'Dr Nnamdi Azikwe', context, '50', 266.0.h),
-                      // const Gap(10),
-                      // voteCount('assets/images/polls/tinubu.png', 'Bola Ahmed Tinubu', context, '40', 285.0.h),
-                      // const Gap(10),
-                      // voteCount('assets/images/polls/buhari.png', 'Mohammed\nBuhari', context, '10', 193.0.h),
-                      // const Gap(80),
                     ],
                   ),
                 ),
@@ -129,42 +121,6 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink> {
           ),
         ));
   }
-//   Widget _scoreCard(){
-//     return Center(
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           // Circular Percent Indicator
-//           LinearPercentIndicator(
-//             percent: 0.7, // 70% indicator
-//             center: Image.asset(
-//               'assets/images/polls/tinubu.png', // Replace with your image path
-//               width: 40,
-//               height: 40,
-//             ),
-//             progressColor: Colors.blue,
-//             backgroundColor: Colors.grey.shade300,
-//           ),
-//           const SizedBox(width: 16), // Space between widgets
-//           // Text Widget
-//           Column(
-//             mainAxisSize: MainAxisSize.min,
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children:  [
-//               Text(
-//                 "Profile Progress",
-//                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-//               ),
-//               Text(
-//                 "70% completed",
-//                 style: TextStyle(fontSize: 14.sp, color: Colors.grey),
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
 
   void screenshotNSend(BuildContext ctx) async {
     final directory = (await getApplicationDocumentsDirectory()).path;
@@ -236,14 +192,6 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink> {
             child: InkWell(
               splashColor: Colors.transparent,
               splashFactory: NoSplash.splashFactory,
-              // onTap: (){
-              //   WayaUtils.showModalSheet(
-              //     ctx,
-              //     child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
-              //       pollId: pollId,candidateName: candidateName,
-              //       votingLink:votingLink,),
-              //   );
-              // },
               child: Container(
                 padding: EdgeInsets.only(
                   left: 20.w,

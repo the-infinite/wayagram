@@ -273,7 +273,7 @@ class _AppTextFieldState extends State<AppTextField> {
       readOnly: widget.readOnly,
       maxLength: widget.maxLength,
       autofillHints: widget.autoFillHints ?? applyAutofillHints(),
-      scrollPadding: widget.scrollPadding ?? EdgeInsets.all(20),
+      scrollPadding: widget.scrollPadding ?? const EdgeInsets.all(20),
       cursorHeight: widget.cursorHeight,
       onTap: widget.onTap,
       buildCounter: widget.buildCounter,

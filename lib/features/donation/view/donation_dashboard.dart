@@ -68,13 +68,13 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w700),
           ),
-          Gap(10),
+          const Gap(10),
           WayaImage(
               imageUrl: args['image'],
               height: 180.h,
               width: double.infinity,
               radius: BorderRadius.all(Radius.circular(12))),
-          Gap(10),
+          const Gap(10),
           EngagementRange(
             topLeft:
                 "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
@@ -82,7 +82,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
             bottomRight: "${args['daysLeft']} days left",
             range: 0.0,
           ),
-          Gap(10),
+          const Gap(10),
           Row(
             children: [
               Expanded(
@@ -92,7 +92,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
                     'Amount Raised',
                     wayaTheme.colorScheme.success50),
               ),
-              Gap(10),
+              const Gap(10),
               Expanded(
                 child: _detailCard(
                     WayaHelpers.formatPrice(
@@ -102,7 +102,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
               )
             ],
           ),
-          Gap(20),
+          const Gap(20),
           Text(
             "Donation Information",
             style: TextStyle().wayaCopyWith(
@@ -110,20 +110,20 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400),
           ),
-          Gap(20),
+          const Gap(20),
           _reviewText('Cause Title', '${args['title']}'),
-          Gap(10),
+          const Gap(10),
           _reviewText('Cause Description', '${args['desc']}'),
-          Gap(10),
+          const Gap(10),
           _reviewText('Proposed Solution', '${args['solution']}'),
-          Gap(10),
+          const Gap(10),
           _reviewText('Impact Statement', '${args['impact']}'),
         ],
       ),
       bottomNavigationBar: args['daysLeft'] == '0'
           ? Container(
               height: 120.h,
-              padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 4, 10, 10),
               child: Column(
                 children: [
                   WayaButton(
@@ -174,7 +174,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
                     centerWidget: LoadingState(
                         loading: viewModel.isLoading, text: 'Request Payout'),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   GestureDetector(
                     onTap: () {
                       // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
@@ -215,7 +215,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
             )
           : Container(
               width: double.infinity,
-              padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 4, 10, 10),
               decoration: BoxDecoration(
                 color: wayaTheme.colorScheme.white,
               ),
@@ -320,7 +320,7 @@ class _DonationDashboardState extends ConsumerState<DonationDashboard>
   Widget _detailCard(String number, String name, Color color) {
     return Container(
       width: 122.w,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 17),
       decoration:
           BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
       child: Column(

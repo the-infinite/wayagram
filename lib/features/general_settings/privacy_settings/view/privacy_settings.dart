@@ -102,7 +102,7 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                   whoCanContactMe: whoCanContactme,
                   switchValue: lastSeen),
             ),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Read Receipts",
                 value: "Allow others to see when you've read their messages.",
@@ -121,7 +121,7 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                 },
                 showSwitch: true,
                 switchValue: readReceipt),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
               title: "Last Seen Visibility",
               value: "Control who can view your last active status.",
@@ -141,7 +141,7 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
               },
               switchValue: lastSeen,
             ),
-            Gap(10),
+            const Gap(10),
             GestureDetector(
               onTap: () {
                 //? go to blocked user page

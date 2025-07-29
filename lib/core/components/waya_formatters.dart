@@ -79,7 +79,7 @@ class _WayaAmountFormatterState extends ConsumerState<WayaAmountFormatter> {
                 _toggleAmount(showAmount);
               },
               child: Container(
-                  padding: EdgeInsets.all(3.71),
+                  padding: const EdgeInsets.all(3.71),
                   decoration: BoxDecoration(
                     // ignore: deprecated_member_use
                     color: widget.color?.withOpacity(0.2) ??

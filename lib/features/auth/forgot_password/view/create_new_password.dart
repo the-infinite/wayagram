@@ -32,7 +32,10 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Create New Password", style: WayaTextStyles.titleLarge),
+        Text(
+          "Create New Password",
+          style: WayaTextStyles.titleLarge,
+        ),
         const Gap(5),
         Text("Create new password and try not forget this time",
             style: WayaTextStyles.hintStyle),

@@ -46,7 +46,7 @@ class _UserInteractionState extends ConsumerState<UserInteraction> {
         spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(10),
+          const Gap(10),
           Container(
             alignment: Alignment.center,
             width: 102.w,
@@ -87,7 +87,7 @@ class _UserInteractionState extends ConsumerState<UserInteraction> {
                   });
                 }),
           ),
-          Gap(10),
+          const Gap(10),
           Expanded(
             child: PaginatedDataView<UserInteractionDocs>(
                 uniqueKey: 'user-interactions',
@@ -146,7 +146,7 @@ class _UserInteractionState extends ConsumerState<UserInteraction> {
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black,
                                       )),
-                                  Gap(10),
+                                  const Gap(10),
                                   ListView.builder(
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),

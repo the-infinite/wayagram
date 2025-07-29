@@ -95,7 +95,7 @@ class _ExploreState extends ConsumerState<Explore> {
         title: ExploreHeader(),
         actions: [
           Container(
-            padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,7 +132,7 @@ class _ExploreState extends ConsumerState<Explore> {
           )
         ],
         leading: Container(
-          padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
           child: WayaAssets.images.wayalogoUnlabelled.image(),
         ),
       ),
@@ -374,7 +374,7 @@ class _ExploreState extends ConsumerState<Explore> {
         Expanded(
           child: ProductCardSekeleton(),
         ),
-        Gap(12),
+        const Gap(12),
         Expanded(
           child: ProductCardSekeleton(),
         ),

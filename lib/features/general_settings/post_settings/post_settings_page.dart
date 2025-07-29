@@ -62,11 +62,11 @@ class _UgtHomeState extends ConsumerState<PostSettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(10),
+            const Gap(10),
             Text("Post Preferences",
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
-            Gap(20),
+            const Gap(20),
             //? card for each of the switch
             /* 
             setting event- on and off for ...let everyone join, approve join request before joining
@@ -83,7 +83,7 @@ class _UgtHomeState extends ConsumerState<PostSettingsPage> {
                       approveJoinRequest: approveJoinRequest.value); */
                 },
                 switchValue: oldPost),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "New Post",
                 value:
@@ -93,7 +93,7 @@ class _UgtHomeState extends ConsumerState<PostSettingsPage> {
                   pageNotifier.updatePostSettings(oldPost.value, value);
                 },
                 switchValue: newPost),
-            Gap(10),
+            const Gap(10),
           ],
         ),
       ),

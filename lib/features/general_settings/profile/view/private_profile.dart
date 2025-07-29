@@ -302,7 +302,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                 ),
 
                 // This is fine.
-                Gap(8)
+                const Gap(8)
               ],
             ),
             title: '',

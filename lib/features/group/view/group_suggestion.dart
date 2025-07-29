@@ -161,7 +161,7 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion>
             controller: _scrollController,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            padding: EdgeInsets.only(top: 15),
+            padding: const EdgeInsets.only(top: 15),
             itemCount: viewModel.recommendedGroupDocs?.length ?? 0,
             itemBuilder: (_, index) => SingleGroupWidget(
               group: viewModel.recommendedGroupDocs![index],
@@ -191,7 +191,7 @@ class GroupEmptyState extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return Center(
       child: Container(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: EmptyState(
             hasButton: true,
             onTap: () {

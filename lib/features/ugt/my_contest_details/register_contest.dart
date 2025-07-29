@@ -315,7 +315,6 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
 
             const Gap(20),
             Text("Information", style: wayaTheme.textTheme.hintStyle),
-            //  const Gap(20),
             FormField<String>(validator: (value) {
               if (selectedState.value.isEmpty) {
                 return 'Contest State is required';
@@ -448,13 +447,9 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
               );
             }),
             */
-            //  Gap(15),
-
             ListView.builder(
               shrinkWrap: true, // Makes the ListView take only the needed space
-              physics:
-                  NeverScrollableScrollPhysics(), // Disables ListView's scrolling
-
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: viewModel.length,
               itemBuilder: (context, index) {
                 final field = viewModel[index];
@@ -465,7 +460,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     children: [
                       if (field.type == FieldType.text) ...[
                         // Text Input Field
-                        Gap(15),
+                        const Gap(15),
                         FormField<String>(validator: (value) {
                           if (field.textController!.text.isEmpty) {
                             return 'Full Name is required';
@@ -508,7 +503,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                         }),
                       ] else if (field.type == FieldType.image) ...[
                         // Image Display & Upload Button
-                        Gap(15),
+                        const Gap(15),
                         imageWidget(context, field, field.id),
                       ],
                     ],

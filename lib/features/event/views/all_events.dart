@@ -70,33 +70,6 @@ class _AllEventsState extends ConsumerState<AllEvents> {
                 ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1),
             child: ListView(
               children: [
-                // WayaButton(
-                //   callback: () {
-
-                //      WayaNav.replaceNamed( AddEvent.route);
-                //   },
-                //   color: wayaTheme.colorScheme.primary50,
-                //   centerWidget: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     crossAxisAlignment: CrossAxisAlignment.center,
-                //     children: [
-                //       SvgPicture.asset(
-                //         WayaAssets.icons.addEventIcon.path,
-                //         colorFilter: ColorFilter.mode(
-                //             wayaTheme.colorScheme.customPrimary,
-                //             BlendMode.srcIn),
-                //       ),
-                //       const Gap(6),
-                //       Text(
-                //         "Create an Event",
-                //         style: TextStyle().wayaCopyWith(
-                //             color: wayaTheme.colorScheme.customPrimary,
-                //             fontSize: 14.sp,
-                //             fontWeight: FontWeight.w500),
-                //       )
-                //     ],
-                //   ),
-                // ),
                 const Gap(10),
                 FilterWidget(
                   search: searchController,
@@ -129,13 +102,6 @@ class _AllEventsState extends ConsumerState<AllEvents> {
                       subTitle: 'See past events here',
                       title: 'Past Events'),
                   const Gap(25),
-                  // ListView.builder(
-                  //     physics: const NeverScrollableScrollPhysics(),
-                  //     shrinkWrap: true,
-                  //     itemCount: 6,
-                  //     itemBuilder: (context, index) {
-                  //       return EventWidget();
-                  //     }),
                 ],
               ],
             )));

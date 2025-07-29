@@ -188,7 +188,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
               fit: BoxFit.none,
             ),
           ),
-          Gap(8)
+          const Gap(8)
         ],
       ),
       body: WayaObservableScrollView(

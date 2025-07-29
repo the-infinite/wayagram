@@ -73,7 +73,7 @@ class MyMomentWidget extends ConsumerWidget {
                             ]),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(3),
+                        padding: const EdgeInsets.all(3),
                         child: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,

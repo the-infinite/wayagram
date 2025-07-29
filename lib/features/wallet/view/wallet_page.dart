@@ -41,7 +41,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
       body: Column(
         children: [
           WalletBalanceCard(),
-          Gap(10),
+          const Gap(10),
           SizedBox(
             width: 10,
           ),
@@ -49,7 +49,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
             'assets/images/wallet/marks.png',
             height: 24,
           ),
-          Gap(10),
+          const Gap(10),
           Row(
             children: [
               Text(
@@ -69,13 +69,13 @@ class _WalletPageState extends ConsumerState<WalletPage> {
               ),
             ],
           ),
-          Gap(10),
+          const Gap(10),
           AccountDetailsCard(
             externalAccounts: state.externalWallets,
           ),
-          Gap(20),
+          const Gap(20),
           _buildHistoryHeader(wayaTheme),
-          Gap(10),
+          const Gap(10),
           Expanded(child: TransactionHistory()),
         ],
       ),

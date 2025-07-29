@@ -59,7 +59,7 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
       valueListenable: wayaPageCache,
       builder: (context, redraws, _) {
         final page = wayaPageCache.getCachedData(widget.page.id);
-        if(page == null ){
+        if (page == null) {
           return SizedBox();
         }
         //? If this is in vertical orientation.
@@ -73,7 +73,7 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
             child: Container(
               margin: widget.index == 0
                   ? EdgeInsets.zero
-                  : EdgeInsets.only(left: 10),
+                  : const EdgeInsets.only(left: 10),
               width: 150.w,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
@@ -133,8 +133,7 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                               ? "Unfollow"
                               : "Follow",
                           height: 30.h,
-                          textStyle:
-                              wayaTheme.textTheme.titleMedium?.copyWith(
+                          textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
                             color: wayaTheme.colorScheme.white,
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
@@ -156,8 +155,8 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
           borderRadius: BorderRadius.circular(12.r),
           onTap: _toPage,
           child: Container(
-            margin: EdgeInsets.only(bottom: 15),
-            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+            margin: const EdgeInsets.only(bottom: 15),
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
@@ -170,7 +169,7 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
               spacing: 5.h,
               children: [
                 ListTile(
-                  contentPadding: EdgeInsets.only(left: 0, right: 0),
+                  contentPadding: const EdgeInsets.only(left: 0, right: 0),
                   leading: CircleAvatar(
                     radius: 40,
                     backgroundColor: wayaTheme.colorScheme.greyColor100,

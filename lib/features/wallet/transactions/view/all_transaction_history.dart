@@ -159,7 +159,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(16),
+          const Gap(16),
           // Filter Dropdown
           PopupMenuButton<DateFilter>(
             offset: const Offset(0, 40),

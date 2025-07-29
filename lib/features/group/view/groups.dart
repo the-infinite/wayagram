@@ -63,7 +63,7 @@ class _GroupsState extends ConsumerState<Groups>
             InkWell(
                 onTap: () => WayaNav.toNamed('/searchGroup'),
                 child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
-            Gap(8),
+            const Gap(8),
             InkWell(
                 onTap: () => WayaNav.toNamed('/userGroupInvitation'),
                 child:

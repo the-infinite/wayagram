@@ -112,7 +112,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                 ),
               ),
             ),
-          Gap(20),
+          const Gap(20),
           if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
             //  - @the-infinite, I removed this PostEmptyState(),
             // because i think the UI looks better without it,

@@ -13,13 +13,13 @@ class ActivityLogsEmptyState extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return Center(
       child: Container(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: EmptyState(
             hasButton: false,
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter:
-              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

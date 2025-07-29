@@ -268,7 +268,7 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(left: 10, top: 10, right: 16, bottom: 10),
+                    padding: const EdgeInsets.only(left: 10, top: 10, right: 16, bottom: 10),
                     decoration: BoxDecoration(
                       color: switch (request.status) {
                         BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending.withAlpha(30),

@@ -120,32 +120,6 @@ class _AddUserToGroupModalState extends State<AddUserToGroupModal>
                       ],
                     ),
 
-                    // Some space.
-                    // const Gap(10),
-
-                    // //? This is fine.
-                    // PopScope(
-                    //   onPopInvokedWithResult: (popping, result) {
-                    //     notifier.reset();
-                    //   },
-                    //   child: SizedBox(
-                    //     height: 50,
-                    //     child: WayaTextFormField(
-                    //       padding: EdgeInsets.symmetric(horizontal: 1),
-                    //       onChanged: (value) {},
-                    //       prefixIcon: Padding(
-                    //         padding: const EdgeInsets.symmetric(vertical: 13),
-                    //         child: WayaAssets.icons.actionSearch.svg(
-                    //           fit: BoxFit.contain,
-                    //         ),
-                    //       ),
-                    //       controller: controller,
-                    //       hintText: "Search friends",
-                    //     ),
-                    //   ),
-                    // ),
-
-                    // Some  space.
                     const Gap(10),
 
                     //? Next, our list of users to send this to.

@@ -102,7 +102,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
                 ];
               },
               child: Icon(Icons.more_vert)),
-          Gap(15)
+          const Gap(15)
         ],
       ),
       body: Column(
@@ -129,7 +129,6 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
           //? the tabs themselves
           if (_selectedIndex == 0) ManageUserTab(),
           if (_selectedIndex == 1) RoleManagementTab(),
-          // const Gap(50),
         ],
       ),
       /*   floatingActionButton:
@@ -168,8 +167,6 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // asset,
-          //const Gap(4),
           Text(
             text,
             style: WayaTextStyles.bodyMedium.copyWith(color: color),

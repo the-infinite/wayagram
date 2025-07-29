@@ -164,8 +164,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       const Gap(10),
                       if (followed.isEmpty) emptyWidget(),
                       ListView.builder(
-                        //  controller: _hostedScrollController,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: followed.length,
                         itemBuilder: (context, index) {
@@ -218,7 +217,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                           },
                         ),
                       ),
-                      Gap(200),
+                      const Gap(200),
                     ],
                   ),
 
@@ -241,7 +240,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                           },
                         ),
                       ),
-                      Gap(250),
+                      const Gap(250),
                     ],
                   ),
               ],

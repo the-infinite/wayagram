@@ -95,10 +95,7 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                             ),
                           ],
                         ),
-                        // Spacer(),
-                        Gap(
-                          width * 0.15,
-                        ),
+                        Gap(width * 0.15),
                       ],
                     ),
                   ),

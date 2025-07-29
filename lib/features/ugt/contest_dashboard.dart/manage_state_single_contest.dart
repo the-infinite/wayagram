@@ -73,12 +73,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
-                  /*  GestureDetector(
-                      onTap: () {
-                      //  WayaNav.toNamed('/contest-active-disqualify');
-                      },
-                      child: _buildStateItem(context, "Obubra Inengite", "")), */
-                  Gap(20),
+                  const Gap(20),
                   ListView.builder(
                     // controller: _scrollController,
                     physics: BouncingScrollPhysics(),
@@ -104,8 +99,6 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                               "contest": model?.id ?? "",
                             },
                           );
-                          /*   notifier.filterByState(post.state );
-                          WayaNav.toNamed(ManageStateSingleContest.route); */
                         },
                         child: Column(
                           children: [
@@ -113,7 +106,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                                 context,
                                 post.contestApplicant?.fullName ?? "",
                                 post.profilePhoto ?? ""),
-                            Gap(10)
+                            const Gap(10)
                           ],
                         ),
                       );
@@ -122,8 +115,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                 ],
               ),
             ),
-
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -167,7 +159,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                 )
               ],
             ),
-            Gap(10),
+            const Gap(10),
             Text(value,
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
           ],
@@ -175,72 +167,6 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
       ),
     );
   }
-
-//   Widget _buildSectionTitle(String title, {bool seeAll = false, seeStatistic = false}) {
-//     return Padding(
-//       padding: EdgeInsets.symmetric(vertical: 12),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Text(title, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-//           if (seeAll)
-//             Row(
-//               children: [
-//                 Text("See all", style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-//                 Gap(10),
-//                 Icon(Icons.arrow_forward_ios, size: 18, color: Colors.orange)
-//               ],
-//             ),
-//           if (!seeAll && !seeStatistic)
-//             Row(
-//               children: [Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black), Gap(10)],
-//             ),
-//           if (seeStatistic)
-//             Row(
-//               children: [Icon(Icons.leaderboard_outlined, size: 18, color: Colors.orange), Gap(10)],
-//             )
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildLeaderboardItem(BuildContext context, String votes, String rank, String name, Color color) {
-//     final wayaTheme = Theme.of(context);
-//     return Container(
-//       padding: EdgeInsets.all(12),
-//       margin: EdgeInsets.symmetric(vertical: 4),
-//       decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Row(
-//             children: [
-//               SizedBox(
-//                   width: context.width * 0.3,
-//                   child: Text(votes, overflow: TextOverflow.ellipsis, style: TextStyle(fontWeight: FontWeight.bold))),
-//               Container(
-//                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-//                 decoration: BoxDecoration(
-//                   color: wayaTheme.colorScheme.greyColor100, // Background color
-
-//                   borderRadius: BorderRadius.circular(10), // Optional: for rounded corners
-//                 ),
-//                 child: Center(
-//                   child: Text(rank, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
-//                 ),
-//               ),
-//             ],
-//           ),
-//           SizedBox(
-//               width: context.width * 0.3,
-//               child: Text(
-//                 name,
-//                 //  overflow: TextOverflow.ellipsis,
-//               )),
-//         ],
-//       ),
-//     );
-//   }
 
   Widget _buildStateItem(
       BuildContext context, String name, String profileImage) {
@@ -269,7 +195,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                         .cover, // Ensures the image covers the area properly
                   ), */
                 ),
-            Gap(15),
+            const Gap(15),
             Text(name,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -283,9 +209,9 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                 style: TextStyle(
                     color: wayaTheme.colorScheme.greyColor700,
                     fontSize: 14.sp)),
-            Gap(10),
+            const Gap(10),
             Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-            Gap(10)
+            const Gap(10)
           ],
         ),
       ],

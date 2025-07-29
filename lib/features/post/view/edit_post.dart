@@ -417,7 +417,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                           : 'assets/images/pages/lock.png',
                       height: 18.h,
                     ),
-                    Gap(5),
+                    const Gap(5),
                     Text(
                       sel ? 'Public post' : 'Private post',
                       style: Theme.of(context)

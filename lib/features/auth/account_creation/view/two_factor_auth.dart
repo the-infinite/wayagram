@@ -151,7 +151,7 @@ class _TwoFactorAuthState extends ConsumerState<TwoFactorAuth> {
                           child: Container(
                             width: 110,
                             alignment: Alignment.center,
-                            padding: EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
                                 color: wayaTheme.colorScheme.primary75,
                                 borderRadius:
@@ -165,7 +165,7 @@ class _TwoFactorAuthState extends ConsumerState<TwoFactorAuth> {
                       : Container(
                           width: 220.sp,
                           alignment: Alignment.center,
-                          padding: EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: wayaTheme.colorScheme.primary75,
                             borderRadius: BorderRadius.all(

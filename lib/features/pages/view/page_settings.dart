@@ -52,70 +52,12 @@ class _PageSettingState extends ConsumerState<PageSetting>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(20),
+          const Gap(20),
           Text(
             "Page Permission Settings",
             style: wayaTheme.textTheme.hintStyle,
           ),
-          Gap(20),
-
-          /// everyoneCanComment  --->
-          /// isOpen              --->
-          /// adminsCanCreate     --->
-
-          /*   GestureDetector(
-            onTap: () {
-              viewModel2.selectValue(context, "Who Can Contact Me", [
-                Select(label: "Everyone", value: "1"),
-                Select(label: "Friends", value: "2"),
-              ], (value) {
-                //? set the state
-                followPermission.value = value.first.label;
-                //? updating the state
-                pageNotifier.updatePageSetting(
-                    context,
-                    followPermission.value == "Everyone",
-                    commentPermission.value == "Everyone",
-                    args["pageId"]);
-              }, false);
-            },
-            child: PrivacyWidget(
-                title: "Is Open permission",
-                value: "Allow anyone to follow without restrictions for a more inclusive community",
-                showSwitch: false,
-                whoCanContactMe: followPermission,
-                switchValue: lastSeen),
-          ),
-          //Gap(10),
-
-          Gap(20),
-          GestureDetector(
-            onTap: () {
-              viewModel2.selectValue(context, "Who Can Contact Me", [
-                Select(label: "Everyone", value: "1"),
-                Select(label: "Friends", value: "2"),
-              ], (value) {
-                //? set the state
-                commentPermission.value = value.first.label;
-                //? updating the state
-                pageNotifier.updatePageSetting(
-                    context,
-                    followPermission.value == "Everyone",
-                    commentPermission.value == "Everyone",
-                    args["pageId"]);
-              }, false);
-            },
-            child: PrivacyWidget(
-                title: "Comment Permissions",
-                value:
-                    "Choose who you want to comment on page posts to have more control over your page",
-                showSwitch: false,
-                whoCanContactMe: commentPermission,
-                switchValue: lastSeen),
-          ),*/
-
-          /// New UI
-
+          const Gap(20),
           accessType(
               "Everyone can comment",
               "Allow anyone to follow without restrictions for a more inclusive community",
@@ -130,7 +72,7 @@ class _PageSettingState extends ConsumerState<PageSetting>
                 viewModel.adminCanCreate,
                 args['pageId']);
           }),
-          Gap(10),
+          const Gap(10),
           accessType(
               "Is Open permission",
               "Allow anyone to follow without restrictions for a more inclusive community",
@@ -143,7 +85,7 @@ class _PageSettingState extends ConsumerState<PageSetting>
                 viewModel.adminCanCreate,
                 args['pageId']);
           }),
-          Gap(10),
+          const Gap(10),
           accessType(
               "Admins can create",
               "Allow invited admins to manage/create post",

@@ -322,15 +322,6 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
 
             // Some space.
             Gap(8.h),
-            //   ] else ...[
-            //     //
-            //     OrderInfoWidget(
-            //       title: "Pickup Address",
-            //       description: bid.pickupAddress ?? "No pickup address provided",
-            //     ),
-
-            //     // Some space.
-            //     Gap(8.h),
           ],
 
           //? The bid's amount.

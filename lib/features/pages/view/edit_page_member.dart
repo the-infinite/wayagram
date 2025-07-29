@@ -158,7 +158,7 @@ class _EditPageMemberInfoState extends ConsumerState<EditPageMemberInfo> {
                   }),
                 ],
               )),
-          Gap(20),
+          const Gap(20),
           viewModel.roleType.isEmpty
               ? Container()
               : viewModel.roleType == 'admin'

@@ -75,7 +75,6 @@ class _ContestProfileStagesSectionState
                         : model.position?.toString() ?? ""),
               ],
             ),
-            //  const Gap(20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,

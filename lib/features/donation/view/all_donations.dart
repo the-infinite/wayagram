@@ -133,9 +133,9 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             color: wayaTheme.colorScheme.primary50,
             isLoading: viewModel.isLoading,
           ),
-          Gap(20),
+          const Gap(20),
           FilterWidget(search: searchController, hintText: 'Search Donations'),
-          Gap(20),
+          const Gap(20),
           Text("Featured Donations", style: wayaTheme.textTheme.titleLarge),
           Text(
             "Support a Cause That Matters",
@@ -207,7 +207,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       buttonWidth: 60.0,
                     );
                   }),
-          Gap(20),
+          const Gap(20),
           Text("Based On Categories", style: wayaTheme.textTheme.titleLarge),
           Text(
             "View donations based on their categories",

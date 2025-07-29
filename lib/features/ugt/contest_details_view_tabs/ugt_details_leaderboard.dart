@@ -62,7 +62,7 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
             );
           },
         ),
-        Gap(50)
+        const Gap(50)
       ],
     );
   }

@@ -63,7 +63,8 @@ class WayaConfirmationView<T> extends StatefulWidget {
   });
 
   @override
-  State<WayaConfirmationView<T>> createState() => _WayaConfirmationViewState<T>();
+  State<WayaConfirmationView<T>> createState() =>
+      _WayaConfirmationViewState<T>();
 }
 
 class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
@@ -98,7 +99,9 @@ class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
         _value = result;
 
         //? After that, we move forward.
-        controller.value = result == null ? _WayaConfirmationState.notFound : _WayaConfirmationState.found;
+        controller.value = result == null
+            ? _WayaConfirmationState.notFound
+            : _WayaConfirmationState.found;
       },
     )();
   }
@@ -122,7 +125,7 @@ class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
           children: [
             //? First, the textfield we would be using to search.
             WayaTextFormField(
-              padding: EdgeInsets.symmetric(horizontal: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 1),
               prefixIcon: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 13),
                 child: WayaAssets.icons.actionSearch.svg(
@@ -140,7 +143,8 @@ class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
                       },
                       customBorder: CircleBorder(),
                       splashColor: theme.colorScheme.primary.withAlpha(30),
-                      focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+                      focusColor: const Color.fromARGB(255, 179, 173, 170)
+                          .withAlpha(30),
                       highlightColor: theme.colorScheme.primary.withAlpha(30),
                       child: Padding(
                         padding: const EdgeInsets.all(7),
@@ -159,7 +163,8 @@ class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
             ),
 
             //? Second, our text that shows who this user is for example.
-            if ([_WayaConfirmationState.found, _WayaConfirmationState.notFound].contains(currentState))
+            if ([_WayaConfirmationState.found, _WayaConfirmationState.notFound]
+                .contains(currentState))
               GestureDetector(
                 onTap: () {
                   widget.onResult?.call(_value);
@@ -177,7 +182,9 @@ class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
                     widget.getText(_value),
                     textAlign: TextAlign.center,
                     style: widget.buttonTextStyle.copyWith(
-                      color: currentState == _WayaConfirmationState.notFound ? theme.colorScheme.greyColor500 : null,
+                      color: currentState == _WayaConfirmationState.notFound
+                          ? theme.colorScheme.greyColor500
+                          : null,
                     ),
                   ),
                 ),

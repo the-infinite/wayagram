@@ -220,7 +220,6 @@ class ContestAppliedCard extends StatelessWidget {
                 ],
               ),
               const Gap(10),
-              // const Gap(25),
               WayaButton(
                 callback: () {
                   if (post.contest?.status == "CLOSED") {

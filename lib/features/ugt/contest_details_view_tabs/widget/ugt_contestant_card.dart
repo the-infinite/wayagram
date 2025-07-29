@@ -53,25 +53,17 @@ class UgtContestantCard extends ConsumerWidget {
             child: Row(
               children: [
                 ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        45), // Adjust the radius as needed
-                    child: WayaImage(
-                      imageUrl: contestantData.profilePhoto ?? "",
-                      height: 45,
-                      width: 45,
-                      fit: BoxFit.cover,
-                      radius: BorderRadius.circular(45),
-                    )
-
-                    /*   Image.network(
-                    contestantData.profilePhoto ?? "",
+                  borderRadius:
+                      BorderRadius.circular(45), // Adjust the radius as needed
+                  child: WayaImage(
+                    imageUrl: contestantData.profilePhoto ?? "",
                     height: 45,
                     width: 45,
-                    fit: BoxFit
-                        .cover, // Ensures the image covers the area properly
-                  ), */
-                    ),
-                Gap(10),
+                    fit: BoxFit.cover,
+                    radius: BorderRadius.circular(45),
+                  ),
+                ),
+                const Gap(10),
                 Text(
                   contestantData.contestApplicant?.fullName ?? "Name",
                   overflow: TextOverflow.ellipsis,
@@ -156,7 +148,6 @@ class UgtContestantCard extends ConsumerWidget {
             ),
           ),
         ),
-        // const Gap(10)
       ],
     );
   }

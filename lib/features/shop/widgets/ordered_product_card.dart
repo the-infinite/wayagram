@@ -19,7 +19,7 @@ class OrderedProductCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
+          padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
           decoration: BoxDecoration(
               border: Border.all(
                   color: wayaTheme.colorScheme.greyColor300, width: 1),
@@ -35,7 +35,7 @@ class OrderedProductCard extends StatelessWidget {
                     height: 70,
                     width: 50,
                     fit: BoxFit.contain,
-                    radius: BorderRadius.circular(8),
+                    radius: const BorderRadius.all(Radius.circular(8)),
                   ),
                   const Gap(5),
                   Column(

@@ -188,7 +188,7 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
                   }),
                 ],
               )),
-          Gap(20),
+          const Gap(20),
           viewModel.roleType.isEmpty
               ? Container()
               : viewModel.roleType == 'admin'
@@ -321,7 +321,7 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
         return Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 16),
+            padding: const EdgeInsets.only(left: 10, bottom: 16),
             child: SizedBox(
               height: 126,
               width: size.width,
@@ -333,7 +333,8 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
                     left: BorderSide(width: 4, color: WayaColors.success),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                    padding:
+                        const EdgeInsets.only(top: 10, left: 10, right: 10),
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -360,7 +361,7 @@ class _EditGroupMemberInfoState extends ConsumerState<EditGroupMemberInfo> {
                                   ),
                                 ),
                               ),
-                              Gap(10),
+                              const Gap(10),
                               Text(
                                 title,
                                 maxLines: 7,

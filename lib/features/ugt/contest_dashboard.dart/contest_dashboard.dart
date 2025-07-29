@@ -185,7 +185,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                             BlendMode.srcIn,
                           ),
                         ),
-                        Gap(5),
+                        const Gap(5),
                         Text(
                           'Filter By',
                           style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
@@ -193,7 +193,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Gap(5),
+                        const Gap(5),
                         WayaAssets.icons.downArrow.svg(
                           colorFilter: ColorFilter.mode(
                             wayaTheme.colorScheme.greyColor400,
@@ -231,7 +231,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           WayaNav.toNamed('/create-contest');
                         }),
                   ),
-                Gap(10),
+                const Gap(10),
                 GestureDetector(
                   onTap: () {
                     //?added ability to conver to pdf
@@ -263,7 +263,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                             BlendMode.srcIn,
                           ),
                         ),
-                        Gap(8),
+                        const Gap(8),
                         Text(
                           'Export Data',
                           style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
@@ -316,7 +316,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           
                           }),
                     ),
-                  Gap(10),
+                  const Gap(10),
                   GestureDetector(
                     onTap: () {
                       // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
@@ -399,7 +399,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           color: wayaTheme.primaryColor),
                     ],
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Text(
                     remainingTime.inSeconds.remainder(60) > 0
                         ? "${remainingTime.inDays}days  :   ${remainingTime.inHours.remainder(24)}hrs  :  ${remainingTime.inMinutes.remainder(60)}mins  :  ${remainingTime.inSeconds.remainder(60)}sec"
@@ -522,15 +522,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       );
                     },
                   ),
-                  /*   _buildProfileItem(context, "Obubra Imengie", true),
-                  Gap(10),
-                  _buildProfileItem(context, "Oluchi Obiano", true),
-                  Gap(10),
-                  _buildProfileItem(context, "Sadiya Wakil", true),
-                  Gap(10),
-                  _buildProfileItem(context, "Ibrahim Ahmad", true),
-                  Gap(10),
-                  _buildProfileItem(context, "Ibrahim Nasiru", true), */
                 ],
               ),
             ),
@@ -605,7 +596,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       },
                       child: _buildSectionTitle("Submitted Applications",
                           seeAll: true)),
-                  Gap(10),
+                  const Gap(10),
                   ListView.builder(
                     // controller: _scrollController,
                     physics: BouncingScrollPhysics(),
@@ -633,19 +624,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       );
                     },
                   ),
-
-                  /*   GestureDetector(
-                      onTap: () {
-                        // WayaNav.toNamed('/manage-application-contest');
-                      },
-                      child:
-                          _buildProfileItem(context, "Obubra Imengie", false)),
-                  Gap(10),
-                  _buildProfileItem(context, "Oluchi Obiano", false),
-                  Gap(10),
-                  _buildProfileItem(context, "Sadiya Wakil", false),
-                  Gap(10),
-                  _buildProfileItem(context, "Ibrahim Ahmad", false), */
                 ],
               ),
             ),
@@ -719,7 +697,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             Text(title,
                 textAlign: TextAlign.center,
                 style: WayaTextStyles.hintStyleBold),
-            Gap(10),
+            const Gap(10),
             Text(value, style: WayaTextStyles.headlineMedium),
           ],
         ),
@@ -742,8 +720,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // asset,
-          //const Gap(4),
           Text(
             text,
             style: WayaTextStyles.bodyMedium.copyWith(color: color),
@@ -784,7 +760,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         children: [
           Text(title,
               textAlign: TextAlign.center, style: WayaTextStyles.hintStyleBold),
-          Gap(5),
+          const Gap(5),
           Row(
             children: [
               Text(value, style: WayaTextStyles.headlineMedium),
@@ -816,7 +792,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                     style: TextStyle(
                         color: wayaTheme.primaryColor,
                         fontWeight: FontWeight.bold)),
-                Gap(10),
+                const Gap(10),
                 Icon(Icons.arrow_forward_ios,
                     size: 18, color: wayaTheme.primaryColor)
               ],
@@ -825,7 +801,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             Row(
               children: [
                 Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-                Gap(10)
+                const Gap(10)
               ],
             ),
           if (seeStatistic)
@@ -833,7 +809,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               children: [
                 Icon(Icons.leaderboard_outlined,
                     size: 18, color: wayaTheme.primaryColor),
-                Gap(10)
+                const Gap(10)
               ],
             )
         ],

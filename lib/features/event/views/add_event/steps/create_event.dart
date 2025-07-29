@@ -443,7 +443,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                                 : null,
                             label: 'Price per Unit',
                             suffixIcon: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 15),
+                              padding: const EdgeInsets.symmetric(vertical: 15),
                               child: Text("NGN",
                                   style: wayaTheme.textTheme.hintStyle),
                             )),

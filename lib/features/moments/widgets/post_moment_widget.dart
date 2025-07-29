@@ -17,7 +17,7 @@ class PostMomentWidget extends ConsumerWidget {
     final state = ref.watch(momentVmProvider);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       decoration: BoxDecoration(
         color: wayaTheme.colorScheme.white.withValues(alpha: 0.1),
       ),

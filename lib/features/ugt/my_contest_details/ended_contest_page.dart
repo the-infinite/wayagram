@@ -88,7 +88,7 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
                       text: "View Contest Dashboard",
                       textColor: wayaTheme.colorScheme.customPrimary,
                     ),
-                  Gap(10),
+                  const Gap(10),
                   if (viewModel.isLoading == true)
                     Center(child: CircularProgressIndicator()),
                   ListView.builder(
@@ -113,9 +113,9 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
                     child: _buildStateItem(
                         context, "Obubra Inengite", "View application"),
                   ),
-                  Gap(20),
+                  const Gap(20),
                   _buildStateItem(context, "Oluchi Obiano", "View application"),
-                  Gap(20),
+                  const Gap(20),
                   _buildStateItem(context, "Sadiya Wakili", "View application"), */
                 ],
               ),
@@ -127,43 +127,6 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
       ),
     );
   }
-
-//   Widget _buildStateItem(BuildContext context, MyContestContestantModel? post) {
-//     final wayaTheme = Theme.of(context);
-//     return Column(
-//       children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Row(
-//               children: [
-//                 WayaImage(
-//                   imageUrl: post?.profilePhoto ?? "",
-//                   height: 45,
-//                   width: 45,
-//                   fit: BoxFit.cover,
-//                   radius: BorderRadius.circular(45),
-//                 ),
-//                 Gap(10),
-//                 Text(post?.contestApplicant?.fullName ?? "",
-//                     style: WayaTextStyles.bodyBold),
-//               ],
-//             ),
-//             Row(
-//               children: [
-//                 Text(post?.votes.toString() ?? "0",
-//                     style: WayaTextStyles.hintStyleBold),
-//                 Gap(10),
-//                 //   Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-//                 Gap(10)
-//               ],
-//             ),
-//           ],
-//         ),
-//         Gap(10)
-//       ],
-//     );
-//   }
 }
 
 Color getColor(bool isText, String text) {

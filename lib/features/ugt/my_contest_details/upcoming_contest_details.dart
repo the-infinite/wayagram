@@ -230,7 +230,7 @@ class _UpcomingContestDetailsState
                     text: "View Contest Details",
                   ),
                 ),
-              Gap(20),
+              const Gap(20),
               Center(
                 child: WayaButton(
                   color: Colors.white,

@@ -75,7 +75,7 @@ class _SeeAllApprovedDonationsState
                   )
                 : Expanded(
                     child: ListView.builder(
-                        padding: EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.only(bottom: 20),
                         shrinkWrap: true,
                         itemCount:
                             //viewModel.myDonationDocs?.length,

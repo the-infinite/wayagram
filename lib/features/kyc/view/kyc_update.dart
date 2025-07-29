@@ -58,7 +58,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).colorScheme.black),
           ),
-          Gap(10),
+          const Gap(10),
           Text(
             'Track the progress of your KYC submission and take necessary actions.',
             textAlign: TextAlign.center,
@@ -67,7 +67,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500),
           ),
-          Gap(15),
+          const Gap(15),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -83,7 +83,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).colorScheme.greyColor700),
               ),
-              Gap(10),
+              const Gap(10),
               Image.asset(
                 viewModel.kycStatus == 'APPROVED'
                     ? 'assets/images/approved.png'
@@ -92,7 +92,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                         : 'assets/images/rejected.png',
                 height: 16.h,
               ),
-              Gap(10),
+              const Gap(10),
               viewModel.kycStatus == 'APPROVED' ||
                       viewModel.kycStatus == 'PENDING'
                   ? Text(

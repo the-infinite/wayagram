@@ -133,7 +133,7 @@ class EventEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.all(30),
+      padding: const EdgeInsets.all(30),
       child: EmptyState(
           hasButton: true,
           onTap: () {

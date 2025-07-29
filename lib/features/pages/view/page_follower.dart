@@ -47,10 +47,6 @@ class _PageFollowerScreenState extends ConsumerState<PageFollowerScreen>
       isLoading: viewModel.isLoading,
       isScrollable: false,
       title: 'Followers',
-      // appBarTrailing: Row(
-      //   spacing: 12,
-      //   children: [WayaAssets.icons.genSet.search.svg(fit: BoxFit.none), Gap(8)],
-      // ),
       body: viewModel.pageFollowerDocs?.isEmpty ?? true
           ? FollowerEmptyState()
           : ListView.builder(

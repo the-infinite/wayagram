@@ -39,12 +39,12 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(20),
+          const Gap(20),
           Text(
             "Group Membership",
             style: wayaTheme.textTheme.hintStyle,
           ),
-          Gap(20),
+          const Gap(20),
           accessType(
               "Open to Everyone",
               "Allow anyone to join without restrictions for a more inclusive community",
@@ -61,7 +61,7 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
             ref.read(createGroupProvider.notifier).updateGroupSetting(
                 context, viewModel.openToEveryone, value, args['groupId']);
           }),
-          Gap(20),
+          const Gap(20),
           accessType(
               "Mute Group",
               "Manually disable members from commenting, liking,sharing and reposting on this group",

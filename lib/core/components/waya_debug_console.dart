@@ -24,7 +24,8 @@ class _WayaDebugMessage extends StatelessWidget {
   });
 
   String _getLocation() {
-    final trace = Trace.from(event.stackTrace ?? WayaDebugHelpers.getStackTrace(event.raw));
+    final trace = Trace.from(
+        event.stackTrace ?? WayaDebugHelpers.getStackTrace(event.raw));
     return trace.frames.first.location;
   }
 
@@ -61,7 +62,10 @@ class _WayaDebugMessage extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: isRead ? theme.colorScheme.greyColor300 : theme.colorScheme.primary),
+              border: Border.all(
+                  color: isRead
+                      ? theme.colorScheme.greyColor300
+                      : theme.colorScheme.primary),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -81,7 +85,11 @@ class _WayaDebugMessage extends StatelessWidget {
                       WayaDebugEventType.flutter => WayaAssets.icons.bugFlutter,
                       WayaDebugEventType.exception => WayaAssets.icons.bugFatal,
                     }
-                        .svg(colorFilter: ColorFilter.mode(color, BlendMode.srcIn), height: 20.dg, width: 20.dg),
+                        .svg(
+                            colorFilter:
+                                ColorFilter.mode(color, BlendMode.srcIn),
+                            height: 20.dg,
+                            width: 20.dg),
 
                     //* For the text.
                     ClipPath(
@@ -91,7 +99,8 @@ class _WayaDebugMessage extends StatelessWidget {
                       child: ColoredBox(
                         color: color.withAlpha(30),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 3.h),
                           child: Text(
                             WayaValueHelper.getModuleName(event.module),
                             style: theme.textTheme.bodyMedium?.copyWith(
@@ -111,7 +120,8 @@ class _WayaDebugMessage extends StatelessWidget {
                       child: ColoredBox(
                         color: theme.colorScheme.scaffoldColor,
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.w, vertical: 3.h),
                           child: Text(
                             WayaDateHelper.getFullTimestamp(event.timestamp),
                             style: theme.textTheme.bodyMedium?.copyWith(
@@ -149,7 +159,8 @@ class _WayaDebugMessage extends StatelessWidget {
                   child: ColoredBox(
                     color: theme.colorScheme.error50,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       child: Text(
                         switch (event.type) {
                           WayaDebugEventType.http =>
@@ -183,14 +194,24 @@ class _WayaDebugMessage extends StatelessWidget {
                   child: ColoredBox(
                     color: theme.colorScheme.scaffoldColor,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       child: Text(
                         switch (event.type) {
                           WayaDebugEventType.http =>
-                            (event.raw as DioException?)?.requestOptions.uri.toString() ?? "N/A",
+                            (event.raw as DioException?)
+                                    ?.requestOptions
+                                    .uri
+                                    .toString() ??
+                                "N/A",
                           WayaDebugEventType.flutter =>
-                            (event.raw as FlutterErrorDetails?)?.context?.toString() ?? "N/A",
-                          WayaDebugEventType.runtime || WayaDebugEventType.exception => _getLocation(),
+                            (event.raw as FlutterErrorDetails?)
+                                    ?.context
+                                    ?.toString() ??
+                                "N/A",
+                          WayaDebugEventType.runtime ||
+                          WayaDebugEventType.exception =>
+                            _getLocation(),
                           _ => "N/A",
                         },
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -265,7 +286,8 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
     //? Return this component.
     return ValueListenableBuilder(
       valueListenable: WayaDebugConsoleController.instance.refreshNotifier,
-      builder: (context, refreshCount, _) => WayaDebugConsoleController.instance.inDetail
+      builder: (context, refreshCount, _) => WayaDebugConsoleController
+              .instance.inDetail
           ? const SizedBox()
           : Stack(
               children: [
@@ -282,7 +304,8 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                         child: ModalBarrier(
                           dismissible: true,
                           color: Colors.black,
-                          onDismiss: () => WayaDebugConsoleController.instance.collapse(),
+                          onDismiss: () =>
+                              WayaDebugConsoleController.instance.collapse(),
                         ),
                       ),
                     ),
@@ -295,10 +318,15 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                   child: Material(
                     color: Colors.transparent,
                     child: Container(
-                      height: WayaDebugConsoleController.instance.visible ? screenSize.height : null,
-                      width: WayaDebugConsoleController.instance.visible ? screenSize.width : null,
+                      height: WayaDebugConsoleController.instance.visible
+                          ? screenSize.height
+                          : null,
+                      width: WayaDebugConsoleController.instance.visible
+                          ? screenSize.width
+                          : null,
                       padding: WayaDebugConsoleController.instance.visible
-                          ? EdgeInsets.only(left: 15.w, right: 15.w, bottom: 15.h)
+                          ? EdgeInsets.only(
+                              left: 15.w, right: 15.w, bottom: 15.h)
                           : EdgeInsets.zero,
                       child: SafeArea(
                         child: Column(
@@ -310,9 +338,10 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                             //? First, our control button.
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: WayaDebugConsoleController.instance.visible
-                                  ? CrossAxisAlignment.center
-                                  : CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                                  WayaDebugConsoleController.instance.visible
+                                      ? CrossAxisAlignment.center
+                                      : CrossAxisAlignment.start,
                               spacing: 15.w,
                               children: [
                                 //? First, we put our button here such that it becomes easy
@@ -323,25 +352,40 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                                     //* The button to toggle the visibility of this
                                     //* console.
                                     GestureDetector(
-                                      onPanUpdate: WayaDebugConsoleController.instance.visible
+                                      onPanUpdate: WayaDebugConsoleController
+                                              .instance.visible
                                           ? null
                                           : (details) {
                                               position = Offset(
-                                                min(max(0, details.globalPosition.dx), screenSize.width - 80.w),
-                                                min(max(0, details.globalPosition.dy), screenSize.height - 80.h),
+                                                min(
+                                                    max(
+                                                        0,
+                                                        details
+                                                            .globalPosition.dx),
+                                                    screenSize.width - 80.w),
+                                                min(
+                                                    max(
+                                                        0,
+                                                        details
+                                                            .globalPosition.dy),
+                                                    screenSize.height - 80.h),
                                               );
-                                              WayaDebugConsoleController.instance.refresh();
+                                              WayaDebugConsoleController
+                                                  .instance
+                                                  .refresh();
                                             },
                                       onTap: _toggleConsole,
                                       child: Container(
                                         padding: const EdgeInsets.all(15),
                                         decoration: BoxDecoration(
-                                          color: WayaDebugConsoleController.instance.visible
+                                          color: WayaDebugConsoleController
+                                                  .instance.visible
                                               ? WayaColors.scaffoldColor
                                               : WayaColors.black,
                                           shape: BoxShape.circle,
                                         ),
-                                        child: WayaDebugConsoleController.instance.visible
+                                        child: WayaDebugConsoleController
+                                                .instance.visible
                                             ? WayaAssets.icons.actonDismiss.svg(
                                                 colorFilter: ColorFilter.mode(
                                                   WayaColors.customBlack,
@@ -358,8 +402,11 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                                     ),
 
                                     //* The unread counter.
-                                    if (WayaDebugConsoleController.instance.unreadCount > 0 &&
-                                        !WayaDebugConsoleController.instance.visible)
+                                    if (WayaDebugConsoleController
+                                                .instance.unreadCount >
+                                            0 &&
+                                        !WayaDebugConsoleController
+                                            .instance.visible)
                                       Positioned(
                                         top: 0,
                                         left: 0,
@@ -370,12 +417,17 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                                           child: ColoredBox(
                                             color: theme.colorScheme.primary,
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 8.w),
                                               child: Text(
                                                 WayaValueHelper.formatNumber(
-                                                    WayaDebugConsoleController.instance.unreadCount),
-                                                style: theme.textTheme.bodyMedium?.copyWith(
-                                                  color: theme.colorScheme.white,
+                                                    WayaDebugConsoleController
+                                                        .instance.unreadCount),
+                                                style: theme
+                                                    .textTheme.bodyMedium
+                                                    ?.copyWith(
+                                                  color:
+                                                      theme.colorScheme.white,
                                                   fontSize: 12,
                                                 ),
                                               ),
@@ -391,17 +443,25 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                                 if (WayaDebugConsoleController.instance.visible)
                                   WayaButton(
                                     height: null,
-                                    callback: () => WayaDebugConsoleController.instance.markAllAsRead(),
-                                    isDisabled: WayaDebugConsoleController.instance.unreadCount == 0,
+                                    callback: () => WayaDebugConsoleController
+                                        .instance
+                                        .markAllAsRead(),
+                                    isDisabled: WayaDebugConsoleController
+                                            .instance.unreadCount ==
+                                        0,
                                     text: "Mark all as read",
                                     horizontalPadding: 15.w,
                                     verticalPadding: 10.h,
-                                    textColor: WayaDebugConsoleController.instance.unreadCount == 0
+                                    textColor: WayaDebugConsoleController
+                                                .instance.unreadCount ==
+                                            0
                                         ? Colors.black
                                         : Colors.white,
                                     leadingIcon: WayaAssets.icons.cRead.svg(
                                       colorFilter: ColorFilter.mode(
-                                        WayaDebugConsoleController.instance.unreadCount == 0
+                                        WayaDebugConsoleController
+                                                    .instance.unreadCount ==
+                                                0
                                             ? Colors.black
                                             : Colors.white,
                                         BlendMode.srcIn,
@@ -415,19 +475,24 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                             if (WayaDebugConsoleController.instance.visible)
                               Expanded(
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w, vertical: 8.h),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15.r),
                                     color: Colors.white,
                                   ),
                                   child: ListView.builder(
-                                    itemCount: WayaDebugConsoleController.instance.errors.length,
+                                    itemCount: WayaDebugConsoleController
+                                        .instance.errors.length,
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) => Padding(
-                                      padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 8.h),
+                                      padding: index == 0
+                                          ? EdgeInsets.zero
+                                          : EdgeInsets.only(top: 8.h),
                                       child: _WayaDebugMessage(
                                         index: index,
-                                        event: WayaDebugConsoleController.instance.errors[index],
+                                        event: WayaDebugConsoleController
+                                            .instance.errors[index],
                                       ),
                                     ),
                                   ),

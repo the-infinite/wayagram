@@ -40,7 +40,7 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
           WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.moment.userId)),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

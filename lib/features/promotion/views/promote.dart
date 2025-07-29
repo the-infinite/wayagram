@@ -281,7 +281,7 @@ class _PromoteState extends ConsumerState<Promote> {
                 ],
               )),
           bottomNavigationBar: Container(
-            padding: EdgeInsets.fromLTRB(15, 6, 15, 15),
+            padding: const EdgeInsets.fromLTRB(15, 6, 15, 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -56,11 +56,11 @@ class _UgtHomeState extends ConsumerState<GroupSettingPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(10),
+            const Gap(10),
             Text("Group Preferences",
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
-            Gap(20),
+            const Gap(20),
             //? card for each of the switch
             /* 
             setting event- on and off for ...let everyone join, approve join request before joining
@@ -75,7 +75,7 @@ class _UgtHomeState extends ConsumerState<GroupSettingPage> {
                       value, approveJoinBeforeJoining.value);
                 },
                 switchValue: allowJoin),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Approve Join Request",
                 value:
@@ -86,7 +86,7 @@ class _UgtHomeState extends ConsumerState<GroupSettingPage> {
                       allowJoin.value, value);
                 },
                 switchValue: approveJoinBeforeJoining),
-            Gap(10),
+            const Gap(10),
           ],
         ),
       ),

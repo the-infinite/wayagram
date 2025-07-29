@@ -115,7 +115,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        Gap(20),
+        const Gap(20),
         _mygrayInput("Email Address"),
 
         /*   WayaTextFormField(
@@ -142,7 +142,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        Gap(20),
+        const Gap(20),
         _mygrayInput("Phone number"),
 
         /*  WayaTextFormField(
@@ -169,7 +169,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        Gap(20),
+        const Gap(20),
         _mygrayInput("Address"),
         /*   WayaTextFormField(
           controller: TextEditingController(),
@@ -185,7 +185,7 @@ class _ContestSignupRequirementState
                 onChanged: (value) {},
                 activeColor: Colors.white,
                 activeTrackColor: wayaTheme.colorScheme.customPrimary), */
-            Gap(20),
+            const Gap(20),
             Text(
               "Mark as Required",
               style: TextStyle(
@@ -195,7 +195,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        Gap(20),
+        const Gap(20),
         _mygrayInput("Date of birth"),
         /*   WayaTextFormField(
           controller: TextEditingController(),
@@ -211,7 +211,7 @@ class _ContestSignupRequirementState
                 onChanged: (value) {},
                 activeColor: Colors.white,
                 activeTrackColor: wayaTheme.colorScheme.customPrimary), */
-            Gap(20),
+            const Gap(20),
             Text(
               "Mark as Required",
               style: TextStyle(

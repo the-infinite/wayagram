@@ -67,7 +67,7 @@ class _EventDateWidgetState extends ConsumerState<EventDateWidget> {
                         .focusChanged(hasFocus);
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

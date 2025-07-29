@@ -31,7 +31,7 @@ class JoinRequestWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(10),
+          const Gap(10),
           Row(
             children: [
               CircleAvatar(
@@ -45,7 +45,7 @@ class JoinRequestWidget extends StatelessWidget {
                         '${joinRequest.user?.profilePicture}',
                       ),
               ),
-              Gap(10),
+              const Gap(10),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +57,7 @@ class JoinRequestWidget extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.black),
                   ),
-                  Gap(5),
+                  const Gap(5),
                   Text(
                     '${joinRequest.user?.email}',
                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
@@ -86,7 +86,7 @@ class JoinRequestWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Gap(10),
+                    const Gap(10),
                     InkWell(
                       onTap: accept,
                       child: Container(
@@ -105,7 +105,6 @@ class JoinRequestWidget extends StatelessWidget {
               ),
             ],
           ),
-          // Gap(6),
         ],
       ),
     );

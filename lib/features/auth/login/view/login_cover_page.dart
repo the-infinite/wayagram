@@ -33,13 +33,13 @@ class LoginCoverPage extends ConsumerWidget {
           WayaAssets.images.wayalogoUnlabelled.image(
             scale: 2,
           ),
-          Gap(10),
+          const Gap(10),
           Text(
             "Connect.Trade.Share\nAll in One Place",
             style: wayaTheme.textTheme.headlineLarge,
             textAlign: TextAlign.center,
           ),
-          Gap(10),
+          const Gap(10),
           Text(
             "Welcome to Social Marketplace",
             style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
@@ -58,9 +58,7 @@ class LoginCoverPage extends ConsumerWidget {
                     text: "Continue with Google",
                     textColor: wayaTheme.colorScheme.black,
                   )
-                :
-                // Gap(10),
-                WayaButton(
+                : WayaButton(
                     color: wayaTheme.colorScheme.black,
                     callback: () {
                       viewModel.signinWithApple();
@@ -69,7 +67,7 @@ class LoginCoverPage extends ConsumerWidget {
                     text: "Continue with Apple",
                     textColor: wayaTheme.colorScheme.onPrimary,
                   ),
-            Gap(10),
+            const Gap(10),
           ],
           WayaButton(
             color: wayaTheme.colorScheme.primary500,
@@ -79,7 +77,7 @@ class LoginCoverPage extends ConsumerWidget {
             text: "Continue with Email Address",
             textColor: wayaTheme.colorScheme.onPrimary,
           ),
-          Gap(30),
+          const Gap(30),
           WayaRichText(
             title1: 'Don\'t have an account? ',
             title2: 'Create an account',

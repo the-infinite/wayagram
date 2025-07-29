@@ -239,7 +239,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     ],
                   ),
 
-                //  const Gap(20),
                 if (model?.contestStatus?.toLowerCase() != "rejected" &&
                     model?.contestStatus?.toLowerCase() != "pending")
                   Column(
@@ -353,11 +352,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     text: "Contest Registration",
                     textColor: wayaTheme.colorScheme.customPrimary,
                   ),
-
-                /*  Text("View Full Details",
-                    style: wayaTheme.textTheme.bodyMedium
-                        ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),
-                const Gap(15), */
                 const Gap(15),
                 Text("Top Contestants",
                     style: wayaTheme.textTheme.bodyMedium

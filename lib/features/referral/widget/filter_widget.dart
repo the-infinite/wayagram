@@ -61,7 +61,7 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
             ),
           ),
 
-          Gap(5),
+          const Gap(5),
 
           //? This is hidden when  it is a popup filter.
           Visibility(

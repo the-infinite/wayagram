@@ -41,7 +41,7 @@ class EventWidget extends ConsumerWidget {
                       topRight: Radius.circular(12)),
                 ),
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

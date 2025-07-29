@@ -201,8 +201,6 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
             );
           }),
           const Gap(15),
-          // const Gap(15),
-
           if (viewModel2.contestTimelineMultipleStage.toLowerCase() != "no")
             FormField<String>(validator: (value) {
               if (viewModel2.contestTimelineCurrentStage.isEmpty) {

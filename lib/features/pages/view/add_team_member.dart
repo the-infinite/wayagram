@@ -181,7 +181,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                   }),
                 ],
               )),
-          Gap(20),
+          const Gap(20),
           viewModel.roleType.isEmpty
               ? Container()
               : viewModel.roleType == 'admin'
@@ -345,7 +345,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                                   ),
                                 ),
                               ),
-                              Gap(10),
+                              const Gap(10),
                               Text(
                                 title,
                                 maxLines: 7,

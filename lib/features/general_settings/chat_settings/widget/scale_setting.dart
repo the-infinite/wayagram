@@ -29,7 +29,7 @@ class WayaScaleSetting extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Padding(
-      padding: EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Material(
         borderRadius: BorderRadius.circular(14),
         color: Colors.white,

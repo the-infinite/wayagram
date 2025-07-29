@@ -46,7 +46,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
           controller: searchController,
           hintText: "search by name",
         ),
-        Gap(10),
+        const Gap(10),
 
         //  if (posts.isEmpty) emptyWidget(),
         //  if (posts.isNotEmpty)
@@ -71,7 +71,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
           },
         ),
 
-        Gap(50)
+        const Gap(50)
       ],
     );
   }

@@ -141,7 +141,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
               ];
             },
           ),
-          Gap(8)
+          const Gap(8)
         ],
       ),
       body: Column(
@@ -172,7 +172,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                             ),
                     ),
                   ),
-                  Gap(15),
+                  const Gap(15),
                   GestureDetector(
                     onTap: () async {
                       final result = await WayaNav.to(
@@ -283,8 +283,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                     ),
                   ],
                 ),
-
-                //const Gap(20),
               ],
             ),
           ),

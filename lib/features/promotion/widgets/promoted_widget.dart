@@ -30,7 +30,7 @@ class _PromotedWidgetState extends ConsumerState<PromotedWidget> {
         child: Card(
           elevation: 0,
           child: Container(
-            padding: EdgeInsets.only(left: 10, right: 10, bottom: 15),
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 15),
             decoration: BoxDecoration(
               color: widget.isDetail
                   ? theme.colorScheme.white
@@ -42,7 +42,7 @@ class _PromotedWidgetState extends ConsumerState<PromotedWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ListTile(
-                  contentPadding: EdgeInsets.only(left: 0, right: 0),
+                  contentPadding: const EdgeInsets.only(left: 0, right: 0),
                   leading: WayaImage(
                     imageUrl: "",
                     height: 40,
@@ -88,9 +88,6 @@ class _PromotedWidgetState extends ConsumerState<PromotedWidget> {
                     ),
                   ),
                 ),
-
-                //Gap(10),
-
                 //? This is the user's bio.
                 Text(
                   'Osumare',

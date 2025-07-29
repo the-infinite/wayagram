@@ -31,7 +31,7 @@ class _JoinedGroupState extends ConsumerState<JoinedGroup>
       builder: (context, redraws, _) => myGroupNotifier.joinedGroups.isEmpty
           ? GroupEmptyState()
           : ListView.builder(
-              padding: EdgeInsets.only(bottom: 40),
+              padding: const EdgeInsets.only(bottom: 40),
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: myGroupNotifier.joinedGroups.length,

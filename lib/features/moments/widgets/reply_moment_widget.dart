@@ -82,7 +82,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
     //? Now move forward.
     return Container(
       width: size.width,
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

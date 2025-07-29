@@ -217,7 +217,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         ),
         bottomNavigationBar: Container(
           width: double.infinity,
-          padding: EdgeInsets.fromLTRB(10, 4, 10, 25),
+          padding: const EdgeInsets.fromLTRB(10, 4, 10, 25),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
           ),
@@ -287,45 +287,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                           ],
                         ),
                       ),
-
-                      //WayaButton(
-                      //   callback: () {
-                      //     WayaNav.toNamed(WayaAppRoutes.getEventInviteScreen(
-                      //         viewModel.singleEvent?.id ?? '',
-                      //         viewModel.singleEvent?.title ?? ''));
-                      //     /**
-                      //      Share.share(
-                      //     subject: "Share event",
-                      //     WayaValueHelper.getShareableUrl(
-                      //         WayaAppRoutes.getEventDetailsScreen(widget.id)),
-                      //   )
-                      //      */
-                      //   },
-                      //   color: wayaTheme.colorScheme.transparent,
-                      //   border: Border.all(
-                      //       width: 1,
-                      //       color: wayaTheme.colorScheme.customPrimary),
-                      //   centerWidget: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     children: [
-                      //       Icon(Icons.share,
-                      //           size: 22,
-                      //           color: wayaTheme.colorScheme.customPrimary),
-                      //       const Gap(4),
-                      //       Text(
-                      //         'Share Invite',
-                      //         style:
-                      //             wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                      //           fontWeight: FontWeight.w600,
-                      //           color: wayaTheme.colorScheme.customPrimary,
-                      //         ),
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
                     ),
-                    //  Gap(context.width * 0.04),
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(

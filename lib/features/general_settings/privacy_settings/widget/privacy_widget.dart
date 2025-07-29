@@ -98,7 +98,7 @@ class PrivacyWidget extends StatelessWidget {
             ),
           ),
         ),
-        Gap(10)
+        const Gap(10)
       ],
     );
   }

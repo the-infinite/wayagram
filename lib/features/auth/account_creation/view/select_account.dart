@@ -43,7 +43,7 @@ class SelectAccount extends ConsumerWidget {
                         child: Container(
                           height: 120,
                           width: double.infinity,
-                          padding: EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
                               color: type != null &&
                                       accounts[index].type == type.type
@@ -107,7 +107,7 @@ class SelectAccount extends ConsumerWidget {
               Container(
                 width: double.infinity,
                 height: 100,
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                     color: wayaTheme.colorScheme.scaffoldColor,
                     border:

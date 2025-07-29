@@ -67,7 +67,7 @@ class _UserPageInvitationState extends ConsumerState<UserPageInvitation>
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Gap(10),
+                          const Gap(10),
                           Row(
                             children: [
                               CircleAvatar(
@@ -79,7 +79,7 @@ class _UserPageInvitationState extends ConsumerState<UserPageInvitation>
                                         '${page.page?.profileImage}',
                                       ),
                               ),
-                              Gap(10),
+                              const Gap(10),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,7 +94,7 @@ class _UserPageInvitationState extends ConsumerState<UserPageInvitation>
                                                 .colorScheme
                                                 .black),
                                   ),
-                                  Gap(5),
+                                  const Gap(5),
                                   Text(
                                     '${page.page?.description?.capitalizeFirst}',
                                     style: Theme.of(context)
@@ -157,7 +157,6 @@ class _UserPageInvitationState extends ConsumerState<UserPageInvitation>
                               ),
                             ],
                           ),
-                          // Gap(6),
                         ],
                       ),
                     );

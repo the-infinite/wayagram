@@ -150,7 +150,7 @@ class _ChangePasswordGenSettingsState
                 ],
               );
             }),
-            Gap(10),
+            const Gap(10),
             WayaButton(
               text: 'Confirm Change',
               color: wayaTheme.colorScheme.primary500,

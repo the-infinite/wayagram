@@ -220,7 +220,7 @@ class EditHeader extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(

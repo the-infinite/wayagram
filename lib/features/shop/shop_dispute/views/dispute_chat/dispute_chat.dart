@@ -279,7 +279,6 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                             ),
                           ],
                         ),
-                        // const Gap(2),
                       ],
                     )),
                   ),

@@ -91,7 +91,7 @@ class _WayaPaginatedSelectFieldState
                 notifier.setFocus(hasFocus);
               },
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -178,7 +178,7 @@ class _PaginatedBottomSheetState extends ConsumerState<PaginatedBottomSheet> {
         ref.watch(paginatedSelectFieldNotifierProvider(widget.uniqueKey));
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       height: context.height * 0.4,
       decoration: BoxDecoration(
         color: wayaTheme.colorScheme.white,
@@ -206,7 +206,7 @@ class _PaginatedBottomSheetState extends ConsumerState<PaginatedBottomSheet> {
                 return ListTile(
                   minTileHeight: 25,
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+                      const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
                   title: Text(item.label),
                   onTap: () => widget.onSelected(item),
                 );

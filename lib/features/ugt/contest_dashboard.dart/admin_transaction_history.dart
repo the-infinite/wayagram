@@ -62,7 +62,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Gap(40),
+                const Gap(40),
                 if (ConversationState.self.accountType ==
                     UserAccountType.business)
                   SizedBox(
@@ -100,7 +100,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                       }));
                         }),
                   ),
-                Gap(10),
+                const Gap(10),
                 GestureDetector(
                   onTap: () {
                     // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
@@ -127,13 +127,6 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        /*   WayaAssets.icons.export.svg(
-                          width: 18,
-                          height: 18,
-                          fit: BoxFit.scaleDown,
-                          color: wayaTheme.colorScheme.primary600,
-                        ),
-                        Gap(8), */
                         Text(
                           'Payout History',
                           style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
@@ -282,7 +275,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                     child: widget)
               ],
             ),
-            Gap(10),
+            const Gap(10),
             Text(value, style: WayaTextStyles.headlineMedium),
           ],
         ),

@@ -844,7 +844,7 @@ class UgtRadioSelect extends StatelessWidget {
           minLeadingWidth: 0,
           minVerticalPadding: 0,
         ),
-        const SizedBox(height: 4), // Replaced Gap(4) for flexibility
+        const SizedBox(height: 4),
       ],
     );
   }

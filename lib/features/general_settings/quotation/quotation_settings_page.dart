@@ -62,11 +62,11 @@ class _UgtHomeState extends ConsumerState<QuotationSettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(10),
+            const Gap(10),
             Text("Quotation Preferences",
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
-            Gap(20),
+            const Gap(20),
             //? card for each of the switch
             PrivacyWidget(
                 title: "Receive Quotation Request",
@@ -80,7 +80,7 @@ class _UgtHomeState extends ConsumerState<QuotationSettingsPage> {
                   );
                 },
                 switchValue: receiveQuotationRequest),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Make My Quotation Private",
                 value:
@@ -94,7 +94,7 @@ class _UgtHomeState extends ConsumerState<QuotationSettingsPage> {
                   );
                 },
                 switchValue: makeMyQuotationPrivate),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Show Quotation Request on my Post Feed",
                 value: "Show Quotation Request on my Post Feed",
@@ -107,7 +107,7 @@ class _UgtHomeState extends ConsumerState<QuotationSettingsPage> {
                   );
                 },
                 switchValue: showQuotationRequest),
-            Gap(10),
+            const Gap(10),
           ],
         ),
       ),

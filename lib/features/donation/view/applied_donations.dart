@@ -119,7 +119,7 @@ class DonationEmptyState extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return Center(
       child: Container(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: EmptyState(
             hasButton: false,
             onTap: () {},

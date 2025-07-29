@@ -144,7 +144,7 @@ class SinglePollWidget extends ConsumerWidget {
                   child: Container(
                       padding: EdgeInsets.only(
                           left: 10.w, right: 10.w, top: 10.w, bottom: 10.w),
-                      margin: EdgeInsets.only(bottom: 4),
+                      margin: const EdgeInsets.only(bottom: 4),
                       // height: 60.h,
                       decoration: BoxDecoration(
                         border: Border.all(

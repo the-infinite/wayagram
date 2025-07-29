@@ -45,7 +45,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
         spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(10),
+          const Gap(10),
           Container(
             alignment: Alignment.center,
             width: 102.w,
@@ -86,7 +86,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                   });
                 }),
           ),
-          Gap(10),
+          const Gap(10),
           Expanded(
             child: PaginatedDataView<SearchLogDocs>(
                 uniqueKey: 'search-logs',
@@ -140,7 +140,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black,
                                       )),
-                                  Gap(10),
+                                  const Gap(10),
                                   ListView.builder(
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),

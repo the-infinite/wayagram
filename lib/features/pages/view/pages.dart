@@ -57,7 +57,7 @@ class _PagesState extends ConsumerState<Pages>
             InkWell(
                 onTap: () => WayaNav.toNamed('/searchPage'),
                 child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
-            Gap(8),
+            const Gap(8),
             InkWell(
                 onTap: () => WayaNav.toNamed('/userPageInvitation'),
                 child:

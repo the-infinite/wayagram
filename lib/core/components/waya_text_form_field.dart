@@ -179,7 +179,8 @@ class _AppFieldState extends State<WayaTextFormField> {
               : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
-        contentPadding: widget.padding ?? EdgeInsets.fromLTRB(12, 1, 12, 1),
+        contentPadding:
+            widget.padding ?? const EdgeInsets.fromLTRB(12, 1, 12, 1),
         fillColor:
             widget.fillColor ?? Theme.of(context).colorScheme.transparent,
         filled: true,

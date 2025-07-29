@@ -100,7 +100,7 @@ class RoleAccessCard extends StatelessWidget {
                           : Colors.orange[700],
                       fontWeight: FontWeight.bold)),
             ),
-            Gap(4),
+            const Gap(4),
             Icon(
               Icons.chevron_right,
               color: Colors.grey,

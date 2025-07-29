@@ -169,7 +169,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -214,7 +214,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<EventLogDocs>(
                     uniqueKey: 'Shop',
@@ -316,7 +316,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -361,7 +361,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<WalletActivityDocs>(
                     uniqueKey: 'Wallet',
@@ -463,7 +463,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -508,7 +508,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<EventLogDocs>(
                     uniqueKey: 'Event',
@@ -610,7 +610,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -652,7 +652,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                         });
                       }),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<PageDocs>(
                       uniqueKey: 'chat-logs',
@@ -707,7 +707,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                               fontWeight: FontWeight.w600,
                                               color: Colors.black,
                                             )),
-                                        Gap(10),
+                                        const Gap(10),
                                         ListView.builder(
                                           shrinkWrap: true,
                                           physics:
@@ -756,7 +756,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -801,7 +801,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<PollsActivityDocs>(
                     uniqueKey: 'Polls',
@@ -903,7 +903,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -948,7 +948,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<AccountActivityDocs>(
                     uniqueKey: 'Account',
@@ -1051,7 +1051,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -1096,7 +1096,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'Page',
@@ -1198,7 +1198,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -1243,7 +1243,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<GroupDocs>(
                     uniqueKey: 'Group',
@@ -1345,7 +1345,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -1390,7 +1390,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<DonationDocs>(
                     uniqueKey: 'Donation',
@@ -1494,7 +1494,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -1539,7 +1539,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<UgtLogDocs>(
                     uniqueKey: 'Ugt',
@@ -1640,7 +1640,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               spacing: 10,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gap(10),
+                const Gap(10),
                 Container(
                   alignment: Alignment.center,
                   width: 102.w,
@@ -1685,7 +1685,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     },
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: PaginatedDataView<EventLogDocs>(
                     uniqueKey: 'Quotation-logs',

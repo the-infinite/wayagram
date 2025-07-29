@@ -142,7 +142,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // const Gap(10),
           if (isAtTop)
             Column(
               children: [
@@ -243,7 +242,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                           BlendMode.srcIn,
                                         ),
                                       ),
-                                      Gap(5),
+                                      const Gap(5),
                                       Text(
                                         'Filter By',
                                         style: wayaTheme.textTheme.labelSmall
@@ -253,7 +252,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      Gap(5),
+                                      const Gap(5),
                                       WayaAssets.icons.downArrow.svg(
                                         colorFilter: ColorFilter.mode(
                                           wayaTheme.colorScheme.greyColor400,
@@ -313,7 +312,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                 },
               ),
             ),
-          Gap(50)
+          const Gap(50)
         ],
       ),
     );
@@ -357,8 +356,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // asset,
-          //const Gap(4),
           Text(
             text,
             style: WayaTextStyles.bodyMedium.copyWith(color: color),

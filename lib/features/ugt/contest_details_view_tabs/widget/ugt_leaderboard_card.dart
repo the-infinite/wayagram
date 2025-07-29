@@ -59,25 +59,17 @@ class UgtLeaderboardCard extends ConsumerWidget {
             title: Row(
               children: [
                 ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        45), // Adjust the radius as needed
-                    child: WayaImage(
-                      imageUrl: contestantData.profilePhoto ?? "",
-                      height: 45,
-                      width: 45,
-                      fit: BoxFit.cover,
-                      radius: BorderRadius.circular(45),
-                    )
-
-                    /*    Image.network(
-                    contestantData.profilePhoto ?? "",
+                  borderRadius:
+                      BorderRadius.circular(45), // Adjust the radius as needed
+                  child: WayaImage(
+                    imageUrl: contestantData.profilePhoto ?? "",
                     height: 45,
                     width: 45,
-                    fit: BoxFit
-                        .cover, // Ensures the image covers the area properly
-                  ), */
-                    ),
-                Gap(10),
+                    fit: BoxFit.cover,
+                    radius: BorderRadius.circular(45),
+                  ),
+                ),
+                const Gap(10),
                 SizedBox(
                   width: context.width * 0.30,
                   child: Text(
@@ -101,7 +93,7 @@ class UgtLeaderboardCard extends ConsumerWidget {
                           ? Colors.white
                           : wayaTheme.colorScheme.greyColor400),
                 ),
-                if (contestantData.votes != 0) Gap(10),
+                if (contestantData.votes != 0) const Gap(10),
                 if (contestantData.votes != 0)
                   WayaButton(
                     callback: () {
@@ -119,7 +111,6 @@ class UgtLeaderboardCard extends ConsumerWidget {
               ],
             ),
           ),
-          // const Gap(10)
         ],
       ),
     );

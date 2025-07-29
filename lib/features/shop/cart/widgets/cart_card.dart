@@ -147,7 +147,6 @@ class _CartCardState extends ConsumerState<CartCard> {
                   })
               : SizedBox.shrink(),
         ),
-        // const Gap(10),
         Container(
           padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
           decoration: BoxDecoration(

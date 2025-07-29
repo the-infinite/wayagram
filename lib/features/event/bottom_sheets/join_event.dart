@@ -33,7 +33,7 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
     final isInsufficientBalance =
         double.parse(walletBalance).toInt() < widget.event.fee;
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -63,7 +63,7 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
           const Gap(30),
           if (widget.event.eventType.toLowerCase() == "paid") ...[
             Container(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               width: double.infinity,
               decoration: BoxDecoration(
                   color: wayaTheme.colorScheme.primary50,
@@ -82,7 +82,7 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
                   const Gap(6),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         color: wayaTheme.colorScheme.white,
                         borderRadius: BorderRadius.circular(12)),

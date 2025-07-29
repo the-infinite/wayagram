@@ -154,10 +154,10 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
             color: wayaTheme.colorScheme.primary50,
             isLoading: viewModel.isLoading,
           ),
-          Gap(20),
+          const Gap(20),
           FilterWidget(
               search: TextEditingController(), hintText: 'Search Donations'),
-          Gap(20),
+          const Gap(20),
           GroupedWidgetHeader(
               onTap: () {
                 WayaNav.toNamed('/seeAllLiveDonations');
@@ -244,7 +244,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               : SizedBox(
                   height: Platform.isAndroid ? 350 : 250,
                   child: ListView.builder(
-                      padding: EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.only(bottom: 20),
                       shrinkWrap: true,
                       itemCount: viewModel.approvedDonations?.length,
                       itemBuilder: (context, index) {
@@ -312,7 +312,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               : SizedBox(
                   height: Platform.isAndroid ? 350 : 250,
                   child: ListView.builder(
-                      padding: EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.only(bottom: 20),
                       shrinkWrap: true,
                       itemCount: viewModel.closedDonations.length,
                       itemBuilder: (context, index) {

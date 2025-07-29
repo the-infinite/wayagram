@@ -57,7 +57,7 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
               'Choose the way you want to fund your \naccount',
               style: wayaTheme.textTheme.labelMedium,
             ),
-            Gap(20),
+            const Gap(20),
             if (viewModel.fundingOptions != null &&
                 viewModel.fundingOptions!.isEmpty &&
                 viewModel.isLoading == false)

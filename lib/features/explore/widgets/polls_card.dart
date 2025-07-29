@@ -31,7 +31,7 @@ class PollsCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
             borderRadius: BorderRadius.circular(16),

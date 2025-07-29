@@ -102,7 +102,7 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                           alignment: Alignment.centerRight,
                           fit: BoxFit.fitWidth,
                         ),
-                  Gap(15),
+                  const Gap(15),
                 ],
               ),
               Positioned(
@@ -116,10 +116,10 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
           ),
           const Gap(50),
           details('Page Name', viewModel.pageName.text.capitalizeFirst),
-          Gap(20),
+          const Gap(20),
           details('Page Description',
               viewModel.pageDescription.text.capitalizeFirst),
-          Gap(20),
+          const Gap(20),
           details('Page Type', args['type'])
         ],
       ),

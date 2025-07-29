@@ -58,11 +58,11 @@ class _UgtHomeState extends ConsumerState<DonationSettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(10),
+            const Gap(10),
             Text("Donation Preferences",
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
-            Gap(20),
+            const Gap(20),
             //? card for each of the switch
             PrivacyWidget(
                 title: "Notify Friend",
@@ -74,7 +74,7 @@ class _UgtHomeState extends ConsumerState<DonationSettingsPage> {
                       makeDonationsPublic: donationPublicPrivate.value);
                 },
                 switchValue: notifyDonation),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Donation Private",
                 value:
@@ -86,7 +86,7 @@ class _UgtHomeState extends ConsumerState<DonationSettingsPage> {
                       makeDonationsPublic: donationPublicPrivate.value);
                 },
                 switchValue: donationPublicPrivate),
-            Gap(10),
+            const Gap(10),
           ],
         ),
       ),

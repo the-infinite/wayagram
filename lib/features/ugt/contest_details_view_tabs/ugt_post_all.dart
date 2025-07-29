@@ -43,7 +43,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
           //? button to switch between approved contest
           Column(
             children: [
-              Gap(10),
+              const Gap(10),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +65,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                       textColor: wayaTheme.colorScheme.greyColor700,
                     ),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Expanded(
                     child: WayaButton(
                       callback: () {
@@ -87,7 +87,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                   ),
                 ],
               ),
-              Gap(15),
+              const Gap(15),
             ],
           ),
         if (viewModel.myPostList.isEmpty) emptyWidget(),

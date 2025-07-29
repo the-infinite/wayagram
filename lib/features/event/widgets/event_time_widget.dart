@@ -67,7 +67,7 @@ class _EventTimeWidgetState extends ConsumerState<EventTimeWidget> {
                         .focusChanged(hasFocus);
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -138,11 +138,10 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
           context: context, initialTime: TimeOfDay(hour: 0, minute: 0));
 
       if (response != null && context.mounted) {
-       
-      final time24Hour =
-          "${response.hour.toString().padLeft(2, '0')}:${response.minute.toString().padLeft(2, '0')}";
+        final time24Hour =
+            "${response.hour.toString().padLeft(2, '0')}:${response.minute.toString().padLeft(2, '0')}";
 
-      selectTime(time: time24Hour);
+        selectTime(time: time24Hour);
       }
     } catch (error) {
       debugPrint(error.toString());

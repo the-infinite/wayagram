@@ -21,7 +21,8 @@ class EditChatGroupScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _EditGroupScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _EditGroupScreenState();
 }
 
 class _EditGroupScreenState extends ConsumerState<EditChatGroupScreen> {
@@ -114,7 +115,6 @@ class _EditGroupScreenState extends ConsumerState<EditChatGroupScreen> {
             // Some space.
             SizedBox(height: 20.h),
 
-
             //? The name of the group.
             WayaFormField(
               controller: nameController,
@@ -140,7 +140,7 @@ class _EditGroupScreenState extends ConsumerState<EditChatGroupScreen> {
               hintText: "Describe the group here",
               line: 5,
               keyboardType: TextInputType.multiline,
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               validator: (value) {
                 if (descriptionController.text.trim().isEmpty) {
                   return "You are required to write a bio for this group chat.";

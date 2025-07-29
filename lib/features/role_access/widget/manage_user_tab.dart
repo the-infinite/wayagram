@@ -98,7 +98,7 @@ class _ForYouContestState extends ConsumerState<ManageUserTab> {
               },
             ),
           ),
-          Gap(100)
+          const Gap(100)
         ],
       ),
     );

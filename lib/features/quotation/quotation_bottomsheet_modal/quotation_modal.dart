@@ -316,7 +316,6 @@ class BidWonModal extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                // const Gap(10),
                                 Row(
                                   children: [
                                     Text(

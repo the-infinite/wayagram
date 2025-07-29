@@ -292,7 +292,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                                         color:
                                             Colors.white.withValues(alpha: 0.7),
                                       ),
-                                      padding: EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8),
                                       child: Icon(
                                         Icons.play_arrow,
                                         size: 30,
@@ -340,7 +340,6 @@ class _CreatePostState extends ConsumerState<CreatePost>
                           },
                         ),
                       ),
-                      //const Gap(350),
                     ],
                   ),
                 ),
@@ -379,7 +378,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                             : 'assets/images/pages/lock.png',
                         height: 18.h,
                       ),
-                      Gap(5),
+                      const Gap(5),
                       Text(
                         sel ? 'Public post' : 'Private post',
                         style: Theme.of(context)
@@ -499,7 +498,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   decoration:
                                       BoxDecoration(color: Colors.white),
@@ -580,7 +579,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,

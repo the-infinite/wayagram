@@ -117,7 +117,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
 
         //? Our section for all quick action widgets.
         Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.scaffoldColor,
             borderRadius: BorderRadius.circular(10),

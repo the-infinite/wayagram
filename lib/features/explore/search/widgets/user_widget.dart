@@ -81,15 +81,18 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
           : Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: InkWell(
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(_userInfo!.$1.id, 'profile')),
+                onTap: () => WayaNav.toNamed(
+                    WayaAppRoutes.getProfileRoute(_userInfo!.$1.id, 'profile')),
                 borderRadius: BorderRadius.circular(12.r),
                 splashColor: theme.colorScheme.primary.withAlpha(30),
-                focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+                focusColor:
+                    const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
                 highlightColor: theme.colorScheme.primary.withAlpha(30),
                 child: Card(
                   elevation: 0,
                   child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 15),
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 15),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.r),
@@ -99,7 +102,8 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          contentPadding: EdgeInsets.only(left: 0, right: 0),
+                          contentPadding:
+                              const EdgeInsets.only(left: 0, right: 0),
                           leading: ChatProfilePicture(
                             user: _userInfo!.$1,
                             radius: 20.h,
@@ -130,12 +134,14 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                       : () async {
                                           //? If this user is following this one.
                                           if (_followStatus!.isUserFollowing) {
-                                            await myFollowProvider.unfollowUser(_userInfo!.$1.id);
+                                            await myFollowProvider
+                                                .unfollowUser(_userInfo!.$1.id);
                                           }
 
                                           //? Since I am not yet following this user...
                                           else {
-                                            await myFollowProvider.followUser(_userInfo!.$1.id);
+                                            await myFollowProvider
+                                                .followUser(_userInfo!.$1.id);
                                           }
 
                                           //? Update this.
@@ -143,9 +149,11 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                         },
                                   child: Container(
                                     margin: EdgeInsets.only(right: 20.w),
-                                    padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                    padding: REdgeInsets.symmetric(
+                                        vertical: 5.dg, horizontal: 10.dg),
                                     decoration: BoxDecoration(
-                                      border: _followStatus?.isUserFollowing == true
+                                      border: _followStatus?.isUserFollowing ==
+                                              true
                                           ? Border.all(
                                               color: theme.colorScheme.primary,
                                               width: 1.5,
@@ -164,7 +172,8 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                           : _followStatus!.isUserFollowing
                                               ? "Following"
                                               : "Follow",
-                                      style: theme.textTheme.labelSmall?.copyWith(
+                                      style:
+                                          theme.textTheme.labelSmall?.copyWith(
                                         color: _followStatus == null
                                             ? theme.colorScheme.greyColor500
                                             : _followStatus!.isUserFollowing
@@ -178,7 +187,9 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                             ],
                           ),
                           subtitle: Text(
-                            _userInfo!.$2.username != null ? '@${_userInfo!.$2.username}' : 'ID: ${_userInfo!.$1.id}',
+                            _userInfo!.$2.username != null
+                                ? '@${_userInfo!.$2.username}'
+                                : 'ID: ${_userInfo!.$1.id}',
                             style: theme.textTheme.bodySmall!.copyWith(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
@@ -186,9 +197,6 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                             ),
                           ),
                         ),
-
-                        //Gap(10),
-
                         //? This is the user's bio.
                         Text(
                           _userInfo!.$2.bio ?? '',

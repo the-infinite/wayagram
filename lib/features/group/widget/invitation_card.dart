@@ -37,7 +37,7 @@ class InvitationCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(10),
+          const Gap(10),
           Row(
             children: [
               CircleAvatar(
@@ -66,11 +66,14 @@ class InvitationCard extends StatelessWidget {
                     Gap(5),
                     Text(
                       '${group.group?.description?.capitalizeFirst}',
-                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).colorScheme.greyColor500,
-                      overflow: TextOverflow.ellipsis),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .wayaCopyWith(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.greyColor500,
+                              overflow: TextOverflow.ellipsis),
                     ),
                   ],
                 ),
@@ -115,7 +118,6 @@ class InvitationCard extends StatelessWidget {
               ),
             ],
           ),
-          // Gap(6),
         ],
       ),
     );

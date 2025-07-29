@@ -43,7 +43,7 @@ class _MutualPageState extends ConsumerState<FollowRelationshipsPage>
             WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
 
             //? A strange padding.
-            Gap(8),
+            const Gap(8),
           ],
         ),
         body: Column(

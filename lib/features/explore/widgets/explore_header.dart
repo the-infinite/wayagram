@@ -30,7 +30,7 @@ class _ExploreHeaderState extends ConsumerState<ExploreHeader> {
           width: width * 0.45,
           child: WayaTextFormField(
             onTap: () => WayaNav.toNamed(SearchView.route),
-            padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
             prefixIcon: Icon(
               Icons.search,
               color: wayaTheme.colorScheme.greyColor400,

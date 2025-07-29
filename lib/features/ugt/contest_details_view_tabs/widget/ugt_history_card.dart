@@ -62,7 +62,7 @@ class UgtHistoryCard extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,14 +93,6 @@ class UgtHistoryCard extends ConsumerWidget {
                   style: wayaTheme.textTheme.hintStyle
                       .copyWith(color: wayaTheme.colorScheme.greyColor400),
                 ),
-                //  Gap(5),
-                /*  if (!isPayout)
-                  Text(
-                    "Commission :₦${formatMoney(model.commission?.toString() ?? '0')}",
-                    style: wayaTheme.textTheme.hintStyle
-                        .copyWith(color: wayaTheme.colorScheme.greyColor400),
-                  ), */
-
                 if (isPayout)
                   Text(
                     "Status  : ${model.status?.toUpperCase() ?? 'N/A'}",
@@ -110,7 +102,6 @@ class UgtHistoryCard extends ConsumerWidget {
               ],
             ),
           ),
-          // const Gap(10)
         ],
       ),
     );

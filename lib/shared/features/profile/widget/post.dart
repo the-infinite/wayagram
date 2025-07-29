@@ -565,7 +565,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                                     color: Colors.white
                                                         .withValues(alpha: 0.7),
                                                   ),
-                                                  padding: EdgeInsets.all(8),
+                                                  padding:
+                                                      const EdgeInsets.all(8),
                                                   child: Icon(
                                                     Icons.play_arrow,
                                                     size: 30.dg,

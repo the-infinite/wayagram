@@ -421,9 +421,7 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
 
                     // Some space.
                     if (bid!.lastCounterSentBy == BidActionAuthor.buyer)
-                      Gap(
-                        10.h,
-                      ),
+                      Gap(10.h),
 
                     //? The buttons to accept and reject an offer.
                     if (bid!.lastCounterSentBy == BidActionAuthor.buyer)

@@ -303,7 +303,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                 ],
               ),
             ),
-            Gap(30),
+            const Gap(30),
             Container(
               // width: 200,
               height: 150,
@@ -325,7 +325,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Gap(5),
+                    const Gap(5),
                     Container(
                       // width: 200,
                       height: 80,
@@ -536,7 +536,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
           const SizedBox(height: 24),
           GridView.builder(
             itemCount: _pinLength,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,

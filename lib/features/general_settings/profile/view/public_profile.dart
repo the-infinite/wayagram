@@ -411,7 +411,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
             ),
 
             // This is fine.
-            Gap(8)
+            const Gap(8)
           ],
         ),
         title: '',
@@ -542,7 +542,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                                             await _getFollowState();
                                           },
                                     child: Container(
-                                      margin: EdgeInsets.only(right: 20),
+                                      margin: const EdgeInsets.only(right: 20),
                                       padding: REdgeInsets.symmetric(
                                           vertical: 5.dg, horizontal: 10.dg),
                                       decoration: BoxDecoration(

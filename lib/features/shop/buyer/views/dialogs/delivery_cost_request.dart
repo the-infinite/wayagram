@@ -94,14 +94,14 @@ class DeliveryCostRequest extends ConsumerWidget {
                       thickness: 1,
                     ),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Text(
                     "Enter Delivery Details",
                     style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor600,
                     ),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Expanded(
                     child: Divider(
                       color: wayaTheme.colorScheme.greyColor200,

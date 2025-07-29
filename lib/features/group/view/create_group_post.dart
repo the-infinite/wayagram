@@ -177,7 +177,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
           children: [
             Expanded(
               child: SafeArea(
-                minimum: EdgeInsets.only(top: 10),
+                minimum: const EdgeInsets.only(top: 10),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,7 +293,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
                                         color:
                                             Colors.white.withValues(alpha: 0.7),
                                       ),
-                                      padding: EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8),
                                       child: Icon(
                                         Icons.play_arrow,
                                         size: 30,
@@ -341,7 +341,6 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
                           },
                         ),
                       ),
-                      //const Gap(350),
                     ],
                   ),
                 ),
@@ -380,7 +379,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
                             : 'assets/images/pages/lock.png',
                         height: 18.h,
                       ),
-                      Gap(5),
+                      const Gap(5),
                       Text(
                         sel ? 'Public post' : 'Private post',
                         style: Theme.of(context)
@@ -408,7 +407,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
         return Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 16),
+            padding: const EdgeInsets.only(left: 10, bottom: 16),
             child: SizedBox(
               height: 120,
               child: ClipRRect(
@@ -419,7 +418,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
                     left: BorderSide(width: 4, color: Colors.white),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       top: 10,
                     ),
                     child: Container(
@@ -500,7 +499,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   decoration:
                                       BoxDecoration(color: Colors.white),
@@ -581,7 +580,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,

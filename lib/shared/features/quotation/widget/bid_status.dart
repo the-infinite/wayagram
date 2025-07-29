@@ -21,7 +21,7 @@ class BidStatusCard extends StatelessWidget {
 
     //? Return the status card.
     return Container(
-      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
       decoration: BoxDecoration(
         color: switch (bid.status) {
           BidActionType.negotiate => wayaTheme.colorScheme.primary50,
@@ -64,7 +64,7 @@ class OrderStatusCard extends StatelessWidget {
 
     //? Return the status card.
     return Container(
-      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
       decoration: BoxDecoration(
         color: switch (order.orderStatus) {
           QuotationOrderStatus.inProgress => wayaTheme.colorScheme.info50,
@@ -105,7 +105,7 @@ class DeliveryStatusCard extends StatelessWidget {
 
     //? Return the status card.
     return Container(
-      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
       decoration: BoxDecoration(
         color: switch (status) {
           QuotationDeliveryStatus.pending ||
@@ -159,7 +159,7 @@ class PickupStatusCard extends StatelessWidget {
 
     //? Return the status card.
     return Container(
-      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
       decoration: BoxDecoration(
         color: switch (status) {
           QuotationPickupStatus.pending => wayaTheme.colorScheme.info50,

@@ -63,7 +63,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
     final wayaTheme = Theme.of(context);
     // final reportState = ref.watch(createGroupProvider);
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,16 +76,16 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
           _reviewText('Cause Title', widget.causeTitle),
-          Gap(10),
+          const Gap(10),
           _reviewText('Proposed Solution', widget.solution),
-          Gap(10),
+          const Gap(10),
           _reviewText('Cause  Description', widget.desc),
           const Gap(10),
           Divider(
             color: wayaTheme.colorScheme.greyColor200,
             thickness: 1,
           ),
-          Gap(20),
+          const Gap(20),
           Row(
             children: [
               _reviewText('Start date', widget.startDate),
@@ -97,7 +97,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
               _reviewText('Show Amount\nRaised', widget.showRaised),
             ],
           ),
-          Gap(20),
+          const Gap(20),
           Row(
             children: [
               _reviewText(

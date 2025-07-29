@@ -318,7 +318,7 @@ class _SearchState extends ConsumerState<SearchView> {
                           backgroundColor: wayaTheme.colorScheme.transparent,
                           selectedColor: wayaTheme.colorScheme.primary50,
                           showCheckmark: false,
-                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                             side: BorderSide(

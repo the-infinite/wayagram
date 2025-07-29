@@ -510,7 +510,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget>
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                         ),
                         icon: SvgPicture.asset(
                           isPlaying
@@ -561,7 +561,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget>
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.white,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.all(2),
+                        padding: const EdgeInsets.all(2),
                       ),
                       icon: SvgPicture.asset(
                         isMuted
@@ -635,7 +635,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget>
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                         ),
                         icon: SvgPicture.asset(
                           isPlaying
@@ -688,7 +688,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget>
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(2),
                         ),
                         icon: SvgPicture.asset(
                           isMuted

@@ -32,8 +32,7 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
         spacing: 1,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(10),
-          //logCard('Account', WayaAssets.icons.genSet.account.path, ()=> WayaNav.toNamed(AccountActivity.route)),
+          const Gap(10),
           logCard(
               'Account',
               WayaAssets.icons.genSet.account.path,

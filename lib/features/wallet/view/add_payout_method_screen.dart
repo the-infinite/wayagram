@@ -106,7 +106,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Gap(10),
+                  const Gap(10),
                   FormField<String>(validator: (value) {
                     if (viewModel.bank == null) {
                       return 'Bank is required';

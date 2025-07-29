@@ -211,7 +211,7 @@ class _SearchProfileModalState extends State<SearchProfileModal> {
 
               //? The search field.
               WayaTextFormField(
-                padding: EdgeInsets.symmetric(horizontal: 1),
+                padding: const EdgeInsets.symmetric(horizontal: 1),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   child: WayaAssets.icons.actionSearch.svg(

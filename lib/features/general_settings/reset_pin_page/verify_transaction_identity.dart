@@ -170,7 +170,7 @@ class _VerifyIdentityPageState
                     child: Container(
                       width: 110,
                       alignment: Alignment.center,
-                      padding: EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                           color: wayaTheme.colorScheme.primary75,
                           borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -183,7 +183,7 @@ class _VerifyIdentityPageState
                 : Container(
                     width: 200,
                     alignment: Alignment.center,
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: wayaTheme.colorScheme.primary75,
                       borderRadius: BorderRadius.all(

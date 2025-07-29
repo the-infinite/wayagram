@@ -105,17 +105,6 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
                           ));
                     },
                   ),
-                  /* GestureDetector(
-                    onTap: () {
-                      WayaNav.toNamed('/view-contestant-single-data');
-                    },
-                    child: _buildStateItem(
-                        context, "Obubra Inengite", "View application"),
-                  ),
-                  Gap(20),
-                  _buildStateItem(context, "Oluchi Obiano", "View application"),
-                  Gap(20),
-                  _buildStateItem(context, "Sadiya Wakili", "View application"), */
                 ],
               ),
             ),
@@ -142,7 +131,7 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
                   fit: BoxFit.cover,
                   radius: BorderRadius.circular(45),
                 ),
-                Gap(10),
+                const Gap(10),
                 Text(post?.name ?? "", style: WayaTextStyles.bodyBold),
               ],
             ),
@@ -153,14 +142,14 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
                         ? post?.numberOfVotes.toString() ?? "0"
                         : "Voted",
                     style: WayaTextStyles.hintStyleBold),
-                Gap(10),
+                const Gap(10),
                 //   Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-                Gap(10)
+                const Gap(10)
               ],
             ),
           ],
         ),
-        Gap(10)
+        const Gap(10)
       ],
     );
   }

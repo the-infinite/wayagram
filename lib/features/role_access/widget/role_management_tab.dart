@@ -47,7 +47,7 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
                 child: RoleManagementCard(user: user));
           },
         ),
-        Gap(50)
+        const Gap(50)
       ],
     );
   }

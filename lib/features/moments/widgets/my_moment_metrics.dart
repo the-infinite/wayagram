@@ -87,7 +87,7 @@ class MyMomentMetrics extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     return Container(
       width: 75,
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
       decoration:
           BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
       child: Row(

@@ -431,7 +431,7 @@ class _PollPinEntryBottomSheetState
             const SizedBox(height: 24),
             GridView.builder(
               itemCount: _pinLength,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
@@ -686,7 +686,7 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
             const SizedBox(height: 24),
             GridView.builder(
               itemCount: _pinLength,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,

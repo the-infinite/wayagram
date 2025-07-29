@@ -51,7 +51,7 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
         backgroundColor: wayaTheme.colorScheme.scaffoldColor,
         title: "Discovery",
         appBarTrailing: Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 20.w,

@@ -185,7 +185,7 @@ class _PayoutPinEntryBottomSheetState
           const SizedBox(height: 24),
           GridView.builder(
             itemCount: _pinLength,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,

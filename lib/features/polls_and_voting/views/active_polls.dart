@@ -438,7 +438,7 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
                     ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 //voteCount == '0'? Container():
                 Expanded(
                   child: Column(
@@ -467,7 +467,7 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
                 ),
               ],
             ),
-            Gap(10),
+            const Gap(10),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),

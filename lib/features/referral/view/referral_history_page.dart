@@ -267,7 +267,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
                               color: wayaTheme.colorScheme.greyColor400,
                               //  color: wayaTheme.colorScheme.primary600,
                             ),
-                            Gap(5),
+                            const Gap(5),
                             Text(
                               'Filter By',
                               style:
@@ -276,7 +276,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            Gap(5),
+                            const Gap(5),
                             WayaAssets.icons.downArrow.svg(
                               color: wayaTheme.colorScheme.greyColor400,
                               //color: wayaTheme.colorScheme.primary600,
@@ -306,7 +306,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
               ),
             ),
 
-            Gap(20),
+            const Gap(20),
             Align(
               alignment: Alignment.bottomLeft,
               child: Text(
@@ -315,7 +315,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
                 style: WayaTextStyles.hintStyleBold,
               ),
             ),
-            Gap(20),
+            const Gap(20),
 
             if (viewModel.referralList.isEmpty) emptyWidget(),
             Expanded(
@@ -330,7 +330,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
                 },
               ),
             ),
-            Gap(100)
+            const Gap(100)
           ],
         ),
       ),
@@ -365,8 +365,6 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // asset,
-          //const Gap(4),
           Text(
             text,
             style: WayaTextStyles.bodyMedium.copyWith(color: color),
@@ -397,7 +395,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
           title,
           style: WayaTextStyles.hintStyleBold,
         ),
-        Gap(4),
+        const Gap(4),
         Text(
           value,
           style: WayaTextStyles.headlineLarge,

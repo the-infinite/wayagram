@@ -69,7 +69,7 @@ class AdminCard extends StatelessWidget {
             ),
           ],
         ),
-        Gap(40),
+        const Gap(40),
 
         // Name
         Transform.translate(

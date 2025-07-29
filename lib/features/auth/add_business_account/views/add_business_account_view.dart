@@ -146,13 +146,6 @@ class _AddBusinessAccountViewState
                             ),
                         ],
                       )),
-
-                  // const Gap(6),
-                  // WayaTextFormField(
-                  //   controller: viewModel.businessAddress,
-                  //   hintText: 'E.g 23 john doe lagos, Nigeria',
-                  //   label: 'Business Address',
-                  // ),
                   const Gap(10),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,

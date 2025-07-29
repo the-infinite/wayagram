@@ -43,7 +43,8 @@ class FollowRelationshipWidget extends StatelessWidget {
                 child: Card(
                   elevation: 0,
                   child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 15),
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 15),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.r),
@@ -53,7 +54,8 @@ class FollowRelationshipWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          contentPadding: EdgeInsets.only(left: 0, right: 0),
+                          contentPadding:
+                              const EdgeInsets.only(left: 0, right: 0),
                           leading: ChatProfilePicture(
                             user: data.$1,
                             radius: 20.h,
@@ -130,9 +132,6 @@ class FollowRelationshipWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-
-                        //Gap(10),
-
                         //? This is the user's bio.
                         Text(
                           data.$2.bio ?? '',

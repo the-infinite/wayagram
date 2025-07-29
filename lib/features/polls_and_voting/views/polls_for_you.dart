@@ -554,7 +554,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Column(
                   children: [
                     Text(
@@ -631,7 +631,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                     ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 voteCount == '0'
                     ? Container()
                     : Expanded(
@@ -666,7 +666,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                       ),
               ],
             ),
-            Gap(10),
+            const Gap(10),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),

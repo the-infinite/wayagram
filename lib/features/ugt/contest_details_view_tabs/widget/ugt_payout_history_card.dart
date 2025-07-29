@@ -56,7 +56,7 @@ class UgtPayoutHistoryCard extends ConsumerWidget {
             ),
             title: Row(
               children: [
-                Gap(10),
+                const Gap(10),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,14 +87,12 @@ class UgtPayoutHistoryCard extends ConsumerWidget {
                   style: wayaTheme.textTheme.hintStyle
                       .copyWith(color: wayaTheme.colorScheme.greyColor400),
                 ),
-                //  Gap(5),
                 if (!isPayout)
                   Text(
                     "Commission :₦${formatMoney(model.commission?.toString() ?? '0')}",
                     style: wayaTheme.textTheme.hintStyle
                         .copyWith(color: wayaTheme.colorScheme.greyColor400),
                   ),
-
                 if (isPayout)
                   Text(
                     "Status  : ${model.status?.toUpperCase() ?? 'N/A'}",
@@ -104,7 +102,6 @@ class UgtPayoutHistoryCard extends ConsumerWidget {
               ],
             ),
           ),
-          // const Gap(10)
         ],
       ),
     );

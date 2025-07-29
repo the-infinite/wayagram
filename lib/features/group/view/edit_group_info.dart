@@ -169,7 +169,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                     'assets/images/pages/cam.png',
                     height: 14.h,
                   ),
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   constraints: BoxConstraints(),
                   color: WayaColors.greyColor600, // Background overlay
                 ),
@@ -216,7 +216,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
           ),
           const Gap(30),
           Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

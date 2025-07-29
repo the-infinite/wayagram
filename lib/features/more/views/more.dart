@@ -61,7 +61,7 @@ class MoreView extends ConsumerWidget {
           onTap: moreOption.onTap,
           child: Container(
             height: 165.h,
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: wayaTheme.colorScheme.scaffoldColor,
                 borderRadius: BorderRadius.circular(12)),

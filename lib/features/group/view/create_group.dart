@@ -170,14 +170,14 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                             'assets/images/pages/cam.png',
                             height: 14.h,
                           ),
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           constraints: BoxConstraints(),
                           color: WayaColors.greyColor600, // Background overlay
                         ),
                       ),
                     ],
                   ),
-                  Gap(15),
+                  const Gap(15),
                 ],
               ),
               Positioned(

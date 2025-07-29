@@ -247,7 +247,7 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
                   label: "Bio",
                   line: 6,
                 ), */
-                Gap(15),
+                const Gap(15),
                 FormField<String>(validator: (value) {
                   if (whatExpectVoterController.text.isEmpty) {
                     return 'What you expect from the voters is required';
@@ -295,7 +295,7 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
             label: "what you expect from the voters",
             line: 6,
           ), */
-          Gap(15),
+          const Gap(15),
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Column(

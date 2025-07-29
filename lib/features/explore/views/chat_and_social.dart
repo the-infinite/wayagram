@@ -36,7 +36,7 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
       title: "Chat & Socials",
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
       appBarTrailing: Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 15.w,

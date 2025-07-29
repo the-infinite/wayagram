@@ -118,7 +118,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
               ),
             ),
           ),
-          Gap(8)
+          const Gap(8)
         ],
       ),
       body: viewModel2.groupPostdocs?.isEmpty ?? true

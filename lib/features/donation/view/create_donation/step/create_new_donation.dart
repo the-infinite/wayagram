@@ -237,7 +237,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         controller: viewModel.targetAmount,
                         hintText: 'e.g., 500,000',
                         suffixIcon: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                           child:
                               Text("NGN", style: wayaTheme.textTheme.hintStyle),
                         ),
@@ -277,7 +277,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         controller: viewModel.minimumDonationAmount,
                         hintText: 'e.g., 500,000',
                         suffixIcon: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                           child:
                               Text("NGN", style: wayaTheme.textTheme.hintStyle),
                         ),

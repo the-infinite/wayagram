@@ -59,7 +59,7 @@ class AppliedDonationWidget extends ConsumerWidget {
                       topRight: Radius.circular(12)),
                 ),
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -68,7 +68,7 @@ class AppliedDonationWidget extends ConsumerWidget {
                         overflow: TextOverflow.ellipsis,
                         style: wayaTheme.textTheme.bodyMedium,
                       ),
-                      Gap(20),
+                      const Gap(20),
                       Row(
                         children: [
                           summary(context, 'Start date', startDate),
@@ -76,7 +76,7 @@ class AppliedDonationWidget extends ConsumerWidget {
                           summary(context, 'End date', endDate),
                         ],
                       ),
-                      Gap(20),
+                      const Gap(20),
                       Row(
                         children: [
                           Column(
@@ -123,7 +123,7 @@ class AppliedDonationWidget extends ConsumerWidget {
                           summary(context, 'Privacy Settings', privacy),
                         ],
                       ),
-                      Gap(20),
+                      const Gap(20),
                       WayaButton(
                         text: 'View Application Details',
                         color: wayaTheme.colorScheme.primary500,

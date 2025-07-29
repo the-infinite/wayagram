@@ -58,14 +58,14 @@ class _PayoutDetailsState extends ConsumerState<PayoutDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Gap(10),
+                const Gap(10),
                 Text('Payout Amount',
                     style: wayaTheme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w400,
                         fontFamily: WayaConstants.fontFamily,
                         fontSize: 14.sp,
                         color: wayaTheme.colorScheme.greyColor500)),
-                Gap(10),
+                const Gap(10),
                 Text(
                     '+₦${ref.watch(createPollVotingProvider.notifier).formatAm(viewModel.amount)}',
                     style: wayaTheme.textTheme.bodyLarge?.copyWith(

@@ -165,7 +165,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
                   onChanged: (value) =>
                       ref.read(radioSelectProvider(key).notifier).state = value,
                 ),
-                //      const Gap(10),
                 RadioSelect(
                   title: Text("Pick-up",
                       style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(

@@ -49,7 +49,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen>
         spacing: 12,
         children: [
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-          Gap(8)
+          const Gap(8)
         ],
       ),
       body: viewModel.allGroupMemberDocs?.isEmpty ?? true

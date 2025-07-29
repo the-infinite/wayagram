@@ -46,12 +46,12 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Gap(20),
+            const Gap(20),
             Text(
               "Welcome Back, ${setUp.user?.user?.firstName.capitalizeFirst ?? ''}",
               style: wayaTheme.textTheme.headlineLarge,
             ),
-            Gap(20),
+            const Gap(20),
             SizedBox(
               width: 303.w,
               child: Text(
@@ -61,14 +61,14 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Gap(30),
+            const Gap(30),
             WayaDp(
               radius: 50,
             ),
-            Gap(10),
+            const Gap(10),
             Text(setUp.user?.user?.fullname ?? '',
                 style: wayaTheme.textTheme.bodyMedium),
-            Gap(10),
+            const Gap(10),
             GestureDetector(
               onTap: () {
                 ref.read(profileVmProvider.notifier).logOutUser();
@@ -78,7 +78,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                       fontWeight: FontWeight.w500,
                       color: wayaTheme.colorScheme.primary500)),
             ),
-            Gap(20),
+            const Gap(20),
             Form(
                 key: _formKey,
                 child: Column(

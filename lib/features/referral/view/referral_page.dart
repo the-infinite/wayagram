@@ -131,13 +131,13 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
               ),
             ),
 
-            Gap(16),
+            const Gap(16),
             Text(
               "Invitation Link",
               textAlign: TextAlign.start,
               style: WayaTextStyles.hintStyleBold,
             ),
-            Gap(16),
+            const Gap(16),
             // Action Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,7 +167,7 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
               ],
             ),
 
-            Gap(20),
+            const Gap(20),
 
             // View Referral History Button
             WayaButton(
@@ -189,7 +189,7 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
           title,
           style: WayaTextStyles.hintStyleBold,
         ),
-        Gap(4),
+        const Gap(4),
         Text(
           value,
           style: WayaTextStyles.headlineLarge,
@@ -216,7 +216,7 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
             color: wayaTheme.colorScheme.primary500,
             size: 20,
           ),
-          Gap(4),
+          const Gap(4),
           Text(label,
               style: WayaTextStyles.bodyMedium.copyWith(
                   color: wayaTheme.colorScheme.primary500, fontSize: 14.sp)),

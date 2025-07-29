@@ -414,7 +414,6 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                           },
                         ),
                       ),
-                      //const Gap(350),
                     ],
                   ),
                 ),
@@ -467,7 +466,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                             : 'assets/images/pages/lock.png',
                         height: 18.h,
                       ),
-                      Gap(5),
+                      const Gap(5),
                       Text(
                         sel ? 'Public post' : 'Private post',
                         style: Theme.of(context)
@@ -587,7 +586,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   decoration:
                                       BoxDecoration(color: Colors.white),
@@ -668,7 +667,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,

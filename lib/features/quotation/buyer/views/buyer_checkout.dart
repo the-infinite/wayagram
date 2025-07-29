@@ -326,7 +326,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                   options: RoundedRectDottedBorderOptions(
                     color: wayaTheme.colorScheme.greyColor300,
                     radius: Radius.circular(8),
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     dashPattern: [5, 5],
                   ),
                   child: ClipRRect(
@@ -361,7 +361,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                   options: RoundedRectDottedBorderOptions(
                     color: wayaTheme.colorScheme.greyColor300,
                     radius: Radius.circular(8),
-                    padding: EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(14),
                     dashPattern: [5, 5],
                   ),
                   child: ClipRRect(
@@ -395,7 +395,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                 Text("Payment Method", style: wayaTheme.textTheme.bodyMedium),
                 const Gap(10),
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: wayaTheme.colorScheme.scaffoldColor,
                       borderRadius: BorderRadius.circular(8)),
@@ -456,7 +456,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                 ),
                 const Gap(10),
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: wayaTheme.colorScheme.scaffoldColor,
                     borderRadius: BorderRadius.circular(8),

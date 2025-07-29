@@ -56,11 +56,11 @@ class _UgtHomeState extends ConsumerState<PageGeneralSetting> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(10),
+            const Gap(10),
             Text("Page Preferences",
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
-            Gap(20),
+            const Gap(20),
             //? card for each of the switch
             /* 
             setting event- on and off for ...let everyone join, approve join request before joining
@@ -78,7 +78,7 @@ class _UgtHomeState extends ConsumerState<PageGeneralSetting> {
                       approveJoinRequest: approveJoinRequest.value); */
                 },
                 switchValue: followPermisson),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Comment Permissions",
                 value:
@@ -89,7 +89,7 @@ class _UgtHomeState extends ConsumerState<PageGeneralSetting> {
                       followPermisson.value, value);
                 },
                 switchValue: commentPermisson),
-            Gap(10),
+            const Gap(10),
           ],
         ),
       ),

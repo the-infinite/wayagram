@@ -31,7 +31,7 @@ class _MutualsState extends ConsumerState<Mutuals>
     //? Our view.
     return ListView.builder(
       shrinkWrap: true,
-      padding: EdgeInsets.only(top: 15),
+      padding: const EdgeInsets.only(top: 15),
       itemCount: 6,
       itemBuilder: (_, index) {
         return Padding(
@@ -39,7 +39,7 @@ class _MutualsState extends ConsumerState<Mutuals>
           child: Card(
             elevation: 0,
             child: Container(
-              padding: EdgeInsets.only(left: 10, right: 10, bottom: 15),
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 15),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -49,7 +49,7 @@ class _MutualsState extends ConsumerState<Mutuals>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    contentPadding: EdgeInsets.only(left: 0, right: 0),
+                    contentPadding: const EdgeInsets.only(left: 0, right: 0),
                     leading: Image.asset(
                       index.isEven
                           ? 'assets/images/pages/c1.png'
@@ -95,8 +95,6 @@ class _MutualsState extends ConsumerState<Mutuals>
                                   Theme.of(context).colorScheme.greyColor500),
                     ),
                   ),
-                  //Gap(10),
-
                   Text(
                     index.isEven
                         ? '🌍 Adventurous soul | Espresso lover ☕ | Gadget aficionado 💻 | Documenting my journeys and life lessons! ✨'

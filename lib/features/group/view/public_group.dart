@@ -49,7 +49,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-     await notifier.getGroupMembers(widget.id);
+      await notifier.getGroupMembers(widget.id);
       final result = await myGroupNotifier.getSingleGroup(widget.id);
       setState(() {
         _thisGroup = result;
@@ -74,7 +74,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     final wayaTheme = Theme.of(context);
     final state = ref.watch(groupProvider);
 
-   final members =  state.allGroupMemberDocs ?? [];
+    final members = state.allGroupMemberDocs ?? [];
 
     //? You can now return this.
     final group = wayaGroupCache.getCachedData(widget.id) ?? _thisGroup;
@@ -85,8 +85,13 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
     }
 
     //? Fetch the data of this page.
-    if (group.ownerId == ConversationState.self.id || members.where((member)=>
-    member.userId == ConversationState.self.id && member.role != 'member').firstOrNull != null) {
+    if (group.ownerId == ConversationState.self.id ||
+        members
+                .where((member) =>
+                    member.userId == ConversationState.self.id &&
+                    member.role != 'member')
+                .firstOrNull !=
+            null) {
       return PrivateGroup(group: group);
     }
 
@@ -197,7 +202,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
               fit: BoxFit.none,
             ),
           ),
-          Gap(8)
+          const Gap(8)
         ],
       ),
       body: WayaObservableScrollView(
@@ -511,7 +516,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
           WayaAssets.icons.genSet.lock.path,
         ),
         Text('This group is private', style: wayaTheme.textTheme.titleLarge),
-        Gap(10),
+        const Gap(10),
         Text('You must join to see posts and participate',
             style: wayaTheme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w400,
@@ -525,7 +530,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
           textColor: wayaTheme.colorScheme.greyColor700,
           text: 'Access to Group requested',
         ),
-        Gap(10),
+        const Gap(10),
         InkWell(
           onTap: cancel,
           child: Text('Cancel request', style: wayaTheme.textTheme.titleSmall),

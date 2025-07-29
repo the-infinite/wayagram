@@ -127,7 +127,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                 ],
               ),
             ),
-            Gap(30),
+            const Gap(30),
             Container(
               // width: 200,
               height: 150,
@@ -149,7 +149,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Gap(5),
+                    const Gap(5),
                     Container(
                       // width: 200,
                       height: 80,
@@ -420,8 +420,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                         : const Icon(Icons.arrow_forward,
                             color: Colors.black54),
                     onPressed: isLoading.value
-                        ? () {
-                          }
+                        ? () {}
                         : () {
                             //   widget.onTap();
                             _submitPin(context, isLoading);

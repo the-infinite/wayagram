@@ -149,7 +149,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
               ),
               const Gap(10),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                     color: WayaColors.greyColor50,
                     borderRadius: BorderRadius.all(Radius.circular(12))),
@@ -372,7 +372,7 @@ class _DonationPinEntryBottomSheetState
             const SizedBox(height: 24),
             GridView.builder(
               itemCount: _pinLength,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
@@ -770,7 +770,8 @@ class _DonationAmountSetupModalState
                               controller: viewModel.amount,
                               hintText: 'e.g., 500,000',
                               suffixIcon: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 15),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
                                 child: Text("NGN",
                                     style: wayaTheme.textTheme.hintStyle),
                               ),
