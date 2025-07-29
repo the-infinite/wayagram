@@ -148,8 +148,9 @@ class _ReportEventState extends ConsumerState<Report> {
                     const Gap(24),
                     WayaButton(
                         callback: () async {
-                          if (selectedStatus.isEmpty)
+                          if (selectedStatus.isEmpty) {
                             return WayaSnackBar.showToast("Reason is required");
+                          }
 
                           setState(() => isLoading = true);
 

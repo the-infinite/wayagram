@@ -5,6 +5,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/cache/order.dart';
 import 'package:wayagram/shared/cache/quotation.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/repo/default.dart';
@@ -477,6 +478,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? Parse the single buy request to ensure we are doing things right.
         final doc = BidOrderModel.fromJson(data);
+        wayaOrdersCache.cache(id, doc);
 
         //? Return the document.
         return doc;
@@ -524,6 +526,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? Parse the buy requests first so we can extrapolate what we need.
         final docs = (data['docs'] as List).map((doc) => BidOrderModel.fromJson(doc)).toList();
+        wayaOrdersCache.cacheAll(docs);
 
         //? Then add all the quotes (buy requests)
         result.addAll(docs);
@@ -563,6 +566,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.updateOrderStatus(id, status.value);
 
+      //? Fetch the details of the order after updating the status.
+      getOrderDetails(id);
+
       //? This is fine.
       return response.success;
     } catch (e) {
@@ -584,6 +590,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.updateDeliveryStatus(id, status.value);
 
+      //? Fetch the details of the order after updating the status.
+      getOrderDetails(id);
+
       //? This is fine.
       return response.success;
     } catch (e) {
@@ -604,6 +613,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   Future<bool> updatePickupStatus(String id, QuotationPickupStatus status) async {
     try {
       final response = await repo.updatePickupStatus(id, status.value);
+
+      //? Fetch the details of the order after updating the status.
+      getOrderDetails(id);
 
       //? This is fine.
       return response.success;
@@ -679,6 +691,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.completeOrder(orderId: id, token: token);
 
+      //? Fetch the details of the order after updating the status.
+      getOrderDetails(id);
+
       //? This is fine.
       return response.success;
     } catch (e) {
@@ -705,6 +720,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       if (response.success) {
         debugPrint("Result: ${response.data}");
         final data = response.data['data'] as List;
+        getOrderDetails(id);
         return [...data.map((payload) => BidOrderStatus.fromJson(payload))];
       }
     } catch (e) {

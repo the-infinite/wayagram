@@ -42,7 +42,7 @@ class _BuyerOrdersWidgetState extends ConsumerState<BuyerOrdersWidget> {
           state.orders.length,
           (index) => QuotationOrderWidget(
             isSeller: true,
-            order: state.orders[index],
+            data: state.orders[index],
           ),
         ),
       ),

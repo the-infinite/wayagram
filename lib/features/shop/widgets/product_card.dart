@@ -358,7 +358,6 @@ class SellerProductCard extends ConsumerWidget {
                         WayaSnackBar.showToast("Item added to cart");
                       }
 
-                      ;
                     },
                     height: 38,
                     radius: 6,

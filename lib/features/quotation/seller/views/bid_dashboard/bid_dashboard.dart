@@ -9,6 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/orders.dart';
@@ -16,6 +17,7 @@ import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
 
@@ -182,16 +184,11 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                     colorFilter: ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
                   ),
                   color: Color(0xffFBEAE9),
-                  onTap: () {
-                    //? Show the coming soon modal.
-                    if (WayaConstants.isProduction) {
-                      WayaNavigationHelper.showComingSoonModal(true);
-                      return;
-                    }
-
-                    //? Now, continue as needed in staging.
-                    WayaNav.toNamed('/seller-settlement');
-                  },
+                  onTap: () => WayaNav.toNamed(PayoutHistory.route, arguments: {
+                    "referenceId": "",
+                    "Module": PayoutModule.quotation.name.toUpperCase(),
+                    "Title": "Settlements",
+                  }),
                 ),
               ],
             ),

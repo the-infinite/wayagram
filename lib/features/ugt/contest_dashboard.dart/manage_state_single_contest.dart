@@ -11,7 +11,6 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
-import '../../../core/components/waya_scaffold.dart';
 
 class ManageStateSingleContest extends StatefulHookConsumerWidget {
   static const route = '/manage-application-single-contest';

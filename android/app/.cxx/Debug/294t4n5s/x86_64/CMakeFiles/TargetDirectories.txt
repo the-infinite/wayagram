@@ -1,0 +1,2 @@
+/home/the-infinite/Projects/Waya/WayaGram/android/app/.cxx/Debug/294t4n5s/x86_64/CMakeFiles/edit_cache.dir
+/home/the-infinite/Projects/Waya/WayaGram/android/app/.cxx/Debug/294t4n5s/x86_64/CMakeFiles/rebuild_cache.dir

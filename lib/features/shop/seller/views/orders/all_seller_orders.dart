@@ -86,7 +86,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
       }).toList();
     }
 
-    final List<String> _tabs = [
+    final List<String> tabs = [
       "Pending Orders",
       "Completed Orders",
       "Cancelled Orders",
@@ -155,7 +155,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                   const EdgeInsets.symmetric(horizontal: 1.0, vertical: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(_tabs.length, (index) {
+                children: List.generate(tabs.length, (index) {
                   return GestureDetector(
                     onTap: () {
                       setState(() {
@@ -177,7 +177,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                         ),
                       ),
                       child: Text(
-                        _tabs[index],
+                        tabs[index],
                         style: TextStyle(
                             color: _selectedIndex == index
                                 ? wayaTheme.colorScheme.customPrimary
