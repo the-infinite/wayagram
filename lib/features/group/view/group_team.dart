@@ -393,13 +393,10 @@ class _GroupTeamState extends ConsumerState<GroupTeam>
                                  ),
                                  PopupMenuItem<int>(
                                    value: 1,
-                                   onTap: () async{
-                                     await myGroupNotifier.removeGroupMember('${group?.userId}',
-                                          widget.groupId);
-                                     // ref.read(createGroupProvider.notifier)
-                                     //     .removeTeamMember(context, '${group?.userId}', widget.groupId);
+                                   onTap: () {
+                                     ref.read(widget.provider.notifier).removeTeamMember(context, '${group?.userId}',
+                                         widget.groupId);
 
-                                     setState(() {});
                                    },
                                    child: WayaActionNav(
                                      context: context,
@@ -485,7 +482,6 @@ class _GroupTeamState extends ConsumerState<GroupTeam>
                          ],
                        ),
                      ),
-                     //Gap(10),
                      ListTile(
                        contentPadding: EdgeInsets.only(
                            left: 0, right: 0, top: 0),
@@ -552,12 +548,8 @@ class _GroupTeamState extends ConsumerState<GroupTeam>
                                PopupMenuItem<int>(
                                  value: 1,
                                  onTap: () {
-                                   // await myGroupNotifier.removeGroupMember('${group?.userId}',
-                                   //      widget.groupId);
-                                   ref.read(createGroupProvider.notifier)
-                                       .removeTeamMember(context, '${group?.userId}', widget.groupId);
-
-                                   setState(() {});
+                                    ref.read(widget.provider.notifier).removeTeamMember(context, '${group?.userId}',
+                                       widget.groupId);
                                  },
                                  child: WayaActionNav(
                                    context: context,

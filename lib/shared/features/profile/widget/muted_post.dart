@@ -331,8 +331,10 @@ class _WayaMutedPostWidgetState extends State<WayaMutedPostWidget> {
                                   //? First, the button to share a post.
                                   PopupMenuItem<int>(
                                     value: 2,
-                                    onTap: () => _sharePost(engagementMonitor,
-                                        pageNotifier, serviceNotifier, ref),
+                                    onTap: () {
+                                      // _sharePost(engagementMonitor,
+                                      //     pageNotifier, serviceNotifier, ref);
+                                    },
                                     child: WayaActionNav(
                                       context: context,
                                       asset: WayaAssets.icons.share.svg(
@@ -349,11 +351,13 @@ class _WayaMutedPostWidgetState extends State<WayaMutedPostWidget> {
                                     //? Second, the button to delete a post
                                     PopupMenuItem<int>(
                                       value: 1,
-                                      onTap: () => pageNotifier.deletePost(
-                                        context,
-                                        postId: postData.id,
-                                        userId: ConversationState.self.id,
-                                      ),
+                                      onTap: () {
+                                       /* pageNotifier.deletePost(
+                                          context,
+                                          postId: postData.id,
+                                          userId: ConversationState.self.id,
+                                        );*/
+                                      },
                                       child: WayaActionNav(
                                         context: context,
                                         asset:
@@ -369,7 +373,7 @@ class _WayaMutedPostWidgetState extends State<WayaMutedPostWidget> {
                                       PopupMenuItem<int>(
                                         value: 4,
                                         onTap: () {
-                                          WayaNav.toNamed(
+                                        /*  WayaNav.toNamed(
                                               WayaAppRoutes.getEditPostScreen(
                                                   postData.id,
                                                   postData.content,
@@ -377,7 +381,7 @@ class _WayaMutedPostWidgetState extends State<WayaMutedPostWidget> {
                                                   postData.media.isEmpty
                                                       ? ''
                                                       : jsonEncode(
-                                                      postData.media)));
+                                                      postData.media)));*/
                                         },
                                         child: WayaActionNav(
                                           context: context,

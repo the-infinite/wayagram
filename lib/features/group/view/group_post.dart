@@ -44,7 +44,6 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(widget.provider);
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

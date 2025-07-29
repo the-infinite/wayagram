@@ -219,7 +219,6 @@ class GroupRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> updateGroupSetting(bool isOpen, bool approveJoinRequest, groupId) {
-    //final payload = { "isPrivate": isPrivate};
     final payload = {
       "approveJoinRequest": approveJoinRequest,
       "isOpen": isOpen

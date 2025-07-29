@@ -279,40 +279,6 @@ class GroupNotifier extends ValueNotifier<int> {
     return false;
   }
 
-  Future<bool> removeGroupMember(String groupId, String memberId) async {
-    try {
-      final response = await repo.removeTeamMember(groupId, memberId);
-
-      //? This is fine.
-      if (response.success) {
-        final found = groupMembers.indexWhere((group) => group.id == groupId);
-        wayaGroupCache.deleteItem(groupId);
-
-        //? If this was found, remove it and update.
-        if (!found.isNegative) {
-          groupMembers.removeAt(found);
-          refresh();
-        }
-
-        //? Now report.
-        WayaSnackBar.showToast("Member removed successfully");
-      }
-
-      //? This is fine.
-      return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-
-    //? Return false.
-    return false;
-  }
-
   /// Creates a new group.
   ///
   /// Makes a network request to create a group with the provided information.
