@@ -11,7 +11,12 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/group/view/events.dart';
+import 'package:wayagram/features/group/view/media_post.dart';
+import 'package:wayagram/features/group/widget/group_empty_state.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
+import 'package:wayagram/features/pages/view/page_post.dart';
+import 'package:wayagram/features/pages/view/team_page.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'private_page.dart';
@@ -45,6 +50,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
   final handler = WayaObservableScrollController();
   final loadingController = ValueNotifier(false);
   PageModel? _thisPage;
+  int _selectedIndex = 0;
 
   Future<void> _followPage() async {
     //? Then leave the page.
@@ -346,8 +352,50 @@ class _PublicPageState extends ConsumerState<PublicPage>
                 ),
               ),
 
-              //? If this page should be visible to the user...
+              ///
+              //? When the user is a member of this group.
               if (myPageNotifier.isMemberOf(widget.id) || page.isPublic) ...[
+                //? Our tab bar.
+                Row(
+                  children: [
+                    WayaTabButton(
+                      isSelected: _selectedIndex == 0,
+                      text: 'Posts',
+                      onTap: () => setState(() => _selectedIndex = 0),
+                    ),
+                    WayaTabButton(
+                      isSelected: _selectedIndex == 1,
+                      text: 'Team',
+                      onTap: () => setState(() => _selectedIndex = 1),
+                    ),
+                  ],
+                ),
+
+                // Some space.
+                Gap(15.h),
+
+                //? Selected content.
+                _selectedIndex == 0
+                    ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: PagePost(
+                    pageId: widget.id,
+                  ),
+                )
+                    : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: TeamPage(
+                    pageId: widget.id,
+                    provider: pageProvider,
+
+                  ),
+                ),
+
+              ]
+              ///
+
+              //? If this page should be visible to the user...
+             /* if (myPageNotifier.isMemberOf(widget.id) || page.isPublic) ...[
                 Padding(
                   padding: EdgeInsets.only(left: 15.w),
                   child: Text(
@@ -366,7 +414,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
 
                 //? This is fine.
                 if (state.getAllPost?.isEmpty ?? true)
-                  PostEmptyState()
+                  GroupPageEmptyState(text: 'No post yet')
                 else
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -380,7 +428,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
                       ),
                     ),
                   )
-              ]
+              ]*/
 
               //? Since the user has not joined and it is private
               else ...[
