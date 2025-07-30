@@ -12,11 +12,13 @@ class DummyData {
     Select(label: 'Admin', value: 'Admin'),
     Select(label: 'Moderator', value: 'Moderator'),
     Select(label: 'Editor', value: 'Editor'),
+    Select(label: 'Member', value: 'Member'),
   ];
 
   static List<Select> pageRole = [
     Select(label: 'Admin', value: 'Admin'),
     Select(label: 'Editor', value: 'Editor'),
+    Select(label: 'Member', value: 'Member'),
 
   ];
 }

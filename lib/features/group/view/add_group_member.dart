@@ -239,7 +239,25 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                                 const Gap(15),
                               ],
                             )
-                          : Container(),
+                          :
+          viewModel.roleType == 'member'
+              ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Permission & Access',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: WayaColors.greyColor700,
+                  )),
+              const Gap(15),
+              _permissionType("Content Focused", "Create and manage all page posts and media"),
+              const Gap(15),
+              _permissionType("Comment & Message Handling", "Respond to user comments and messages"),
+              const Gap(15),
+            ],
+          ):
+          Container(),
         ],
       ),
     );

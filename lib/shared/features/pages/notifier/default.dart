@@ -27,6 +27,7 @@ class PageNotifier extends ValueNotifier<int> {
   List<PageModel> createdPages = [];
   List<PageModel> followedPages = [];
   List<PostModel> popularPosts = [];
+  List<PageModel> pageMembers = [];
   List<PostModel> latestPosts = [];
   List<PostModel> recentPosts = [];
 
@@ -100,7 +101,7 @@ class PageNotifier extends ValueNotifier<int> {
     final result = <PageModel>[];
 
     //? If there is nothing to see or get, leave.
-    if (!hasMoreCreatedPages) return createdPages;
+    //if (!hasMoreCreatedPages) return createdPages;
 
     //? If is now loading.
     isLoading = true;
@@ -444,6 +445,40 @@ class PageNotifier extends ValueNotifier<int> {
         WayaDebugHelpers.getStackTrace(e),
       );
     }
+  }
+
+  Future<bool> removePageMember(String groupId, String memberId) async {
+    try {
+      final response = await repo.removePageTeamMember(groupId, memberId);
+
+      //? This is fine.
+      if (response.success) {
+        final found = pageMembers.indexWhere((group) => group.id == groupId);
+        wayaPageCache.deleteItem(groupId);
+
+        //? If this was found, remove it and update.
+        if (!found.isNegative) {
+          pageMembers.removeAt(found);
+          refresh();
+        }
+
+        //? Now report.
+        WayaSnackBar.showToast("Member removed successfully");
+      }
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return false.
+    return false;
   }
 
   /// Unfollows a page with the specified ID.
