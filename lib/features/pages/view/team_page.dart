@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -10,6 +11,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/widget/group_empty_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 class TeamPage extends ConsumerStatefulWidget {
   final String pageId;
@@ -144,6 +146,69 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500),
+                          ),
+                          trailing: Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: PopupMenuButton(
+                              onSelected: (value) {},
+                              iconColor:
+                              wayaTheme.colorScheme.greyColor400,
+                              position: PopupMenuPosition.under,
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem<int>(
+                                    value: 0,
+                                    onTap: () {
+                                      WayaNav.toNamed(
+                                          '/groups/members/edit',
+                                          arguments: {
+                                            'email': page?.user?.email,
+                                            'id': page?.userId,
+                                            'groupId': widget.pageId,
+                                          });
+                                    },
+                                    child: WayaActionNav(
+                                      context: context,
+                                      asset: WayaAssets.images.pages.editor
+                                          .image(color: wayaTheme.colorScheme.greyColor600,
+                                        height: 20,
+                                      ),
+                                      text: "  Edit Group",
+                                      color: wayaTheme
+                                          .colorScheme.customBlack,
+                                    ),
+                                  ),
+                                  PopupMenuItem<int>(
+                                    value: 1,
+                                    onTap: () {
+                                      // myPageNotifier.removePageMember('${page?.userId}',
+                                      //     widget.pageId);
+                                      ref.read(createPageProvider.notifier)
+                                          .removeTeamMember(context, '${page?.userId}', widget.pageId);
+
+                                      setState(() {});
+                                    },
+                                    child: WayaActionNav(
+                                      context: context,
+                                      asset: WayaAssets
+                                          .images.pages.delete
+                                          .svg(
+                                        color: wayaTheme
+                                            .colorScheme.error500,
+                                        height: 20,
+                                      ),
+                                      text: "Remove member",
+                                      color: wayaTheme
+                                          .colorScheme.error500,
+                                    ),
+                                  ),
+                                ];
+                              },
+                              child:
+                              WayaAssets.icons.genSet.moreHorz.svg(
+                                fit: BoxFit.none,
+                              ),
+                            ),
                           ),
                         ),
                       ],

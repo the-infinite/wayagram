@@ -25,6 +25,7 @@ class GroupNotifier extends ValueNotifier<int> {
   int totalJoinedGroups = 0;
   List<GroupModel> createdGroups = [];
   List<GroupModel> joinedGroups = [];
+  List<GroupModel> groupMembers = [];
   List<PostModel> popularPosts = [];
   List<PostModel> latestPosts = [];
   List<PostModel> recentPosts = [];

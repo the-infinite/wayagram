@@ -335,7 +335,15 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () => WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(widget.group.id)),
+          callback: () => widget.group.mutedAt == null ?
+              WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(widget.group.id)):
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('This group is muted'),
+              backgroundColor: WayaColors.primary,
+              duration: Duration(seconds: 2),
+            ),
+          ),
           height: 50,
           centerWidget: Center(
             child: Icon(

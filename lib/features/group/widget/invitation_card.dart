@@ -50,26 +50,30 @@ class InvitationCard extends StatelessWidget {
                 ),
               ),
               Gap(10),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${group.group?.name?.capitalizeFirst}',
-                    style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.black),
-                  ),
-                  Gap(5),
-                  Text(
-                    '${group.group?.description?.capitalizeFirst}',
-                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).colorScheme.greyColor500),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${group.group?.name?.capitalizeFirst}',
+                      style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.black,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    Gap(5),
+                    Text(
+                      '${group.group?.description?.capitalizeFirst}',
+                      style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Theme.of(context).colorScheme.greyColor500,
+                      overflow: TextOverflow.ellipsis),
+                    ),
+                  ],
+                ),
               ),
               Spacer(),
               Padding(
