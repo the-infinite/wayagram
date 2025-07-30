@@ -40,6 +40,7 @@ class _CreateRequestState extends ConsumerState<CreateBidScreen> with SingleTick
   }
 
   void _goToPreviousTab() {
+    //? Then we can navigate backwards.
     if (_tabController.index > 1) {
       _tabController.animateTo(_tabController.index - 1);
     }

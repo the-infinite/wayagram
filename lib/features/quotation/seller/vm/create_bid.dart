@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class CreateBidState {
@@ -12,8 +14,6 @@ class CreateBidState {
   final String? comment;
   final String? condition;
   final List<File>? images;
-  final String? color;
-  final String? size;
 
   //? Second, pricing for delivery.
   final String? shopId;
@@ -30,8 +30,6 @@ class CreateBidState {
     required this.comment,
     required this.condition,
     required this.images,
-    required this.color,
-    required this.size,
     required this.unitPrice,
     required this.quantity,
     required this.location,
@@ -51,8 +49,6 @@ class CreateBidState {
     String? description,
     List<File>? images,
     String? comment,
-    String? color,
-    String? size,
     String? shopId,
     String? condition,
     double? unitPrice,
@@ -65,8 +61,6 @@ class CreateBidState {
       request: request ?? this.request,
       description: description ?? this.description,
       comment: comment ?? this.comment,
-      color: color ?? this.color,
-      size: size ?? this.size,
       images: images ?? this.images,
       shopId: shopId ?? this.shopId,
       condition: condition ?? this.condition,
@@ -85,8 +79,6 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
           request: request,
           description: null,
           comment: null,
-          color: null,
-          size: null,
           images: null,
           shopId: null,
           condition: null,
@@ -97,6 +89,16 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
           readyDate: null,
         ));
 
+  /// Returns a list of valid product conditions available for selection.
+  /// 
+  /// The list contains [Select] objects representing different conditions 
+  /// that can be assigned to a product in the quotation/bidding process.
+  List<Select> get validConditions => productConditions
+      .asMap()
+      .entries
+      .map((entries) => Select(value: entries.value.id.toString(), label: entries.value.productCondition))
+      .toList();
+
   /// Resets all bid-related states to their initial values.
   /// This includes clearing any form inputs, validation errors, and loading states.
   void reset() {
@@ -104,8 +106,6 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
       request: null,
       description: null,
       comment: null,
-      color: null,
-      size: null,
       images: null,
       shopId: null,
       condition: null,
@@ -123,16 +123,12 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
     String condition,
     List<File> images,
     String? comment,
-    String? color,
-    String? size,
   ) {
     state = state.copyWith(
       description: description,
       condition: condition,
       images: images,
       comment: comment,
-      color: color,
-      size: size,
     );
   }
 

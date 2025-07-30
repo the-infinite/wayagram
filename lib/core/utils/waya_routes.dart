@@ -112,7 +112,6 @@ import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.da
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
-import 'package:wayagram/features/quotation/seller/views/create_bid/create_bid.dart';
 import 'package:wayagram/features/quotation/seller/views/order_details.dart';
 import 'package:wayagram/features/quotation/seller/views/orders.dart';
 import 'package:wayagram/features/referral/view/referral_history_page.dart';
