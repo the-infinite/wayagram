@@ -13,20 +13,23 @@ import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class RequestPayout extends ConsumerStatefulWidget {
   static const route = '/requestPayout';
-  const RequestPayout({super.key,});
+  const RequestPayout({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RequestPayoutState();
 }
 
 class _RequestPayoutState extends ConsumerState<RequestPayout> {
-
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
+
+    final args = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
       //removeAppBar: false,
       isLoading: viewModel.isLoading!,
@@ -38,33 +41,37 @@ class _RequestPayoutState extends ConsumerState<RequestPayout> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Gap(10),
-          Container(
-            decoration: BoxDecoration(
-              color: WayaColors.greyColor100,
-                borderRadius: BorderRadius.circular(12)
-            ),
-            height: 88.h,
-            child: Container(
-              margin: EdgeInsets.all(10),
+          if (args != 'shop') ...[
+            const Gap(10),
+            Container(
               decoration: BoxDecoration(
-                color: WayaColors.white,
-                borderRadius: BorderRadius.circular(12)
-              ),
-              height: 52.h,
-              child: ListTile(
-                leading: Image.asset('assets/images/wallet/misc_icon.png', height: 40.h,),
-             title: Text('Payout - Eligible',
-                 style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                     color: wayaTheme.colorScheme.greyColor600)),
-                subtitle: Text('₦0.00',
-                    style: wayaTheme.textTheme.mediumDescriptionStyle.wayaCopyWith(
-                      fontWeight: FontWeight.w700,
-                        fontSize: 16.sp,
-                        color: wayaTheme.colorScheme.greyColor700)),
+                  color: WayaColors.greyColor100,
+                  borderRadius: BorderRadius.circular(12)),
+              height: 88.h,
+              child: Container(
+                margin: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: WayaColors.white,
+                    borderRadius: BorderRadius.circular(12)),
+                height: 52.h,
+                child: ListTile(
+                  leading: Image.asset(
+                    'assets/images/wallet/misc_icon.png',
+                    height: 40.h,
+                  ),
+                  title: Text('Payout - Eligible',
+                      style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                          color: wayaTheme.colorScheme.greyColor600)),
+                  subtitle: Text('₦0.00',
+                      style: wayaTheme.textTheme.mediumDescriptionStyle
+                          .wayaCopyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16.sp,
+                              color: wayaTheme.colorScheme.greyColor700)),
+                ),
               ),
             ),
-          ),
+          ],
           const Gap(10),
           Row(
             children: [
@@ -78,14 +85,12 @@ class _RequestPayoutState extends ConsumerState<RequestPayout> {
                 text: 'Payout History',
                 onTap: () => setState(() => _selectedIndex = 1),
               ),
-
             ],
           ),
           const Gap(25),
           _selectedIndex == 0 ? PayoutMethodScreen() : PayoutHistoryScreen()
-
         ],
-      ) ,
+      ),
     );
   }
 }
