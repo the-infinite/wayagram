@@ -951,10 +951,12 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> removeTeamMember(ctx, String memberId, String pageId) async {
+  Future<void> removeTeamMember(
+      BuildContext ctx, String memberId, String pageId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.removePageTeamMember(pageId, memberId);
+      final response =
+          await _pageRepository.removePageTeamMember(pageId, memberId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
         await getPageMember(pageId);
@@ -977,7 +979,6 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: false);
     }
   }
-
 
   Future<void> getRecommendedPages() async {
     try {

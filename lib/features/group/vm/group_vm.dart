@@ -520,21 +520,24 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> removeTeamMember(ctx, String memberId, String groupId) async {
+  Future<void> removeTeamMember(
+      BuildContext ctx, String memberId, String groupId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response =
           await _groupRepository.removeTeamMember(groupId, memberId);
       state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
+      if (response.success) {
         await getGroupMembers(groupId);
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Member removed successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        if (ctx.mounted) {
+          ScaffoldMessenger.of(ctx).showSnackBar(
+            const SnackBar(
+              content: Text('Member removed successfully!'),
+              backgroundColor: WayaColors.primary,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -548,20 +551,23 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> rejectRequest(ctx, String requestId, String groupId) async {
+  Future<void> rejectRequest(
+      BuildContext ctx, String requestId, String groupId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.rejectJoinRequest(requestId);
       state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
+      if (response.success) {
         getJoinRequest(groupId);
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Request declined successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        if (ctx.mounted) {
+          ScaffoldMessenger.of(ctx).showSnackBar(
+            const SnackBar(
+              content: Text('Request declined successfully!'),
+              backgroundColor: WayaColors.primary,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

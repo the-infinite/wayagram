@@ -29,7 +29,6 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     /// if approveJoinRequest is false they can join the group and vice versa
-    final settingViewModel = ref.read(groupProvider);
     return WayaScaffold(
       backgroundColor: Theme.of(context).colorScheme.greyColor50,
       isLoading: viewModel.isLoading,

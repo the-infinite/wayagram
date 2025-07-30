@@ -5,15 +5,11 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/widget/group_empty_state.dart';
-import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/pages/widget/page_member_card.dart';
 import 'package:wayagram/shared/cache/page.dart';
-import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 class TeamPage extends ConsumerStatefulWidget {
   final String pageId;
@@ -43,10 +39,7 @@ class _TeamPageState extends ConsumerState<TeamPage>
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(
-        left: 15,
-        right: 15,
-      ),
+      padding: const EdgeInsets.only(left: 15, right: 15),
       color: wayaTheme.colorScheme.greyColor50,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

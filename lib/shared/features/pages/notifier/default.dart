@@ -5,7 +5,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/pages/data/model/all_page_model.dart';
 import 'package:wayagram/features/pages/data/model/get_all_pages.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
@@ -56,7 +55,8 @@ class PageNotifier extends ValueNotifier<int> {
 
     //? Now, try actually fetching the groups.
     try {
-      final response = await repo.getAllPages(ConversationState.self.id, createdPage, limit);
+      final response =
+          await repo.getAllPages(ConversationState.self.id, createdPage, limit);
 
       //? If this was successful.
       if (!response.success) return createdPages;
@@ -152,9 +152,7 @@ class PageNotifier extends ValueNotifier<int> {
     return result;
   }
 
-
   Future<List<PageModel>> getManagedPages() async {
-
     final result = <PageModel>[];
 
     //? If there is nothing to see or get, leave.
@@ -168,7 +166,7 @@ class PageNotifier extends ValueNotifier<int> {
 
     //? Now, try actually fetching the groups.
     try {
-      final response = await repo.getAllManagedPages( createdPage, limit);
+      final response = await repo.getAllManagedPages(createdPage, limit);
 
       //? If this was successful.
       if (!response.success) return createdPages;
@@ -280,19 +278,23 @@ class PageNotifier extends ValueNotifier<int> {
     bool pageType,
     String coverImage,
     String profileImage,
-      String category,
+    String category,
   ) async {
-    final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage));
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage));
+    final coverImageUrl =
+        await WayaFileRepository.instance.uploadFile(File(coverImage));
+    final profileImageUrl =
+        await WayaFileRepository.instance.uploadFile(File(profileImage));
 
     //? If either of this fails.
     if (coverImageUrl == null || profileImageUrl == null) {
-      WayaSnackBar.showToast("Sorry, we cannot upload your page at this time.", showSuccess: false);
+      WayaSnackBar.showToast("Sorry, we cannot upload your page at this time.",
+          showSuccess: false);
       return null;
     }
 
     try {
-      final response = await repo.createPage(pageName, pageDesc, pageType, coverImageUrl, profileImageUrl, category);
+      final response = await repo.createPage(pageName, pageDesc, pageType,
+          coverImageUrl, profileImageUrl, category);
 
       //? If this was fine...
       if (response.success) {
@@ -327,20 +329,23 @@ class PageNotifier extends ValueNotifier<int> {
     String profileImage,
     String pageId,
   ) async {
-    final coverImageUrl =
-        coverImage.startsWith("http") ? coverImage : await WayaFileRepository.instance.uploadFile(File(coverImage));
+    final coverImageUrl = coverImage.startsWith("http")
+        ? coverImage
+        : await WayaFileRepository.instance.uploadFile(File(coverImage));
     final profileImageUrl = profileImage.startsWith("http")
         ? profileImage
         : await WayaFileRepository.instance.uploadFile(File(profileImage));
 
     //? If either of this fails.
     if (coverImageUrl == null || profileImageUrl == null) {
-      WayaSnackBar.showToast("Sorry, we cannot upload your page at this time.", showSuccess: false);
+      WayaSnackBar.showToast("Sorry, we cannot upload your page at this time.",
+          showSuccess: false);
       return false;
     }
 
     try {
-      final response = await repo.editPage(pageName, pageDesc, pageType, coverImageUrl, profileImageUrl, pageId);
+      final response = await repo.editPage(
+          pageName, pageDesc, pageType, coverImageUrl, profileImageUrl, pageId);
 
       //? If this is fine...
       if (response.success) {
@@ -616,7 +621,8 @@ class PageNotifier extends ValueNotifier<int> {
   /// Utility function used to check whether or not a user is a member of a
   /// page.
   bool isMemberOf(String pageId) {
-    return followedPages.any((page) => page.id == pageId) || createdPages.any((page) => page.id == pageId);
+    return followedPages.any((page) => page.id == pageId) ||
+        createdPages.any((page) => page.id == pageId);
   }
 
   /// Refreshes the current state and triggers a rebuild of dependent widgets.
