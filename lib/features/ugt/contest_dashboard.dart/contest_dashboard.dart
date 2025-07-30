@@ -303,21 +303,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                             }
 
                             WayaNav.toNamed('/admin-transaction-page');
-                            /*   ref
-                                .read(credentialInputProvider.notifier)
-                                .onSubmitPayoutPin(() => WayaNav.toNamed(
-                                        '/payoutVerification',
-                                        arguments: {
-                                          "id": model?.id ?? "",
-                                          "Module": PayoutModule.contest,
-                                          "Model":PayoutReviewModel(
-                                              comission: "10",
-                                              amount: "20",
-                                              amountDue: "20%",
-                                              endDate: model?.endDate ?? ""
-                                           
-                                          )
-                                        })); */
+                          
                           }),
                     ),
                   Gap(10),
@@ -346,13 +332,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          /*   WayaAssets.icons.export.svg(
-                          width: 18,
-                          height: 18,
-                          fit: BoxFit.scaleDown,
-                          color: wayaTheme.colorScheme.primary600,
-                        ),
-                        Gap(8), */
+                      
                           Text(
                             'Payout History',
                             style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
