@@ -84,6 +84,8 @@ class _PublicPageState extends ConsumerState<PublicPage>
     final wayaTheme = Theme.of(context);
     final state = ref.watch(pageProvider);
 
+    final followers =  state.pageFollowerDocs ?? [];
+
     //? Return this component.
     final page = wayaPageCache.getCachedData(widget.id) ?? _thisPage;
 
@@ -93,8 +95,9 @@ class _PublicPageState extends ConsumerState<PublicPage>
     }
 
     //? Fetch the data of this page.
-    if (page.ownerId == ConversationState.self.id) {
-      return PrivatePage(page: page,);
+    if (page.ownerId == ConversationState.self.id || followers.where((follower)=>
+    follower.followerId == ConversationState.self.id).firstOrNull != null) {
+      return PrivatePage(page: page);
     }
 
     //? Return the Scaffolded screen here.
@@ -431,6 +434,23 @@ class _PublicPageState extends ConsumerState<PublicPage>
           ),
         ),
       ),
+      floatingActionButton: myPageNotifier.isMemberOf(page.id) || page.ownerId == ConversationState.self.id
+          ? SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () => WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(page.id)),
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
+            ),
+          ),
+        ),
+      )
+          : null,
     );
   }
 
