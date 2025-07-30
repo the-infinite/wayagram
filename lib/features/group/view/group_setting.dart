@@ -8,10 +8,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
+import 'package:wayagram/shared/features/profile/model/groups.dart';
 
 class GroupSetting extends ConsumerStatefulWidget {
   static const route = '/groupSetting';
-  const GroupSetting ({super.key});
+  final GroupModel? group;
+  const GroupSetting ({super.key, this.group});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupSettingState();
@@ -19,6 +21,8 @@ class GroupSetting extends ConsumerStatefulWidget {
 
 class _GroupSettingState extends ConsumerState<GroupSetting>
     with SingleTickerProviderStateMixin {
+
+   late final groupProvider = singleGroupProvider("group-${widget.group?.id}");
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,7 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
     final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
 
     /// if approveJoinRequest is false they can join the group and vice versa
-
+    final settingViewModel = ref.read(groupProvider);
     return WayaScaffold(
       backgroundColor: Theme.of(context).colorScheme.greyColor50,
       isLoading: viewModel.isLoading,
@@ -72,6 +76,7 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
                   (value) {
                     ref.read(createGroupProvider.notifier).toggleMute(value);
                     ref.read(createGroupProvider.notifier).muteAndUnMuteGroup(context, value, args['groupId']);
+                    //ref.read(createGroupProvider.notifier).muteAndUnMuteGroup(context, value, '${widget.group?.id}');
                   })
             ,
         ],

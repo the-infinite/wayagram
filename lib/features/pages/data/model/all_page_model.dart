@@ -59,7 +59,7 @@ class Data {
     if (json['docs'] != null) {
       docs = [];
       json['docs'].forEach((v) {
-        docs?.add(AllPageModelDocs.fromJson(v));
+        docs?.add(AllPageModel.fromJson(v));
       });
     }
     totalDocs = json['totalDocs'];
@@ -72,7 +72,7 @@ class Data {
     prevPage = json['prevPage'];
     pagingCounter = json['pagingCounter'];
   }
-  List<AllPageModelDocs>? docs;
+  List<AllPageModel>? docs;
   num? totalDocs;
   num? limit;
   num? page;
@@ -82,7 +82,7 @@ class Data {
   bool? hasPrevPage;
   dynamic prevPage;
   num? pagingCounter;
-Data copyWith({  List<AllPageModelDocs>? docs,
+Data copyWith({  List<AllPageModel>? docs,
   num? totalDocs,
   num? limit,
   num? page,

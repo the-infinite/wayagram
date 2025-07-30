@@ -1357,6 +1357,8 @@ final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
   return PageVm(ref, PageRepository());
 });
 
+typedef PageProviderFamily = StateNotifierProvider<PageVm, PageState>;
+
 final singlePageProvider =
     StateNotifierProvider.family<PageVm, PageState, String>((ref, key) {
   return PageVm(ref, PageRepository());

@@ -5,6 +5,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/pages/data/model/all_page_model.dart';
+import 'package:wayagram/features/pages/data/model/get_all_pages.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
@@ -44,7 +46,7 @@ class PageNotifier extends ValueNotifier<int> {
     final result = <PageModel>[];
 
     //? If there is nothing to see or get, leave.
-    if (!hasMoreCreatedPages) return createdPages;
+    //if (!hasMoreCreatedPages) return createdPages;
 
     //? If is now loading.
     isLoading = true;
@@ -87,6 +89,61 @@ class PageNotifier extends ValueNotifier<int> {
         WayaDebugHelpers.getMessage(e),
         e,
         WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return the result.
+    return result;
+  }
+
+  Future<List<PageModel>> getMyPages() async {
+    final result = <PageModel>[];
+
+    //? If there is nothing to see or get, leave.
+    //if (!hasMoreCreatedGroups) return createdGroups;
+
+    //? This is loading.
+    isLoading = true;
+
+    //? Then refresh.
+    refresh();
+
+    //? Now, try actually fetching the groups.
+    try {
+      final response = await repo.getAllManagedPages(createdPage, limit);
+
+      //? If this was successful.
+      if (!response.success) return createdPages;
+
+      //? Then continue onward.
+      final responseModel = GetAllPages.fromJson(response.data);
+
+      //? If there were older pages to this thing...
+      if (createdPage > 1) {
+        result.addAll(createdPages);
+      }
+
+      //? This is good.
+      totalCreatedPages = responseModel.data?.totalDocs?.toInt() ?? 0;
+      createdPage = responseModel.data?.nextPage?.toInt() ?? 1;
+      hasMoreCreatedPages = responseModel.data?.hasNextPage ?? true;
+
+      //? Now add the newly fetched pages.
+      result.addAll(responseModel.data?.docs ?? []);
+      wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
+
+      //? Now, update our value.
+      createdPages = result;
+      isLoading = false;
+
+      //? Now, refresh.
+      refresh();
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
         WayaDebugHelpers.getStackTrace(e),
       );
     }
