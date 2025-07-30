@@ -10,12 +10,14 @@ class CreateRequestState {
   final TextEditingController productDescription;
   final ValueNotifier<TimeOfDay?> startTime;
   final ValueNotifier<TimeOfDay?> endTime;
-  final ValueNotifier<DateTime?> bidDate;
+  final ValueNotifier<DateTime?> bidStartDate;
+  final ValueNotifier<DateTime?> bidEndDate;
   final TextEditingController deliveryAddress;
   final TextEditingController deliveryPrice;
   final TextEditingController quantity;
   final TextEditingController bidStartingAmount;
   final TextEditingController maxBidAmount;
+  final bool startLater;
   final bool vendorSeeBuyRequest;
   final bool skipAddress;
   final bool includeDeliveryFee;
@@ -47,7 +49,8 @@ class CreateRequestState {
     TextEditingController? productDescription,
     ValueNotifier<TimeOfDay?>? startTime,
     ValueNotifier<TimeOfDay?>? endTime,
-    ValueNotifier<DateTime?>? bidDate,
+    ValueNotifier<DateTime?>? bidStartDate,
+    ValueNotifier<DateTime?>? bidEndDate,
     TextEditingController? pricePerUnit,
     TextEditingController? deliveryAddress,
     TextEditingController? deliveryPrice,
@@ -65,6 +68,7 @@ class CreateRequestState {
     this.productType = '',
     this.isLoading = false,
     this.isFocused = false,
+    this.startLater = false,
     TextEditingController? quantity,
     TextEditingController? bidStartingAmount,
     TextEditingController? maxBidAmount,
@@ -82,7 +86,8 @@ class CreateRequestState {
         productDescription = productDescription ?? TextEditingController(),
         startTime = startTime ?? ValueNotifier<TimeOfDay?>(null),
         endTime = endTime ?? ValueNotifier<TimeOfDay?>(null),
-        bidDate = bidDate ?? ValueNotifier<DateTime?>(null),
+        bidStartDate = bidStartDate ?? ValueNotifier<DateTime?>(null),
+        bidEndDate = bidEndDate ?? ValueNotifier<DateTime?>(null),
         deliveryAddress = deliveryAddress ?? TextEditingController(),
         deliveryPrice = deliveryPrice ?? TextEditingController(),
         quantity = quantity ?? TextEditingController(),
@@ -95,7 +100,8 @@ class CreateRequestState {
     TextEditingController? productDescription,
     ValueNotifier<TimeOfDay?>? startTime,
     ValueNotifier<TimeOfDay?>? endTime,
-    ValueNotifier<DateTime?>? bidDate,
+    ValueNotifier<DateTime?>? bidStartDate,
+    ValueNotifier<DateTime?>? bidEndDate,
     TextEditingController? pricePerUnit,
     TextEditingController? deliveryAddress,
     TextEditingController? deliveryPrice,
@@ -121,6 +127,7 @@ class CreateRequestState {
     bool? vendorSeeBuyRequest,
     bool? skipAddress,
     bool? applyDiscount,
+    bool? startLater,
     bool? includeDeliveryFee,
     List<DocType>? uploadedDocuments,
     List<BuyerRequests>? buyerRequest,
@@ -132,7 +139,9 @@ class CreateRequestState {
       productDescription: productDescription ?? this.productDescription,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
-      bidDate: bidDate ?? this.bidDate,
+      bidStartDate: bidStartDate ?? this.bidStartDate,
+      bidEndDate: bidEndDate ?? this.bidEndDate,
+      startLater: startLater ?? this.startLater,
       deliveryAddress: deliveryAddress ?? this.deliveryAddress,
       deliveryPrice: deliveryPrice ?? this.deliveryPrice,
       productCategory: productCategory ?? this.productCategory,

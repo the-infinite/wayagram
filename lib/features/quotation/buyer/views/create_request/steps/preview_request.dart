@@ -40,7 +40,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
     viewModel.deliveryAddress.clear();
     viewModel.startTime.value = null;
     viewModel.endTime.value = null;
-    viewModel.bidDate.value = null;
+    viewModel.bidStartDate.value = null;
     notifier.clear();
   }
 
@@ -274,19 +274,21 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             Expanded(
               child: AboutProduct(
                 title: 'Start Time',
-                content: WayaDateHelper.getFullTimestamp(
-                  viewModel.bidDate.value!.copyWith(
-                    hour: viewModel.startTime.value!.hour,
-                    minute: viewModel.startTime.value!.minute,
-                  ),
-                ),
+                content: !viewModel.startLater
+                    ? "Now"
+                    : WayaDateHelper.getFullTimestamp(
+                        viewModel.bidStartDate.value!.copyWith(
+                          hour: viewModel.startTime.value!.hour,
+                          minute: viewModel.startTime.value!.minute,
+                        ),
+                      ),
               ),
             ),
             Expanded(
               child: AboutProduct(
                 title: 'End Time',
                 content: WayaDateHelper.getFullTimestamp(
-                  viewModel.bidDate.value!.copyWith(
+                  viewModel.bidStartDate.value!.copyWith(
                     hour: viewModel.endTime.value!.hour,
                     minute: viewModel.endTime.value!.minute,
                   ),
@@ -303,11 +305,13 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         WayaProgressiveButton(
           callback: () async {
             final buyerId = ConversationState.self.id;
-            final startTime = viewModel.bidDate.value!.copyWith(
-              hour: viewModel.startTime.value!.hour,
-              minute: viewModel.startTime.value!.minute,
-            );
-            final endTime = viewModel.bidDate.value!.copyWith(
+            final startTime = viewModel.startLater
+                ? viewModel.bidStartDate.value!.copyWith(
+                    hour: viewModel.startTime.value!.hour,
+                    minute: viewModel.startTime.value!.minute,
+                  )
+                : DateTime.now();
+            final endTime = viewModel.bidStartDate.value!.copyWith(
               hour: viewModel.endTime.value!.hour,
               minute: viewModel.endTime.value!.minute,
             );
@@ -321,7 +325,9 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
               condition: viewModel.productCondition.toLowerCase(),
               description: viewModel.productDescription.text.trim(),
               quantity: viewModel.quantity.text.trim(),
-              bidStart: startTime.toIso8601String(),
+              bidStart: viewModel.startLater
+                  ? startTime.toIso8601String()
+                  : WayaDateHelper.getDailyTimestamp(startTime, true),
               bidEnd: endTime.toIso8601String(),
               deliveryDetails: '----',
               stateOfPurchase: viewModel.stateOfPurchase,

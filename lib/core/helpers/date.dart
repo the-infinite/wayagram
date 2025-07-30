@@ -52,8 +52,8 @@ class WayaDateHelper {
     return DateFormat("hh:mm a").format(timestamp.toLocal());
   }
 
-  static String getDailyTimestamp(DateTime timestamp) {
-    return DateFormat("dd MMM, yyyy").format(timestamp.toLocal());
+  static String getDailyTimestamp(DateTime timestamp, [bool alternateFormat = false]) {
+    return DateFormat(alternateFormat ? "yyyy-MM-dd" : "dd MMM, yyyy").format(timestamp.toLocal());
   }
 
   static String getEffectiveTimestamp(DateTime timestamp) {

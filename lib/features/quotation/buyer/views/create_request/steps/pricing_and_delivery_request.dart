@@ -371,7 +371,13 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
 
                         //? If this is a request for now...
                         if (value.first.value == 'Start now') {
-                          viewModel.bidDate.value = DateTime.now();
+                          viewModel.bidStartDate.value = DateTime.now();
+                          notifier.setStartLater(false);
+                        }
+
+                        //? If this is a request for later...
+                        else if (value.first.value == 'Start later') {
+                          notifier.setStartLater(true);
                         }
                       },
                     ),
@@ -393,41 +399,86 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
               const Gap(10),
 
               //? If the user chose to start bidding at a later date...
-              if (viewModel.biddingStartTime == 'Start later') ...[
-                //? The start date.
-                FormField<String>(
-                  validator: (value) {
-                    if (viewModel.bidDate.value == null) {
-                      return 'Bid start date is required';
-                    }
+              if (viewModel.startLater) ...[
+                Row(
+                  spacing: 10,
+                  children: [
+                    //? For start date.
+                    Expanded(
+                      child: FormField<String>(
+                        validator: (value) {
+                          if (viewModel.bidStartDate.value == null) {
+                            return 'Bid start date is required';
+                          }
 
-                    // This is fine.
-                    return null;
-                  },
-                  builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaDatePicker(
-                          controller: viewModel.bidDate,
-                          hintText: 'Select Bid Date',
-                          label: 'Start Date',
-                          hasError: formState.hasError && viewModel.bidDate.value == null,
-                          initialDate: DateTime.now().add(const Duration(days: 1)),
-                        ),
+                          // This is fine.
+                          return null;
+                        },
+                        builder: (formState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              WayaDatePicker(
+                                controller: viewModel.bidStartDate,
+                                hintText: 'Select Bid Date',
+                                label: 'Start Date',
+                                hasError: formState.hasError && viewModel.bidStartDate.value == null,
+                                initialDate: DateTime.now().add(const Duration(days: 1)),
+                              ),
 
-                        // Error
-                        if (formState.hasError && viewModel.bidDate.value == null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
-                            ),
-                          ),
-                      ],
-                    );
-                  },
+                              // Error
+                              if (formState.hasError && viewModel.bidStartDate.value == null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    formState.errorText!,
+                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+
+                    //? For the end date.
+                    Expanded(
+                      child: FormField<String>(
+                        validator: (value) {
+                          if (viewModel.bidEndDate.value == null) {
+                            return 'Bid end date is required';
+                          }
+
+                          // This is fine.
+                          return null;
+                        },
+                        builder: (formState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              WayaDatePicker(
+                                controller: viewModel.bidEndDate,
+                                hintText: 'Select Bid Date',
+                                label: 'End Date',
+                                hasError: formState.hasError && viewModel.bidEndDate.value == null,
+                                initialDate: DateTime.now().add(const Duration(days: 1)),
+                              ),
+
+                              // Error
+                              if (formState.hasError && viewModel.bidEndDate.value == null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    formState.errorText!,
+                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
 
                 // Some space.
@@ -439,37 +490,38 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                 spacing: 10,
                 children: [
                   //? The bidding start time.
-                  Expanded(
-                    child: FormField<String>(validator: (value) {
-                      if (viewModel.startTime.value == null) {
-                        return 'Start Time is required';
-                      }
+                  if (viewModel.startLater)
+                    Expanded(
+                      child: FormField<String>(validator: (value) {
+                        if (viewModel.startTime.value == null) {
+                          return 'Start Time is required';
+                        }
 
-                      return null;
-                    }, builder: (formState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          WayaTimePicker(
-                            controller: viewModel.startTime,
-                            hintText: '00:00',
-                            label: 'Start Time',
-                            hasError: formState.hasError,
-                          ),
-
-                          //? This is fine.
-                          if (formState.hasError && viewModel.startTime.value == null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                formState.errorText!,
-                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
-                              ),
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaTimePicker(
+                              controller: viewModel.startTime,
+                              hintText: '00:00',
+                              label: 'Start Time',
+                              hasError: formState.hasError,
                             ),
-                        ],
-                      );
-                    }),
-                  ),
+
+                            //? This is fine.
+                            if (formState.hasError && viewModel.startTime.value == null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
+                    ),
 
                   //? The bidding end time.
                   Expanded(
