@@ -119,10 +119,7 @@ class GroupMemberCardWidget extends StatelessWidget {
                   color: wayaTheme.colorScheme.greyColor500,
                 ),
               ),
-              trailing:
-              groupMember?.role == 'admin' ||
-                  groupMember?.role == 'owner'
-                  ? Container() : Padding(
+              trailing: Padding(
                 padding: EdgeInsets.only(right: 20),
                 child: PopupMenuButton(
                   onSelected: (value) {},
