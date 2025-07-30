@@ -311,7 +311,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
                     minute: viewModel.startTime.value!.minute,
                   )
                 : DateTime.now();
-            final endTime = viewModel.bidStartDate.value!.copyWith(
+            final endTime = viewModel.bidEndDate.value!.copyWith(
               hour: viewModel.endTime.value!.hour,
               minute: viewModel.endTime.value!.minute,
             );

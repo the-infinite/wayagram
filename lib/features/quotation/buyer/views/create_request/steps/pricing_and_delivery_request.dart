@@ -372,6 +372,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                         //? If this is a request for now...
                         if (value.first.value == 'Start now') {
                           viewModel.bidStartDate.value = DateTime.now();
+                          viewModel.bidEndDate.value = DateTime.now();
                           notifier.setStartLater(false);
                         }
 
