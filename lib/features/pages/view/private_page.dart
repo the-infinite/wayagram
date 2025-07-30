@@ -46,8 +46,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(pageProvider);
 
-    debugPrint('PRIVATE PAGEID ${widget.page.id}');
-
     //? Return this component.
     final page = wayaPageCache.getCachedData(widget.page.id) ?? _thisPage;
 
@@ -297,6 +295,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                 )
               : TeamPage(
                   pageId: widget.page.id,
+                  provider: pageProvider,
                 )
           //AllOrders()
         ],

@@ -65,7 +65,7 @@ class _MediaPostState extends ConsumerState<MediaPost> with SingleTickerProvider
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.getAllPost?.length ?? 0,
-            itemBuilder: (_, index) => group?.mutedAt == null ?WayaPostWidget(
+            itemBuilder: (_, index) => group?.mutedAt == null ? WayaPostWidget(
               data: viewModel.getAllPost![index],
               index: index,
             ): WayaMutedPostWidget(
