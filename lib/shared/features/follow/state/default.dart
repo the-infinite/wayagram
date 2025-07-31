@@ -25,6 +25,15 @@ class FollowState {
   final int followingTotalSize;
   final int followingTotalPages;
   final List<FollowModel> following;
+    // For invitation.
+  final bool hasLoadedInvitation;
+  final bool isLoadingInvitation;
+  final int? invitationNextPage;
+  final int invitationPage;
+  final bool invitationHasNextPage;
+  final int invitationTotalSize;
+  final int invitationTotalPages;
+  final List<FollowModel> invitation;
 
   // For request.
   final bool hasLoadedRequests;
@@ -70,6 +79,15 @@ class FollowState {
     required this.followingTotalSize,
     required this.followingTotalPages,
     required this.following,
+      // For invitation.
+    required this.hasLoadedInvitation,
+    required this.isLoadingInvitation,
+    required this.invitationNextPage,
+    required this.invitationPage,
+    required this.invitationHasNextPage,
+    required this.invitationTotalSize,
+    required this.invitationTotalPages,
+    required this.invitation,
 
     // For requests.
     required this.hasLoadedRequests,
@@ -111,6 +129,14 @@ class FollowState {
     followingTotalSize: 0,
     followingTotalPages: 0,
     following: [],
+    hasLoadedInvitation: false,
+    isLoadingInvitation: false,
+    invitationNextPage: 1,
+    invitationPage: 0,
+    invitationHasNextPage: true,
+    invitationTotalSize: 0,
+    invitationTotalPages: 0,
+    invitation: [],
     hasLoadedRequests: false,
     isLoadingRequests: false,
     requestsNextPage: 1,
@@ -184,6 +210,14 @@ class FollowState {
     int? followingTotalSize,
     int? followingTotalPages,
     List<FollowModel>? following,
+      bool? hasLoadedInvitation,
+   bool? isLoadingInvitation,
+   int? invitationNextPage,
+   int? invitationPage,
+   bool? invitationHasNextPage,
+   int? invitationTotalSize,
+   int? invitationTotalPages,
+   List<FollowModel>? invitation,
     bool? hasLoadedRequests,
     bool? isLoadingRequests,
     int? requestsNextPage,
@@ -221,6 +255,14 @@ class FollowState {
       followingTotalPages: followingTotalPages ?? this.followingTotalPages,
       following: following ?? this.following,
       suggestions: suggestions ?? this.suggestions,
+      hasLoadedInvitation: hasLoadedInvitation ?? this.hasLoadedInvitation,
+      isLoadingInvitation: isLoadingInvitation ?? this.isLoadingInvitation,
+      invitationNextPage: invitationNextPage ?? this.invitationNextPage,
+      invitationPage: invitationPage ?? this.invitationPage,
+      invitationHasNextPage: invitationHasNextPage ?? this.invitationHasNextPage,
+      invitationTotalSize: invitationTotalSize ?? this.invitationTotalSize,
+      invitationTotalPages: invitationTotalPages ?? this.invitationTotalPages,
+      invitation: invitation ?? this.invitation,
       hasLoadedRequests: hasLoadedRequests ?? this.hasLoadedRequests,
       isLoadingRequests: isLoadingRequests ?? this.isLoadingRequests,
       requestsNextPage: requestsNextPage ?? this.requestsNextPage,
