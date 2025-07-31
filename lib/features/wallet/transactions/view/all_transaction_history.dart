@@ -13,7 +13,14 @@ import 'package:wayagram/features/wallet/transactions/view/transaction_details.d
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 import 'package:wayagram/features/wallet/widget/transaction_widget.dart';
 
-enum DateFilter { thisWeek, thisMonth, lastSixMonths, thisYear, customRange }
+enum DateFilter {
+  all,
+  thisWeek,
+  thisMonth,
+  lastSixMonths,
+  thisYear,
+  customRange
+}
 
 class AllTransactionHistory extends ConsumerStatefulWidget {
   static const route = '/all-transactions';
@@ -30,12 +37,14 @@ class AllTransactionHistory extends ConsumerStatefulWidget {
 }
 
 class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
-  DateFilter selectedFilter = DateFilter.thisWeek;
+  DateFilter selectedFilter = DateFilter.all;
   final ScrollController _scrollController = ScrollController();
   bool isLoadingMore = false;
 
   String _getFilterName(DateFilter filter) {
     switch (filter) {
+      case DateFilter.all:
+        return 'All';
       case DateFilter.thisWeek:
         return 'This Week';
       case DateFilter.thisMonth:
@@ -51,7 +60,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
 
   Future<void> _applyFilter(DateFilter filter) async {
     String? appliedFilter;
-
+    DateTime now = DateTime.now();
     if (filter == DateFilter.customRange) {
       final firstDate = DateTime.now().year;
       // Show date range picker
@@ -67,36 +76,57 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
       if (dateRange != null) {
         var startDate = dateRange.start.toLocal();
         var endDate = dateRange.end.toLocal();
-     
 
         endDate = dateRange.end
-            .add(const Duration(hours: 11, minutes: 59, seconds: 59));
+            .add(const Duration(hours: 23, minutes: 59, seconds: 59));
         appliedFilter =
             "startDate=${DateFormat('yyyy-MM-dd').format(startDate)}&endDate=${DateFormat('yyyy-MM-dd hh:mm a').format(endDate)}";
-
       } else {
         return;
       }
+    } else if (filter == DateFilter.all) {
+      appliedFilter = null; // No filter applied, fetch all transactions
+      ref.read(transactionVmProvider.notifier).loadInitialData();
     } else if (filter == DateFilter.thisWeek) {
       final weekday = DateTime.now().weekday;
       appliedFilter =
-          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: weekday)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 7 - weekday)))}";
+          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: weekday)))}&endDate=${DateFormat('yyyy-MM-dd hh:mm a').format(DateTime.now().add(Duration(days: 7 - weekday)).add(const Duration(hours: 23, minutes: 59, seconds: 59)))}";
     } else if (filter == DateFilter.thisMonth) {
-      final day = DateTime.now().day;
-      appliedFilter =
-          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(Duration(days: day)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().add(Duration(days: 30 - day)))}";
-    } else if (filter == DateFilter.lastSixMonths) {
-      appliedFilter =
-          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(const Duration(days: 30 * 6)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
-    } else if (filter == DateFilter.thisYear) {
-      appliedFilter =
-          "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(const Duration(days: 365)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
-    }
-    var list = await ref.read(transactionVmProvider.notifier).getTransaction2(
-        filters: appliedFilter, isFirst: true, page: 1, limit: 10);
+      //first dat of the month
+      DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
 
-    ref.read(transactionVmProvider.notifier).setModelList(list);
-   
+// Last day of the month
+      DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 0)
+          .add(const Duration(hours: 23, minutes: 59, seconds: 59));
+      appliedFilter =
+          "startDate=${DateFormat('yyyy-MM-dd').format(firstDayOfMonth)}&endDate=${DateFormat('yyyy-MM-dd hh:mm a').format(lastDayOfMonth)}";
+    } else if (filter == DateFilter.lastSixMonths) {
+// First day of the month, 6 months ago
+      DateTime startDate = DateTime(now.year, now.month - 6, 1);
+
+// Last day of the previous month
+      DateTime endDate =
+          now.add(const Duration(hours: 23, minutes: 59, seconds: 59));
+      appliedFilter =
+          "startDate=${DateFormat('yyyy-MM-dd').format(startDate)}&endDate=${DateFormat('yyyy-MM-dd hh:mm a').format(endDate)}";
+    } else if (filter == DateFilter.thisYear) {
+      DateTime now = DateTime.now();
+
+// First day of the year
+      DateTime startOfYear = DateTime(now.year, 1, 1);
+
+// Last day of the year
+      DateTime endOfYear = DateTime(now.year, 12, 31);
+      appliedFilter =
+          "startDate=${DateFormat('yyyy-MM-dd').format(startOfYear)}&endDate=${DateFormat('yyyy-MM-dd').format(endOfYear)}";
+    }
+    //if null, means no filter applied
+    if (appliedFilter != null) {
+      var list = await ref.read(transactionVmProvider.notifier).getTransaction2(
+          filters: appliedFilter, isFirst: true, page: 1, limit: 10);
+
+      ref.read(transactionVmProvider.notifier).setModelList(list);
+    }
   }
 
   @override
