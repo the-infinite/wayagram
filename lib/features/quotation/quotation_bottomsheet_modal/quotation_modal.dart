@@ -371,7 +371,7 @@ class BidWonModal extends StatelessWidget {
               callback: () async {
                 //? For a buyer.
                 if (user == BidActionAuthor.buyer) {
-                  WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId));
+                  WayaNav.toNamed(WayaAppRoutes.getOrder(bid.id, bid.requestId));
                 }
 
                 //? For the seller.

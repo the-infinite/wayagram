@@ -210,6 +210,10 @@ class BuyRequestModel {
 
   Map<String, dynamic> toJson() => _$BuyRequestModelToJson(this);
 
+  double get unitPrice => bidStartingAmount / quantity;
+
+  double? get maximumUnitPrice => maxBidAmount / quantity;
+
   BuyRequestModel copyWith({
     String? id,
     String? buyerId,
@@ -276,6 +280,9 @@ class QuotationBidModel {
   final String vendorId;
   final String bidAmount;
   final String shopId;
+  final String? comment;
+  final List<String>? images;
+  final DateTime? deliveryDate;
   final DateTime updatedAt;
   final DateTime createdAt;
   final String? counterAmount;
@@ -303,6 +310,9 @@ class QuotationBidModel {
     required this.shopId,
     required this.updatedAt,
     required this.createdAt,
+    this.images,
+    this.deliveryDate,
+    this.comment,
     this.deliveryCost,
     this.counterAmount,
   });

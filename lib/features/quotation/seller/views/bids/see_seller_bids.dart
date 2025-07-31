@@ -6,13 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/quotation/seller/views/create_bid/create_bid.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
@@ -89,6 +93,34 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
     loadingController.dispose();
     _timer?.cancel();
     super.dispose();
+  }
+
+  Future<void> _placeBid() async {
+    //? Try to load all of the payment methods first, in place.
+    final walletNotifier = ref.read(walletVmProvider.notifier);
+    await walletNotifier.getPayoutMethod();
+
+    //? If this is not fine.
+    if (!mounted) {
+      return;
+    }
+
+    //? First, we check if this user has any payout methods configured before
+    //? placing the bid.
+    final walletViewModel = ref.read(walletVmProvider);
+
+    //? Check if user have payout method added and then tell he or she to if he
+    //? or she has not.
+    if (walletViewModel.payoutMethod.isEmpty) {
+      await WayaUtils.showModalSheet(
+        context,
+        child: AddPayoutModal(),
+      );
+      return;
+    }
+
+    //? Send the user to the screen dedicated to the cause.
+    WayaNav.to(CreateBidScreen(request: request!), transition: Transition.downToUp);
   }
 
   Future<void> _negotiateBid(BuyRequestModel request, QuotationBidModel bid) async {
@@ -374,6 +406,17 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
 
                   // Boundless space.
                   const Spacer(),
+
+                  //? If this is one thing, you can place another bid.
+                  WayaProgressiveButton(
+                    callback: _placeBid,
+                    notifier: loadingController,
+                    color: wayaTheme.colorScheme.primary,
+                    text: "Place Another Bid",
+                  ),
+
+                  // Some space.
+                  Gap(10.h),
 
                   //? Since this bid is just opened, the seller cannot accept or reject it. So
                   //? we will show a disabled button.

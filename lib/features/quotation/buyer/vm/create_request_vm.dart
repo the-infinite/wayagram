@@ -72,6 +72,10 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     state = state.copyWith(skipAddress: value);
   }
 
+  void setStartLater(bool value) {
+    state = state.copyWith(startLater: value);
+  }
+
   List<Select> restructuredCategory() {
     return ShopResource.categories.asMap().entries.map((entries) {
       return Select(value: entries.value.name, label: entries.value.name);

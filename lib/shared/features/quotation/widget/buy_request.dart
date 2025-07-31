@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -13,10 +14,9 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
-import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/quotation/seller/views/create_bid/create_bid.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/cache/quotation.dart';
-import 'package:wayagram/shared/features/quotation/modal/choose_shop.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
@@ -41,6 +41,7 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
   final orderController = ValueNotifier<BidOrderModel?>(null);
   QuotationBidModel? bid;
   final timeNotifier = ValueNotifier(Duration.zero);
+  bool getOrder = true;
   final loadingController = ValueNotifier(false);
   Timer? timer;
   late final isClosed = [BuyRequestStatus.cancelled, BuyRequestStatus.closed].contains(widget.data.status);
@@ -90,13 +91,21 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     final cachedRequest = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final eval = timeNotifier.value - const Duration(seconds: 1);
 
-    try {
-      //? Get the order value and update it.
-      final value = await widget.notifier.getOrderDetails(widget.data.id);
+    //? Only do this when you are allowed to.
+    if (getOrder) {
+      try {
+        //? Get the order value and update it.
+        final value = await widget.notifier.getOrderDetails(widget.data.id);
 
-      //? This is fine too.
-      orderController.value = value;
-    } catch (_) {}
+        //? This is fine too.
+        orderController.value = value;
+
+        //? Stop getting this.
+        if (value == null) {
+          getOrder = false;
+        }
+      } catch (_) {}
+    }
 
     //? Update this guy in the list.
     if (eval.isNegative || eval.inSeconds == 0) {
@@ -112,6 +121,11 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     //? Try to load all of the payment methods first, in place.
     final walletNotifier = ref.read(walletVmProvider.notifier);
     await walletNotifier.getPayoutMethod();
+
+    //? If this is not fine.
+    if (!mounted) {
+      return;
+    }
 
     //? First, we check if this user has any payout methods configured before
     //? placing the bid.
@@ -129,62 +143,9 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
 
     //? Then move forward.
     final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
-    final amount = await WayaUtils.showModalSheet<double>(
-      context,
-      child: EditOfferModal(
-        title: 'Edit your Offer',
-        hint: 'Update your base price for this request',
-        delta: request.bidStartingAmount >= 3000000
-            ? 25000
-            : request.bidStartingAmount >= 200000
-                ? 5000
-                : 1000,
-      ),
-    );
 
-    //! If this was dismissed before an amount was even calculated...
-    if (amount == null) return;
-
-    //? Which shop is the user sending the bid as?
-    final shopId = await WayaUtils.showModalSheet(context, child: ChooseShopModal());
-
-    //! If the shop was not selected.
-    if (shopId == null) return;
-
-    double? deliveryCost;
-
-    //? If this is a delivery request and the delivery address is not null.
-    //? After the shop is selected, we need to confirm the delivery cost with
-    //? the seller.
-    if (request.deliveryAddress != null) {
-      final cost = await WayaUtils.showModalSheet<double>(
-        context,
-        child: EditOfferModal(
-          title: 'Delivery Cost',
-          hint: 'Enter your delivery cost for this order to deliver to\n\n${request.deliveryAddress}',
-          delta: request.bidStartingAmount >= 3000000
-              ? 25000
-              : request.bidStartingAmount >= 200000
-                  ? 5000
-                  : 1000,
-        ),
-      );
-
-      //? Since const is null.
-      if (cost == null) return;
-
-      //? Now we can try again.
-      deliveryCost = cost;
-    }
-
-    //? Now, send the bid.
-    final result = await widget.notifier.sendBid(request.id, amount, shopId, deliveryCost);
-
-    //! Since bidding failed, you can leave.
-    if (result == null) return;
-
-    //* Okay, since bidding was fine, we throw a pizza party.
-    _viewSellerBid(result);
+    //? Send the user to the screen dedicated to the cause.
+    WayaNav.to(CreateBidScreen(request: request), transition: Transition.downToUp);
   }
 
   Future<void> _viewSellerBid(QuotationBidModel result) async {
@@ -192,22 +153,22 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
   }
 
   Future<void> _viewOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetaisScreen(widget.data.id));
   }
 
   Future<void> _checkoutOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailScreen(widget.data.id));
     final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final bid = request.bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
 
     //? This is fine
     if (bid != null && widget.data.buyerId == ConversationState.self.id) {
-      WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId);
+      WayaAppRoutes.getQuotationCheckoutSceen(bid.id, bid.requestId);
     }
 
     //? Are you the right vendor?
     else if (bid?.vendorId == ConversationState.self.id) {
-      WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+      WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDtailsScreen(widget.data.id));
     }
   }
 

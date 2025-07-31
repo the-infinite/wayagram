@@ -19,8 +19,7 @@ class WalletRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> checkWalletPinStatus(String userId) {
-    return post(
-        '$serviceUrl/client/wallet-pin/check-status', {"userId": userId});
+    return post('$serviceUrl/client/wallet-pin/check-status', {"userId": userId});
   }
 
   Future<WayaRequestResponse> getUserWallet() {
@@ -36,18 +35,15 @@ class WalletRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> verifyWalletFunding(VerifyTransaction payload) {
-    return post(
-        '$serviceUrl/client/wallet/verify-wallet-funding', payload.toJson());
+    return post('$serviceUrl/client/wallet/verify-wallet-funding', payload.toJson());
   }
 
   Future<WayaRequestResponse> getExternalWallet(String accountNumber) {
-    return get(
-        '$serviceUrl/client/wallet/get-external-wallet?accountNumber=$accountNumber');
+    return get('$serviceUrl/client/wallet/get-external-wallet?accountNumber=$accountNumber');
   }
 
   Future<WayaRequestResponse> payForService(WalletPaymentData data) {
-    return post('$serviceUrl/client/payment/pay-for-service', data.toJson(),
-        showErrors: true);
+    return post('$serviceUrl/client/payment/pay-for-service', data.toJson(), showErrors: true);
   }
 
   Future<WayaRequestResponse> getPayoutMethod() {
@@ -75,24 +71,13 @@ class WalletRepository extends BaseRepository {
     return get('$serviceUrl/client/payout/requests?page=$page&limit=10');
   }
 
-  Future<WayaRequestResponse> createPayoutRequest(
-      String amount, String paymentMethodId) {
-    final payload = {
-      "userId": ConversationState.self.id,
-      "amount": amount,
-      "payoutMethodId": paymentMethodId
-    };
+  Future<WayaRequestResponse> createPayoutRequest(String amount, String paymentMethodId) {
+    final payload = {"userId": ConversationState.self.id, "amount": amount, "payoutMethodId": paymentMethodId};
     return post('$serviceUrl/client/payout/requests', payload);
   }
 
-  Future<WayaRequestResponse> createPayoutMethod(
-      String acctNum, String acctName, String bankName, String bankCode) {
-    final payload = {
-      "accountNumber": acctNum,
-      "accountName": acctName,
-      "bankName": bankName,
-      "bankCode": bankCode
-    };
+  Future<WayaRequestResponse> createPayoutMethod(String acctNum, String acctName, String bankName, String bankCode) {
+    final payload = {"accountNumber": acctNum, "accountName": acctName, "bankName": bankName, "bankCode": bankCode};
     return post('$serviceUrl/client/payout/methods', payload);
   }
 
@@ -111,8 +96,7 @@ class WalletRepository extends BaseRepository {
   }) {
     final payload = {
       "chargeType": "WHOLE", //use this always for now
-      "purpose":
-          purpose, // "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+      "purpose": purpose, // "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
       "referenceId": referenceId,
       "accountNumber": accountNumber,
       "accountName": accountName,
@@ -120,14 +104,11 @@ class WalletRepository extends BaseRepository {
       "bankCode": bankCode
     };
 
-    return post('$serviceUrl/client/payout/requests', payload,
-        formdata: false, showErrors: true);
+    return post('$serviceUrl/client/payout/requests', payload, formdata: false, showErrors: true);
   }
 
-  Future<WayaRequestResponse> fetchPayoutHistory(
-      String referenceId, String purpose,
-      {int page = 1, int limit = 100}) {
+  Future<WayaRequestResponse> fetchPayoutHistory(String referenceId, String purpose, {int page = 1, int limit = 100}) {
     return get(
-        '$serviceUrl/client/payout/requests?page=$page&limit=$limit&referenceId=$referenceId&purpose=$purpose');
+        '$serviceUrl/client/payout/requests?page=$page&limit=$limit${referenceId.isNotEmpty ? "&referenceId=$referenceId" : ''}&purpose=$purpose');
   }
 }

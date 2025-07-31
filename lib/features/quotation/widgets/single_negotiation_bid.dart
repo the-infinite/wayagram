@@ -13,6 +13,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
@@ -43,6 +44,7 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
 
 class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBidWidget> {
   late final userQuotationNotifier = ref.read(userQuotationsProvider.notifier);
+  late final cartNotifier = ref.read(cartVmProvider.notifier);
   final stateNotifier = ValueNotifier(false);
   bool locked = false;
   ShopDetailsModel? _shopData;
@@ -113,6 +115,21 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
 
     //? Call this.
     await widget.onBidReacted?.call();
+    final addedToCart = await cartNotifier.addToCart(
+      count: 1,
+      shopId: widget.bid.shopId,
+      price: widget.bid.usedAmount.toInt(),
+      productName: widget.request.fullname,
+      productImage: widget.bid.images?.first ?? '',
+      productId: widget.bid.requestId,
+      isQuotation: true,
+    );
+
+    //? If we could not add this to our cart...
+    if (!addedToCart) {
+      WayaSnackBar.showToast("Could not add bid to cart");
+      return;
+    }
 
     //? Prevent some confusing visuals.
     widget.timer?.cancel();

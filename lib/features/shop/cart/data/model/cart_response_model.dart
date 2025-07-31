@@ -42,19 +42,14 @@ class CartData {
   });
 
   CartData copyWith({String? id, String? userId, List<CartItem>? items}) {
-    return CartData(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        items: items ?? this.items);
+    return CartData(id: id ?? this.id, userId: userId ?? this.userId, items: items ?? this.items);
   }
 
   factory CartData.fromJson(Map<String, dynamic> json) {
     return CartData(
       id: json['id'] ?? '',
       userId: json['userId'],
-      items: (json['items'] as List)
-          .map((item) => CartItem.fromJson(item))
-          .toList(),
+      items: (json['items'] as List).map((item) => CartItem.fromJson(item)).toList(),
     );
   }
 
@@ -114,14 +109,12 @@ class CartItem {
     return CartItem(
       shopId: json['shopId'] ?? '',
       deliveryAddress: json['deliveryAddress'],
-      deliveryFee: _parseToInt(json['deliveryFee']), 
+      deliveryFee: _parseToInt(json['deliveryFee']),
       deliveryDate: json['deliveryDate'],
       shopName: json['shopName'] ?? '',
       shopLogo: json['shopLogo'] ?? '',
-      totalFee: _parseToInt(json['totalFee']), 
-      products: (json['products'] as List)
-          .map((product) => CartProduct.fromJson(product))
-          .toList(),
+      totalFee: _parseToInt(json['totalFee']),
+      products: (json['products'] as List).map((product) => CartProduct.fromJson(product)).toList(),
     );
   }
 
@@ -158,51 +151,60 @@ class CartProduct {
   final bool deliveryCharge;
   final String? productImage;
   final dynamic unitPrice;
+  final bool isQuotation;
 
-  CartProduct(
-      {required this.price,
-      required this.quantity,
-      required this.productId,
-      required this.productName,
-      required this.deliveryCharge,
-      this.productImage,
-      this.pickUpAddress,
-      this.unitPrice,
-      required this.deliveryOptions});
+  CartProduct({
+    required this.price,
+    required this.quantity,
+    required this.productId,
+    required this.productName,
+    required this.deliveryCharge,
+    required this.deliveryOptions,
+    this.isQuotation = false,
+    this.productImage,
+    this.pickUpAddress,
+    this.unitPrice,
+  });
 
-  CartProduct copyWith(
-      {int? price,
-      int? quantity,
-      String? productId,
-      String? productName,
-      bool? deliveryCharge,
-      String? productImage,
-      String? deliveryOptions,
-      dynamic unitPrice,
-      String? pickUpAddress}) {
+  CartProduct copyWith({
+    int? price,
+    int? quantity,
+    String? productId,
+    String? productName,
+    bool? deliveryCharge,
+    String? productImage,
+    String? deliveryOptions,
+    dynamic unitPrice,
+    String? pickUpAddress,
+    bool? isQuotation,
+  }) {
     return CartProduct(
-        price: price ?? this.price,
-        quantity: quantity ?? this.quantity,
-        productId: productId ?? this.productId,
-        productName: productName ?? this.productName,
-        deliveryCharge: deliveryCharge ?? this.deliveryCharge,
-        productImage: productImage ?? this.productImage,
-        deliveryOptions: deliveryOptions ?? this.deliveryOptions,
-        unitPrice : unitPrice ?? this.unitPrice,
-        pickUpAddress: pickUpAddress ?? this.pickUpAddress);
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      deliveryCharge: deliveryCharge ?? this.deliveryCharge,
+      productImage: productImage ?? this.productImage,
+      deliveryOptions: deliveryOptions ?? this.deliveryOptions,
+      unitPrice: unitPrice ?? this.unitPrice,
+      pickUpAddress: pickUpAddress ?? this.pickUpAddress,
+      isQuotation: isQuotation ?? this.isQuotation,
+    );
   }
 
   factory CartProduct.fromJson(Map<String, dynamic> json) {
     return CartProduct(
-        price: json['price'],
-        quantity: json['quantity'],
-        productId: json['productId'],
-        productName: json['productName'],
-        deliveryCharge: json['deliveryCharge'],
-        productImage: json['productImage'],
-        pickUpAddress: json['pickUpAddress'],
-        unitPrice: json['unitPrice'],
-        deliveryOptions: json['deliveryOptions']);
+      price: json['price'],
+      quantity: json['quantity'],
+      productId: json['productId'],
+      productName: json['productName'],
+      deliveryCharge: json['deliveryCharge'],
+      productImage: json['productImage'],
+      pickUpAddress: json['pickUpAddress'],
+      unitPrice: json['unitPrice'],
+      deliveryOptions: json['deliveryOptions'],
+      isQuotation: bool.tryParse(json['isQuotation'].toString()) ?? false,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -215,7 +217,8 @@ class CartProduct {
       'productImage': productImage,
       'deliveryOptions': deliveryOptions,
       'pickUpAddress': pickUpAddress,
-      'unitPrice' : unitPrice
+      'unitPrice': unitPrice,
+      'isQuotation': isQuotation,
     };
   }
 }

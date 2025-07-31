@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:uuid/uuid.dart';
+// import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -24,12 +24,12 @@ class _PageSettingState extends ConsumerState<PageSetting> with SingleTickerProv
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
-    final viewModel2 = ref.watch(wayaSelectFieldViewModelProvider(Uuid().v4()));
-    final pageNotifier = ref.read(createPageProvider.notifier);
+    // final viewModel2 = ref.watch(wayaSelectFieldViewModelProvider(Uuid().v4()));
+    // final pageNotifier = ref.read(createPageProvider.notifier);
 
     final followPermission = useState("Everyone");
     final commentPermission = useState("Everyone");
-    final lastSeen = useState(false);
+    //final lastSeen = useState(false);
 
     /// Everyone, invited followers, restricted followers
     ///For comments we have: Admins only, Everyone, followers

@@ -9,12 +9,10 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
 import 'dart:io' show Platform;
 
-import '../../../../../../core/utils/waya_navigation.dart';
 
 class PersonalAccountView extends ConsumerStatefulWidget {
   const PersonalAccountView({

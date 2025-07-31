@@ -114,7 +114,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                     children: [
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
-                        child: pw.Text('${transaction.id}'),
+                        child: pw.Text(transaction.id),
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
@@ -126,7 +126,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
-                        child: pw.Text('${transaction.description}'),
+                        child: pw.Text(transaction.description),
                       ),
                     ],
                   )),
@@ -338,7 +338,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                       children: [
                         pw.Text('${transaction.updatedAt}'),
                         pw.Text(transaction.amount.toString()),
-                        pw.Text('${transaction.description}'),
+                        pw.Text(transaction.description),
                       ],
                     )),
               ],
