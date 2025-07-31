@@ -487,7 +487,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () => WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(page.id)),
+          callback: () => WayaNav.toNamed(WayaAppRoutes.getPagePostScreen(page.id)),
           height: 50,
           centerWidget: Center(
             child: Icon(
