@@ -11,15 +11,12 @@ class CreateBidState {
 
   //? First, for the overview and specifications.
   final String? description;
-  final String? comment;
   final String? condition;
   final List<File>? images;
 
   //? Second, pricing for delivery.
   final String? shopId;
   final double? unitPrice;
-  final int? quantity;
-  final String? location;
   final double? deliveryCharge;
   final DateTime? readyDate;
 
@@ -27,12 +24,9 @@ class CreateBidState {
   CreateBidState({
     required this.request,
     required this.description,
-    required this.comment,
     required this.condition,
     required this.images,
     required this.unitPrice,
-    required this.quantity,
-    required this.location,
     required this.shopId,
     required this.deliveryCharge,
     required this.readyDate,
@@ -48,25 +42,19 @@ class CreateBidState {
     BuyRequestModel? request,
     String? description,
     List<File>? images,
-    String? comment,
     String? shopId,
     String? condition,
     double? unitPrice,
-    int? quantity,
-    String? location,
     double? deliveryCharge,
     DateTime? readyDate,
   }) {
     return CreateBidState(
       request: request ?? this.request,
       description: description ?? this.description,
-      comment: comment ?? this.comment,
       images: images ?? this.images,
       shopId: shopId ?? this.shopId,
       condition: condition ?? this.condition,
       unitPrice: unitPrice ?? this.unitPrice,
-      quantity: quantity ?? this.quantity,
-      location: location ?? this.location,
       deliveryCharge: deliveryCharge ?? this.deliveryCharge,
       readyDate: readyDate ?? this.readyDate,
     );
@@ -78,13 +66,10 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
       : super(CreateBidState(
           request: request,
           description: null,
-          comment: null,
           images: null,
           shopId: null,
           condition: null,
           unitPrice: null,
-          quantity: null,
-          location: null,
           deliveryCharge: null,
           readyDate: null,
         ));
@@ -105,13 +90,10 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
     state = CreateBidState(
       request: null,
       description: null,
-      comment: null,
       images: null,
       shopId: null,
       condition: null,
       unitPrice: null,
-      quantity: null,
-      location: null,
       deliveryCharge: null,
       readyDate: null,
     );
@@ -122,13 +104,11 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
     String description,
     String condition,
     List<File> images,
-    String? comment,
   ) {
     state = state.copyWith(
       description: description,
       condition: condition,
       images: images,
-      comment: comment,
     );
   }
 
@@ -136,17 +116,13 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
   void updatePricingAndDelivery(
     String shopId,
     double unitPrice,
-    int quantity,
     double? deliveryCharge,
-    String? location,
     DateTime? readyDate,
   ) {
     state = state.copyWith(
       shopId: shopId,
       deliveryCharge: deliveryCharge,
-      location: location,
       unitPrice: unitPrice,
-      quantity: quantity,
       readyDate: readyDate,
     );
   }

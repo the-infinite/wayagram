@@ -265,42 +265,43 @@ class WayaMultiImagePicker extends StatelessWidget {
             ),
 
             //? Buttons to add more images or remove images.
-            Padding(
-              padding: EdgeInsets.only(top: 10.h),
-              child: Row(
-                spacing: 10.w,
-                children: [
-                  //? Button to remove all images here.
-                  WayaButton(
-                    text: "Clear",
-                    callback: () {
-                      controller._clearImages();
-                      state.didChange(controller._images);
-                    },
-                    verticalPadding: 10.h,
-                    horizontalPadding: 10.w,
-                    height: null,
-                    color: wayaTheme.colorScheme.error,
-                    leadingIcon: WayaAssets.icons.cBin.svg(
-                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            if (controller._images.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.only(top: 10.h),
+                child: Row(
+                  spacing: 10.w,
+                  children: [
+                    //? Button to remove all images here.
+                    WayaButton(
+                      text: "Clear",
+                      callback: () {
+                        controller._clearImages();
+                        state.didChange(controller._images);
+                      },
+                      verticalPadding: 10.h,
+                      horizontalPadding: 10.w,
+                      height: null,
+                      color: wayaTheme.colorScheme.error,
+                      leadingIcon: WayaAssets.icons.cBin.svg(
+                        colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      ),
                     ),
-                  ),
 
-                  //? Button to add a new image to this place.
-                  WayaButton(
-                    text: "Add Image",
-                    callback: () => _choosePhoto(context, state),
-                    verticalPadding: 10.h,
-                    horizontalPadding: 10.w,
-                    height: null,
-                    color: wayaTheme.colorScheme.customBlack,
-                    leadingIcon: WayaAssets.icons.cPlus.svg(
-                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    //? Button to add a new image to this place.
+                    WayaButton(
+                      text: "Add Image",
+                      callback: () => _choosePhoto(context, state),
+                      verticalPadding: 10.h,
+                      horizontalPadding: 10.w,
+                      height: null,
+                      color: wayaTheme.colorScheme.customBlack,
+                      leadingIcon: WayaAssets.icons.cPlus.svg(
+                        colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
             //? For the helper text.
             if (state.hasError || (helperText?.isNotEmpty ?? false))

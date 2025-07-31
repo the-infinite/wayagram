@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/seller/vm/create_bid.dart';
-import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class BidOverviewStep extends ConsumerStatefulWidget {
@@ -34,8 +33,7 @@ class BidOverviewStep extends ConsumerStatefulWidget {
 
 class _BidOverviewStepState extends ConsumerState<BidOverviewStep> {
   late final savedState = ref.read(widget.provider);
-  late final commentController = TextEditingController(text: savedState.comment);
-  late final descriptionController = TextEditingController(text: savedState.description);
+  late final commentController = TextEditingController(text: savedState.description);
   late final conditionController = ValueNotifier<String?>(savedState.condition);
   late final imagesController = MultiImageController(savedState.images);
   final formKey = GlobalKey<FormState>();
@@ -43,7 +41,6 @@ class _BidOverviewStepState extends ConsumerState<BidOverviewStep> {
   @override
   void dispose() {
     commentController.dispose();
-    descriptionController.dispose();
     conditionController.dispose();
     imagesController.dispose();
     super.dispose();
@@ -83,50 +80,75 @@ class _BidOverviewStepState extends ConsumerState<BidOverviewStep> {
             const Gap(25),
 
             //? The name of this product.
-            AboutProduct(
-              title: 'Product Name',
-              content: widget.request.productName,
+            WayaTextFormField(
+              label: 'Product Name',
+              hintText: widget.request.productName,
+              isReadOnly: true,
+              hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
+                color: wayaTheme.colorScheme.customBlack,
+              ),
             ),
 
             //? If there is no brand name, don't show this.
             if (widget.request.brand?.isNotEmpty ?? false) ...[
               // Some space.
-              const Gap(15),
+              const Gap(10),
 
               //? The brand name of the product.
-              AboutProduct(
-                title: 'Brand',
-                content: '${widget.request.brand!.capitalizeFirst}',
+              WayaTextFormField(
+                label: 'Brand',
+                hintText: '${widget.request.brand!.capitalizeFirst}',
+                isReadOnly: true,
+                hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
+                  color: wayaTheme.colorScheme.customBlack,
+                ),
               ),
             ],
 
             // Some more space.
-            const Gap(15),
+            const Gap(10),
 
             //? The category.
-            AboutProduct(
-              title: 'Category',
-              content: widget.request.category,
+            WayaTextFormField(
+              label: 'Category',
+              hintText: widget.request.category,
+              isReadOnly: true,
+              hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
+                color: wayaTheme.colorScheme.customBlack,
+              ),
             ),
 
             // Some more space.
-            const Gap(20),
+            const Gap(10),
+
+            //? The name of this product.
+            WayaTextFormField(
+              label: 'Quantity',
+              hintText: widget.request.quantity.toString(),
+              isReadOnly: true,
+              hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
+                color: wayaTheme.colorScheme.customBlack,
+              ),
+            ),
+
+            // Some more space.
+            const Gap(10),
 
             //? The description
             ListenableBuilder(
-              listenable: descriptionController,
+              listenable: commentController,
               builder: (context, _) => WayaFormField(
-                label: 'Product Description',
-                controller: descriptionController,
+                label: 'Comment',
+                controller: commentController,
                 keyboardType: TextInputType.text,
                 hintText: 'Write a brief description of the product. '
-                    'Include size, type, color, and additional specifications that apply.',
-                borderColor: descriptionController.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                    'Include size, type, color, and additional specifications that apply. '
+                    'You can also write anything else you want the buyer to know.',
                 line: 6,
                 validator: (value) {
                   //? How empty.
-                  if (descriptionController.text.trim().isEmpty) {
-                    return 'Description is required';
+                  if (commentController.text.trim().isEmpty) {
+                    return 'Comment is required';
                   }
 
                   //? No issues.
@@ -195,18 +217,6 @@ class _BidOverviewStepState extends ConsumerState<BidOverviewStep> {
             ),
 
             // Some space.
-            const Gap(10),
-
-            //? The comments
-            WayaFormField(
-              label: 'Comments (Optional)',
-              controller: commentController,
-              keyboardType: TextInputType.text,
-              hintText: 'Write anything else you want the buyer to know.',
-              line: 6,
-            ),
-
-            // Some space.
             const Gap(25),
 
             //? How we complete this.
@@ -216,13 +226,12 @@ class _BidOverviewStepState extends ConsumerState<BidOverviewStep> {
                 if (!formKey.currentState!.validate()) return;
 
                 //? Do the needful.
-                final description = descriptionController.text.trim();
                 final condition = conditionController.value!;
                 final comment = commentController.text.trim();
                 final images = imagesController.rawImages.toList();
 
                 //? Since we could validate...
-                widget.notifier.updateSpecifications(description, condition, images, comment);
+                widget.notifier.updateSpecifications(comment, condition, images);
                 widget.gotoNextTab();
               },
               text: 'Setup Pricing & Delivery',
