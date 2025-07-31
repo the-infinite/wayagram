@@ -92,6 +92,9 @@ class _BidOverviewStepState extends ConsumerState<BidDeliveryInfoStep> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
+        //? First, for updating the formStates.
+
+        //? Now for fetching the shops.
         final result = await ShopResource.getShopsForVendor(ConversationState.self.id);
 
         //? If this user has only one shop.
@@ -144,7 +147,7 @@ class _BidOverviewStepState extends ConsumerState<BidDeliveryInfoStep> {
 
             //? Page subtitle.
             Text(
-              "Since you've written the specifics of the product you are offering,\nit is time for you to make your offer of the total cost and delivery time.",
+              "Since you've written the specifics of the product you are offering, it is time for you to make your offer of the total cost and delivery time.",
               style: wayaTheme.textTheme.hintStyle,
             ),
 
@@ -184,6 +187,7 @@ class _BidOverviewStepState extends ConsumerState<BidDeliveryInfoStep> {
 
             //? This is fair enough.
             FormField<double>(
+              initialValue: savedState.unitPrice,
               validator: (value) {
                 //? This is not there.
                 if (value == null) {
@@ -239,6 +243,49 @@ class _BidOverviewStepState extends ConsumerState<BidDeliveryInfoStep> {
 
             // Delivery specific properties.
             if (widget.request.deliveryType == BuyRequestDeliveryType.delivery) ...[
+              //? The delivery address of this product.
+              WayaTextFormField(
+                label: 'Delivery Address',
+                hintText: widget.request.deliveryAddress!,
+                isReadOnly: true,
+                hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
+                  color: wayaTheme.colorScheme.customBlack,
+                ),
+              ),
+
+              // Some space.
+              const Gap(10),
+
+              //? The delivery local government and state of this product.
+              Row(
+                spacing: 10,
+                children: [
+                  Expanded(
+                    child: WayaTextFormField(
+                      label: 'Delivery LGA',
+                      hintText: widget.request.deliveryLga ?? "N/A",
+                      isReadOnly: true,
+                      hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
+                        color: wayaTheme.colorScheme.customBlack,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: WayaTextFormField(
+                      label: 'Delivery State',
+                      hintText: widget.request.deliveryState ?? "N/A",
+                      isReadOnly: true,
+                      hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
+                        color: wayaTheme.colorScheme.customBlack,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Some space.
+              const Gap(10),
+
               //? Third, the place where we put the unit price.
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
@@ -253,6 +300,7 @@ class _BidOverviewStepState extends ConsumerState<BidDeliveryInfoStep> {
 
               //? This is fair enough.
               FormField<double>(
+                initialValue: savedState.deliveryCharge,
                 validator: (value) {
                   //? This is not there.
                   if (value == null) {
@@ -303,6 +351,7 @@ class _BidOverviewStepState extends ConsumerState<BidDeliveryInfoStep> {
 
               //? Fourth, the place for the delivery date.
               FormField<String>(
+                initialValue: savedState.readyDate?.toIso8601String(),
                 validator: (value) {
                   if (deliveryDateController.value == null) {
                     return 'Delivery date is required';
@@ -348,8 +397,8 @@ class _BidOverviewStepState extends ConsumerState<BidDeliveryInfoStep> {
                 //? Do the needful.
                 final shopId = shopNotifier.value!;
                 final unitPrice = priceController.value!;
-                final deliveryCharge = deliveryChargeController.value!;
-                final readyDate = deliveryDateController.value!;
+                final deliveryCharge = deliveryChargeController.value;
+                final readyDate = deliveryDateController.value;
 
                 //? Since we could validate...
                 widget.notifier.updatePricingAndDelivery(

@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
+import 'package:wayagram/features/quotation/seller/views/create_bid/create_bid.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
-import 'package:wayagram/shared/features/quotation/modal/choose_shop.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
@@ -41,49 +43,34 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
   CachedUserDataTuple? _buyerDetails;
 
   Future<void> _placeBid(BuyRequestModel request) async {
-    final amount = await WayaUtils.showModalSheet<double>(
-      context,
-      child: EditOfferModal(
-        title: 'Edit your Offer',
-        hint: 'Update your base price for this request',
-        delta: request.bidStartingAmount >= 3000000
-            ? 25000
-            : request.bidStartingAmount >= 200000
-                ? 5000
-                : 1000,
-      ),
-    );
+    //? Try to load all of the payment methods first, in place.
+    final walletNotifier = ref.read(walletVmProvider.notifier);
+    await walletNotifier.getPayoutMethod();
 
-    //! If this was dismissed before an amount was even calculated...
-    if (amount == null) return;
+    //? If this is not fine.
+    if (!mounted) {
+      return;
+    }
 
-    //? Which shop is the user sending the bid as?
-    final shopId = await WayaUtils.showModalSheet(context, child: ChooseShopModal());
+    //? First, we check if this user has any payout methods configured before
+    //? placing the bid.
+    final walletViewModel = ref.read(walletVmProvider);
 
-    //! If the shop was not selected.
-    if (shopId == null) return;
+    //? Check if user have payout method added and then tell he or she to if he
+    //? or she has not.
+    if (walletViewModel.payoutMethod.isEmpty) {
+      await WayaUtils.showModalSheet(
+        context,
+        child: AddPayoutModal(),
+      );
+      return;
+    }
 
-    //? Next, get the delivery cost.
-    final deliveryCost = await WayaUtils.showModalSheet<double>(
-      context,
-      child: EditOfferModal(
-        title: 'Delivery Cost',
-        hint: 'Enter the delivery cost for this request',
-        delta: 1500,
-      ),
-    );
+    //? Then move forward.
+    final request = notifier.getBidQuote(widget.requestId)!;
 
-    //? If this is undefined.
-    if (deliveryCost == null) return;
-
-    //? Now, send the bid.
-    final result = await notifier.sendBid(request.id, amount, shopId, deliveryCost);
-
-    //! Since bidding failed, you can leave.
-    if (result == null) return;
-
-    //* Okay, since bidding was fine, we throw a pizza party.
-    _viewSellerBid(result);
+    //? Send the user to the screen dedicated to the cause.
+    WayaNav.to(CreateBidScreen(request: request), transition: Transition.downToUp);
   }
 
   Future<void> _viewSellerBid(QuotationBidModel result) async {

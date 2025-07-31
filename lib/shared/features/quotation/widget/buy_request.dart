@@ -153,33 +153,26 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
   }
 
   Future<void> _viewOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetaisScreen(widget.data.id));
   }
 
   Future<void> _checkoutOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailScreen(widget.data.id));
     final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final bid = request.bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
 
     //? This is fine
     if (bid != null && widget.data.buyerId == ConversationState.self.id) {
-      WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId);
+      WayaAppRoutes.getQuotationCheckoutSceen(bid.id, bid.requestId);
     }
 
     //? Are you the right vendor?
     else if (bid?.vendorId == ConversationState.self.id) {
-      WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+      WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDtailsScreen(widget.data.id));
     }
   }
 
   Future<void> _viewBids() async {
-    //? For now, always redirect tot the place bid activity.
-    if (widget.data.lga != "Curry") {
-      await _placeBid();
-      return;
-    }
-
-    //? Then do this.
     final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(request.id));
   }

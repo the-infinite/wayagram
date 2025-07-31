@@ -174,6 +174,7 @@ class WayaMultiImagePicker extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: controller,
       builder: (context, redraws, _) => FormField<List<File>>(
+        initialValue: controller._images,
         validator: (value) {
           final hasContents = value?.isNotEmpty ?? false;
 

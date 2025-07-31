@@ -1,9 +1,17 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/data/model/model.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
+import 'package:wayagram/shared/features/quotation/repo/default.dart';
+import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
 class CreateBidState {
   //? Reference.
@@ -62,7 +70,11 @@ class CreateBidState {
 }
 
 class CreateBidVm extends StateNotifier<CreateBidState> {
-  CreateBidVm(BuyRequestModel request)
+  final repo = QuotationRepository.instance;
+  final QuotationsNotifier _n;
+
+  // Construct.
+  CreateBidVm(BuyRequestModel request, this._n)
       : super(CreateBidState(
           request: request,
           description: null,
@@ -75,8 +87,8 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
         ));
 
   /// Returns a list of valid product conditions available for selection.
-  /// 
-  /// The list contains [Select] objects representing different conditions 
+  ///
+  /// The list contains [Select] objects representing different conditions
   /// that can be assigned to a product in the quotation/bidding process.
   List<Select> get validConditions => productConditions
       .asMap()
@@ -126,6 +138,72 @@ class CreateBidVm extends StateNotifier<CreateBidState> {
       readyDate: readyDate,
     );
   }
+
+  /// Used to create the bid
+  Future<QuotationBidModel?> sendBid() async {
+    //? First, we upload the files.
+    try {
+      //? For the images.
+      final images = <String>[];
+
+      //? For each image.
+      for (final image in state.images!) {
+        //? Now upload each image.
+        final name = WayaFileHelper.generateFilename(state.request!.id, image);
+        final result = await WayaFileRepository.instance.uploadFile(image, name);
+
+        //? Upload the file...
+        if (result == null) {
+          WayaSnackBar.showToast("Unable to upload images for your bid");
+          return null;
+        }
+
+        //? Since it was fine...
+        images.add(result);
+      }
+
+      //? Help
+      final response = await repo.placeBid(
+        requestId: state.request!.id,
+        amount: state.unitPrice! * state.request!.quantity,
+        shopId: state.shopId!,
+        vendorId: ConversationState.self.id,
+        deliveryCost: state.deliveryCharge,
+        deliveryDate: state.readyDate,
+        comment: state.description!,
+        images: images,
+      );
+
+      //? This is fine.
+      if (response.success) {
+        //? The data.
+        final data = response.data['data'];
+
+        //? Parse the single buy request to ensure we are doing things right.
+        final doc = QuotationBidModel.fromJson(data);
+
+        //? Then save this as is needed.
+        try {
+          await _n.saveBid(doc);
+        } catch (_) {}
+
+        //? Return the document.
+        return doc;
+      }
+    } catch (e) {
+      debugPrint('Error sending bid: $e');
+      debugPrint('Stack trace: ${WayaDebugHelpers.getStackTrace(e)}');
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return this.
+    return null;
+  }
 }
 
 typedef CreateBidProvider = StateNotifierProvider<CreateBidVm, CreateBidState>;
@@ -137,4 +215,6 @@ typedef CreateBidProvider = StateNotifierProvider<CreateBidVm, CreateBidState>;
 ///
 /// Returns a [StateNotifierProvider] that provides access to the [CreateBidVm]
 /// view model and [CreateBidState] state.
-CreateBidProvider createBidProviderFactory(BuyRequestModel request) => CreateBidProvider((ref) => CreateBidVm(request));
+CreateBidProvider createBidProviderFactory(BuyRequestModel request) => CreateBidProvider(
+      (ref) => CreateBidVm(request, ref.read(userQuotationsProvider.notifier)),
+    );

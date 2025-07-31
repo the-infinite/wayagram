@@ -315,52 +315,20 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     return false;
   }
 
-  /// Helper function used to place a bid so that we can enter a quote auction.
-  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId, double? deliveryCost) async {
-    try {
-      final response = await repo.placeBid(
-        requestId: requestId,
-        amount: amount,
-        shopId: shopId,
-        vendorId: ConversationState.self.id,
-        deliveryCost: deliveryCost,
-      );
+  /// Helper function used to place a bid inside of our list of bids and refreshing
+  /// the quotation model that it comes from. Or at least, it tries to refresh
+  /// the quotation model. It has no real reason or objective for doing so.
+  Future<void> saveBid(QuotationBidModel doc) async {
+    //? STylishly sneak this bid into the list of bids on screen.
+    state = state.copyWith(
+      bids: [
+        doc,
+        ...state.bids,
+      ],
+    );
 
-      //? This is fine.
-      if (response.success) {
-        //? The data.
-        final data = response.data['data'];
-
-        //? Parse the single buy request to ensure we are doing things right.
-        final doc = QuotationBidModel.fromJson(data);
-
-        //? STylishly sneak this bid into the list of bids on screen.
-        state = state.copyWith(
-          bids: [
-            doc,
-            ...state.bids,
-          ],
-        );
-
-        //? This is fine.
-        await getBuyRequest(requestId);
-
-        //? Return the document.
-        return doc;
-      }
-    } catch (e) {
-      Get.log('Error sending bid: $e');
-      Get.log('Stack trace: ${WayaDebugHelpers.getStackTrace(e)}');
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-
-    //? Since it failed.
-    return null;
+    //? This is fine.
+    await getBuyRequest(doc.requestId);
   }
 
   /// Helper function used to get all bids from the server that a given user has

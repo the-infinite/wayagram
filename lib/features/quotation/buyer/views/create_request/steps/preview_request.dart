@@ -227,7 +227,9 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             children: [
               Expanded(
                 child: AboutProduct(
-                    title: 'Delivery Address', content: '${viewModel.deliveryAddress.text.capitalizeFirst}'),
+                  title: 'Delivery Address',
+                  content: '${viewModel.deliveryAddress.text.capitalizeFirst}',
+                ),
               )
             ],
           ),
@@ -367,7 +369,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           textColor: wayaTheme.colorScheme.customBlack,
           border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
           callback: () => widget.gotoPreviousTab(),
-        )
+        ),
       ],
     );
   }

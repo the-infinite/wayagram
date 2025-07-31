@@ -72,7 +72,7 @@ class _BidOverviewStepState extends ConsumerState<BidOverviewStep> {
 
             //? Page subtitle.
             Text(
-              "It's your first step towards participating in the quotation auction\nthat excites you.",
+              "It's your first step towards participating in the quotation auction that excites you.",
               style: wayaTheme.textTheme.hintStyle,
             ),
 
@@ -176,44 +176,43 @@ class _BidOverviewStepState extends ConsumerState<BidOverviewStep> {
             //? Product condition.
             ValueListenableBuilder(
               valueListenable: conditionController,
-              builder: (context, selectedCondition, _) {
-                return FormField<String>(
-                  validator: (value) {
-                    if (conditionController.value?.isEmpty ?? true) {
-                      return 'Product Condition is required';
-                    }
-                    return null;
-                  },
-                  builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaSelectField<String>(
-                          height: 0.3,
-                          label: "Condition",
-                          hintText: 'Select Product Condition',
-                          items: widget.notifier.validConditions,
-                          value: selectedCondition,
-                          onSelected: (value) => conditionController.value = value.first.value,
-                        ),
+              builder: (context, selectedCondition, _) => FormField<String>(
+                initialValue: selectedCondition,
+                validator: (value) {
+                  if (conditionController.value?.isEmpty ?? true) {
+                    return 'Product Condition is required';
+                  }
+                  return null;
+                },
+                builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField<String>(
+                        height: 0.3,
+                        label: "Condition",
+                        hintText: 'Select Product Condition',
+                        items: widget.notifier.validConditions,
+                        value: selectedCondition,
+                        onSelected: (value) => conditionController.value = value.first.value,
+                      ),
 
-                        //? Error
-                        if (formState.hasError && (conditionController.value?.isEmpty ?? true))
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp,
-                              ),
+                      //? Error
+                      if (formState.hasError && (conditionController.value?.isEmpty ?? true))
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                              color: wayaTheme.colorScheme.error,
+                              fontSize: 12.sp,
                             ),
                           ),
-                      ],
-                    );
-                  },
-                );
-              },
+                        ),
+                    ],
+                  );
+                },
+              ),
             ),
 
             // Some space.
