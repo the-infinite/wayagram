@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
-import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -61,9 +61,14 @@ class ProfileVm extends StateNotifier<ProfileState> {
         WayaSnackBar.showToast('Account Updated Successfully');
 
         await logOutUser();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
       state = ProfileState(isLoading: false);
-    } catch (e) {
+    } catch (_) {
       state = ProfileState(isLoading: false);
     }
   }
@@ -311,16 +316,13 @@ class ProfileVm extends StateNotifier<ProfileState> {
       if (response.success) {
         WayaSnackBar.showToast('Cover photo removed successfully');
         refetchUserData();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.relationships,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-
+    } catch (_) {}
     WayaPreloaderController.instance.hide();
   }
 }

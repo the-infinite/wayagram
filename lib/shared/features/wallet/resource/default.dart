@@ -1,5 +1,5 @@
-import 'package:wayagram/core/controller/debug_console.dart';
-import 'package:wayagram/core/helpers/debug.dart';
+import 'package:wayagram/core/components/modals/error.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
@@ -22,14 +22,7 @@ class WalletResource {
       if (response.success) {
         return ExternalWalletModel.fromJson(response.data['data']);
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.wallets,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
 
     //? This is fine.
     return null;
@@ -41,18 +34,14 @@ class WalletResource {
     try {
       final response = await repo.payForService(data);
 
-      //? If this was fine, return the wallet.
-      if (response.success) {
-        return response.success;
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.wallets,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+      return response.success;
+    } catch (_) {}
     return false;
   }
 }

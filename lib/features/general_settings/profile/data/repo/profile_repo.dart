@@ -39,8 +39,7 @@ class ProfileRepo extends BaseRepository {
     if (phone != null) payload['newPhoneNumber'] = phone;
 
     return patch(
-        '$serviceUrl/client/users/$userId/email-or-phone/update', payload,
-        showErrors: true);
+        '$serviceUrl/client/users/$userId/email-or-phone/update', payload);
   }
 
   Future<WayaRequestResponse> updateProfileRepo(
@@ -81,12 +80,10 @@ class ProfileRepo extends BaseRepository {
 
   Future<WayaRequestResponse> removeCoverPhoto() async {
     return patch(
-      "$serviceUrl/client/profiles/${ConversationState.self.id}/remove-imagaes",
-      {
-        "fields": ["coverImage"]
-      },
-      showErrors: true,
-    );
+        "$serviceUrl/client/profiles/${ConversationState.self.id}/remove-imagaes",
+        {
+          "fields": ["coverImage"]
+        });
   }
 
   Future<WayaRequestResponse> postDisputeDetails(dynamic payload) async {

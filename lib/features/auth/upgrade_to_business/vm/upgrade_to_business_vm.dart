@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -99,9 +100,13 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
         final businessId = responseModel.business.id;
         await _secureDataSource.saveBusinessId(businessId);
         WayaNav.toNamed(AddBusinessAccountView.route);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e);
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }

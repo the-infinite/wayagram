@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -203,6 +204,11 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
           isLoading: false,
         );
         return true;
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
       //? Tell that isValidCAC is false not verifying BVN again
       state = state.copyWith(isValidBVN: false);
@@ -210,7 +216,6 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     } catch (e) {
       //? Tell that isValidCAC is false not verifying BVN again
       state = state.copyWith(isValidBVN: false);
-      _logger.e(e);
     } finally {
       //? close off all on the verification of BVN
       state = state.copyWith(isLoading: false, isBVNVerify: false);
@@ -232,14 +237,17 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
           isLoading: false,
         );
         return true;
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
       //? Tell that isValidCAC is false not verifying CAC again
       state = state.copyWith(isValidCAC: false);
       return true;
     } catch (e) {
-      //? an error occurred
       state = state.copyWith(isValidCAC: false);
-      _logger.e(e);
     } finally {
       //? close off all on the verification of CAC
       state = state.copyWith(isLoading: false, isCACVerify: false);

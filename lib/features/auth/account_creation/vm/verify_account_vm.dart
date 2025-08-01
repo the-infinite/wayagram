@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -97,9 +98,13 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
       if (response.success) {
         onSuccess();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -156,9 +161,13 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
         }
 
         onSuccess();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -175,16 +184,19 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
           await _authRepository.verify(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 
-
-    Future<void> verifyChangePassword(
+  Future<void> verifyChangePassword(
       {required VoidCallback onSuccess,
       required String code,
       required String email}) async {
@@ -195,6 +207,11 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
           .verifyChangePassword(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -214,13 +231,18 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
           .verifySetPin(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
   }
+
   Future<void> verifyChangeTransactionPin(
       {required VoidCallback onSuccess,
       required String code,
@@ -232,13 +254,18 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
           .verifyChangePin(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
   }
+
   Future<void> verifyPayout(
       {required VoidCallback onSuccess,
       required String code,
@@ -249,9 +276,13 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       final response = await _authRepository.verifyPayout(email, code);
       if (response.success) {
         onSuccess();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -309,9 +340,13 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
         _secureDataSource.saveToken(token);
         _secureDataSource.saveRefreshToken(refreshToken);
         WayaNav.goBack();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -356,6 +391,11 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
       if (response.success) {
         WayaNav.replaceNamed(AccountSecurity.route);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       _logger.e(e.toString());

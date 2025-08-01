@@ -9,7 +9,7 @@ class EventRepository extends BaseRepository {
 
   Future<WayaRequestResponse> createEvent(AddEventRequestModel payload) {
     return post("$serviceUrl/events/create", payload.toJson(),
-        formdata: false, showErrors: true);
+        formdata: false);
   }
 
   Future<WayaRequestResponse> getEvents({int? limit = 500, int? page = 1}) {
@@ -22,8 +22,7 @@ class EventRepository extends BaseRepository {
       required String eventLink,
       required String eventTitle}) {
     return post("$serviceUrl/events/invite",
-        {"userIds": userIds, "eventTitle": eventTitle, "eventLink": eventLink},
-        showErrors: true);
+        {"userIds": userIds, "eventTitle": eventTitle, "eventLink": eventLink});
   }
 
   Future<WayaRequestResponse> getUserEvents(
@@ -55,14 +54,13 @@ class EventRepository extends BaseRepository {
   Future<WayaRequestResponse> editEvent(
       UpdateEventRequestModel payload, String id) {
     return patch("$serviceUrl/events/edit-event/$id", payload.toJson(),
-        formdata: false, showErrors: true);
+        formdata: false);
   }
 
   Future<WayaRequestResponse> joinEvent(
       {required String userId, required String eventId}) {
     return post(
-        "$serviceUrl/join-events", {"userId": userId, "eventId": eventId},
-        showErrors: true);
+        "$serviceUrl/join-events", {"userId": userId, "eventId": eventId});
   }
 
   Future<WayaRequestResponse> reportEvent(
@@ -72,7 +70,7 @@ class EventRepository extends BaseRepository {
       String? comment}) {
     final payload = {"eventId": eventId, "reason": reason};
     if (comment != null) payload['comment'] = comment;
-    return post("$serviceUrl/reports/create", payload, showErrors: true);
+    return post("$serviceUrl/reports/create", payload);
   }
 
   Future<WayaRequestResponse> joinedUsers(
@@ -112,8 +110,7 @@ class EventRepository extends BaseRepository {
         {
           "letEveryoneJoin": letEveryoneJoin,
           "approveJoinRequest": approveJoinRequest
-        },
-        showErrors: true);
+        });
   }
 
   Future<WayaRequestResponse> getEventSettings() {

@@ -9,41 +9,40 @@ class AuthRepository extends BaseRepository {
   static const graphServiceUrl = WayaServiceUri.graph;
 
   Future<WayaRequestResponse> register(Register payload) {
-    return post('$serviceUrl/client/auth/register', payload.toJson(),
-        showErrors: true);
+    return post(
+      '$serviceUrl/client/auth/register',
+      payload.toJson(),
+    );
   }
 
   Future<WayaRequestResponse> verifyOtp(VerifyOtp payload) {
     return post(
-        '$serviceUrl/client/auth/register/verify-email', payload.toJson(),
-        showErrors: true);
+        '$serviceUrl/client/auth/register/verify-email', payload.toJson());
   }
 
   Future<WayaRequestResponse> verify(VerifyOtp payload) {
     final data = {...payload.toJson(), "purpose": "USER_RESET_PASSWORD"};
-    return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
+    return post('$serviceUrl/client/auth/verify-otp', data);
   }
 
   Future<WayaRequestResponse> verifySetPin(VerifyOtp payload) {
     final data = {...payload.toJson(), "purpose": "Transaction-Pin"};
-    return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
+    return post('$serviceUrl/client/auth/verify-otp', data);
   }
 
-      Future<WayaRequestResponse> verifyChangePin(VerifyOtp payload) {
+  Future<WayaRequestResponse> verifyChangePin(VerifyOtp payload) {
     final data = {...payload.toJson(), "purpose": "Change-Transaction-Pin"};
-    return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
+    return post('$serviceUrl/client/auth/verify-otp', data);
   }
 
-    Future<WayaRequestResponse> verifyChangePassword(VerifyOtp payload) {
+  Future<WayaRequestResponse> verifyChangePassword(VerifyOtp payload) {
     final data = {...payload.toJson(), "purpose": "Reset-Password"};
-    return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
+    return post('$serviceUrl/client/auth/verify-otp', data);
   }
-
 
   Future<WayaRequestResponse> verifyPayout(String email, String otp) {
     final payload = {"email": email, "otp": otp, "purpose": "PAYOUT"};
-    return post('$serviceUrl/client/auth/verify-otp', payload,
-        showErrors: true);
+    return post('$serviceUrl/client/auth/verify-otp', payload);
   }
 
   Future<WayaRequestResponse> resendOtp(
@@ -69,8 +68,7 @@ class AuthRepository extends BaseRepository {
 
     if (purpose != null) payload['purpose'] = purpose;
 
-    return post('$serviceUrl/client/auth/toggle-2fa', payload,
-        showErrors: true);
+    return post('$serviceUrl/client/auth/toggle-2fa', payload);
   }
 
   Future<WayaRequestResponse> validate2Fa(
@@ -79,23 +77,18 @@ class AuthRepository extends BaseRepository {
 
     if (purpose != null) payload['purpose'] = purpose;
 
-    return post('$serviceUrl/client/auth/validate-2fa', payload,
-        showErrors: true);
+    return post('$serviceUrl/client/auth/validate-2fa', payload);
   }
 
   Future<WayaRequestResponse> phoneVerification(String code, String phone) {
     return post('$serviceUrl/client/auth/verify-phone',
-        {"otp": code, "phoneNumber": phone, "purpose": 'REGISTER_USER'},
-        showErrors: true);
+        {"otp": code, "phoneNumber": phone, "purpose": 'REGISTER_USER'});
   }
 
   Future<WayaRequestResponse> verifyEmail(String email) {
-    return post(
-        '$serviceUrl/client/auth/password/reset-password',
-        {
-          "email": email,
-        },
-        showErrors: true);
+    return post('$serviceUrl/client/auth/password/reset-password', {
+      "email": email,
+    });
   }
 
   Future<WayaRequestResponse> getOtp(
@@ -105,26 +98,22 @@ class AuthRepository extends BaseRepository {
     if (email != null) payload['email'] = email;
     if (phone != null) payload['phoneNumber'] = phone;
 
-    return post('$serviceUrl/client/auth/resend-otp', payload,
-        showErrors: true);
+    return post('$serviceUrl/client/auth/resend-otp', payload);
   }
 
   Future<WayaRequestResponse> verifyCAC(String cacNumber) {
     return post('$serviceUrl/client/kyc/verify-cac-number',
-        {"cacNumber": cacNumber, "mode": "basic"},
-        showErrors: true);
+        {"cacNumber": cacNumber, "mode": "basic"});
   }
 
   Future<WayaRequestResponse> verifyBVN(String bvnNumber) {
     return post('$serviceUrl/client/kyc/verify-bvn',
-        {"bvn": bvnNumber, "mode": "basic"},
-        showErrors: true);
+        {"bvn": bvnNumber, "mode": "basic"});
   }
 
   Future<WayaRequestResponse> resetPassword(ForgotPassword payload) {
     return post(
-        '$serviceUrl/client/auth/password/new-password', payload.toJson(),
-        showErrors: true);
+        '$serviceUrl/client/auth/password/new-password', payload.toJson());
   }
 
   ///client/users/:userId/email-or-phone/update
@@ -148,8 +137,7 @@ class AuthRepository extends BaseRepository {
       payload['email'] = email;
       payload['password'] = password;
     }
-
-    return post('$serviceUrl/client/auth/login', payload, showErrors: true);
+    return post('$serviceUrl/client/auth/login', payload);
   }
 
   Future<WayaRequestResponse> getAllCountries() {
@@ -188,15 +176,11 @@ class AuthRepository extends BaseRepository {
   Future<WayaRequestResponse> upgradeToBusiness(
       {required UpgradeToBusinessModel payload, required String id}) {
     return post(
-        '$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson(),
-        showErrors: true);
+        '$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson());
   }
 
   Future<WayaRequestResponse> selectInterest(dynamic data) {
-    return patch(
-      '$graphServiceUrl/interests/toggle',
-      {"interests": data},
-    );
+    return patch('$graphServiceUrl/interests/toggle', {"interests": data});
   }
 
   Future<WayaRequestResponse> getSelectedInterests(

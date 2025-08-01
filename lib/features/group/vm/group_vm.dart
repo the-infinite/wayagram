@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -154,18 +155,15 @@ class GroupVm extends StateNotifier<GroupState> {
         //? Now report.
         WayaSnackBar.showToast("Member removed successfully");
         getGroupMembers(groupId);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
 
-      //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
 
     //? Return false.
     return false;
@@ -247,20 +245,13 @@ class GroupVm extends StateNotifier<GroupState> {
             ),
           ),
         );
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        _logger.i(response.data['data']);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -278,6 +269,11 @@ class GroupVm extends StateNotifier<GroupState> {
             duration: Duration(seconds: 2),
           ),
         );
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -358,15 +354,13 @@ class GroupVm extends StateNotifier<GroupState> {
             duration: Duration(seconds: 2),
           ),
         );
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        _logger.i(response.data['data']);
-      }
-    } catch (e) {
-      _logger.e(e);
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -507,14 +501,13 @@ class GroupVm extends StateNotifier<GroupState> {
             duration: Duration(seconds: 2),
           ),
         );
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -538,14 +531,13 @@ class GroupVm extends StateNotifier<GroupState> {
             ),
           );
         }
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -567,6 +559,11 @@ class GroupVm extends StateNotifier<GroupState> {
               duration: Duration(seconds: 2),
             ),
           );
+        }
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
         }
       }
     } catch (e) {
@@ -597,14 +594,13 @@ class GroupVm extends StateNotifier<GroupState> {
             duration: Duration(seconds: 2),
           ),
         );
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -626,6 +622,11 @@ class GroupVm extends StateNotifier<GroupState> {
             duration: Duration(seconds: 2),
           ),
         );
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -649,6 +650,10 @@ class GroupVm extends StateNotifier<GroupState> {
       if (response.success) {
         getGroupMembers(groupId);
       } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
         WayaNav.goBack();
       }
 
@@ -677,17 +682,15 @@ class GroupVm extends StateNotifier<GroupState> {
       if (response.success) {
         getGroupMembers(groupId);
       } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
         WayaNav.goBack();
       }
 
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -984,15 +987,13 @@ class GroupVm extends StateNotifier<GroupState> {
         JoinRequestModel responseModel =
             JoinRequestModel.fromJson(response.data);
         state = state.copyWith(joinRequestDocs: responseModel.data?.docs);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {}
+    } catch (_) {}
   }
 
   Future<void> reportGroup(

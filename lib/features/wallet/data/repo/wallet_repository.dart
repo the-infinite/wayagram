@@ -46,8 +46,7 @@ class WalletRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> payForService(WalletPaymentData data) {
-    return post('$serviceUrl/client/payment/pay-for-service', data.toJson(),
-        showErrors: true);
+    return post('$serviceUrl/client/payment/pay-for-service', data.toJson());
   }
 
   Future<WayaRequestResponse> getPayoutMethod() {
@@ -97,7 +96,7 @@ class WalletRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> deletePayoutMethod(String id) {
-    return delete("$serviceUrl/client/payout/methods/$id", showErrors: true);
+    return delete("$serviceUrl/client/payout/methods/$id");
   }
 
   //payout
@@ -120,8 +119,7 @@ class WalletRepository extends BaseRepository {
       "bankCode": bankCode
     };
 
-    return post('$serviceUrl/client/payout/requests', payload,
-        formdata: false, showErrors: true);
+    return post('$serviceUrl/client/payout/requests', payload, formdata: false);
   }
 
   Future<WayaRequestResponse> fetchPayoutHistory(

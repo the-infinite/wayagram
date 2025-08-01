@@ -96,7 +96,6 @@ class ChatRepository extends BaseRepository {
     return put(
       "$serviceUrl/client/chat/group/photo",
       {"chatId": id, "groupImage": image},
-      showErrors: true,
     );
   }
 
@@ -104,7 +103,6 @@ class ChatRepository extends BaseRepository {
     return post(
       "$serviceUrl/client/chat/group/report",
       {"chatId": id, "reason": reason},
-      showErrors: true,
     );
   }
 
@@ -112,7 +110,6 @@ class ChatRepository extends BaseRepository {
     return post(
       "$serviceUrl/client/chat/group/leave",
       {"chatId": id},
-      showErrors: true,
     );
   }
 
@@ -120,7 +117,6 @@ class ChatRepository extends BaseRepository {
     return post(
       "$serviceUrl/client/chat/group/remove-user",
       {"chatId": id, "userId": userId},
-      showErrors: true,
     );
   }
 
@@ -128,7 +124,6 @@ class ChatRepository extends BaseRepository {
     return post(
       "$serviceUrl/client/chat/group/add-user",
       {"chatId": id, "userId": userId},
-      showErrors: true,
     );
   }
 
@@ -136,7 +131,6 @@ class ChatRepository extends BaseRepository {
     return put(
       "$serviceUrl/client/chat/group/name",
       {"chatId": id, "name": name, if (description != null) "description": description},
-      showErrors: true,
     );
   }
 
@@ -146,7 +140,6 @@ class ChatRepository extends BaseRepository {
       return post(
         "$serviceUrl/client/chat/group/mute",
         {"chatId": chatId, "mute": true, "mutedUntil": mutedUntil.toIso8601String()},
-        showErrors: true,
       );
     }
 
@@ -154,7 +147,6 @@ class ChatRepository extends BaseRepository {
     return post(
       "$serviceUrl/client/chat/group/mute",
       {"chatId": chatId, "mute": false},
-      showErrors: true,
     );
   }
 }

@@ -25,6 +25,9 @@ class PersonalAccountView extends ConsumerStatefulWidget {
 
 class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(loginVmProvider);
@@ -59,11 +62,11 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FormField<String>(validator: (value) {
-                  if (viewModel.emailController.text.isEmpty) {
+                  if (emailController.text.isEmpty) {
                     return 'Email is required';
                   }
                   final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                  if (!regexp.hasMatch(viewModel.emailController.text)) {
+                  if (!regexp.hasMatch(emailController.text)) {
                     return 'Invalid email address';
                   }
                   return null;
@@ -73,12 +76,12 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.emailAddress,
-                        controller: viewModel.emailController,
+                        controller: emailController,
                         hintText: 'example@gmail.com',
-                        borderColor: formState.hasError &&
-                                viewModel.emailController.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        borderColor:
+                            formState.hasError && emailController.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
                         label: 'Email Address',
                       ),
                       if (formState.hasError)
@@ -97,7 +100,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                 const Gap(10),
                 FormField<String>(validator: (value) {
                   return WayaValidators.passwordValidator(
-                      viewModel.passwordController.text);
+                      passwordController.text);
                 }, builder: (formState) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,9 +113,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                         },
                         child: WayaTextFormField(
                           keyboardType: TextInputType.visiblePassword,
-                          controller: viewModel.passwordController,
+                          controller: passwordController,
                           borderColor: formState.hasError &&
-                                  viewModel.passwordController.text.isEmpty
+                                  passwordController.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           hintText: 'Enter Your Password',
@@ -164,9 +167,10 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   callback: !viewModel.isLoading
                       ? () async {
                           if (_formKey.currentState!.validate()) {
-                            ref
-                                .read(loginVmProvider.notifier)
-                                .onSubmit(ref, isBusinessLogin: false);
+                            ref.read(loginVmProvider.notifier).onSubmit(
+                                ref: ref,
+                                email: emailController.text,
+                                password: passwordController.text);
                           }
                         }
                       : null,
@@ -177,209 +181,6 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
               ],
             )),
         const Gap(25),
-        InkWell(
-          onTap: () {
-            WayaNav.toNamed("/account-creation");
-          },
-          child: Chip(
-              label: WayaRichText(
-            title1: "Don't have an account? ",
-            title2: "Create new account",
-            style1: wayaTheme.textTheme.hintStyle
-                .wayaCopyWith(color: wayaTheme.colorScheme.black),
-          )),
-        ),
-      ],
-    );
-  }
-}
-
-class BusinessAccountView extends ConsumerStatefulWidget {
-  const BusinessAccountView({
-    super.key,
-  });
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _BusinessAccountViewState();
-}
-
-class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(loginVmProvider);
-    return Column(
-      children: [
-        Platform.isAndroid
-            ? WayaButton(
-                color: wayaTheme.colorScheme.secondaryColor,
-                callback: () {
-                  ref.watch(loginVmProvider.notifier).signinWithGoogle();
-                },
-                leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
-                text: "Continue with Google",
-                textColor: wayaTheme.colorScheme.black,
-              )
-            : WayaButton(
-                color: wayaTheme.colorScheme.black,
-                callback: () {
-                  ref.watch(loginVmProvider.notifier).signinWithApple();
-                },
-                leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
-                text: "Continue with Apple",
-                textColor: wayaTheme.colorScheme.onPrimary,
-              ),
-        const Gap(25),
-        Row(
-          children: [
-            Expanded(
-              child: Divider(
-                color: wayaTheme.colorScheme.greyColor200,
-                thickness: 1,
-              ),
-            ),
-            const Gap(10),
-            Text(
-              "OR",
-              style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor600,
-              ),
-            ),
-            const Gap(15),
-            Expanded(
-              child: Divider(
-                color: wayaTheme.colorScheme.greyColor200,
-                thickness: 1,
-              ),
-            ),
-          ],
-        ),
-        const Gap(25),
-        Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FormField<String>(validator: (value) {
-                  if (viewModel.businessAcctController.text.isEmpty) {
-                    return 'Business ID/ Email is required';
-                  }
-
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
-                        keyboardType: TextInputType.text,
-                        controller: viewModel.businessAcctController,
-                        hintText: 'Enter Your Email or Business ID',
-                        borderColor: formState.hasError &&
-                                viewModel.businessAcctController.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
-                        label: 'Email Address/Business ID',
-                      ),
-                      if (formState.hasError &&
-                          viewModel.businessAcctController.text.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
-                const Gap(10),
-                FormField<String>(validator: (value) {
-                  return WayaValidators.passwordValidator(
-                      viewModel.passwordController.text);
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Focus(
-                        onFocusChange: (hasFocus) {
-                          ref
-                              .read(loginVmProvider.notifier)
-                              .setPasswordFocus(hasFocus);
-                        },
-                        child: WayaTextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: viewModel.passwordController,
-                          borderColor: formState.hasError &&
-                                  viewModel.passwordController.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          hintText: 'Enter Your Password',
-                          label: 'Password',
-                          obscureText: !viewModel.isPasswordVisible,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              ref
-                                  .read(loginVmProvider.notifier)
-                                  .togglePasswordVisibility();
-                            },
-                            autofocus: false,
-                            icon: Icon(viewModel.isPasswordVisible
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            color: wayaTheme.colorScheme.greyColor300,
-                          ),
-                          helperText:
-                              "Password must be 8 or more character and contain at least 1 number and 1 special character",
-                        ),
-                      ),
-                      if (formState.hasError && !viewModel.isPasswordFocused)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12.sp),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
-                const Gap(15),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () => WayaNav.toNamed('/forgot-password'),
-                    child: Text('Forgot Password?',
-                        style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
-                            fontSize: 14.sp,
-                            color: wayaTheme.colorScheme.customPrimary)),
-                  ),
-                ),
-                const Gap(25),
-                WayaButton(
-                  color: wayaTheme.colorScheme.primary500,
-                  callback: !viewModel.isLoading
-                      ? () async {
-                          if (_formKey.currentState!.validate()) {
-                            ref
-                                .read(loginVmProvider.notifier)
-                                .onSubmit(ref, isBusinessLogin: true);
-                          }
-                        }
-                      : null,
-                  centerWidget:
-                      LoadingState(loading: viewModel.isLoading, text: "Login"),
-                  textColor: wayaTheme.colorScheme.onPrimary,
-                ),
-              ],
-            )),
-        const Gap(30),
         InkWell(
           onTap: () {
             WayaNav.toNamed("/account-creation");

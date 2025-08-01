@@ -170,10 +170,12 @@ class _SinglePollScreenState extends ConsumerState<PollDetailScreen> {
                         //   );
                         // } else
                         if (viewModel.pollType == 'free') {
-                          ref
-                              .read(createPollVotingProvider.notifier)
-                              .castFreeVote(1, '${e.id}', viewModel.pollId,
-                                  context, '${e.text}', viewModel.pollUrl);
+                          if (context.mounted) {
+                            ref
+                                .read(createPollVotingProvider.notifier)
+                                .castFreeVote(1, '${e.id}', viewModel.pollId,
+                                    context, '${e.text}', viewModel.pollUrl);
+                          }
 
                           // ref.read(createPollVotingProvider.notifier).castFreeVote(
                           //     1, '${e.id}', '${poll.id}', context, '${e.text}', '${viewModel.pollUrl}');

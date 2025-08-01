@@ -206,7 +206,6 @@ class WayaAppRoutes {
     SelectInterest.route: (context) => SelectInterest(),
     AddBusinessAccountView.route: (context) => AddBusinessAccountView(),
     LoginPage.route: (context) => LoginPage(),
-    WelcomeBackPage.route: (context) => WelcomeBackPage(),
     BottomView.route: (context) => BottomView(),
     ProductDetail.route: (context) =>
         ProductDetail(id: WayaNav.parameters['id'].toString()),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -260,21 +261,16 @@ class GroupNotifier extends ValueNotifier<int> {
           createdGroups.removeAt(found);
           refresh();
         }
-
-        //? Now report.
         WayaSnackBar.showToast("Group deleted successfully");
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
 
-      //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
 
     //? Return false.
     return false;
@@ -324,18 +320,14 @@ class GroupNotifier extends ValueNotifier<int> {
         refresh();
         WayaSnackBar.showToast("Group created successfully");
         return result;
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+        return null;
       }
-
-      //? Since this is fine.
-      return null;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
     return null;
   }
 
@@ -354,20 +346,16 @@ class GroupNotifier extends ValueNotifier<int> {
         resetJoinedGroups(false);
         await getJoinedGroups();
         WayaSnackBar.showToast("Joined successfully");
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
 
       // Return the success status.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-
-    //? Return false.
+    } catch (_) {}
     return false;
   }
 
@@ -401,6 +389,11 @@ class GroupNotifier extends ValueNotifier<int> {
 
         //? Notify the user.
         WayaSnackBar.showToast("You have left the group");
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
 
       // Return the success status.

@@ -169,7 +169,6 @@ class _VerifyIdentityPageState extends ConsumerState<VerifyYourIdentityPage> {
                               .read(verifyAccountProvider.notifier)
                               .requestEmailOtp();
                         }
-                        // viewModel.resendOtp();
                       }
                     },
                     child: Container(

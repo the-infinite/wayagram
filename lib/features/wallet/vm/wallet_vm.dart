@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wayagram/core/components/waya_snackbar.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -178,6 +178,11 @@ class WalletVm extends StateNotifier<WalletState> {
             duration: Duration(seconds: 2),
           ),
         );
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -368,17 +373,12 @@ class WalletVm extends StateNotifier<WalletState> {
         );
         goBackTo();
       } else {
-        // WayaSnackBar.showToast(response.message ?? "An Error Occurred");
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaSnackBar.showToast(e.toString());
-      /*  WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.polls,
-        WayaDebugHelpers.getStackTrace(e),
-      ); */
-      // _logger.e(e);
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }

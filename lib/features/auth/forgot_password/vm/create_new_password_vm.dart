@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class CreateNewPasswordVm extends ChangeNotifier {
   final AuthRepository _authRepository = AuthRepository();
@@ -58,6 +59,11 @@ class CreateNewPasswordVm extends ChangeNotifier {
 
       if (response.data["statusCode"] == 200) {
         WayaNav.toNamed('/changed-password-success');
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       _logger.e(e);

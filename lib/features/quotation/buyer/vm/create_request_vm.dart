@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
@@ -184,12 +185,14 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       //? Since this can be fine.
       if (response.success) {
         return BuyRequestModel.fromJson(response.data['data']);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+        return null;
       }
-
-      //? Return this one as is.
-      return null;
-    } catch (e) {
-      debugPrint('${WayaDebugHelpers.getStackTrace(e)}');
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }

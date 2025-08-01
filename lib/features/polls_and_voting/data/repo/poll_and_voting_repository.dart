@@ -9,8 +9,7 @@ class PollAndVotingRepository extends BaseRepository {
   static const walletServiceUrl = WayaServiceUri.wallet;
 
   Future<WayaRequestResponse> createPoll(dynamic data) {
-    return post('$serviceUrl/client/polls', data,
-        formdata: true, showErrors: true);
+    return post('$serviceUrl/client/polls', data, formdata: true);
   }
 
   Future<WayaRequestResponse> getAccountType() async {
@@ -19,8 +18,7 @@ class PollAndVotingRepository extends BaseRepository {
 
   Future<WayaRequestResponse> requestSettlement(String pollId) {
     final payload = {"pollId": pollId};
-    return post('$serviceUrl/client/polls/request/payouts', payload,
-        showErrors: true);
+    return post('$serviceUrl/client/polls/request/payouts', payload);
   }
 
   Future<WayaRequestResponse> getAllRequestPayout(
@@ -40,8 +38,7 @@ class PollAndVotingRepository extends BaseRepository {
       "amountPaid": amountPaid
     };
 
-    return post("$serviceUrl/client/polls/$pollId/votes", payload,
-        showErrors: true);
+    return post("$serviceUrl/client/polls/$pollId/votes", payload);
   }
 
   Future<WayaRequestResponse> castFreeVote(
@@ -54,12 +51,11 @@ class PollAndVotingRepository extends BaseRepository {
       //"amountPaid": amountPaid
     };
 
-    return post("$serviceUrl/client/polls/$pollId/votes", payload,
-        showErrors: true);
+    return post("$serviceUrl/client/polls/$pollId/votes", payload);
   }
 
   Future<WayaRequestResponse> deletePoll(String pollId) {
-    return delete("$serviceUrl/client/polls/$pollId", showErrors: true);
+    return delete("$serviceUrl/client/polls/$pollId");
   }
 
   Future<WayaRequestResponse> getAllPolls(int page,

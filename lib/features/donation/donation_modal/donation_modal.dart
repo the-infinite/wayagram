@@ -318,34 +318,37 @@ class _DonationPinEntryBottomSheetState
     }
   }
 
-  void _submitPin() async {
+  void _submitPin(BuildContext context) async {
     if (_pin.length == _pinLength) {
       var isPass = await ref
           .read(donationVmProvider.notifier)
           .verifyWalletPin(_pin, context);
 
       if (isPass) {
-        //WayaNav.goBack();
-        await ref.watch(donationVmProvider.notifier).makeDonation(
-              widget.campaignId,
-              int.parse(widget.amount),
-              widget.campaignTitle,
-              context,
-            );
+        if (context.mounted) {
+          await ref.watch(donationVmProvider.notifier).makeDonation(
+                widget.campaignId,
+                int.parse(widget.amount),
+                widget.campaignTitle,
+                context,
+              );
+        }
       } else {
         WayaNav.goBack();
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Invalid pin',
-              style: TextStyle(
-                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Invalid pin',
+                style: TextStyle(
+                    fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+              ),
+              backgroundColor: WayaColors.primary,
+              duration: Duration(seconds: 2),
             ),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
+          );
+        }
       }
     }
   }
@@ -429,16 +432,10 @@ class _DonationPinEntryBottomSheetState
                         child: const Icon(Icons.arrow_forward,
                             color: Colors.black54),
                         onPressed: () {
-                          //final userId = _wayaLocalDataSource.getUserId();
                           if (_pin.length == _pinLength) {
-                            // viewModel.submitPins(context);
-                            // viewModel.verifyWalletPin(_pin);
-                            //WayaNav.goBack();
-                            _submitPin();
+                            _submitPin(context);
                           }
-                        }
-                        // _submitPin,
-                        );
+                        });
                   } else {
                     return _buildKeypadButton(
                       child: Text('${index + 1}',

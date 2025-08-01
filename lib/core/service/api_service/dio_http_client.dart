@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
 import 'dart:io';
 
@@ -28,11 +26,8 @@ class RequestRepeater {
 class DioHttpClient implements WayaHttpClientInterface {
   late final Dio dio;
   final String baseURL = WayaConstants.baseUrl;
-  // final _logger = getLogger('DioHttpClient');
   final secureDataSource = WayaSecureDataSource();
   static final _instance = DioHttpClient._internal();
-  //removing the snackbar
-  //final SnackbarService _snackBarService = SnackbarService();
 
   DioHttpClient._internal() {
     dio = initializeDio();
@@ -47,19 +42,9 @@ class DioHttpClient implements WayaHttpClientInterface {
       baseUrl: baseURL,
       receiveDataWhenStatusError: true,
       connectTimeout: const Duration(seconds: 30),
-      // receiveTimeout: const Duration(seconds: 30),
     );
     final dio = Dio(options);
     dio.interceptors.add(DioInterceptor(dio, secureDataSource, baseURL));
-    // for proper logging of dio request and response
-    // dio.interceptors.add(PrettyDioLogger(
-    //     requestHeader: true,
-    //     requestBody: true,
-    //     responseBody: false,
-    //     responseHeader: false,
-    //     error: true,
-    //     compact: true,
-    //     maxWidth: 90));
     return dio;
   }
 
@@ -71,7 +56,6 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool formdata = false,
     dynamic token,
     bool useBase = true,
-    bool showErrors = false,
   }) {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
@@ -88,7 +72,6 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
-          showErrors,
         );
 
         //? After that, then complete with the result.
@@ -113,17 +96,13 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool formEncoded = false,
     void Function({int count, int total})? onSendProgress,
     void Function({int count, int total})? onRecieveProgress,
-    bool showErrors = false,
   }) {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
       repeat: (repeater) async {
-        //? Since it is form data.
         if (formdata) {
           body = FormData.fromMap(body as Map<String, dynamic>);
         }
-
-        //? This is fine.late
         await _setHeader(
           formdata: formdata,
           formEncoded: formEncoded,
@@ -135,7 +114,6 @@ class DioHttpClient implements WayaHttpClientInterface {
 
         params?.removeWhere((key, value) => value == null);
 
-        //? This is fine.
         final result = await _makeRequest(
           dio.post(
             fullRoute,
@@ -165,7 +143,6 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
-          showErrors,
         );
 
         //? Now, complete this with the awaited result.
@@ -207,7 +184,6 @@ class DioHttpClient implements WayaHttpClientInterface {
             },
           ),
           repeater,
-          false,
         );
 
         //? After that, then complete with the result.
@@ -236,7 +212,6 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool isAuth = true,
     bool isBinary = false,
     bool formEncoded = false,
-    bool showErrors = false,
   }) {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
@@ -248,9 +223,6 @@ class DioHttpClient implements WayaHttpClientInterface {
           length = await (body as File).length();
           body = body.openRead();
         }
-
-        //? Now, I need you to set the headers correctly. Please add the content length
-        //? to headers.
         await _setHeader(
           formdata: formdata,
           contentLength: length,
@@ -275,7 +247,6 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
-          showErrors,
         );
 
         //? After that, then complete with the result.
@@ -300,7 +271,6 @@ class DioHttpClient implements WayaHttpClientInterface {
     Map<String, dynamic>? params,
     bool formdata = false,
     bool formEncoded = false,
-    bool showErrors = false,
   }) async {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
@@ -321,7 +291,6 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
-          showErrors,
         );
 
         //? After that, then complete with the result.
@@ -342,7 +311,6 @@ class DioHttpClient implements WayaHttpClientInterface {
     String route, {
     Object? body,
     Map<String, dynamic>? params,
-    bool showErrors = false,
   }) async {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
@@ -357,7 +325,6 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
-          showErrors,
         );
 
         //? After that, then complete with the result.
@@ -374,8 +341,7 @@ class DioHttpClient implements WayaHttpClientInterface {
   }
 
   Future<WayaRequestResponse> _makeRequest(
-      Future<Response> future, RequestRepeater repeater,
-      [bool showErrors = false]) async {
+      Future<Response> future, RequestRepeater repeater) async {
     try {
       final response = await future;
       return WayaRequestResponse(
@@ -385,8 +351,6 @@ class DioHttpClient implements WayaHttpClientInterface {
       );
     } on DioException catch (e) {
       if (e.response != null) {
-        var message = 'An unknown error occurred';
-
         if (e.response?.statusCode == 401 ||
             (e.response?.data is Map &&
                 e.response?.data['statusCode'] == 401)) {
@@ -397,10 +361,7 @@ class DioHttpClient implements WayaHttpClientInterface {
           if (success && repeater.depth > 0) {
             repeater.depth -= 1;
             return repeater.repeat(repeater);
-          }
-
-          //? Since it failed, probably redirect the user to the login screen.
-          else {
+          } else {
             final token = await secureDataSource.getToken();
 
             //? Always clear session data when something fails.
@@ -409,44 +370,22 @@ class DioHttpClient implements WayaHttpClientInterface {
               await WayaFastStorageService().deleteAll();
               await ShopResource.reset();
               _signedOut = true;
-              await WayaUtils.showModalSheet(
-                WayaNav.context,
-                child: WayaErrorDialog(
-                  title:
-                      "Your session has expired. To continue, please log in to your account.",
-                ),
-              );
+              if (WayaNav.context.mounted) {
+                await WayaUtils.showModalSheet(
+                  WayaNav.context,
+                  child: WayaErrorDialog(
+                    title:
+                        "Your session has expired. To continue, please log in to your account.",
+                  ),
+                );
+              }
               await WayaNav.removeUntilNamed(LoginCoverPage.route);
               _signedOut = false;
             }
-
-            //? This is fine.
             return WayaHttpException.handleDioError(e);
           }
         }
-
-        //? Since this is something else.
-
-        try {
-          message = e.response?.data['errors'] != null
-              ? e.response?.data['errors'][0]
-              : e.response?.data['message'];
-        } catch (_) {}
-
-        //? If this should show errors.
-        if (showErrors) {
-          //? Close all dialogs before we get here.
-          while (WayaNav.isDialogOpen) {
-            WayaNav.goBack();
-          }
-
-          // Now continue.
-          WayaUtils.showModalSheet(WayaNav.context,
-              child: WayaErrorDialog(title: message));
-        }
       }
-
-      //? Handle this error.
       return WayaHttpException.handleDioError(e);
     }
   }
@@ -472,7 +411,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       await secureDataSource.saveToken(newToken);
       await secureDataSource.saveRefreshToken(newRefreshToken);
       return true;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   }

@@ -123,14 +123,14 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> reportPage(String pageId, String reason) {
     final payload = {"pageId": pageId, "reason": reason};
-    return post("$serviceUrl/reports/create", payload, showErrors: true);
+    return post("$serviceUrl/reports/create", payload);
   }
 
   Future<WayaRequestResponse> reportPost(
       String postId, String reason, String? comment) {
     final payload = {"postId": postId, "reason": reason, "comment": comment};
     // return post("$serviceUrl/posts/report", payload, showErrors: true);
-    return post("$serviceUrl/reports/create", payload, showErrors: true);
+    return post("$serviceUrl/reports/create", payload);
   }
 
   // Future<WayaRequestResponse> likePost(postId) {
@@ -177,7 +177,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> deleteComment(String commentId) async {
-    return delete("$serviceUrl/posts/comments/$commentId", showErrors: true);
+    return delete("$serviceUrl/posts/comments/$commentId");
   }
 
   Future<WayaRequestResponse> likeComment(String commentId) async {
@@ -220,7 +220,7 @@ class PageRepository extends BaseRepository {
       "categories": [category]
     };
 
-    return post("$serviceUrl/pages", payload, showErrors: true);
+    return post("$serviceUrl/pages", payload);
   }
 
   Future<WayaRequestResponse> getPageMedia(String pageId,
@@ -273,7 +273,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> deletePage(String pageId) async {
-    return delete("$serviceUrl/pages/$pageId", showErrors: true);
+    return delete("$serviceUrl/pages/$pageId");
   }
 
   Future<WayaRequestResponse> getPageMembers(String pageId) {
@@ -287,31 +287,27 @@ class PageRepository extends BaseRepository {
   Future<WayaRequestResponse> acceptPageInvitation(String invitationId) {
     final payload = {};
 
-    return post("$serviceUrl/pages/invitations/$invitationId/accept", payload,
-        showErrors: true);
+    return post("$serviceUrl/pages/invitations/$invitationId/accept", payload);
   }
 
   Future<WayaRequestResponse> rejectPageInvitation(String invitationId) {
     final payload = {};
 
-    return post("$serviceUrl/pages/invitations/$invitationId/reject", payload,
-        showErrors: true);
+    return post("$serviceUrl/pages/invitations/$invitationId/reject", payload);
   }
 
   Future<WayaRequestResponse> inviteUserToPage(
       String role, String pageId, String memberId) {
     final payload = {"role": role};
 
-    return post("$serviceUrl/pages/$pageId/team-members/$memberId", payload,
-        showErrors: true);
+    return post("$serviceUrl/pages/$pageId/team-members/$memberId", payload);
   }
 
   Future<WayaRequestResponse> updateTeamMember(
       String role, String pageId, String memberId) {
     final payload = {"role": role};
 
-    return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload,
-        showErrors: true);
+    return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload);
   }
 
   Future<WayaRequestResponse> editPage(String name, String desc, bool pageType,
@@ -324,13 +320,12 @@ class PageRepository extends BaseRepository {
       "profileImage": profileImage
     };
 
-    return put("$serviceUrl/pages/$pageId", payload, showErrors: true);
+    return put("$serviceUrl/pages/$pageId", payload);
   }
 
   Future<WayaRequestResponse> removePageTeamMember(
       String pageId, String memberId) async {
-    return delete("$serviceUrl/pages/$pageId/team-members/$memberId",
-        showErrors: true);
+    return delete("$serviceUrl/pages/$pageId/team-members/$memberId");
   }
 
   Future<WayaRequestResponse> followPage(String pageId) async {

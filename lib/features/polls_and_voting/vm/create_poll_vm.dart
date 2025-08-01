@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -267,25 +268,17 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         await getAllPolls(page: 1);
         await getMyPolls(page: 1);
         if (!context.mounted) return;
-        WayaUtils.showModalSheet(
-          context,
-          child: PollsModal(url: '${createPollResponse.data!.url}'),
-        );
-        // showDialog(
-        //     useRootNavigator: false,
-        //     context: context,
-        //     barrierDismissible: false,
-        //     builder: (BuildContext context) {
-        //       return PaymentDialog();
-        //     });
+        if (response.success) {
+          WayaUtils.showModalSheet(
+            context,
+            child: PollsModal(url: '${createPollResponse.data!.url}'),
+          );
+        } else {
+          WayaUtils.showModalSheet(context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.polls,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -349,14 +342,13 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
             builder: (BuildContext context) {
               return PaymentDialog();
             });
+      } else {
+        if (context.mounted) {
+          WayaUtils.showModalSheet(context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.polls,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -384,6 +376,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         _logger.i(response.data['data']);
       } else if (response.data['responseCode'] == 1620) {
         WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -428,7 +425,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
           await _pollAndVotingRepository.castFreeVote(qty, choiceId, pollId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
-        //WayaNav.goBack();
         await getAllPolls(page: 1);
         await WayaUtils.showModalSheet(
           ctx,
@@ -442,6 +438,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         _logger.i(response.data['data']);
       } else if (response.data['responseCode'] == 1620) {
         WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -525,6 +526,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
             duration: Duration(seconds: 2),
           ),
         );
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -579,6 +585,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
             duration: Duration(seconds: 2),
           ),
         );
+      } else {
+        if (ctx.mounted) {
+          WayaUtils.showModalSheet(ctx,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

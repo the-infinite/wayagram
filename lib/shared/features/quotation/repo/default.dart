@@ -12,7 +12,7 @@ class QuotationRepository extends BaseRepository {
   QuotationRepository._();
 
   Future<WayaRequestResponse> createBuyerRequest(CreateBuyerRequest payload) {
-    return post("$serviceUrl/buyer/request", payload.toJson(), showErrors: true);
+    return post("$serviceUrl/buyer/request", payload.toJson());
   }
 
   Future<WayaRequestResponse> getBuyerRequest([
@@ -35,11 +35,7 @@ class QuotationRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> verifyPaymentStatus(String id, bool value) {
-    return patch(
-      "$serviceUrl/order/payment-status/$id",
-      {"status": value},
-      showErrors: true,
-    );
+    return patch("$serviceUrl/order/payment-status/$id", {"status": value});
   }
 
   Future<WayaRequestResponse> updateRequestAmount({
@@ -47,18 +43,19 @@ class QuotationRepository extends BaseRepository {
     String? amount,
   }) {
     final payload = {"id": id, "amount": amount};
-    return patch('$serviceUrl/buyer/request/update-amount', payload, showErrors: true);
+    return patch('$serviceUrl/buyer/request/update-amount', payload);
   }
 
   Future<WayaRequestResponse> updateCancelRequest({
     required String id,
   }) {
-    return patch('$serviceUrl/buyer/request/cancel', {"id": id}, showErrors: true);
+    return patch('$serviceUrl/buyer/request/cancel', {"id": id});
   }
 
-  Future<WayaRequestResponse> extendBidTime({required String id, required String time}) {
+  Future<WayaRequestResponse> extendBidTime(
+      {required String id, required String time}) {
     final payload = {"id": id, "time": time};
-    return patch('$serviceUrl/buyer/request/extend-bid-end', payload, showErrors: true);
+    return patch('$serviceUrl/buyer/request/extend-bid-end', payload);
   }
 
   Future<WayaRequestResponse> placeBid({
@@ -75,14 +72,15 @@ class QuotationRepository extends BaseRepository {
       "shopId": shopId, // shop id of the vendor
       if (deliveryCost != null) "deliveryCost": deliveryCost, // delivery cost
     };
-    return post('$serviceUrl/vendor/bid', payload, showErrors: true);
+    return post('$serviceUrl/vendor/bid', payload);
   }
 
   Future<WayaRequestResponse> getAllAvailableQuotation([
     int limit = 10,
     int page = 1,
   ]) {
-    return get("$serviceUrl/vendor/quotations?limit=$limit&page=$page&shopId=${ShopResource.currentShop.id}");
+    return get(
+        "$serviceUrl/vendor/quotations?limit=$limit&page=$page&shopId=${ShopResource.currentShop.id}");
   }
 
   Future<WayaRequestResponse> getVendorQuotation(
@@ -102,7 +100,7 @@ class QuotationRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> sendBidAction(BidActionModel action) {
-    return patch('$serviceUrl/vendor/bid-response', action.toJson(), showErrors: true);
+    return patch('$serviceUrl/vendor/bid-response', action.toJson());
   }
 
   Future<WayaRequestResponse> retrieveOrder(String requestId) {
@@ -115,34 +113,36 @@ class QuotationRepository extends BaseRepository {
 
   Future<WayaRequestResponse> updateOrderStatus(String orderId, String status) {
     final payload = {"status": status};
-    return patch('$serviceUrl/order/status/$orderId', payload, showErrors: true);
+    return patch('$serviceUrl/order/status/$orderId', payload);
   }
 
-  Future<WayaRequestResponse> updatePickupStatus(String orderId, String status) {
+  Future<WayaRequestResponse> updatePickupStatus(
+      String orderId, String status) {
     final payload = {"status": status};
-    return patch('$serviceUrl/order/pickup-status/$orderId', payload, showErrors: true);
+    return patch('$serviceUrl/order/pickup-status/$orderId', payload);
   }
 
-  Future<WayaRequestResponse> updateDeliveryStatus(String orderId, String status) {
+  Future<WayaRequestResponse> updateDeliveryStatus(
+      String orderId, String status) {
     final payload = {"status": status};
-    return patch('$serviceUrl/order/delivery-status/$orderId', payload, showErrors: true);
+    return patch('$serviceUrl/order/delivery-status/$orderId', payload);
   }
 
-  Future<WayaRequestResponse> updatePaymentStatus({required String status, required String orderId}) {
-    final payload = {"status": status};
-    return patch('$serviceUrl/order/payment-status/$orderId', payload, showErrors: true);
-  }
-
-  Future<WayaRequestResponse> completeOrder({required String token, required String orderId}) {
+  Future<WayaRequestResponse> completeOrder(
+      {required String token, required String orderId}) {
     final payload = {"token": token};
-    return patch('$serviceUrl/order/complete/$orderId', payload, showErrors: true);
+    return patch('$serviceUrl/order/complete/$orderId', payload);
   }
 
-  Future<WayaRequestResponse> getSellerOrders(String shopId, [int limit = 10, int page = 1]) {
-    return get("$serviceUrl/order/seller?limit=$limit&page=$page&shopId=$shopId");
+  Future<WayaRequestResponse> getSellerOrders(String shopId,
+      [int limit = 10, int page = 1]) {
+    return get(
+        "$serviceUrl/order/seller?limit=$limit&page=$page&shopId=$shopId");
   }
 
-  Future<WayaRequestResponse> getBuyerOrders(String userId, [int limit = 10, int page = 1]) {
-    return get("$serviceUrl/order/buyer?limit=$limit&page=$page&userId=$userId");
+  Future<WayaRequestResponse> getBuyerOrders(String userId,
+      [int limit = 10, int page = 1]) {
+    return get(
+        "$serviceUrl/order/buyer?limit=$limit&page=$page&userId=$userId");
   }
 }

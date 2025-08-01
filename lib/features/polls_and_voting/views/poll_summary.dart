@@ -102,40 +102,44 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
                           ConversationState.self.accountType ==
                               UserAccountType.business) {
                         //}if(viewModel.pollType == 'free' && viewModel.accountType  == 'BUSINESS'){
-                        await ref
-                            .read(createPollVotingProvider.notifier)
-                            .createFreePoll(
-                              context,
-                              viewModel.pollTitle.text,
-                              viewModel.startDate,
-                              viewModel.endDate,
-                              viewModel.voteNumber.text,
-                              viewModel.pollDescription.text,
-                              viewModel.firstChoiceDescription.text,
-                              '${int.tryParse(viewModel.votePrice.text)}',
-                              viewModel.pollType.toLowerCase(),
-                              viewModel.pollDescription.text,
-                            );
+                        if (context.mounted) {
+                          await ref
+                              .read(createPollVotingProvider.notifier)
+                              .createFreePoll(
+                                context,
+                                viewModel.pollTitle.text,
+                                viewModel.startDate,
+                                viewModel.endDate,
+                                viewModel.voteNumber.text,
+                                viewModel.pollDescription.text,
+                                viewModel.firstChoiceDescription.text,
+                                '${int.tryParse(viewModel.votePrice.text)}',
+                                viewModel.pollType.toLowerCase(),
+                                viewModel.pollDescription.text,
+                              );
+                        }
                         //poll.reset();
                       }
                       if (viewModel.pollType == 'free' &&
                           ConversationState.self.accountType ==
                               UserAccountType.personal) {
                         //if(viewModel.pollType == 'free' && viewModel.accountType  == 'PERSONAL'){
-                        await ref
-                            .read(createPollVotingProvider.notifier)
-                            .createFreePoll(
-                              context,
-                              viewModel.pollTitle.text,
-                              viewModel.startDate,
-                              viewModel.endDate,
-                              viewModel.voteNumber.text,
-                              viewModel.pollDescription.text,
-                              viewModel.firstChoiceDescription.text,
-                              '${int.tryParse(viewModel.votePrice.text)}',
-                              viewModel.pollType.toLowerCase(),
-                              viewModel.pollDescription.text,
-                            );
+                        if (context.mounted) {
+                          await ref
+                              .read(createPollVotingProvider.notifier)
+                              .createFreePoll(
+                                context,
+                                viewModel.pollTitle.text,
+                                viewModel.startDate,
+                                viewModel.endDate,
+                                viewModel.voteNumber.text,
+                                viewModel.pollDescription.text,
+                                viewModel.firstChoiceDescription.text,
+                                '${int.tryParse(viewModel.votePrice.text)}',
+                                viewModel.pollType.toLowerCase(),
+                                viewModel.pollDescription.text,
+                              );
+                        }
                         //poll.reset();
                       }
                     }

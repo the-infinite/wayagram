@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/personal_state_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/response_model.dart';
@@ -279,9 +281,13 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
           _secureDataSource.saveBusinessId(business.id!);
         }
         gotoNextTab();
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }

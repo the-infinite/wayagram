@@ -98,10 +98,9 @@ class WayaUtils {
     bool isDismissible = true,
     Color? backgroundColor,
   }) {
-    // Get the theme.
+    final context = WayaNav.context;
     final theme = Theme.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
-
     // Return the modal.
     return showModalBottomSheet<T>(
       context: context,

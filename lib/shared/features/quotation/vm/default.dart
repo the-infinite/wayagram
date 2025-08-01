@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -195,14 +195,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         //? Return the document.
         return doc;
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
 
     //? Since it failed.
     return null;
@@ -215,16 +208,15 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? This is an okay attempt.
       final response = await repo.verifyPaymentStatus(id, value);
 
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       //? Now, try to send the request.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
 
     //? Fail here.
     return false;
@@ -283,20 +275,16 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? If it was fine...
       if (response.success) {
         await getBuyRequest(id);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-
-      //? Return this value if it was fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    return false;
   }
 
   /// Helper function used to send a bid action request to the server. We use it
@@ -305,17 +293,17 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.sendBidAction(data);
 
-      // This is fine.
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
+
       return response.success;
     } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+      return false;
     }
-    return false;
   }
 
   /// Helper function used to place a bid so that we can enter a quote auction.
@@ -351,18 +339,16 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? Return the document.
         return doc;
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+        return null;
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return null;
     }
-
-    //? Since it failed.
-    return null;
   }
 
   /// Helper function used to get all bids from the server that a given user has
@@ -572,19 +558,16 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.updateOrderStatus(id, status.value);
 
-      //? This is fine.
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       return response.success;
     } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to update the delivery status of a single order. This is
@@ -594,19 +577,17 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.updateDeliveryStatus(id, status.value);
 
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to update the pickup status of a single order. This is
@@ -616,19 +597,17 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.updatePickupStatus(id, status.value);
 
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to extend the time of a bid. This is useful when we
@@ -640,22 +619,16 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? When this was fine, update the buy request in question.
       if (response.success) {
         await getBuyRequest(id);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-
-      //? This is fine.
       return response.success;
     } catch (e) {
-      debugPrint("Error: $e");
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to update the amount of a single request. This is useful
@@ -668,21 +641,18 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? When this was fine, update the buy request in question.
       if (response.success) {
         await getBuyRequest(id);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
 
       //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to complete an order. This is useful when we want to
@@ -690,21 +660,17 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   Future<bool> completeOrder(String id, String token) async {
     try {
       final response = await repo.completeOrder(orderId: id, token: token);
-
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaSnackBar.showToast(WayaDebugHelpers.getMessage(e));
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to complete an order. This is useful when we want to

@@ -3,12 +3,12 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
@@ -30,36 +30,28 @@ class LoginState {
   final bool isLoading;
   final bool isPasswordVisible;
   final UserModel? userData;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController businessAcctController;
 
-  LoginState(
-      {this.isPasswordFocused = false,
-      this.isLoading = false,
-      this.isPasswordVisible = false,
-      this.userData,
-      required this.emailController,
-      required this.passwordController,
-      required this.businessAcctController});
+  LoginState({
+    this.isPasswordFocused = false,
+    this.isLoading = false,
+    this.isPasswordVisible = false,
+    this.userData,
+  });
 
-  LoginState copyWith(
-      {bool? isPasswordFocused,
-      bool? isLoading,
-      bool? isPasswordVisible,
-      UserModel? userData,
-      TextEditingController? emailController,
-      TextEditingController? passwordController,
-      TextEditingController? businessAcctController}) {
+  LoginState copyWith({
+    bool? isPasswordFocused,
+    bool? isLoading,
+    bool? isPasswordVisible,
+    UserModel? userData,
+    TextEditingController? emailController,
+    TextEditingController? passwordController,
+  }) {
     return LoginState(
-        isPasswordFocused: isPasswordFocused ?? this.isPasswordFocused,
-        isLoading: isLoading ?? this.isLoading,
-        isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-        userData: userData ?? this.userData,
-        emailController: emailController ?? this.emailController,
-        passwordController: passwordController ?? this.passwordController,
-        businessAcctController:
-            businessAcctController ?? this.businessAcctController);
+      isPasswordFocused: isPasswordFocused ?? this.isPasswordFocused,
+      isLoading: isLoading ?? this.isLoading,
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+      userData: userData ?? this.userData,
+    );
   }
 }
 
@@ -69,18 +61,19 @@ class LoginVm extends StateNotifier<LoginState> {
   final WayaSecureDataSource _secureDataSource;
   final SuccessfulSetupVm _setupVm;
   final ProfileRepo _profileRepo;
-  final _logger = getLogger("LoginVm");
   final Ref ref;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
   );
 
-  LoginVm(this.ref, this._authRepository, this._localDataSource,
-      this._secureDataSource, this._setupVm, this._profileRepo)
-      : super(LoginState(
-            emailController: TextEditingController(),
-            passwordController: TextEditingController(),
-            businessAcctController: TextEditingController()));
+  LoginVm(
+    this.ref,
+    this._authRepository,
+    this._localDataSource,
+    this._secureDataSource,
+    this._setupVm,
+    this._profileRepo,
+  ) : super(LoginState());
 
   void togglePasswordVisibility() {
     state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
@@ -92,9 +85,7 @@ class LoginVm extends StateNotifier<LoginState> {
 
   @override
   void dispose() {
-    state.emailController.dispose();
-    state.passwordController.dispose();
-    state.businessAcctController.dispose();
+    // state.businessAcctController.dispose();
     super.dispose();
   }
 
@@ -118,11 +109,6 @@ class LoginVm extends StateNotifier<LoginState> {
 
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
-
-    // final OAuthCredential credential = GoogleAuthProvider.credential(
-    //   idToken: googleAuth.idToken,
-    //   accessToken: googleAuth.accessToken,
-    // );
 
     log(googleAuth.idToken ?? "");
 
@@ -155,39 +141,39 @@ class LoginVm extends StateNotifier<LoginState> {
     }
   }
 
-  Future<void> onSubmit(WidgetRef ref,
-      {String? email, bool? isBusinessLogin}) async {
+  Future<void> onSubmit({
+    required WidgetRef ref,
+    required String? email,
+    required String? password,
+  }) async {
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
 
       //? added trim, add issue login in just cause of space issues
       final response = await _authRepository.login(
-          isBusinessLogin: isBusinessLogin,
-          email: email?.trim() ?? state.emailController.text.trim(),
-          businessInfo: state.businessAcctController.text.trim(),
-          password: state.passwordController.text.trim());
-
+          isBusinessLogin: false,
+          email: email?.trim(),
+          password: password ?? '');
+      WayaPreloaderController.instance.hide();
       if (response.success) {
         await getUserInfo(data: response.data);
       } else {
         if (response.data != null && response.data['responseCode'] == 625) {
           await ref
               .read(verifyAccountProvider.notifier)
-              .resendOtpForRegisteredButNotVerifiedUser(
-                  email: state.emailController.text);
+              .resendOtpForRegisteredButNotVerifiedUser(email: email ?? '');
 
-          WayaNav.toNamed(VerifyEmail.route,
-              arguments: state.emailController.text);
+          WayaNav.toNamed(VerifyEmail.route, arguments: email);
+        } else {
+          if (WayaNav.context.mounted) {
+            WayaUtils.showModalSheet(WayaNav.context,
+                child:
+                    WayaErrorDialog(title: response.responseCodeError ?? ''));
+          }
         }
       }
-    } catch (e) {
-      _logger.e(e);
-    } finally {
-      //state = state.copyWith(isLoading: false);
-      //? Hide the preloader.
-      WayaPreloaderController.instance.hide();
-    }
+    } catch (_) {}
   }
 
   Future<void> getUserInfo({required dynamic data}) async {
@@ -313,10 +299,13 @@ class LoginVm extends StateNotifier<LoginState> {
 
       if (response.success) {
         await getUserInfo(data: response.data);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    } catch (_) {}
   }
 }
 
