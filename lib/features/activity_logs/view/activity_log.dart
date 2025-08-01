@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/extensions/list_filter_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -20,7 +21,6 @@ import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state
 import 'package:wayagram/features/activity_logs/widget/activity_log_filter.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_log_search.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_log_list.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 import '../state/activity_logs_state.dart';
@@ -235,8 +235,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredShop,
           getDescription: (shop) => '${shop.description}',
           getCreatedAt: (shop) => '${shop.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have shop logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -266,8 +265,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           getDescription: (wallet) =>
               '${wallet.metadata?.description ?? wallet.description}',
           getCreatedAt: (wallet) => '${wallet.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have wallet logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -296,8 +294,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredEvent,
           getDescription: (event) => '${event.description}',
           getCreatedAt: (event) => '${event.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have event logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -344,10 +341,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              ref
-                                  .read(createPollVotingProvider.notifier)
-                                  .formatDt(dates[i]),
+                          Text(dates[i].formatDt(),
                               style: TextStyle(
                                 fontSize: 20.sp,
                                 fontFamily: WayaConstants.fontFamily,
@@ -372,7 +366,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 return ActivityImageWidget(
                                   title: '${searchLog.description}',
                                   subTitle:
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
+                                      '${searchLog.createdAt.toString().formatDt2()}, '
                                       '${DateFormat.jm().format(dateTime)}',
                                   image: 'assets/icons/search.svg',
                                 );
@@ -409,8 +403,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredPolls,
           getDescription: (polls) => '${polls.description}',
           getCreatedAt: (polls) => '${polls.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have poll logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -436,8 +429,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredAccount,
           getDescription: (account) => '${account.description}',
           getCreatedAt: (account) => '${account.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have account logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -466,8 +458,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredPage,
           getDescription: (page) => '${page.description}',
           getCreatedAt: (page) => '${page.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have page logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -496,8 +487,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredGroup,
           getDescription: (group) => '${group.description}',
           getCreatedAt: (group) => '${group.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have group logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -526,8 +516,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredDonations,
           getDescription: (donation) => '${donation.description}',
           getCreatedAt: (donation) => '${donation.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have donation logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -556,8 +545,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredUgt,
           getDescription: (ugt) => '${ugt.description}',
           getCreatedAt: (ugt) => '${ugt.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have ugt logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -586,8 +574,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
           items: filteredGetQuotation,
           getDescription: (quotation) => '${quotation.description}',
           getCreatedAt: (quotation) => '${quotation.createdAt}',
-          formatDate: (createdAt) =>
-              ref.read(createPollVotingProvider.notifier).formatDt2(createdAt),
+          formatDate: (createdAt) => createdAt.formatDt2(),
           emptyStateText:
               'You don\'t have quotation logs for ${_filterBy.name.toLowerCase()} yet',
         );
@@ -598,7 +585,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
   void sortList(String filter, List log1, List log2) {
     setState(() {
       final filtered = log2.filterByTimeRange(
-        filter, 
+        filter,
         (item) => DateTime.parse(item.createdAt.toString()),
       );
       log1.clear();

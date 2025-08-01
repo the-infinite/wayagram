@@ -9,15 +9,20 @@ class WayaDateHelper {
 
   static (DateTime, DateTime) getCurrentWeekBounds([DateTime? reference]) {
     final now = reference ?? DateTime.now();
-    final firstDay = now.subtract(Duration(days: now.weekday - DateTime.monday));
+    final firstDay =
+        now.subtract(Duration(days: now.weekday - DateTime.monday));
     final lastDay = firstDay.add(const Duration(days: 6));
-    return (DateTime(firstDay.year, firstDay.month, firstDay.day), DateTime(lastDay.year, lastDay.month, lastDay.day));
+    return (
+      DateTime(firstDay.year, firstDay.month, firstDay.day),
+      DateTime(lastDay.year, lastDay.month, lastDay.day)
+    );
   }
 
   static (DateTime, DateTime) getCurrentMonthBounds([DateTime? reference]) {
     final now = reference ?? DateTime.now();
     final firstDay = DateTime(now.year, now.month, 1);
-    final lastDay = DateTime(now.year, now.month, getNumberOfDaysInMonth(now.month, now.year));
+    final lastDay = DateTime(
+        now.year, now.month, getNumberOfDaysInMonth(now.month, now.year));
     return (firstDay, lastDay);
   }
 
@@ -29,7 +34,9 @@ class WayaDateHelper {
   }
 
   static bool isSameDay(DateTime first, DateTime second) {
-    return first.year == second.year && first.month == second.month && first.day == second.day;
+    return first.year == second.year &&
+        first.month == second.month &&
+        first.day == second.day;
   }
 
   static DateTime pureDate(DateTime timestamp) {
@@ -39,7 +46,11 @@ class WayaDateHelper {
   static int getNumberOfDaysInMonth(int month, int year) {
     return switch (month) {
       DateTime.february => isLeapYear(year) ? 29 : 28,
-      DateTime.september || DateTime.april || DateTime.june || DateTime.november => 30,
+      DateTime.september ||
+      DateTime.april ||
+      DateTime.june ||
+      DateTime.november =>
+        30,
       _ => 31,
     };
   }
@@ -101,8 +112,11 @@ class WayaDateHelper {
     return '${duration.inHours == 0 ? '' : '${hh}h '}${mm}m ${ss}s';
   }
 
-  static String convertDurationToCountdown(Duration duration, [bool longFormat = false]) =>
-      longFormat ? _longFormatDuration(duration) : _shortFormatDuration(duration);
+  static String convertDurationToCountdown(Duration duration,
+          [bool longFormat = false]) =>
+      longFormat
+          ? _longFormatDuration(duration)
+          : _shortFormatDuration(duration);
 
   static String getSocialTimeAgo(DateTime timestamp) {
     final now = DateTime.now();
@@ -145,7 +159,8 @@ class WayaDateHelper {
     return DateFormat("dd.MM.yyyy").format(timestamp);
   }
 
-  static String getSocialTimestamp(DateTime timestamp, [bool extraPrecise = true]) {
+  static String getSocialTimestamp(DateTime timestamp,
+      [bool extraPrecise = true]) {
     final now = DateTime.now();
     final gap = now.difference(timestamp);
 
@@ -204,5 +219,21 @@ class WayaDateHelper {
 
     //? Then just return the timestamp.
     return getFullTimestamp(timestamp);
+  }
+
+  static bool isDateInFuture(String dateString) {
+    DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
+
+    DateTime now = DateTime.now().toUtc();
+
+    return givenDate.isAfter(now);
+  }
+
+  static bool isPresentIsPast(String dateString) {
+    DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
+
+    DateTime now = DateTime.now().toUtc();
+
+    return now.isAfter(givenDate);
   }
 }

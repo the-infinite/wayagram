@@ -6,12 +6,12 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 import '../widget/activity_card_widget.dart';
@@ -133,13 +133,10 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      ref
-                                          .read(
-                                              createPollVotingProvider.notifier)
-                                          .formatDt(viewModel
-                                              .paymentActivityDocs[i].createdAt
-                                              .toString()
-                                              .split('T')[0]),
+                                      viewModel.paymentActivityDocs[i].createdAt
+                                          .toString()
+                                          .split('T')[0]
+                                          .formatDt(),
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -171,7 +168,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                                           title:
                                               '${paymentActivity.description}',
                                           subTitle:
-                                              '${ref.read(createPollVotingProvider.notifier).formatDt2(paymentActivity.createdAt)}, '
+                                              '${paymentActivity.createdAt?.formatDt2()}, '
                                               '${DateFormat.jm().format(dateTime)}',
                                         );
                                       } else {

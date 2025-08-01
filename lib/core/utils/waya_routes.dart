@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
-import 'package:wayagram/features/activity_logs/view/donation_logs.dart';
 import 'package:wayagram/features/auth/account_creation/view/two_factor_auth.dart';
-import 'package:wayagram/features/activity_logs/view/page_logs.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
@@ -182,7 +180,6 @@ import 'package:wayagram/features/explore/search/search.dart';
 import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 
 import '../../features/activity_logs/view/cms_clicks.dart';
-import '../../features/activity_logs/view/account_activity.dart';
 import '../../features/activity_logs/view/logs_and_audit.dart';
 import '../../features/activity_logs/view/payment_activity.dart';
 import '../../features/activity_logs/view/search_log.dart';
@@ -408,12 +405,9 @@ class WayaAppRoutes {
         DisputeDetail(id: WayaNav.parameters['id'].toString()),
     ProductSearchResult.route: (context) => ProductSearchResult(),
     LogsAndAuditTrials.route: (context) => LogsAndAuditTrials(),
-    AccountActivity.route: (context) => AccountActivity(),
     ActivityLog.route: (context) => ActivityLog(),
     QuotationSellerOrders.route: (context) => QuotationSellerOrders(),
     VisitedPage.route: (context) => VisitedPage(),
-    PageLogs.route: (context) => PageLogs(),
-    DonationLogs.route: (context) => DonationLogs(),
     DonationSettingsPage.route: (context) => DonationSettingsPage(),
     QuotationSettingsPage.route: (context) => QuotationSettingsPage(),
     ShopSettingPage.route: (context) => ShopSettingPage(),
@@ -531,7 +525,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/quotation/buyer/order':
         final id = queryParams['id'];
         final requestId = queryParams['requestId'];
@@ -542,18 +536,19 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/quotation/seller/order':
         final id = queryParams['id'];
         final requestId = queryParams['requestId'];
         if (id != null && requestId != null) {
           return MaterialPageRoute(
-            builder: (context) => SellerBidDetails(id: id, requestId: requestId),
+            builder: (context) =>
+                SellerBidDetails(id: id, requestId: requestId),
             settings: settings,
           );
         }
         break;
-        
+
       case '/quotation/buyer/bids':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -562,7 +557,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/quotation/seller/bids':
         final id = queryParams['id'];
         final requestId = queryParams['requestId'];
@@ -573,18 +568,19 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/quotation/seller/bid':
         final id = queryParams['id'];
         final requestId = queryParams['requestId'];
         if (id != null && requestId != null) {
           return MaterialPageRoute(
-            builder: (context) => SellerBidDetails(id: id, requestId: requestId),
+            builder: (context) =>
+                SellerBidDetails(id: id, requestId: requestId),
             settings: settings,
           );
         }
         break;
-        
+
       case '/quotation/seller/orders/one':
         final requestId = queryParams['requestId'] ?? queryParams['id'];
         if (requestId != null) {
@@ -594,7 +590,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/product':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -603,7 +599,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/donation':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -612,7 +608,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/group':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -621,7 +617,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/groups/public':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -630,7 +626,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/page':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -639,7 +635,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/pages/public':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -648,7 +644,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/group/invitation':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -657,7 +653,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/page/invitation':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -666,7 +662,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/group/members':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -675,7 +671,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/group/add_member':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -684,7 +680,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/page/add_member':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -693,7 +689,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/page/post':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -702,7 +698,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/group/post':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -711,7 +707,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/event':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -720,7 +716,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/event-detail':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -729,7 +725,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/contest':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -738,7 +734,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/dispute/chat':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -747,7 +743,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/dispute':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -756,31 +752,33 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/follow':
         final uid = queryParams['uid'];
         final tab = queryParams['tab'] ?? 'followers';
         final source = queryParams['source'] ?? 'any';
         if (uid != null) {
           return MaterialPageRoute(
-            builder: (context) => MutualPage(userId: uid, initialTab: tab, source: source),
+            builder: (context) =>
+                MutualPage(userId: uid, initialTab: tab, source: source),
             settings: settings,
           );
         }
         break;
-        
+
       case '/follow/relationships':
         final uid = queryParams['uid'];
         final tab = queryParams['tab'] ?? 'followers';
         final source = queryParams['source'] ?? 'any';
         if (uid != null) {
           return MaterialPageRoute(
-            builder: (context) => MutualPage(userId: uid, initialTab: tab, source: source),
+            builder: (context) =>
+                MutualPage(userId: uid, initialTab: tab, source: source),
             settings: settings,
           );
         }
         break;
-        
+
       case '/userGroupInvitation/single':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -789,7 +787,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/userPageInvitation/single':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -798,7 +796,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/groups/members':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -807,7 +805,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/groups/members/add':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -816,7 +814,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/pages/team/add':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -825,7 +823,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/groups/post/new':
         if (queryParams.containsKey('id')) {
           return MaterialPageRoute(
@@ -834,7 +832,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/contest-profile-page':
         final id = queryParams['id'];
         final contest = queryParams['contest'];
@@ -845,7 +843,7 @@ class WayaAppRoutes {
           );
         }
         break;
-        
+
       case '/two-factor-authentication':
         final email = queryParams['email'];
         if (email != null) {

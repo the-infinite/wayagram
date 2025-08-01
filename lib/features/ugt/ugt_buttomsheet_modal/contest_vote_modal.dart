@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -436,8 +437,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                       height: 56.h,
                     )),
                 Text(
-                  ref.read(createPollVotingProvider.notifier).formatAm(amount),
-                  //amount,
+                  amount.formatAm(),
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                       fontSize: 48.sp,
                       fontWeight: FontWeight.w600,
@@ -468,9 +468,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                 //   child: PinEntryBottomSheet(),
                 // );
               },
-              //text: "Total: ₦${num.parse(amount)*100}",
-              text:
-                  "Total: ₦${ref.read(createPollVotingProvider.notifier).formatAm(calculateAmount())}",
+              text: "Total: ₦${(calculateAmount().formatAm())}",
               textColor: WayaColors.primary,
             ),
             const Gap(20),
@@ -573,8 +571,7 @@ class _ConfirmVoteOptionModalState
                     ),
                   ),
                   TextSpan(
-                    text:
-                        '${ref.read(createPollVotingProvider.notifier).formatAm(widget.amount)} Votes ',
+                    text: '${widget.amount.formatAm()} Votes ',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
                       fontSize: 12.sp,
@@ -591,7 +588,7 @@ class _ConfirmVoteOptionModalState
                   ),
                   TextSpan(
                     text:
-                        '₦${ref.read(createPollVotingProvider.notifier).formatAm('${num.parse(widget.amount) * num.parse(widget.voteFee)}')}',
+                        '₦${'${num.parse(widget.amount) * num.parse(widget.voteFee)}'.formatAm()}',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
                       fontSize: 12.sp,

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -16,7 +17,6 @@ import 'package:wayagram/features/donation/view/application_details.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/applied_donation_widget.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
 import '../../../shared/features/user/models/default.dart';
@@ -403,14 +403,11 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                                       '${donation.title?.capitalizeFirst}',
                                   solution: '${donation.solution}',
                                   desc: '${donation.description}',
-                                  startDate: ref
-                                      .read(createPollVotingProvider.notifier)
-                                      .formatDonationDate(
-                                          '${donation.startDate}'),
-                                  endDate: ref
-                                      .read(createPollVotingProvider.notifier)
-                                      .formatDonationDate(
-                                          '${donation.expirationDate}'),
+                                  startDate: donation.startDate
+                                      .toString()
+                                      .formatDonationDate(),
+                                  endDate:
+                                      '${donation.expirationDate?.formatDonationDate()}',
                                   targetAmount:
                                       '${donation.targetAmount?.replaceAll('.00', '')}',
                                   amountRaised:
@@ -445,12 +442,8 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                           image: '${donation.imageURL}',
                           targetAmount: WayaHelpers.formatPrice(int.parse(
                               '${donation.targetAmount?.replaceAll('.00', '')}')),
-                          startDate: ref
-                              .read(createPollVotingProvider.notifier)
-                              .formatDt1('${donation.startDate}'),
-                          endDate: ref
-                              .read(createPollVotingProvider.notifier)
-                              .formatDt1('${donation.expirationDate}'),
+                          startDate: donation.startDate.toString().formatDt1(),
+                          endDate: '${donation.expirationDate?.formatDt1()}',
                           color: donation.status == 'pending_approval'
                               ? WayaColors.pendingColor
                               : donation.status == 'approved'
@@ -503,14 +496,10 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                                       '${donation.title?.capitalizeFirst}',
                                   solution: '${donation.solution}',
                                   desc: '${donation.description}',
-                                  startDate: ref
-                                      .read(createPollVotingProvider.notifier)
-                                      .formatDonationDate(
-                                          '${donation.startDate}'),
-                                  endDate: ref
-                                      .read(createPollVotingProvider.notifier)
-                                      .formatDonationDate(
-                                          '${donation.expirationDate}'),
+                                  startDate:
+                                      '${donation.startDate?.formatDonationDate()}',
+                                  endDate:
+                                      '${donation.expirationDate?.formatDonationDate()}',
                                   targetAmount:
                                       '${donation.targetAmount?.replaceAll('.00', '')}',
                                   amountRaised:
@@ -545,12 +534,8 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                           image: '${donation.imageURL}',
                           targetAmount: WayaHelpers.formatPrice(int.parse(
                               '${donation.targetAmount?.replaceAll('.00', '')}')),
-                          startDate: ref
-                              .read(createPollVotingProvider.notifier)
-                              .formatDt1('${donation.startDate}'),
-                          endDate: ref
-                              .read(createPollVotingProvider.notifier)
-                              .formatDt1('${donation.expirationDate}'),
+                          startDate: '${donation.startDate?.formatDt1()}',
+                          endDate: '${donation.expirationDate?.formatDt1()}',
                           color: donation.status == 'pending_approval'
                               ? WayaColors.pendingColor
                               : donation.status == 'approved'

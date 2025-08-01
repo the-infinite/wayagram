@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -168,16 +169,10 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                summary(
-                    'Start Date',
-                    '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
-                    'Host',
-                    setUp.user?.user?.firstName.capitalizeFirst ?? ''),
-                summary(
-                    'End Date',
-                    '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n',
-                    'Times to Vote',
-                    viewModel.voteNumber.text),
+                summary('Start Date', '${viewModel.startDate.formatDt()}\n',
+                    'Host', setUp.user?.user?.firstName.capitalizeFirst ?? ''),
+                summary('End Date', '${viewModel.endDate.formatDt()}\n',
+                    'Times to Vote', viewModel.voteNumber.text),
                 summary(
                     'Poll Type',
                     '${viewModel.pollType.capitalizeFirst}\n',

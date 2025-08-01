@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
@@ -53,7 +53,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
           Row(
             children: [
               Text(
-                'Total Balance: ₦${ref.watch(createPollVotingProvider.notifier).formatAm('${state.data?.balance}')}',
+                'Total Balance: ₦${'${state.data?.balance.formatAm()}'}',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,

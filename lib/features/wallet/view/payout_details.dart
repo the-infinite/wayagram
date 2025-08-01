@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PayoutDetails extends ConsumerStatefulWidget {
@@ -66,8 +66,7 @@ class _PayoutDetailsState extends ConsumerState<PayoutDetails> {
                         fontSize: 14.sp,
                         color: wayaTheme.colorScheme.greyColor500)),
                 const Gap(10),
-                Text(
-                    '+₦${ref.watch(createPollVotingProvider.notifier).formatAm(viewModel.amount)}',
+                Text('+₦${viewModel.amount.formatAm()}',
                     style: wayaTheme.textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w700,
                       fontFamily: WayaConstants.fontFamily,
@@ -90,9 +89,7 @@ class _PayoutDetailsState extends ConsumerState<PayoutDetails> {
               wayaTheme.colorScheme.greyColor700),
           _detailCard('Bank Name', viewModel.bankName,
               wayaTheme.colorScheme.greyColor700),
-          _detailCard(
-              'Date Requested ',
-              '${ref.watch(createPollVotingProvider.notifier).formatDt1(viewModel.time)} ',
+          _detailCard('Date Requested ', '${viewModel.time.formatDt()} ',
               wayaTheme.colorScheme.greyColor700),
           _detailCard('Reference Number', viewModel.refNumber,
               wayaTheme.colorScheme.greyColor700),

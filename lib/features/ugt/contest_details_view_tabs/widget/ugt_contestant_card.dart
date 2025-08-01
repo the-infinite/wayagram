@@ -6,12 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class UgtContestantCard extends ConsumerWidget {
@@ -79,7 +79,7 @@ class UgtContestantCard extends ConsumerWidget {
               color: WayaColors.primary50,
               textColor: WayaColors.primary500,
               callback: () {
-                if (isPresentIsPast(model.endDate ?? "")) {
+                if (WayaDateHelper.isPresentIsPast(model.endDate ?? "")) {
                   WayaSnackBar.showToast("Contest has ended");
                   return;
                 }

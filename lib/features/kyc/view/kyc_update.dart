@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/kyc/vm/kyc_vm.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class KycUpdate extends ConsumerStatefulWidget {
   static const route = '/kycUpdate';
@@ -96,7 +96,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
               viewModel.kycStatus == 'APPROVED' ||
                       viewModel.kycStatus == 'PENDING'
                   ? Text(
-                      'Date Submitted: ${ref.read(createPollVotingProvider.notifier).formatDt2(viewModel.date)} ',
+                      'Date Submitted: ${viewModel.date?.formatDt2()} ',
                       textAlign: TextAlign.center,
                       style: WayaTextStyles.bodySmall.copyWith(
                           fontSize: 14.sp,

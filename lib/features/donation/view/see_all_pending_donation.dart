@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -8,7 +9,6 @@ import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state
 import 'package:wayagram/features/donation/view/application_details.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/applied_donation_widget.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class SeeAllDonations extends ConsumerStatefulWidget {
   static const route = '/seeAllPendingDonations';
@@ -75,14 +75,11 @@ class _SeeAllDonationsState extends ConsumerState<SeeAllDonations>
                                         '${donation.title?.capitalizeFirst}',
                                     solution: '${donation.solution}',
                                     desc: '${donation.description}',
-                                    startDate: ref
-                                        .read(createPollVotingProvider.notifier)
-                                        .formatDonationDate(
-                                            '${donation.startDate}'),
-                                    endDate: ref
-                                        .read(createPollVotingProvider.notifier)
-                                        .formatDonationDate(
-                                            '${donation.expirationDate}'),
+                                    startDate: donation.startDate
+                                        .toString()
+                                        .formatDonationDate(),
+                                    endDate:
+                                        '${donation.expirationDate?.formatDonationDate()}',
                                     targetAmount:
                                         '${donation.targetAmount?.replaceAll('.00', '')}',
                                     amountRaised:
@@ -118,12 +115,9 @@ class _SeeAllDonationsState extends ConsumerState<SeeAllDonations>
                             image: '${donation.imageURL}',
                             targetAmount: WayaHelpers.formatPrice(int.parse(
                                 '${donation.targetAmount?.replaceAll('.00', '')}')),
-                            startDate: ref
-                                .read(createPollVotingProvider.notifier)
-                                .formatDt1('${donation.startDate}'),
-                            endDate: ref
-                                .read(createPollVotingProvider.notifier)
-                                .formatDt1('${donation.expirationDate}'),
+                            startDate:
+                                donation.startDate.toString().formatDt1(),
+                            endDate: '${donation.expirationDate?.formatDt1()}',
                             color: donation.status == 'pending_approval'
                                 ? WayaColors.pendingColor
                                 : donation.status == 'approved'

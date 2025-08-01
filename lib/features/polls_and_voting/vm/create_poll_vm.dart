@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -195,15 +194,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  bool isDateBefore(String dateString) {
-    DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
-
-    DateTime now = DateTime.now().toUtc();
-
-    return givenDate.isBefore(now);
-  }
-
-  bool isStartDateAfterEndDate(String startDate, String endDate) {
+  bool _isStartDateAfterEndDate(String startDate, String endDate) {
     DateTime start = DateTime.parse(startDate);
     DateTime end = DateTime.parse(endDate);
 
@@ -220,327 +211,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     state.voteNumber.dispose();
     state.votePrice.dispose();
     super.dispose();
-  }
-
-  String formatDate(String inputDate) {
-    // Parse the input date string
-    DateTime parsedDate = DateTime.parse(inputDate);
-
-    // Get the day, month, and year
-    int day = parsedDate.day;
-    String month = DateFormat('MMMM').format(parsedDate);
-    int year = parsedDate.year;
-
-    // Determine the suffix for the day
-    String suffix;
-    if (day >= 11 && day <= 13) {
-      suffix = 'th'; // Special case for 11th, 12th, 13th
-    } else {
-      switch (day % 10) {
-        case 1:
-          suffix = 'st';
-          break;
-        case 2:
-          suffix = 'nd';
-          break;
-        case 3:
-          suffix = 'rd';
-          break;
-        default:
-          suffix = 'th';
-      }
-    }
-
-    // Return the formatted date string
-    return '$day$suffix of $month, $year';
-  }
-
-  static String getMonthName(String mon) {
-    var def = '';
-    if (mon == '01' || mon == '1') {
-      def = 'January,';
-    } else if (mon == '02' || mon == '2') {
-      def = 'February,';
-    } else if (mon == '03' || mon == '3') {
-      def = 'March,';
-    } else if (mon == '04' || mon == '4') {
-      def = 'April,';
-    } else if (mon == '05' || mon == '5') {
-      def = 'May,';
-    } else if (mon == '06' || mon == '6') {
-      def = 'June,';
-    } else if (mon == '07' || mon == '7') {
-      def = 'July,';
-    } else if (mon == '08' || mon == '8') {
-      def = 'August,';
-    } else if (mon == '09' || mon == '9') {
-      def = 'September,';
-    } else if (mon == '10') {
-      def = 'October,';
-    } else if (mon == '11') {
-      def = 'November,';
-    } else if (mon == '12') {
-      def = 'December,';
-    }
-    return def;
-  }
-
-  static String getMonthNameMini(String mon) {
-    var def = '';
-    if (mon == '01' || mon == '1') {
-      def = 'Jan';
-    } else if (mon == '02' || mon == '2') {
-      def = 'Feb';
-    } else if (mon == '03' || mon == '3') {
-      def = 'Mar';
-    } else if (mon == '04' || mon == '4') {
-      def = 'Apr';
-    } else if (mon == '05' || mon == '5') {
-      def = 'May';
-    } else if (mon == '06' || mon == '6') {
-      def = 'Jun';
-    } else if (mon == '07' || mon == '7') {
-      def = 'Jul';
-    } else if (mon == '08' || mon == '8') {
-      def = 'Aug';
-    } else if (mon == '09' || mon == '9') {
-      def = 'Sep';
-    } else if (mon == '10') {
-      def = 'Oct';
-    } else if (mon == '11') {
-      def = 'Nov';
-    } else if (mon == '12') {
-      def = 'Dec';
-    }
-    return def;
-  }
-
-  static String getDayAbbreviation(String day) {
-    var def = '';
-    if (day == '01' || day == '1') {
-      def = '1st';
-    } else if (day == '02' || day == '2') {
-      def = '2nd';
-    } else if (day == '03' || day == '3') {
-      def = '3rd';
-    } else if (day == '04' || day == '4') {
-      def = '4th';
-    } else if (day == '05' || day == '5') {
-      def = '5th';
-    } else if (day == '06' || day == '6') {
-      def = '6th';
-    } else if (day == '07' || day == '7') {
-      def = '7th';
-    } else if (day == '08' || day == '8') {
-      def = '8th';
-    } else if (day == '09' || day == '9') {
-      def = '9th';
-    } else if (day == '10') {
-      def = '10th';
-    } else if (day == '21') {
-      def = '21st';
-    } else if (day == '22') {
-      def = '22nd';
-    } else if (day == '23') {
-      def = '23rd';
-    } else if (day == '31') {
-      def = '31st';
-    } else {
-      def = '${day}th';
-    }
-    return def;
-  }
-
-  String formatDt(String? j) {
-    String dt = '';
-    if (j != null) {
-      if (j.contains('-')) {
-        String a = j.split('-')[0];
-        String b = j.split('-')[1];
-        String c = j.split('-')[2];
-
-        dt = '${getDayAbbreviation(c)} ${getMonthNameMini(b)} $a';
-      } else {
-        dt = j;
-      }
-    }
-    return dt;
-  }
-
-  String formatDonationDate(String? j) {
-    String dt = '';
-    if (j != null) {
-      if (j.toString().contains('T')) {
-        String x = j.toString().split('T')[0];
-        if (x.contains('-')) {
-          String a = x.split('-')[0];
-          String b = x.split('-')[1];
-          String c = x.split('-')[2];
-
-          dt = '${getDayAbbreviation(c)} ${getMonthName(b)}\n$a';
-        } else {
-          dt = x;
-        }
-      } else {
-        dt = j;
-      }
-    }
-    return dt;
-  }
-
-  String formatDt1(String? j) {
-    String dt = '';
-    if (j != null) {
-      if (j.toString().contains('T')) {
-        String x = j.toString().split('T')[0];
-        if (x.contains('-')) {
-          String a = x.split('-')[0];
-          String b = x.split('-')[1];
-          String c = x.split('-')[2];
-
-          dt = '${getDayAbbreviation(c)} ${getMonthName(b)} $a';
-        } else {
-          dt = x;
-        }
-      } else {
-        dt = j;
-      }
-    }
-    return dt;
-  }
-
-  String formatDt2(String? j) {
-    String dt = '';
-    if (j != null) {
-      if (j.toString().contains('T')) {
-        String x = j.toString().split('T')[0];
-        if (x.contains('-')) {
-          String a = x.split('-')[0];
-          String b = x.split('-')[1];
-          String c = x.split('-')[2];
-
-          dt = '${getMonthNameMini(b)} ${getDayAbbreviation(c)}, $a';
-        } else {
-          dt = x;
-        }
-      } else {
-        dt = j;
-      }
-    }
-    return dt;
-  }
-
-  String formatAm(String? j) {
-    String am = '';
-    if (j != '' && j != null) {
-      if (j == '0') {
-        am = j;
-      } else {
-        j = j.toString().replaceAll(' ', '').replaceAll(',', '');
-        if (j.toString().contains('.')) {
-          j = (double.parse(j)).toStringAsFixed(2);
-          if (j.toString().split('.')[0].length == 4) {
-            String a = j.toString().substring(0, 1);
-            String b = j.toString().substring(1, 4);
-            am = '$a,$b.${j.toString().split('.')[1]}';
-          } else if (j.toString().split('.')[0].length == 5) {
-            String a = j.toString().substring(0, 2);
-            String b = j.toString().substring(2, 5);
-            am = '$a,$b.${j.toString().split('.')[1]}';
-          } else if (j.toString().split('.')[0].length == 6) {
-            String a = j.toString().substring(0, 3);
-            String b = j.toString().substring(3, 6);
-            am = '$a,$b.${j.toString().split('.')[1]}';
-          } else if (j.toString().split('.')[0].length == 7) {
-            String a = j.toString().substring(0, 1);
-            String b = j.toString().substring(1, 4);
-            String c = j.toString().substring(4, 7);
-            am = '$a,$b,$c.${j.toString().split('.')[1]}';
-          } else if (j.toString().split('.')[0].length == 8) {
-            String a = j.toString().substring(0, 3);
-            String b = j.toString().substring(3, 5);
-            String c = j.toString().substring(5, 8);
-            am = '$a,$b,$c.${j.toString().split('.')[1]}';
-          } else if (j.toString().split('.')[0].length == 9) {
-            String a = j.toString().substring(0, 3);
-            String b = j.toString().substring(3, 6);
-            String c = j.toString().substring(6, 9);
-            am = '$a,$b,$c.${j.toString().split('.')[1]}';
-          } else if (j.toString().split('.')[0].length == 10) {
-            String a = j.toString().substring(0, 1);
-            String b = j.toString().substring(1, 4);
-            String c = j.toString().substring(4, 7);
-            String d = j.toString().substring(7, 10);
-            am = '$a,$b,$c,$d.${j.toString().split('.')[1]}';
-          } else if (j.toString().split('.')[0].length == 11) {
-            String a = j.toString().substring(0, 2);
-            String b = j.toString().substring(2, 5);
-            String c = j.toString().substring(5, 8);
-            String d = j.toString().substring(8, 11);
-            am = '$a,$b,$c,$d.${j.toString().split('.')[1]}';
-          } else if (j.toString().split('.')[0].length == 12) {
-            String a = j.toString().substring(0, 3);
-            String b = j.toString().substring(3, 6);
-            String c = j.toString().substring(6, 9);
-            String d = j.toString().substring(9, 12);
-            am = '$a,$b,$c,$d.${j.toString().split('.')[1]}';
-          } else {
-            am = j;
-          }
-        } else {
-          if (j.toString().length == 4) {
-            String a = j.toString().substring(0, 1);
-            String b = j.toString().substring(1, 4);
-            am = '$a,$b';
-          } else if (j.toString().length == 5) {
-            String a = j.toString().substring(0, 2);
-            String b = j.toString().substring(2, 5);
-            am = '$a,$b';
-          } else if (j.toString().length == 6) {
-            String a = j.toString().substring(0, 3);
-            String b = j.toString().substring(3, 6);
-            am = '$a,$b';
-          } else if (j.toString().length == 7) {
-            String a = j.toString().substring(0, 1);
-            String b = j.toString().substring(1, 4);
-            String c = j.toString().substring(4, 7);
-            am = '$a,$b,$c';
-          } else if (j.toString().length == 8) {
-            String a = j.toString().substring(0, 2);
-            String b = j.toString().substring(2, 5);
-            String c = j.toString().substring(5, 8);
-            am = '$a,$b,$c';
-          } else if (j.toString().length == 9) {
-            String a = j.toString().substring(0, 3);
-            String b = j.toString().substring(3, 6);
-            String c = j.toString().substring(6, 9);
-            am = '$a,$b,$c';
-          } else if (j.toString().length == 10) {
-            String a = j.toString().substring(0, 1);
-            String b = j.toString().substring(1, 4);
-            String c = j.toString().substring(4, 7);
-            String d = j.toString().substring(7, 10);
-            am = '$a,$b,$c,$d';
-          } else if (j.toString().length == 11) {
-            String a = j.toString().substring(0, 2);
-            String b = j.toString().substring(2, 5);
-            String c = j.toString().substring(5, 8);
-            String d = j.toString().substring(8, 11);
-            am = '$a,$b,$c,$d';
-          } else if (j.toString().length == 12) {
-            String a = j.toString().substring(0, 3);
-            String b = j.toString().substring(3, 6);
-            String c = j.toString().substring(6, 9);
-            String d = j.toString().substring(9, 12);
-            am = '$a,$b,$c,$d';
-          } else {
-            am = j;
-          }
-        }
-      }
-    }
-
-    return am;
   }
 
   Future<void> createFreePoll(
@@ -584,7 +254,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     try {
       // validate date
-      if (isStartDateAfterEndDate(state.startDate, state.endDate)) {
+      if (_isStartDateAfterEndDate(state.startDate, state.endDate)) {
         WayaSnackBar.showToast("Start date must be before the end date");
         return;
       }
@@ -661,7 +331,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     try {
       // validate date
-      if (isStartDateAfterEndDate(state.startDate, state.endDate)) {
+      if (_isStartDateAfterEndDate(state.startDate, state.endDate)) {
         WayaSnackBar.showToast("Start date must be before the end date");
         return;
       }

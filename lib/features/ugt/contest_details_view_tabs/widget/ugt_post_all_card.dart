@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/helpers/navigation.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -22,7 +23,6 @@ import 'package:wayagram/features/ugt/media_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/my_full_media_type.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/media/video.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
@@ -313,7 +313,8 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     fontSize: 12.sp,
                     height: 40,
                     callback: () async {
-                      if (isPresentIsPast(widget.model.endDate ?? "")) {
+                      if (WayaDateHelper.isPresentIsPast(
+                          widget.model.endDate ?? "")) {
                         WayaSnackBar.showToast("Contest has ended");
                         return;
                       }

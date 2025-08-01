@@ -49,3 +49,4 @@ extension DateTimeFilterExtension on DateTime {
            (itemDateOnly.isAfter(startOfWeekOnly) && itemDateOnly.isBefore(endOfWeekOnly));
   }
 }
+

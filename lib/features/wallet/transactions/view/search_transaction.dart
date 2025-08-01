@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_model.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
@@ -104,7 +104,7 @@ class _SearchTransactionState extends ConsumerState<SearchTransaction> {
                   transactionType: '${filteredTransaction[index].type}',
                   amount: filteredTransaction[index].amount.toString(),
                   date:
-                      '${ref.read(createPollVotingProvider.notifier).formatDt2(filteredTransaction[index].updatedAt)},${DateFormat.jm().format(dateTime)}',
+                      '${filteredTransaction[index].updatedAt?.formatDt2()},${DateFormat.jm().format(dateTime)}',
                 );
               }),
     );
