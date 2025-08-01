@@ -7,8 +7,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/modals/group/actions.dart';
 import 'package:wayagram/features/chat/modals/group/add_users.dart';
-import 'package:wayagram/features/chat/modals/group/remove.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -107,32 +107,47 @@ class _GroupMembersWidgetState extends State<GroupMembersWidget> {
             id: widget.chat.chatMembers[index].userId,
             onTap: () => WayaUtils.showModalSheet(
               context,
-              child: RemoveUserChatGroupModal(
+              child: GroupMemberActions(
                 chat: widget.chat,
                 notifier: notifier,
-                userId: widget.chat.chatMembers[index].userId,
+                ref: widget.ref,
+                member: widget.chat.chatMembers[index],
               ),
             ),
-            actionText: "Remove",
             hideAction: widget.chat.chatMembers[index].userId == ConversationState.self.id,
-            actionAvailable: widget.chat.membersCanAddMembers,
-            child: widget.chat.chatMembers[index].role == ChatMemberRole.member
-                ? null
-                : Container(
-                    padding: EdgeInsets.symmetric(vertical: 3.w, horizontal: 12.h),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary50,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      "Group Owner",
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12.sp,
-                      ),
+            child: switch (widget.chat.chatMembers[index].role) {
+              ChatMemberRole.member => null,
+              ChatMemberRole.owner => Container(
+                  padding: EdgeInsets.symmetric(vertical: 3.w, horizontal: 12.h),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    "Group Owner",
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
                     ),
                   ),
+                ),
+              ChatMemberRole.admin => Container(
+                  padding: EdgeInsets.symmetric(vertical: 3.w, horizontal: 12.h),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    "Group Admin",
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ),
+            },
           ),
         ),
       ],

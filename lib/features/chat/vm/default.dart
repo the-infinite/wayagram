@@ -737,6 +737,30 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return false;
   }
 
+  /// Helper function used to remove a user from the group.
+  Future<bool> makeUserAdmin(String id, String userId) async {
+    try {
+      //? Now, use it.
+      final response = await repo.makeUserAdmin(id, userId);
+
+      //? If this was true.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
   /// Helper function used to leave a group chat when you don tire to dey the
   /// group.
   Future<bool> leaveGroup(String id) async {

@@ -282,7 +282,6 @@ class UserActionWidget extends StatelessWidget {
   final bool actionAvailable;
   final bool useYou;
   final bool hideAction;
-  final String actionText;
   final VoidCallback onTap;
   final Widget? child;
 
@@ -291,7 +290,6 @@ class UserActionWidget extends StatelessWidget {
     super.key,
     required this.id,
     required this.index,
-    required this.actionText,
     required this.onTap,
     this.useYou = true,
     this.hideAction = false,
@@ -301,31 +299,18 @@ class UserActionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChatAndSocialUserWidget(
-      id: id,
-      index: index,
-      useYou: useYou,
-      child: child ??
-          Visibility(
-            visible: !hideAction,
-            child: InkWell(
-              onTap: actionAvailable ? onTap : null,
-              splashColor: WayaColors.primary.withAlpha(30),
-              focusColor: WayaColors.primary.withAlpha(30),
-              highlightColor: WayaColors.primary.withAlpha(30),
-              borderRadius: BorderRadius.circular(10),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
-                child: Text(
-                  actionText,
-                  style: WayaTextStyles.bodyBold.copyWith(
-                    color: actionAvailable ? WayaColors.primary : WayaColors.greyColor500,
-                    fontSize: 14.sp,
-                  ),
-                ),
-              ),
-            ),
-          ),
+    return InkWell(
+      onTap: actionAvailable ? onTap : null,
+      splashColor: WayaColors.primary.withAlpha(30),
+      focusColor: WayaColors.primary.withAlpha(30),
+      highlightColor: WayaColors.primary.withAlpha(30),
+      borderRadius: BorderRadius.circular(10),
+      child: ChatAndSocialUserWidget(
+        id: id,
+        index: index,
+        useYou: useYou,
+        child: child,
+      ),
     );
   }
 }
