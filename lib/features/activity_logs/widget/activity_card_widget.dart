@@ -14,23 +14,20 @@ class ActivityCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(
-        top: 10,
-      ),
+      margin: const EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        contentPadding: const EdgeInsets.only(
-          left: 10,
-          right: 10,
+        contentPadding: const EdgeInsets.only(left: 10, right: 10),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontFamily: WayaConstants.fontFamily,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
         ),
-        title: Text(title,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontFamily: WayaConstants.fontFamily,
-              fontWeight: FontWeight.w600,
-              color: Colors.black,
-            )),
         subtitle: Text(subTitle,
             style: TextStyle(
               fontSize: 12.sp,

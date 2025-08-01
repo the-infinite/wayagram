@@ -7,18 +7,17 @@ class ActivityImageWidget extends StatelessWidget {
   final String title;
   final String subTitle;
   final String image;
-  const ActivityImageWidget(
-      {super.key,
-      required this.title,
-      required this.subTitle,
-      required this.image});
+  const ActivityImageWidget({
+    super.key,
+    required this.title,
+    required this.subTitle,
+    required this.image,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(
-        top: 10,
-      ),
+      margin: const EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(12)),
       child: ListTile(
@@ -27,13 +26,15 @@ class ActivityImageWidget extends StatelessWidget {
           right: 10,
         ),
         leading: SvgPicture.asset(image),
-        title: Text(title,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              fontFamily: WayaConstants.fontFamily,
-              color: Colors.black,
-            )),
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            fontFamily: WayaConstants.fontFamily,
+            color: Colors.black,
+          ),
+        ),
         subtitle: Text(subTitle,
             style: TextStyle(
               fontSize: 12.sp,
