@@ -116,21 +116,21 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
 
     //? Call this.
     await widget.onBidReacted?.call();
-    final addedToCart = await cartNotifier.addToCart(
-      count: 1,
-      shopId: widget.bid.shopId,
-      price: widget.bid.usedAmount.toInt(),
-      productName: widget.request.fullname,
-      productImage: widget.bid.images?.first ?? '',
-      productId: widget.bid.requestId,
-      isQuotation: true,
-    );
+    // final addedToCart = await cartNotifier.addToCart(
+    //   count: 1,
+    //   shopId: widget.bid.shopId,
+    //   price: widget.bid.usedAmount.toInt(),
+    //   productName: widget.request.fullname,
+    //   productImage: widget.bid.images?.first ?? '',
+    //   productId: widget.bid.requestId,
+    //   isQuotation: true,
+    // );
 
     //? If we could not add this to our cart...
-    if (!addedToCart) {
-      WayaSnackBar.showToast("Could not add bid to cart");
-      return;
-    }
+    // if (!addedToCart) {
+    //   WayaSnackBar.showToast("Could not add bid to cart");
+    //   return;
+    // }
 
     //? Prevent some confusing visuals.
     widget.timer?.cancel();
