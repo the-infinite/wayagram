@@ -32,14 +32,13 @@ class SingleOrderWidget extends ConsumerWidget {
       onTap: () {
         if (isSeller) {
           if (fromRecent) {
-            WayaNav.toNamed(SellerOrderDetails.route, arguments: order);
+            WayaNav.toNamed(WayaAppRoutes.getSellerOrderDetailScreen(order.id));
 
             return;
           }
-          WayaNav.replaceNamed(SellerOrderDetails.route, arguments: order);
+          WayaNav.replaceNamed(WayaAppRoutes.getSellerOrderDetailScreen(order.id));
         } else {
-          WayaNav.toNamed(OrderDetails.route,
-              arguments: OrderDetailArg(type: 'buyer', order: order));
+          WayaNav.toNamed(WayaAppRoutes.getOrderDetailScreen(order.id));
         }
       },
       child: Column(

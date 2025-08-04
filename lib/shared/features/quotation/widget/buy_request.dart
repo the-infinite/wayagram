@@ -153,22 +153,23 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
   }
 
   Future<void> _viewOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetaisScreen(widget.data.id));
+    WayaNav.toNamed(WayaAppRoutes.getOrderDetailScreen(widget.data.id));
   }
 
   Future<void> _checkoutOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailScreen(widget.data.id));
+    WayaNav.toNamed(WayaAppRoutes.getOrderDetailScreen(widget.data.id));
     final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final bid = request.bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
 
     //? This is fine
     if (bid != null && widget.data.buyerId == ConversationState.self.id) {
+
       WayaAppRoutes.getQuotationCheckoutSceen(bid.id, bid.requestId);
     }
 
     //? Are you the right vendor?
     else if (bid?.vendorId == ConversationState.self.id) {
-      WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDtailsScreen(widget.data.id));
+      WayaNav.toNamed(WayaAppRoutes.getSellerOrderDetailScreen(widget.data.id));
     }
   }
 
