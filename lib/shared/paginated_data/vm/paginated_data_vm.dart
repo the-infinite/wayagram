@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 
 class PaginatedDataState<T> {
@@ -51,7 +52,7 @@ class PaginatedDataVm<T> extends StateNotifier<PaginatedDataState<T>> {
       if (state.currentPage > 1) {
         state = state.copyWith(currentPage: 1, data: []);
       }
-      print("fwefwefewf");
+      
       final result = await fetchData(page: 1);
       print("fewfwefw $result");
       if (result != null) {
@@ -70,20 +71,20 @@ class PaginatedDataVm<T> extends StateNotifier<PaginatedDataState<T>> {
   Future<void> loadMoreItems(
       Future<PaginatedResult<T>?> Function({required int page})
           fetchData) async {
-    debugPrint("testing");
+    debugPrint("testing -------");
     if (!state.hasNextPage || state.isLoading) return;
     state = state.copyWith(isLoading: true);
 
     try {
       final result = await fetchData(page: state.currentPage + 1);
       if (result != null && result.items.isNotEmpty) {
-        state = state.copyWith(
+      state = state.copyWith(
           data: [...state.data, ...result.items],
           currentPage: state.currentPage + 1,
           hasNextPage: result.hasNextPage,
           isLoading: false,
         );
-        debugPrint("???");
+        debugPrint("??? ${state.currentPage}");
         debugPrint(state.data.length.toString());
       } else {
         state = state.copyWith(isLoading: false);
