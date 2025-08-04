@@ -371,12 +371,12 @@ class BidWonModal extends StatelessWidget {
               callback: () async {
                 //? For a buyer.
                 if (user == BidActionAuthor.buyer) {
-                  WayaNav.toNamed(WayaAppRoutes.getOrder(bid.id, bid.requestId));
+                  WayaNav.toNamed(WayaAppRoutes.getOrderDetailScreen(bid.requestId));
                 }
 
                 //? For the seller.
                 else {
-                  WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId));
+                  WayaNav.toNamed(WayaAppRoutes.getSellerOrderDetailScreen(bid.requestId));
                 }
               },
               text: "Proceed to Order Fulfillment",

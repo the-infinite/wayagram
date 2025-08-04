@@ -46,8 +46,8 @@ class SellerOrdersVm extends StateNotifier<SellerOrdersState> {
 
   Future<PaginatedResult<Order>?> getPendingOrders({required int page}) async {
     try {
-      final response =
-          await _orderRepository.getSellerOrders(shopId: state.shopId, page: page, status: "pending");
+      final response = await _orderRepository.getSellerOrders(
+          shopId: state.shopId, page: page, status: "pending");
       List<Order> orders = [];
       bool hasNextPage = false;
       if (response.success) {
@@ -62,28 +62,30 @@ class SellerOrdersVm extends StateNotifier<SellerOrdersState> {
     } finally {}
   }
 
-    Future<PaginatedResult<Order>?> getCompletedOrders({required int page}) async {
+  Future<Order?> getSellerSingleOrder({required String orderId}) async {
     try {
-      final response =
-          await _orderRepository.getSellerOrders(shopId: state.shopId, page: page, status: "completed");
-      List<Order> orders = [];
-      bool hasNextPage = false;
+      final response = await _orderRepository.getSellerOrder(
+          shopId: state.shopId, orderId: orderId);
+      Order? order;
+
       if (response.success) {
         OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
-        orders = ordersResponse.data.docs;
-        hasNextPage = ordersResponse.data.hasNextPage;
+        order = ordersResponse.data.docs.isNotEmpty
+            ? ordersResponse.data.docs[0]
+            : null;
       }
-      return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
+      return order;
     } catch (e) {
       debugPrint(e.toString());
       return null;
     } finally {}
   }
 
-    Future<PaginatedResult<Order>?> getCancelledOrders({required int page}) async {
+  Future<PaginatedResult<Order>?> getCompletedOrders(
+      {required int page}) async {
     try {
-      final response =
-          await _orderRepository.getSellerOrders(shopId: state.shopId, page: page, status:"cancelled");
+      final response = await _orderRepository.getSellerOrders(
+          shopId: state.shopId, page: page, status: "completed");
       List<Order> orders = [];
       bool hasNextPage = false;
       if (response.success) {
@@ -98,11 +100,25 @@ class SellerOrdersVm extends StateNotifier<SellerOrdersState> {
     } finally {}
   }
 
-
-
+  Future<PaginatedResult<Order>?> getCancelledOrders(
+      {required int page}) async {
+    try {
+      final response = await _orderRepository.getSellerOrders(
+          shopId: state.shopId, page: page, status: "cancelled");
+      List<Order> orders = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
+        orders = ordersResponse.data.docs;
+        hasNextPage = ordersResponse.data.hasNextPage;
+      }
+      return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    } finally {}
+  }
 }
-
-
 
 final sellerOrdersVmProvider =
     StateNotifierProvider<SellerOrdersVm, SellerOrdersState>((ref) {

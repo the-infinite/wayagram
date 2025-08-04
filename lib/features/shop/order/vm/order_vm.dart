@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
@@ -19,8 +20,8 @@ class OrderVm extends StateNotifier<OrderState> {
   Future<PaginatedResult<Order>?> getOrders({required int page}) async {
     try {
       state = state.copyWith(isLoading: false);
-      final userId = await _secureDataSource.getUserId();
-      final response = await _orderRepository.getUserOrders(userId!, page);
+   final userId = ConversationState.self.id;
+      final response = await _orderRepository.getUserOrders(userId, page);
       List<Order> orders = [];
       bool hasNextPage = false;
       if (response.success) {
@@ -35,6 +36,26 @@ class OrderVm extends StateNotifier<OrderState> {
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<Order?> getSingleOrder({required String orderId}) async {
+    try {
+      final userId = ConversationState.self.id;
+      final response = await _orderRepository.getUserOrder(userId, orderId);
+      Order? order;
+
+      if (response.success) {
+        OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
+        order = ordersResponse.data.docs.isNotEmpty
+            ? ordersResponse.data.docs[0]
+            : null;
+      }
+
+      return order;
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
     }
   }
 

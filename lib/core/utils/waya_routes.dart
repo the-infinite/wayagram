@@ -214,11 +214,11 @@ class WayaAppRoutes {
     WelcomeBackPage.route: () => WelcomeBackPage(),
     BottomView.route: () => BottomView(),
     ProductDetail.route: () => ProductDetail(id: WayaNav.search['id'].toString()),
-    OrderDetails.route: () => OrderDetails(),
+    OrderDetails.route: () => OrderDetails(id: WayaNav.search['id'].toString()),
     ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
     CartView.route: () => CartView(),
     AllSellerOrders.route: () => AllSellerOrders(),
-    SellerOrderDetails.route: () => SellerOrderDetails(),
+    SellerOrderDetails.route: () => SellerOrderDetails( id: WayaNav.search['id'].toString()),
     SellerBidDetails.route: () => SellerBidDetails(
           id: WayaNav.search['id'].toString(),
           requestId: WayaNav.search['requestId'].toString(),
@@ -626,7 +626,10 @@ class WayaAppRoutes {
   ) =>
       "${TwoFactorAuth.route}?email=$email";
   static String getSingleEventDashboard(String id) => "${EventDashboard.route}?id=$id";
-//
+
+  static String getSellerOrderDetailScreen(String id) => "${SellerOrderDetails.route}?id=$id";
+
+    static String getOrderDetailScreen(String id) => "${OrderDetails.route}?id=$id";
   /// This is fine.
   static List<GetPage> get getPages {
     return routes.entries
