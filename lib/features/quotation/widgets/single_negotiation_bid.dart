@@ -377,10 +377,10 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                   Gap(5.h),
 
                   //? Somehow
-                  Text(
+                  WayaCollapsibleText(
                     widget.bid.comment!,
                     textAlign: TextAlign.center,
-                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                    style: wayaTheme.textTheme.bodyMedium!.copyWith(
                       color: wayaTheme.colorScheme.customBlack,
                     ),
                   ),
