@@ -45,8 +45,8 @@ class FollowModel {
 
   factory FollowModel.fromJson(Map<String, dynamic> json) => _$FollowModelFromJson(json);
 
-  /// Helper used ot check whether the other person is following the currently 
-  /// logged in user. 
+  /// Helper used ot check whether the other person is following the currently
+  /// logged in user.
   bool get isOtherFollowingMe {
     return status == FollowRelationship.accepted && (followerId == ConversationState.self.id && followedBack) ||
         followingId == ConversationState.self.id;
@@ -57,6 +57,11 @@ class FollowModel {
   bool get isUserFollowing {
     return status == FollowRelationship.accepted && followerId == ConversationState.self.id ||
         (followingId == ConversationState.self.id && followedBack);
+  }
+
+  bool get isRequestSent {
+    return status == FollowRelationship.pending &&
+        (followerId == ConversationState.self.id || (followingId == ConversationState.self.id && followedBack));
   }
 
   /// Helper function used to get the user ID of the person in this follower following relationship that is not the user in question.
@@ -93,9 +98,11 @@ class FollowStatusModel {
 
   factory FollowStatusModel.fromJson(Map<String, dynamic> json) => _$FollowStatusModelFromJson(json);
 
+  bool get isRequestSent => isFollowing && status == FollowRelationship.pending;
+
   bool get isOtherFollowingMe => (isFollowing && isMutual) || isFollowedBy;
 
-  bool get isUserFollowing => isFollowing || (isFollowedBy && isMutual);
+  bool get isUserFollowing => isFollowing && status == FollowRelationship.accepted || (isFollowedBy && isMutual);
 }
 
 @JsonSerializable()
