@@ -78,7 +78,7 @@ class Product extends BaseModel<Product> {
   final bool deliveryCharge;
   final String options;
   final String? pickupAddress;
-  final int? rating;
+  final dynamic rating;
   final int discountPercentage;
   final String shopId;
   final dynamic discountedPrice;

@@ -18,9 +18,11 @@ class FollowRelationshipsPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MutualPageState();
 }
 
-class _MutualPageState extends ConsumerState<FollowRelationshipsPage> with SingleTickerProviderStateMixin {
+class _MutualPageState extends ConsumerState<FollowRelationshipsPage>
+    with SingleTickerProviderStateMixin {
   final followersHandler = WayaObservableScrollController();
   final followingHandler = WayaObservableScrollController();
+  final invitationHandler = WayaObservableScrollController();
   int _selectedIndex = 1;
 
   @override
@@ -68,7 +70,9 @@ class _MutualPageState extends ConsumerState<FollowRelationshipsPage> with Singl
                   WayaTabButton(
                     isSelected: _selectedIndex == 1,
                     text: 'Following',
-                    count: state.hasLoadedFollowing ? state.followingTotalSize : null,
+                    count: state.hasLoadedFollowing
+                        ? state.followingTotalSize
+                        : null,
                     onTap: () => setState(() => _selectedIndex = 1),
                   ),
 
@@ -76,8 +80,18 @@ class _MutualPageState extends ConsumerState<FollowRelationshipsPage> with Singl
                   WayaTabButton(
                     isSelected: _selectedIndex == 2,
                     text: 'Followers',
-                    count: state.hasLoadedFollowers ? state.followersTotalSize : null,
+                    count: state.hasLoadedFollowers
+                        ? state.followersTotalSize
+                        : null,
                     onTap: () => setState(() => _selectedIndex = 2),
+                  ),
+                  WayaTabButton(
+                    isSelected: _selectedIndex == 3,
+                    text: 'Invitations',
+                    count: state.hasLoadedInvitation
+                        ? state.invitationTotalSize
+                        : null,
+                    onTap: () => setState(() => _selectedIndex = 3),
                   ),
                 ],
               ),
@@ -92,8 +106,11 @@ class _MutualPageState extends ConsumerState<FollowRelationshipsPage> with Singl
                 1 => MyFollowingDataView(
                     handler: followingHandler,
                   ),
-                _ => MyFollowersDataView(
+                2 => MyFollowersDataView(
                     handler: followersHandler,
+                  ),
+                _ => MyInvitationDataView(
+                    handler: invitationHandler,
                   ),
               },
             ),

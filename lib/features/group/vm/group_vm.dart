@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -131,6 +132,43 @@ class GroupVm extends StateNotifier<GroupState> {
       _logger.e(e);
     }
   }
+  Future<bool> removeGroupMember(String groupId, String memberId) async {
+    try {
+      final response = await _groupRepository.removeTeamMember(groupId, memberId);
+
+      //? This is fine.
+      if (response.success) {
+        final groupMembers = state.allGroupMemberDocs ?? [];
+        final found = groupMembers.indexWhere((member) => member.userId == memberId);
+
+        //? If this was found, remove it and update.
+        if (!found.isNegative) {
+          groupMembers.removeAt(found);
+         state =  state.copyWith(
+            allGroupMemberDocs: groupMembers
+         );
+        }
+
+        //? Now report.
+        WayaSnackBar.showToast("Member removed successfully");
+        getGroupMembers(groupId);
+      }
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return false.
+    return false;
+  }
+
 
   Future<void> createGroupPost(ctx, String content, String postType, List<XFile> images, String groupId) async {
     List<UploadedImage> urls = [];
@@ -324,7 +362,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
-
+       myGroupNotifier.createdGroups;
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
             content: Text(
@@ -443,6 +481,33 @@ class GroupVm extends StateNotifier<GroupState> {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Request approved successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> removeTeamMember(ctx, String memberId, String groupId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.removeTeamMember(groupId, memberId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+       await getGroupMembers(groupId);
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Member removed successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),

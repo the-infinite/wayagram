@@ -10,8 +10,13 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
+import 'package:wayagram/features/group/widget/group_empty_state.dart';
+import 'package:wayagram/features/group/widget/group_member_card.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/shared/cache/group.dart';
+import 'package:wayagram/shared/features/group/notifier/default.dart';
 
 class GroupTeam extends ConsumerStatefulWidget {
   final String groupId;
@@ -26,8 +31,8 @@ class GroupTeam extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupTeamState();
 }
 
-
-class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProviderStateMixin {
+class _GroupTeamState extends ConsumerState<GroupTeam>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -35,6 +40,8 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
       ref.read(widget.provider.notifier).getGroupMembers(widget.groupId);
     });
   }
+
+  final bool vertical = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,136 +76,44 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                 ),
               ],
             ),
-            callback: () => WayaNav.toNamed(WayaAppRoutes.getAddGroupMemberPage(widget.groupId)),
+            callback: () => WayaNav.toNamed(
+                WayaAppRoutes.getAddGroupMemberPage(widget.groupId)),
             color: wayaTheme.colorScheme.primary50,
           ),
           Gap(10.h),
           if (viewModel.allGroupMemberDocs!.isEmpty)
-            PostEmptyState()
+            GroupPageEmptyState(text: 'No members yet')
           else
-            ListView.builder(
-                padding: EdgeInsets.zero,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.allGroupMemberDocs?.length,
-                itemBuilder: (_, index) {
-                  final group = viewModel.allGroupMemberDocs?[index];
-                  return InkWell(
-                    onTap: ()=> WayaNav.toNamed('/groups/members/edit',
-                        arguments: {
-                          'email': group?.user?.email,
-                          'id': group?.userId,
-                          'groupId': widget.groupId,
-                        }),
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 15),
-                      padding: EdgeInsets.only(left: 10),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Gap(10),
-                          Container(
-                            padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
-                            width: 80.w,
-                            decoration: BoxDecoration(
-                              color: group?.role == 'admin' || group?.role == 'owner'
-                                  ? wayaTheme.colorScheme.success50
-                                  : wayaTheme.colorScheme.primary50,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  group?.role == 'admin' || group?.role == 'owner'
-                                      ? 'assets/images/pages/crown.png'
-                                      : group?.role == 'editor'
-                                          ? 'assets/images/pages/editor.png'
-                                          : 'assets/images/pages/moderator.png',
-                                  height: 8.h,
-                                ),
-                                const Gap(5),
-                                Text(
-                                  "${group?.role?.capitalizeFirst}",
-                                  style: TextStyle().wayaCopyWith(
-                                    color: group?.role == 'admin' || group?.role == 'owner'
-                                        ? wayaTheme.colorScheme.success
-                                        : WayaColors.primary700,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 11.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          //Gap(10),
-                          ListTile(
-                            contentPadding: EdgeInsets.only(left: 0, right: 0, top: 0),
-                            leading: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: WayaColors.greyColor100,
-                              backgroundImage: NetworkImage(
-                                '${group?.user?.profilePicture}',
-                              ),
-                            ),
-                            title: Row(
-                              children: [
-                                Text(
-                                  '${group?.user?.firstName} ${group?.user?.lastName}',
-                                  style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: wayaTheme.colorScheme.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Text(
-                              '${group?.user?.email}',
-                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w400,
-                                color: wayaTheme.colorScheme.greyColor500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
+    ListView.builder(
+          padding: EdgeInsets.only(bottom: 50.h),
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: viewModel.allGroupMemberDocs?.length,
+        itemBuilder: (_, index){
+
+       return ValueListenableBuilder(
+           valueListenable: wayaGroupCache,
+           builder: (context, redraws, _) {
+             final groupMember = viewModel.allGroupMemberDocs?[index];
+             final group = wayaGroupCache.getCachedData(widget.groupId);
+             if (group == null) {
+               return SizedBox();
+             }
+             //? If this is in vertical orientation.
+             if (vertical) {
+               return GroupMemberCardWidget(groupMember: groupMember, widget: widget, wayaTheme: wayaTheme, ref: ref);
+             }
+             // Build and return our component.
+             return GroupMemberCardWidget(groupMember: groupMember, widget: widget, wayaTheme: wayaTheme, ref: ref);
+           });
+    })
+
         ],
       ),
     );
   }
 }
 
-class PostEmptyState extends StatelessWidget {
-  const PostEmptyState({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(30),
-        child: EmptyState(
-            hasButton: false,
-            onTap: () {
-              //WayaNav.toNamed(CreatePost.route);
-            },
-            buttontext: 'Create a Post',
-            buttonTrailingIcon: SvgPicture.asset(
-              WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
-            ),
-            assetImage: Image.asset(
-              WayaAssets.images.emptyEvent.path,
-              scale: 1.5,
-            ),
-            message: "You don't have team members yet"),
-      ),
-    );
-  }
-}
+
+

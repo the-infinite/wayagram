@@ -3,19 +3,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/widget/group_empty_state.dart';
+import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/pages/widget/page_member_card.dart';
+import 'package:wayagram/shared/cache/page.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 class TeamPage extends ConsumerStatefulWidget {
   final String pageId;
+  final PageProviderFamily provider;
   const TeamPage({
     super.key,
-    required this.pageId,
+    required this.pageId, required this.provider
   });
 
   @override
@@ -30,6 +36,8 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
       ref.read(createPageProvider.notifier).getPageMember(widget.pageId);
     });
   }
+
+  final bool vertical = false;
 
   @override
   Widget build(BuildContext context) {
@@ -64,95 +72,47 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
             color: wayaTheme.colorScheme.primary50,
           ),
           const Gap(8),
-          viewModel.getPageMemberDocs!.isEmpty ? GroupPageEmptyState(text: 'No media yet'):
+          if(viewModel.getPageMemberDocs!.isEmpty)
+            GroupPageEmptyState(text: 'No members yet')
+          else
           ListView.builder(
-              padding: EdgeInsets.zero,
+              padding: EdgeInsets.only(bottom: 50.h),
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: viewModel.getPageMemberDocs?.length,
-              itemBuilder: (_, index) {
-                final page = viewModel.getPageMemberDocs?[index];
-                return InkWell(
-                  onTap: ()=> WayaNav.toNamed('/pages/members/edit',
-                      arguments: {
-                        'email': page?.user?.email,
-                        'id': page?.userId,
-                        'pageId': widget.pageId,
-                      }),
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 15),
-                    padding: EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.white),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Gap(10),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
-                          width: 80.w,
-                          decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.success50,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                page?.role == 'admin' || page?.role == 'owner'
-                                    ? 'assets/images/pages/crown.png'
-                                    : page?.role == 'editor'
-                                        ? 'assets/images/pages/editor.png'
-                                        : 'assets/images/pages/moderator.png',
-                                height: 8.h,
-                              ),
-                              const Gap(5),
-                              const Gap(5),
-                              Text(
-                                "${page?.role?.capitalizeFirst}",
-                                style: TextStyle().wayaCopyWith(
-                                  color: page?.role == 'admin' || page?.role == 'owner'
-                                      ? wayaTheme.colorScheme.success
-                                      : WayaColors.primary700,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 11.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        //Gap(10),
-                        ListTile(
-                          contentPadding: EdgeInsets.only(left: 0, right: 0, top: 0),
-                          leading: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: WayaColors.greyColor100,
-                              backgroundImage: NetworkImage('${page?.user?.profilePicture}')),
-                          title: Row(
-                            children: [
-                              Text(
-                                '${page?.user?.firstName?.capitalizeFirst} ${page?.user?.lastName?.capitalizeFirst}',
-                                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).colorScheme.black),
-                              ),
-                            ],
-                          ),
-                          subtitle: Text(
-                            '${page?.user?.email}',
-                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Theme.of(context).colorScheme.greyColor500),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
+              itemCount:  viewModel.getPageMemberDocs?.length,
+              itemBuilder: (_, index){
+
+                return ValueListenableBuilder(
+                    valueListenable: wayaPageCache,
+                    builder: (context, redraws, _) {
+                      final pageMember = viewModel.getPageMemberDocs?[index];
+                      final page = wayaPageCache.getCachedData(widget.pageId);
+                      if (page == null) {
+                        return SizedBox();
+                      }
+                      //? If this is in vertical orientation.
+                      if (vertical) {
+                        return PageMemberCardWidget(
+                            pageMember: pageMember,
+                            widget: widget,
+                            wayaTheme: wayaTheme,
+                            ref: ref
+                        );
+                      }
+
+                      // Build and return our component.
+                      return PageMemberCardWidget(
+                          pageMember: pageMember,
+                          widget: widget,
+                          wayaTheme: wayaTheme,
+                          ref: ref
+                      );
+                    });
+              })
         ],
       ),
     );
   }
 }
+
+

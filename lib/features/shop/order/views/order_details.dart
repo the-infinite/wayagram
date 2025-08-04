@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
@@ -13,7 +14,9 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
+import 'package:wayagram/features/shop/order/vm/order_vm.dart';
 import 'package:wayagram/features/shop/order/widgets/contact_seller.dart';
 import 'package:wayagram/features/shop/order/widgets/order_address_widget.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
@@ -21,19 +24,68 @@ import 'package:wayagram/features/shop/widgets/copy_code.dart';
 import 'package:wayagram/features/shop/order/widgets/order_tracking.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
-class OrderDetails extends ConsumerWidget {
+class OrderDetails extends ConsumerStatefulWidget {
+  final String id;
   static const route = '/order-detail';
-  const OrderDetails({super.key});
+  const OrderDetails({super.key, required this.id});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _OrderDetails();
+}
+
+class _OrderDetails extends ConsumerState<OrderDetails> {
+  Order? order;
+  bool isLoading = false;
+  late final notifier = ref.read(orderVmProvider.notifier);
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      setState(() {
+        isLoading = true;
+      });
+      final response = await notifier.getSingleOrder(orderId: widget.id);
+      setState(() {
+        isLoading = false;
+        if (response != null) {
+          order = response;
+        }
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final arg = ModalRoute.of(context)?.settings.arguments as OrderDetailArg?;
+
     final notifier = ref.read(conversationProvider.notifier);
+
+    if (isLoading) {
+      return Container(
+        width: context.width,
+        height: context.height,
+        color: wayaTheme.colorScheme.white,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (order == null) {
+      return Container(
+        width: context.width,
+        height: context.height,
+        color: wayaTheme.colorScheme.white,
+        child: Center(
+          child: Text("No Response"),
+        ),
+      );
+    }
 
     void chatWithUser() async {
       //? This is fine.
-      notifier.startChat(ChatType.personal, [arg!.order.vendorId]).then(
+      notifier.startChat(ChatType.personal, [order!.vendorId]).then(
         (chat) {
           //? Stop if we could not make this chat.
           if (chat == null) return;
@@ -63,60 +115,57 @@ class OrderDetails extends ConsumerWidget {
             Text("Order Details", style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
             CopyCode(
-                code: "#${arg?.order.id.substring(0, 6)}",
-                title: "Order Details"),
+                code: "#${order?.id.substring(0, 6)}", title: "Order Details"),
             const Gap(25),
             Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
             ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: arg?.order.items.length,
+                itemCount: order?.items.length,
                 itemBuilder: (context, index) {
-                  CartProduct order = CartProduct(
-                      price: double.parse(arg?.order.items[index].price ?? '0')
+                  CartProduct cartOrder = CartProduct(
+                      price: double.parse(order?.items[index].price ?? '0')
                           .toInt(),
-                      quantity: arg?.order.items[index].quantity ?? 0,
-                      productId: arg?.order.items[index].productId ?? '',
-                      productName: arg?.order.items[index].productName ?? '',
+                      quantity: order?.items[index].quantity ?? 0,
+                      productId: order?.items[index].productId ?? '',
+                      productName: order?.items[index].productName ?? '',
                       deliveryCharge: false,
-                      unitPrice: "${arg?.order.items[index].price ?? 0}",
-                      productImage: arg?.order.items[index].productImage ?? '',
+                      unitPrice: "${order?.items[index].price ?? 0}",
+                      productImage: order?.items[index].productImage ?? '',
                       deliveryOptions: '');
-                  return OrderedProductCard(orders: order);
+                  return OrderedProductCard(orders: cartOrder);
                 }),
             const Gap(25),
             Visibility(
-              visible: arg?.order.pickupAddress != null,
+              visible: order?.pickupAddress != null,
               child: OrderAddressWidget(
-                  type: 'Pickup Address',
-                  address: arg?.order.pickupAddress ?? ''),
+                  type: 'Pickup Address', address: order?.pickupAddress ?? ''),
             ),
             Visibility(
-              visible: arg?.order.deliveryAddress != null,
+              visible: order?.deliveryAddress != null,
               child: OrderAddressWidget(
                   type: 'Delivery Address',
-                  address: arg?.order.deliveryAddress ?? ''),
+                  address: order?.deliveryAddress ?? ''),
             ),
             Text("Token", style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
             CopyCode(
-                code: arg?.order.deliveryToken ?? '',
+                code: order?.deliveryToken ?? '',
                 title: "Delivery Confirmation Token"),
             const Gap(25),
             Text("Shop Details", style: wayaTheme.textTheme.bodyMedium),
             const Gap(15),
             OrderInfoWidget(
-                title: "Shop Name", description: arg?.order.shopName ?? ''),
+                title: "Shop Name", description: order?.shopName ?? ''),
             const Gap(8),
             OrderInfoWidget(
                 title: "Date Ordered",
                 description: WayaHelpers.formatDateString(
-                    arg?.order.updatedAt.toIso8601String())),
+                    order?.updatedAt.toIso8601String())),
             const Gap(8),
             OrderInfoWidget(
-                title: "Delivery Type",
-                description: arg?.order.deliveryType ?? ''),
+                title: "Delivery Type", description: order?.deliveryType ?? ''),
             const Gap(25),
             WayaButton(
               centerWidget: Row(
@@ -143,52 +192,48 @@ class OrderDetails extends ConsumerWidget {
             ),
             const Gap(25),
             Text(
-                arg?.order.deliveryType == 'Pickup'
+                order?.deliveryType == 'Pickup'
                     ? "Pickup Progress"
                     : "Delivery Progress",
                 style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
             OrderTracking(
-                statuses: arg?.order.deliveryType == 'Pickup'
+                statuses: order?.deliveryType == 'Pickup'
                     ? pickupStatus
                     : deliveryStatus,
-                type: arg?.order.deliveryType,
-                currentStatuses: arg?.order.deliveryType == 'Pickup'
-                    ? arg?.order.pickupStatusHistory
-                    : arg?.order.deliveryStatusHistory),
+                type: order?.deliveryType,
+                currentStatuses: order?.deliveryType == 'Pickup'
+                    ? order?.pickupStatusHistory
+                    : order?.deliveryStatusHistory),
             const Gap(25),
-          if (arg?.order.status != 'cancelled') ... [
+            if (order?.status != 'cancelled') ...[
               Visibility(
-                visible: arg?.order.status != 'completed' &&
-                    ((arg?.order.deliveryStatusHistory.isNotEmpty == true &&
-                            arg?.order.deliveryStatusHistory.last.status ==
-                                'completed') ||
-                        (arg?.order.pickupStatusHistory.isNotEmpty == true &&
-                            arg?.order.pickupStatusHistory.last.status ==
-                                'completed')),
-                child: WayaButton(
-                  callback: () {
-                    WayaNav.replaceNamed(ConfirmOrderDelivery.route,
-                        arguments: arg?.order);
-                  },
-                  text: "Confirm Order Delivery",
-                )),
-            const Gap(10),
-            Visibility(
-                visible: arg?.order.status == 'completed',
-                child: WayaButton(
-                  callback: () async {
-                    WayaUtils.showModalSheet(context,
-                        child: ContactSeller(order: arg!.order));
-                  },
-                  text: "Report a problem",
-                ))
-          ]
+                  visible: order?.status != 'completed' &&
+                      ((order?.deliveryStatusHistory.isNotEmpty == true &&
+                              order?.deliveryStatusHistory.last.status ==
+                                  'completed') ||
+                          (order?.pickupStatusHistory.isNotEmpty == true &&
+                              order?.pickupStatusHistory.last.status ==
+                                  'completed')),
+                  child: WayaButton(
+                    callback: () {
+                      WayaNav.replaceNamed(ConfirmOrderDelivery.route,
+                          arguments: order);
+                    },
+                    text: "Confirm Order Delivery",
+                  )),
+              const Gap(10),
+              Visibility(
+                  visible: order?.status == 'completed',
+                  child: WayaButton(
+                    callback: () async {
+                      WayaUtils.showModalSheet(context,
+                          child: ContactSeller(order: order!));
+                    },
+                    text: "Report a problem",
+                  ))
+            ]
           ],
         ));
   }
 }
-
-/**
- 
- */

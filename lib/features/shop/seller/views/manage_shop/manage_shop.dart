@@ -137,7 +137,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 verticalPadding: 8,
                 horizontalPadding: 8,
                 callback: () {
-                  WayaNav.toNamed(RequestPayout.route);
+                  WayaNav.toNamed(RequestPayout.route, arguments: 'shop');
                 },
                 text: 'Payouts',
                 textStyle: wayaTheme.textTheme.descriptionStyle,
