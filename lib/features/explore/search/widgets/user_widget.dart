@@ -129,7 +129,7 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                       ? null
                                       : () async {
                                           //? If this user is following this one.
-                                          if (_followStatus!.isUserFollowing) {
+                                          if (_followStatus!.isUserFollowing || _followStatus!.isRequestSent) {
                                             await myFollowProvider.unfollowUser(_userInfo!.$1.id);
                                           }
 
@@ -162,8 +162,10 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                       _followStatus == null
                                           ? "Loading"
                                           : _followStatus!.isUserFollowing
-                                              ? "Following"
-                                              : "Follow",
+                                              ? "Unfollow"
+                                              : _followStatus!.isRequestSent
+                                                  ? "Cancel Request"
+                                                  : "Follow",
                                       style: theme.textTheme.labelSmall?.copyWith(
                                         color: _followStatus == null
                                             ? theme.colorScheme.greyColor500
