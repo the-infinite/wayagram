@@ -163,8 +163,8 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
 
     //? This is fine
     if (bid != null && widget.data.buyerId == ConversationState.self.id) {
-
-      WayaAppRoutes.getQuotationCheckoutSceen(bid.id, bid.requestId);
+      
+    //  WayaAppRoutes.getQuotationCheckoutSceen(bid.id, bid.requestId);
     }
 
     //? Are you the right vendor?
