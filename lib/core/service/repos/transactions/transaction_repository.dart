@@ -1,4 +1,5 @@
 import 'package:file_saver/file_saver.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
@@ -25,7 +26,7 @@ class TransactionRepository extends BaseRepository {
         name: "transaction",
         link: LinkDetails(
             link:
-                "${WayaConstants.baseUrl}/${WayaServiceUri.wallet}/client/transactions/export",
+                "${AppEnvironment.apiBaseUrl}${WayaServiceUri.wallet}/client/transactions/export",
             method: "GET",
             headers: {
               'Authorization': 'Bearer ${await secureDataSource.getToken()}'

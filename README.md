@@ -12,21 +12,6 @@ This helps you quickly run the Flutter CodeGen utility. This should be run every
 asset or anything else of a similar sort. Recommended to be run each time before you build the app or
 run it in debug mode.
 
-### `setup.bat` or `setup.sh`
-This helps you do all the configuration necessary to get the project up and running on your own end
-so you can get up to speed with everything.
+### Run project 
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To run project use script helpers/run_dev.sh for development and helpers/run_prod.sh for production app. This scripts using dart defines for building params

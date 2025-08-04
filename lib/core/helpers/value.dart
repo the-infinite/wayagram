@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:intl/intl.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
-import 'package:wayagram/core/utils/waya_constants.dart';
 
 enum WayaPostAction { comment, share, likes }
 
@@ -130,10 +130,7 @@ class WayaValueHelper {
   ///
   /// Returns a [String] containing the complete shareable URL
   static String getShareableUrl(String route) =>
-      switch (WayaConstants.isProduction) {
-        true => "https://wayagram.ng$route",
-        false => "https://staging.wayagram.ng$route",
-      };
+      "${AppEnvironment.webUrl}$route";
 
   /// Checks if a given string contains only emoji characters.
   ///

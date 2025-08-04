@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
 import 'package:wayagram/core/components/modals/error.dart';
@@ -25,7 +26,7 @@ class RequestRepeater {
 
 class DioHttpClient implements WayaHttpClientInterface {
   late final Dio dio;
-  final String baseURL = WayaConstants.baseUrl;
+  final String baseURL = AppEnvironment.apiBaseUrl;
   final secureDataSource = WayaSecureDataSource();
   static final _instance = DioHttpClient._internal();
 

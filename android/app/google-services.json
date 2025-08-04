@@ -65,6 +65,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276195200870:android:86d92470ee9355f58b42a7",
+        "android_client_info": {
+          "package_name": "ng.wayagram.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276195200870-o5382ijj550evijhajp13p4itbc34dl6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDblceeBZQZyjAoWlNEvW6-zD_8-oXWMos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276195200870-o5382ijj550evijhajp13p4itbc34dl6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

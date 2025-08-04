@@ -7,26 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/helpers/debug.dart';
 import 'package:wayagram/core/helpers/deep_linking_listener.dart';
 import 'package:wayagram/core/helpers/package.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/theme/vm/theme_vm.dart';
-//import 'package:wayagram/core/utils/task.dart';
-import 'package:wayagram/core/utils/waya_constants.dart';
-import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
-import 'package:wayagram/features/auth/login/view/login_cover_page.dart';
-import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/chat_settings/vm.dart';
@@ -37,9 +31,13 @@ import 'package:wayagram/features/general_settings/profile/data/repo/profile_rep
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
 import 'firebase_options.dart';
-
+import 'config/environment.dart';
 
 void main() async {
+  await runMainApp();
+}
+
+Future<void> runMainApp() async {
   //? First, set up all Firebase services so we can report all crashes to firebase,
   //? have analytics, crashlytics, and push notifications set up.
   //? needed the widget reference
@@ -49,94 +47,33 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  //? Second, setup the error handlers for synchronous errors here and asynchronous
-  //? errors here.
-  if (!kDebugMode) {
-    FlutterError.onError = (errorDetails) {
-      //? If this is production.
-      if (WayaConstants.isProduction) {
-        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-      }
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
 
-      //? Since it is not.
-      else {
-        WayaDebugConsoleController.instance.addDebugEvent(
-          WayaDebugEvent(
-            type: WayaDebugEventType.flutter,
-            module: WayaDebugEventModule.unknown,
-            message: errorDetails.summary.toDescription(),
-            raw: errorDetails,
-            stackTrace: errorDetails.stack,
-            timestamp: DateTime.now(),
-          ),
-        );
-      }
-    };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
-    //* For async errors.
-    PlatformDispatcher.instance.onError = (error, stack) {
-      //? If this is production.
-      if (WayaConstants.isProduction) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      }
-
-      //? Since it is not.
-      else {
-        WayaDebugConsoleController.instance.addDebugEvent(
-          WayaDebugEvent(
-            type: WayaDebugEventType.runtime,
-            module: WayaDebugEventModule.unknown,
-            message: error.toString().split("\n").first.trim(),
-            raw: error,
-            stackTrace: stack,
-            timestamp: DateTime.now(),
-          ),
-        );
-      }
-      return true;
-    };
-
-    //* For errors outside of flutter...
-    Isolate.current.addErrorListener(RawReceivePort((pair) async {
-      final List<dynamic> errorAndStacktrace = pair;
-
-      //? If this is production.
-      if (WayaConstants.isProduction) {
-        await FirebaseCrashlytics.instance.recordError(
-          errorAndStacktrace.first,
-          errorAndStacktrace.last,
-          fatal: true,
-        );
-      }
-
-      //? Since it is not.
-      else {
-        WayaDebugConsoleController.instance.addDebugEvent(
-          WayaDebugEvent(
-            type: WayaDebugEventType.runtime,
-            module: WayaDebugEventModule.unknown,
-            message:
-                errorAndStacktrace.first.toString().split("\n").first.trim(),
-            raw: errorAndStacktrace.first,
-            stackTrace:
-                StackTrace.fromString(errorAndStacktrace.last.toString()),
-            timestamp: DateTime.now(),
-          ),
-        );
-      }
-    }).sendPort);
-  }
+  //* For errors outside of flutter...
+  Isolate.current.addErrorListener(RawReceivePort((pair) async {
+    final List<dynamic> errorAndStacktrace = pair;
+    await FirebaseCrashlytics.instance.recordError(
+      errorAndStacktrace.first,
+      errorAndStacktrace.last,
+      fatal: true,
+    );
+  }).sendPort);
 
   //? Third, initialize everything that should be initialized.
   await GetStorage.init();
   await PushNotifications.init();
   WayaSnackBar.setUpSnackBarUI();
-  //await TaskScheduler.init();
 
-  //? Get the incoming
   String path = await getUserData() ?? "/";
 
-  //? Fourth, remove the native splash screen at this point in time.
   FlutterNativeSplash.remove();
 
   //? Fifth, configure our visibility detector.
@@ -146,9 +83,13 @@ void main() async {
   //? Sixth, load the chat settings into memory so we can update this correctly.
   ChatSettingsNotifier.instance.reload();
 
-  //? Finally, run the app.
-  //? added DeepLinkListener to listen to incoming deepLinking urls
-  runApp(ProviderScope(child: DeepLinkListener(child: Wayagram(path))));
+  runApp(
+    ProviderScope(
+      child: DeepLinkListener(
+        child: Wayagram(path),
+      ),
+    ),
+  );
 }
 
 class Wayagram extends ConsumerStatefulWidget {
@@ -187,8 +128,6 @@ class _WayagramState extends ConsumerState<Wayagram> {
     final themeMode = ref.watch(themeProvider);
     var size = MediaQuery.of(context).size;
 
-    //? added this screenutil init here to register before getting to the theme
-    //? else it will throw an error
     ScreenUtil.init(
       context,
       designSize: Size(size.width, size.height),
@@ -198,11 +137,9 @@ class _WayagramState extends ConsumerState<Wayagram> {
 
     //? Return the widget.
     return MaterialApp(
-      //? If deepLink path is null, means it normally open
-      //? else means it through a link the app is opened
       navigatorKey: WayaNav.navigatorKey,
       initialRoute: widget.path,
-      title: WayaConstants.appName,
+      title: AppEnvironment.appName,
       theme: WayaTheme.lightTheme,
       darkTheme: WayaTheme.darkTheme,
       themeMode: themeMode,
@@ -215,7 +152,6 @@ class _WayagramState extends ConsumerState<Wayagram> {
           children: [
             child!,
             if (showPreloader) WayaPreloaderOverlay(),
-            if (!WayaConstants.isProduction) WayaDebugConsole(),
           ],
         ),
       ),

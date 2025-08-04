@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
@@ -207,7 +208,9 @@ class WayaSocketController {
       if (ref == null) return null;
       return await action();
     } catch (e) {
-      if (e.toString().contains('Cannot use "ref" after the widget was disposed')) {
+      if (e
+          .toString()
+          .contains('Cannot use "ref" after the widget was disposed')) {
         debugPrint('Ignoring socket event - widget was disposed');
         return null;
       }
@@ -226,7 +229,7 @@ class WayaSocketController {
 
     //? This should only be update when necessary.
     _socket = socket_io.io(
-      WayaConstants.baseUrl,
+      AppEnvironment.apiBaseUrl,
       socket_io.OptionBuilder()
           .setPath("/communication-service/socket.io/")
           .setTransports(['websocket', 'polling']) // Our transport options.

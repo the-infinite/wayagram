@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Wayagram</string>
+	<string>$(APP_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -42,49 +42,45 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-        <string>We need access to your camera to capture your favourite moments and make video calls</string>
-        <key>NSMicrophoneUsageDescription</key>
-        <string>We need access to your microphone to record voice messages and for calls</string>
-        <key>NSPhotoLibraryUsageDescription</key>
-        <string>We need access to your photo library</string>
-		  <key>NSAppleMusicUsageDescription</key>
-        <string>Play using while you are hiking</string>
-        <key>NSBluetoothAlwaysUsageDescription</key>
-        <string>So we can connect to wireless audio devices for your calls when you choose to use
+	<string>We need access to your camera to capture your favourite moments and make video calls</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to your microphone to record voice messages and for calls</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>photos description.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Play using while you are hiking</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>So we can connect to wireless audio devices for your calls when you choose to use
             them</string>
-        <key>NSCalendarsUsageDescription</key>
-        <string>Wayagram would like to access your calendar</string>
-		 <key>ITSAppUsesNonExemptEncryption</key>
-        <false />
-        <key>NSPhotoLibraryAddUsageDescription</key>
-        <string>photos add description.</string>
-        <key>NSPhotoLibraryUsageDescription</key>
-        <string>photos description.</string>
-        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-        <string>This app requires access to your location to provide personalized services and
+	<key>NSCalendarsUsageDescription</key>
+	<string>Wayagram would like to access your calendar</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>photos add description.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires access to your location to provide personalized services and
             content even when the app is in the background.</string>
-        <key>NSLocationWhenInUseUsageDescription</key>
-        <string>This app requires access to your location to provide personalized services and
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to your location to provide personalized services and
             content while you are using the app.</string>
-        <key>NSLocationAlwaysUsageDescription</key>
-        <string>This app requires access to your location to provide personalized services and
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires access to your location to provide personalized services and
             content even when the app is in the background.</string>
-			 <!-- For Firebase crashlytics. -->
-        <key>FirebaseCrashlyticsCollectionEnabled</key>
-        <true />
-        <key>UIStatusBarHidden</key>
-        <false />
-        <key>UISupportsDocumentBrowser</key>
-        <true />
-        <key>CFBundleURLTypes</key>
-        <array>
-            <dict>
-                <key>CFBundleURLSchemes</key>
-                <array>
-                    <string>ng.wayagram</string>
-                </array>
-            </dict>
-			        </array>
-
+	<key>FirebaseCrashlyticsCollectionEnabled</key>
+	<true/>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ng.wayagram</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

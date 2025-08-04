@@ -184,14 +184,11 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                   ),
                   color: Color(0xffFBEAE9),
                   onTap: () {
-                    //? Show the coming soon modal.
-                    if (WayaConstants.isProduction) {
-                      WayaNavigationHelper.showComingSoonModal(true);
-                      return;
-                    }
+                    WayaNavigationHelper.showComingSoonModal(true);
+                    return;
 
                     //? Now, continue as needed in staging.
-                    WayaNav.toNamed('/seller-settlement');
+                    // WayaNav.toNamed('/seller-settlement');
                   },
                 ),
               ],

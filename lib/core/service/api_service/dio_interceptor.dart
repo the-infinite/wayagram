@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/utils/utils.dart';
 
 class DioInterceptor extends Interceptor {
   final Dio dio;
@@ -12,7 +12,7 @@ class DioInterceptor extends Interceptor {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    if (options.path.contains(WayaConstants.baseUrl)) {
+    if (options.path.contains(AppEnvironment.apiBaseUrl)) {
       final token = await secureDataSource.getToken();
       options.headers['Authorization'] = 'Bearer $token';
     }
@@ -54,7 +54,7 @@ class DioInterceptor extends Interceptor {
       if (refreshToken != null) {
         try {
           final response = await dio.post(
-              '${WayaConstants.baseUrl}wayagram-profile/api/v2/client/auth/refresh-token',
+              '${AppEnvironment.apiBaseUrl}wayagram-profile/api/v2/client/auth/refresh-token',
               data: {"token": refreshToken});
 
           // Safely access nested response data

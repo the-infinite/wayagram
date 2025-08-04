@@ -35,7 +35,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
-        if (!WayaConstants.isProduction || kDebugMode) ...[
+        if (kDebugMode) ...[
           Platform.isAndroid
               ? WayaButton(
                   color: wayaTheme.colorScheme.secondaryColor,

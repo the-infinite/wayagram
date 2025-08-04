@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -440,7 +441,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
           description: decription ?? "Wallet funding",
           email: ConversationState.self.email!,
           fundOptionCode: fundOptionCode,
-          callbackUrl: WayaConstants.webUrl),
+          callbackUrl: AppEnvironment.webUrl),
     );
 
     if (response.success) {

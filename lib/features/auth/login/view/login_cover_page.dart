@@ -47,7 +47,7 @@ class LoginCoverPage extends ConsumerWidget {
             ),
           ),
           Gap(height * 0.25),
-          if (!WayaConstants.isProduction || kDebugMode) ...[
+          if (kDebugMode) ...[
             Platform.isAndroid
                 ? WayaButton(
                     color: wayaTheme.colorScheme.secondaryColor,

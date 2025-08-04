@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/helpers/package.dart';
@@ -108,9 +109,8 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 title: 'Change Password',
                 iconPath: 'password',
                 onTap: () => {
-                    WayaNav.toNamed(VerifyTransactionIdentity.route,
+                  WayaNav.toNamed(VerifyTransactionIdentity.route,
                       arguments: "change-password"),
-              
                 },
               ),
 
@@ -319,7 +319,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               return const SizedBox();
             },
             builder: (context) => Text(
-              "v${PackageData.info.version}-${WayaConstants.isProduction ? "live" : "test"}",
+              "v${PackageData.info.version}-${Environment.isProduction ? "live" : "test"}",
               textAlign: TextAlign.center,
               style: WayaTextStyles.bodySmall.copyWith(
                 color: WayaColors.greyColor400,
