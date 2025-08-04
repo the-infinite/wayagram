@@ -392,9 +392,18 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     state = FollowState.initial;
   }
 
+  bool hasRelationship(String id) {
+    return isUserFollowing(id) || hasSentRequest(id);
+  }
+
   bool isUserFollowing(String id) {
     return state.followers.any((relation) => relation.isUserFollowing && relation.otherUserId == id) ||
         state.following.any((relation) => relation.isUserFollowing && relation.otherUserId == id);
+  }
+
+  bool hasSentRequest(String id) {
+    return state.followers.any((relation) => relation.isRequestSent && relation.otherUserId == id) ||
+        state.following.any((relation) => relation.isRequestSent && relation.otherUserId == id);
   }
 }
 

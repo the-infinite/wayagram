@@ -59,6 +59,11 @@ class FollowModel {
         (followingId == ConversationState.self.id && followedBack);
   }
 
+  bool get isRequestSent {
+    return status == FollowRelationship.pending &&
+        (followerId == ConversationState.self.id || (followingId == ConversationState.self.id && followedBack));
+  }
+
   /// Helper function used to get the user ID of the person in this follower following relationship that is not the user in question.
   String get otherUserId => otherFollowerId(ConversationState.self.id);
 
