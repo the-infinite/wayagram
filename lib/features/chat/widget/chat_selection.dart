@@ -309,6 +309,7 @@ class UserActionWidget extends StatelessWidget {
         id: id,
         index: index,
         useYou: useYou,
+        onTap: actionAvailable ? onTap : null,
         child: child,
       ),
     );
@@ -320,6 +321,7 @@ class ChatAndSocialUserWidget extends StatelessWidget {
   final int index;
   final Widget? child;
   final bool useYou;
+  final VoidCallback? onTap;
 
   // Construct.
   const ChatAndSocialUserWidget({
@@ -328,6 +330,7 @@ class ChatAndSocialUserWidget extends StatelessWidget {
     required this.index,
     this.useYou = true,
     this.child,
+    this.onTap,
   });
 
   @override
@@ -337,63 +340,61 @@ class ChatAndSocialUserWidget extends StatelessWidget {
       suspense: (context) => const SizedBox(),
       builder: (context, data) => Padding(
         padding: index == 0 ? EdgeInsets.zero : const EdgeInsets.only(top: 10),
-        child: InkWell(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 10.w,
-            children: [
-              // The user's chat profile picture.
-              ChatProfilePicture(
-                user: data!.$1,
-                radius: 27.r,
-                showActive: false,
-                canMove: true,
-              ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 10.w,
+          children: [
+            // The user's chat profile picture.
+            ChatProfilePicture(
+              user: data!.$1,
+              radius: 27.r,
+              showActive: false,
+              canMove: false,
+            ),
 
-              //* For the messages part.
-              Expanded(
-                child: InkWell(
-                  onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(id)),
-                  splashColor: WayaColors.primary.withAlpha(30),
-                  focusColor: WayaColors.primary.withAlpha(30),
-                  highlightColor: WayaColors.primary.withAlpha(30),
-                  borderRadius: BorderRadius.circular(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //* For the other person's name.
+            //* For the messages part.
+            Expanded(
+              child: InkWell(
+                onTap: onTap ?? () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(id)),
+                splashColor: WayaColors.primary.withAlpha(30),
+                focusColor: WayaColors.primary.withAlpha(30),
+                highlightColor: WayaColors.primary.withAlpha(30),
+                borderRadius: BorderRadius.circular(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //* For the other person's name.
+                    Text(
+                      useYou && id == ConversationState.self.id ? "You " : data.$1.fullname,
+                      maxLines: 1,
+                      style: WayaTextStyles.titleMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+
+                    //? For the message content...
+                    if (data.$2.username != null)
                       Text(
-                        useYou && id == ConversationState.self.id ? "You " : data.$1.fullname,
+                        "@${data.$2.username!}",
                         maxLines: 1,
                         style: WayaTextStyles.titleMedium.copyWith(
                           fontWeight: FontWeight.w600,
                           overflow: TextOverflow.ellipsis,
+                          color: WayaColors.greyColor500,
+                          fontSize: 14.sp,
                         ),
                       ),
-
-                      //? For the message content...
-                      if (data.$2.username != null)
-                        Text(
-                          "@${data.$2.username!}",
-                          maxLines: 1,
-                          style: WayaTextStyles.titleMedium.copyWith(
-                            fontWeight: FontWeight.w600,
-                            overflow: TextOverflow.ellipsis,
-                            color: WayaColors.greyColor500,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
+            ),
 
-              //* Selection icon
-              if (child != null) child!,
-            ],
-          ),
+            //* Selection icon
+            if (child != null) child!,
+          ],
         ),
       ),
     );

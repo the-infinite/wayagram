@@ -59,6 +59,9 @@ class GroupMemberActions extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Some space.
+        SizedBox(height: 15.h),
+
         //? First, the title bar.
         Text(
           "Member Actions",
@@ -69,60 +72,20 @@ class GroupMemberActions extends StatelessWidget {
           ),
         ),
 
+        // Some space.
+        SizedBox(height: 30.h),
+
         //? Next, to send a message.
-        WayaButton(
-          text: "Send Message",
-          verticalPadding: 10.h,
-          textStyle: style,
-          alignment: Alignment.centerLeft,
-          textColor: wayaTheme.colorScheme.customBlack,
-          color: wayaTheme.colorScheme.primary.withAlpha(25),
-          leadingIcon: WayaAssets.icons.chat.svg(
-            height: 18.sp,
-            width: 18.sp,
-            colorFilter: ColorFilter.mode(
-              wayaTheme.colorScheme.primary,
-              BlendMode.srcIn,
-            ),
-          ),
-          callback: _sendMessage,
-        ),
-
-        // Some space.
-        SizedBox(height: 15.h),
-
-        //? Next, to view the profile.
-        WayaButton(
-          text: "View Profile",
-          verticalPadding: 10.h,
-          textStyle: style,
-          alignment: Alignment.centerLeft,
-          textColor: wayaTheme.colorScheme.customBlack,
-          color: wayaTheme.colorScheme.primary.withAlpha(25),
-          leadingIcon: WayaAssets.icons.personal.svg(
-            height: 18.sp,
-            width: 18.sp,
-            colorFilter: ColorFilter.mode(
-              wayaTheme.colorScheme.primary,
-              BlendMode.srcIn,
-            ),
-          ),
-          callback: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(member.userId)),
-        ),
-
-        // Some space.
-        SizedBox(height: 15.h),
-
-        //? Next, to make this person an admin.
-        if (self.role != ChatMemberRole.member && member.role == ChatMemberRole.member) ...[
-          WayaButton(
-            text: "Make Admin",
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15.w),
+          child: WayaButton(
+            text: "Send Message",
             verticalPadding: 10.h,
             textStyle: style,
             alignment: Alignment.centerLeft,
             textColor: wayaTheme.colorScheme.customBlack,
-            color: wayaTheme.colorScheme.primary.withAlpha(25),
-            leadingIcon: WayaAssets.icons.personal.svg(
+            color: Colors.transparent,
+            leadingIcon: WayaAssets.icons.chat.svg(
               height: 18.sp,
               width: 18.sp,
               colorFilter: ColorFilter.mode(
@@ -130,17 +93,65 @@ class GroupMemberActions extends StatelessWidget {
                 BlendMode.srcIn,
               ),
             ),
-            callback: () {
-              WayaNav.goBack();
-              WayaUtils.showModalSheet(
-                context,
-                child: MakeGroupAdminModal(
-                  chat: chat,
-                  notifier: notifier,
-                  userId: member.userId,
+            callback: _sendMessage,
+          ),
+        ),
+
+        // Some space.
+        SizedBox(height: 15.h),
+
+        //? Next, to view the profile.
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15.w),
+          child: WayaButton(
+            text: "View Profile",
+            verticalPadding: 10.h,
+            textStyle: style,
+            alignment: Alignment.centerLeft,
+            textColor: wayaTheme.colorScheme.customBlack,
+            color: Colors.transparent,
+            leadingIcon: WayaAssets.icons.personal.svg(
+              height: 18.sp,
+              width: 18.sp,
+            ),
+            callback: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(member.userId)),
+          ),
+        ),
+
+        // Some space.
+        SizedBox(height: 15.h),
+
+        //? Next, to make this person an admin.
+        if (self.role != ChatMemberRole.member && member.role == ChatMemberRole.member) ...[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            child: WayaButton(
+              text: "Make Admin",
+              verticalPadding: 10.h,
+              textStyle: style,
+              alignment: Alignment.centerLeft,
+              textColor: wayaTheme.colorScheme.customBlack,
+              color: Colors.transparent,
+              leadingIcon: WayaAssets.icons.personal.svg(
+                height: 18.sp,
+                width: 18.sp,
+                colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.primary,
+                  BlendMode.srcIn,
                 ),
-              );
-            },
+              ),
+              callback: () {
+                WayaNav.goBack();
+                WayaUtils.showModalSheet(
+                  context,
+                  child: MakeGroupAdminModal(
+                    chat: chat,
+                    notifier: notifier,
+                    userId: member.userId,
+                  ),
+                );
+              },
+            ),
           ),
 
           // Some space.
@@ -149,32 +160,35 @@ class GroupMemberActions extends StatelessWidget {
 
         //? Finally, the button to remove a member from the group.
         if (self.role != ChatMemberRole.member) ...[
-          WayaButton(
-            text: "Remove ${member.userData?.firstName.capitalizeFirst}",
-            verticalPadding: 10.h,
-            textStyle: style,
-            alignment: Alignment.centerLeft,
-            textColor: wayaTheme.colorScheme.error,
-            color: wayaTheme.colorScheme.error.withAlpha(25),
-            leadingIcon: WayaAssets.icons.chat.svg(
-              height: 18.sp,
-              width: 18.sp,
-              colorFilter: ColorFilter.mode(
-                wayaTheme.colorScheme.error,
-                BlendMode.srcIn,
-              ),
-            ),
-            callback: () {
-              WayaNav.goBack();
-              WayaUtils.showModalSheet(
-                context,
-                child: RemoveUserChatGroupModal(
-                  chat: chat,
-                  notifier: notifier,
-                  userId: member.userId,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            child: WayaButton(
+              text: "Remove ${member.userData?.firstName.capitalizeFirst}",
+              verticalPadding: 10.h,
+              textStyle: style,
+              alignment: Alignment.centerLeft,
+              textColor: wayaTheme.colorScheme.error,
+              color: Colors.transparent,
+              leadingIcon: WayaAssets.icons.chat.svg(
+                height: 18.sp,
+                width: 18.sp,
+                colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.error,
+                  BlendMode.srcIn,
                 ),
-              );
-            },
+              ),
+              callback: () {
+                WayaNav.goBack();
+                WayaUtils.showModalSheet(
+                  context,
+                  child: RemoveUserChatGroupModal(
+                    chat: chat,
+                    notifier: notifier,
+                    userId: member.userId,
+                  ),
+                );
+              },
+            ),
           ),
 
           // Some space.
