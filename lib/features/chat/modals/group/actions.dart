@@ -33,7 +33,8 @@ class GroupMemberActions extends StatelessWidget {
   //? Helpful function used to send a message to this person.
   void _sendMessage() async {
     var chat = wayaChatsCache.getItem(
-      (chat) => chat.chatType == ChatType.personal && chat.chatMembers.any((member) => member.userId == member.userId),
+      (chat) =>
+          chat.chatType == ChatType.personal && chat.chatMembers.any((member) => member.userId == this.member.userId),
     );
     chat ??= await notifier.startChat(ChatType.personal, [member.userId]);
 
