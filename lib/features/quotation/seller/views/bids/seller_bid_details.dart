@@ -333,19 +333,20 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           Gap(30.h),
 
           //? The button to change the order status.
-          if (bid.status == BidActionType.accept)
-            WayaButton(
-              color: wayaTheme.colorScheme.transparent,
-              textColor: wayaTheme.colorScheme.greyColor900,
-              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
-              text: "View Order",
-              leadingIcon: WayaAssets.icons.orders.svg(
-                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
-                width: 20,
-              ),
-            )
-          else if (bid.status == BidActionType.reject)
+          //   if (bid.status == BidActionType.accept)
+          //     WayaButton(
+          //       color: wayaTheme.colorScheme.transparent,
+          //       textColor: wayaTheme.colorScheme.greyColor900,
+          //       border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+          //       callback: () => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
+          //       text: "View Order",
+          //       leadingIcon: WayaAssets.icons.orders.svg(
+          //         colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+          //         width: 20,
+          //       ),
+          //     )
+          //   else
+          if (bid.status == BidActionType.reject)
             WayaProgressiveButton(
               callback: () => _placeBid(request),
               text: 'Bid Again',

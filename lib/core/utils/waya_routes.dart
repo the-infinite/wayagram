@@ -218,7 +218,7 @@ class WayaAppRoutes {
     ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
     CartView.route: () => CartView(),
     AllSellerOrders.route: () => AllSellerOrders(),
-    SellerOrderDetails.route: () => SellerOrderDetails( id: WayaNav.search['id'].toString()),
+    SellerOrderDetails.route: () => SellerOrderDetails(id: WayaNav.search['id'].toString()),
     SellerBidDetails.route: () => SellerBidDetails(
           id: WayaNav.search['id'].toString(),
           requestId: WayaNav.search['requestId'].toString(),
@@ -280,9 +280,7 @@ class WayaAppRoutes {
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
-    PayoutHistory.route: () => PayoutHistory(
-
-    ),
+    PayoutHistory.route: () => PayoutHistory(),
     WayaSocialNotificationsScreen.route: () => WayaSocialNotificationsScreen(),
     ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
     AdminTransactionHistory.route: () => AdminTransactionHistory(),
@@ -587,8 +585,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that leads to the quotation
   /// checkout screen for a buyer.
-  static String getQuotationCheckoutScreen(String id, String requestId) =>
-      "${BuyerCheckout.route}?id=$id&requestId=$requestId";
+  static String getQuotationCheckoutScreen(String id, String requestId) => CartView.route;
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
@@ -596,8 +593,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route tha tis supposed to take you to
   /// a single order's details screen.
-  static String getQuotationOrderDetailsScreen(String id) =>
-      "${QuotationOrderDetails.route}?id=$id&requestId=$id";
+  static String getQuotationOrderDetailsScreen(String id) => "${QuotationOrderDetails.route}?id=$id&requestId=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
@@ -629,7 +625,8 @@ class WayaAppRoutes {
 
   static String getSellerOrderDetailScreen(String id) => "${SellerOrderDetails.route}?id=$id";
 
-    static String getOrderDetailScreen(String id) => "${OrderDetails.route}?id=$id";
+  static String getOrderDetailScreen(String id) => "${OrderDetails.route}?id=$id";
+
   /// This is fine.
   static List<GetPage> get getPages {
     return routes.entries
