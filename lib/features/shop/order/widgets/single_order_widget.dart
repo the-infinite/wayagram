@@ -9,8 +9,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
-import 'package:wayagram/features/shop/order/data/model/order_state.dart';
-import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
 
 class SingleOrderWidget extends ConsumerWidget {
   final Order order;
