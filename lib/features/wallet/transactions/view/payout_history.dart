@@ -29,20 +29,22 @@ class _ManageStateContestState extends ConsumerState<PayoutHistory> {
   Widget build(BuildContext context) {
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
     final walletViewModel = ref.watch(walletVmProvider);
-    final notifier = ref.watch(walletVmProvider.notifier);
+    final notifier = ref.read(walletVmProvider.notifier);
 
     useEffect(() {
       //? check the module type after the import
       Future.delayed(Duration.zero, () {
-         notifier.fetchUserPayoutTransaction(args["referenceId"], args["Module"]);
+        notifier.fetchUserPayoutTransaction(args["referenceId"], args["Module"]);
       });
 
       return null;
     }, []);
+
+    //? Return the WayaScaffold with the payout history
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      title: "Payout History",
+      title: args["Title"] ?? "Payout History",
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         //  padding: EdgeInsets.all(),
@@ -88,8 +90,7 @@ class _ManageStateContestState extends ConsumerState<PayoutHistory> {
     );
   }
 
-  Widget _buildStatCard(
-      BuildContext context, String title, String value, Widget widget) {
+  Widget _buildStatCard(BuildContext context, String title, String value, Widget widget) {
     final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
@@ -107,15 +108,12 @@ class _ManageStateContestState extends ConsumerState<PayoutHistory> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title,
-                    textAlign: TextAlign.start,
-                    style: WayaTextStyles.hintStyleBold),
+                Text(title, textAlign: TextAlign.start, style: WayaTextStyles.hintStyleBold),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
                     decoration: BoxDecoration(
-                      color:
-                          wayaTheme.colorScheme.primary500, // Background color
+                      color: wayaTheme.colorScheme.primary500, // Background color
                       shape: BoxShape.circle, // Makes the container circular
                       border: Border.all(
                         color: Colors.white, // Optional: Border color

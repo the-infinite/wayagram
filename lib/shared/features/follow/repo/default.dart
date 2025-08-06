@@ -10,16 +10,25 @@ class FollowRepository extends BaseRepository {
   // Construct.
   FollowRepository._();
 
-  Future<WayaRequestResponse> getFollowRequests(String userId, [int page = 1, int limit = 50]) {
-    return httpClient.getHttp("$serviceUri/follow/pending-follow-request/$userId?page=$page&limit=$limit");
+  Future<WayaRequestResponse> getFollowRequests(String userId,
+      [int page = 1, int limit = 50]) {
+    return httpClient.getHttp(
+        "$serviceUri/follow/pending-follow-request/$userId?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getFollowers(String id, int page, int limit) {
-    return httpClient.getHttp("$serviceUri/follow/followers/$id?page=$page&limit=$limit");
+    return httpClient
+        .getHttp("$serviceUri/follow/followers/$id?page=$page&limit=$limit");
+  }
+
+  Future<WayaRequestResponse> getInvitations(String id, int page, int limit) {
+    return httpClient.getHttp(
+        "$serviceUri/follow/pending-follow-request/$id?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getFollowing(String id, int page, int limit) {
-    return httpClient.getHttp("$serviceUri/follow/following/$id?page=$page&limit=$limit");
+    return httpClient
+        .getHttp("$serviceUri/follow/following/$id?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getFollowStatus(String id) {
@@ -27,14 +36,18 @@ class FollowRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getSuggestedFriends(int page, int limit) {
-    return httpClient.getHttp("$serviceUri/follow/suggestions?page=$page&limit=$limit");
+    return httpClient
+        .getHttp("$serviceUri/follow/suggestions?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> followUser(String id) {
     return httpClient.postHttp("$serviceUri/follow/$id", null);
   }
+  
 
-  Future<WayaRequestResponse> handleFollowRequest(String followerId, String followingId, FollowAction action) {
+
+  Future<WayaRequestResponse> handleFollowRequest(
+      String followerId, String followingId, FollowAction action) {
     return httpClient.patchHttp(
       "$serviceUri/follow/handleRequest",
       {

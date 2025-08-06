@@ -9,12 +9,14 @@ class CartRepository extends BaseRepository {
     required int quantity,
     required String userId,
     required String shopId,
+    required bool isQuotation,
   }) {
     return post("$serviceUrl/cart/add-to-cart", {
       "productId": productId,
       "quantity": quantity,
       "shopId": shopId,
       "userId": userId,
+      "isQuotation": isQuotation,
     });
   }
 
@@ -24,36 +26,24 @@ class CartRepository extends BaseRepository {
 
   // //
   ///
-  Future<WayaRequestResponse> removeShopProduct(
-      {required String shopId}) async {
+  Future<WayaRequestResponse> removeShopProduct({required String shopId}) async {
     return patch("$serviceUrl/cart/remove-shop-product", {"shopId": shopId});
   }
 
   Future<WayaRequestResponse> decreaseQuantity(
-      {required String productId,
-      required String userId,
-      required String shopId}) async {
-    return patch("$serviceUrl/cart/decrease-quantity",
-        {"productId": productId, "userId": userId, "shopId": shopId});
+      {required String productId, required String userId, required String shopId}) async {
+    return patch("$serviceUrl/cart/decrease-quantity", {"productId": productId, "userId": userId, "shopId": shopId});
   }
 
   Future<WayaRequestResponse> updateQuantity(
-      {required String productId,
-      required String userId,
-      required String shopId}) async {
-    return patch("$serviceUrl/cart/update-quantity",
-        {"productId": productId, "userId": userId, "shopId": shopId});
+      {required String productId, required String userId, required String shopId}) async {
+    return patch("$serviceUrl/cart/update-quantity", {"productId": productId, "userId": userId, "shopId": shopId});
   }
 
   Future<WayaRequestResponse> updateDeliveryAddress(
-      {required String deliveryAddress,
-      required String userId,
-      required String shopId}) async {
-    return patch("$serviceUrl/cart/request-deliveryFee", {
-      "userId": userId,
-      "shopId": shopId,
-      "deliveryAddress": deliveryAddress
-    });
+      {required String deliveryAddress, required String userId, required String shopId}) async {
+    return patch("$serviceUrl/cart/request-deliveryFee",
+        {"userId": userId, "shopId": shopId, "deliveryAddress": deliveryAddress});
   }
 
   Future<WayaRequestResponse> updateDeliveryFee(
@@ -62,8 +52,7 @@ class CartRepository extends BaseRepository {
       required String deliveryDate,
       required String userId,
       required String shopId}) async {
-    return patch(
-        "$serviceUrl/cart/shop/$shopId/user/$userId/update-fee-and-date",
+    return patch("$serviceUrl/cart/shop/$shopId/user/$userId/update-fee-and-date",
         {"deliveryDate": deliveryDate, "deliveryFee": deliveryFee});
   }
 

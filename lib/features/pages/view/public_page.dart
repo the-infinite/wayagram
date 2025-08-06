@@ -12,6 +12,8 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
+import 'package:wayagram/features/pages/view/page_post.dart';
+import 'package:wayagram/features/pages/view/team_page.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'private_page.dart';
@@ -20,9 +22,7 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
-import 'package:wayagram/shared/features/profile/widget/post.dart';
 
-import '../../group/view/groups_for_you.dart';
 
 class PublicPage extends ConsumerStatefulWidget {
   static const route = '/pages/public';
@@ -45,6 +45,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
   final handler = WayaObservableScrollController();
   final loadingController = ValueNotifier(false);
   PageModel? _thisPage;
+  int _selectedIndex = 0;
 
   Future<void> _followPage() async {
     //? Then leave the page.
@@ -84,6 +85,8 @@ class _PublicPageState extends ConsumerState<PublicPage>
     final wayaTheme = Theme.of(context);
     final state = ref.watch(pageProvider);
 
+    final followers =  state.pageFollowerDocs ?? [];
+
     //? Return this component.
     final page = wayaPageCache.getCachedData(widget.id) ?? _thisPage;
 
@@ -93,8 +96,9 @@ class _PublicPageState extends ConsumerState<PublicPage>
     }
 
     //? Fetch the data of this page.
-    if (page.ownerId == ConversationState.self.id) {
-      return PrivatePage(page: page,);
+    if (page.ownerId == ConversationState.self.id || followers.where((follower)=>
+    follower.followerId == ConversationState.self.id).firstOrNull != null) {
+      return PrivatePage(page: page);
     }
 
     //? Return the Scaffolded screen here.
@@ -343,8 +347,50 @@ class _PublicPageState extends ConsumerState<PublicPage>
                 ),
               ),
 
-              //? If this page should be visible to the user...
+              ///
+              //? When the user is a member of this group.
               if (myPageNotifier.isMemberOf(widget.id) || page.isPublic) ...[
+                //? Our tab bar.
+                Row(
+                  children: [
+                    WayaTabButton(
+                      isSelected: _selectedIndex == 0,
+                      text: 'Posts',
+                      onTap: () => setState(() => _selectedIndex = 0),
+                    ),
+                    WayaTabButton(
+                      isSelected: _selectedIndex == 1,
+                      text: 'Team',
+                      onTap: () => setState(() => _selectedIndex = 1),
+                    ),
+                  ],
+                ),
+
+                // Some space.
+                Gap(15.h),
+
+                //? Selected content.
+                _selectedIndex == 0
+                    ? Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: PagePost(
+                    pageId: widget.id,
+                  ),
+                )
+                    : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: TeamPage(
+                    pageId: widget.id,
+                    provider: pageProvider,
+
+                  ),
+                ),
+
+              ]
+              ///
+
+              //? If this page should be visible to the user...
+             /* if (myPageNotifier.isMemberOf(widget.id) || page.isPublic) ...[
                 Padding(
                   padding: EdgeInsets.only(left: 15.w),
                   child: Text(
@@ -363,7 +409,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
 
                 //? This is fine.
                 if (state.getAllPost?.isEmpty ?? true)
-                  PostEmptyState()
+                  GroupPageEmptyState(text: 'No post yet')
                 else
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -377,7 +423,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
                       ),
                     ),
                   )
-              ]
+              ]*/
 
               //? Since the user has not joined and it is private
               else ...[
@@ -431,6 +477,23 @@ class _PublicPageState extends ConsumerState<PublicPage>
           ),
         ),
       ),
+      floatingActionButton: myPageNotifier.isMemberOf(page.id) || page.ownerId == ConversationState.self.id
+          ? SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () => WayaNav.toNamed(WayaAppRoutes.getPagePostScreen(page.id)),
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
+            ),
+          ),
+        ),
+      )
+          : null,
     );
   }
 

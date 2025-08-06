@@ -5,6 +5,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/cache/order.dart';
 import 'package:wayagram/shared/cache/quotation.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/repo/default.dart';
@@ -314,52 +315,20 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     return false;
   }
 
-  /// Helper function used to place a bid so that we can enter a quote auction.
-  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId, double? deliveryCost) async {
-    try {
-      final response = await repo.placeBid(
-        requestId: requestId,
-        amount: amount,
-        shopId: shopId,
-        vendorId: ConversationState.self.id,
-        deliveryCost: deliveryCost,
-      );
+  /// Helper function used to place a bid inside of our list of bids and refreshing
+  /// the quotation model that it comes from. Or at least, it tries to refresh
+  /// the quotation model. It has no real reason or objective for doing so.
+  Future<void> saveBid(QuotationBidModel doc) async {
+    //? STylishly sneak this bid into the list of bids on screen.
+    state = state.copyWith(
+      bids: [
+        doc,
+        ...state.bids,
+      ],
+    );
 
-      //? This is fine.
-      if (response.success) {
-        //? The data.
-        final data = response.data['data'];
-
-        //? Parse the single buy request to ensure we are doing things right.
-        final doc = QuotationBidModel.fromJson(data);
-
-        //? STylishly sneak this bid into the list of bids on screen.
-        state = state.copyWith(
-          bids: [
-            doc,
-            ...state.bids,
-          ],
-        );
-
-        //? This is fine.
-        await getBuyRequest(requestId);
-
-        //? Return the document.
-        return doc;
-      }
-    } catch (e) {
-      Get.log('Error sending bid: $e');
-      Get.log('Stack trace: ${WayaDebugHelpers.getStackTrace(e)}');
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-
-    //? Since it failed.
-    return null;
+    //? This is fine.
+    await getBuyRequest(doc.requestId);
   }
 
   /// Helper function used to get all bids from the server that a given user has
@@ -477,6 +446,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? Parse the single buy request to ensure we are doing things right.
         final doc = BidOrderModel.fromJson(data);
+        wayaOrdersCache.cache(id, doc);
 
         //? Return the document.
         return doc;
@@ -524,6 +494,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? Parse the buy requests first so we can extrapolate what we need.
         final docs = (data['docs'] as List).map((doc) => BidOrderModel.fromJson(doc)).toList();
+        wayaOrdersCache.cacheAll(docs);
 
         //? Then add all the quotes (buy requests)
         result.addAll(docs);
@@ -563,6 +534,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.updateOrderStatus(id, status.value);
 
+      //? Fetch the details of the order after updating the status.
+      getOrderDetails(id);
+
       //? This is fine.
       return response.success;
     } catch (e) {
@@ -584,6 +558,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.updateDeliveryStatus(id, status.value);
 
+      //? Fetch the details of the order after updating the status.
+      getOrderDetails(id);
+
       //? This is fine.
       return response.success;
     } catch (e) {
@@ -604,6 +581,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   Future<bool> updatePickupStatus(String id, QuotationPickupStatus status) async {
     try {
       final response = await repo.updatePickupStatus(id, status.value);
+
+      //? Fetch the details of the order after updating the status.
+      getOrderDetails(id);
 
       //? This is fine.
       return response.success;
@@ -679,6 +659,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.completeOrder(orderId: id, token: token);
 
+      //? Fetch the details of the order after updating the status.
+      getOrderDetails(id);
+
       //? This is fine.
       return response.success;
     } catch (e) {
@@ -705,6 +688,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       if (response.success) {
         debugPrint("Result: ${response.data}");
         final data = response.data['data'] as List;
+        getOrderDetails(id);
         return [...data.map((payload) => BidOrderStatus.fromJson(payload))];
       }
     } catch (e) {

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
@@ -43,6 +45,7 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
 
 class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBidWidget> {
   late final userQuotationNotifier = ref.read(userQuotationsProvider.notifier);
+  late final cartNotifier = ref.read(cartVmProvider.notifier);
   final stateNotifier = ValueNotifier(false);
   bool locked = false;
   ShopDetailsModel? _shopData;
@@ -113,6 +116,21 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
 
     //? Call this.
     await widget.onBidReacted?.call();
+    // final addedToCart = await cartNotifier.addToCart(
+    //   count: 1,
+    //   shopId: widget.bid.shopId,
+    //   price: widget.bid.usedAmount.toInt(),
+    //   productName: widget.request.fullname,
+    //   productImage: widget.bid.images?.first ?? '',
+    //   productId: widget.bid.requestId,
+    //   isQuotation: true,
+    // );
+
+    //? If we could not add this to our cart...
+    // if (!addedToCart) {
+    //   WayaSnackBar.showToast("Could not add bid to cart");
+    //   return;
+    // }
 
     //? Prevent some confusing visuals.
     widget.timer?.cancel();
@@ -352,6 +370,97 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                     color: sentBid ? wayaTheme.colorScheme.greyColor300 : wayaTheme.colorScheme.customBlack,
                   ),
                 ),
+
+                //? Somehow
+                if (widget.bid.comment?.isNotEmpty ?? false) ...[
+                  // Some space.
+                  Gap(5.h),
+
+                  //? Somehow
+                  WayaCollapsibleText(
+                    widget.bid.comment!,
+                    textAlign: TextAlign.center,
+                    style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                      color: wayaTheme.colorScheme.customBlack,
+                    ),
+                  ),
+                ],
+
+                //? For the images.
+                if (widget.bid.images?.isNotEmpty ?? false) ...[
+                  // Some space.
+                  Gap(5.h),
+
+                  //? Now, for the row of
+                  ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: widget.bid.images!.length,
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: () async {
+                        final result = await WayaNavigationHelper.toImageDetailsScreen(
+                          null,
+                          widget.bid.images!,
+                        );
+
+                        //? Do nothing.
+                        if (result == null) return;
+                      },
+                      child: ClipPath(
+                        clipBehavior: Clip.antiAlias,
+                        clipper: ShapeBorderClipper(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: 100,
+                            minHeight: 100,
+                            maxWidth: 100,
+                            minWidth: 100,
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.bid.images![index],
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+
+                //? If the delivery cost is known.
+                if (widget.bid.deliveryCost != null) ...[
+                  // Some space.
+                  Gap(5.h),
+
+                  //? Somehow.
+                  Text(
+                    "Delivery Cost: ${WayaValueHelper.formatPrice(widget.bid.deliveryCharge!)}",
+                    textAlign: TextAlign.center,
+                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                      color: wayaTheme.colorScheme.customBlack,
+                    ),
+                  ),
+                ],
+
+                //? If the delivery time is known.
+                if (widget.bid.deliveryDate != null) ...[
+                  // Some space.
+                  Gap(5.h),
+
+                  //? Somehow.
+                  Text(
+                    "Deliver by: ${WayaDateHelper.getDailyTimestamp(widget.bid.deliveryDate!)}",
+                    textAlign: TextAlign.center,
+                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                      color: wayaTheme.colorScheme.customBlack,
+                    ),
+                  ),
+                ],
 
                 // Some space.
                 Gap(5.h),

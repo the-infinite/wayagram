@@ -73,7 +73,7 @@ class FollowRelationshipWidget extends StatelessWidget {
                               GestureDetector(
                                 onTap: () async {
                                   //? If this user is following this one.
-                                  if (myFollowProvider.isUserFollowing(data.$1.id)) {
+                                  if (myFollowProvider.hasRelationship(data.$1.id)) {
                                     await notifier.unfollowUser(data.$1.id);
                                   }
 
@@ -86,21 +86,25 @@ class FollowRelationshipWidget extends StatelessWidget {
                                   margin: EdgeInsets.only(right: 20.w),
                                   padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
                                   decoration: BoxDecoration(
-                                    border: myFollowProvider.isUserFollowing(data.$1.id)
+                                    border: myFollowProvider.hasRelationship(data.$1.id)
                                         ? Border.all(
                                             color: theme.colorScheme.primary,
                                             width: 1.5,
                                           )
                                         : null,
-                                    color: myFollowProvider.isUserFollowing(data.$1.id)
+                                    color: myFollowProvider.hasRelationship(data.$1.id)
                                         ? theme.colorScheme.white
                                         : theme.colorScheme.primary,
                                     borderRadius: BorderRadius.circular(7.r),
                                   ),
                                   child: Text(
-                                    myFollowProvider.isUserFollowing(data.$1.id) ? "Following" : "Follow",
+                                    myFollowProvider.isUserFollowing(data.$1.id)
+                                        ? "Unfollow"
+                                        : myFollowProvider.hasSentRequest(data.$1.id)
+                                            ? "Cancel Request"
+                                            : "Follow",
                                     style: theme.textTheme.labelSmall?.copyWith(
-                                      color: myFollowProvider.isUserFollowing(data.$1.id)
+                                      color: myFollowProvider.hasRelationship(data.$1.id)
                                           ? theme.colorScheme.primary
                                           : theme.colorScheme.white,
                                       fontWeight: FontWeight.w600,

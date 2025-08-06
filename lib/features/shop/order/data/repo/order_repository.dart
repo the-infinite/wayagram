@@ -25,12 +25,27 @@ class OrderRepository extends BaseRepository {
     return get("$serviceUrl/orders/get-orders?userId=$userId&page=$page");
   }
 
+    Future<WayaRequestResponse> getUserOrder(String userId, String orderId) async {
+    return get("$serviceUrl/orders/get-orders?userId=$userId&id=$orderId");
+  }
+
   Future<WayaRequestResponse> getSellerOrders(
      {  required String shopId, required int page, String? status}) async {
     final queryParams = [
       'shopId=$shopId',
       'page=$page',
       if (status != null && status.isNotEmpty) 'status=$status',
+    ].join('&');
+
+    return get("$serviceUrl/orders/get-orders?$queryParams");
+  }
+
+  Future<WayaRequestResponse> getSellerOrder(
+     {  required String shopId, required String orderId}) async {
+    final queryParams = [
+      'shopId=$shopId',
+      'id=$orderId',
+     
     ].join('&');
 
     return get("$serviceUrl/orders/get-orders?$queryParams");

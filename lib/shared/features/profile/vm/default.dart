@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -9,7 +8,6 @@ import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/repo/default.dart';
 import 'package:wayagram/shared/features/profile/state/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class PostNotifier extends StateNotifier<PostState> {
   final repo = UserProfileRepository.instance;

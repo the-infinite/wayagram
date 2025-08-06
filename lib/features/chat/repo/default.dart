@@ -124,6 +124,14 @@ class ChatRepository extends BaseRepository {
     );
   }
 
+  Future<WayaRequestResponse> makeUserAdmin(String id, String userId) {
+    return post(
+      "$serviceUrl/client/chat/group/make-admin",
+      {"chatId": id, "userId": userId},
+      showErrors: true,
+    );
+  }
+
   Future<WayaRequestResponse> addUserToGroup(String id, String userId) {
     return post(
       "$serviceUrl/client/chat/group/add-user",

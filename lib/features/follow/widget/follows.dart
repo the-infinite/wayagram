@@ -4,6 +4,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/features/follow/widget/follow_relationship.dart';
+import 'package:wayagram/features/follow/widget/invitation_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
@@ -158,6 +159,43 @@ class MyFollowingDataView extends StatelessWidget {
         builder: (context, index) => FollowRelationshipWidget(
           index: index,
           data: state.following[index],
+        ),
+      ),
+    );
+  }
+}
+
+class MyInvitationDataView extends StatelessWidget {
+  final WayaObservableScrollController handler;
+
+  //? This is fine.
+  const MyInvitationDataView({
+    super.key,
+    required this.handler,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    //? The body of the page in question.
+    return ValueListenableBuilder(
+      valueListenable: myFollowProvider,
+      builder: (context, state, _) => WayaPaginatedListView(
+        isEmpty: state.hasLoadedInvitation && state.invitation.isEmpty,
+        shouldFetch: !state.isLoadingInvitation,
+        isAtEnd: !state.followersHasNextPage,
+        nextPage: state.invitationPage,
+        itemCount: state.invitation.length,
+        handler: handler,
+        getPage: (page) => myFollowProvider.getInvitationOf(),
+        whenEmpty: Center(
+          child: EmptyState(
+            assetImage: WayaAssets.icons.emptyState.svg(),
+            message: "You do not have any invitation yet",
+          ),
+        ),
+        builder: (context, index) => InvitationWidget(
+          index: index,
+          data: state.invitation[index],
         ),
       ),
     );
