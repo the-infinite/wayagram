@@ -21,8 +21,7 @@ class PostNotifier extends StateNotifier<PostState> {
 
     try {
       // This is fine too.
-      final response = await repo.getPostsForUser(
-          id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getPostsForUser(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -36,8 +35,7 @@ class PostNotifier extends StateNotifier<PostState> {
         //? Parse the posts as they are in the response object...
         final docs = await Future.wait((data['docs'] as List).map((doc) async {
           if (doc["originalPostId"] != null && doc['originalPost'] == null) {
-            final originalPost =
-                await getSinglePosts(postId: doc["originalPostId"]);
+            final originalPost = await getSinglePosts(postId: doc["originalPostId"]);
             doc['originalPost'] = originalPost;
           }
           return PostModel.fromJson(doc);
@@ -105,8 +103,7 @@ class CommentedPostNotifier extends StateNotifier<PostState> {
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchCommentedPost(
-          id, state.nextPage ?? state.page, state.limit);
+      final response = await exploreRepo.fetchCommentedPost(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -172,8 +169,7 @@ class LikedPostNotifier extends StateNotifier<PostState> {
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchLikedPosts(
-          id, state.nextPage ?? state.page, state.limit);
+      final response = await exploreRepo.fetchLikedPosts(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -240,8 +236,7 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchReposts(
-          id, state.nextPage ?? state.page, state.limit);
+      final response = await exploreRepo.fetchReposts(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -255,8 +250,7 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
         //? Parse the posts as they are in the response object...
         final docs = await Future.wait((data['docs'] as List).map((doc) async {
           if (doc["originalPostId"] != null) {
-            final originalPost =
-                await getSinglePosts(postId: doc["originalPostId"]);
+            final originalPost = await getSinglePosts(postId: doc["originalPostId"]);
 
             doc['originalPost'] = originalPost;
           }
@@ -329,8 +323,7 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
       state = state.copyWith(isLoading: true);
 
       // This is fine too.
-      final response = await repo.getBookmarksForUser(
-          id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getBookmarksForUser(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -343,11 +336,9 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
         }
 
         //? Parse the bookmarks as they are in the response object, and retrieve only their posts...
-
         final docs = await Future.wait((data['docs'] as List).map((doc) async {
           if (doc["originalPostId"] != null) {
-            final originalPost =
-                await getSinglePosts(postId: doc["originalPostId"]);
+            final originalPost = await getSinglePosts(postId: doc["originalPostId"]);
 
             doc['originalPost'] = originalPost;
           }
@@ -405,7 +396,7 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
       final response = await repo.bookMarkPost(postId);
 
       if (response.success) {
-        getSavedPostsForUser(ConversationState.self.id);
+        await getSavedPostsForUser(ConversationState.self.id);
       }
 
       return response.success;
@@ -434,7 +425,7 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
       final response = await repo.removeBookMark(bookmark.id);
 
       if (response.success) {
-        getSavedPostsForUser(ConversationState.self.id);
+        await getSavedPostsForUser(ConversationState.self.id);
       }
 
       return response.success;
@@ -468,8 +459,7 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
   }
 }
 
-final otherUserPostsProvider =
-    StateNotifierProvider.family<PostNotifier, PostState, String>((ref, id) {
+final otherUserPostsProvider = StateNotifierProvider.family<PostNotifier, PostState, String>((ref, id) {
   return PostNotifier(PostState.initial);
 });
 
@@ -477,22 +467,18 @@ final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>(
   (ref) => PostNotifier(PostState.initial),
 );
 
-final userLikedPostsProvider =
-    StateNotifierProvider<LikedPostNotifier, PostState>(
+final userLikedPostsProvider = StateNotifierProvider<LikedPostNotifier, PostState>(
   (ref) => LikedPostNotifier(PostState.initial),
 );
 
-final userCommentedPostsProvider =
-    StateNotifierProvider<CommentedPostNotifier, PostState>(
+final userCommentedPostsProvider = StateNotifierProvider<CommentedPostNotifier, PostState>(
   (ref) => CommentedPostNotifier(PostState.initial),
 );
 
-final userRepostsProvider =
-    StateNotifierProvider<RepostedPostNotifier, PostState>(
+final userRepostsProvider = StateNotifierProvider<RepostedPostNotifier, PostState>(
   (ref) => RepostedPostNotifier(PostState.initial),
 );
 
-final userSavedPostsProvider =
-    StateNotifierProvider<SavedPostNotifier, SavedPostState>(
+final userSavedPostsProvider = StateNotifierProvider<SavedPostNotifier, SavedPostState>(
   (ref) => SavedPostNotifier(SavedPostState.initial),
 );
