@@ -88,7 +88,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
       if (balanceCheck ?? false) {
         await WayaNav.toNamed(
           FundWalletOptionsScreen.route,
-          arguments: WayaAppRoutes.getQuotationCheckoutScreen(widget.id, widget.requestId),
+          arguments: WayaAppRoutes.getQuotationCheckoutScreen(),
         );
         return;
       }

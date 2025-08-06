@@ -48,10 +48,6 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
     if (result != null) requestState.value = result;
   }
 
-  Future<void> _viewOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.id));
-  }
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
@@ -207,17 +203,19 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                   ),
                 ),
 
-              //? This is fine.
-              if (request?.hasAcceptedBid ?? false)
+              //? If you participated in this order...
+              if (participatedOrder && order!.isPaid)
+                const SizedBox()
+
+              //? If this bid has been accepted.
+              else if (request?.hasAcceptedBid ?? false)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: WayaButton(
-                    callback: participatedOrder && order!.isPaid
-                        ? _viewOrder
-                        : () async => WayaNav.offNamed(
-                              WayaAppRoutes.getQuotationCheckoutScreen(request!.acceptedBid!.id, request.id),
-                            ),
-                    text: participatedOrder && order!.isPaid ? "View Order" : "Proceed to Payment",
+                    callback: () async => WayaNav.offNamed(
+                      WayaAppRoutes.getQuotationCheckoutScreen(),
+                    ),
+                    text: "Proceed to Payment",
                   ),
                 )
               else

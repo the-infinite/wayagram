@@ -59,15 +59,16 @@ class FollowRelationshipWidget extends StatelessWidget {
                           ),
                           horizontalTitleGap: 5.w,
                           title: Row(
+                            spacing: 10.w,
                             children: [
                               //? The fullname of the user in question.
-                              Text(
-                                data.$1.fullname,
-                                style: theme.textTheme.bodyMedium,
+                              Expanded(
+                                child: Text(
+                                  data.$1.fullname,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodyMedium,
+                                ),
                               ),
-
-                              // Infinite space.
-                              Spacer(),
 
                               //? The current state of affairs.
                               GestureDetector(

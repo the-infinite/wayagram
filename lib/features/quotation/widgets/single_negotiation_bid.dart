@@ -540,7 +540,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                 else if (widget.bid.status == BidActionType.accept)
                   WayaButton(
                     callback: () => WayaNav.toNamed(
-                      WayaAppRoutes.getQuotationCheckoutScreen(widget.bid.id, widget.bid.requestId),
+                      WayaAppRoutes.getQuotationCheckoutScreen(),
                     ),
                     text: 'Checkout',
                     height: 38,

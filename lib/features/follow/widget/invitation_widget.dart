@@ -34,12 +34,10 @@ class InvitationWidget extends StatelessWidget {
           : Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: InkWell(
-                onTap: () => WayaNav.toNamed(
-                    WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
                 borderRadius: BorderRadius.circular(12.r),
                 splashColor: theme.colorScheme.primary.withAlpha(30),
-                focusColor:
-                    const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+                focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
                 highlightColor: theme.colorScheme.primary.withAlpha(30),
                 child: Card(
                   elevation: 0,
@@ -61,89 +59,12 @@ class InvitationWidget extends StatelessWidget {
                             showActive: false,
                           ),
                           horizontalTitleGap: 5.w,
-                          title: Row(
-                            children: [
-                              //? The fullname of the user in question.
-                              Text(
-                                data.$1.fullname,
-                                style: theme.textTheme.bodyMedium,
-                              ),
-
-                              // Infinite space.
-                              Spacer(),
-
-                              //? The current state of affairs.
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      //? accept invitation.
-                                      await notifier.handleFollowRequest(
-                                          ConversationState.self.id,
-                                          data.$1.id,
-                                          FollowAction.accept,
-                                          isInvitation: true);
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 20.w),
-                                      padding: REdgeInsets.symmetric(
-                                          vertical: 5.dg, horizontal: 10.dg),
-                                      decoration: BoxDecoration(
-                                        border: null,
-                                        color: theme.colorScheme.primary,
-                                        borderRadius:
-                                            BorderRadius.circular(7.r),
-                                      ),
-                                      child: Text(
-                                        "Accept",
-                                        style: theme.textTheme.labelSmall
-                                            ?.copyWith(
-                                          color: theme.colorScheme.white,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      //? decline invitation.
-                                      await notifier.handleFollowRequest(
-                                          ConversationState.self.id,
-                                          data.$1.id,
-                                          FollowAction.reject,
-                                          isInvitation: true);
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 20.w),
-                                      padding: REdgeInsets.symmetric(
-                                          vertical: 5.dg, horizontal: 10.dg),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: theme.colorScheme.primary,
-                                          width: 1.5,
-                                        ),
-                                        color: theme.colorScheme.white,
-                                        borderRadius:
-                                            BorderRadius.circular(7.r),
-                                      ),
-                                      child: Text(
-                                        "Decline",
-                                        style: theme.textTheme.labelSmall
-                                            ?.copyWith(
-                                          color: theme.colorScheme.primary,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          title: Text(
+                            data.$1.fullname,
+                            style: theme.textTheme.bodyMedium,
                           ),
                           subtitle: Text(
-                            data.$2.username != null
-                                ? '@${data.$2.username}'
-                                : 'ID: ${data.$1.id}',
+                            data.$2.username != null ? '@${data.$2.username}' : 'ID: ${data.$1.id}',
                             style: theme.textTheme.bodySmall!.copyWith(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
@@ -151,8 +72,6 @@ class InvitationWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-
-                        //Gap(10),
 
                         //? This is the user's bio.
                         Text(
@@ -162,6 +81,74 @@ class InvitationWidget extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             color: theme.colorScheme.greyColor500,
                           ),
+                        ),
+
+                        //? The current state of affairs.
+                        Row(
+                          spacing: 10.w,
+                          children: [
+                            //? First button.
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  //? accept invitation.
+                                  await notifier.handleFollowRequest(
+                                      ConversationState.self.id, data.$1.id, FollowAction.accept,
+                                      isInvitation: true);
+                                },
+                                child: Container(
+                                  padding: REdgeInsets.symmetric(vertical: 8.dg, horizontal: 10.dg),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: theme.colorScheme.primary,
+                                      width: 1.5,
+                                    ),
+                                    color: theme.colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(7.r),
+                                  ),
+                                  child: Text(
+                                    "Accept",
+                                    textAlign: TextAlign.center,
+                                    style: theme.textTheme.labelSmall?.copyWith(
+                                      color: theme.colorScheme.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            //? Second button.
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  //? decline invitation.
+                                  await notifier.handleFollowRequest(
+                                      ConversationState.self.id, data.$1.id, FollowAction.reject,
+                                      isInvitation: true);
+                                },
+                                child: Container(
+                                  padding: REdgeInsets.symmetric(vertical: 8.dg, horizontal: 10.dg),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: theme.colorScheme.primary,
+                                      width: 1.5,
+                                    ),
+                                    color: theme.colorScheme.white,
+                                    borderRadius: BorderRadius.circular(7.r),
+                                  ),
+                                  child: Text(
+                                    "Decline",
+                                    textAlign: TextAlign.center,
+                                    style: theme.textTheme.labelSmall?.copyWith(
+                                      color: theme.colorScheme.primary,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
