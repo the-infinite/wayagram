@@ -36,14 +36,12 @@ class _CartCardState extends ConsumerState<CartCard> {
 //or if the deliveryOption is delivery and the seller has not set the delivery date
     final bool isDeliveryCharge = widget.cartItem.products.any((prod) =>
         (prod.deliveryCharge && widget.cartItem.deliveryDate == null && prod.deliveryOptions != 'Both') ||
-        (prod.deliveryOptions == 'Delivery' &&
-            widget.cartItem.deliveryDate == null));
+        (prod.deliveryOptions == 'Delivery' && widget.cartItem.deliveryDate == null));
 
 //? to cancel delivery during checkout or to know if the delivery date has been added
     final bool isAddedDeliveryDate = widget.cartItem.products.any((prod) =>
         (prod.deliveryCharge && widget.cartItem.deliveryDate != null) ||
-        (prod.deliveryOptions == 'Delivery' &&
-            widget.cartItem.deliveryDate != null));
+        (prod.deliveryOptions == 'Delivery' && widget.cartItem.deliveryDate != null));
 
     return Column(
       children: [
@@ -56,9 +54,8 @@ class _CartCardState extends ConsumerState<CartCard> {
           child: Container(
             width: double.infinity,
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.scaffoldColor,
-                borderRadius: BorderRadius.circular(12)),
+            decoration:
+                BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(12)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,16 +75,12 @@ class _CartCardState extends ConsumerState<CartCard> {
                       children: [
                         Text(
                           widget.cartItem.shopName,
-                          style: TextStyle().wayaCopyWith(
-                              fontSize: 18.sp,
-                              color: wayaTheme.colorScheme.customBlack),
+                          style: TextStyle().wayaCopyWith(fontSize: 18.sp, color: wayaTheme.colorScheme.customBlack),
                         ),
                         if (isDeliveryCharge || isAddedDeliveryDate)
                           Text(
                             "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not added'}",
-                            style: TextStyle().wayaCopyWith(
-                                color: wayaTheme.colorScheme.greyColor400,
-                                fontSize: 14.sp),
+                            style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 14.sp),
                           )
                       ],
                     )
@@ -100,12 +93,8 @@ class _CartCardState extends ConsumerState<CartCard> {
                     if (isDeliveryCharge)
                       GestureDetector(
                         onTap: () {
-                          ref.read(cartCardVmProvider.notifier).deliveryRequest(
-                              context,
-                              widget.cartItem.products,
-                              widget.cartItem.shopId,
-                              widget.cartItem.shopName,
-                              widget.cartItem.shopLogo);
+                          ref.read(cartCardVmProvider.notifier).deliveryRequest(context, widget.cartItem.products,
+                              widget.cartItem.shopId, widget.cartItem.shopName, widget.cartItem.shopLogo);
                         },
                         child: SvgPicture.asset('assets/icons/chat.svg'),
                       ),
@@ -113,9 +102,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                     GestureDetector(
                       onTap: () {},
                       child: Icon(
-                        _isExpanded
-                            ? Icons.arrow_drop_up
-                            : Icons.arrow_drop_down,
+                        _isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                         color: wayaTheme.colorScheme.customPrimary,
                         size: 22,
                       ),
@@ -137,8 +124,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                   itemCount: widget.cartItem.products.length,
                   itemBuilder: (context, index) {
                     return CartProductCard(
-                        shopId: widget.cartItem.shopId,
-                        cartProduct: widget.cartItem.products[index]);
+                        shopId: widget.cartItem.shopId, cartProduct: widget.cartItem.products[index]);
                   })
               : SizedBox.shrink(),
         ),
@@ -146,8 +132,7 @@ class _CartCardState extends ConsumerState<CartCard> {
         Container(
           padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
           decoration: BoxDecoration(
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor300, width: 1),
+              border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
               borderRadius: BorderRadius.circular(8)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -156,31 +141,33 @@ class _CartCardState extends ConsumerState<CartCard> {
               SizedBox(
                 width: context.width * 0.40,
                 child: Center(
-                  child: Text(
-                      WayaHelpers.formatPrice(widget.cartItem.totalFee ?? 0),
+                  child: Text(WayaHelpers.formatPrice(widget.cartItem.totalFee ?? 0),
                       style: wayaTheme.textTheme.titleLarge),
                 ),
               ),
               SizedBox(
                 width: context.width * 0.40,
                 child: WayaButton(
-                    callback: () {
-                      if (isDeliveryCharge) {
-                        return ref
-                            .read(cartCardVmProvider.notifier)
-                            .deliveryRequest(
-                                context,
-                                widget.cartItem.products,
-                                widget.cartItem.shopId,
-                                widget.cartItem.shopName,
-                                widget.cartItem.shopLogo);
-                      }
-                      WayaNav.replaceNamed(Checkout.route,
-                          arguments: CheckoutArg(
-                              cartId: widget.cartId,
-                              cartItem: widget.cartItem));
-                    },
-                    text: isDeliveryCharge ? "Request Delivery" : "Checkout"),
+                  callback: () {
+                    if (isDeliveryCharge) {
+                      return ref.read(cartCardVmProvider.notifier).deliveryRequest(
+                            context,
+                            widget.cartItem.products,
+                            widget.cartItem.shopId,
+                            widget.cartItem.shopName,
+                            widget.cartItem.shopLogo,
+                          );
+                    }
+                    WayaNav.replaceNamed(
+                      Checkout.route,
+                      arguments: CheckoutArg(
+                        cartId: widget.cartId,
+                        cartItem: widget.cartItem,
+                      ),
+                    );
+                  },
+                  text: isDeliveryCharge ? "Request Delivery" : "Checkout",
+                ),
               )
             ],
           ),
@@ -194,8 +181,7 @@ class _CartCardState extends ConsumerState<CartCard> {
 class CartProductCard extends ConsumerWidget {
   final CartProduct cartProduct;
   final String shopId;
-  const CartProductCard(
-      {super.key, required this.cartProduct, required this.shopId});
+  const CartProductCard({super.key, required this.cartProduct, required this.shopId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -206,8 +192,7 @@ class CartProductCard extends ConsumerWidget {
         Container(
           padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
           decoration: BoxDecoration(
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor300, width: 1),
+              border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
               borderRadius: BorderRadius.circular(8)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -232,9 +217,7 @@ class CartProductCard extends ConsumerWidget {
                         child: Text(
                           cartProduct.productName,
                           style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.sp),
+                              color: wayaTheme.colorScheme.customBlack, fontWeight: FontWeight.w500, fontSize: 14.sp),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -245,13 +228,9 @@ class CartProductCard extends ConsumerWidget {
                       ),
                       const Gap(5),
                       Text(
-                        WayaHelpers.formatPrice(
-                            double.parse(cartProduct.unitPrice).toInt() *
-                                cartProduct.quantity),
+                        WayaHelpers.formatPrice(double.parse(cartProduct.unitPrice).toInt() * cartProduct.quantity),
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customBlack,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp),
+                            color: wayaTheme.colorScheme.customBlack, fontWeight: FontWeight.w600, fontSize: 14.sp),
                       ),
                     ],
                   )
@@ -275,15 +254,14 @@ class CartProductCard extends ConsumerWidget {
                   Text(
                     "${cartProduct.quantity}",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14.sp),
+                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w500, fontSize: 14.sp),
                   ),
                   const Gap(6),
                   GestureDetector(
                     onTap: () {
-                      ref.read(cartVmProvider.notifier).removeFromCart(
-                          productId: cartProduct.productId, shopId: shopId);
+                      ref
+                          .read(cartVmProvider.notifier)
+                          .removeFromCart(productId: cartProduct.productId, shopId: shopId);
                     },
                     child: SvgPicture.asset('assets/icons/r-cart.svg'),
                   ),
