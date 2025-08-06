@@ -8,7 +8,6 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
-import 'package:wayagram/features/quotation/buyer/views/my_orders.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/features/shop/seller/views/seller_shop/seller_shop.dart';
@@ -22,7 +21,7 @@ class WayaBuyerQuotation extends ConsumerStatefulWidget {
 }
 
 class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with SingleTickerProviderStateMixin {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +40,11 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
           const Gap(10),
           Row(
             children: [
-              WayaTabButton(
-                isSelected: _selectedIndex == 0,
-                text: 'My Orders',
-                onTap: () => setState(() => _selectedIndex = 0),
-              ),
+              //   WayaTabButton(
+              //     isSelected: _selectedIndex == 0,
+              //     text: 'My Orders',
+              //     onTap: () => setState(() => _selectedIndex = 0),
+              //   ),
               WayaTabButton(
                 isSelected: _selectedIndex == 1,
                 text: 'My Requests',
@@ -80,12 +79,11 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
                   color: wayaTheme.colorScheme.primary50,
                 )
               : Container(),
-          _selectedIndex == 0 || _selectedIndex == 1 ? const Gap(25) : const Gap(10),
-          _selectedIndex == 0
+          /* _selectedIndex == 0 || */ _selectedIndex == 1 ? const Gap(25) : const Gap(10),
+          /* _selectedIndex == 0
               ? BuyerOrdersWidget()
-              : _selectedIndex == 1
-                  ? MyRequests()
-                  : SellerShop()
+              : */
+          _selectedIndex == 1 ? MyRequests() : SellerShop()
         ],
       ),
       floatingActionButton: SizedBox(

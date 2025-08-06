@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -12,9 +11,8 @@ import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
 class OrderVm extends StateNotifier<OrderState> {
   final Ref ref;
   final OrderRepository _orderRepository;
-  final WayaSecureDataSource _secureDataSource;
 
-  OrderVm(this._orderRepository, this._secureDataSource, this.ref)
+  OrderVm(this._orderRepository, this.ref)
       : super(OrderState());
 
   Future<PaginatedResult<Order>?> getOrders({required int page}) async {
@@ -88,5 +86,5 @@ class OrderVm extends StateNotifier<OrderState> {
 }
 
 final orderVmProvider = StateNotifierProvider<OrderVm, OrderState>((ref) {
-  return OrderVm(OrderRepository(), WayaSecureDataSource(), ref);
+  return OrderVm(OrderRepository(), ref);
 });

@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/widget/group_empty_state.dart';
-import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/pages/widget/page_member_card.dart';
 import 'package:wayagram/shared/cache/page.dart';
-import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 class TeamPage extends ConsumerStatefulWidget {
   final String pageId;

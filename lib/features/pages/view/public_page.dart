@@ -11,9 +11,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/group/view/events.dart';
-import 'package:wayagram/features/group/view/media_post.dart';
-import 'package:wayagram/features/group/widget/group_empty_state.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/view/page_post.dart';
 import 'package:wayagram/features/pages/view/team_page.dart';
@@ -25,9 +22,7 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
-import 'package:wayagram/shared/features/profile/widget/post.dart';
 
-import '../../group/view/groups_for_you.dart';
 
 class PublicPage extends ConsumerStatefulWidget {
   static const route = '/pages/public';
