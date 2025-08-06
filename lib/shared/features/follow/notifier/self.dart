@@ -4,7 +4,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/model/suggestion.dart';
-import 'package:wayagram/shared/features/follow/repo/default.dart';
+import 'package:wayagram/shared/features/follow/repo/follow_repository.dart';
 import 'package:wayagram/shared/features/follow/state/default.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
 
@@ -14,7 +14,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
   /// Our singleton instance.
   static final instance = UserFollowerNotifier._();
 
-  UserFollowerNotifier._() : super(FollowState.initial.copyWith(userId: ConversationState.self.id));
+  UserFollowerNotifier._()
+      : super(FollowState.initial.copyWith(userId: ConversationState.self.id));
 
   /// Utility to make it such that I do not have to rewrite the code I already
   /// have tested on which comes with Riverpod.
@@ -32,15 +33,16 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowRequests(
-          ConversationState.self.id, state.requestsNextPage ?? state.requestsPage, state.limit);
+      final response = await repo.getFollowRequests(ConversationState.self.id,
+          state.requestsNextPage ?? state.requestsPage, state.limit);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.followersHasNextPage) {
@@ -81,15 +83,16 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowers(
-          ConversationState.self.id, state.followersNextPage ?? state.followersPage, state.limit);
+      final response = await repo.getFollowers(ConversationState.self.id,
+          state.followersNextPage ?? state.followersPage, state.limit);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.followersHasNextPage) {
@@ -141,7 +144,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.followingHasNextPage) {
@@ -176,7 +180,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     return result;
   }
 
-  Future<List<SuggestionModel>> getFollowSuggestions([bool reset = false]) async {
+  Future<List<SuggestionModel>> getFollowSuggestions(
+      [bool reset = false]) async {
     final result = <SuggestionModel>[];
 
     //? If this is a request that resets everything.
@@ -202,7 +207,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => SuggestionModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => SuggestionModel.fromJson(doc));
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.suggestionsHasNextPage) {
@@ -210,13 +216,15 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
         }
 
         //? Now, add these to what we have here.
-        result.addAll(docs.where((suggestion) => !result.any((match) => match.id == suggestion.id)));
+        result.addAll(docs.where(
+            (suggestion) => !result.any((match) => match.id == suggestion.id)));
 
         //? This is fine.
         state = state.copyWith(
           suggestions: result,
           suggestionsTotalSize: data['total'],
-          suggestionsTotalPages: ((data['total'] / data['limit']) as double).ceil(),
+          suggestionsTotalPages:
+              ((data['total'] / data['limit']) as double).ceil(),
           suggestionsHasNextPage: data['hasNextPage'],
           suggestionsPage: page,
           suggestionsNextPage: page + 1,
@@ -262,11 +270,13 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     return null;
   }
 
-  Future<FollowStatusModel?> handleFollowRequest(String followerId, String followingId, FollowAction action) async {
+  Future<FollowStatusModel?> handleFollowRequest(
+      String followerId, String followingId, FollowAction action) async {
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.handleFollowRequest(followerId, followingId, action);
+      final response =
+          await repo.handleFollowRequest(followerId, followingId, action);
 
       // If this was fine...
       if (response.success) {
@@ -324,7 +334,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       // If this was fine...
       if (response.success) {
-        final index = state.following.indexWhere((user) => user.otherUserId == id);
+        final index =
+            state.following.indexWhere((user) => user.otherUserId == id);
         final list = state.following;
 
         //? This is fine.
@@ -393,8 +404,10 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
   }
 
   bool isUserFollowing(String id) {
-    return state.followers.any((relation) => relation.isUserFollowing && relation.otherUserId == id) ||
-        state.following.any((relation) => relation.isUserFollowing && relation.otherUserId == id);
+    return state.followers.any((relation) =>
+            relation.isUserFollowing && relation.otherUserId == id) ||
+        state.following.any((relation) =>
+            relation.isUserFollowing && relation.otherUserId == id);
   }
 }
 

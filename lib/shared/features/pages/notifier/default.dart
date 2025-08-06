@@ -11,7 +11,7 @@ import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/cache/post.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 

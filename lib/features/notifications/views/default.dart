@@ -6,7 +6,7 @@ import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/notifications/views/all_notifications.dart';
 import 'package:wayagram/features/notifications/views/requests.dart';
-import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/notifications/vm/notification_vm.dart';
 import 'package:wayagram/features/notifications/widgets/filter_items.dart';
 
 class WayaNotifications extends ConsumerStatefulWidget {

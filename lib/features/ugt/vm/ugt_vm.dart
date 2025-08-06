@@ -27,7 +27,7 @@ import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 import '../../../core/data/local_data_source.dart';
 import '../../../core/data/model/model.dart';
 import '../../../core/service/logger_service.dart';
@@ -807,7 +807,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 }
 
-final authRepositoryProvider = Provider((ref) => ContestRepo());
 final contestControllerProvider = Provider((ref) => ContestController());
 final stateContactProvider = StateProvider<List<StagePrefModel>>((ref) => [
       StagePrefModel(id: 0, stageName: "Qualification Stage"),
@@ -826,10 +825,8 @@ final categoryData = Provider((ref) => ContestResponse());
 final contestNotifierProvider =
     StateNotifierProvider<CreateContestNotifier, ContestState>(
   (ref) {
-    // final contestRepository = ref.watch(authRepositoryProvider);
-    // final contestNotifierProvider2 = ref.watch(contestControllerProvider);
-    // final categoryProvider = ref.watch(categoryData);
-    return CreateContestNotifier(ContestRepo(), WayaLocalDataSource());
+    final contestRepo = ref.watch(contestRepositoryProvider);
+    return CreateContestNotifier(contestRepo, WayaLocalDataSource());
   },
 );
 
@@ -843,4 +840,3 @@ void invalidateUGTVm(WidgetRef ref) {
   ref.invalidate(stateContactProvider);
   ref.read(stateIsEditingContestProvider.notifier).state = false;
 }
-

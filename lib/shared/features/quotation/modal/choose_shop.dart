@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/shop/model/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class ChooseShopModal extends StatefulWidget {
   const ChooseShopModal({super.key});

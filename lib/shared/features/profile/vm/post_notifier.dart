@@ -6,14 +6,18 @@ import 'package:wayagram/features/explore/data/repo/explore_repository.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
-import 'package:wayagram/shared/features/profile/repo/default.dart';
+import 'package:wayagram/shared/features/profile/repo/user_profile_repository.dart';
 import 'package:wayagram/shared/features/profile/state/default.dart';
 
 class PostNotifier extends StateNotifier<PostState> {
-  final repo = UserProfileRepository.instance;
-  final pageRepo = PageRepository.instance;
+  final UserProfileRepository repo;
+  final PageRepository pageRepo;
 
-  PostNotifier(super.state);
+  PostNotifier(
+    super.state,
+    this.repo,
+    this.pageRepo,
+  );
 
   /// An API used to fetch all the posts for a given user.
   Future<List<PostModel>> getPostsForUser(String id) async {
@@ -95,9 +99,9 @@ class PostNotifier extends StateNotifier<PostState> {
 }
 
 class CommentedPostNotifier extends StateNotifier<PostState> {
-  final exploreRepo = ExploreRepository.instance;
+  final ExploreRepository exploreRepo;
 
-  CommentedPostNotifier(super.state);
+  CommentedPostNotifier(super.state, this.exploreRepo);
 
   /// An API used to fetch all the posts for a given user.
   Future<List<PostModel>> getCommentedPost(String id) async {
@@ -162,9 +166,9 @@ class CommentedPostNotifier extends StateNotifier<PostState> {
 }
 
 class LikedPostNotifier extends StateNotifier<PostState> {
-  final exploreRepo = ExploreRepository.instance;
+  final ExploreRepository exploreRepo;
 
-  LikedPostNotifier(super.state);
+  LikedPostNotifier(super.state, this.exploreRepo);
 
   /// An API used to fetch all the posts for a given user.
   Future<List<PostModel>> getLikedPost(String id) async {
@@ -229,10 +233,10 @@ class LikedPostNotifier extends StateNotifier<PostState> {
 }
 
 class RepostedPostNotifier extends StateNotifier<PostState> {
-  final exploreRepo = ExploreRepository.instance;
-  final pageRepo = PageRepository.instance;
+  final ExploreRepository exploreRepo;
+  final PageRepository pageRepo;
 
-  RepostedPostNotifier(super.state);
+  RepostedPostNotifier(super.state, this.exploreRepo, this.pageRepo);
 
   /// An API used to fetch all the posts for a given user.
   Future<List<PostModel>> getRepostedPosts(String id) async {
@@ -315,10 +319,10 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
 }
 
 class SavedPostNotifier extends StateNotifier<SavedPostState> {
-  final repo = UserProfileRepository.instance;
+  final UserProfileRepository repo;
 
-  final pageRepo = PageRepository.instance;
-  SavedPostNotifier(super.state);
+  final PageRepository pageRepo;
+  SavedPostNotifier(super.state, this.repo, this.pageRepo);
 
   /// An API used to fetch the list of all saved posts for a given user.
   Future<List<PostModel>> getSavedPostsForUser(String id) async {
@@ -470,29 +474,41 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
 
 final otherUserPostsProvider =
     StateNotifierProvider.family<PostNotifier, PostState, String>((ref, id) {
-  return PostNotifier(PostState.initial);
+  final userRepository = ref.watch(userProfileRepositoryProvider);
+
+  return PostNotifier(
+      PostState.initial, userRepository, PageRepository.instance);
 });
 
-final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>(
-  (ref) => PostNotifier(PostState.initial),
-);
+final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>((ref) {
+  final userRepository = ref.watch(userProfileRepositoryProvider);
+  return PostNotifier(
+      PostState.initial, userRepository, PageRepository.instance);
+});
 
 final userLikedPostsProvider =
-    StateNotifierProvider<LikedPostNotifier, PostState>(
-  (ref) => LikedPostNotifier(PostState.initial),
-);
+    StateNotifierProvider<LikedPostNotifier, PostState>((ref) {
+  final exploreRepository = ref.watch(exploreRepositoryProvider);
+  return LikedPostNotifier(PostState.initial, exploreRepository);
+});
 
 final userCommentedPostsProvider =
-    StateNotifierProvider<CommentedPostNotifier, PostState>(
-  (ref) => CommentedPostNotifier(PostState.initial),
-);
+    StateNotifierProvider<CommentedPostNotifier, PostState>((ref) {
+  final exploreRepository = ref.watch(exploreRepositoryProvider);
+  return CommentedPostNotifier(PostState.initial, exploreRepository);
+});
 
 final userRepostsProvider =
-    StateNotifierProvider<RepostedPostNotifier, PostState>(
-  (ref) => RepostedPostNotifier(PostState.initial),
-);
+    StateNotifierProvider<RepostedPostNotifier, PostState>((ref) {
+  final exploreRepository = ref.watch(exploreRepositoryProvider);
+
+  return RepostedPostNotifier(
+      PostState.initial, exploreRepository, PageRepository.instance);
+});
 
 final userSavedPostsProvider =
-    StateNotifierProvider<SavedPostNotifier, SavedPostState>(
-  (ref) => SavedPostNotifier(SavedPostState.initial),
-);
+    StateNotifierProvider<SavedPostNotifier, SavedPostState>((ref) {
+  final userRepository = ref.watch(userProfileRepositoryProvider);
+  return SavedPostNotifier(
+      SavedPostState.initial, userRepository, PageRepository.instance);
+});

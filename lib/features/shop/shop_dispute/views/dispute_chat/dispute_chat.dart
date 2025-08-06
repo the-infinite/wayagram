@@ -19,12 +19,12 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/my_bubble_widget.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class DisputeChat extends ConsumerStatefulWidget {

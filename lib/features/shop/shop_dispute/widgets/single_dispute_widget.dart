@@ -8,9 +8,9 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 
 class SingleDisputeWidget extends ConsumerWidget {
   final DisputeModel dispute;

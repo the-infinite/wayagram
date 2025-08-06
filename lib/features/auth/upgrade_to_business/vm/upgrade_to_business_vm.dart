@@ -1,41 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/add_business_account/data/model/upgrading_response_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_state.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 
-class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
-  final AuthRepository _authRepository;
-  final WayaLocalDataSource _localDataSource;
-  final WayaSecureDataSource _secureDataSource;
-  final _logger = getLogger('Upgrade');
-  final Ref ref;
+part 'upgrade_to_business_vm.g.dart';
 
-  UpgradeToBusinessVm(this._authRepository, this._localDataSource,
-      this._secureDataSource, this.ref)
-      : super(UpgradeToBusinessState()) {
-    state = state.copyWith(
-        contactEmail:
-            TextEditingController(text: ConversationState.self.email));
-    state = state.copyWith(
-        contactPhone:
-            TextEditingController(text: ConversationState.self.phoneNumber));
+@riverpod
+class UpgradeToBusiness extends _$UpgradeToBusiness {
+  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  final WayaSecureDataSource _secureDataSource = WayaSecureDataSource();
 
-    // state = state.copyWith(city: user?.city);
-    // state = state.copyWith(state: user?.state);
-    // state = state.copyWith(country: user?.country);
-    // state = state.copyWith(lga: user?.lga);
-
-    // state = state.copyWith(accountTypeId: user?.accountTypeId);
+  @override
+  UpgradeToBusinessState build() {
+    return UpgradeToBusinessState();
   }
 
   void selectBizType(Select value) {
@@ -87,11 +71,12 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
       final accountData = await ref
           .read(selectAccountTypesProvider.notifier)
           .fetchAccountType();
-      final accountId = accountData?.firstWhere((v) => v.type != 'PERSONAL').id;
+      final accountId = accountData.firstWhere((v) => v.type != 'PERSONAL').id;
 
       state = state.copyWith(accountTypeId: accountId);
       final userid = await _secureDataSource.getUserId();
-      final response = await _authRepository.upgradeToBusiness(
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.upgradeToBusiness(
           payload: state.upgradeToBusinessModel, id: userid!);
       if (response.success) {
         UpgradingResponseModel responseModel =
@@ -114,7 +99,8 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
 
   Future<void> fetchLocation() async {
     try {
-      final reponse = await _authRepository.getAllCountries();
+      final authRepository = ref.read(authRepositoryProvider);
+      final reponse = await authRepository.getAllCountries();
 
       if (reponse.success) {
         CountryResponseModel responseModel =
@@ -126,15 +112,14 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
 
         state = state.copyWith(countries: countries);
       }
-    } catch (e) {
-      _logger.e(e);
-    }
+    } catch (_) {}
   }
 
   Future<List<Select>?> fetchCities(
       String stateCode, String countryCode) async {
     try {
-      final response = await _authRepository.getAllCities(
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getAllCities(
           stateCode: stateCode, countryCode: countryCode);
 
       List<Select>? cities;
@@ -150,15 +135,15 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
       }
 
       return cities;
-    } catch (e) {
-      _logger.e(e);
+    } catch (_) {
       return null;
     }
   }
 
   Future<List<Select>?> fetchStates() async {
     try {
-      final response = await _authRepository.getAllStates();
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getAllStates();
       List<Select>? states;
       if (response.success) {
         StatesResponseModel responseModel =
@@ -172,15 +157,15 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
       }
 
       return states;
-    } catch (e) {
-      _logger.e(e);
+    } catch (_) {
       return null;
     }
   }
 
   Future<List<Select>?> fetchLGA(String stateCode, String countryCode) async {
     try {
-      final response = await _authRepository.getAllLGA(
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getAllLGA(
           stateCode: stateCode, countryCode: countryCode);
 
       List<Select>? allLgas;
@@ -195,16 +180,15 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
       }
 
       return allLgas;
-    } catch (e) {
-      _logger.e(e);
+    } catch (_) {
       return null;
     }
   }
 
   Future<void> fetchBusinessTypes() async {
     try {
-      final response = await _authRepository.getBusinessTypes();
-      _logger.d(response.data);
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getBusinessTypes();
       final businesses = response.data['data']['docs'] as List;
       final businessTypes = businesses
           .map((item) => Select(
@@ -214,14 +198,7 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
           .toList();
 
       state = state.copyWith(businessTypes: businessTypes);
-    } catch (e) {
-      _logger.e(e);
+    } catch (_) {
     } finally {}
   }
 }
-
-final upgradeToBusinessVmProvider =
-    StateNotifierProvider<UpgradeToBusinessVm, UpgradeToBusinessState>((ref) {
-  return UpgradeToBusinessVm(
-      AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource(), ref);
-});

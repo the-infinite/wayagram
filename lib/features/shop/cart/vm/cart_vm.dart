@@ -397,5 +397,6 @@ class CartVm extends StateNotifier<CartState> {
 }
 
 final cartVmProvider = StateNotifierProvider<CartVm, CartState>((ref) {
-  return CartVm(ref, CartRepository(), WayaSecureDataSource());
+  final cartRepo = ref.watch(cartRepositoryProvider);
+  return CartVm(ref, cartRepo, WayaSecureDataSource());
 });

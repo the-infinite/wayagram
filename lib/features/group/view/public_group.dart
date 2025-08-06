@@ -18,7 +18,7 @@ import 'package:wayagram/features/group/view/media_post.dart';
 import 'package:wayagram/features/group/view/report_group.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/shared/cache/group.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 
 import 'private_group.dart';

@@ -10,7 +10,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 final uuid = Uuid();
 
@@ -212,9 +212,10 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
 
 // Provider for the StateNotifier
 final registerFormProvider =
-    StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>(
-  (ref) => RegisterFormNotifier(ContestRepo(), WayaLocalDataSource()),
-);
+    StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>((ref) {
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return RegisterFormNotifier(contestRepo, WayaLocalDataSource());
+});
 
 enum FieldType { text, image }
 

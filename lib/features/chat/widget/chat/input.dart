@@ -23,7 +23,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/types/attachment.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/chat/input/reply_to.dart';
 import 'package:wayagram/features/chat/widget/chat/input/selected_file.dart';
 import 'package:wayagram/features/chat/widget/chat/input/voice_note.dart';

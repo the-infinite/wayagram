@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/widget/block_dialog.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class BlockedCard extends StatelessWidget {

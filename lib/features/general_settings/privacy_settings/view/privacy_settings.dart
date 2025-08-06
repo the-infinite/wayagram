@@ -10,8 +10,8 @@ import 'package:wayagram/core/components/waya_select_field.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/chat/dto/default.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/dto/create_conversation_dto.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';

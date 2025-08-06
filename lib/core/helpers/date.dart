@@ -87,6 +87,17 @@ class WayaDateHelper {
     return DateTime.parse(timestamp).toLocal();
   }
 
+  static DateTime? safeParseDateString(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return null;
+    }
+    try {
+      return DateTime.parse(dateString).toLocal();
+    } catch (e) {
+      return null;
+    }
+  }
+
   static DateTime getLocalTime(String time) {
     return DateTime.parse(time).toLocal();
   }

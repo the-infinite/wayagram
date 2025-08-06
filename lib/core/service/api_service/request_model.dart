@@ -11,6 +11,5 @@ class WayaRequestResponse {
     this.message,
     this.responseCodeError,
     this.statusCode,
-
   });
 }

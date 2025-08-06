@@ -77,5 +77,7 @@ class KycVm extends StateNotifier<KycState> {
 }
 
 final kycVmProvider = StateNotifierProvider<KycVm, KycState>((ref) {
-  return KycVm(KycRepository(), ProfileRepo(), WayaSecureDataSource(), ref);
+  final kycRepo = ref.watch(kycRepositoryProvider);
+  final profileRepo = ref.watch(profileRepositoryProvider);
+  return KycVm(kycRepo, profileRepo, WayaSecureDataSource(), ref);
 });

@@ -10,7 +10,7 @@ import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
@@ -30,7 +30,6 @@ class SellerOrderDetails extends ConsumerStatefulWidget {
 
 class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
   String userName = "";
-  final ProfileRepo repo = ProfileRepo();
 
   @override
   void initState() {
@@ -44,7 +43,9 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
   }
 
   void getUser({required String userId}) async {
-    final response = await repo.getUserDataRepo(userId: userId);
+    final response = await ref
+        .read(profileRepositoryProvider)
+        .getUserDataRepo(userId: userId);
     if (response.success) {
       UserAccountModel responseModel = UserAccountModel.fromJson(response.data);
       String? firstName = responseModel.data?.userdata?.user?.firstName ?? '';

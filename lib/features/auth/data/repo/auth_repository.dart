@@ -1,12 +1,18 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_model.dart';
 
-class AuthRepository extends BaseRepository {
+part 'auth_repository.g.dart';
+
+class AuthRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = WayaServiceUri.account;
   static const graphServiceUrl = WayaServiceUri.graph;
+
+  AuthRepository(super.ref);
 
   Future<WayaRequestResponse> register(Register payload) {
     return post(
@@ -60,8 +66,6 @@ class AuthRepository extends BaseRepository {
         {"oauthProvider": authType, "token": token});
   }
 
-//
-  ///
   Future<WayaRequestResponse> toggle2Fa(
       {required String code, String? purpose}) {
     final payload = {"code": code};
@@ -115,8 +119,6 @@ class AuthRepository extends BaseRepository {
     return post(
         '$serviceUrl/client/auth/password/new-password', payload.toJson());
   }
-
-  ///client/users/:userId/email-or-phone/update
 
   Future<WayaRequestResponse> login(
       {required String password,
@@ -195,5 +197,9 @@ class AuthRepository extends BaseRepository {
   Future<WayaRequestResponse> refreshToken({required String token}) async {
     return post("$serviceUrl/client/auth/refresh-token", {"token": token});
   }
-//
+}
+
+@riverpod
+AuthRepository authRepository(Ref ref) {
+  return AuthRepository(ref);
 }

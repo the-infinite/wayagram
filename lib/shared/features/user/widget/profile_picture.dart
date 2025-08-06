@@ -5,7 +5,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ChatProfilePicture extends StatefulWidget {

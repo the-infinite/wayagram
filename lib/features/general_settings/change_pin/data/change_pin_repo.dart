@@ -1,9 +1,15 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
-class ChangePinRepo extends BaseRepository {
+part 'change_pin_repo.g.dart';
+
+class ChangePinRepo extends BaseRepositoryRiverpod {
   String get serviceUrl => 'wayagram-wallet/api/v2';
+
+  ChangePinRepo(super.ref);
 
   Future<WayaRequestResponse> changePin(
       {required String userId,
@@ -29,4 +35,9 @@ class ChangePinRepo extends BaseRepository {
     };
     return post('$serviceUrl/client/wallet-pin/reset-pin', payload);
   }
+}
+
+@riverpod
+ChangePinRepo changePinRepository(Ref ref) {
+  return ChangePinRepo(ref);
 }

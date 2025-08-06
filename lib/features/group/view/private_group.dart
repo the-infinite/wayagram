@@ -20,7 +20,7 @@ import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/shared/cache/group.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 
 class PrivateGroup extends ConsumerStatefulWidget {

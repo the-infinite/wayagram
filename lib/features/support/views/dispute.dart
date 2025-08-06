@@ -12,7 +12,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 import 'package:wayagram/features/support/modal/dispute.dart';
 import 'package:wayagram/features/support/vm/dispute.dart';
 

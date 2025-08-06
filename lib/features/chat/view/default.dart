@@ -11,7 +11,7 @@ import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/shared/features/chat/modal/start_conversation.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
 import 'package:wayagram/features/chat/widget/search.dart';
 import 'package:wayagram/shared/features/chat/widget/empty_conversation.dart';

@@ -11,7 +11,7 @@ import 'package:wayagram/core/service/api_service/dio_interceptor.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/storage_service/fast_storage/waya_fast_storage_interface.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 typedef WayaDownloadListener = void Function(double done, int totalSize);
 

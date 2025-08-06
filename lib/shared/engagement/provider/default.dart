@@ -7,8 +7,9 @@ import 'package:wayagram/shared/engagement/model/default.dart';
 class EngagementNotifier
     extends StateNotifier<Map<ServiceType, EngagementData>> {
   final WayaLocalDataSource localDataSource;
+  final AuthRepository authRepository;
 
-  EngagementNotifier(this.localDataSource)
+  EngagementNotifier(this.localDataSource, this.authRepository)
       : super({
           for (var service in ServiceType.values) service: EngagementData()
         }) {
@@ -32,7 +33,7 @@ class EngagementNotifier
           .map((entry) => {"category": entry.key, "score": entry.value})
           .toList();
 
-      await AuthRepository().selectInterest(postCategoryData);
+      await authRepository.selectInterest(postCategoryData);
     } catch (error) {
       debugPrint("Error sending data: $error");
     }
@@ -95,5 +96,8 @@ class EngagementNotifier
 
 final engagementNotifierProvider =
     StateNotifierProvider<EngagementNotifier, Map<ServiceType, EngagementData>>(
-  (ref) => EngagementNotifier(WayaLocalDataSource()),
-);
+        (ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+
+  return EngagementNotifier(WayaLocalDataSource(), authRepository);
+});

@@ -9,7 +9,7 @@ import 'package:wayagram/features/quotation/widgets/order_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class QuotationSellerOrders extends ConsumerStatefulWidget {
   static const route = '/quotation/seller/orders';

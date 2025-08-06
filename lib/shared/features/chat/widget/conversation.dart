@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';

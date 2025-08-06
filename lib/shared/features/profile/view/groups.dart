@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 

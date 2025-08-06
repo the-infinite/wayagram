@@ -282,27 +282,6 @@ class ShopVm extends StateNotifier<ShopState> {
     }
     return null;
   }
-
-  // List<Product> get filteredWayagramDealProducts {
-  //   if (state.products.isEmpty) return [];
-  //   return state.products.where((product) {
-  //     // category filter
-  //     if (state.selectedCategoryId != null &&
-  //         state.selectedCategoryId!.isNotEmpty &&
-  //         !state.selectedCategoryId!.contains(product.categoryId)) {
-  //       return false;
-  //     }
-
-  //     // search filter
-  //     if (state.searchQuery.isNotEmpty) {
-  //       final query = state.searchQuery.toLowerCase();
-  //       return product.name.toLowerCase().contains(query) ||
-  //           product.description.toLowerCase().contains(query);
-  //     }
-
-  //     return product.wayagramDeal == true;
-  //   }).toList();
-  // }
 }
 
 final shopVmProvider = StateNotifierProvider<ShopVm, ShopState>((ref) {

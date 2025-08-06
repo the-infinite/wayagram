@@ -9,7 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/buyer_dispute/vm/default.dart';
+import 'package:wayagram/features/buyer_dispute/vm/buyer_dispute_notifier.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
 class BuyerDisputeAddEvidenceModal extends ConsumerStatefulWidget {

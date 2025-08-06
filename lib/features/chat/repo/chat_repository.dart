@@ -1,13 +1,19 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/dto/default.dart';
+import 'package:wayagram/features/chat/dto/create_conversation_dto.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
-class ChatRepository extends BaseRepository {
+part 'chat_repository.g.dart';
+
+class ChatRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = WayaServiceUri.communication;
   static const serviceUrlGraph = WayaServiceUri.graph;
+
+  ChatRepository(super.ref);
 
   Future<WayaRequestResponse> startConversation(
     ChatType type,
@@ -49,7 +55,8 @@ class ChatRepository extends BaseRepository {
     return get("$serviceUrl/client/chat-user/user/$userId");
   }
 
-  Future<WayaRequestResponse> getAllConversations([int limit = 100, int page = 1]) {
+  Future<WayaRequestResponse> getAllConversations(
+      [int limit = 100, int page = 1]) {
     return get("$serviceUrl/client/chat/user/all?limit=$limit&page=$page");
   }
 
@@ -63,7 +70,8 @@ class ChatRepository extends BaseRepository {
     });
   }
 
-  Future<WayaRequestResponse> reportUser(String targetUserId, String reason, [String? comment]) {
+  Future<WayaRequestResponse> reportUser(String targetUserId, String reason,
+      [String? comment]) {
     return post("$serviceUrlGraph/reports/create", {
       "targetUserId": targetUserId,
       "reason": reason,
@@ -87,66 +95,61 @@ class ChatRepository extends BaseRepository {
     return delete("$serviceUrl/client/message/all/$chatId");
   }
 
-  Future<WayaRequestResponse> getArchivedChats([int limit = 100, int page = 1, bool archived = true]) {
-    return get("$serviceUrl/client/chat/user/all?limit=$limit&page=$page&archived=$archived");
+  Future<WayaRequestResponse> getArchivedChats(
+      [int limit = 100, int page = 1, bool archived = true]) {
+    return get(
+        "$serviceUrl/client/chat/user/all?limit=$limit&page=$page&archived=$archived");
   }
 
   // THE APIs for group chats.
   Future<WayaRequestResponse> updateGroupImage(String id, String image) {
-    return put(
-      "$serviceUrl/client/chat/group/photo",
-      {"chatId": id, "groupImage": image},
-    );
+    return put("$serviceUrl/client/chat/group/photo",
+        {"chatId": id, "groupImage": image});
   }
 
   Future<WayaRequestResponse> reportChatGroup(String id, String reason) {
-    return post(
-      "$serviceUrl/client/chat/group/report",
-      {"chatId": id, "reason": reason},
-    );
+    return post("$serviceUrl/client/chat/group/report",
+        {"chatId": id, "reason": reason});
   }
 
   Future<WayaRequestResponse> leaveGroup(String id) {
-    return post(
-      "$serviceUrl/client/chat/group/leave",
-      {"chatId": id},
-    );
+    return post("$serviceUrl/client/chat/group/leave", {"chatId": id});
   }
 
   Future<WayaRequestResponse> removeUserFromGroup(String id, String userId) {
-    return post(
-      "$serviceUrl/client/chat/group/remove-user",
-      {"chatId": id, "userId": userId},
-    );
+    return post("$serviceUrl/client/chat/group/remove-user",
+        {"chatId": id, "userId": userId});
   }
 
   Future<WayaRequestResponse> addUserToGroup(String id, String userId) {
-    return post(
-      "$serviceUrl/client/chat/group/add-user",
-      {"chatId": id, "userId": userId},
-    );
+    return post("$serviceUrl/client/chat/group/add-user",
+        {"chatId": id, "userId": userId});
   }
 
-  Future<WayaRequestResponse> updateGroupInfo(String id, String name, [String? description]) {
-    return put(
-      "$serviceUrl/client/chat/group/name",
-      {"chatId": id, "name": name, if (description != null) "description": description},
-    );
+  Future<WayaRequestResponse> updateGroupInfo(String id, String name,
+      [String? description]) {
+    return put("$serviceUrl/client/chat/group/name", {
+      "chatId": id,
+      "name": name,
+      if (description != null) "description": description
+    });
   }
 
-  Future<WayaRequestResponse> muteOrUnmuteGroup(String chatId, DateTime? mutedUntil) {
-    //? If this is not available.
+  Future<WayaRequestResponse> muteOrUnmuteGroup(
+      String chatId, DateTime? mutedUntil) {
     if (mutedUntil != null) {
-      return post(
-        "$serviceUrl/client/chat/group/mute",
-        {"chatId": chatId, "mute": true, "mutedUntil": mutedUntil.toIso8601String()},
-      );
+      return post("$serviceUrl/client/chat/group/mute", {
+        "chatId": chatId,
+        "mute": true,
+        "mutedUntil": mutedUntil.toIso8601String()
+      });
     }
-
-    //? This is fine.
-    return post(
-      "$serviceUrl/client/chat/group/mute",
-      {"chatId": chatId, "mute": false},
-    );
+    return post("$serviceUrl/client/chat/group/mute",
+        {"chatId": chatId, "mute": false});
   }
+}
+
+@riverpod
+ChatRepository chatRepository(Ref ref) {
+  return ChatRepository(ref);
 }

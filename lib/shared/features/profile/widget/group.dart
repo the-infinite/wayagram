@@ -6,7 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/cache/group.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 
 class SingleGroupWidget extends StatefulWidget {

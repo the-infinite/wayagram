@@ -5,7 +5,7 @@ import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
-import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
+import 'package:wayagram/features/general_settings/notifications/vm/notification_settings_vm.dart';
 import 'package:wayagram/features/general_settings/notifications/widget/notification_switch.dart';
 
 class NotificationSettingsScreen extends ConsumerStatefulWidget {

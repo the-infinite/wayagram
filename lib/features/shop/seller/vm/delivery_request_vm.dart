@@ -16,7 +16,6 @@ class DeliveryRequestVm extends StateNotifier<DeliveryRequestState> {
     try {
       final shopId = ref.watch(manageShopVmProvider).singleShop?.id;
       final response = await _cartRepository.getPendingDelivery(id: shopId!);
-// responseModel.data.expand((value) => value.items).toList()
 
       List<DeliveryRequestData> requests = [];
       if (response.success) {
@@ -48,5 +47,6 @@ class DeliveryRequestVm extends StateNotifier<DeliveryRequestState> {
 
 final deliveryRequestVmProvider =
     StateNotifierProvider<DeliveryRequestVm, DeliveryRequestState>((ref) {
-  return DeliveryRequestVm(CartRepository(), ref);
+  final cartRepo = ref.watch(cartRepositoryProvider);
+  return DeliveryRequestVm(cartRepo, ref);
 });

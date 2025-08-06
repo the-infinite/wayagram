@@ -12,7 +12,7 @@ import 'package:wayagram/features/chat/modals/group/remove.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/chat_selection.dart';
 
 class GroupMembersWidget extends StatefulWidget {

@@ -34,7 +34,8 @@ class _ManageStateContestState extends ConsumerState<PayoutHistory> {
     useEffect(() {
       //? check the module type after the import
       Future.delayed(Duration.zero, () {
-         notifier.fetchUserPayoutTransaction(args["referenceId"], args["Module"]);
+        notifier.fetchUserPayoutTransaction(
+            args["referenceId"], args["Module"]);
       });
 
       return null;

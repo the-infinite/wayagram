@@ -79,6 +79,7 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
 final supportRequestProvider =
     StateNotifierProvider<SupportRequestNotifier, SupportRequestState>(
   (ref) {
-    return SupportRequestNotifier(ProfileRepo());
+    final profileRepo = ref.watch(profileRepositoryProvider);
+    return SupportRequestNotifier(profileRepo);
   },
 );

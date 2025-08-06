@@ -29,11 +29,11 @@ class PersonalFirstStepView extends ConsumerStatefulWidget {
 
 class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   final _formKey = GlobalKey<FormState>();
-  late final notifier = ref.read(personalFirstStepProvider.notifier);
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final notifier = ref.read(personalFirstStepProvider.notifier);
       notifier.fetchBusinessTypes();
       notifier.fetchLocation();
 

@@ -289,6 +289,8 @@ final hideShowBalanceProvider =
 
 final transactionVmProvider =
     StateNotifierProvider<TransactionVm, TransactionHistoryState>((ref) {
-  return TransactionVm(TransactionRepository(), WalletRepository.instance,
-      WayaLocalDataSource());
+  final transactionRepository = ref.watch(transactionRepositoryProvider);
+
+  return TransactionVm(
+      transactionRepository, WalletRepository.instance, WayaLocalDataSource());
 });

@@ -313,7 +313,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                             }
 
                             WayaNav.toNamed('/admin-transaction-page');
-                          
                           }),
                     ),
                   const Gap(10),
@@ -342,7 +341,6 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                      
                           Text(
                             'Payout History',
                             style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(

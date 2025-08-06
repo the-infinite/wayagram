@@ -139,5 +139,6 @@ final selectedAppliedContestProvider =
 // Provider
 final appliedContestProvider =
     StateNotifierProvider<AppliedContestNotifier, AppliedContestState>((ref) {
-  return AppliedContestNotifier(ContestRepo(), WayaLocalDataSource());
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return AppliedContestNotifier(contestRepo, WayaLocalDataSource());
 });

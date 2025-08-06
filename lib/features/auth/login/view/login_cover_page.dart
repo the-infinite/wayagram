@@ -17,7 +17,7 @@ class LoginCoverPage extends ConsumerWidget {
   const LoginCoverPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(loginVmProvider.notifier);
+    final viewModel = ref.watch(loginProvider.notifier);
     final wayaTheme = Theme.of(context);
     final height = MediaQuery.of(context).size.height;
 

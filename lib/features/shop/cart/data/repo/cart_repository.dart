@@ -1,8 +1,14 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 
-class CartRepository extends BaseRepository {
+part 'cart_repository.g.dart';
+
+class CartRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = "wayagram-shop/api/v2";
+
+  CartRepository(super.ref);
 
   Future<WayaRequestResponse> addItemToCart({
     required String productId,
@@ -70,15 +76,9 @@ class CartRepository extends BaseRepository {
   Future<WayaRequestResponse> getPendingDelivery({required String id}) async {
     return get("$serviceUrl/cart/delivery-address/$id");
   }
+}
 
-  //
-  ///
-  // Future<WayaRequestResponse> createOrder(
-  //     {required String cartId,
-  //     required String shopId,
-  //     required String userId}) {
-  //   return post("$serviceUrl/orders/place-order",
-  //       {'cartId': cartId, 'shopId': shopId, 'userId': userId});
-  // }
-  //
+@riverpod
+CartRepository cartRepository(Ref ref) {
+  return CartRepository(ref);
 }

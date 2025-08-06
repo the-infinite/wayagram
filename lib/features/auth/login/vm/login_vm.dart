@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:developer';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
-import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -17,13 +16,15 @@ import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/login/model/user_model.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
-import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
+import 'package:wayagram/features/general_settings/notifications/vm/notification_settings_vm.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
-import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/notifications/vm/notification_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
+
+part 'login_vm.g.dart';
 
 class LoginState {
   final bool isPasswordFocused;
@@ -55,25 +56,16 @@ class LoginState {
   }
 }
 
-class LoginVm extends StateNotifier<LoginState> {
-  final AuthRepository _authRepository;
-  final WayaLocalDataSource _localDataSource;
-  final WayaSecureDataSource _secureDataSource;
-  final SuccessfulSetupVm _setupVm;
-  final ProfileRepo _profileRepo;
-  final Ref ref;
+@riverpod
+class Login extends _$Login {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],
   );
 
-  LoginVm(
-    this.ref,
-    this._authRepository,
-    this._localDataSource,
-    this._secureDataSource,
-    this._setupVm,
-    this._profileRepo,
-  ) : super(LoginState());
+  @override
+  LoginState build() {
+    return LoginState();
+  }
 
   void togglePasswordVisibility() {
     state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
@@ -81,12 +73,6 @@ class LoginVm extends StateNotifier<LoginState> {
 
   void setPasswordFocus(bool hasFocus) {
     state = state.copyWith(isPasswordFocused: hasFocus);
-  }
-
-  @override
-  void dispose() {
-    // state.businessAcctController.dispose();
-    super.dispose();
   }
 
   Future<void> signinWithApple() async {
@@ -112,7 +98,6 @@ class LoginVm extends StateNotifier<LoginState> {
 
     log(googleAuth.idToken ?? "");
 
-    // if (idToken != null) {
     await oauthSignIn(authType: 'GOOGLE', token: googleAuth.idToken ?? '');
   }
 
@@ -122,7 +107,8 @@ class LoginVm extends StateNotifier<LoginState> {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
 
-      final response = await _authRepository.oauth(token, authType);
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.oauth(token, authType);
 
       if (response.success) {
         await getUserInfo(data: response.data);
@@ -133,25 +119,21 @@ class LoginVm extends StateNotifier<LoginState> {
           throw "Error";
         }
       }
-    } catch (error) {
-      debugPrint(error.toString());
+    } catch (_) {
     } finally {
-      //? Hide the preloader.
       WayaPreloaderController.instance.hide();
     }
   }
 
   Future<void> onSubmit({
-    required WidgetRef ref,
     required String? email,
     required String? password,
   }) async {
     try {
-      //? Show the preloader.
       WayaPreloaderController.instance.show();
 
-      //? added trim, add issue login in just cause of space issues
-      final response = await _authRepository.login(
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.login(
           isBusinessLogin: false,
           email: email?.trim(),
           password: password ?? '');
@@ -192,13 +174,16 @@ class LoginVm extends StateNotifier<LoginState> {
 
     state = state.copyWith(userData: remoteUserData);
 
-    _localDataSource
+    final localDataSource = WayaLocalDataSource();
+    final secureDataSource = WayaSecureDataSource();
+
+    localDataSource
         .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-    await _secureDataSource
+    await secureDataSource
         .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-    await _secureDataSource
+    await secureDataSource
         .saveToken(remoteUserData.data?.token?.token as String);
-    await _secureDataSource
+    await secureDataSource
         .saveRefreshToken(remoteUserData.data?.token?.refreshToken as String);
 
     //
@@ -214,48 +199,35 @@ class LoginVm extends StateNotifier<LoginState> {
       try {
         await ShopResource.configureShop(ConversationState.self.id);
         await ShopResource.getShopCategories();
-      } catch (e) {
-        WayaDebugConsoleController.instance.addException(
-          WayaDebugHelpers.getMessage(e),
-          e,
-          WayaDebugEventModule.shops,
-          WayaDebugHelpers.getStackTrace(e),
-        );
-      }
+      } catch (_) {}
 
-      //? Now, load this user's followers
       try {
         await myFollowProvider.getIfEmpty();
-      } catch (e) {
-        WayaDebugConsoleController.instance.addException(
-          WayaDebugHelpers.getMessage(e),
-          e,
-          WayaDebugEventModule.relationships,
-          WayaDebugHelpers.getStackTrace(e),
-        );
-      }
+      } catch (_) {}
 
       //? Now we do the unnecessPary part of things.
-      final response = await _profileRepo.getUserDataRepo(
+      final profileRepo = ref.read(profileRepositoryProvider);
+      final response = await profileRepo.getUserDataRepo(
           userId: remoteUserData.data?.userdata?.user?.id as String);
 
       if (response.success) {
         UserAccountModel userAccountModel =
             UserAccountModel.fromJson(response.data);
 
-        _setupVm.state =
-            _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+        final setupVm = ref.read(successfulSetupProvider.notifier);
+        setupVm.state =
+            setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
         if (userAccountModel.data != null &&
             userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
-          final bizResponse = await _profileRepo.getBusinessDataRepo(
+          final bizResponse = await profileRepo.getBusinessDataRepo(
               userId: remoteUserData.data?.userdata?.user?.id as String);
           BusinessAccountData bizData =
               BusinessAccountData.fromJson(bizResponse.data["data"]);
 
-          _setupVm.state = _setupVm.state.copyWith(business: bizData);
+          setupVm.state = setupVm.state.copyWith(business: bizData);
 
-          await _secureDataSource.saveBusinessId(bizData.businessId);
+          await secureDataSource.saveBusinessId(bizData.businessId);
         }
       }
     }
@@ -278,14 +250,7 @@ class LoginVm extends StateNotifier<LoginState> {
       await notificationSettings
           .getSettings(NotificationSettingsController.instance);
       await notificationVm.getUserNotifications();
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.notifications,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
 
     // This is good too.
     WayaNav.replaceNamed("/explore");
@@ -294,7 +259,8 @@ class LoginVm extends StateNotifier<LoginState> {
   Future<void> loginVerification(
       {required String email, required String code, String? purpose}) async {
     try {
-      final response = await _authRepository.validate2Fa(
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.validate2Fa(
           email: email, code: code, purpose: purpose);
 
       if (response.success) {
@@ -308,9 +274,3 @@ class LoginVm extends StateNotifier<LoginState> {
     } catch (_) {}
   }
 }
-
-final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
-  final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
-  return LoginVm(ref, AuthRepository(), WayaLocalDataSource(),
-      WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
-});

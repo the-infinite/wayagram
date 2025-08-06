@@ -21,8 +21,8 @@ import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import '../../../core/data/local_data_source.dart';
 
 import '../../../core/service/logger_service.dart';
@@ -806,13 +806,12 @@ final selectedContestantProfile =
 final selectedApplicantProfile =
     StateProvider<ApplicantContestModel?>((ref) => null);
 
-final authRepositoryProvider = Provider((ref) => ContestRepo());
-
 final votersContestNotifier =
     StateNotifierProvider<VotersContestNotifier, VoterDetailState>(
   (ref) {
+    final contestRepo = ref.watch(contestRepositoryProvider);
     return VotersContestNotifier(
-        ContestRepo(), WayaLocalDataSource(), WalletRepository.instance);
+        contestRepo, WayaLocalDataSource(), WalletRepository.instance);
   },
 );
 

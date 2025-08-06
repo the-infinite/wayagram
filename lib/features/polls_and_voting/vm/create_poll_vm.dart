@@ -874,13 +874,12 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   }
 }
 
-final pollAndVotingProvider = Provider((ref) => PollAndVotingRepository());
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
 final createPollVotingProvider = StateNotifierProvider.autoDispose<
     CreatePollVotingVm, CreatePollVotingState>((ref) {
-  final pollAndVotingRepository = ref.watch(pollAndVotingProvider);
+  final pollAndVotingRepository = ref.watch(pollAndVotingRepositoryProvider);
   return CreatePollVotingVm(ref, ImagePicker(), pollAndVotingRepository);
 });

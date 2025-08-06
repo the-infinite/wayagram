@@ -2,26 +2,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
-import 'package:wayagram/shared/features/profile/repo/default.dart';
+import 'package:wayagram/shared/features/profile/repo/user_profile_repository.dart';
 import 'package:wayagram/shared/features/profile/state/groups.dart';
 
 class GroupsNotifier extends StateNotifier<GroupsState> {
-  final repo = UserProfileRepository.instance;
-  GroupsNotifier(super.state);
+  final UserProfileRepository repo;
+  GroupsNotifier(super.state, this.repo);
 
   Future<List<GroupModel>> getGroupsForUser(String id) async {
     final result = <GroupModel>[];
 
     try {
       // This is fine too.
-      final response = await repo.getGroupsForUser(id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getGroupsForUser(
+          id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => GroupModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => GroupModel.fromJson(doc));
 
         //? Now, add these to what we have here.
         result.addAll(docs);
@@ -62,6 +64,9 @@ class GroupsNotifier extends StateNotifier<GroupsState> {
   }
 }
 
-final userGroupsProvider = StateNotifierProvider.family<GroupsNotifier, GroupsState, String>((ref, id) {
-  return GroupsNotifier(GroupsState.initial);
+final userGroupsProvider =
+    StateNotifierProvider.family<GroupsNotifier, GroupsState, String>(
+        (ref, id) {
+  final userRepository = ref.watch(userProfileRepositoryProvider);
+  return GroupsNotifier(GroupsState.initial, userRepository);
 });

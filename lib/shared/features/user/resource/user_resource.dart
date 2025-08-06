@@ -1,6 +1,7 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-import 'package:wayagram/shared/features/user/repo/default.dart';
+import 'package:wayagram/shared/features/user/repo/user_repository.dart';
 
 typedef CachedUserDataTuple = (UserDetailsModel, SocialProfileModel);
 
@@ -8,7 +9,6 @@ class UserResource {
   UserResource._();
   static final userCache = <String, CachedUserDataTuple>{};
   static final cachedTimestamps = <String, DateTime>{};
-  static final repo = UserRepository.instance;
   static final logger = Logger();
 
   static Future<CachedUserDataTuple?> getUserDetails(String id) async {
@@ -21,7 +21,20 @@ class UserResource {
 
       //? Cache again if you should.
       if (now.difference(lastCached).inMinutes >= 30) {
-        _getAndSave(id);
+        // Background refresh
+        ProviderContainer()
+            .read(userRepositoryProvider)
+            .getUserDetails(id)
+            .then((response) {
+          if (response.success) {
+            final data = response.data['data']['userdata'];
+            final result = (
+              UserDetailsModel.fromJson(data['user']),
+              SocialProfileModel.fromJson(data['profile'])
+            );
+            _save(id, result);
+          }
+        }).catchError((_) {});
       }
 
       //? Return this as the case may be.
@@ -63,6 +76,7 @@ class UserResource {
 
   static Future<CachedUserDataTuple?> _getFromNetworkByUsername(
       String username) async {
+    final repo = ProviderContainer().read(userRepositoryProvider);
     final response = await repo.getUserByUsername(username);
 
     //? If it failed, return nothing.
@@ -85,6 +99,7 @@ class UserResource {
   }
 
   static Future<CachedUserDataTuple?> _getAndSave(String id) async {
+    final repo = ProviderContainer().read(userRepositoryProvider);
     final response = await repo.getUserDetails(id);
 
     //? If it failed, return nothing.

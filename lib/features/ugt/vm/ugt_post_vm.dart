@@ -117,9 +117,10 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
         final docs = responseModel.data?.docs;
         if (docs != null && docs.isNotEmpty) {
           ref.read(selectedContestantProfile.notifier).state = docs.first;
-          
-          ref.watch(ugtContestantProfileVm.notifier).fetchSingleContestantPosts(
-              docs.first.id ?? "");
+
+          ref
+              .watch(ugtContestantProfileVm.notifier)
+              .fetchSingleContestantPosts(docs.first.id ?? "");
         }
 
         return responseModel;
@@ -249,5 +250,6 @@ final selectedContestProvider = StateProvider<Contest?>((ref) {
 // Provider
 final postProvider =
     StateNotifierProvider<ContestForYou, ContextForYouState>((ref) {
-  return ContestForYou(ContestRepo(), WayaLocalDataSource());
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return ContestForYou(contestRepo, WayaLocalDataSource());
 });

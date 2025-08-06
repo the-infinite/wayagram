@@ -6,7 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/follow/view/mutuals.dart';
 import 'package:wayagram/features/follow/widget/follows.dart';
-import 'package:wayagram/shared/features/follow/vm/default.dart';
+import 'package:wayagram/shared/features/follow/vm/follow_notifier.dart';
 
 class MutualPage extends ConsumerStatefulWidget {
   static const route = '/follow/relationships';

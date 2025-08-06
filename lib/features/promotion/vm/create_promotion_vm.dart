@@ -106,7 +106,7 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
 
   Future<void> getAllStates() async {
     final response =
-        await ref.read(upgradeToBusinessVmProvider.notifier).fetchStates();
+        await ref.read(upgradeToBusinessProvider.notifier).fetchStates();
 
     if (response != null) {
       state = state.copyWith(states: response);
@@ -180,5 +180,6 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
 
 final promotionVmProvider =
     StateNotifierProvider<CreatePromotionVm, CreatePromotionState>((ref) {
-  return CreatePromotionVm(ref, PromotionRepository());
+  final repo = ref.watch(promotionRepositoryProvider);
+  return CreatePromotionVm(ref, repo);
 });

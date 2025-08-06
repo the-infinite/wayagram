@@ -1,11 +1,17 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
-class MessageRepository extends BaseRepository {
+part 'message_repository.g.dart';
+
+class MessageRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = 'communication-service/api/v2';
+
+  MessageRepository(super.ref);
 
   Future<WayaRequestResponse> sendMessage(
     SendMessageDto data,
@@ -28,7 +34,8 @@ class MessageRepository extends BaseRepository {
     });
   }
 
-  Future<WayaRequestResponse> updateMessageStatus(MessageStatusCode status, String id) {
+  Future<WayaRequestResponse> updateMessageStatus(
+      MessageStatusCode status, String id) {
     return put("$serviceUrl/client/message/status", {
       "status": status.name,
       "messageId": id,
@@ -36,12 +43,16 @@ class MessageRepository extends BaseRepository {
     });
   }
 
-  Future<WayaRequestResponse> getMessages(String chatId, [int limit = 100, int page = 100]) {
-    return get("$serviceUrl/client/message?limit=$limit&page=$page&chatId=$chatId");
+  Future<WayaRequestResponse> getMessages(String chatId,
+      [int limit = 100, int page = 100]) {
+    return get(
+        "$serviceUrl/client/message?limit=$limit&page=$page&chatId=$chatId");
   }
 
-  Future<WayaRequestResponse> getChatMedia(String chatId, [int limit = 10000, int page = 1]) {
-    return get("$serviceUrl/client/message/media?limit=$limit&page=$page&chatId=$chatId");
+  Future<WayaRequestResponse> getChatMedia(String chatId,
+      [int limit = 10000, int page = 1]) {
+    return get(
+        "$serviceUrl/client/message/media?limit=$limit&page=$page&chatId=$chatId");
   }
 
   Future<WayaRequestResponse> editMessage(String id, String content) {
@@ -51,7 +62,8 @@ class MessageRepository extends BaseRepository {
     });
   }
 
-  Future<WayaRequestResponse> deleteMessage(List<String> ids, MessageDeleteAction action) {
+  Future<WayaRequestResponse> deleteMessage(
+      List<String> ids, MessageDeleteAction action) {
     return delete("$serviceUrl/client/message", body: {
       'messageIds': ids,
       'action': action.value,
@@ -71,4 +83,9 @@ class MessageRepository extends BaseRepository {
       "messageId": id,
     });
   }
+}
+
+@riverpod
+MessageRepository messageRepository(Ref ref) {
+  return MessageRepository(ref);
 }

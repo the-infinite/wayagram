@@ -20,11 +20,19 @@ class CreateNewPassword extends ConsumerStatefulWidget {
 
 class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController password = TextEditingController();
+  final TextEditingController confirmPassword = TextEditingController();
+
+  @override
+  void dispose() {
+    password.dispose();
+    confirmPassword.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createNewPasswordProvider);
-    // final credential = ref.watch(credentialInputProvider);
     final verify = ref.watch(verifyAccountProvider);
     final wayaTheme = Theme.of(context);
 
@@ -48,10 +56,10 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
               children: [
                 const Gap(20),
                 FormField<String>(validator: (value) {
-                  if (viewModel.password.text.isEmpty) {
+                  if (password.text.isEmpty) {
                     return 'Password is required';
                   }
-                  if (viewModel.password.text.length < 8) {
+                  if (password.text.length < 8) {
                     return 'Password must be at least 8';
                   }
 
@@ -62,9 +70,8 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.visiblePassword,
-                        controller: viewModel.password,
-                        borderColor: formState.hasError &&
-                                viewModel.password.text.isEmpty
+                        controller: password,
+                        borderColor: formState.hasError && password.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         hintText: 'Enter Your Password',
@@ -72,7 +79,9 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                         obscureText: !viewModel.isPasswordVisible,
                         suffixIcon: IconButton(
                           onPressed: () {
-                            viewModel.togglePasswordVisibility();
+                            ref
+                                .read(createNewPasswordProvider.notifier)
+                                .togglePasswordVisibility();
                           },
                           icon: Icon(viewModel.isPasswordVisible
                               ? Icons.visibility_outlined
@@ -82,7 +91,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                         helperText:
                             "Password must be 8 or more character and contain at least 1 number and 1 special character",
                       ),
-                      if (formState.hasError && viewModel.password.text.isEmpty)
+                      if (formState.hasError && password.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -97,14 +106,13 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                 }),
                 const Gap(5),
                 FormField<String>(validator: (value) {
-                  if (viewModel.confirmPassword.text.isEmpty) {
+                  if (confirmPassword.text.isEmpty) {
                     return 'Password is required';
                   }
-                  if (viewModel.confirmPassword.text.length < 8) {
+                  if (confirmPassword.text.length < 8) {
                     return 'Password must be at least 8';
                   }
-                  if (viewModel.password.text !=
-                      viewModel.confirmPassword.text) {
+                  if (password.text != confirmPassword.text) {
                     return 'Password does not match';
                   }
 
@@ -115,17 +123,19 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.visiblePassword,
-                        controller: viewModel.confirmPassword,
-                        borderColor: formState.hasError &&
-                                viewModel.confirmPassword.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        controller: confirmPassword,
+                        borderColor:
+                            formState.hasError && confirmPassword.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
                         hintText: 'Enter your Password',
                         label: 'Confirm Password',
                         obscureText: !viewModel.isConfirmPasswordVisible,
                         suffixIcon: IconButton(
                           onPressed: () {
-                            viewModel.toggleConfirmPasswordVisibility();
+                            ref
+                                .read(createNewPasswordProvider.notifier)
+                                .toggleConfirmPasswordVisibility();
                           },
                           icon: Icon(viewModel.isConfirmPasswordVisible
                               ? Icons.visibility_outlined
@@ -133,8 +143,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                           color: wayaTheme.colorScheme.greyColor300,
                         ),
                       ),
-                      if (formState.hasError &&
-                          viewModel.confirmPassword.text.isEmpty)
+                      if (formState.hasError && confirmPassword.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -152,7 +161,14 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                   callback: !viewModel.isLoading
                       ? () {
                           if (_formKey.currentState!.validate()) {
-                            viewModel.onSubmit(widget.email, verify.inputCode);
+                            ref
+                                .read(createNewPasswordProvider.notifier)
+                                .onSubmit(
+                                  widget.email,
+                                  verify.inputCode,
+                                  password.text,
+                                  confirmPassword.text,
+                                );
                           }
                         }
                       : null,

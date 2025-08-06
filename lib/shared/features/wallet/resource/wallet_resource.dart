@@ -2,7 +2,7 @@ import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import 'package:wayagram/shared/features/wallet/model/dto.dart';
 
 class WalletResource {

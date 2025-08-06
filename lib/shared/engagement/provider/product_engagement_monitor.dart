@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/shared/engagement/model/default.dart';
 import 'package:wayagram/shared/engagement/provider/default.dart';
 
@@ -8,10 +9,9 @@ enum ProductPoint {
   likePoints(3),
   searchPoint(1),
   sharePoints(5);
-  
 
   final int value;
-   const ProductPoint(this.value);
+  const ProductPoint(this.value);
 }
 
 class ProductEngagementMonitor extends StateNotifier<void> {
@@ -40,5 +40,8 @@ class ProductEngagementMonitor extends StateNotifier<void> {
 
 final productEngagementProvider =
     StateNotifierProvider<ProductEngagementMonitor, void>((ref) {
-  return ProductEngagementMonitor(EngagementNotifier(WayaLocalDataSource()));
+  final authRepository = ref.watch(authRepositoryProvider);
+
+  return ProductEngagementMonitor(
+      EngagementNotifier(WayaLocalDataSource(), authRepository));
 });

@@ -13,7 +13,7 @@ import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/group/report.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/profile/chat_media.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
 import 'package:wayagram/features/chat/widget/profile/group_members.dart';

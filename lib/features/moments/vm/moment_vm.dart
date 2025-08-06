@@ -21,7 +21,7 @@ import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:wayagram/features/moments/views/trim_video.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 import '../data/model/moment_state.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import '../views/media_moment.dart';
@@ -33,7 +33,7 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/features/moments/data/model/moment_viewer_response_model.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 class MomentVm extends StateNotifier<MomentState> {
   final Ref ref;
@@ -686,5 +686,5 @@ class MomentVm extends StateNotifier<MomentState> {
 }
 
 final momentVmProvider = StateNotifierProvider<MomentVm, MomentState>((ref) {
-  return MomentVm(WayaSecureDataSource(), MomentRepository(), ref);
+  return MomentVm(WayaSecureDataSource(), MomentRepository.instance, ref);
 });

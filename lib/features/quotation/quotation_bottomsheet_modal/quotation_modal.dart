@@ -16,7 +16,7 @@ import 'package:wayagram/shared/components/multi_select.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_timer.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class QuotationModal extends StatelessWidget {
   final QuotationBidModel bid;

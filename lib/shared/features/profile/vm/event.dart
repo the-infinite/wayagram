@@ -2,12 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/shared/features/profile/repo/default.dart';
+import 'package:wayagram/shared/features/profile/repo/user_profile_repository.dart';
 import 'package:wayagram/shared/features/profile/state/event.dart';
 
 class EventNotifier extends StateNotifier<EventState> {
-  final repo = UserProfileRepository.instance;
-  EventNotifier(super.state);
+  final UserProfileRepository repo;
+  EventNotifier(super.state, this.repo);
 
   /// An API used to fetch all the posts for a given user.
   Future<List<EventDoc>> getEventsForUser(String id) async {
@@ -15,14 +15,16 @@ class EventNotifier extends StateNotifier<EventState> {
 
     try {
       // This is fine too.
-      final response = await repo.getEventsForUser(id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getEventsForUser(
+          id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => EventDoc.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => EventDoc.fromJson(doc));
 
         //? Now, add these to what we have here.
         result.addAll(docs);
@@ -64,6 +66,9 @@ class EventNotifier extends StateNotifier<EventState> {
   }
 }
 
-final userEventsProvider = StateNotifierProvider.family<EventNotifier, EventState,String>((ref, id) {
-  return EventNotifier(EventState.initial);
+final userEventsProvider =
+    StateNotifierProvider.family<EventNotifier, EventState, String>((ref, id) {
+  final userRepository = ref.watch(userProfileRepositoryProvider);
+
+  return EventNotifier(EventState.initial, userRepository);
 });

@@ -25,11 +25,11 @@ import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/chat_settings/vm.dart';
 import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
-import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
+import 'package:wayagram/features/general_settings/notifications/vm/notification_settings_vm.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 import 'firebase_options.dart';
 import 'config/environment.dart';
 
@@ -178,7 +178,9 @@ Future<String?> getUserData() async {
 
     //>  get a new auth token
     await getNewToken();
-    ProfileRepo profileRepo = ProfileRepo();
+    final container = ProviderContainer();
+    final profileRepo = container.read(profileRepositoryProvider);
+
     final response = await profileRepo.getUserDataRepo(userId: userId);
 
     //? This was fine so move forward.
@@ -257,8 +259,11 @@ Future<void> getNewToken() async {
     //? need ref to Pref
     final WayaSecureDataSource secureDataSource = WayaSecureDataSource();
     final refreshToken = await secureDataSource.getRefreshToken();
-    //? ref to authrepo
-    AuthRepository repo = AuthRepository();
+
+    //? Create a temporary container to access the provider
+    final container = ProviderContainer();
+    final repo = container.read(authRepositoryProvider);
+
     final response = await repo.refreshToken(token: refreshToken!);
     if (response.success) {
       final newToken = response.data['data']['token']['token'];
@@ -267,6 +272,9 @@ Future<void> getNewToken() async {
       await secureDataSource.saveToken(newToken);
       await secureDataSource.saveRefreshToken(newRefreshToken);
     }
+
+    // Dispose the container after use
+    container.dispose();
   } catch (e) {
     WayaDebugConsoleController.instance.addException(
       WayaDebugHelpers.getMessage(e),

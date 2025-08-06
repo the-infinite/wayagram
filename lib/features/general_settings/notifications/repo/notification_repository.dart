@@ -1,17 +1,22 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/notification_service.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
-class NotificationRepository extends BaseRepository {
+part 'notification_repository.g.dart';
+
+class NotificationRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = WayaServiceUri.notification;
   static const serviceUrlGraph = WayaServiceUri.graph;
-  static final instance = NotificationRepository._();
 
-  NotificationRepository._();
+  NotificationRepository(super.ref);
 
-  Future<WayaRequestResponse> getUserNotifications([int page = 0, int limit = 200]) {
-    return get("$serviceUrl/users/notifications?page=$page&offset=$page&limit=$limit");
+  Future<WayaRequestResponse> getUserNotifications(
+      [int page = 0, int limit = 200]) {
+    return get(
+        "$serviceUrl/users/notifications?page=$page&offset=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> deleteDeviceToken() async {
@@ -31,7 +36,8 @@ class NotificationRepository extends BaseRepository {
     });
   }
 
-  Future<WayaRequestResponse> updateSettings(List<Map<String, dynamic>> settings) {
+  Future<WayaRequestResponse> updateSettings(
+      List<Map<String, dynamic>> settings) {
     return put("$serviceUrl/users/preferences", {
       "preferences": settings,
     });
@@ -40,4 +46,9 @@ class NotificationRepository extends BaseRepository {
   Future<WayaRequestResponse> getSettings() {
     return get("$serviceUrl/users/preferences");
   }
+}
+
+@riverpod
+NotificationRepository notificationRepository(Ref ref) {
+  return NotificationRepository(ref);
 }

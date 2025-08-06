@@ -17,7 +17,7 @@ import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 import 'confirm_order.dart';
 

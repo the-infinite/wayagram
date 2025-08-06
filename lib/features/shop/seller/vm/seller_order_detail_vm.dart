@@ -131,5 +131,6 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
 final sellerOrderDetailVmProvider =
     ChangeNotifierProvider<SellerOrderDetailVm>((ref) {
-  return SellerOrderDetailVm(OrderRepository(), ref);
+  final orderRepository = ref.watch(orderRepositoryProvider);
+  return SellerOrderDetailVm(orderRepository, ref);
 });

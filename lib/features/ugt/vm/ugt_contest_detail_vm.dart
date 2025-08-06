@@ -180,5 +180,6 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
 // Provider
 final contestDetailProvider =
     StateNotifierProvider<ContestDetailNotifier, List<Contest>>((ref) {
-  return ContestDetailNotifier(ContestRepo(), WayaLocalDataSource());
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return ContestDetailNotifier(contestRepo, WayaLocalDataSource());
 });

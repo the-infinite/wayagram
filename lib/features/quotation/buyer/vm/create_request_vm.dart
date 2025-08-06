@@ -8,13 +8,13 @@ import 'package:wayagram/features/quotation/buyer/model/create_request_state_mod
 import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
-import 'package:wayagram/shared/features/quotation/repo/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/quotation/repo/quotation_repository.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
-  final _quotationRepository = QuotationRepository.instance;
+  final QuotationRepository _quotationRepository;
 
-  CreateRequestVm() : super(CreateRequestState());
+  CreateRequestVm(this._quotationRepository) : super(CreateRequestState());
 
   void clear() {
     state = CreateRequestState(
@@ -218,6 +218,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 final createRequestProvider =
     StateNotifierProvider<CreateRequestVm, CreateRequestState>(
   (ref) {
-    return CreateRequestVm();
+    final quotationRepository = ref.watch(quotationRepositoryProvider);
+    return CreateRequestVm(quotationRepository);
   },
 );

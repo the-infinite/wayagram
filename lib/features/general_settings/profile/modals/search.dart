@@ -6,7 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 import 'package:wayagram/shared/model/base_model.dart';
 
 class _FilterSections {
@@ -96,7 +96,7 @@ class _FilterSections {
 class SearchProfileModal extends StatefulWidget {
   final ValueNotifier<BaseFilterModel?> searchManager;
   final TextEditingController searchController;
-  final States interests;
+  final SelectInterestState interests;
   final int page;
 
   // Construct.

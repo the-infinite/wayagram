@@ -17,7 +17,7 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_ac
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class BidDashboard extends ConsumerStatefulWidget {
   const BidDashboard({super.key});

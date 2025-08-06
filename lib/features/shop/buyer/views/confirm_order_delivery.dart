@@ -35,7 +35,6 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
     final viewModel = ref.read(confirmOrderDeliveryVmProvider.notifier);
     final wayaTheme = Theme.of(context);
     final state = ref.watch(confirmOrderDeliveryVmProvider);
-    // final walletViewModel = ref.watch(walletVmProvider);
 
     final Order? arg = ModalRoute.of(context)?.settings.arguments as Order?;
 
@@ -101,22 +100,6 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                     child: PinKeyboard(
                         onKeyTap: viewModel.handleKeyPress,
                         onSubmit: () {
-                          // if (walletViewModel.payoutMethod.isEmpty) {
-                          //   WayaSnackBar.showToast(
-                          //       'Cannot Checkout. Contact the Shop Owner');
-                          //   return;
-                          // }
-
-                          // final String acctNumber =
-                          //     walletViewModel.payoutMethod[0].accountNumber ??
-                          //         '';
-                          // final String acctName =
-                          //     walletViewModel.payoutMethod[0].accountName ?? '';
-                          // final String bankName =
-                          //     walletViewModel.payoutMethod[0].bankName ?? '';
-                          // final String bankCode =
-                          //     walletViewModel.payoutMethod[0].bankCode ?? '';
-
                           viewModel.submitPins(
                             context: context,
                             order: arg,

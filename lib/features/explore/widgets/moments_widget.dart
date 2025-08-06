@@ -4,7 +4,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/moments/data/model/followed_user_moments_model.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 class MomentsWidget extends StatelessWidget {
   final UserMoments? moment;

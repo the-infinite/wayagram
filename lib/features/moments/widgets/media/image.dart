@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 class ImageMomentScreen extends StatefulWidget {
   final String media;

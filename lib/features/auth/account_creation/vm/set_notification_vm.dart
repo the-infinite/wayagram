@@ -1,9 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/notifications/vm/notification_vm.dart';
+
+part 'set_notification_vm.g.dart';
 
 class States {
   final bool isLoading;
@@ -15,9 +15,12 @@ class States {
   }
 }
 
-class SetNotificationVm extends StateNotifier<States> {
-  final Ref ref;
-  SetNotificationVm(this.ref) : super(States());
+@riverpod
+class SetNotification extends _$SetNotification {
+  @override
+  States build() {
+    return States();
+  }
 
   Future<void> setNotification() async {
     //? This is fine.
@@ -34,28 +37,10 @@ class SetNotificationVm extends StateNotifier<States> {
       }
       // Before moving forward, try to retrieve the user's notifications.
       notificationVm.getUserNotifications();
-
-      // final accountTypeState = ref.watch(selectAccountProvider);
-      // if (accountTypeState.selectedType!.type == "PERSONAL") {
-      //   WayaNav.toNamed('/account-setup-success');
-      // } else {
-      //   WayaNav.toNamed('/add-business-account');
-      // }
-       WayaNav.toNamed(SelectInterest.route);
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.notifications,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+      WayaNav.toNamed(SelectInterest.route);
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 }
-
-final setNotificationVmProvider =
-    StateNotifierProvider<SetNotificationVm, States>((ref) {
-  return SetNotificationVm(ref);
-});

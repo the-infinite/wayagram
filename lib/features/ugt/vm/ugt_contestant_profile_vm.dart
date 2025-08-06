@@ -129,5 +129,6 @@ class UgtContestantProfileVm
 final ugtContestantProfileVm =
     StateNotifierProvider<UgtContestantProfileVm, List<SingleContestantPosts>>(
         (ref) {
-  return UgtContestantProfileVm(ContestRepo(), WayaLocalDataSource());
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return UgtContestantProfileVm(contestRepo, WayaLocalDataSource());
 });

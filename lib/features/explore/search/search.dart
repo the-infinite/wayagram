@@ -30,7 +30,7 @@ import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 import 'package:wayagram/shared/features/profile/widget/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 import '../../group/vm/group_vm.dart';
 import '../../pages/vm/pages_vm.dart';

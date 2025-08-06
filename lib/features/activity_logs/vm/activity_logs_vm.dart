@@ -657,5 +657,6 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
 
 final activityLogsVmProvider =
     StateNotifierProvider<ActivityLogsVm, ActivityLogsState>((ref) {
-  return ActivityLogsVm(ActivityLogsRepository(), ref);
+  final repository = ref.watch(activityLogsRepositoryProvider);
+  return ActivityLogsVm(repository, ref);
 });

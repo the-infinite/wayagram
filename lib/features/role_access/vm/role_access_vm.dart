@@ -354,7 +354,10 @@ final editingRoleMemberProvider = StateProvider<bool>((ref) {
 
 final roleAccessVm = StateNotifierProvider<RoleAccessVm, RoleAccessState>(
   (ref) {
-    return RoleAccessVm(RoleAccessRepo(), ContestRepo(), WayaLocalDataSource());
+    final roleRepo = ref.watch(roleAccessRepositoryProvider);
+    final contestRepo = ref.watch(contestRepositoryProvider);
+
+    return RoleAccessVm(roleRepo, contestRepo, WayaLocalDataSource());
   },
 );
 

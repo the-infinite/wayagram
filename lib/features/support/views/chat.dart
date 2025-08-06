@@ -10,7 +10,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
-import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/my_bubble_widget.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/support/vm/chat.dart';
 

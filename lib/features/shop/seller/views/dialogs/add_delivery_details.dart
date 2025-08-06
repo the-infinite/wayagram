@@ -345,4 +345,7 @@ class AddDeliveryDetailsViewModel
 
 final addDeliveryDetailsViewModelProvider =
     StateNotifierProvider<AddDeliveryDetailsViewModel, AddDeliveryDetailState>(
-        (ref) => AddDeliveryDetailsViewModel(CartRepository(), ref));
+        (ref) {
+  final cartRepo = ref.watch(cartRepositoryProvider);
+  return AddDeliveryDetailsViewModel(cartRepo, ref);
+});

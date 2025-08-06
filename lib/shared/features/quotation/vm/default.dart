@@ -6,14 +6,14 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/cache/quotation.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
-import 'package:wayagram/shared/features/quotation/repo/default.dart';
+import 'package:wayagram/shared/features/quotation/repo/quotation_repository.dart';
 import 'package:wayagram/shared/features/quotation/state/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class QuotationsNotifier extends StateNotifier<QuotationsState> {
-  final repo = QuotationRepository.instance;
-  QuotationsNotifier(super.value);
+  final QuotationRepository repo;
+  QuotationsNotifier(super.value, this.repo);
 
   /// Helper function used to call [getBuyRequests] only if this has not yet been
   /// loaded.
@@ -737,10 +737,12 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
 final userQuotationsProvider =
     StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
-  return QuotationsNotifier(QuotationsState.self);
+  final repo = ref.watch(quotationRepositoryProvider);
+  return QuotationsNotifier(QuotationsState.self, repo);
 });
 
 final othersQuotationsProvider =
     StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
-  return QuotationsNotifier(QuotationsState.others);
+  final repo = ref.watch(quotationRepositoryProvider);
+  return QuotationsNotifier(QuotationsState.others, repo);
 });

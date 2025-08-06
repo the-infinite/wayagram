@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/shared/engagement/model/default.dart';
 import 'package:wayagram/shared/engagement/provider/default.dart';
 
@@ -43,5 +44,8 @@ class EventEngagementMonitor extends StateNotifier<void> {
 
 final eventEngagementProvider =
     StateNotifierProvider<EventEngagementMonitor, void>((ref) {
-  return EventEngagementMonitor(EngagementNotifier(WayaLocalDataSource()));
+  final authRepository = ref.watch(authRepositoryProvider);
+
+  return EventEngagementMonitor(
+      EngagementNotifier(WayaLocalDataSource(), authRepository));
 });

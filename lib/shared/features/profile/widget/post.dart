@@ -25,7 +25,7 @@ import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/shared/features/media/video.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
-import 'package:wayagram/shared/features/profile/vm/default.dart';
+import 'package:wayagram/shared/features/profile/vm/post_notifier.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
 class WayaPostWidget extends StatefulWidget {

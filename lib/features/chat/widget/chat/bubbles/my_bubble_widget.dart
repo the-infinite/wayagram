@@ -13,7 +13,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/file.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/voice.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
@@ -64,10 +64,7 @@ class _MyBubbleWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //? First, the space before this component.
             const Gap(30),
-
-            //? Finally, component itself.
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

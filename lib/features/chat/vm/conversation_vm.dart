@@ -9,19 +9,28 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
-import 'package:wayagram/features/chat/dto/default.dart';
+import 'package:wayagram/features/chat/dto/create_conversation_dto.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
-import 'package:wayagram/features/chat/repo/default.dart';
+import 'package:wayagram/features/chat/repo/chat_repository.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/cache/chat.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
+import 'package:wayagram/shared/features/user/repo/user_repository.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 class ConversationVm extends StateNotifier<ConversationState> {
-  final repo = ChatRepository();
+  final ChatRepository repo;
+  final WayaFileRepository fileRepository;
+  final UserRepository userRepository;
+
   OverlayEntry? _entry;
-  ConversationVm(super.state);
+  ConversationVm(
+    super.state,
+    this.repo,
+    this.fileRepository,
+    this.userRepository,
+  );
 
   /// A utility used to keep track of the current overlay showing on the
   /// conversation screen.
@@ -75,7 +84,9 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final docs = (data['docs'] as List)
           .map((doc) => ChatModel.fromJson(doc))
           .where((chat) =>
-              (chat.latestMessageId != null && chat.chatType != ChatType.group) || chat.chatType == ChatType.group)
+              (chat.latestMessageId != null &&
+                  chat.chatType != ChatType.group) ||
+              chat.chatType == ChatType.group)
           .toList();
 
       //? First, we check each of the members in each conversation...
@@ -90,10 +101,14 @@ class ConversationVm extends StateNotifier<ConversationState> {
         }
 
         //? Second, add all group admins.
-        members.addAll(docs[c].allOthers.where((member) => member.role != ChatMemberRole.member));
+        members.addAll(docs[c]
+            .allOthers
+            .where((member) => member.role != ChatMemberRole.member));
 
         //? Third, add all regular users.
-        members.addAll(docs[c].allOthers.where((member) => member.role == ChatMemberRole.member));
+        members.addAll(docs[c]
+            .allOthers
+            .where((member) => member.role == ChatMemberRole.member));
 
         //? Finally, replace the conversation with what we have here.
         final conversation = docs[c].copyWith(chatMembers: members);
@@ -156,11 +171,13 @@ class ConversationVm extends StateNotifier<ConversationState> {
     String? description,
     File? image,
   ]) async {
-    final imageUrl =
-        image == null ? null : await WayaFileRepository.instance.uploadFile(image, _getGroupProfilePhoto(image));
+    final imageUrl = image == null
+        ? null
+        : await fileRepository.uploadFile(image, _getGroupProfilePhoto(image));
 
     //? This is fine.
-    final response = await repo.startConversation(type, users, name, description, imageUrl);
+    final response =
+        await repo.startConversation(type, users, name, description, imageUrl);
 
     //? If this was fine...
     if (!response.success) {
@@ -201,10 +218,12 @@ class ConversationVm extends StateNotifier<ConversationState> {
       }
 
       //? Second, add all group admins.
-      members.addAll(result.allOthers.where((member) => member.role != ChatMemberRole.member));
+      members.addAll(result.allOthers
+          .where((member) => member.role != ChatMemberRole.member));
 
       //? Third, add all regular users.
-      members.addAll(result.allOthers.where((member) => member.role == ChatMemberRole.member));
+      members.addAll(result.allOthers
+          .where((member) => member.role == ChatMemberRole.member));
 
       //? Finally, replace the conversation with what we have here.
       result = result.copyWith(chatMembers: members);
@@ -425,7 +444,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
   }
 
   /// Helper function used to mute/unmute a user.
-  Future<bool> muteOrUnmuteUser(BuildContext context, WidgetRef ref, String id) async {
+  Future<bool> muteOrUnmuteUser(
+      BuildContext context, WidgetRef ref, String id) async {
     //? the provider
     final viewModel = ref.watch(wayaSelectFieldViewModelProvider(Uuid().v4()));
 
@@ -433,7 +453,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
     viewModel.selectValue(
         context,
         "Mute User",
-        subTitle: "You won't receive notifications from this user based on the time you set",
+        subTitle:
+            "You won't receive notifications from this user based on the time you set",
         contextHeight: context.height * 0.45,
         [
           Select(label: "Unmute", value: "0"),
@@ -517,7 +538,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
     state = state.copyWith(isLoading: true);
 
     //? This is fine.
-    final response = await repo.getArchivedChats(state.limit, state.archivedPage);
+    final response =
+        await repo.getArchivedChats(state.limit, state.archivedPage);
 
     //? This is fine.
     if (response.success) {
@@ -547,10 +569,14 @@ class ConversationVm extends StateNotifier<ConversationState> {
         }
 
         //? Second, add all group admins.
-        members.addAll(docs[c].allOthers.where((member) => member.role != ChatMemberRole.member));
+        members.addAll(docs[c]
+            .allOthers
+            .where((member) => member.role != ChatMemberRole.member));
 
         //? Third, add all regular users.
-        members.addAll(docs[c].allOthers.where((member) => member.role == ChatMemberRole.member));
+        members.addAll(docs[c]
+            .allOthers
+            .where((member) => member.role == ChatMemberRole.member));
 
         //? Finally, replace the conversation with what we have here.
         final conversation = docs[c].copyWith(chatMembers: members);
@@ -611,7 +637,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
   Future<bool> changeGroupProfilePicture(String id, File file) async {
     try {
       //? First, upload the new profile image.
-      final imageUrl = await WayaFileRepository.instance.uploadFile(file, _getGroupProfilePhoto(file));
+      final imageUrl =
+          await fileRepository.uploadFile(file, _getGroupProfilePhoto(file));
 
       //? If this was not fine... stop.
       if (imageUrl == null) {
@@ -764,7 +791,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
   /// Helper function used to edit the name (and probably description) of a group
   /// conversation.
-  Future<bool> updateGroupInfo(String id, String name, [String? description]) async {
+  Future<bool> updateGroupInfo(String id, String name,
+      [String? description]) async {
     try {
       //? Now, use it.
       final response = await repo.updateGroupInfo(id, name, description);
@@ -800,6 +828,11 @@ class ConversationVm extends StateNotifier<ConversationState> {
 }
 
 /// The state provider for conversations.
-final conversationProvider = StateNotifierProvider<ConversationVm, ConversationState>((ref) {
-  return ConversationVm(ConversationState.initial);
+final conversationProvider =
+    StateNotifierProvider<ConversationVm, ConversationState>((ref) {
+  final repo = ref.watch(chatRepositoryProvider);
+  final userRepo = ref.watch(userRepositoryProvider);
+
+  return ConversationVm(
+      ConversationState.initial, repo, WayaFileRepository.instance, userRepo);
 });

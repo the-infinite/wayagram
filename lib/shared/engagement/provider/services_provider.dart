@@ -14,7 +14,7 @@ import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dar
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
-import 'package:wayagram/shared/features/user/repo/default.dart';
+import 'package:wayagram/shared/features/user/repo/user_repository.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 
 class CategorizedPost {
@@ -88,12 +88,19 @@ class ServicesProvider extends StateNotifier<States> {
   final Ref ref;
   final EventRepository _eventRepository;
   final PageRepository _pageRepository;
-  final _exploreRepository = ExploreRepository.instance;
+  final ExploreRepository _exploreRepository;
   final PollAndVotingRepository _pollAndVotingRepository;
   final WayaSecureDataSource _secureDataSource;
+  final UserRepository userRepository;
 
-  ServicesProvider(this._pollAndVotingRepository, this._pageRepository,
-      this._secureDataSource, this._eventRepository, this.ref)
+  ServicesProvider(
+      this._pollAndVotingRepository,
+      this._pageRepository,
+      this._secureDataSource,
+      this._eventRepository,
+      this.ref,
+      this._exploreRepository,
+      this.userRepository)
       : super(States());
 
   Future<void> getEvents() async {
@@ -219,18 +226,12 @@ class ServicesProvider extends StateNotifier<States> {
       final response = await _exploreRepository.getFeeds(1, 200);
       if (response.success) {
         final data = response.data['data'];
- 
-      
+
         //originalPostId
         final posts = data['docs'] as List;
         final recent = await Future.wait(posts.map((e) async {
-         
           return PostModel.fromJson(e);
         }));
-
-          
-
-       
 
         //? Fetch the posts.
         final result = [...state.topPosts];
@@ -569,7 +570,7 @@ class ServicesProvider extends StateNotifier<States> {
 
   Future<void> getAllUsers() async {
     try {
-      final response = await UserRepository.instance.getAllUsers();
+      final response = await userRepository.getAllUsers();
 
       if (response.success) {
         final data = response.data['data'];
@@ -590,6 +591,19 @@ class ServicesProvider extends StateNotifier<States> {
 }
 
 final servicesProvider = StateNotifierProvider<ServicesProvider, States>((ref) {
-  return ServicesProvider(PollAndVotingRepository(), PageRepository(),
-      WayaSecureDataSource(), EventRepository(), ref);
+  final expoloreRepo = ref.watch(exploreRepositoryProvider);
+  final pollAndVotingRepo = ref.watch(pollAndVotingRepositoryProvider);
+  final eventRepo = ref.watch(eventRepositoryProvider);
+  final pageRepo = PageRepository.instance;
+  final userRepo = ref.watch(userRepositoryProvider);
+
+  return ServicesProvider(
+    pollAndVotingRepo,
+    pageRepo,
+    WayaSecureDataSource(),
+    eventRepo,
+    ref,
+    expoloreRepo,
+    userRepo,
+  );
 });

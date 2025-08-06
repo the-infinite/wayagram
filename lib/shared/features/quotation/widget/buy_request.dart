@@ -34,16 +34,19 @@ class QuotationBuyRequestWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<QuotationBuyRequestWidget> createState() => _QuotationBuyRequestWidgetState();
+  ConsumerState<QuotationBuyRequestWidget> createState() =>
+      _QuotationBuyRequestWidgetState();
 }
 
-class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestWidget> {
+class _QuotationBuyRequestWidgetState
+    extends ConsumerState<QuotationBuyRequestWidget> {
   final orderController = ValueNotifier<BidOrderModel?>(null);
   QuotationBidModel? bid;
   final timeNotifier = ValueNotifier(Duration.zero);
   final loadingController = ValueNotifier(false);
   Timer? timer;
-  late final isClosed = [BuyRequestStatus.cancelled, BuyRequestStatus.closed].contains(widget.data.status);
+  late final isClosed = [BuyRequestStatus.cancelled, BuyRequestStatus.closed]
+      .contains(widget.data.status);
 
   @override
   void initState() {
@@ -61,7 +64,8 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
       if (isClosed) return;
 
       //? This is fine.
-      final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+      final request =
+          wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
 
       //? If the status is not started, then we need to calculate the time left
       //? until the bid starts.
@@ -76,7 +80,8 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
       }
 
       //? Now, let the timer keep ticking.
-      timer = Timer.periodic(const Duration(seconds: 1), (_) async => await _ingestOrder());
+      timer = Timer.periodic(
+          const Duration(seconds: 1), (_) async => await _ingestOrder());
     });
     super.initState();
   }
@@ -92,8 +97,9 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
 
   Future<void> _ingestOrder() async {
     if (!mounted) return;
-    
-    final cachedRequest = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+
+    final cachedRequest =
+        wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final eval = timeNotifier.value - const Duration(seconds: 1);
 
     try {
@@ -138,7 +144,8 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     }
 
     //? Then move forward.
-    final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+    final request =
+        wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     final amount = await WayaUtils.showModalSheet<double>(
       context,
       child: EditOfferModal(
@@ -156,7 +163,8 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     if (amount == null) return;
 
     //? Which shop is the user sending the bid as?
-    final shopId = await WayaUtils.showModalSheet(context, child: ChooseShopModal());
+    final shopId =
+        await WayaUtils.showModalSheet(context, child: ChooseShopModal());
 
     //! If the shop was not selected.
     if (shopId == null) return;
@@ -171,7 +179,8 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
         context,
         child: EditOfferModal(
           title: 'Delivery Cost',
-          hint: 'Enter your delivery cost for this order to deliver to\n\n${request.deliveryAddress}',
+          hint:
+              'Enter your delivery cost for this order to deliver to\n\n${request.deliveryAddress}',
           delta: request.bidStartingAmount >= 3000000
               ? 25000
               : request.bidStartingAmount >= 200000
@@ -188,7 +197,8 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     }
 
     //? Now, send the bid.
-    final result = await widget.notifier.sendBid(request.id, amount, shopId, deliveryCost);
+    final result =
+        await widget.notifier.sendBid(request.id, amount, shopId, deliveryCost);
 
     //! Since bidding failed, you can leave.
     if (result == null) return;
@@ -198,17 +208,23 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
   }
 
   Future<void> _viewSellerBid(QuotationBidModel result) async {
-    WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
+    WayaNav.toNamed(
+        WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
   }
 
   Future<void> _viewOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+    WayaNav.toNamed(
+        WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
   }
 
   Future<void> _checkoutOrder() async {
-    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
-    final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
-    final bid = request.bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
+    WayaNav.toNamed(
+        WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+    final request =
+        wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+    final bid = request.bids
+        ?.where((bid) => bid.status == BidActionType.accept)
+        .firstOrNull;
 
     //? This is fine
     if (bid != null && widget.data.buyerId == ConversationState.self.id) {
@@ -217,12 +233,14 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
 
     //? Are you the right vendor?
     else if (bid?.vendorId == ConversationState.self.id) {
-      WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
+      WayaNav.toNamed(
+          WayaAppRoutes.getQuotationOrderDetailsScreen(widget.data.id));
     }
   }
 
   Future<void> _viewBids() async {
-    final request = wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
+    final request =
+        wayaQuotationsCache.getCachedData(widget.data.id) ?? widget.data;
     WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(request.id));
   }
 
@@ -239,15 +257,17 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
     //? Proceed to get all the utilities needed to render the views.
     final wayaTheme = Theme.of(context);
     final vendoredBid = request.bids
-        ?.where((bid) => bid.vendorId == ConversationState.self.id && bid.status != BidActionType.reject)
+        ?.where((bid) =>
+            bid.vendorId == ConversationState.self.id &&
+            bid.status != BidActionType.reject)
         .firstOrNull;
 
     //? The component itself.
     return ValueListenableBuilder(
       valueListenable: orderController,
       builder: (context, order, _) {
-        final participatedOrder =
-            order?.buyerId == ConversationState.self.id || order?.vendorId == ConversationState.self.id;
+        final participatedOrder = order?.buyerId == ConversationState.self.id ||
+            order?.vendorId == ConversationState.self.id;
 
         //? This is fine.
         return Column(
@@ -268,11 +288,14 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(left: 10, top: 10, right: 16, bottom: 10),
+                    padding: const EdgeInsets.only(
+                        left: 10, top: 10, right: 16, bottom: 10),
                     decoration: BoxDecoration(
                       color: switch (request.status) {
-                        BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending.withAlpha(30),
-                        BuyRequestStatus.active => wayaTheme.colorScheme.success50,
+                        BuyRequestStatus.notStarted =>
+                          wayaTheme.colorScheme.pending.withAlpha(30),
+                        BuyRequestStatus.active =>
+                          wayaTheme.colorScheme.success50,
                         _ => wayaTheme.colorScheme.error.withAlpha(30),
                       },
                       borderRadius: BorderRadius.circular(40),
@@ -285,8 +308,10 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
                         WayaAssets.icons.bBid.svg(
                           colorFilter: ColorFilter.mode(
                             switch (request.status) {
-                              BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending,
-                              BuyRequestStatus.active => wayaTheme.colorScheme.success,
+                              BuyRequestStatus.notStarted =>
+                                wayaTheme.colorScheme.pending,
+                              BuyRequestStatus.active =>
+                                wayaTheme.colorScheme.success,
                               _ => wayaTheme.colorScheme.error,
                             },
                             BlendMode.srcIn,
@@ -303,8 +328,10 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
                           },
                           style: wayaTheme.textTheme.descriptionStyle.copyWith(
                             color: switch (request.status) {
-                              BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending,
-                              BuyRequestStatus.active => wayaTheme.colorScheme.success,
+                              BuyRequestStatus.notStarted =>
+                                wayaTheme.colorScheme.pending,
+                              BuyRequestStatus.active =>
+                                wayaTheme.colorScheme.success,
                               _ => wayaTheme.colorScheme.error,
                             },
                             fontSize: 14.sp,
@@ -356,18 +383,23 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
                           children: [
                             TextSpan(
                               text: switch (request.status) {
-                                BuyRequestStatus.notStarted => 'Bidding Starts in ',
+                                BuyRequestStatus.notStarted =>
+                                  'Bidding Starts in ',
                                 BuyRequestStatus.active => 'Bidding Ends in ',
-                                BuyRequestStatus.cancelled => 'Bidding Cancelled ',
+                                BuyRequestStatus.cancelled =>
+                                  'Bidding Cancelled ',
                                 BuyRequestStatus.closed => 'Bidding Closed ',
                               },
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                             TextSpan(
                               text: isClosed
-                                  ? WayaDateHelper.getSocialDate(request.updatedAt)
-                                  : WayaDateHelper.convertDurationToCountdown(timeNotifier.value),
-                              style: wayaTheme.textTheme.descriptionStyle.copyWith(
+                                  ? WayaDateHelper.getSocialDate(
+                                      request.updatedAt)
+                                  : WayaDateHelper.convertDurationToCountdown(
+                                      timeNotifier.value),
+                              style:
+                                  wayaTheme.textTheme.descriptionStyle.copyWith(
                                 color: wayaTheme.colorScheme.customPrimary,
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
@@ -387,7 +419,9 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
                     text: TextSpan(
                       children: [
                         //* For the section title.
-                        TextSpan(text: 'Starting Price: ', style: wayaTheme.textTheme.hintStyle),
+                        TextSpan(
+                            text: 'Starting Price: ',
+                            style: wayaTheme.textTheme.hintStyle),
 
                         //* For the starting amount.
                         TextSpan(
@@ -435,8 +469,12 @@ class _QuotationBuyRequestWidgetState extends ConsumerState<QuotationBuyRequestW
                   //? Then you can view bids.
                   else
                     WayaProgressiveButton(
-                      callback: request.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
-                      text: request.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
+                      callback: request.buyerId == ConversationState.self.id
+                          ? _viewBids
+                          : _placeBid,
+                      text: request.buyerId == ConversationState.self.id
+                          ? 'View Bids'
+                          : 'Place Bid',
                       height: 48,
                       isDisabled: request.buyerId == ConversationState.self.id
                           ? false

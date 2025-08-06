@@ -134,5 +134,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
 // Provider
 final followedContestProvider =
     StateNotifierProvider<FollowedContestNotifier, List<Contest>>((ref) {
-  return FollowedContestNotifier(ContestRepo(), WayaLocalDataSource());
+  final contestRepo = ref.watch(contestRepositoryProvider);
+
+  return FollowedContestNotifier(contestRepo, WayaLocalDataSource());
 });

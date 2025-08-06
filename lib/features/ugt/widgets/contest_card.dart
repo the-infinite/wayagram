@@ -485,20 +485,30 @@ bool isCurrentDateBetween(
 }
 
 bool isTodayInRange(String startDateStr, String endDateStr) {
-  // Parse input strings
-  DateTime startDate = DateTime.parse(startDateStr);
-  DateTime endDate = DateTime.parse(endDateStr);
+  try {
+    // Check if date strings are valid
+    if (startDateStr.isEmpty || endDateStr.isEmpty) {
+      return false;
+    }
+    
+    // Parse input strings
+    DateTime startDate = DateTime.parse(startDateStr);
+    DateTime endDate = DateTime.parse(endDateStr);
 
-  // Get current date without time
-  DateTime today = DateTime.now();
-  today = DateTime(today.year, today.month, today.day);
+    // Get current date without time
+    DateTime today = DateTime.now();
+    today = DateTime(today.year, today.month, today.day);
 
-  // Optional: Normalize start and end to remove time (if needed)
-  startDate = DateTime(startDate.year, startDate.month, startDate.day);
-  endDate = DateTime(endDate.year, endDate.month, endDate.day);
+    // Optional: Normalize start and end to remove time (if needed)
+    startDate = DateTime(startDate.year, startDate.month, startDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
-  // Check if today is within range [start, end]
-  return today.isAtSameMomentAs(startDate) ||
-      today.isAtSameMomentAs(endDate) ||
-      (today.isAfter(startDate) && today.isBefore(endDate));
+    // Check if today is within range [start, end]
+    return today.isAtSameMomentAs(startDate) ||
+        today.isAtSameMomentAs(endDate) ||
+        (today.isAfter(startDate) && today.isBefore(endDate));
+  } catch (e) {
+    debugPrint("Invalid date format in isTodayInRange: $e");
+    return false;
+  }
 }

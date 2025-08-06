@@ -11,7 +11,7 @@ import 'package:wayagram/features/polls_and_voting/widgets/poll_widget.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/shared/features/profile/model/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/poll.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 class PollsFeedWidget extends ConsumerStatefulWidget {
   final bool isExpanded;

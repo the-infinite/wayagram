@@ -2,12 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
-import 'package:wayagram/shared/features/follow/repo/default.dart';
+import 'package:wayagram/shared/features/follow/repo/follow_repository.dart';
 import 'package:wayagram/shared/features/follow/state/default.dart';
 
 class FollowNotifier extends StateNotifier<FollowState> {
-  final repo = FollowRepository.instance;
-  FollowNotifier(super.state);
+  final FollowRepository repo;
+  FollowNotifier(super.state, this.repo);
 
   Future<List<FollowModel>> getFollowersOf(String id) async {
     final result = <FollowModel>[];
@@ -15,14 +15,16 @@ class FollowNotifier extends StateNotifier<FollowState> {
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowers(id, state.followersNextPage ?? state.followersPage, state.limit);
+      final response = await repo.getFollowers(
+          id, state.followersNextPage ?? state.followersPage, state.limit);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.followersHasNextPage) {
@@ -63,14 +65,16 @@ class FollowNotifier extends StateNotifier<FollowState> {
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowing(id, state.followingNextPage ?? state.followingPage, state.limit);
+      final response = await repo.getFollowing(
+          id, state.followingNextPage ?? state.followingPage, state.limit);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => FollowModel.fromJson(doc));
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.followingHasNextPage) {
@@ -151,10 +155,13 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
 typedef FollowProvider = StateNotifierProvider<FollowNotifier, FollowState>;
 
-final userFollowersProvider = StateNotifierProvider.family<FollowNotifier, FollowState, String>(
-  (ref, id) => FollowNotifier(
+final userFollowersProvider =
+    StateNotifierProvider.family<FollowNotifier, FollowState, String>(
+        (ref, id) {
+  return FollowNotifier(
     FollowState.initial.copyWith(
       userId: id,
     ),
-  ),
-);
+    FollowRepository.instance,
+  );
+});

@@ -21,8 +21,11 @@ import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 final addProductProvider =
     StateNotifierProvider.family<AddProductVm, AddProductState, String>(
-        (ref, uniqueKey) =>
-            AddProductVm(UploadFileRepository(), ShopRepository.instance, ref));
+        (ref, uniqueKey) {
+  final uploadFileRepository = ref.watch(uploadFileRepositoryProvider);
+
+  return AddProductVm(uploadFileRepository, ShopRepository.instance, ref);
+});
 
 class AddProductVm extends StateNotifier<AddProductState> {
   final ShopRepository _shopRepository;

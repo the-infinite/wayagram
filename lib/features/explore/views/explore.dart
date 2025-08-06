@@ -9,7 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
@@ -30,7 +30,7 @@ import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
-import 'package:wayagram/shared/features/location/vm/default.dart';
+import 'package:wayagram/shared/features/location/vm/waya_location_repository.dart';
 import 'package:wayagram/shared/features/follow/widget/default.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
@@ -56,9 +56,6 @@ class _ExploreState extends ConsumerState<Explore> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //> need to fetch user data
-      //ref.read(successfulSetupVmProvider.notifier).getUserData();
-      //>
       ref.read(conversationProvider.notifier).getBlockedUsers();
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();

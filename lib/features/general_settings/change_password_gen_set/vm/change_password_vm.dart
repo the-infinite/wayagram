@@ -30,7 +30,6 @@ class ChangePasswordVm extends StateNotifier<ChangePasswordState> {
           WayaNav.offNamed('/general-settings');
         });
       } else {
-       
         WayaSnackBar.showToast(
             refinedResponse.message ?? 'Sth is wrong. Try again later');
       }
@@ -41,20 +40,18 @@ class ChangePasswordVm extends StateNotifier<ChangePasswordState> {
         isLoading: false,
       );
       return false;
-    }
-     finally  {
-    state = state.copyWith(
+    } finally {
+      state = state.copyWith(
         isLoading: false,
       );
+    }
   }
-    
-  }
- 
 }
 
 final changePasswordNotifierProvider =
     StateNotifierProvider<ChangePasswordVm, ChangePasswordState>((ref) {
-  return ChangePasswordVm(ChangePasswordRepo());
+  final changeRepo = ref.watch(changePasswordRepositoryProvider);
+  return ChangePasswordVm(changeRepo);
 });
 
 class ChangePasswordState {
@@ -74,47 +71,3 @@ class ChangePasswordState {
     );
   }
 }
-
-// class ChangePasswordVm extends ChangeNotifier {
-//   final ChangePasswordRepo _changePasswordRepo;
-//   final Ref ref;
-
-//   ChangePasswordVm(this.ref, this._changePasswordRepo);
-
-  // TextEditingController oldPassword = TextEditingController();
-  // TextEditingController newPassword = TextEditingController();
-  // TextEditingController confirmPassword = TextEditingController();
-//   bool _isLoading = false;
-//   bool get isLoading => _isLoading;
-
-//   @override
-//   void dispose() {
-//     super.dispose();
-//     oldPassword.dispose();
-//     newPassword.dispose();
-//     confirmPassword.dispose();
-//   }
-
-//   Future<bool> changePassword(
-//       {required String oldPassword, required String newPassword, required String confirmPassword}) async {
-//     try {
-//       _isLoading = true;
-//       notifyListeners();
-//       await _changePasswordRepo.changePassword(
-//         oldPassword: oldPassword,
-//         newPassword: newPassword,
-//         confirmPassword: confirmPassword,
-//       );
-//       _isLoading = false;
-//       notifyListeners();
-//       return true;
-//     } catch (e) {
-//       _isLoading = false;
-//       notifyListeners();
-//       return false;
-//     }
-//   }
-// }
-
-// final changePasswordProvider =
-//     ChangeNotifierProvider<ChangePasswordVm>((ref) => ChangePasswordVm(ref, ChangePasswordRepo()));

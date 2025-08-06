@@ -11,7 +11,7 @@ import 'package:wayagram/features/promotion/data/models/promotion_state.dart';
 import 'package:wayagram/features/promotion/data/repo/promotion_repository.dart';
 import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 class PromotionVm extends StateNotifier<PromotionState> {
@@ -177,5 +177,6 @@ class PromotionVm extends StateNotifier<PromotionState> {
 
 final promoteVmProvider =
     StateNotifierProvider<PromotionVm, PromotionState>((ref) {
-  return PromotionVm(ref, PromotionRepository());
+  final repo = ref.watch(promotionRepositoryProvider);
+  return PromotionVm(ref, repo);
 });

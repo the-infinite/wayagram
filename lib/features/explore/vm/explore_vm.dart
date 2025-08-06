@@ -50,12 +50,15 @@ class ExploreState {
 
 class ExploreVm extends StateNotifier<ExploreState> {
   final Ref ref;
-  final  _exploreRepository = ExploreRepository.instance;
+  final ExploreRepository _exploreRepository;
   final WayaSecureDataSource _secureDataSource;
   final PageRepository _pageRepository;
-  ExploreVm(this._secureDataSource,
-      this._pageRepository, this.ref)
-      : super(ExploreState.initial) {
+  ExploreVm(
+    this._secureDataSource,
+    this._pageRepository,
+    this.ref,
+    this._exploreRepository,
+  ) : super(ExploreState.initial) {
     initialize();
   }
 
@@ -96,7 +99,8 @@ class ExploreVm extends StateNotifier<ExploreState> {
     try {
       //? Continue.
       state = state.copyWith(isLoading: true);
-      final response = await _exploreRepository.getFeeds(state.cursor ?? 1, 1000);
+      final response =
+          await _exploreRepository.getFeeds(state.cursor ?? 1, 1000);
 
       if (response.success) {
         final data = response.data['data'];
@@ -106,7 +110,6 @@ class ExploreVm extends StateNotifier<ExploreState> {
           if (e["originalPostId"] != null) {
             final originalPost =
                 await getSinglePosts(postId: e["originalPostId"]);
-           
 
             e['originalPost'] = originalPost;
           }
@@ -145,6 +148,6 @@ class ExploreVm extends StateNotifier<ExploreState> {
 }
 
 final exploreVmProvider = StateNotifierProvider<ExploreVm, ExploreState>((ref) {
-  return ExploreVm(
-      WayaSecureDataSource(), PageRepository(), ref);
+  final exploreRepo = ref.watch(exploreRepositoryProvider);
+  return ExploreVm(WayaSecureDataSource(), PageRepository.instance, ref, exploreRepo);
 });

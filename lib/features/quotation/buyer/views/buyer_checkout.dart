@@ -18,7 +18,7 @@ import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/wallet/model/dto.dart';
-import 'package:wayagram/shared/features/wallet/resource/default.dart';
+import 'package:wayagram/shared/features/wallet/resource/wallet_resource.dart';
 
 class BuyerCheckout extends ConsumerStatefulWidget {
   static const route = '/quotation/buyer/checkout';

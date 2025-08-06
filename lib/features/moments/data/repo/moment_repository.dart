@@ -93,14 +93,10 @@ class MomentRepository extends BaseRepository {
     );
   }
 
-  ///moments/get
   Future<WayaRequestResponse> getSingleMoment({required String id}) {
     return get("$serviceUrl/moments/get?id=$id");
   }
 
-  ///moments/:momentId
-  ///
-  ///
   Future<WayaRequestResponse> reportMoment(
       {required String userId,
       required String momentId,

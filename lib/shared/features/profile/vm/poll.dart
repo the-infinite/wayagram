@@ -6,22 +6,24 @@ import 'package:wayagram/shared/features/profile/model/poll.dart';
 import 'package:wayagram/shared/features/profile/state/poll.dart';
 
 class UserPollsNotifier extends StateNotifier<PollsState> {
-  final repo = PollAndVotingRepository();
-  UserPollsNotifier() : super(PollsState.initial);
+  final PollAndVotingRepository repo;
+  UserPollsNotifier(this.repo) : super(PollsState.initial);
 
   Future<List<PollModel>> getPollsByUser(String id) async {
     final result = <PollModel>[];
 
     try {
       // This is fine too.
-      final response = await repo.getAllPolls(state.nextPage ?? state.page, state.limit, id);
+      final response =
+          await repo.getAllPolls(state.nextPage ?? state.page, state.limit, id);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => PollModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => PollModel.fromJson(doc));
 
         //? Now, add these to what we have here.
         result.addAll(docs);
@@ -62,4 +64,9 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
   }
 }
 
-final userPollsProvider = StateNotifierProvider.family<UserPollsNotifier, PollsState, String>((ref, id) => UserPollsNotifier());
+final userPollsProvider =
+    StateNotifierProvider.family<UserPollsNotifier, PollsState, String>(
+        (ref, id) {
+  final repo = ref.watch(pollAndVotingRepositoryProvider);
+  return UserPollsNotifier(repo);
+});

@@ -1342,12 +1342,12 @@ class PageVm extends StateNotifier<PageState> {
 }
 
 final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
-  return PageVm(ref, PageRepository());
+  return PageVm(ref, PageRepository.instance);
 });
 
 typedef PageProviderFamily = StateNotifierProvider<PageVm, PageState>;
 
 final singlePageProvider =
     StateNotifierProvider.family<PageVm, PageState, String>((ref, key) {
-  return PageVm(ref, PageRepository());
+  return PageVm(ref, PageRepository.instance);
 });

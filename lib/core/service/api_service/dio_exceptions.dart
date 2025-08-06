@@ -1,17 +1,8 @@
-import 'dart:developer' as logger;
-
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 
 class WayaHttpException {
   static WayaRequestResponse handleDioError(DioException e) {
-    if (kDebugMode) {
-      logger.log('DioException: ${e.message}');
-      logger.log('Error Type: ${e.type.name}');
-      logger.log('Error Data: ${e.response?.data}');
-      logger.log('Status Code: ${e.response?.statusCode}');
-    }
     String? message;
     try {
       message = e.response?.data['errors'] != null

@@ -7,8 +7,8 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/follow/vm/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/follow/vm/follow_notifier.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class FollowUserWidget extends ConsumerStatefulWidget {

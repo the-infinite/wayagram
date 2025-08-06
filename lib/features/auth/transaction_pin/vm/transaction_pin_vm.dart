@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -30,11 +29,9 @@ final isChangePinValidProvider = StateProvider<bool>((ref) {
 });
 
 class TransactionPinVm extends StateNotifier<void> {
-  final WalletRepository _walletRepository = WalletRepository.instance;
+  final WalletRepository _walletRepository;
   final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
-  final ChangePinRepo _changePinRepo = ChangePinRepo();
-  final _logger = getLogger("TransactionPinVm");
-  TransactionPinVm(this.ref) : super(null);
+  TransactionPinVm(this.ref, this._walletRepository) : super(null);
   final Ref ref;
 
   void handleKeyPress(String value) {
@@ -106,8 +103,7 @@ class TransactionPinVm extends StateNotifier<void> {
             WayaNav.toNamed('/set-notification');
           }
         }
-      } catch (e) {
-        _logger.e(e);
+      } catch (_) {
       } finally {
         ref.read(loadingProvider.notifier).state = false;
       }
@@ -131,7 +127,7 @@ class TransactionPinVm extends StateNotifier<void> {
       try {
         final userId = _localDataSource.getUserId();
 
-        final response = await _changePinRepo.changePin(
+        final response = await ref.read(changePinRepositoryProvider).changePin(
             userId: userId ?? '', oldPin: pin, confirmPin: newConfirmPin);
 
         if (response.success) {
@@ -144,8 +140,7 @@ class TransactionPinVm extends StateNotifier<void> {
           ref.read(newPinConfirmationProvider.notifier).state =
               ''; // this code needs to  be refactored after the first deployment , it is hard working with it
         }
-      } catch (e) {
-        _logger.e(e);
+      } catch (_) {
       } finally {
         ref.read(loadingProvider.notifier).state = false;
       }
@@ -167,7 +162,7 @@ class TransactionPinVm extends StateNotifier<void> {
       try {
         final userId = _localDataSource.getUserId();
 
-        final response = await _changePinRepo.resetPin(
+        final response = await ref.read(changePinRepositoryProvider).resetPin(
             userId: userId ?? '',
             pin: confirmPin,
             confirmPin: newConfirmPin,
@@ -183,8 +178,7 @@ class TransactionPinVm extends StateNotifier<void> {
           ref.read(newPinConfirmationProvider.notifier).state =
               ''; // this code needs to  be refactored after the first deployment , it is hard working with it
         }
-      } catch (e) {
-        _logger.e(e);
+      } catch (_) {
       } finally {
         ref.read(loadingProvider.notifier).state = false;
       }
@@ -201,5 +195,5 @@ class TransactionPinVm extends StateNotifier<void> {
 
 final transactionPinProvider =
     StateNotifierProvider<TransactionPinVm, void>((ref) {
-  return TransactionPinVm(ref);
+  return TransactionPinVm(ref, WalletRepository.instance);
 });

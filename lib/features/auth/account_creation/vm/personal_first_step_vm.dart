@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/personal_state_model.dart';
@@ -14,17 +14,17 @@ import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
-class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
-  final AuthRepository _authRepository;
-  final WayaLocalDataSource _localDataSource;
-  final WayaSecureDataSource _secureDataSource;
-  final Ref ref;
+part 'personal_first_step_vm.g.dart';
 
-  final _logger = getLogger('PersonalFirstStepVm');
+@riverpod
+class PersonalFirstStep extends _$PersonalFirstStep {
+  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  final WayaSecureDataSource _secureDataSource = WayaSecureDataSource();
 
-  PersonalFirstStepVm(this.ref, this._authRepository, this._localDataSource,
-      this._secureDataSource)
-      : super(PersonalFirstStepState());
+  @override
+  PersonalFirstStepState build() {
+    return PersonalFirstStepState();
+  }
 
   void togglePasswordVisibility() {
     state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
@@ -99,8 +99,11 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
 
   Future<void> fetchCities(String stateCode, String countryCode) async {
     try {
-      final response = await _authRepository.getAllCities(
-          stateCode: stateCode, countryCode: countryCode);
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getAllCities(
+        stateCode: stateCode,
+        countryCode: countryCode,
+      );
 
       if (response.success) {
         CitiesResponseModel responseModel =
@@ -111,14 +114,13 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         }).toList();
         state = state.copyWith(cities: allCities);
       }
-    } catch (e) {
-      _logger.e(e);
-    }
+    } catch (_) {}
   }
 
   Future<void> fetchStates() async {
     try {
-      final response = await _authRepository.getAllStates();
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getAllStates();
 
       if (response.success) {
         StatesResponseModel responseModel =
@@ -129,15 +131,16 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         }).toList();
         state = state.copyWith(states: allStates);
       }
-    } catch (e) {
-      _logger.e(e);
-    }
+    } catch (_) {}
   }
 
   Future<void> fetchLGA(String stateCode, String countryCode) async {
     try {
-      final response = await _authRepository.getAllLGA(
-          stateCode: stateCode, countryCode: countryCode);
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getAllLGA(
+        stateCode: stateCode,
+        countryCode: countryCode,
+      );
 
       if (response.success) {
         LGAResponseModel responseModel =
@@ -148,14 +151,13 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         }).toList();
         state = state.copyWith(lgas: lgas);
       }
-    } catch (e) {
-      _logger.e(e);
-    }
+    } catch (_) {}
   }
 
   Future<void> fetchLocation() async {
     try {
-      final reponse = await _authRepository.getAllCountries();
+      final authRepository = ref.read(authRepositoryProvider);
+      final reponse = await authRepository.getAllCountries();
 
       if (reponse.success) {
         CountryResponseModel responseModel =
@@ -167,16 +169,14 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
 
         state = state.copyWith(countries: countries);
       }
-    } catch (e) {
-      _logger.e(e);
-    }
+    } catch (_) {}
   }
 
   Future<List<Select>?> fetchBusinessTypes() async {
     try {
       state = state.copyWith(isLoadingBusinessType: true);
-      final response = await _authRepository.getBusinessTypes();
-      _logger.d(response.data);
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getBusinessTypes();
       List<Select> biz = [];
       final businesses = response.data['data']['docs'] as List;
       final businessTypes = businesses
@@ -227,9 +227,10 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   Future<void> onSubmit(Function gotoNextTab) async {
     try {
       state = state.copyWith(isLoading: true);
-      final accountState = ref.watch(selectAccountProvider);
+      final accountState = ref.read(selectAccountProvider);
       final bool isPersonal = accountState.selectedType!.type == 'PERSONAL';
-      final response = await _authRepository.register(Register(
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.register(Register(
         email: state.email.text,
         password: state.password.text,
         firstName: state.firstName.text,
@@ -294,33 +295,17 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   }
 }
 
-final authRepositoryProvider = Provider((ref) => AuthRepository());
-
-final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
-  return WayaLocalDataSource();
-});
-
-final personalFirstStepProvider =
-    StateNotifierProvider<PersonalFirstStepVm, PersonalFirstStepState>((ref) {
-  final authRepository = ref.watch(authRepositoryProvider);
-  final localDataSource = ref.watch(localDataSourceProvider);
-  return PersonalFirstStepVm(
-      ref, authRepository, localDataSource, WayaSecureDataSource());
-});
-
-class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
-  final AuthRepository _authRepository;
-  final _logger = getLogger('BusinessTypes');
-
-  BusinessTypes(this._authRepository) : super(const AsyncValue.loading()) {
-    fetchBusinessTypes();
+@riverpod
+class BusinessTypes extends _$BusinessTypes {
+  @override
+  FutureOr<List<Select>> build() {
+    return fetchBusinessTypes();
   }
 
-  Future<void> fetchBusinessTypes() async {
+  Future<List<Select>> fetchBusinessTypes() async {
     try {
-      state = const AsyncValue.loading();
-      final response = await _authRepository.getBusinessTypes();
-      _logger.d(response.data);
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.getBusinessTypes();
       final businesses = response.data['data']['docs'] as List;
       final businessTypes = businesses
           .map((item) => Select(
@@ -329,20 +314,14 @@ class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
               ))
           .toList();
 
-      state = AsyncValue.data(businessTypes);
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
-      _logger.e(e);
+      return businessTypes;
+    } catch (_) {
+      rethrow;
     }
   }
 
   Future<void> refresh() async {
-    await fetchBusinessTypes();
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() => fetchBusinessTypes());
   }
 }
-
-final businessTypesProvider =
-    StateNotifierProvider<BusinessTypes, AsyncValue<List<Select>>>((ref) {
-  final authRepository = ref.watch(authRepositoryProvider);
-  return BusinessTypes(authRepository);
-});

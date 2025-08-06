@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
@@ -12,6 +11,8 @@ import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/account_security/account_security.dart';
+
+part 'verify_account_vm.g.dart';
 
 class VerifyAccountState {
   bool isEditing;
@@ -46,20 +47,16 @@ class VerifyAccountState {
   }
 }
 
-class VerifyAccountVm extends Notifier<VerifyAccountState> {
-  final AuthRepository _authRepository;
+@riverpod
+class VerifyAccount extends _$VerifyAccount {
   final WayaSecureDataSource _secureDataSource = WayaSecureDataSource();
-  final _logger = getLogger("VerifyAccountVm");
   Timer? _timer;
   final SnackbarService _snackbarService = SnackbarService();
 
-  VerifyAccountVm(this._authRepository);
-
   @override
   VerifyAccountState build() {
-    state = VerifyAccountState();
     startCountdown();
-    return state;
+    return VerifyAccountState();
   }
 
   void startCountdown() {
@@ -93,8 +90,9 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
     state = state.copyWith(isLoading: true);
     try {
+      final authRepository = ref.read(authRepositoryProvider);
       final response =
-          await _authRepository.phoneVerification(code, "234$personalPhone");
+          await authRepository.phoneVerification(code, "234$personalPhone");
 
       if (response.success) {
         onSuccess();
@@ -114,11 +112,11 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     try {
       final personalPhone =
           ref.watch(personalFirstStepProvider).phoneNumber.text;
-      final response = await _authRepository.resendOtp(
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.resendOtp(
           phone:
               "234${personalPhone.length > 10 ? personalPhone.substring(1) : personalPhone}",
           purpose: "PHONE_NUMBER_AUTH");
-      _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(
             variant: SnackbarType.success,
@@ -128,9 +126,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
         //? Start the countdown since our attempt to resend the OTP was successful.
         startCountdown();
       }
-    } catch (e) {
-      _logger.e(e.toString());
-    }
+    } catch (_) {}
   }
 
   Future<void> verifyAccount(
@@ -144,7 +140,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       String phoneNumber =
           ref.watch(personalFirstStepProvider).phoneNumber.text;
 
-      final response = await _authRepository
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository
           .verifyOtp(VerifyOtp(email: personalEmail, otp: code));
       if (response.success) {
         final token = response.data['data']['token']['token'];
@@ -154,7 +151,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
         _secureDataSource.saveRefreshToken(refreshToken);
         state = state.copyWith(inputCode: '');
         if (type == 'account-creation') {
-          await _authRepository.resendOtp(
+          await authRepository.resendOtp(
               phone:
                   "234${phoneNumber.length > 10 ? phoneNumber.substring(1) : phoneNumber}",
               purpose: "PHONE_NUMBER_AUTH");
@@ -180,8 +177,9 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isLoading: true);
 
     try {
+      final authRepository = ref.read(authRepositoryProvider);
       final response =
-          await _authRepository.verify(VerifyOtp(email: email, otp: code));
+          await authRepository.verify(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
       } else {
@@ -203,7 +201,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final response = await _authRepository
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository
           .verifyChangePassword(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
@@ -213,8 +212,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
               child: WayaErrorDialog(title: response.responseCodeError ?? ''));
         }
       }
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -227,8 +225,9 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final response = await _authRepository
-          .verifySetPin(VerifyOtp(email: email, otp: code));
+      final authRepository = ref.read(authRepositoryProvider);
+      final response =
+          await authRepository.verifySetPin(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
       } else {
@@ -250,7 +249,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final response = await _authRepository
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository
           .verifyChangePin(VerifyOtp(email: email, otp: code));
       if (response.success) {
         onSuccess();
@@ -273,7 +273,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      final response = await _authRepository.verifyPayout(email, code);
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.verifyPayout(email, code);
       if (response.success) {
         onSuccess();
       } else {
@@ -291,8 +292,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
   Future<void> resendOtp() async {
     try {
       final email = ref.watch(personalFirstStepProvider).email.text;
-      final response = await _authRepository.resendOtp(email: email);
-      _logger.d(" result ${response.data['message']}");
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.resendOtp(email: email);
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(
             variant: SnackbarType.success,
@@ -302,16 +303,14 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
         //? Start the countdown since our attempt to resend the OTP was successful.
         startCountdown();
       }
-    } catch (e) {
-      _logger.e(e.toString());
-    }
+    } catch (_) {}
   }
 
   Future<void> resendOtpForRegisteredButNotVerifiedUser(
       {required String email}) async {
     try {
-      final response = await _authRepository.resendOtp(email: email);
-      _logger.d(" result ${response.data['message']}");
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.resendOtp(email: email);
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(
             variant: SnackbarType.success,
@@ -321,9 +320,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
         //? Start the countdown since our attempt to resend the OTP was successful.
         startCountdown();
       }
-    } catch (e) {
-      _logger.e(e.toString());
-    }
+    } catch (_) {}
   }
 
   Future<void> verifyAccountForRegisteredButNotVerifiedUser(
@@ -331,8 +328,9 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isLoading: true);
 
     try {
+      final authRepository = ref.read(authRepositoryProvider);
       final response =
-          await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
+          await authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
       if (response.success) {
         final token = response.data['data']['token']['token'];
         final refreshToken = response.data['data']['token']['refreshToken'];
@@ -358,19 +356,21 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
   Future<void> requestOtp(
       {required String purpose, String? email, String? phone}) async {
-    await _authRepository.getOtp(email: email, purpose: purpose, phone: phone);
+    final authRepository = ref.read(authRepositoryProvider);
+    await authRepository.getOtp(email: email, purpose: purpose, phone: phone);
   }
 
   Future<void> requestEmailOtp() async {
-    await _authRepository.resendOtp(
+    final authRepository = ref.read(authRepositoryProvider);
+    await authRepository.resendOtp(
         email: ConversationState.self.email, purpose: "Reset_PIN");
   }
 
   Future<void> resend2faOtp({required String email}) async {
     try {
+      final authRepository = ref.read(authRepositoryProvider);
       final response =
-          await _authRepository.resendOtp(email: email, purpose: "2FA");
-      _logger.d(" result ${response.data['message']}");
+          await authRepository.resendOtp(email: email, purpose: "2FA");
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(
             variant: SnackbarType.success,
@@ -379,15 +379,14 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
         //? Start the countdown since our attempt to resend the OTP was successful.
       }
-    } catch (e) {
-      _logger.e(e.toString());
-    }
+    } catch (_) {}
   }
 
   Future<void> update2Fa({required String code, required String email}) async {
     try {
+      final authRepository = ref.read(authRepositoryProvider);
       final response =
-          await _authRepository.toggle2Fa(code: code, purpose: "2FA");
+          await authRepository.toggle2Fa(code: code, purpose: "2FA");
 
       if (response.success) {
         WayaNav.replaceNamed(AccountSecurity.route);
@@ -397,9 +396,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
               child: WayaErrorDialog(title: response.responseCodeError ?? ''));
         }
       }
-    } catch (e) {
-      _logger.e(e.toString());
-    }
+    } catch (_) {}
   }
 
   Future<void> twoFaVerification(
@@ -410,13 +407,12 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
     try {
       state.isFromLogin
-          ? await ref.read(loginVmProvider.notifier).loginVerification(
+          ? await ref.read(loginProvider.notifier).loginVerification(
               email: decodedEmail,
               code: code,
               purpose: state.isResend ? "2FA" : null)
           : await update2Fa(code: code, email: decodedEmail);
-    } catch (e) {
-      _logger.e(e.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -430,8 +426,3 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isFromLogin: value, isResend: !value);
   }
 }
-
-final verifyAccountProvider =
-    NotifierProvider<VerifyAccountVm, VerifyAccountState>(() {
-  return VerifyAccountVm(AuthRepository());
-});

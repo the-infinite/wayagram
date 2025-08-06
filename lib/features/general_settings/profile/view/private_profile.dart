@@ -11,7 +11,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
@@ -20,21 +20,21 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/vm/donation.dart';
 import 'package:wayagram/shared/features/profile/vm/groups.dart';
 import 'package:wayagram/shared/features/profile/vm/pages.dart';
 import 'package:wayagram/shared/features/profile/vm/poll.dart';
 import 'package:wayagram/shared/features/profile/vm/product.dart';
-import 'package:wayagram/shared/features/profile/vm/default.dart';
+import 'package:wayagram/shared/features/profile/vm/post_notifier.dart';
 import 'package:wayagram/shared/features/profile/vm/event.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 import 'package:wayagram/shared/features/profile/widget/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 import 'package:wayagram/shared/model/base_model.dart';
 
@@ -199,7 +199,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     if (result.status == ShareResultStatus.success) return;
   }
 
-  void _triggerSearch(States interestState) async {
+  void _triggerSearch(SelectInterestState interestState) async {
     final result = await WayaUtils.showModalSheet(
       context,
       isDismissible: false,

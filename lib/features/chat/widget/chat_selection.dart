@@ -10,7 +10,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class SelectConversationWidget extends StatelessWidget {

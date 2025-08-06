@@ -13,12 +13,12 @@ import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/widgets/dispute_profile_picture.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 
 class InitDispute extends ConsumerStatefulWidget {
   static const route = '/init/dispute/chat';

@@ -5,11 +5,12 @@ import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/state/social_notification.dart';
-import 'package:wayagram/features/general_settings/notifications/repo/default.dart';
+import 'package:wayagram/features/general_settings/notifications/repo/notification_repository.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/models/notification_response.dart';
 
-class SocialNotificationNotifier extends StateNotifier<SocialNotificationState> {
+class SocialNotificationNotifier
+    extends StateNotifier<SocialNotificationState> {
   final NotificationRepository _repo;
   // ignore: unused_field
   final Ref _ref;
@@ -44,7 +45,8 @@ class SocialNotificationNotifier extends StateNotifier<SocialNotificationState> 
   }
 
   /// Helper function used to get all notifications.
-  Future<List<NotificationModel>> getUserNotifications([bool reset = true]) async {
+  Future<List<NotificationModel>> getUserNotifications(
+      [bool reset = true]) async {
     final result = <NotificationModel>[];
 
     //? First, notify this guy that we are loading.
@@ -113,10 +115,13 @@ class SocialNotificationNotifier extends StateNotifier<SocialNotificationState> 
   }
 }
 
-final socialNotificationProvider = StateNotifierProvider<SocialNotificationNotifier, SocialNotificationState>(
+final socialNotificationProvider =
+    StateNotifierProvider<SocialNotificationNotifier, SocialNotificationState>(
   (ref) {
+    final notificationRepo = ref.watch(notificationRepositoryProvider);
+
     return SocialNotificationNotifier(
-      NotificationRepository.instance,
+      notificationRepo,
       ref,
       getLogger("socialNotificationProvider"),
       SocialNotificationState.initial,

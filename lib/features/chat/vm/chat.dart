@@ -8,7 +8,7 @@ import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/media.dart';
 import 'package:wayagram/features/chat/model/message.dart';
-import 'package:wayagram/features/chat/repo/message.dart';
+import 'package:wayagram/features/chat/repo/message_repository.dart';
 import 'package:wayagram/features/chat/state/chat.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repository.dart';
 
@@ -16,12 +16,12 @@ final _controllers = <String, MessageController>{};
 final _removed = <String, int>{};
 
 class ChatNotifier extends StateNotifier<ChatState> {
-  final repo = MessageRepository();
-  final shopDisputeRepo = ShopDisputeRepository();
+  final MessageRepository repo;
+  final ShopDisputeRepository shopDisputeRepo;
   final _typingList = <String, bool>{};
   final typingNotifier = ValueNotifier(0);
 
-  ChatNotifier(super.state);
+  ChatNotifier(super.state, this.repo, this.shopDisputeRepo);
 
   /// A helper function used to retrieve the
   bool get isActive => state.isActive;
@@ -70,7 +70,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// Helper function used to get the list of messages from the back-end so they
   /// can be stored locally on this device.
-  Future<List<MessageModel>> getMessages([bool reset = false, bool onlyIfEmpty = false]) async {
+  Future<List<MessageModel>> getMessages(
+      [bool reset = false, bool onlyIfEmpty = false]) async {
     //? If this should only operate if this is empty.
     if (onlyIfEmpty && state.messages.isNotEmpty) {
       return state.messages;
@@ -80,7 +81,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final result = <MessageModel>[];
 
     //? This is fine.
-    final response = await repo.getMessages(state.chatId, state.limit, state.page);
+    final response =
+        await repo.getMessages(state.chatId, state.limit, state.page);
 
     //? This is fine.
     if (response.success) {
@@ -88,7 +90,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
       final data = response.data['data'];
 
       //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => MessageModel.fromJson(doc));
+      final docs =
+          (data['docs'] as List).map((doc) => MessageModel.fromJson(doc));
 
       //? If the previous page had a next page, offload them onto this place.
       if (!reset && state.hasNextPage) {
@@ -96,7 +99,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
       }
 
       //? Add our new messages
-      result.addAll(docs.where((msg) => msg.myStatus?.status != MessageStatusCode.deleted).toList().reversed);
+      result.addAll(docs
+          .where((msg) => msg.myStatus?.status != MessageStatusCode.deleted)
+          .toList()
+          .reversed);
 
       //? Update state.
       state = state.copyWith(
@@ -134,7 +140,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
         final data = response.data['data'];
 
         //? Parse the conversations as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => ChatMediaModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => ChatMediaModel.fromJson(doc));
 
         //? Add our new messages
         result.addAll(docs);
@@ -144,9 +151,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
           media: result,
         );
       }
-    } catch (e) {
-      debugPrint("Error: $e");
-    }
+    } catch (_) {}
 
     //? Dismiss the preloader
     WayaPreloaderController.instance.hide();
@@ -218,7 +223,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// A helper function used to send a message to a given chat. The multipart
   /// file specification
-  Future<MessageModel?> sendMessage(SendMessageDto message, [String? originalId]) async {
+  Future<MessageModel?> sendMessage(SendMessageDto message,
+      [String? originalId]) async {
     final messageId = originalId ?? message.id;
 
     //? If this is not an attempt to resend...
@@ -227,17 +233,20 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Tell the listeners that this has been updated to first add the message to
       //? our list of messages.
-      state = state.copyWith(messages: [...state.messages, placeholder], isLoading: true);
+      state = state.copyWith(
+          messages: [...state.messages, placeholder], isLoading: true);
     }
 
     //? Else, we just flag this message as something that is not an error.
     else {
       final conversation = state.messages;
-      final found = conversation.lastIndexWhere((bubble) => bubble.id == messageId);
+      final found =
+          conversation.lastIndexWhere((bubble) => bubble.id == messageId);
 
       //? Now, replace this.
       if (found != -1) {
-        conversation[found] = conversation[found].copyWith(false, message.originalMessage);
+        conversation[found] =
+            conversation[found].copyWith(false, message.originalMessage);
       }
 
       //? Now update the UI with our changes...
@@ -252,13 +261,15 @@ class ChatNotifier extends StateNotifier<ChatState> {
       //? If this went well...
       if (response.success) {
         final result = MessageModel.fromJson(response.data['data']);
-        final found = state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
+        final found =
+            state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
 
         //? Now, replace this.
         if (found != -1) {
           final controller = getController(state.messages[found]);
           if (controller != null) {
-            controller.updateData(result.copyWith(false, message.originalMessage), result.id);
+            controller.updateData(
+                result.copyWith(false, message.originalMessage), result.id);
             _controllers[result.id] = controller;
             _controllers.remove(messageId);
           }
@@ -269,7 +280,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
         }
 
         // Notify everyone of it.
-        WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, result.id));
+        WayaSocketController.instance
+            .emit(WayaChatSocketArgs.sendMessage(state.chatId, result.id));
 
         //? Return the result.
         return result;
@@ -277,23 +289,24 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Turn this into an error.
       else {
-        final found = state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
+        final found =
+            state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
 
         //? Now, replace this.
         if (found != -1) {
           final controller = getController(state.messages[found]);
           final result = state.messages[found];
-          controller?.updateData(result.copyWith(true, message.originalMessage));
+          controller
+              ?.updateData(result.copyWith(true, message.originalMessage));
         }
 
         //? Now update the UI with our changes...
         // state = state.copyWith(messages: [...conversation], isLoading: false);
       }
-    } catch (e) {
-      debugPrint('$e');
-
+    } catch (_) {
       //? This is fine.
-      final found = state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
+      final found =
+          state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
 
       //? Now, replace this.
       if (found != -1) {
@@ -326,7 +339,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
       getMessages(true);
 
       // This is fine.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.markAllAsRead(state.chatId));
+      WayaSocketController.instance
+          .emit(WayaChatSocketArgs.markAllAsRead(state.chatId));
     }
 
     //? This is fine.
@@ -361,7 +375,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this was fine...
     if (response.success) {
       //? If this was read.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
+      WayaSocketController.instance
+          .emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
 
       // Now, pull all messages.
       getMessage(id);
@@ -378,7 +393,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this was fine...
     if (response.success) {
       //? If this was read.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
+      WayaSocketController.instance
+          .emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
 
       // Now, pull all messages.
       getMessage(id);
@@ -398,7 +414,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       // Notify everyone of it.
       if (action == MessageDeleteAction.deleteForEveryone) {
-        WayaSocketController.instance.emit(WayaChatSocketArgs.deleteMessage(state.chatId, id));
+        WayaSocketController.instance
+            .emit(WayaChatSocketArgs.deleteMessage(state.chatId, id));
       }
 
       // Remove this.
@@ -416,7 +433,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this succeeded...
     if (response.success) {
       // Notify everyone of it.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
+      WayaSocketController.instance
+          .emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
 
       // This is fine.
       getMessage(id);
@@ -433,7 +451,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this succeeded...
     if (response.success) {
       // Notify everyone of it.
-      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
+      WayaSocketController.instance
+          .emit(WayaChatSocketArgs.sendMessage(state.chatId, id));
 
       // This is fine.
       getMessage(id);
@@ -450,10 +469,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
     if (state.chat != null) {
       return;
     }
-
-    // Log.
-    debugPrint("Activating ${chat.id}");
-
     // Clear the controllers and then update the chat we are listening to.
     state = state.copyWith(
       chat: chat,
@@ -468,10 +483,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
     if (!state.isActive) {
       return;
     }
-
-    // Log.
-    debugPrint("Deactivating ${state.chat?.id}");
-
     //? Clear the controllers and then update the chat we are listening to.
     state = state.copyWith(
       isActive: false,
@@ -480,8 +491,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }
 }
 
-final chatProvider = StateNotifierProvider.family<ChatNotifier, ChatState, String>(
-  (ref, id) => ChatNotifier(
-    ChatState.initial.copyWith(chatId: id),
-  ),
-);
+final chatProvider =
+    StateNotifierProvider.family<ChatNotifier, ChatState, String>((ref, id) {
+  final messageRepo = ref.watch(messageRepositoryProvider);
+  final shopDisputeRepository = ref.watch(shopDisputeRepositoryProvider);
+  return ChatNotifier(ChatState.initial.copyWith(chatId: id), messageRepo,
+      shopDisputeRepository);
+});

@@ -2,19 +2,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
-import 'package:wayagram/shared/features/profile/repo/product.dart';
+import 'package:wayagram/shared/features/profile/repo/products_repository.dart';
 import 'package:wayagram/shared/features/profile/state/product.dart';
 
 class UserProductsNotifier extends StateNotifier<ProductsState> {
-  final repo = ProductsRepository.instance;
-  UserProductsNotifier() : super(ProductsState.initial);
+  final ProductsRepository repo;
+  UserProductsNotifier(this.repo) : super(ProductsState.initial);
 
   Future<List<Product>> getProductsByShop(String id) async {
     final result = <Product>[];
 
     try {
       // This is fine too.
-      final response = await repo.getShopProducts(id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getShopProducts(
+          id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -62,7 +63,8 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
 
     try {
       // This is fine too.
-      final response = await repo.getShopProducts(id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getShopProducts(
+          id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -87,8 +89,8 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
           totalPages: int.tryParse(pagination['totalPages'].toString()) ?? 1,
           hasNextPage: pagination['hasNextPage'],
           page: int.tryParse(pagination['currentPage'].toString()) ?? 1,
-          nextPage:
-              (int.tryParse(pagination['currentPage'].toString()) ?? 1) + (pagination['hasNextPage'] == true ? 1 : 0),
+          nextPage: (int.tryParse(pagination['currentPage'].toString()) ?? 1) +
+              (pagination['hasNextPage'] == true ? 1 : 0),
           hasLoaded: true,
         );
       }
@@ -115,6 +117,9 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
   }
 }
 
-final userProductsProvider = StateNotifierProvider.family<UserProductsNotifier, ProductsState, String>((ref, userId) {
-  return UserProductsNotifier();
+final userProductsProvider =
+    StateNotifierProvider.family<UserProductsNotifier, ProductsState, String>(
+        (ref, userId) {
+  final repo = ref.watch(productsRepositoryProvider);
+  return UserProductsNotifier(repo);
 });

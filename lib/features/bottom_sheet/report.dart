@@ -15,11 +15,12 @@ class Report extends ConsumerStatefulWidget {
   final List<String> statuses;
   final String momentId;
 
-  const Report(
-      {super.key,
-      required this.statuses,
-      required this.currentStatus,
-      required this.momentId});
+  const Report({
+    super.key,
+    required this.statuses,
+    required this.currentStatus,
+    required this.momentId,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReportEventState();

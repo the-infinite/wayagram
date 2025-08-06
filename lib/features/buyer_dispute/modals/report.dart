@@ -16,7 +16,7 @@ import 'package:wayagram/features/auth/add_business_account/widget/add_document_
 import 'package:wayagram/features/buyer_dispute/modals/failure.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class ReportDisputeModal extends ConsumerStatefulWidget {

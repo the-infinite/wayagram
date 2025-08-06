@@ -10,7 +10,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 
 class ConfirmGroupDetails extends ConsumerStatefulWidget {
   static const route = '/confirmGroupDetails';

@@ -1,11 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:wayagram/features/buyer_dispute/state/default.dart';
+import 'package:wayagram/features/buyer_dispute/state/buyer_dispute_state.dart';
 
 class BuyerDisputeNotifier extends StateNotifier<BuyerDisputeState> {
   BuyerDisputeNotifier(super.state);
-
- 
 
   /// Helper used to reset everything in this form.
   void reset() {}

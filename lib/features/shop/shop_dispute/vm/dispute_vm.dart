@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
+import 'package:wayagram/features/chat/repo/message_repository.dart';
 import 'package:wayagram/features/chat/state/chat.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
@@ -12,9 +13,11 @@ import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repos
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 final sellerDisputeChatProvider =
-    StateNotifierProvider<ChatNotifier, ChatState>(
-  (ref) => ChatNotifier(ChatState.initial),
-);
+    StateNotifierProvider<ChatNotifier, ChatState>((ref) {
+  final messageRepository = ref.watch(messageRepositoryProvider);
+  final shopDisp = ref.watch(shopDisputeRepositoryProvider);
+  return ChatNotifier(ChatState.initial, messageRepository, shopDisp);
+});
 
 class States {
   final bool isLoading;
@@ -230,5 +233,7 @@ class DisputeVm extends StateNotifier<States> {
 }
 
 final disputeVmProvider = StateNotifierProvider<DisputeVm, States>((ref) {
-  return DisputeVm(UploadFileRepository(), ShopDisputeRepository(), ref);
+  final uploadFileRepository = ref.watch(uploadFileRepositoryProvider);
+  final shopDisputeRepository = ref.watch(shopDisputeRepositoryProvider);
+  return DisputeVm(uploadFileRepository, shopDisputeRepository, ref);
 });

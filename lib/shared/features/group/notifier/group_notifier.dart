@@ -10,7 +10,7 @@ import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/repo/group_repository.dart';
 import 'package:wayagram/shared/cache/group.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 

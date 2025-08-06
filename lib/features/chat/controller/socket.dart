@@ -9,7 +9,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 
 class WayaChatSocketArgs {
   static int _lastId = -1;

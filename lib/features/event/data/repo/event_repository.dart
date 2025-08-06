@@ -1,15 +1,20 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/add_event_request_model.dart';
 import 'package:wayagram/features/event/data/model/update_event_request_model.dart';
 
-class EventRepository extends BaseRepository {
+part 'event_repository.g.dart';
+
+class EventRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = WayaServiceUri.graph;
 
+  EventRepository(super.ref);
+
   Future<WayaRequestResponse> createEvent(AddEventRequestModel payload) {
-    return post("$serviceUrl/events/create", payload.toJson(),
-        formdata: false);
+    return post("$serviceUrl/events/create", payload.toJson(), formdata: false);
   }
 
   Future<WayaRequestResponse> getEvents({int? limit = 500, int? page = 1}) {
@@ -105,15 +110,19 @@ class EventRepository extends BaseRepository {
 
   Future<WayaRequestResponse> updateEventSettings(
       {required bool letEveryoneJoin, required bool approveJoinRequest}) {
-    return patch(
-        "$serviceUrl/events-settings/update",
-        {
-          "letEveryoneJoin": letEveryoneJoin,
-          "approveJoinRequest": approveJoinRequest
-        });
+    return patch("$serviceUrl/events-settings/update", {
+      "letEveryoneJoin": letEveryoneJoin,
+      "approveJoinRequest": approveJoinRequest
+    });
   }
 
   Future<WayaRequestResponse> getEventSettings() {
     return get("$serviceUrl/events-settings");
   }
+}
+
+
+@riverpod
+EventRepository eventRepository(Ref ref) {
+  return EventRepository(ref);
 }

@@ -44,7 +44,7 @@ class _PollSummaryState extends ConsumerState<PollSummary> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
-    final setUp = ref.watch(successfulSetupVmProvider);
+    final setUp = ref.watch(successfulSetupProvider);
     String startDate = viewModel.startDate;
     String endDate = viewModel.endDate;
     DateFormat format = DateFormat("yyyy-M-d");

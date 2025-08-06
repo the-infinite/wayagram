@@ -42,7 +42,6 @@ class _PollReviewState extends ConsumerState<PollReview> {
 
   @override
   Widget build(BuildContext context) {
-   // final viewModel = ref.watch(createPollVotingProvider);
     final walletViewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
 
@@ -169,8 +168,8 @@ class _PollReviewState extends ConsumerState<PollReview> {
                           });
                     }
                   : null,
-              centerWidget:
-                  LoadingState(loading: walletViewModel.isLoading!, text: 'Continue'),
+              centerWidget: LoadingState(
+                  loading: walletViewModel.isLoading!, text: 'Continue'),
             ),
           ],
         ));

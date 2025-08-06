@@ -8,7 +8,7 @@ class BusinessTypeData {
 }
 
 final List<BusinessTypeData> businessDataType = [
-   BusinessTypeData(
+  BusinessTypeData(
       description: 'Set up a business account with your c.a.c documents.',
       title: 'C.A.C Business Account',
       type: 'WITH-CAC'),
@@ -17,5 +17,4 @@ final List<BusinessTypeData> businessDataType = [
           'We got you covered even if you don’t have a registered business',
       title: 'Non C.A.C Business Account',
       type: 'NO-CAC'),
- 
 ];

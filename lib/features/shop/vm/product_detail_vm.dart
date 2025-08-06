@@ -150,5 +150,6 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
 }
 
 final productDetailVmProvider =
-    StateNotifierProvider<ProductDetailVm, ProductDetailState>(
-        (ref) => ProductDetailVm(ShopRepository.instance, ref));
+    StateNotifierProvider<ProductDetailVm, ProductDetailState>((ref) {
+  return ProductDetailVm(ShopRepository.instance, ref);
+});

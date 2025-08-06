@@ -13,7 +13,7 @@ import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
@@ -269,7 +269,7 @@ final replyMomentVmProvider =
     StateNotifierProvider.family<ReplyMomentVm, ReplyMomentState, String>(
         (ref, uniqueKey) {
   ref.watch(momentVmProvider);
-  return ReplyMomentVm(MomentRepository(), WayaSecureDataSource(), ref);
+  return ReplyMomentVm(MomentRepository.instance, WayaSecureDataSource(), ref);
 });
 
 class ReplyMomentVm extends StateNotifier<ReplyMomentState> {

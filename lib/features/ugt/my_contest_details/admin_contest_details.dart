@@ -82,12 +82,12 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     return PopScope(
       canPop: false, // Prevents automatic back navigation
       onPopInvokedWithResult: (didPop, _) async {
-        WayaNav.goBack();
-        /*  if (WayaNav.canPop()) {
-          WayaNav.goBack();
-        } else {
-          WayaNav.closeApp();
-        } */
+        if (!didPop) {
+          // Only navigate if the pop hasn't already occurred
+          if (WayaNav.canPop()) {
+            WayaNav.goBack();
+          }
+        }
       },
       child: WayaScaffold(
         isLoading: false,

@@ -18,6 +18,7 @@ class CredentialInput extends ConsumerStatefulWidget {
 
 class _CredentialInputState extends ConsumerState<CredentialInput> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController email = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +43,11 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
               children: [
                 const Gap(20),
                 FormField<String>(validator: (value) {
-                  if (viewModel.isEmail && viewModel.email.text.isEmpty) {
+                  if (viewModel.isEmail && email.text.isEmpty) {
                     return 'Email is required';
                   }
                   final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                  if (viewModel.isEmail &&
-                      !regexp.hasMatch(viewModel.email.text)) {
+                  if (viewModel.isEmail && !regexp.hasMatch(email.text)) {
                     return 'Invalid email address';
                   }
                   return null;
@@ -57,15 +57,14 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.emailAddress,
-                        controller: viewModel.email,
+                        controller: email,
                         hintText: 'example@gmail.com',
-                        borderColor:
-                            formState.hasError && viewModel.email.text.isEmpty
-                                ? wayaTheme.colorScheme.error
-                                : null,
+                        borderColor: formState.hasError && email.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
                         label: 'Email Address',
                       ),
-                      if (formState.hasError && viewModel.email.text.isEmpty)
+                      if (formState.hasError && email.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -85,7 +84,8 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                           if (_formKey.currentState!.validate()) {
                             ref.read(credentialInputProvider.notifier).onSubmit(
                                 () => widget.goToNextTab(
-                                    emailAddress: viewModel.email.text));
+                                    emailAddress: email.text),
+                                email.text);
                           }
                         }
                       : null,

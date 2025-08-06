@@ -6,19 +6,17 @@ import 'package:wayagram/features/wallet/widget/payout_empty_state.dart';
 import 'package:wayagram/features/wallet/widget/payout_history_widget.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
-
 class PayoutHistoryScreen extends ConsumerStatefulWidget {
   const PayoutHistoryScreen({
     super.key,
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PayoutHistoryScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PayoutHistoryScreenState();
 }
 
 class _PayoutHistoryScreenState extends ConsumerState<PayoutHistoryScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -26,14 +24,13 @@ class _PayoutHistoryScreenState extends ConsumerState<PayoutHistoryScreen> {
     return Expanded(
       child: PaginatedDataView<RequestDocs>(
           uniqueKey: 'payout-history',
-          loadingState:const SizedBox(),
+          loadingState: const SizedBox(),
           emptyState: PayoutEmptyState(
-            onTap: (){},
+            onTap: () {},
             title: 'No Payout Yet',
             image: 'history',
             subTitle: 'Looks like you haven\'t requested any Payout yet',
             hasButton: false,
-
           ),
           fetchData: ref.read(walletVmProvider.notifier).getRequest,
           result: (data, s) {
@@ -51,15 +48,11 @@ class _PayoutHistoryScreenState extends ConsumerState<PayoutHistoryScreen> {
                       wayaTheme: wayaTheme,
                       wallet: wallet,
                       ref: ref,
-                      dateTime: dateTime
-                  );
+                      dateTime: dateTime);
                 },
               ),
             );
           }),
     );
   }
-
 }
-
-

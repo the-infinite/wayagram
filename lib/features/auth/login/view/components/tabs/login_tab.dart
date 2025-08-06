@@ -30,8 +30,8 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(loginVmProvider);
-    final notifier = ref.read(loginVmProvider.notifier);
+    final viewModel = ref.watch(loginProvider);
+    final notifier = ref.read(loginProvider.notifier);
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
@@ -108,7 +108,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                       Focus(
                         onFocusChange: (hasFocus) {
                           ref
-                              .read(loginVmProvider.notifier)
+                              .read(loginProvider.notifier)
                               .setPasswordFocus(hasFocus);
                         },
                         child: WayaTextFormField(
@@ -124,7 +124,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                           suffixIcon: IconButton(
                             onPressed: () {
                               ref
-                                  .read(loginVmProvider.notifier)
+                                  .read(loginProvider.notifier)
                                   .togglePasswordVisibility();
                             },
                             autofocus: false,
@@ -167,8 +167,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   callback: !viewModel.isLoading
                       ? () async {
                           if (_formKey.currentState!.validate()) {
-                            ref.read(loginVmProvider.notifier).onSubmit(
-                                ref: ref,
+                            ref.read(loginProvider.notifier).onSubmit(
                                 email: emailController.text,
                                 password: passwordController.text);
                           }

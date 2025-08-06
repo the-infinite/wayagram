@@ -1,7 +1,8 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
+
+part 'select_account_vm.g.dart';
 
 class AccountState {
   SelectAccountData? selectedType;
@@ -17,36 +18,29 @@ class AccountState {
   }
 }
 
-class SelectAccountVm extends StateNotifier<AccountState> {
-  final Ref ref;
-  SelectAccountVm(this.ref) : super(AccountState());
-
-
+@riverpod
+class SelectAccount extends _$SelectAccount {
+  @override
+  AccountState build() {
+    return AccountState();
+  }
 
   void setSelectedType(SelectAccountData account) {
     state = state.copyWith(selectedType: account);
   }
 }
 
-final selectAccountProvider =
-    StateNotifierProvider<SelectAccountVm, AccountState>((ref) {
-  return SelectAccountVm(ref);
-});
-
-class SelectAccountTypes
-    extends StateNotifier<AsyncValue<List<SelectAccountData>>> {
-  final AuthRepository _authRepository;
-  final _logger = getLogger('SelectAccountTypes');
-
-  SelectAccountTypes(this._authRepository) : super(const AsyncValue.loading()) {
-    fetchAccountType();
+@riverpod
+class SelectAccountTypes extends _$SelectAccountTypes {
+  @override
+  Future<List<SelectAccountData>> build() async {
+    return fetchAccountType();
   }
 
-  Future<List<SelectAccountData>?> fetchAccountType() async {
+  Future<List<SelectAccountData>> fetchAccountType() async {
     try {
-      state = const AsyncValue.loading();
-      final response = await _authRepository.getAccountType();
-      _logger.d(response.data);
+      final authRepository = ref.watch(authRepositoryProvider);
+      final response = await authRepository.getAccountType();
       final accountTypes = response.data['data'] as List;
 
       final accountData = selectAccountData
@@ -59,25 +53,13 @@ class SelectAccountTypes
                     (element) => element['name'] == item.type)['id'],
               ))
           .toList();
-      state = AsyncValue.data(accountData);
       return accountData;
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
-
-      _logger.e(e);
-      return null;
+    } catch (_) {
+      rethrow;
     }
   }
 
   Future<void> refresh() async {
-    await fetchAccountType();
+    ref.invalidateSelf();
   }
 }
-
-final authRepositoryProvider = Provider((ref) => AuthRepository());
-
-final selectAccountTypesProvider = StateNotifierProvider<SelectAccountTypes,
-    AsyncValue<List<SelectAccountData>>>((ref) {
-  final authRepository = ref.watch(authRepositoryProvider);
-  return SelectAccountTypes(authRepository);
-});

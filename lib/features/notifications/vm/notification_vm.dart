@@ -6,7 +6,7 @@ import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/general_settings/notifications/repo/default.dart';
+import 'package:wayagram/features/general_settings/notifications/repo/notification_repository.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/models/notification_response.dart';
 import 'package:wayagram/features/notifications/state/default.dart';
@@ -157,8 +157,10 @@ class NotificationVm extends StateNotifier<NotificationState> {
 final notificationProvider =
     StateNotifierProvider<NotificationVm, NotificationState>(
   (ref) {
+    final notificationRepo = ref.watch(notificationRepositoryProvider);
+
     return NotificationVm(
-      NotificationRepository.instance,
+      notificationRepo,
       ref,
       getLogger("NotificationVm"),
       NotificationState.initial,

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 
-part 'default.g.dart';
+part 'create_conversation_dto.g.dart';
 
 @JsonSerializable()
 class CreateConversationDto {

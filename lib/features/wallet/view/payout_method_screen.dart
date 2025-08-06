@@ -11,11 +11,11 @@ class PayoutMethodScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PayoutMethodScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PayoutMethodScreenState();
 }
 
 class _PayoutMethodScreenState extends ConsumerState<PayoutMethodScreen> {
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -37,44 +37,46 @@ class _PayoutMethodScreenState extends ConsumerState<PayoutMethodScreen> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(walletVmProvider);
-    return viewModel.payoutMethod.isEmpty? PayoutEmptyState(
-      onTap: (){
-        WayaNav.toNamed('/addPayoutMethodScreen');
-      },
-      title: 'No Payout Method Added',
-      image: 'payout',
-      subTitle: 'Looks like you haven’t added any payout\nmethod yet',
-      hasButton: true,
-
-    ):SizedBox(
-      height: 530,
-      child: ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: viewModel.payoutMethod.length,
-          itemBuilder: (context, index) {
-            return PaymentMethodWidget(
-              isChecked: true,
-              initial: '${viewModel.payoutMethod[index].accountName?.substring(0, 1)}',
-              accountName: '${viewModel.payoutMethod[index].accountName}',
-              accountNumber: '${viewModel.payoutMethod[index].accountNumber}',
-              bankName: '${viewModel.payoutMethod[index].bankName}',
-              wayaTheme: wayaTheme,
-              onTap: ()=> ref.watch(walletVmProvider.notifier).deletePayoutMethod(context, id: '${viewModel.payoutMethod[index].id}'),
-              onClick: (){
-                // WayaNav.toNamed('/enterRequestAmountScreen',
-                //     arguments: {
-                //       'id':'${viewModel.payoutMethod[index].id}',
-                //       'bankName':viewModel.payoutMethod[index].bankName,
-                //       'acctNumber':viewModel.payoutAccountNumber
-                //     });
-              }
-
-            );
-          }),
-    );
+    return viewModel.payoutMethod.isEmpty
+        ? PayoutEmptyState(
+            onTap: () {
+              WayaNav.toNamed('/addPayoutMethodScreen');
+            },
+            title: 'No Payout Method Added',
+            image: 'payout',
+            subTitle: 'Looks like you haven’t added any payout\nmethod yet',
+            hasButton: true,
+          )
+        : SizedBox(
+            height: 530,
+            child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: viewModel.payoutMethod.length,
+                itemBuilder: (context, index) {
+                  return PaymentMethodWidget(
+                      isChecked: true,
+                      initial:
+                          '${viewModel.payoutMethod[index].accountName?.substring(0, 1)}',
+                      accountName:
+                          '${viewModel.payoutMethod[index].accountName}',
+                      accountNumber:
+                          '${viewModel.payoutMethod[index].accountNumber}',
+                      bankName: '${viewModel.payoutMethod[index].bankName}',
+                      wayaTheme: wayaTheme,
+                      onTap: () => ref
+                          .watch(walletVmProvider.notifier)
+                          .deletePayoutMethod(context,
+                              id: '${viewModel.payoutMethod[index].id}'),
+                      onClick: () {
+                        // WayaNav.toNamed('/enterRequestAmountScreen',
+                        //     arguments: {
+                        //       'id':'${viewModel.payoutMethod[index].id}',
+                        //       'bankName':viewModel.payoutMethod[index].bankName,
+                        //       'acctNumber':viewModel.payoutAccountNumber
+                        //     });
+                      });
+                }),
+          );
   }
-
 }
-
-

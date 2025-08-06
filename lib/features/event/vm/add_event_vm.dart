@@ -206,8 +206,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
         }
         return response.success;
       }
-    } catch (error) {
-      debugPrint(error.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -260,6 +259,8 @@ class AddEventVm extends StateNotifier<AddEventState> {
 
 final addEventVmProvider =
     StateNotifierProvider<AddEventVm, AddEventState>((ref) {
-  return AddEventVm(
-      UploadFileRepository(), WayaSecureDataSource(), EventRepository(), ref);
+  final eventRepo = ref.watch(eventRepositoryProvider);
+  final uploadRepo = ref.watch(uploadFileRepositoryProvider);
+
+  return AddEventVm(uploadRepo, WayaSecureDataSource(), eventRepo, ref);
 });

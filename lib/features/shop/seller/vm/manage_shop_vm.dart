@@ -42,7 +42,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     try {
       state = state.copyWith(isLoading: true);
 
-      await ref.read(splashScreenVmProvider.notifier).getNewToken();
+      await ref.read(splashScreenProvider.notifier).getNewToken();
 
       final businessProfile = await _profileRepo.getBusinessDataRepo(
           userId: ConversationState.self.id);
@@ -247,6 +247,9 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
 final manageShopVmProvider =
     StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
+  final orderRepository = ref.watch(orderRepositoryProvider);
+  final profileRepo = ref.watch(profileRepositoryProvider);
+
   return ManageShopVm(
-      OrderRepository(), ProfileRepo(), ShopRepository.instance, ref);
+      orderRepository, profileRepo, ShopRepository.instance, ref);
 });

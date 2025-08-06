@@ -1,15 +1,18 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
-class QuotationRepository extends BaseRepository {
+part 'quotation_repository.g.dart';
+
+class QuotationRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = WayaServiceUri.quotation;
-  static final instance = QuotationRepository._();
 
-  QuotationRepository._();
+  QuotationRepository(super.ref);
 
   Future<WayaRequestResponse> createBuyerRequest(CreateBuyerRequest payload) {
     return post("$serviceUrl/buyer/request", payload.toJson());
@@ -145,4 +148,9 @@ class QuotationRepository extends BaseRepository {
     return get(
         "$serviceUrl/order/buyer?limit=$limit&page=$page&userId=$userId");
   }
+}
+
+@riverpod
+QuotationRepository quotationRepository(Ref ref) {
+  return QuotationRepository(ref);
 }

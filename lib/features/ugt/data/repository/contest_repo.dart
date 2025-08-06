@@ -1,18 +1,19 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 
-class ContestRepo extends BaseRepository {
+part 'contest_repo.g.dart';
+
+class ContestRepo extends BaseRepositoryRiverpod {
   static const serviceUrl2 = WayaServiceUri.contest;
 
+  ContestRepo(super.ref);
   Future<WayaRequestResponse> getCategory() {
     return get('$serviceUrl2/category/getAll');
   }
 
-  // Future<WayaRequestResponse> createContest(CreateContestModel payLoad){
-  //
-  //   return post('$serviceUrl/contests/create',payLoad.toJson());
-  // }
   Future<WayaRequestResponse> requestPayout(String contestId) {
     return post('$serviceUrl2/contest-payout', {"contestId": contestId},
         formdata: false);
@@ -192,4 +193,9 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/contests/web/contest-for-you?id=$contestId');
     //  return get('$serviceUrl2/admin/contests/?id=$contestId');
   }
+}
+
+@riverpod
+ContestRepo contestRepository(Ref ref) {
+  return ContestRepo(ref);
 }

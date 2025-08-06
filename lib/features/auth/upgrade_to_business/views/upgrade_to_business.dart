@@ -25,15 +25,15 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(upgradeToBusinessVmProvider.notifier).fetchBusinessTypes();
-      ref.read(upgradeToBusinessVmProvider.notifier).fetchLocation();
+      ref.read(upgradeToBusinessProvider.notifier).fetchBusinessTypes();
+      ref.read(upgradeToBusinessProvider.notifier).fetchLocation();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(upgradeToBusinessVmProvider);
+    final viewModel = ref.watch(upgradeToBusinessProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       isLoading: viewModel.isLoading,
@@ -178,7 +178,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             hintText: 'Select Business Type',
                             items: viewModel.businessTypes,
                             onSelected: (value) => ref
-                                .read(upgradeToBusinessVmProvider.notifier)
+                                .read(upgradeToBusinessProvider.notifier)
                                 .selectBizType(value.first)),
                         if (formState.hasError &&
                             viewModel.businessTypeId.isEmpty)
@@ -294,7 +294,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             hintText: 'Select Country',
                             items: viewModel.countries,
                             onSelected: (value) => ref
-                                .read(upgradeToBusinessVmProvider.notifier)
+                                .read(upgradeToBusinessProvider.notifier)
                                 .selectCountry(value.first)),
                         if (formState.hasError && viewModel.country.isEmpty)
                           Padding(
@@ -331,7 +331,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                 hintText: 'Select State',
                                 items: viewModel.states,
                                 onSelected: (value) => ref
-                                    .read(upgradeToBusinessVmProvider.notifier)
+                                    .read(upgradeToBusinessProvider.notifier)
                                     .selectState(value.first)),
                             if (formState.hasError && viewModel.state.isEmpty)
                               Padding(
@@ -366,8 +366,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                   value: viewModel.lga,
                                   items: viewModel.lgas,
                                   onSelected: (value) => ref
-                                      .read(
-                                          upgradeToBusinessVmProvider.notifier)
+                                      .read(upgradeToBusinessProvider.notifier)
                                       .selectLGA(value.first)),
                               if (formState.hasError && viewModel.lga.isEmpty)
                                 Padding(
@@ -403,7 +402,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             hintText: 'Select City',
                             items: viewModel.cities,
                             onSelected: (value) => ref
-                                .read(upgradeToBusinessVmProvider.notifier)
+                                .read(upgradeToBusinessProvider.notifier)
                                 .selectCity(value.first)),
                         if (formState.hasError && viewModel.city.isEmpty)
                           Padding(
@@ -425,9 +424,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                   WayaButton(
                     callback: () async {
                       if (_formKey.currentState!.validate()) {
-                        ref
-                            .read(upgradeToBusinessVmProvider.notifier)
-                            .onSubmit();
+                        ref.read(upgradeToBusinessProvider.notifier).onSubmit();
                       }
                     },
                     text: 'Upgrade',

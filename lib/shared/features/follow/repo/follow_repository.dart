@@ -7,46 +7,45 @@ class FollowRepository extends BaseRepository {
   static const serviceUri = WayaServiceUri.graph;
   static final instance = FollowRepository._();
 
-  // Construct.
   FollowRepository._();
 
-  Future<WayaRequestResponse> getFollowRequests(String userId, [int page = 1, int limit = 50]) {
-    return httpClient.getHttp("$serviceUri/follow/pending-follow-request/$userId?page=$page&limit=$limit");
+  Future<WayaRequestResponse> getFollowRequests(String userId,
+      [int page = 1, int limit = 50]) {
+    return get(
+        "$serviceUri/follow/pending-follow-request/$userId?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getFollowers(String id, int page, int limit) {
-    return httpClient.getHttp("$serviceUri/follow/followers/$id?page=$page&limit=$limit");
+    return get("$serviceUri/follow/followers/$id?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getFollowing(String id, int page, int limit) {
-    return httpClient.getHttp("$serviceUri/follow/following/$id?page=$page&limit=$limit");
+    return get("$serviceUri/follow/following/$id?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getFollowStatus(String id) {
-    return httpClient.getHttp("$serviceUri/follow/status/$id");
+    return get("$serviceUri/follow/status/$id");
   }
 
   Future<WayaRequestResponse> getSuggestedFriends(int page, int limit) {
-    return httpClient.getHttp("$serviceUri/follow/suggestions?page=$page&limit=$limit");
+    return get("$serviceUri/follow/suggestions?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> followUser(String id) {
-    return httpClient.postHttp("$serviceUri/follow/$id", null);
+    return post("$serviceUri/follow/$id", null);
   }
 
-  Future<WayaRequestResponse> handleFollowRequest(String followerId, String followingId, FollowAction action) {
-    return httpClient.patchHttp(
-      "$serviceUri/follow/handleRequest",
-      {
-        "followerId": followerId,
-        "followingId": followingId,
-        "action": action.value,
-      },
-    );
+  Future<WayaRequestResponse> handleFollowRequest(
+      String followerId, String followingId, FollowAction action) {
+    return patch("$serviceUri/follow/handleRequest", {
+      "followerId": followerId,
+      "followingId": followingId,
+      "action": action.value,
+    });
   }
 
   Future<WayaRequestResponse> unFollowUser(String id) {
-    return httpClient.postHttp("$serviceUri/follow/unfollow/$id", null);
+    return post("$serviceUri/follow/unfollow/$id", null);
   }
 
   Future<WayaRequestResponse> updateUserSettings(UserSettingsDto dto) {

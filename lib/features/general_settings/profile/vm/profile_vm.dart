@@ -16,17 +16,16 @@ import 'package:wayagram/features/general_settings/profile/data/model/profile_st
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
-import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/notifications/vm/notification_vm.dart';
 import 'package:wayagram/shared/cache/comment.dart';
 import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/cache/post.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
-import 'package:wayagram/shared/features/moments/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {
   final ProfileRepo _profileRepo;
@@ -215,7 +214,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
     myFollowProvider.reset();
     myGroupNotifier.reset();
     myPageNotifier.reset();
-    otherUserMoments.reset();
+    // otherUserMoments.reset();
     wayaCommentCache.clear();
     wayaPostCache.clear();
     wayaGroupCache.clear();
@@ -328,8 +327,9 @@ class ProfileVm extends StateNotifier<ProfileState> {
 }
 
 final profileVmProvider = StateNotifierProvider<ProfileVm, ProfileState>((ref) {
+  final profileRepo = ref.watch(profileRepositoryProvider);
   return ProfileVm(
-    ProfileRepo(),
+    profileRepo,
     WayaLocalDataSource(),
     WayaSecureDataSource(),
     ref,

@@ -11,7 +11,7 @@ import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
 import 'package:wayagram/features/shop/order/widgets/contact_seller.dart';

@@ -1,12 +1,18 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 
-class PollAndVotingRepository extends BaseRepository {
+part 'poll_and_voting_repository.g.dart';
+
+class PollAndVotingRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = "wayagram-products/api/v1";
   static const accountServiceUrl = WayaServiceUri.account;
   static const walletServiceUrl = WayaServiceUri.wallet;
+
+  PollAndVotingRepository(super.ref);
 
   Future<WayaRequestResponse> createPoll(dynamic data) {
     return post('$serviceUrl/client/polls', data, formdata: true);
@@ -130,4 +136,9 @@ class PollAndVotingRepository extends BaseRepository {
   Future<WayaRequestResponse> getSinglePollById({required String id}) {
     return get("$serviceUrl/client/polls/$id");
   }
+}
+
+@riverpod
+PollAndVotingRepository pollAndVotingRepository(Ref ref) {
+  return PollAndVotingRepository(ref);
 }

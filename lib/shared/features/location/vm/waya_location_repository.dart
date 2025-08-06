@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/shared/features/location/model/default.dart';
-import 'package:wayagram/shared/features/location/repo/default.dart';
+import 'package:wayagram/shared/features/location/repo/waya_location_repository.dart';
 import 'package:wayagram/shared/features/location/state/default.dart';
 
 class RegionNotifier extends StateNotifier<RegionsState> {
-  final repo = WayaLocationRepository.instance;
-  RegionNotifier(super.state);
+  final WayaLocationRepository repo;
+  RegionNotifier(super.state, this.repo);
 
   /// Fetches a list of countries from the server.
   ///
@@ -48,7 +48,9 @@ class RegionNotifier extends StateNotifier<RegionsState> {
     //? If this is fine.
     if (response.success) {
       state = state.copyWith(
-        states: (response.data["data"] as List).map((e) => RegionStateModel.fromJson(e)).toList(),
+        states: (response.data["data"] as List)
+            .map((e) => RegionStateModel.fromJson(e))
+            .toList(),
         hasLoaded: true,
       );
     }
@@ -66,12 +68,15 @@ class RegionNotifier extends StateNotifier<RegionsState> {
     state = state.copyWith(isLoading: true);
 
     //? Try fetching.
-    final response = await repo.getAllCities(stateCode: stateCode, countryCode: country);
+    final response =
+        await repo.getAllCities(stateCode: stateCode, countryCode: country);
 
     //? If this is fine.
     if (response.success) {
       state = state.copyWith(
-        cities: (response.data["data"] as List).map((e) => RegionCityModel.fromJson(e)).toList(),
+        cities: (response.data["data"] as List)
+            .map((e) => RegionCityModel.fromJson(e))
+            .toList(),
         hasLoaded: true,
       );
     }
@@ -89,12 +94,16 @@ class RegionNotifier extends StateNotifier<RegionsState> {
     state = state.copyWith(isLoading: true);
 
     //? Try fetching.
-    final response = await repo.getAllLGA(stateCode: stateCode, countryCode: country);
+    final response =
+        await repo.getAllLGA(stateCode: stateCode, countryCode: country);
 
     //? If this is fine.
     if (response.success) {
       state = state.copyWith(
-        areas: (response.data["data"]["lgas"] as List).map((value) => value.toString()).cast<String>().toList(),
+        areas: (response.data["data"]["lgas"] as List)
+            .map((value) => value.toString())
+            .cast<String>()
+            .toList(),
         hasLoaded: true,
       );
     }
@@ -116,6 +125,8 @@ class RegionNotifier extends StateNotifier<RegionsState> {
   }
 }
 
-final regionsProvider = StateNotifierProvider<RegionNotifier, RegionsState>((ref) {
-  return RegionNotifier(RegionsState.initial);
+final regionsProvider =
+    StateNotifierProvider<RegionNotifier, RegionsState>((ref) {
+  final repo = ref.watch(wayaLocationRepositoryProvider);
+  return RegionNotifier(RegionsState.initial, repo);
 });

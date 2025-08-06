@@ -30,8 +30,8 @@ import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/cache/post.dart';
 
-import 'package:wayagram/shared/features/file/repo/default.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
@@ -1039,12 +1039,12 @@ class GroupVm extends StateNotifier<GroupState> {
 }
 
 final createGroupProvider = StateNotifierProvider<GroupVm, GroupState>((ref) {
-  return GroupVm(ref, GroupRepository());
+  return GroupVm(ref, GroupRepository.instance);
 });
 
 typedef GroupProviderFamily = StateNotifierProvider<GroupVm, GroupState>;
 
 final singleGroupProvider =
     StateNotifierProvider.family<GroupVm, GroupState, String>((ref, key) {
-  return GroupVm(ref, GroupRepository());
+  return GroupVm(ref, GroupRepository.instance);
 });

@@ -8,7 +8,7 @@ import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 import '../../../core/components/waya_buttons.dart';
-import '../../../shared/features/group/notifier/default.dart';
+import '../../../shared/features/group/notifier/group_notifier.dart';
 import '../../activity_logs/widget/activity_logs_empty_state.dart';
 
 class SearchGroup extends ConsumerStatefulWidget {

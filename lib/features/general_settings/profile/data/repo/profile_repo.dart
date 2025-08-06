@@ -3,13 +3,19 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart' as waya;
 import 'package:http_parser/http_parser.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
-class ProfileRepo extends BaseRepository {
+part 'profile_repo.g.dart';
+
+class ProfileRepo extends BaseRepositoryRiverpod {
   String get serviceUrl => WayaServiceUri.account;
   String get serviceUrl2 => WayaServiceUri.product;
+
+  ProfileRepo(super.ref);
 
   Future<WayaRequestResponse> updateAccountRepo({
     required String userId,
@@ -114,4 +120,9 @@ class ProfileRepo extends BaseRepository {
       {required String userId}) async {
     return get("$serviceUrl/client/businesses/user-business/$userId");
   }
+}
+
+@riverpod
+ProfileRepo profileRepository(Ref ref) {
+  return ProfileRepo(ref);
 }

@@ -27,15 +27,13 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref
-          .read(walletFundingOptionsVmProvider.notifier)
-          .getWalletFundingOptions();
+      ref.read(walletFundingOptionsProvider.notifier).getWalletFundingOptions();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(walletFundingOptionsVmProvider);
+    final viewModel = ref.watch(walletFundingOptionsProvider);
     final wayaTheme = Theme.of(context);
 
     final redirectRoute = ModalRoute.of(context)!.settings.arguments;

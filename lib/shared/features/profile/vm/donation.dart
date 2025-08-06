@@ -6,22 +6,24 @@ import 'package:wayagram/shared/features/profile/model/donation.dart';
 import 'package:wayagram/shared/features/profile/state/donation.dart';
 
 class UserDonationsNotifier extends StateNotifier<DonationsState> {
-  final repo = DonationRepository();
-  UserDonationsNotifier() : super(DonationsState.initial);
+  final DonationRepository repo;
+  UserDonationsNotifier(this.repo) : super(DonationsState.initial);
 
   Future<List<DonationModel>> getDonationsByUser(String id) async {
     final result = <DonationModel>[];
 
     try {
       // This is fine too.
-      final response = await repo.getAllCampaigns(state.nextPage ?? state.page, state.limit, id);
+      final response = await repo.getAllCampaigns(
+          state.nextPage ?? state.page, state.limit, id);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => DonationModel.fromJson(doc));
+        final docs =
+            (data['docs'] as List).map((doc) => DonationModel.fromJson(doc));
 
         //? Now, add these to what we have here.
         result.addAll(docs);
@@ -62,6 +64,9 @@ class UserDonationsNotifier extends StateNotifier<DonationsState> {
   }
 }
 
-final userDonationsProvider = StateNotifierProvider.family<UserDonationsNotifier, DonationsState,String>(
-  (ref,id) => UserDonationsNotifier(),
-);
+final userDonationsProvider =
+    StateNotifierProvider.family<UserDonationsNotifier, DonationsState, String>(
+        (ref, id) {
+  final donation = ref.watch(donationRepositoryProvider);
+  return UserDonationsNotifier(donation);
+});

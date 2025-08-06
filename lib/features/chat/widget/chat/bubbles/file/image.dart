@@ -10,7 +10,7 @@ import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 class ImageFileWidget extends StatefulWidget {
   final File image;
