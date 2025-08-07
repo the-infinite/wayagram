@@ -137,7 +137,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         final docs = (data['docs'] as List).map((doc) => ChatMediaModel.fromJson(doc));
 
         //? Add our new messages
-        result.addAll(docs);
+        result.addAll(docs.where((media) => media.isImage || media.isVideo));
 
         //? Update state.
         state = state.copyWith(

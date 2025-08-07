@@ -204,12 +204,15 @@ class QuotationModal extends StatelessWidget {
             //? The
             if (user == BidActionAuthor.vendor)
               WayaButton(
-                callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
+                callback: () async {
+                  // TODO: Fix this.
+                  // return WayaNav.toNamed(WayaAppRoutes.getSellerOrderDetailScreen());
+                },
                 text: "Proceed to Order Fulfillment",
               )
             else
               WayaButton(
-                callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId)),
+                callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen()),
                 text: "Proceed to Payment",
               ),
           ],
