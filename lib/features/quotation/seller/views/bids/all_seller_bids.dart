@@ -12,7 +12,7 @@ import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class AllSellerBids extends ConsumerStatefulWidget {
   static const route = '/seller-bids';
@@ -48,7 +48,8 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
         handler: handler,
         shouldFetch: !state.isLoadingBids,
         isAtEnd: !state.hasNextBid,
-        onReachEnd: () async => await notifier.getBids(ShopResource.currentShop.id),
+        onReachEnd: () async =>
+            await notifier.getBids(ShopResource.currentShop.id),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

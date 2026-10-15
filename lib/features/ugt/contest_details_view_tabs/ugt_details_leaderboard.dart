@@ -21,11 +21,6 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
     //final wayaTheme = Theme.of(context);
@@ -54,6 +49,10 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
                 ref.read(selectedContestProvider.notifier).state = widget.model;
                 WayaNav.toNamed(
                   '/contest-profile-page',
+                  arguments: {
+                    "id": post.profileId ?? "",
+                    "contest": widget.model?.id ?? "",
+                  },
                 );
               },
               child: UgtLeaderboardCard(
@@ -63,8 +62,7 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
             );
           },
         ),
-        Gap(50)
-      
+        const Gap(50)
       ],
     );
   }

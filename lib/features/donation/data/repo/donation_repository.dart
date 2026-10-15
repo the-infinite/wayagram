@@ -1,11 +1,17 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/service/api_service/api_service.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 
-class DonationRepository extends BaseRepository {
+part 'donation_repository.g.dart';
+
+class DonationRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = "wayagram-products/api/v1";
   static const walletServiceUrl = WayaServiceUri.wallet;
+
+  DonationRepository(super.ref);
 
   Future<WayaRequestResponse> donate(
       String campaignId, int amount, String message) {
@@ -18,8 +24,7 @@ class DonationRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getPayoutCommission() {
-    return get(
-        "$walletServiceUrl/client/commission/commission-rates");
+    return get("$walletServiceUrl/client/commission/commission-rates");
   }
 
   Future<WayaRequestResponse> getSingleDonation(String donationId) {
@@ -33,17 +38,19 @@ class DonationRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> createCampaign(
-      String title,
-      String description,
-      String solution,
-      String impact,
-      dynamic targetAmount,
-      dynamic minimumAmount,
-      String privacy,
-      String expirationDate,
-      String image,
-      String startDate,
-      String category) {
+    String title,
+    String description,
+    String solution,
+    String impact,
+    dynamic targetAmount,
+    dynamic minimumAmount,
+    String privacy,
+    String expirationDate,
+    String image,
+    String startDate,
+    String category,
+    bool showRaised,
+  ) {
     final payload = {
       "title": title,
       "description": description,
@@ -55,19 +62,16 @@ class DonationRepository extends BaseRepository {
       "expirationDate": expirationDate,
       "imageURL": image,
       "startDate": startDate,
-      "category": category
+      "category": category,
+      "showRaised": showRaised
     };
     return post("$serviceUrl/client/campaigns", payload);
   }
 
-  // Future<WayaRequestResponse> getAllCampaigns(int page, [int limit = 15, String? organizerId]) {
-  //   return get("$serviceUrl/client/campaigns?page=$page&limit=$limit&${organizerId != null ? '&organizerId=$organizerId' : ''}");
-  // }
-
   Future<WayaRequestResponse> getAllCampaigns(int page,
       [int limit = 15, String? organizerId]) {
     return get(
-        "$serviceUrl/client/campaigns?limit=$limit&page=$page&status=live&${organizerId != null ? '&organizerId=$organizerId' : ''}");
+        "$serviceUrl/client/campaigns?page=$page&limit=$limit&status=live");
   }
 
   Future<WayaRequestResponse> getMyCampaigns(
@@ -89,6 +93,13 @@ class DonationRepository extends BaseRepository {
   ) {
     return get(
         "$serviceUrl/client/campaigns?organizerId=$organizerId&status=pending_approval");
+  }
+
+  Future<WayaRequestResponse> getClosedDonation(
+    String organizerId,
+  ) {
+    return get(
+        "$serviceUrl/client/campaigns?organizerId=$organizerId&status=closed");
   }
 
   Future<WayaRequestResponse> getRejectedDonation(
@@ -141,9 +152,13 @@ class DonationRepository extends BaseRepository {
   Future<WayaRequestResponse> updateDonationSettings(
       bool notifyFriends, bool makeDonationsPublic) {
     return patch('$serviceUrl/client/donation-settings/settings', {
-       "notifyFriends": notifyFriends,
-    "makeDonationsPublic": makeDonationsPublic
-
+      "notifyFriends": notifyFriends,
+      "makeDonationsPublic": makeDonationsPublic
     });
   }
+}
+
+@riverpod
+DonationRepository donationRepository(Ref ref) {
+  return DonationRepository(ref);
 }

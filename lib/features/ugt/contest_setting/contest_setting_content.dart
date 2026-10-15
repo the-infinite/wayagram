@@ -11,16 +11,24 @@ class ContestSettingContent extends ConsumerStatefulWidget {
   const ContestSettingContent({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ContestSettingContentState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ContestSettingContentState();
 }
 
-class _ContestSettingContentState extends ConsumerState<ContestSettingContent> with SingleTickerProviderStateMixin {
+class _ContestSettingContentState extends ConsumerState<ContestSettingContent>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void _goToNextTab() {

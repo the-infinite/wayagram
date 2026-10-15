@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -19,7 +18,7 @@ import 'package:wayagram/features/promotion/data/models/promotion_service_type.d
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/my_full_media_type.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
@@ -58,6 +57,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
     final voteNotifier = ref.read(votersContestNotifier.notifier);
     final hasClickedLiked = useState(false);
     final hasClickedShared = useState(false);
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -116,8 +117,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                             SizedBox(
                               width: widget.post.profileId ==
                                       voteNotifier.getLoggedInUserId()
-                                  ? context.width * 0.38
-                                  : context.width * 0.45,
+                                  ? width * 0.38
+                                  : width * 0.45,
                               child: Text(
                                 //"you are going to print the form help me now qwerty",
                                 widget.post.title ?? "Title",
@@ -158,7 +159,10 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                             fit: BoxFit.none,
                             width: 20,
                             height: 20,
-                            color: wayaTheme.colorScheme.white,
+                            colorFilter: ColorFilter.mode(
+                              wayaTheme.colorScheme.white,
+                              BlendMode.srcIn,
+                            ),
                           ),
                           text: "Promote",
                         )),
@@ -211,7 +215,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       ? WayaImage(
                           imageUrl: widget.post.uploadCoverImages ?? "",
                           height: 200,
-                          width: context.width,
+                          width: width,
                           fit: BoxFit.cover,
                           radius: BorderRadius.circular(10),
                         )
@@ -223,7 +227,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         ),
                 ),
               ),
-
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
@@ -295,20 +298,14 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     alignment: Alignment.bottomCenter,
                     child: AboutUgtWidget(
                         title: "Prize", content: "${widget.post.winnerPrize}"),
-                    //  const Gap(30),
                   )
                 ],
               ),
-              // const Gap(20),
-
               WayaButton(
                 callback: () {
                   ref.read(selectedContestProvider.notifier).state =
                       widget.post;
-                  print(isTodayInRange(widget.post.participationStartDate ?? "",
-                      widget.post.participationStartDate ?? ""));
                   if (widget.isFromHost) {
-                    print("i am here nw");
                     WayaNav.toNamed("/contest-details-page",
                         arguments: {"canViewDashboard": true});
                     return;
@@ -319,9 +316,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     });
                     return;
                   }
-                  print("i am here 1111");
-                  print("i am here ${widget.post.profileId}");
-                  print("i am here ${voteNotifier.getLoggedInUserId()}");
                   if (widget.post.profileId ==
                       voteNotifier.getLoggedInUserId()) {
                     WayaNav.toNamed('/contest-details-page');
@@ -330,7 +324,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
 
                   if (isTodayInRange(widget.post.participationStartDate ?? "",
                       widget.post.participationEndDate ?? "")) {
-                    print("i am here");
                     ref.read(registerFormProvider.notifier).addDefault(
                         widget.post.contestSettings?.formRequirements ?? [],
                         widget.post);
@@ -350,7 +343,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       return;
                     }
  */
-                    print("i am here 2222");
                     ref.read(selectedContestProvider.notifier).state =
                         widget.post;
                     WayaNav.toNamed('/contest-details-page');
@@ -389,15 +381,12 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     image: WayaAssets.images.pages.share2.path,
                     color: wayaTheme.colorScheme.primary,
                     onPressed: () async {
-                      final result = await Share.share(
-                        WayaValueHelper.getShareableUrl(
+                      final result = await SharePlus.instance.share(ShareParams(
+                        text: WayaValueHelper.getShareableUrl(
                             WayaAppRoutes.getContestDetailRoute(
                                 widget.post.id ?? "")),
                         subject: "Share Contest",
-
-                        /* Uri.parse(
-                          "http://wayagram.ng/contest-details-page?id=${widget.post.id}") */
-                      );
+                      ));
 
                       if (result.status == ShareResultStatus.success) {
                         if (hasClickedShared.value == false) {
@@ -496,23 +485,30 @@ bool isCurrentDateBetween(
 }
 
 bool isTodayInRange(String startDateStr, String endDateStr) {
-  // Parse input strings
-  DateTime startDate = DateTime.parse(startDateStr);
-  DateTime endDate = DateTime.parse(endDateStr);
+  try {
+    // Check if date strings are valid
+    if (startDateStr.isEmpty || endDateStr.isEmpty) {
+      return false;
+    }
+    
+    // Parse input strings
+    DateTime startDate = DateTime.parse(startDateStr);
+    DateTime endDate = DateTime.parse(endDateStr);
 
-  // Get current date without time
-  DateTime today = DateTime.now();
-  today = DateTime(today.year, today.month, today.day);
+    // Get current date without time
+    DateTime today = DateTime.now();
+    today = DateTime(today.year, today.month, today.day);
 
-  // Optional: Normalize start and end to remove time (if needed)
-  startDate = DateTime(startDate.year, startDate.month, startDate.day);
-  endDate = DateTime(endDate.year, endDate.month, endDate.day);
-  print("kk my $today");
-  print("kk my $startDate");
-  print("kk my $endDate");
+    // Optional: Normalize start and end to remove time (if needed)
+    startDate = DateTime(startDate.year, startDate.month, startDate.day);
+    endDate = DateTime(endDate.year, endDate.month, endDate.day);
 
-  // Check if today is within range [start, end]
-  return today.isAtSameMomentAs(startDate) ||
-      today.isAtSameMomentAs(endDate) ||
-      (today.isAfter(startDate) && today.isBefore(endDate));
+    // Check if today is within range [start, end]
+    return today.isAtSameMomentAs(startDate) ||
+        today.isAtSameMomentAs(endDate) ||
+        (today.isAfter(startDate) && today.isBefore(endDate));
+  } catch (e) {
+    debugPrint("Invalid date format in isTodayInRange: $e");
+    return false;
+  }
 }

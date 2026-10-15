@@ -29,11 +29,12 @@ class UploadImage extends StatelessWidget {
 
     //? The component.
     return DottedBorder(
-      borderType: BorderType.RRect,
-      color: wayaTheme.colorScheme.greyColor300,
-      radius: Radius.circular(12),
-      padding: EdgeInsets.all(18.dg),
-      dashPattern: [5, 5],
+      options: RoundedRectDottedBorderOptions(
+        color: wayaTheme.colorScheme.greyColor300,
+        radius: Radius.circular(12),
+        padding: EdgeInsets.all(18.dg),
+        dashPattern: [5, 5],
+      ),
       child: SizedBox(
         width: double.infinity,
         child: Column(
@@ -149,7 +150,12 @@ class UploadLogo extends StatelessWidget {
   final File? imagePath;
   final String? url;
   final bool? isEditingMode;
-  const UploadLogo({super.key, required this.onUpload, this.imagePath, this.isEditingMode, this.url});
+  const UploadLogo(
+      {super.key,
+      required this.onUpload,
+      this.imagePath,
+      this.isEditingMode,
+      this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +169,8 @@ class UploadLogo extends StatelessWidget {
               Container(
                 width: 150,
                 height: 150,
-                decoration: BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor),
+                decoration:
+                    BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor),
                 child: imagePath != null
                     ? Image.file(
                         imagePath!,
@@ -182,7 +189,8 @@ class UploadLogo extends StatelessWidget {
               ),
               Positioned.fill(
                 child: Material(
-                  color: wayaTheme.colorScheme.customPrimary.withOpacity(0.3),
+                  color: wayaTheme.colorScheme.customPrimary
+                      .withValues(alpha: 0.3),
                   child: InkWell(
                     onTap: onUpload,
                     child: Center(
@@ -190,11 +198,14 @@ class UploadLogo extends StatelessWidget {
                       padding: EdgeInsets.all(3),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(width: 1, color: wayaTheme.colorScheme.white)),
+                          border: Border.all(
+                              width: 1, color: wayaTheme.colorScheme.white)),
                       child: Text(
                         "Upload Logo",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.white, fontSize: 13.sp, fontWeight: FontWeight.w400),
+                            color: wayaTheme.colorScheme.white,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w400),
                       ),
                     )),
                   ),
@@ -215,11 +226,12 @@ class UploadProductImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return DottedBorder(
-        borderType: BorderType.RRect,
-        color: wayaTheme.colorScheme.greyColor300,
-        radius: Radius.circular(12),
-        padding: EdgeInsets.all(12),
-        dashPattern: [5, 5],
+        options: RoundedRectDottedBorderOptions(
+          color: wayaTheme.colorScheme.greyColor300,
+          radius: Radius.circular(12),
+          padding: EdgeInsets.all(12),
+          dashPattern: [5, 5],
+        ),
         child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(12)),
             child: SizedBox(
@@ -250,7 +262,9 @@ class UploadProductImage extends StatelessWidget {
                       "Click to upload",
                       textAlign: TextAlign.center,
                       style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customPrimary, fontSize: 13.sp, fontWeight: FontWeight.w500),
+                          color: wayaTheme.colorScheme.customPrimary,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                   const Gap(8),

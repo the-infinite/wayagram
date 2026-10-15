@@ -14,7 +14,8 @@ class FollowingPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _FollowingPageState();
 }
 
-class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTickerProviderStateMixin {
+class _FollowingPageState extends ConsumerState<FollowingPage>
+    with SingleTickerProviderStateMixin {
   PageController pageController = PageController(
     initialPage: 0,
   );
@@ -25,6 +26,12 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       myPageNotifier.getPagesUserFollows();
     });
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,7 +67,8 @@ class PageEmptyState extends StatelessWidget {
             onTap: () {},
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

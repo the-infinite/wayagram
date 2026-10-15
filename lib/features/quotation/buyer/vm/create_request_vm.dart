@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
 import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
-import 'package:wayagram/shared/features/quotation/repo/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/quotation/repo/quotation_repository.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
-  final _quotationRepository = QuotationRepository.instance;
-  final _logger = getLogger('CreateRequestVm');
+  final QuotationRepository _quotationRepository;
 
-  CreateRequestVm() : super(CreateRequestState());
+  CreateRequestVm(this._quotationRepository) : super(CreateRequestState());
+
+  void clear() {
+    state = CreateRequestState(
+      productCategory: '',
+      productCondition: '',
+      productType: '',
+      productColor: '',
+      productDescription: null,
+      productName: null,
+      productImage: null,
+      startDate: '',
+      endDate: '',
+      dateIsoFormat: '',
+      deliveryState: '',
+      deliveryLga: '',
+      lga: '',
+      stateOfPurchase: '',
+      pickUpOption: 'No',
+      biddingStartTime: '',
+      vendorSeeBuyRequest: false,
+      skipAddress: false,
+    );
+  }
 
   void selectStateOfPurchase(Select value) {
     state = state.copyWith(stateOfPurchase: value.value);
@@ -57,25 +79,30 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 
   List<Select> restructuredBidTime() {
     return bidTimes.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.bidTime);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.bidTime);
     }).toList();
   }
 
   List<Select> restructuredState() {
     return states.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.state);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.state);
     }).toList();
   }
 
   List<Select> restructuredCondition() {
     return productConditions.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.productCondition);
+      return Select(
+          value: entries.value.id.toString(),
+          label: entries.value.productCondition);
     }).toList();
   }
 
   List<Select> restructuredLga() {
     return lgas.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.lga);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.lga);
     }).toList();
   }
 
@@ -95,7 +122,8 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
+        state =
+            state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       debugPrint(error.toString());
@@ -147,21 +175,24 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     }
   }
 
-  Future<BuyRequestModel?> createBuyerRequest(CreateBuyerRequest createBuyerRequest) async {
+  Future<BuyRequestModel?> createBuyerRequest(
+      CreateBuyerRequest createBuyerRequest) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _quotationRepository.createBuyerRequest(createBuyerRequest);
+      final response =
+          await _quotationRepository.createBuyerRequest(createBuyerRequest);
 
       //? Since this can be fine.
       if (response.success) {
         return BuyRequestModel.fromJson(response.data['data']);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+        return null;
       }
-
-      //? Return this one as is.
-      return null;
-    } catch (e) {
-      debugPrint('${WayaDebugHelpers.getStackTrace(e)}');
-      _logger.e(e, stackTrace: WayaDebugHelpers.getStackTrace(e));
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -174,18 +205,20 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     final response = await _quotationRepository.getBuyerRequest();
     state = state.copyWith(isLoading: false);
     if (response.success) {
-      BuyerRequestModel responseModel = BuyerRequestModel.fromJson(response.data);
+      BuyerRequestModel responseModel =
+          BuyerRequestModel.fromJson(response.data);
 
       state = state.copyWith(buyerRequest: responseModel.data?.buyerRequests);
-      //debugPrint(state.productDescription);
     } else {
       state = state.copyWith(isLoading: false);
     }
   }
 }
 
-final createRequestProvider = StateNotifierProvider<CreateRequestVm, CreateRequestState>(
+final createRequestProvider =
+    StateNotifierProvider<CreateRequestVm, CreateRequestState>(
   (ref) {
-    return CreateRequestVm();
+    final quotationRepository = ref.watch(quotationRepositoryProvider);
+    return CreateRequestVm(quotationRepository);
   },
 );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 
 enum SnackbarType { success, failure }
 
@@ -11,8 +11,8 @@ class SnackbarConfig {
   final EdgeInsets margin;
   final double barBlur;
   final Color messageColor;
-  final SnackPosition snackPosition;
-  final SnackStyle snackStyle;
+  final bool isFloating;
+  final bool isDismissible;
 
   SnackbarConfig({
     required this.backgroundColor,
@@ -22,13 +22,12 @@ class SnackbarConfig {
     required this.margin,
     required this.barBlur,
     required this.messageColor,
-    required this.snackPosition,
-    required this.snackStyle,
+    required this.isFloating,
+    required this.isDismissible,
   });
 }
 
 class SnackbarService {
-
   SnackbarService._internal();
   static final SnackbarService _instance = SnackbarService._internal();
   factory SnackbarService() => _instance;
@@ -47,22 +46,29 @@ class SnackbarService {
     required String message,
   }) {
     final config = _snackbarConfigs[variant];
-    if (config != null) {
-      Get.snackbar(
-        '',
-        message,
-        backgroundColor: config.backgroundColor,
-        colorText: config.textColor,
-        borderRadius: config.borderRadius,
-        dismissDirection: config.dismissDirection,
-        margin: config.margin,
-        barBlur: config.barBlur,
-        snackPosition: config.snackPosition,
-        snackStyle: config.snackStyle,
-        
+    final context = WayaNav.navigatorKey.currentContext;
+    if (context != null && config != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: TextStyle(color: config.textColor),
+          ),
+          backgroundColor: config.backgroundColor,
+          behavior: config.isFloating ? SnackBarBehavior.floating : SnackBarBehavior.fixed,
+          margin: config.margin,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(config.borderRadius),
+          ),
+          dismissDirection: config.dismissDirection,
+        ),
       );
-    } else {
-      Get.snackbar('', message); 
+    } else if (context != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
     }
   }
 }

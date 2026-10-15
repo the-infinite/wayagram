@@ -19,11 +19,10 @@ class EventView extends ConsumerStatefulWidget {
 
 class _EventViewState extends ConsumerState<EventView>
     with SingleTickerProviderStateMixin {
- 
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-     final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
     return WayaScaffold(
       isLoading: false,
       isScrollable: false,

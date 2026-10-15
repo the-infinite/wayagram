@@ -16,8 +16,9 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,7 +47,7 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
                 child: RoleManagementCard(user: user));
           },
         ),
-        Gap(50)
+        const Gap(50)
       ],
     );
   }
@@ -60,12 +61,6 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
         showButtonBusiness: false,
         hideButton: false,
         onTap: () {});
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }
 

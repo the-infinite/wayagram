@@ -6,7 +6,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
@@ -32,7 +31,6 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   Future<void> _getStatus() async {
     //? If this is a follow request.
     if (widget.data.messageType == NotificationMessageType.followRequest) {
-      debugPrint("Follow Status: ${widget.data.message.data}, ${ConversationState.self.id}");
       final follow = await myFollowProvider.getFollowStatus(widget.data.id);
 
       if (mounted) {
@@ -44,13 +42,18 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   }
 
   bool get showActions {
+    final followerId = widget.data.message.followerId;
+    final followingId = widget.data.message.followingId;
+
     //? Only show the action button when this is not yet followed.
     if (widget.data.messageType == NotificationMessageType.followRequest) {
-      return _follow?.status == FollowRelationship.none;
+      return _follow?.status == FollowRelationship.none &&
+          followerId != null &&
+          followingId != null;
     }
 
     // This is fine.
-    return true;
+    return false;
   }
 
   @override
@@ -69,7 +72,8 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
 
     //? If this is for a follow request...
     if (followerId != null && followingId != null) {
-      await myFollowProvider.handleFollowRequest(followerId, followingId, FollowAction.accept);
+      await myFollowProvider.handleFollowRequest(
+          followerId, followingId, FollowAction.accept);
 
       //? If this user is following you now....
       await _getStatus();
@@ -83,7 +87,8 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
 
     //? If this is for a follow request...
     if (followerId != null && followingId != null) {
-      await myFollowProvider.handleFollowRequest(followerId, followingId, FollowAction.reject);
+      await myFollowProvider.handleFollowRequest(
+          followerId, followingId, FollowAction.reject);
 
       //? If this user is following you now....
       await _getStatus();
@@ -127,12 +132,18 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                     padding: const EdgeInsets.all(7),
                     child: SvgPicture.asset(
                       switch (widget.data.messageType) {
-                        NotificationMessageType.chat => WayaAssets.icons.notifNewMessage.path,
-                        NotificationMessageType.comment => WayaAssets.icons.notifNewComment.path,
-                        NotificationMessageType.donation => WayaAssets.icons.notifNewDonation.path,
-                        NotificationMessageType.event => WayaAssets.icons.notifUpcomingEvent.path,
-                        NotificationMessageType.followRequest => WayaAssets.icons.notifNewFollower.path,
-                        NotificationMessageType.poll => WayaAssets.icons.notifPollResults.path,
+                        NotificationMessageType.chat =>
+                          WayaAssets.icons.notifNewMessage.path,
+                        NotificationMessageType.comment =>
+                          WayaAssets.icons.notifNewComment.path,
+                        NotificationMessageType.donation =>
+                          WayaAssets.icons.notifNewDonation.path,
+                        NotificationMessageType.event =>
+                          WayaAssets.icons.notifUpcomingEvent.path,
+                        NotificationMessageType.followRequest =>
+                          WayaAssets.icons.notifNewFollower.path,
+                        NotificationMessageType.poll =>
+                          WayaAssets.icons.notifPollResults.path,
                         NotificationMessageType.creditAlert ||
                         NotificationMessageType.debitAlert ||
                         NotificationMessageType.getQuotation =>
@@ -141,19 +152,28 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         NotificationMessageType.groups ||
                         NotificationMessageType.pages =>
                           WayaAssets.icons.notifGroupRequest.path,
-                        NotificationMessageType.calls => WayaAssets.icons.notifCall.path,
-                        NotificationMessageType.like => WayaAssets.icons.notifLike.path,
-                        NotificationMessageType.share => WayaAssets.icons.notifShare.path,
-                        NotificationMessageType.view => WayaAssets.icons.notifView.path,
-                        NotificationMessageType.liveStream => WayaAssets.icons.notifLivestream.path,
-                        NotificationMessageType.uncategorized => WayaAssets.icons.notifications.path,
+                        NotificationMessageType.calls =>
+                          WayaAssets.icons.notifCall.path,
+                        NotificationMessageType.like =>
+                          WayaAssets.icons.notifLike.path,
+                        NotificationMessageType.share =>
+                          WayaAssets.icons.notifShare.path,
+                        NotificationMessageType.view =>
+                          WayaAssets.icons.notifView.path,
+                        NotificationMessageType.liveStream =>
+                          WayaAssets.icons.notifLivestream.path,
+                        NotificationMessageType.uncategorized =>
+                          WayaAssets.icons.notifications.path,
                         NotificationMessageType.supportNotification ||
                         NotificationMessageType.disputeNotification =>
                           WayaAssets.icons.cAttachContact.path,
                       },
                       height: 22,
                       width: 22,
-                      color: WayaColors.primary,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.primary,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),

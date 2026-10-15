@@ -70,7 +70,6 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
                     )),
               ],
             ),
-            
 
             SizedBox(height: 20),
 
@@ -106,17 +105,6 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
                       );
                     },
                   ),
-                  /* GestureDetector(
-                    onTap: () {
-                      WayaNav.toNamed('/view-contestant-single-data');
-                    },
-                    child: _buildStateItem(
-                        context, "Obubra Inengite", "View application"),
-                  ),
-                  Gap(20),
-                  _buildStateItem(context, "Oluchi Obiano", "View application"),
-                  Gap(20),
-                  _buildStateItem(context, "Sadiya Wakili", "View application"), */
                 ],
               ),
             ),
@@ -165,7 +153,7 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
                     child: widget)
               ],
             ),
-            Gap(10),
+            const Gap(10),
             Text(value,
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
           ],
@@ -191,9 +179,9 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
                 style: TextStyle(
                     color: wayaTheme.colorScheme.greyColor700,
                     fontSize: 14.sp)),
-            Gap(10),
+            const Gap(10),
             Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-            Gap(10)
+            const Gap(10)
           ],
         ),
       ],

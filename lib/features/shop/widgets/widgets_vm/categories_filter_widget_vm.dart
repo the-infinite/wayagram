@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/model/model.dart';
 
@@ -27,8 +26,6 @@ class CategoriesFilterWidgetVm extends StateNotifier<CategoryFilterState> {
       selectedList.add(cat.value);
       state = state.copyWith(selected: selectedList);
     }
-    debugPrint(cat.value);
-
     return state.selected;
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -15,6 +14,8 @@ class DisputeEvidence extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     // This is fine
     return Dialog(
@@ -24,8 +25,8 @@ class DisputeEvidence extends StatelessWidget {
       elevation: 0,
       backgroundColor: Colors.transparent,
       child: Container(
-        width: context.width,
-        height: context.height * 0.6,
+        width: width,
+        height: height * 0.6,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         decoration: BoxDecoration(
           color: wayaTheme.colorScheme.white,
@@ -40,7 +41,7 @@ class DisputeEvidence extends StatelessWidget {
               Text(
                 "Evidence Detail",
                 textAlign: TextAlign.start,
-                style:  TextStyle(
+                style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -66,7 +67,8 @@ class DisputeEvidence extends StatelessWidget {
                 },
                 textColor: wayaTheme.colorScheme.greyColor500,
                 color: wayaTheme.colorScheme.transparent,
-                border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+                border: Border.all(
+                    color: wayaTheme.colorScheme.greyColor500, width: 1),
                 text: 'Cancel',
               )
             ],

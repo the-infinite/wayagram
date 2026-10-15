@@ -32,9 +32,20 @@ class _VerifyIdentityPageState
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(credentialInputProvider.notifier).onToTransactionPin();
+      final dynamic args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args != null) {
+        if (args == 'change-transaction-pin') {
+          await ref
+              .read(credentialInputProvider.notifier)
+              .onToChangeTransactionPin();
+        } else if (args == 'change-password') {
+          await ref.read(credentialInputProvider.notifier).onToChangePassword();
+        }
+      } else {
+        await ref.read(credentialInputProvider.notifier).onToTransactionPin();
+      }
       startCountdown();
     });
     super.initState();
@@ -62,7 +73,6 @@ class _VerifyIdentityPageState
 
   @override
   void dispose() {
-    // TODO: implement dispose
     cancelTimer();
     super.dispose();
   }
@@ -142,15 +152,25 @@ class _VerifyIdentityPageState
                         });
                         startCountdown();
 
-                        ref
-                            .read(credentialInputProvider.notifier)
-                            .onToTransactionPin();
+                        if (args == 'change-transaction-pin') {
+                          ref
+                              .read(credentialInputProvider.notifier)
+                              .onToChangeTransactionPin();
+                        } else if (args == 'change-password') {
+                          ref
+                              .read(credentialInputProvider.notifier)
+                              .onToChangePassword();
+                        } else {
+                          ref
+                              .read(credentialInputProvider.notifier)
+                              .onToTransactionPin();
+                        }
                       }
                     },
                     child: Container(
                       width: 110,
                       alignment: Alignment.center,
-                      padding: EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                           color: wayaTheme.colorScheme.primary75,
                           borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -163,7 +183,7 @@ class _VerifyIdentityPageState
                 : Container(
                     width: 200,
                     alignment: Alignment.center,
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: wayaTheme.colorScheme.primary75,
                       borderRadius: BorderRadius.all(
@@ -196,7 +216,31 @@ class _VerifyIdentityPageState
             callback: !viewModelState.isLoading
                 ? () {
                     final code = ref.watch(verifyAccountProvider).inputCode;
-                    debugPrint('DARLINGTON Code ==> $code');
+                    if (args == 'change-transaction-pin') {
+                      ref
+                          .read(verifyAccountProvider.notifier)
+                          .verifyChangeTransactionPin(
+                              onSuccess: () =>
+                                  {WayaNav.replaceNamed('/change-pin-page')},
+                              code: code,
+                              email: ConversationState.self.email ?? '');
+
+                      return;
+                    }
+
+                    if (args == 'change-password') {
+                      ref
+                          .read(verifyAccountProvider.notifier)
+                          .verifyChangePassword(
+                              onSuccess: () => {
+                                    WayaNav.replaceNamed(
+                                        '/change-password-gen-set')
+                                  },
+                              code: code,
+                              email: ConversationState.self.email ?? '');
+
+                      return;
+                    }
 
                     ref
                         .read(verifyAccountProvider.notifier)

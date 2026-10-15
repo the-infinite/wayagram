@@ -26,18 +26,23 @@ class TransactionDetailsScreen extends ConsumerStatefulWidget {
   const TransactionDetailsScreen({super.key});
 
   @override
-  ConsumerState<TransactionDetailsScreen> createState() => _TransactionDetailsScreenState();
+  ConsumerState<TransactionDetailsScreen> createState() =>
+      _TransactionDetailsScreenState();
 }
 
-class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScreen> with WalletMixin {
+class _TransactionDetailsScreenState
+    extends ConsumerState<TransactionDetailsScreen> with WalletMixin {
   final screenshotController = ScreenshotController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final transactionId = ModalRoute.of(context)!.settings.arguments as String;
-      ref.read(transactionVmProvider.notifier).getSingleTransactions(transactionId);
+      final transactionId =
+          ModalRoute.of(context)!.settings.arguments as String;
+      ref
+          .read(transactionVmProvider.notifier)
+          .getSingleTransactions(transactionId);
     });
   }
 
@@ -93,19 +98,23 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                 children: [
                   pw.Padding(
                     padding: pw.EdgeInsets.all(8),
-                    child: pw.Text('ID', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    child: pw.Text('ID',
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                   ),
                   pw.Padding(
                     padding: pw.EdgeInsets.all(8),
-                    child: pw.Text('Date', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    child: pw.Text('Date',
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                   ),
                   pw.Padding(
                     padding: pw.EdgeInsets.all(8),
-                    child: pw.Text('Amount', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    child: pw.Text('Amount',
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                   ),
                   pw.Padding(
                     padding: pw.EdgeInsets.all(8),
-                    child: pw.Text('Description', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    child: pw.Text('Description',
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                   ),
                 ],
               ),
@@ -114,7 +123,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                     children: [
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
-                        child: pw.Text('${transaction.id}'),
+                        child: pw.Text(transaction.id),
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
@@ -126,7 +135,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(8),
-                        child: pw.Text('${transaction.description}'),
+                        child: pw.Text(transaction.description),
                       ),
                     ],
                   )),
@@ -208,11 +217,13 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
               ),
               buildPdfDetailRowTwo(
                 label: 'Date',
-                value: WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
+                value: WayaHelpers.formatDateString(
+                    state.transaction?.updatedAt.toString() ?? ""),
               ),
               buildPdfDetailRowTwo(
                 label: 'Time',
-                value: DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
+                value: DateFormat.jm()
+                    .format(state.transaction?.updatedAt ?? DateTime.now()),
               ),
               buildPdfDetailRowTwo(
                 label: 'Reference Number',
@@ -338,7 +349,7 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                       children: [
                         pw.Text('${transaction.updatedAt}'),
                         pw.Text(transaction.amount.toString()),
-                        pw.Text('${transaction.description}'),
+                        pw.Text(transaction.description),
                       ],
                     )),
               ],
@@ -373,7 +384,8 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
 
   final List<TransactionHistoryModelDocs> transactions = [];
 
-  Widget _buildDetailRow(String label, String value, {Color? valueColor, Widget? trailing}) {
+  Widget _buildDetailRow(String label, String value,
+      {Color? valueColor, Widget? trailing}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -455,11 +467,13 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
           ),
           _buildDetailRow(
             'Date',
-            WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
+            WayaHelpers.formatDateString(
+                state.transaction?.updatedAt.toString() ?? ""),
           ),
           _buildDetailRow(
             'Time',
-            DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
+            DateFormat.jm()
+                .format(state.transaction?.updatedAt ?? DateTime.now()),
           ),
           _buildDetailRow(
               'Reference Number',
@@ -549,7 +563,8 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                           ),
                           _buildDetailRow(
                             'Description',
-                            shortenDescription(state.transaction?.description ?? ""),
+                            shortenDescription(
+                                state.transaction?.description ?? ""),
                           ),
                           _buildDetailRow(
                             'Transaction Type',
@@ -558,23 +573,29 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                           ),
                           _buildDetailRow(
                             'Date',
-                            WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
+                            WayaHelpers.formatDateString(
+                                state.transaction?.updatedAt.toString() ?? ""),
                           ),
                           _buildDetailRow(
                             'Time',
-                            DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
+                            DateFormat.jm().format(
+                                state.transaction?.updatedAt ?? DateTime.now()),
                           ),
                           _buildDetailRow(
                             'Reference Number',
-                            shortenReference(state.transaction?.referenceId ?? ""),
+                            shortenReference(
+                                state.transaction?.referenceId ?? ""),
                             trailing: InkWell(
                               onTap: () {
-                                Clipboard.setData(ClipboardData(text: '${state.transaction?.referenceId}'));
+                                Clipboard.setData(ClipboardData(
+                                    text: '${state.transaction?.referenceId}'));
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
                                       'Link copied to clipboard',
-                                      style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                                      style: TextStyle(
+                                          fontFamily: WayaConstants.fontFamily,
+                                          fontSize: 12.sp),
                                     ),
                                     backgroundColor: WayaColors.primary,
                                     duration: Duration(seconds: 2),
@@ -620,11 +641,13 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                             value: 0,
                             onTap: () async {
                               //final file = await generateTransactionPdf(context, [state.transaction!]);
-                              await generateTransactionPdfTwo(context, [state.transaction!]);
+                              await generateTransactionPdfTwo(
+                                  context, [state.transaction!]);
                             },
                             child: WayaActionNav(
                               context: context,
-                              asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                              asset: WayaAssets.icons.genSet.share
+                                  .svg(fit: BoxFit.none),
                               text: "  Share as PDF",
                               color: wayaTheme.colorScheme.customBlack,
                             ),
@@ -632,11 +655,13 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                           PopupMenuItem<int>(
                             value: 1,
                             onTap: () async {
-                              shareReceipt(screenshotController, _buildReceiptContent(context));
+                              shareReceipt(screenshotController,
+                                  _buildReceiptContent(context));
                             },
                             child: WayaActionNav(
                               context: context,
-                              asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                              asset: WayaAssets.icons.genSet.share
+                                  .svg(fit: BoxFit.none),
                               text: "  Share as Image",
                               color: wayaTheme.colorScheme.customBlack,
                             ),
@@ -657,7 +682,8 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                             SizedBox(width: 8),
                             Text(
                               'Share Receipt',
-                              style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 16.sp, color: Colors.white),
                             ),
                           ],
                         ),
@@ -673,12 +699,20 @@ class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScr
                         onPressed: () async {
                           await ref
                               .read(transactionVmProvider.notifier)
-                              .verifyTransaction(state.transaction!.transactionId, state.transaction!.paymentMethod);
+                              .verifyTransaction(
+                                  state.transaction!.transactionId,
+                                  state.transaction!.paymentMethod);
+                          if (!context.mounted) return;
                           WayaLoadingDialog.show(context);
                           if (state.verified!) {
-                            await ref.read(transactionVmProvider.notifier).getSingleTransactions(state.transaction!.id);
-                            await ref.read(walletVmProvider.notifier).getUserWallet();
+                            await ref
+                                .read(transactionVmProvider.notifier)
+                                .getSingleTransactions(state.transaction!.id);
+                            await ref
+                                .read(walletVmProvider.notifier)
+                                .getUserWallet();
                           }
+                          if (!context.mounted) return;
                           WayaLoadingDialog.hide(context);
                         },
                         style: ElevatedButton.styleFrom(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -10,6 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
@@ -27,6 +27,7 @@ import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/features/wallet/view/request_payout.dart';
 
 class ManageShop extends ConsumerStatefulWidget {
   static const route = '/manage-shop';
@@ -56,13 +57,14 @@ class _ManageShopState extends ConsumerState<ManageShop> {
     final viewModel = ref.watch(manageShopVmProvider);
     final shopState = ref.watch(shopVmProvider);
     final wayaTheme = Theme.of(context);
+    final height = MediaQuery.of(context).size.height;
 
     final shopId = ModalRoute.of(context)!.settings.arguments as String?;
 
     if (shopId == null || viewModel.isLoadingOrder) {
       return Container(
         width: double.infinity,
-        height: context.height,
+        height: height,
         decoration: BoxDecoration(color: wayaTheme.colorScheme.white),
         child: Center(
           child: CircularProgressIndicator(),
@@ -122,7 +124,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(viewModel.singleShop!.name.capitalizeFirst!,
+                  Text(viewModel.singleShop?.name.capitalizeFirst ?? '',
                       style: wayaTheme.textTheme.titleLarge),
                   const Gap(3),
                   Text(
@@ -131,6 +133,16 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   ),
                 ],
               ),
+              WayaButton(
+                height: null,
+                verticalPadding: 8,
+                horizontalPadding: 8,
+                callback: () {
+                  WayaNav.toNamed(RequestPayout.route, arguments: 'shop');
+                },
+                text: 'Payouts',
+                textStyle: wayaTheme.textTheme.descriptionStyle,
+              )
             ],
           ),
           const Gap(30),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -13,7 +12,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 import 'package:wayagram/features/support/modal/dispute.dart';
 import 'package:wayagram/features/support/vm/dispute.dart';
 
@@ -135,8 +134,6 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                 if (notifier.email.text.isEmpty) {
                   return 'Email is required';
                 }
-
-                // TODO: Streamline this by making it a helper.
                 final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                 if (!regexp.hasMatch(notifier.email.text)) {
                   return 'Invalid email address';
@@ -582,10 +579,12 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                   //? update dispute list
                   ref.read(disputeVmProvider.notifier).getDisputes();
                   //? Show the popup on the previous screen.
-                  await WayaUtils.showModalSheet(
-                    Get.context!,
-                    child: SuccessfulSupportDisputeDialog(id: ticketId),
-                  );
+                  if (context.mounted) {
+                    await WayaUtils.showModalSheet(
+                      context,
+                      child: SuccessfulSupportDisputeDialog(id: ticketId),
+                    );
+                  }
                 }
               },
               notifier: loadingNotifier,

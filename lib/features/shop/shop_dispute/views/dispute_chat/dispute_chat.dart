@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -13,18 +12,19 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/buyer_dispute/modals/report.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
+import 'package:wayagram/features/chat/widget/chat/bubbles/my_bubble_widget.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class DisputeChat extends ConsumerStatefulWidget {
@@ -116,12 +116,14 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
       }
 
       if (disputeState.dispute != null) {
-        final order = Order.fromJson(disputeState.dispute!.ticketBody.metadata.orderedItem);
+        final order = Order.fromJson(
+            disputeState.dispute!.ticketBody.metadata.orderedItem);
 
         String completedAt = order.deliveryStatusHistory.isNotEmpty
             ? order.deliveryStatusHistory.last.updatedAt
             : order.pickupStatusHistory.last.updatedAt;
-        int daysLeft = 14 - DateTime.now().difference(DateTime.parse(completedAt)).inDays;
+        int daysLeft =
+            14 - DateTime.now().difference(DateTime.parse(completedAt)).inDays;
 
         isButtonDisabled = daysLeft <= 0;
         noOfDaysLeft = daysLeft;
@@ -202,9 +204,12 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                                   //? For the message content...
                                   if (lastSeenText != null)
                                     Text(
-                                      userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
+                                      userStatus == ChatUserActivity.online
+                                          ? "Online"
+                                          : lastSeenText,
                                       maxLines: 1,
-                                      style: WayaTextStyles.titleMedium.copyWith(
+                                      style:
+                                          WayaTextStyles.titleMedium.copyWith(
                                         fontWeight: FontWeight.normal,
                                         overflow: TextOverflow.ellipsis,
                                         color: WayaColors.greyColor500,
@@ -228,21 +233,30 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         WayaButton(
-                          callback: (disputeState.dispute?.escalatedBy != null || isButtonDisabled)
-                              ? null
-                              : () {
-                                  final order = Order.fromJson(disputeState.dispute!.ticketBody.metadata.orderedItem);
-                                  final id = disputeState.dispute?.id;
-                                  final bool isBuyer = disputeState.dispute?.sellerId != ConversationState.self.id;
-                                  escalateToMediator(
-                                      context: context,
-                                      order: order,
-                                      tobeEscalatedBy: isBuyer ? "buyer" : "seller",
-                                      disputeId: id!);
-                                },
+                          callback:
+                              (disputeState.dispute?.escalatedBy != null ||
+                                      isButtonDisabled)
+                                  ? null
+                                  : () {
+                                      final order = Order.fromJson(disputeState
+                                          .dispute!
+                                          .ticketBody
+                                          .metadata
+                                          .orderedItem);
+                                      final id = disputeState.dispute?.id;
+                                      final bool isBuyer =
+                                          disputeState.dispute?.sellerId !=
+                                              ConversationState.self.id;
+                                      escalateToMediator(
+                                          context: context,
+                                          order: order,
+                                          tobeEscalatedBy:
+                                              isBuyer ? "buyer" : "seller",
+                                          disputeId: id!);
+                                    },
                           height: null,
-                          textStyle:
-                              theme.textTheme.descriptionStyle.copyWith(fontSize: 13.sp, fontWeight: FontWeight.w500),
+                          textStyle: theme.textTheme.descriptionStyle.copyWith(
+                              fontSize: 13.sp, fontWeight: FontWeight.w500),
                           text: "Escalate to mediator",
                           horizontalPadding: 8,
                           verticalPadding: 5,
@@ -259,11 +273,12 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                             Text(
                               "$noOfDaysLeft days left",
                               style: theme.textTheme.hintStyle.copyWith(
-                                  color: theme.colorScheme.customPrimary, fontSize: 12.sp, fontWeight: FontWeight.w500),
+                                  color: theme.colorScheme.customPrimary,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
-                        // const Gap(2),
                       ],
                     )),
                   ),
@@ -291,7 +306,9 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                             height: 70,
                             width: 70,
                             fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(theme.colorScheme.customPrimary, BlendMode.srcIn)),
+                            colorFilter: ColorFilter.mode(
+                                theme.colorScheme.customPrimary,
+                                BlendMode.srcIn)),
 
                         // Some space.
                         const Gap(20),
@@ -330,7 +347,8 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                       isAtEnd: !state.hasNextPage,
                       shouldFetch: !state.isLoading,
                       direction: Axis.vertical,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
                       physics: const AlwaysScrollableScrollPhysics(),
                       reverse: true,
                       getPage: (page) async {
@@ -339,7 +357,9 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                       builder: (context, index) => ChatBubbleWidget(
                         index: index,
                         inputFocus: focusNode,
-                        previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+                        previousDate: index == 0
+                            ? DateTime(1970)
+                            : state.messages[index - 1].createdAt,
                         data: state.messages[index],
                         chat: state.chat,
                         controller: inputController,
@@ -348,10 +368,12 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                     ),
                   ),
 
-                if (disputeState.dispute != null && disputeState.dispute!.escalatedBy != null) ...[
+                if (disputeState.dispute != null &&
+                    disputeState.dispute!.escalatedBy != null) ...[
                   Gap(30.h),
                   //> dispute state
-                  buildDisputeStateIndicator(context: context, dispute: disputeState.dispute!),
+                  buildDisputeStateIndicator(
+                      context: context, dispute: disputeState.dispute!),
                   //> Gap
                   Gap(30.h),
 
@@ -361,21 +383,26 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                       alignment: Alignment.center,
                       child: Row(
                         children: [
-                          Text("Chat Ended", style: theme.textTheme.bodySemiBold.copyWith(fontWeight: FontWeight.w600)),
+                          Text("Chat Ended",
+                              style: theme.textTheme.bodySemiBold
+                                  .copyWith(fontWeight: FontWeight.w600)),
                           const Gap(2),
-                          Text("Dispute ${disputeState.dispute!.status.capitalizeFirst!}",
+                          Text(
+                              "Dispute ${disputeState.dispute!.status.capitalizeFirst}",
                               style: theme.textTheme.bodySemiBold.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: disputeState.dispute!.status != "resolved"
-                                      ? theme.colorScheme.error700
-                                      : theme.colorScheme.customPrimary))
+                                  color:
+                                      disputeState.dispute!.status != "resolved"
+                                          ? theme.colorScheme.error700
+                                          : theme.colorScheme.customPrimary))
                         ],
                       ),
                     )
                 ],
 
                 //? Third, the chat input widget.
-                if (disputeState.dispute != null && disputeState.dispute!.escalatedBy == null)
+                if (disputeState.dispute != null &&
+                    disputeState.dispute!.escalatedBy == null)
                   ChatInputWidget(
                     controller: inputController,
                     notifier: notifier,
@@ -391,7 +418,8 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
     });
   }
 
-  Widget buildDisputeStateIndicator({required BuildContext context, required DisputeModel dispute}) {
+  Widget buildDisputeStateIndicator(
+      {required BuildContext context, required DisputeModel dispute}) {
     final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(12),
@@ -404,7 +432,8 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
             children: [
               Text(
                 "Dispute Resolution Progress",
-                style: theme.textTheme.bodySemiBold.copyWith(fontWeight: FontWeight.w600),
+                style: theme.textTheme.bodySemiBold
+                    .copyWith(fontWeight: FontWeight.w600),
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
@@ -416,7 +445,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                             : theme.colorScheme.error700.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(6)),
                 child: Text(
-                  dispute.status.capitalizeFirst!,
+                  dispute.status.capitalizeFirst,
                   style: TextStyle().wayaCopyWith(
                       color: dispute.status == 'open'
                           ? theme.colorScheme.primary600
@@ -437,12 +466,15 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                   fit: BoxFit.cover,
                 )
               : dispute.status == "resolved"
-                  ? Image.asset(WayaAssets.images.dresolved.path, width: double.infinity, fit: BoxFit.cover)
-                  : Image.asset(WayaAssets.images.ddismissed.path, width: double.infinity, fit: BoxFit.cover),
+                  ? Image.asset(WayaAssets.images.dresolved.path,
+                      width: double.infinity, fit: BoxFit.cover)
+                  : Image.asset(WayaAssets.images.ddismissed.path,
+                      width: double.infinity, fit: BoxFit.cover),
           const Gap(8),
           Text(
             "Date Submitted ${WayaHelpers.formatDateString(dispute.updatedAt.toIso8601String())}",
-            style: theme.textTheme.bodySemiBold.copyWith(fontWeight: FontWeight.w500),
+            style: theme.textTheme.bodySemiBold
+                .copyWith(fontWeight: FontWeight.w500),
           )
         ],
       ),
@@ -464,7 +496,10 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
           WayaNav.goBack();
 
           await WayaUtils.showModalSheet(context,
-              child: ReportDisputeModal(order: order, disputeId: disputeId, tobeEscalatedBy: tobeEscalatedBy));
+              child: ReportDisputeModal(
+                  order: order,
+                  disputeId: disputeId,
+                  tobeEscalatedBy: tobeEscalatedBy));
         },
         message:
             "Please confirm whether you’d like to escalate this dispute to a mediator. This cannot be undone when confirmed",

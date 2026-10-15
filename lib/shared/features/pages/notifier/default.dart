@@ -5,12 +5,13 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/pages/data/model/get_all_pages.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/cache/post.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 
@@ -27,6 +28,7 @@ class PageNotifier extends ValueNotifier<int> {
   List<PageModel> createdPages = [];
   List<PageModel> followedPages = [];
   List<PostModel> popularPosts = [];
+  List<PageModel> pageMembers = [];
   List<PostModel> latestPosts = [];
   List<PostModel> recentPosts = [];
 
@@ -43,7 +45,7 @@ class PageNotifier extends ValueNotifier<int> {
     final result = <PageModel>[];
 
     //? If there is nothing to see or get, leave.
-    if (!hasMoreCreatedPages) return createdPages;
+    //if (!hasMoreCreatedPages) return createdPages;
 
     //? If is now loading.
     isLoading = true;
@@ -53,7 +55,8 @@ class PageNotifier extends ValueNotifier<int> {
 
     //? Now, try actually fetching the groups.
     try {
-      final response = await repo.getAllPages(ConversationState.self.id, createdPage, limit);
+      final response =
+          await repo.getAllPages(ConversationState.self.id, createdPage, limit);
 
       //? If this was successful.
       if (!response.success) return createdPages;
@@ -94,13 +97,66 @@ class PageNotifier extends ValueNotifier<int> {
     return result;
   }
 
-
-  Future<List<PageModel>> getManagedPages() async {
-
+  Future<List<PageModel>> getMyPages() async {
     final result = <PageModel>[];
 
     //? If there is nothing to see or get, leave.
-    if (!hasMoreCreatedPages) return createdPages;
+    //if (!hasMoreCreatedGroups) return createdGroups;
+
+    //? This is loading.
+    isLoading = true;
+
+    //? Then refresh.
+    refresh();
+
+    //? Now, try actually fetching the groups.
+    try {
+      final response = await repo.getAllManagedPages(createdPage, limit);
+
+      //? If this was successful.
+      if (!response.success) return createdPages;
+
+      //? Then continue onward.
+      final responseModel = GetAllPages.fromJson(response.data);
+
+      //? If there were older pages to this thing...
+      if (createdPage > 1) {
+        result.addAll(createdPages);
+      }
+
+      //? This is good.
+      totalCreatedPages = responseModel.data?.totalDocs?.toInt() ?? 0;
+      createdPage = responseModel.data?.nextPage?.toInt() ?? 1;
+      hasMoreCreatedPages = responseModel.data?.hasNextPage ?? true;
+
+      //? Now add the newly fetched pages.
+      result.addAll(responseModel.data?.docs ?? []);
+      wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
+
+      //? Now, update our value.
+      createdPages = result;
+      isLoading = false;
+
+      //? Now, refresh.
+      refresh();
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return the result.
+    return result;
+  }
+
+  Future<List<PageModel>> getManagedPages() async {
+    final result = <PageModel>[];
+
+    //? If there is nothing to see or get, leave.
+    //if (!hasMoreCreatedPages) return createdPages;
 
     //? If is now loading.
     isLoading = true;
@@ -110,7 +166,7 @@ class PageNotifier extends ValueNotifier<int> {
 
     //? Now, try actually fetching the groups.
     try {
-      final response = await repo.getAllManagedPages( createdPage, limit);
+      final response = await repo.getAllManagedPages(createdPage, limit);
 
       //? If this was successful.
       if (!response.success) return createdPages;
@@ -222,19 +278,23 @@ class PageNotifier extends ValueNotifier<int> {
     bool pageType,
     String coverImage,
     String profileImage,
-      String category,
+    String category,
   ) async {
-    final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage));
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage));
+    final coverImageUrl =
+        await WayaFileRepository.instance.uploadFile(File(coverImage));
+    final profileImageUrl =
+        await WayaFileRepository.instance.uploadFile(File(profileImage));
 
     //? If either of this fails.
     if (coverImageUrl == null || profileImageUrl == null) {
-      WayaSnackBar.showToast("Sorry, we cannot upload your page at this time.", showSuccess: false);
+      WayaSnackBar.showToast("Sorry, we cannot upload your page at this time.",
+          showSuccess: false);
       return null;
     }
 
     try {
-      final response = await repo.createPage(pageName, pageDesc, pageType, coverImageUrl, profileImageUrl, category);
+      final response = await repo.createPage(pageName, pageDesc, pageType,
+          coverImageUrl, profileImageUrl, category);
 
       //? If this was fine...
       if (response.success) {
@@ -269,20 +329,23 @@ class PageNotifier extends ValueNotifier<int> {
     String profileImage,
     String pageId,
   ) async {
-    final coverImageUrl =
-        coverImage.startsWith("http") ? coverImage : await WayaFileRepository.instance.uploadFile(File(coverImage));
+    final coverImageUrl = coverImage.startsWith("http")
+        ? coverImage
+        : await WayaFileRepository.instance.uploadFile(File(coverImage));
     final profileImageUrl = profileImage.startsWith("http")
         ? profileImage
         : await WayaFileRepository.instance.uploadFile(File(profileImage));
 
     //? If either of this fails.
     if (coverImageUrl == null || profileImageUrl == null) {
-      WayaSnackBar.showToast("Sorry, we cannot upload your page at this time.", showSuccess: false);
+      WayaSnackBar.showToast("Sorry, we cannot upload your page at this time.",
+          showSuccess: false);
       return false;
     }
 
     try {
-      final response = await repo.editPage(pageName, pageDesc, pageType, coverImageUrl, profileImageUrl, pageId);
+      final response = await repo.editPage(
+          pageName, pageDesc, pageType, coverImageUrl, profileImageUrl, pageId);
 
       //? If this is fine...
       if (response.success) {
@@ -446,6 +509,40 @@ class PageNotifier extends ValueNotifier<int> {
     }
   }
 
+  Future<bool> removePageMember(String groupId, String memberId) async {
+    try {
+      final response = await repo.removePageTeamMember(groupId, memberId);
+
+      //? This is fine.
+      if (response.success) {
+        final found = pageMembers.indexWhere((group) => group.id == groupId);
+        wayaPageCache.deleteItem(groupId);
+
+        //? If this was found, remove it and update.
+        if (!found.isNegative) {
+          pageMembers.removeAt(found);
+          refresh();
+        }
+
+        //? Now report.
+        WayaSnackBar.showToast("Member removed successfully");
+      }
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return false.
+    return false;
+  }
+
   /// Unfollows a page with the specified ID.
   ///
   /// Takes a [pageId] as a parameter which uniquely identifies the page to unfollow.
@@ -524,7 +621,8 @@ class PageNotifier extends ValueNotifier<int> {
   /// Utility function used to check whether or not a user is a member of a
   /// page.
   bool isMemberOf(String pageId) {
-    return followedPages.any((page) => page.id == pageId) || createdPages.any((page) => page.id == pageId);
+    return followedPages.any((page) => page.id == pageId) ||
+        createdPages.any((page) => page.id == pageId);
   }
 
   /// Refreshes the current state and triggers a rebuild of dependent widgets.

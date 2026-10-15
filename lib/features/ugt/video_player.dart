@@ -15,7 +15,7 @@ class VideoThumbnailPlayer extends StatefulWidget {
   });
 
   @override
-  _VideoThumbnailPlayerState createState() => _VideoThumbnailPlayerState();
+  State<StatefulWidget> createState() => _VideoThumbnailPlayerState();
 }
 
 class _VideoThumbnailPlayerState extends State<VideoThumbnailPlayer> {
@@ -29,7 +29,6 @@ class _VideoThumbnailPlayerState extends State<VideoThumbnailPlayer> {
     super.initState();
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
-        debugPrint("i am initialized finish");
         setState(() {
           _isInitialized = true;
         });

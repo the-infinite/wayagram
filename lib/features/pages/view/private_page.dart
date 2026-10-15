@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -46,8 +45,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(pageProvider);
 
-    debugPrint('PRIVATE PAGEID ${widget.page.id}');
-
     //? Return this component.
     final page = wayaPageCache.getCachedData(widget.page.id) ?? _thisPage;
 
@@ -66,11 +63,11 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
               },
               child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
-            onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(
+            onTap: () => SharePlus.instance.share(ShareParams(
+              text: WayaValueHelper.getShareableUrl(
                   WayaAppRoutes.getPageDetailsPage(widget.page.id)),
               subject: 'Share ${widget.page.name}',
-            ),
+            )),
             child: WayaAssets.icons.genSet.share.svg(
               fit: BoxFit.none,
             ),
@@ -131,7 +128,10 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                     context: context,
                     asset: SvgPicture.asset(
                       'assets/images/pages/delete.svg',
-                      color: wayaTheme.colorScheme.error500,
+                      colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.error500,
+                        BlendMode.srcIn,
+                      ),
                       height: 16,
                     ),
                     text: "Delete Page",
@@ -141,7 +141,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
               ];
             },
           ),
-          Gap(8)
+          const Gap(8)
         ],
       ),
       body: Column(
@@ -172,11 +172,11 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                             ),
                     ),
                   ),
-                  Gap(15),
+                  const Gap(15),
                   GestureDetector(
                     onTap: () async {
                       final result = await WayaNav.to(
-                        transition: Transition.circularReveal,
+                        transition: WayaTransition.circularReveal,
                         duration: const Duration(milliseconds: 500),
                         EditPageInfo(
                           page: widget.page,
@@ -249,11 +249,9 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                 Row(
                   children: [
                     InkWell(
-                      onTap: (){
+                      onTap: () {
                         WayaNav.toNamed('/pageFollowerScreen',
-                            arguments: {
-                          'pageId': widget.page.id
-                            });
+                            arguments: {'pageId': widget.page.id});
                       },
                       child: actionType(
                         WayaValueHelper.formatNumber(widget.page.followerCount),
@@ -285,8 +283,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                     ),
                   ],
                 ),
-
-                //const Gap(20),
               ],
             ),
           ),
@@ -297,6 +293,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                 )
               : TeamPage(
                   pageId: widget.page.id,
+                  provider: pageProvider,
                 )
           //AllOrders()
         ],
@@ -320,7 +317,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
     );
   }
 
-  actionType(txt, txt2, {onPressed}) {
+  Widget actionType(String txt, String txt2, {Function()? onPressed}) {
     final wayaTheme = Theme.of(context);
     return InkWell(
       splashFactory: NoSplash.splashFactory,

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
@@ -18,7 +18,11 @@ class PreviewRequest extends ConsumerStatefulWidget {
   final Function(int index) goBack;
   final Function gotoPreviousTab;
   final bool isWayagramDeal;
-  const PreviewRequest({super.key, required this.goBack, required this.gotoPreviousTab, this.isWayagramDeal = false});
+  const PreviewRequest(
+      {super.key,
+      required this.goBack,
+      required this.gotoPreviousTab,
+      this.isWayagramDeal = false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PreviewRequestState();
@@ -41,6 +45,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
     viewModel.startTime.value = null;
     viewModel.endTime.value = null;
     viewModel.bidDate.value = null;
+    notifier.clear();
   }
 
   @override
@@ -105,7 +110,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           //? The brand name of the product.
           AboutProduct(
             title: 'Brand Name',
-            content: '${viewModel.brandName.text.capitalizeFirst}',
+            content: viewModel.brandName.text.capitalizeFirst,
           ),
         ],
 
@@ -135,7 +140,9 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         const Gap(15),
 
         //? The description of the product.
-        AboutProduct(title: 'Product Description', content: '${viewModel.productDescription.text.capitalizeFirst}'),
+        AboutProduct(
+            title: 'Product Description',
+            content: viewModel.productDescription.text.capitalizeFirst),
 
         // Some more space.
         const Gap(15),
@@ -226,7 +233,8 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             children: [
               Expanded(
                 child: AboutProduct(
-                    title: 'Delivery Address', content: '${viewModel.deliveryAddress.text.capitalizeFirst}'),
+                    title: 'Delivery Address',
+                    content: viewModel.deliveryAddress.text.capitalizeFirst),
               )
             ],
           ),
@@ -241,13 +249,13 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
               Expanded(
                 child: AboutProduct(
                   title: 'State',
-                  content: '${viewModel.deliveryState.capitalizeFirst}',
+                  content: viewModel.deliveryState.capitalizeFirst,
                 ),
               ),
               Expanded(
                 child: AboutProduct(
                   title: 'LGA',
-                  content: '${viewModel.deliveryLga.capitalizeFirst}',
+                  content: viewModel.deliveryLga.capitalizeFirst,
                 ),
               )
             ],
@@ -315,7 +323,9 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             final createBuyerRequest = CreateBuyerRequest(
               buyerId: buyerId,
               productName: viewModel.productName.text.trim(),
-              brand: viewModel.brandName.text.trim().isEmpty ? null : viewModel.brandName.text.trim(),
+              brand: viewModel.brandName.text.trim().isEmpty
+                  ? null
+                  : viewModel.brandName.text.trim(),
               category: viewModel.productCategory,
               condition: viewModel.productCondition.toLowerCase(),
               description: viewModel.productDescription.text.trim(),
@@ -325,17 +335,27 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
               deliveryDetails: '----',
               stateOfPurchase: viewModel.stateOfPurchase,
               lga: viewModel.lga,
-              vendorsCanSeeBidFromAnyDistance: '${viewModel.vendorSeeBuyRequest}',
+              vendorsCanSeeBidFromAnyDistance:
+                  '${viewModel.vendorSeeBuyRequest}',
               deliveryType: viewModel.pickUpOption,
-              deliveryAddress: viewModel.canDeliver ? viewModel.deliveryAddress.text : null,
-              deliveryState: viewModel.canDeliver ? viewModel.deliveryState : null,
+              deliveryAddress:
+                  viewModel.canDeliver ? viewModel.deliveryAddress.text : null,
+              deliveryState:
+                  viewModel.canDeliver ? viewModel.deliveryState : null,
               deliveryLga: viewModel.canDeliver ? viewModel.deliveryLga : null,
-              maxBidAmount: double.tryParse(viewModel.maxBidAmount.text.trim().replaceAll(',', '')) ?? 0.0,
-              bidStartingAmount: double.tryParse(viewModel.bidStartingAmount.text.trim().replaceAll(',', '')) ?? 0.0,
+              maxBidAmount: double.tryParse(
+                      viewModel.maxBidAmount.text.trim().replaceAll(',', '')) ??
+                  0.0,
+              bidStartingAmount: double.tryParse(viewModel
+                      .bidStartingAmount.text
+                      .trim()
+                      .replaceAll(',', '')) ??
+                  0.0,
             );
 
             //? The request that has been made.
-            final request = await notifier.createBuyerRequest(createBuyerRequest);
+            final request =
+                await notifier.createBuyerRequest(createBuyerRequest);
 
             //? Create the buyer request.
             if (request == null) return;
@@ -358,7 +378,8 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           text: 'Go Back',
           color: wayaTheme.colorScheme.transparent,
           textColor: wayaTheme.colorScheme.customBlack,
-          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+          border:
+              Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
           callback: () => widget.gotoPreviousTab(),
         )
       ],
@@ -399,7 +420,8 @@ class EditHeader extends StatelessWidget {
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1)),
+                border: Border.all(
+                    color: wayaTheme.colorScheme.greyColor300, width: 1)),
             child: Row(
               children: [
                 WayaAssets.icons.ctxEdit.svg(
@@ -409,7 +431,9 @@ class EditHeader extends StatelessWidget {
                 const Gap(5),
                 Text(
                   "Edit",
-                  style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                  style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customBlack,
+                      fontSize: 14.sp),
                 )
               ],
             ),

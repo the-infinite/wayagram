@@ -7,20 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:get_thumbnail_video/index.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:wayagram/features/moments/views/trim_video.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 import '../data/model/moment_state.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import '../views/media_moment.dart';
@@ -32,7 +33,7 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/features/moments/data/model/moment_viewer_response_model.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 class MomentVm extends StateNotifier<MomentState> {
   final Ref ref;
@@ -297,7 +298,7 @@ class MomentVm extends StateNotifier<MomentState> {
       quality: 60,
     );
 
-    return thumb != null ? File(thumb) : null;
+    return File(thumb.path);
   }
 
 //> generate text preview
@@ -318,20 +319,11 @@ class MomentVm extends StateNotifier<MomentState> {
     final textStyle = state.textStyle;
     final selectedAsset = state.selectedFile;
     final caption = state.caption;
-    final mediaType = state.mediaType;
     String content = '';
     String contentType = '';
     String color = '';
     String fontType = '';
     String? thumbnail = state.thumbnail;
-
-    debugPrint('Submitting moment:');
-    debugPrint('Text: $text');
-    debugPrint('Background Color: $backgroundColor');
-    debugPrint('Text Style: $textStyle');
-    debugPrint('Media Type: $mediaType');
-    debugPrint('Has Media: ${selectedAsset != null}');
-    debugPrint('Caption: $caption');
 
     state = state.copyWith(isCreatingMoment: true);
     if (state.type == StatusType.text) {
@@ -418,7 +410,7 @@ class MomentVm extends StateNotifier<MomentState> {
           ? await _momentRepository.editMoment(
               userId: ConversationState.self.id,
               name:
-                  "${ConversationState.self.firstName.capitalizeFirst ?? ''} ${ConversationState.self.lastName.capitalizeFirst ?? ''}",
+                  "${ConversationState.self.firstName.capitalizeFirst} ${ConversationState.self.lastName.capitalizeFirst}",
               image: ConversationState.self.profilePicture ?? '',
               content: content,
               caption: caption,
@@ -430,7 +422,7 @@ class MomentVm extends StateNotifier<MomentState> {
           : await _momentRepository.createMoment(
               userId: ConversationState.self.id,
               name:
-                  "${ConversationState.self.firstName.capitalizeFirst ?? ''} ${ConversationState.self.lastName.capitalizeFirst ?? ''}",
+                  "${ConversationState.self.firstName.capitalizeFirst} ${ConversationState.self.lastName.capitalizeFirst}",
               image: ConversationState.self.profilePicture ?? '',
               content: content,
               caption: caption,
@@ -587,7 +579,6 @@ class MomentVm extends StateNotifier<MomentState> {
 
       return moments?[0];
     } catch (error) {
-      debugPrint(error.toString());
       return null;
     }
   }
@@ -625,8 +616,6 @@ class MomentVm extends StateNotifier<MomentState> {
       //     ),
       //     message: 'Thank you for reporting. We take your feedback seriously',
       //     buttonText: 'Dismiss');
-      //  print("fwfewfwef $isSuccess");
-      debugPrint(response.data.toString());
       return isSuccess;
 
       // }
@@ -654,8 +643,7 @@ class MomentVm extends StateNotifier<MomentState> {
   //         comment: state.isComment);
 
   //     if (response.success) {
-  //       debugPrint(response.data.toString());
-  //     }
+  //   //     }
   //   } catch (error) {
   //     debugPrint(error.toString());
   //   }
@@ -698,5 +686,5 @@ class MomentVm extends StateNotifier<MomentState> {
 }
 
 final momentVmProvider = StateNotifierProvider<MomentVm, MomentState>((ref) {
-  return MomentVm(WayaSecureDataSource(), MomentRepository(), ref);
+  return MomentVm(WayaSecureDataSource(), MomentRepository.instance, ref);
 });

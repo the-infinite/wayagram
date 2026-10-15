@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,7 +17,7 @@ import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_timer.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 class SellerBidDetails extends ConsumerStatefulWidget {
   static const route = '/quotation/seller/bid';
@@ -36,6 +38,7 @@ class SellerBidDetails extends ConsumerStatefulWidget {
 class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
   final loadingController = ValueNotifier(false);
+  CachedUserDataTuple? _buyerDetails;
 
   Future<void> _placeBid(BuyRequestModel request) async {
     final amount = await WayaUtils.showModalSheet<double>(
@@ -55,13 +58,28 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
     if (amount == null) return;
 
     //? Which shop is the user sending the bid as?
-    final shopId = await WayaUtils.showModalSheet(context, child: ChooseShopModal());
+    final shopId =
+        await WayaUtils.showModalSheet(context, child: ChooseShopModal());
 
     //! If the shop was not selected.
     if (shopId == null) return;
 
+    //? Next, get the delivery cost.
+    final deliveryCost = await WayaUtils.showModalSheet<double>(
+      context,
+      child: EditOfferModal(
+        title: 'Delivery Cost',
+        hint: 'Enter the delivery cost for this request',
+        delta: 1500,
+      ),
+    );
+
+    //? If this is undefined.
+    if (deliveryCost == null) return;
+
     //? Now, send the bid.
-    final result = await notifier.sendBid(request.id, amount, shopId);
+    final result =
+        await notifier.sendBid(request.id, amount, shopId, deliveryCost);
 
     //! Since bidding failed, you can leave.
     if (result == null) return;
@@ -71,15 +89,26 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
   }
 
   Future<void> _viewSellerBid(QuotationBidModel result) async {
-    if (!WayaConstants.isProduction) {
-      WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
-    }
+    WayaNav.toNamed(
+        WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
   }
 
   @override
   void dispose() {
     loadingController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //? Get the buyer's details.
+      final request = notifier.getBidQuote(widget.requestId)!;
+      _buyerDetails = await UserResource.getUserDetails(request.buyerId);
+      setState(() {});
+    });
+
+    super.initState();
   }
 
   @override
@@ -249,21 +278,17 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           Gap(15.h),
 
           //? The name of the customer.
-          WayaFutureSubscriber(
-            future: UserResource.getUserDetails(request.buyerId),
-            builder: (context, data) {
-              //? Return null as a failsafe.
-              if (data == null) {
-                return const SizedBox();
-              }
-
-              //? Then return the buyer's information.
-              return OrderInfoWidget(
+          if (_buyerDetails == null)
+            const SizedBox()
+          else
+            GestureDetector(
+              onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(
+                  _buyerDetails!.$1.id, "quotation")),
+              child: OrderInfoWidget(
                 title: "Customer's Name",
-                description: data.$1.fullname,
-              );
-            },
-          ),
+                description: _buyerDetails!.$1.fullname,
+              ),
+            ),
 
           // Some space.
           Gap(8.h),
@@ -271,7 +296,9 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           //? The delivery type.
           OrderInfoWidget(
             title: "Delivery Type",
-            description: request.deliveryType == BuyRequestDeliveryType.pickup ? 'Pickup' : 'Home Delivery',
+            description: request.deliveryType == BuyRequestDeliveryType.pickup
+                ? 'Pickup'
+                : 'Home Delivery',
           ),
 
           // Some space.
@@ -295,21 +322,12 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
 
             // Some space.
             Gap(8.h),
-            //   ] else ...[
-            //     //
-            //     OrderInfoWidget(
-            //       title: "Pickup Address",
-            //       description: bid.pickupAddress ?? "No pickup address provided",
-            //     ),
-
-            //     // Some space.
-            //     Gap(8.h),
           ],
 
           //? The bid's amount.
           OrderInfoWidget(
-            title: "Bid Amount",
-            description: WayaValueHelper.formatPrice(bid.amount),
+            title: "Delivery Fee",
+            description: WayaValueHelper.formatPrice(bid.deliveryCharge ?? 0),
           ),
 
           // Some space.
@@ -329,11 +347,14 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
             WayaButton(
               color: wayaTheme.colorScheme.transparent,
               textColor: wayaTheme.colorScheme.greyColor900,
-              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () => WayaNav.toNamed(
+                  WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
               text: "View Order",
               leadingIcon: WayaAssets.icons.orders.svg(
-                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
                 width: 20,
               ),
             )
@@ -344,7 +365,8 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
               height: 48,
               notifier: loadingController,
               leadingIcon: WayaAssets.icons.bid.svg(
-                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.white, BlendMode.srcIn),
                 width: 20,
               ),
             )

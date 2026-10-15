@@ -13,7 +13,7 @@ import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
@@ -82,7 +82,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
     //? Now move forward.
     return Container(
       width: size.width,
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -207,7 +207,6 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                   likedMoments[widget.moment.id] =
                       !(likedMoments[widget.moment.id] ?? false);
                 });
-                print("loieerree");
                 notifier.toggleLiked(likedMoments[widget.moment.id]!,
                     widget.moment.id, widget.moment.userId);
               },
@@ -270,7 +269,7 @@ final replyMomentVmProvider =
     StateNotifierProvider.family<ReplyMomentVm, ReplyMomentState, String>(
         (ref, uniqueKey) {
   ref.watch(momentVmProvider);
-  return ReplyMomentVm(MomentRepository(), WayaSecureDataSource(), ref);
+  return ReplyMomentVm(MomentRepository.instance, WayaSecureDataSource(), ref);
 });
 
 class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
@@ -294,25 +293,19 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
 
   void updateComment(String comment) {
     if (_isDisposed) return;
-    print("commeting");
     state = state.copyWith(comment: comment);
-    print("commeeeeee ${state.comment}");
   }
 
   void isCommented(bool isComment, String id, String userId) async {
-   // if (_isDisposed) return;
+    // if (_isDisposed) return;
     state = state.copyWith(isComment: isComment);
-    print("efwef ------ commenting $isComment");
-    await postSingleUserMoment(
-        momentId: id, userId: userId, isComment: true);
+    await postSingleUserMoment(momentId: id, userId: userId, isComment: true);
   }
 
   void toggleLiked(bool liked, String id, String userId) async {
-     print("efwef liking before dispose");
-   // if (_isDisposed) return;
+    // if (_isDisposed) return;
     state = state.copyWith(isLiked: liked);
 
-    print("efwef liking");
     await postSingleUserMoment(momentId: id, userId: userId, isLiked: true);
   }
 
@@ -324,8 +317,7 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
     try {
       final profileId = await _secureDataSource.getUserId();
 
-      if (profileId == userId) return debugPrint("working but it's yours");
-      print("efwef ---ewfewfwe--- commenting $isComment $isLiked");
+      if (profileId == userId) return;
       final response = await _momentRepository.viewMoments(
         // profileId: profileId!,
         momentId: momentId,

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -101,8 +100,14 @@ class ShopRepository extends BaseRepository {
     return post("$serviceUrl/favorites/add/$userId", {"productId": productId});
   }
 
+  Future<WayaRequestResponse> removeFromFavorite({required String favoriteId}) {
+    return put("$serviceUrl/favorites/remove", {"productId": favoriteId});
+  }
+
   ///
-  Future<WayaRequestResponse> addToken({required String deliveryToken}) {
+  Future<WayaRequestResponse> addToken({
+    required String deliveryToken,
+  }) {
     return post(
         "$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
   }
@@ -127,7 +132,6 @@ class ShopRepository extends BaseRepository {
 
     if (productId != null) payload['productId'] = productId;
     if (shopId != null) payload['shopId'] = shopId;
-    debugPrint("??? $payload");
     return post("$serviceUrl/rating/create", payload);
   }
 
@@ -170,4 +174,3 @@ class ShopRepository extends BaseRepository {
     });
   }
 }
-//

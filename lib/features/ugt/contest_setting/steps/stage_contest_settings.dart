@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
@@ -11,39 +10,25 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../../core/utils/waya_navigation.dart';
-import '../../data/controller/contest_controller.dart';
+import '../../data/controller/contest_controller.dart' as contest_ctrl;
 
 class StageContestSettings extends StatefulHookConsumerWidget {
   final VoidCallback goToNextTab;
   const StageContestSettings({super.key, required this.goToNextTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _StageContestSettingsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _StageContestSettingsState();
 }
 
 class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
-  final _contestController = Get.put(ContestController());
   List<Map<String, dynamic>> stages = [];
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-//   void _addStage() {
-//     debugPrint(
-//         'i dey ghhhhhhhh ${ref.read(contestNotifierProvider.notifier).getEditStageList()}');
-//     ref
-//         .read(contestNotifierProvider.notifier)
-//         .updateEditStagePrefListValue(StagePrefModel(id: 1));
-//     /* setState(() {
-//       stages.add({"id": stages.length + 1, "stageName": "Stage Name"});
-//     }); */
-//   }
 
   void _removeStage(int index) {
     ref.read(stateContactProvider.notifier).state.removeAt(index);
-    ref.read(stateContactProvider.notifier).state = [...ref.read(stateContactProvider.notifier).state];
+    ref.read(stateContactProvider.notifier).state = [
+      ...ref.read(stateContactProvider.notifier).state
+    ];
     /*  setState(() {
       _contestController.removeStage(index);
       stages.removeAt(index);
@@ -52,10 +37,10 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
 
   @override
   Widget build(BuildContext context) {
-    // final viewModel = ref.watch(personalFirstStepProvider);
-    // final viewModel2 = ref.watch(contestNotifierProvider);
     final viewModel3 = ref.watch(stateContactProvider);
     final wayaTheme = Theme.of(context);
+    final contestController =
+        ref.read(contest_ctrl.contestControllerProvider.notifier);
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
 
     var isEditing = ref.watch(stateIsEditingContestProvider);
@@ -91,7 +76,8 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
       children: [
         Text("Stage Settings", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
-        Text("Configure each stage settings and modify it \n as you see fit", style: wayaTheme.textTheme.hintStyle),
+        Text("Configure each stage settings and modify it \n as you see fit",
+            style: wayaTheme.textTheme.hintStyle),
         const Gap(30),
         Column(
           children: [
@@ -109,7 +95,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
+                          color: Colors.red.withValues(alpha: 0.1),
                           shape: BoxShape.rectangle,
                         ),
                         child: IconButton(
@@ -126,7 +112,8 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                       ),
                       Expanded(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                           height: 60,
                           decoration: BoxDecoration(
                             color: Colors.grey[100],
@@ -137,7 +124,11 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                  ref.read(stateContactProvider.notifier).state[index].stageName.toString()
+                                  ref
+                                      .read(stateContactProvider.notifier)
+                                      .state[index]
+                                      .stageName
+                                      .toString()
                                   /*  index >= 0 &&
                                           index <
                                               _contestController
@@ -146,7 +137,9 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                                           ["stageName"]
                                       : stages[index] */
                                   ,
-                                  style: TextStyle(fontSize: 16.sp, color: Colors.grey[700])),
+                                  style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: Colors.grey[700])),
                               IconButton(
                                 icon: Image.asset(
                                   'assets/images/icon-right.png',
@@ -155,7 +148,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                                 ),
                                 //Icon(Icons.edit, color: Colors.grey),
                                 onPressed: () {
-                                  _contestController.selectedIndex = index;
+                                  contestController.updateSelectedIndex(index);
                                   WayaNav.toNamed("/edit-stage-preference");
                                 },
                               ),
@@ -195,7 +188,8 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                     .read(contestNotifierProvider.notifier)
                     .updateEditStagePrefListValue(StagePrefModel(id: 1)); */
               },
-              child: Text('+ Add Another Stage', style: TextStyle(color: Colors.red)),
+              child: Text('+ Add Another Stage',
+                  style: TextStyle(color: Colors.red)),
             ),
             SizedBox(height: 20),
           ],
@@ -230,9 +224,9 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
             text: 'Go Back',
             color: wayaTheme.colorScheme.greyColor300,
             textColor: wayaTheme.colorScheme.customBlack,
-            border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            border:
+                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              debugPrint("stages  ${_contestController.contestStages.toString()}");
               WayaNav.goBack();
             })
       ],

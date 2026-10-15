@@ -30,14 +30,17 @@ class _MyMomentState extends ConsumerState<MyMoments> {
       notifier.getUserMoments(1);
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
     super.initState();
+  }
+
+  void _onSearchChanged() {
+    setState(() {});
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -52,7 +55,7 @@ class _MyMomentState extends ConsumerState<MyMoments> {
       ['caption', 'content'],
       searchController.text,
     );
-    
+
     return WayaScaffold(
       isLoading: state.isLoadingUserMoments,
       title: "My Moments",

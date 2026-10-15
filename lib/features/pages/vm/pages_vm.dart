@@ -5,8 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -14,6 +13,7 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/data/model/group_category_model.dart';
@@ -78,14 +78,6 @@ class PageVm extends StateNotifier<PageState> {
   List<SavedPost> get savedPosts => _savedPosts;
   String get errorMessage2 => _errorMessage2;
 
-  void updateValue(RxInt value, bool isIncreased) {
-    if (isIncreased) {
-      value.value++;
-    } else {
-      value.value--;
-    }
-  }
-
   void clearText() {
     state.content.clear();
   }
@@ -102,17 +94,29 @@ class PageVm extends StateNotifier<PageState> {
     state = state.copyWith(category: value.value);
   }
 
+  void updateOpenCommentToEveryone(bool value) {
+    state = state.copyWith(comment: value);
+  }
+
+  void updateOpenToEveryone(bool value) {
+    state = state.copyWith(openToEveryone: value);
+  }
+
+  void updateAdminCanCreate(bool value) {
+    state = state.copyWith(adminCanCreate: value);
+  }
+
   Future<void> fetchCategory() async {
     try {
       final response = await _pageRepository.getUserCategory();
 
       if (response.success) {
         GroupCategoryModel responseModel =
-        GroupCategoryModel.fromJson(response.data);
+            GroupCategoryModel.fromJson(response.data);
 
         final List<Select>? categories = responseModel.data?.map((val) {
           return Select(
-              label: '${val.name?.capitalizeFirst}', value: '${val.id}');
+              label: '${val.name?.capitalizeFirst}', value: '${val.name}');
         }).toList();
         state = state.copyWith(categories: categories);
       }
@@ -201,7 +205,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> fetchSavedPosts(userId) async {
+  Future<void> fetchSavedPosts(String userId) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
@@ -234,7 +238,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> getAllPosts(id) async {
+  Future<void> getAllPosts(String id) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
@@ -421,7 +425,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> createPost(ctx, content, postType, List<XFile> images) async {
+  Future<void> createPost(
+      BuildContext ctx, content, postType, List<XFile> images) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
@@ -431,10 +436,10 @@ class PageVm extends StateNotifier<PageState> {
       MediaUploadModel mediaUploadModel =
           MediaUploadModel.fromJson(uploadImageResponse.data);
       urls.add(UploadedImage(
-          url: mediaUploadModel.data!.url!,
+          url: mediaUploadModel.data?.url ?? '',
           file: image.path,
           fileName: image.name));
-      publicUrl.add(mediaUploadModel.data!.publicUrl!);
+      publicUrl.add(mediaUploadModel.data?.publicUrl ?? '');
     }
 
     // upload
@@ -544,7 +549,7 @@ class PageVm extends StateNotifier<PageState> {
     return null;
   }
 
-  Future<void> createPagePost(ctx, String content, String postType,
+  Future<void> createPagePost(BuildContext ctx, String content, String postType,
       List<XFile> images, String pageId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
@@ -675,7 +680,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> deletePost(ctx,
+  Future<void> deletePost(BuildContext ctx,
       {required String postId,
       required String userId,
       bool notify = true}) async {
@@ -706,7 +711,7 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   Future<void> deletePage(
-    ctx, {
+    BuildContext ctx, {
     required String pageId,
   }) async {
     try {
@@ -735,7 +740,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> sharePost(ctx, {required String postId}) async {
+  Future<void> sharePost(BuildContext ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.sharePost(postId);
@@ -755,7 +760,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<bool> bookmarkPost(ctx, {required String postId}) async {
+  Future<bool> bookmarkPost(BuildContext ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.bookMarkPost(postId);
@@ -778,7 +783,7 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<bool> likePost(ctx,
+  Future<bool> likePost(BuildContext ctx,
       {required String postId, required String userId}) async {
     try {
       //state = state.copyWith(isLoading: true);
@@ -803,7 +808,7 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<bool> unlikePost(ctx, {required String postId}) async {
+  Future<bool> unlikePost(BuildContext ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.unlikePost(postId);
@@ -825,8 +830,8 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<void> editPost(ctx, content, postType, List<XFile> images, postId,
-      List<String>? prevouslySelectedMedia) async {
+  Future<void> editPost(BuildContext ctx, content, postType, List<XFile> images,
+      postId, List<String>? prevouslySelectedMedia) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
@@ -926,7 +931,7 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> getPageMember(pageId) async {
+  Future<void> getPageMember(String pageId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.getPageMembers(pageId);
@@ -944,6 +949,35 @@ class PageVm extends StateNotifier<PageState> {
         WayaDebugHelpers.getStackTrace(e),
       );
     } finally {}
+  }
+
+  Future<void> removeTeamMember(
+      BuildContext ctx, String memberId, String pageId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response =
+          await _pageRepository.removePageTeamMember(pageId, memberId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        await getPageMember(pageId);
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Member removed successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   Future<void> getRecommendedPages() async {
@@ -1014,8 +1048,10 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.getPageInvitation();
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PageInvitationModel responseModel = PageInvitationModel.fromJson(response.data);
-        state = state.copyWith(pageInvitationModelDocs: responseModel.data?.docs);
+        PageInvitationModel responseModel =
+            PageInvitationModel.fromJson(response.data);
+        state =
+            state.copyWith(pageInvitationModelDocs: responseModel.data?.docs);
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -1027,7 +1063,8 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> acceptPageInvitation(ctx, String invitationId) async {
+  Future<void> acceptPageInvitation(
+      BuildContext ctx, String invitationId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.acceptPageInvitation(invitationId);
@@ -1040,7 +1077,6 @@ class PageVm extends StateNotifier<PageState> {
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
-
         );
       }
     } catch (e) {
@@ -1055,7 +1091,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> rejectPageInvitation(ctx, String invitationId) async {
+  Future<void> rejectPageInvitation(
+      BuildContext ctx, String invitationId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.rejectPageInvitation(invitationId);
@@ -1087,7 +1124,7 @@ class PageVm extends StateNotifier<PageState> {
     try {
       state = state.copyWith(isLoading: true);
       final response =
-      await _pageRepository.inviteUserToPage(role, pageId, memberId);
+          await _pageRepository.inviteUserToPage(role, pageId, memberId);
       state = state.copyWith(isLoading: false);
       getPageMember(pageId);
       return response.success;
@@ -1123,7 +1160,6 @@ class PageVm extends StateNotifier<PageState> {
       );
     } finally {}
   }
-
 
   Future<bool> updateTeamMember(
       BuildContext ctx, String role, String pageId, String memberId) async {
@@ -1168,19 +1204,33 @@ class PageVm extends StateNotifier<PageState> {
 
   Future<bool> updatePageSetting(
     BuildContext ctx,
-    bool isPublic,
+    bool isOpen,
     bool everyoneCanComment,
+    bool adminsCanCreate,
     String pageId,
   ) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.updatePageSetting(
-        isPublic,
+        isOpen,
         everyoneCanComment,
+        adminsCanCreate,
         pageId,
       );
       state = state.copyWith(isLoading: false);
-      return response.success;
+      if (response.success || ctx.mounted) {
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Page setting updated successfully!',
+              style: TextStyle(
+                  fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -1195,9 +1245,11 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-    Future<bool> updatePageGeneralSettings(bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
+  Future<bool> updatePageGeneralSettings(
+      bool isEveryOneAllowFollow, bool isEveryOneAllowComment) async {
     try {
-      final response = await _pageRepository.updatePageGeneralSettings(isEveryOneAllowFollow, isEveryOneAllowComment);
+      final response = await _pageRepository.updatePageGeneralSettings(
+          isEveryOneAllowFollow, isEveryOneAllowComment);
 
       //? If this is fine.
       if (response.success) {
@@ -1216,14 +1268,18 @@ class PageVm extends StateNotifier<PageState> {
 
     return false;
   }
-    Future<(bool, bool)> getPageGeneralSettings() async {
+
+  Future<(bool, bool)> getPageGeneralSettings() async {
     try {
       // API call
 
       final response = await _pageRepository.getPageGeneralSettings();
 
       if (response.success) {
-        return (response.data["data"]["allowComments"]=="everyone", response.data["data"]["allowFollow"] == "everyone");
+        return (
+          response.data["data"]["allowComments"] as bool,
+          response.data["data"]["allowFollow"] as bool
+        );
       }
       return (false, false);
     } catch (e) {
@@ -1237,10 +1293,10 @@ class PageVm extends StateNotifier<PageState> {
     return (false, false);
   }
 
-
   Future<bool> updatePostSettings(bool isOldPublic, bool isNewPublic) async {
     try {
-      final response = await _pageRepository.updatePostSettings(isOldPublic, isNewPublic);
+      final response =
+          await _pageRepository.updatePostSettings(isOldPublic, isNewPublic);
 
       //? If this is fine.
       if (response.success) {
@@ -1267,7 +1323,10 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.getPostSettings();
 
       if (response.success) {
-        return (response.data["data"]["oldPostprivacy"]=="public", response.data["data"]["newPostprivacy"] == "public");
+        return (
+          response.data["data"]["oldPostprivacy"] == "public",
+          response.data["data"]["newPostprivacy"] == "public"
+        );
       }
       return (false, false);
     } catch (e) {
@@ -1283,10 +1342,12 @@ class PageVm extends StateNotifier<PageState> {
 }
 
 final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
-  return PageVm(ref, PageRepository());
+  return PageVm(ref, PageRepository.instance);
 });
+
+typedef PageProviderFamily = StateNotifierProvider<PageVm, PageState>;
 
 final singlePageProvider =
     StateNotifierProvider.family<PageVm, PageState, String>((ref, key) {
-  return PageVm(ref, PageRepository());
+  return PageVm(ref, PageRepository.instance);
 });

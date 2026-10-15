@@ -13,7 +13,7 @@ import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/group/report.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/profile/chat_media.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
 import 'package:wayagram/features/chat/widget/profile/group_members.dart';
@@ -133,7 +133,7 @@ class _GroupChatProfilePageState extends State<GroupChatProfilePage> {
 
                 //* Mute/Unmute this user.
                 ProfileActionButton(
-                  onTap: widget.chat.self.mutedUntil != null
+                  onTap: widget.chat.self?.mutedUntil != null
                       ? () async {
                           //? Get the result.
                           final result = await notifier.muteOrUnmuteGroup(widget.chat.id, null);
@@ -150,11 +150,11 @@ class _GroupChatProfilePageState extends State<GroupChatProfilePage> {
                               notifier: notifier,
                             ),
                           ),
-                  icon: widget.chat.self.isMuted
+                  icon: widget.chat.self?.isMuted ?? false
                       ? WayaAssets.icons.cProfileUnmute.path
                       : WayaAssets.icons.cProfileMute.path,
-                  isBad: widget.chat.self.mutedUntil == null,
-                  text: widget.chat.self.mutedUntil == null ? "Mute" : "Unmute",
+                  isBad: widget.chat.self?.mutedUntil == null,
+                  text: widget.chat.self?.mutedUntil == null ? "Mute" : "Unmute",
                 ),
 
                 //* Next, report a user.

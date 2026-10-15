@@ -24,15 +24,15 @@ class _MyPollsTwoState extends ConsumerState<MyPollsTwo> {
     });
   }
 
+
   int _selectedIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-
         Row(
           children: [
             DonationTabButton(
@@ -54,10 +54,12 @@ class _MyPollsTwoState extends ConsumerState<MyPollsTwo> {
             ),
           ],
         ),
-
         const Gap(20),
-
-        _selectedIndex == 0 ? ActivePolls() :_selectedIndex == 1 ? InActivePolls() : PendingPolls(),
+        _selectedIndex == 0
+            ? ActivePolls()
+            : _selectedIndex == 1
+                ? InActivePolls()
+                : PendingPolls(),
       ],
     );
   }

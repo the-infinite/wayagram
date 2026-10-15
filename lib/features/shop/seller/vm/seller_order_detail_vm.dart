@@ -47,8 +47,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
       if (response.success) {
         WayaSnackBar.showToast("Delivery status updated");
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
-      }
-      else {
+      } else {
         if (response.data['responseCode'] == 704) {
           WayaSnackBar.showToast("Access not granted by the shop owner");
         }
@@ -98,7 +97,6 @@ class SellerOrderDetailVm extends ChangeNotifier {
       required BuildContext context,
       required String orderId}) async {
     orderStatus = current ?? 'pending';
-    //debugPrint(current);
     notifyListeners();
     final response = await WayaUtils.showModalSheet(context,
         child: UpdateStatus(
@@ -111,17 +109,11 @@ class SellerOrderDetailVm extends ChangeNotifier {
     updateOrder(response, orderId, shopId);
   }
 
-  void wdfew() {
-    debugPrint("wefwef");
-  }
-
   Future<void> updateDeliveryStatus(
       {required String shopId,
       String? current,
       required BuildContext context,
       required String orderId}) async {
-    debugPrint("wefvewfew");
-
     delivery = current ?? 'pending';
     notifyListeners();
     final response = await WayaUtils.showModalSheet(context,
@@ -139,5 +131,6 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
 final sellerOrderDetailVmProvider =
     ChangeNotifierProvider<SellerOrderDetailVm>((ref) {
-  return SellerOrderDetailVm(OrderRepository(), ref);
+  final orderRepository = ref.watch(orderRepositoryProvider);
+  return SellerOrderDetailVm(orderRepository, ref);
 });

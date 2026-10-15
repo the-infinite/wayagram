@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
@@ -12,7 +11,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/add_new_requirement_modal.dart';
-import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
+import 'package:wayagram/features/ugt/data/controller/contest_controller.dart' as contest_ctrl;
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/shared/features/browser/activity.dart';
@@ -34,23 +33,12 @@ bool isSwitched = true;
 class _ContestSignupRequirementState
     extends ConsumerState<ContestSignupRequirement> {
   List<dynamic> stages = [];
-  final _contestController = Get.put(ContestController());
-
-//   void _addStage() {
-//     setState(() {
-//       stages.add('Document ${stages.length}');
-//     });
-//   }
 
   void _removeStage(int index) {
     ref.read(stateRequirementProvider.notifier).state.removeAt(index);
     ref.read(stateRequirementProvider.notifier).state = [
       ...ref.read(stateRequirementProvider.notifier).state
     ];
-    /*  setState(() {
-      _contestController.removeContestSignUpRequirement(index);
-      stages.removeAt(index);
-    }); */
   }
 
   String selectedValue = '';
@@ -62,6 +50,7 @@ class _ContestSignupRequirementState
     final isLoading = useState(false);
     final acceptedTerms = useState(false);
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
+    final contestController = ref.read(contest_ctrl.contestControllerProvider.notifier);
 
     var isEditing = ref.watch(stateIsEditingContestProvider);
     useEffect(() {
@@ -126,7 +115,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        Gap(20),
+        const Gap(20),
         _mygrayInput("Email Address"),
 
         /*   WayaTextFormField(
@@ -153,7 +142,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        Gap(20),
+        const Gap(20),
         _mygrayInput("Phone number"),
 
         /*  WayaTextFormField(
@@ -180,7 +169,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        Gap(20),
+        const Gap(20),
         _mygrayInput("Address"),
         /*   WayaTextFormField(
           controller: TextEditingController(),
@@ -196,7 +185,7 @@ class _ContestSignupRequirementState
                 onChanged: (value) {},
                 activeColor: Colors.white,
                 activeTrackColor: wayaTheme.colorScheme.customPrimary), */
-            Gap(20),
+            const Gap(20),
             Text(
               "Mark as Required",
               style: TextStyle(
@@ -206,7 +195,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        Gap(20),
+        const Gap(20),
         _mygrayInput("Date of birth"),
         /*   WayaTextFormField(
           controller: TextEditingController(),
@@ -222,7 +211,7 @@ class _ContestSignupRequirementState
                 onChanged: (value) {},
                 activeColor: Colors.white,
                 activeTrackColor: wayaTheme.colorScheme.customPrimary), */
-            Gap(20),
+            const Gap(20),
             Text(
               "Mark as Required",
               style: TextStyle(
@@ -249,7 +238,7 @@ class _ContestSignupRequirementState
                       Container(
                         margin: EdgeInsets.only(right: 8),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
+                          color: Colors.red.withValues(alpha: 0.1),
                           shape: BoxShape.rectangle,
                         ),
                         child: IconButton(
@@ -296,8 +285,8 @@ class _ContestSignupRequirementState
                                 ),
                                 //Icon(Icons.edit, color: Colors.grey),
                                 onPressed: () {
-                                  _contestController
-                                      .selectedIndexSignUPRequire = index;
+                                  contestController
+                                      .updateSelectedIndexSignUPRequire(index);
                                   WayaUtils.showModalSheetUgt(
                                     context,
                                     child: AddNewRequirementModal(),
@@ -389,7 +378,7 @@ class _ContestSignupRequirementState
                       style: WayaTextStyles.smallActiveLinkStyle,
                       recognizer: TapGestureRecognizer()
                         ..onTap = () async => await WayaNav.to(
-                              transition: Transition.circularReveal,
+                              transition: WayaTransition.circularReveal,
                               duration: const Duration(milliseconds: 500),
                               WayaBrowserView(
                                 name: "Terms and Conditions",
@@ -407,7 +396,7 @@ class _ContestSignupRequirementState
         WayaButton(
             centerWidget:
                 LoadingState(loading: isLoading.value, text: 'Submit'),
-            callback: !isLoading.value && acceptedTerms.value 
+            callback: !isLoading.value && acceptedTerms.value
                 ? () {
                     /*   if (ref
                         .read(stateRequirementProvider.notifier)
@@ -473,9 +462,9 @@ class _ContestSignupRequirementState
     );
   }
 
-  _mygrayInput(String name) {
+  Widget _mygrayInput(String name) {
     return Container(
-      width: context.width,
+      width: MediaQuery.of(context).size.width,
       height: 45,
       decoration: BoxDecoration(
         color: Color(0xffF0F2F5),

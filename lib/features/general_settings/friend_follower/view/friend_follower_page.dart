@@ -58,11 +58,11 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(10),
+            const Gap(10),
             Text("Friends and Followers Preferences",
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
-            Gap(20),
+            const Gap(20),
             //? card for each of the switch
             PrivacyWidget(
                 title: "Restrict Requests to People I Follow",
@@ -76,7 +76,7 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
                       showPeopleFollowMe: showPeopleFollowMe.value));
                 },
                 switchValue: restrictRequest),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Show People I’m Following",
                 value:
@@ -89,7 +89,7 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
                       showPeopleFollowMe: showPeopleFollowMe.value));
                 },
                 switchValue: showPeopleFollowing),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Show People Who Follow Me",
                 value:

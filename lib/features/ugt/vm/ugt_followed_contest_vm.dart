@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 
 class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   final ContestRepo _contestRepository;
@@ -41,7 +41,6 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-    debugPrint("Contest followed post");
     state = state.map((post) {
       if (post.id == postId) {
         if (!post.hasLiked!) {
@@ -57,14 +56,12 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   }
 
   void doOnLikeLike(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.likeContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
@@ -75,9 +72,6 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
         return post;
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      // WayaSnackBar.showToast("Contest already liked");
-      debugPrint("Contest already liked");
     }
   }
 
@@ -96,14 +90,12 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   }
 
   void doShare(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
@@ -114,25 +106,18 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
         return post;
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   void doFollow(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.followContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (response.success) {
-      //  debugPrint("do like stuff Fail");
-
       WayaSnackBar.showToast("Contest Followed", showSuccess: true);
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   // Toggle Follow
@@ -149,5 +134,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
 // Provider
 final followedContestProvider =
     StateNotifierProvider<FollowedContestNotifier, List<Contest>>((ref) {
-  return FollowedContestNotifier(ContestRepo(), WayaLocalDataSource());
+  final contestRepo = ref.watch(contestRepositoryProvider);
+
+  return FollowedContestNotifier(contestRepo, WayaLocalDataSource());
 });

@@ -32,6 +32,10 @@ class SellerProducts extends ConsumerStatefulWidget {
 class _SellerProductsState extends ConsumerState<SellerProducts> {
   late TextEditingController searchController;
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     super.initState();
@@ -43,9 +47,14 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
           .sellerProducts(shopId: shopId);
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {}); // Rebuild when search text changes
-    });
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -145,60 +154,6 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                 ],
               ));
   }
-
-//   Widget _buildProductGrid(List<SellerProduct> products) {
-//     return GridView.builder(
-//       shrinkWrap: true,
-//       physics: const NeverScrollableScrollPhysics(),
-//       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: 2,
-//         crossAxisSpacing: 12.0,
-//         mainAxisSpacing: 12.0,
-//         childAspectRatio: 3 / 5,
-//       ),
-//       itemCount: products.length,
-//       itemBuilder: (context, index) {
-//         return SellerProductCard(
-//           product: products[index],
-//           isExplore: false,
-//           isWayaGramDeal: false,
-//           canbeAddedTocart: false,
-//           sellerProduct: true,
-//         );
-//       },
-//     );
-//   }
-
-//   Widget _productLoadingState({required BuildContext context}) {
-//     return Column(
-//       children: [
-//         for (int i = 0; i < 6; i += 2)
-//           Row(
-//             children: [
-//               Expanded(
-//                 child: ProductCardSekeleton(
-//                   isExplore: false,
-//                   isWayaGramDeal: false,
-//                   canbeAddedTocart: false,
-//                   sellerProduct: true,
-//                 ),
-//               ),
-//               if (i + 1 < 6) ...[
-//                 const SizedBox(width: 12),
-//                 Expanded(
-//                   child: ProductCardSekeleton(
-//                     isExplore: false,
-//                     isWayaGramDeal: false,
-//                     canbeAddedTocart: false,
-//                     sellerProduct: true,
-//                   ),
-//                 ),
-//               ],
-//             ],
-//           ),
-//       ],
-//     );
-//   }
 }
 
 class SellerProductEmptyState extends StatelessWidget {
@@ -264,7 +219,6 @@ class SellerShopEmptyState extends StatelessWidget {
       children: [
         const Gap(40),
         SvgPicture.asset('assets/icons/empty-state.svg'),
-        // const Gap(30),
         Text(
           "No Shop Created",
           textAlign: TextAlign.center,

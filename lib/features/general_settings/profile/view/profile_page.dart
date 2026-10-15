@@ -1,10 +1,7 @@
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 import 'private_profile.dart';
 import 'public_profile.dart';
@@ -28,30 +25,57 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
+  CachedUserDataTuple? _cachedUserData;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      //? If this is by username, do the needful.
+      if (widget.username != null) {
+        _cachedUserData = await UserResource.getByUsername(widget.username!);
+      }
+
+      //? If this is for me, return this one.
+      else if (widget.id == ConversationState.self.id ||
+          widget.username == ConversationState.profile.username) {
+        _cachedUserData = (ConversationState.self, ConversationState.profile);
+      }
+
+      //? Then fetch the user using the id.
+      else {
+        _cachedUserData = await UserResource.getUserDetails(widget.id);
+      }
+
+      //? If this is undefined...
+      if (_cachedUserData == null) return;
+
+      //? Force a UI update.
+      setState(() {});
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WayaFutureSubscriber(
-      future: widget.username != null
-          ? UserResource.getByUsername(widget.username!)
-          : UserResource.getUserDetails(widget.id, true),
-      builder: (context, data) {
-        //? When this is undefined...
-        if (data == null) return const SizedBox();
+    //? Set this.
+    final data = _cachedUserData;
 
-        //? If this user is the one currently logged in.
-        if (data.$1.id == ConversationState.self.id) {
-          return MyProfilePage(
-            data: data,
-            source: widget.source,
-          );
-        }
+    //? When this is undefined...
+    if (data == null) return const SizedBox();
 
-        //? Since this is another person.
-        return UsersProfilePage(
-          data: data,
-          source: widget.source,
-        );
-      },
+    //? If this user is the one currently logged in.
+    if (data.$1.id == ConversationState.self.id) {
+      return MyProfilePage(
+        data: data,
+        source: widget.source,
+      );
+    }
+
+    //? Since this is another person.
+    return UsersProfilePage(
+      data: data,
+      source: widget.source,
     );
   }
 }

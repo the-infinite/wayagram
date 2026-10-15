@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +12,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -44,6 +44,13 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
 //       _selectedImage = image;
 //     });
 //   }
+
+  @override
+  void dispose() {
+    bioController.dispose();
+    whatExpectVoterController.dispose();
+    super.dispose();
+  }
 
   File? _imgFile;
   File? _videoFile;
@@ -164,7 +171,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: Colors.red.withOpacity(0.2),
+                                  color: Colors.red.withValues(alpha: 0.2),
                                   width: 3)),
                           child: _imgFile == null
                               ? SizedBox(
@@ -172,7 +179,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                                   width: 82,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(135),
-                                    child: CachedNetworkImage(
+                                    child: SafeCachedNetworkImage(
                                       imageUrl:
                                           "https://images.squarespace-cdn.com/content/v1/60f1a490a90ed8713c41c36c/1629223610791-LCBJG5451DRKX4WOB4SP/37-design-powers-url-structure.jpeg",
                                       fit: BoxFit.cover,
@@ -254,7 +261,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                   label: "Bio",
                   line: 6,
                 ), */
-                Gap(15),
+                const Gap(15),
                 FormField<String>(validator: (value) {
                   if (whatExpectVoterController.text.isEmpty) {
                     return 'What you expect from the voters is required';
@@ -302,7 +309,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
             label: "what you expect from the voters",
             line: 6,
           ), */
-          Gap(15),
+          const Gap(15),
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Column(

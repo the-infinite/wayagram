@@ -9,7 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
@@ -30,7 +30,7 @@ import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
-import 'package:wayagram/shared/features/location/vm/default.dart';
+import 'package:wayagram/shared/features/location/vm/waya_location_repository.dart';
 import 'package:wayagram/shared/features/follow/widget/default.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
@@ -51,13 +51,11 @@ class Explore extends ConsumerStatefulWidget {
 
 class _ExploreState extends ConsumerState<Explore> {
   final suggestedFriendsHandler = WayaObservableScrollController();
+  final quotationSearch = TextEditingController();
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //> need to fetch user data
-      //ref.read(successfulSetupVmProvider.notifier).getUserData();
-      //>
       ref.read(conversationProvider.notifier).getBlockedUsers();
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();
@@ -68,6 +66,12 @@ class _ExploreState extends ConsumerState<Explore> {
       ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    quotationSearch.dispose();
+    super.dispose();
   }
 
   @override
@@ -88,7 +92,7 @@ class _ExploreState extends ConsumerState<Explore> {
         title: ExploreHeader(),
         actions: [
           Container(
-            padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -125,7 +129,7 @@ class _ExploreState extends ConsumerState<Explore> {
           )
         ],
         leading: Container(
-          padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
           child: WayaAssets.images.wayalogoUnlabelled.image(),
         ),
       ),
@@ -142,7 +146,8 @@ class _ExploreState extends ConsumerState<Explore> {
           SharedMoments(),
           const Gap(25),
           GroupedWidgetHeader(
-            onTap: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
+            onTap: () =>
+                WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
             subTitle: 'Have a buy request, just create a quote',
             title: 'Get Quotation',
           ),
@@ -176,12 +181,16 @@ class _ExploreState extends ConsumerState<Explore> {
           const Gap(25),
 
           //? The shared quotations widget.
-          const SharedOthersBuyRequestsWidget(isExpanded: false),
+          SharedOthersBuyRequestsWidget(
+            isExpanded: false,
+            controller: quotationSearch,
+          ),
 
           //? For the next section.
           GroupedWidgetHeader(
               onTap: () {
-                WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
+                WayaNav.toNamed(BottomView.route,
+                    arguments: 1, preventDuplicates: false);
               },
               subTitle: 'Explore Categories & Best Offers',
               title: 'Shop'),
@@ -189,7 +198,9 @@ class _ExploreState extends ConsumerState<Explore> {
           CategoriesFilterWidget(setCategory: (value) {
             ref.read(shopVmProvider.notifier).setCategory(value);
             for (String categoryId in value) {
-              ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
+              ref
+                  .read(productEngagementProvider.notifier)
+                  .addCategory(categoryId, ProductPoint.searchPoint.value);
             }
           }),
           const Gap(25),
@@ -202,7 +213,8 @@ class _ExploreState extends ConsumerState<Explore> {
           const Gap(25),
           GroupedWidgetHeader(
             onTap: () => WayaNav.toNamed(DisplayFeed.route),
-            subTitle: 'Explore content based on your interests and interactions.',
+            subTitle:
+                'Explore content based on your interests and interactions.',
             title: 'Discover',
           ),
           const Gap(25),
@@ -302,7 +314,7 @@ class _ExploreState extends ConsumerState<Explore> {
                 WayaNav.toNamed("/ugt-home");
               },
               subTitle: 'Join Upcoming Activities',
-              title: 'University Got Talent'),
+              title: 'Contests'),
           const Gap(25),
           //?added ugt widget to the page
           UgtContestWidget(
@@ -314,7 +326,8 @@ class _ExploreState extends ConsumerState<Explore> {
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () => WayaUtils.showModalSheet(context, child: CreateSheet()),
+          callback: () =>
+              WayaUtils.showModalSheet(context, child: CreateSheet()),
           height: 50,
           centerWidget: Center(
             child: Icon(
@@ -358,7 +371,7 @@ class _ExploreState extends ConsumerState<Explore> {
         Expanded(
           child: ProductCardSekeleton(),
         ),
-        Gap(12),
+        const Gap(12),
         Expanded(
           child: ProductCardSekeleton(),
         ),

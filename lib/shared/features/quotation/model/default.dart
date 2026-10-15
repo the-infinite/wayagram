@@ -1,4 +1,3 @@
-import 'package:get/get_utils/get_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'default.g.dart';
@@ -59,38 +58,91 @@ enum QuotationOrderStatus {
 }
 
 enum QuotationDeliveryStatus {
-  pending._('pending'),
-  processing._('processing'),
+  pending._('pending', 1),
+  processing._('processing', 2),
 
   @JsonValue('ready-for-dispatch')
-  readyForDispatch._('ready-for-dispatch'),
+  readyForDispatch._('ready-for-dispatch', 3),
 
   @JsonValue('in-transit')
-  inTransit._('in-transit'),
+  inTransit._('in-transit', 4),
 
   @JsonValue('out-for-delivery')
-  outForDelivery._('out-for-delivery'),
+  outForDelivery._('out-for-delivery', 5),
 
-  delivered._('delivered');
+  delivered._('delivered', 6);
 
   final String value;
-  const QuotationDeliveryStatus._(this.value);
+  final int rank;
+  const QuotationDeliveryStatus._(this.value, this.rank);
+
+  static QuotationDeliveryStatus build(String value) {
+    return switch (value) {
+      'pending' => QuotationDeliveryStatus.pending,
+      'ready-for-dispatch' => QuotationDeliveryStatus.readyForDispatch,
+      'out-for-delivery' => QuotationDeliveryStatus.inTransit,
+      'delivered' => QuotationDeliveryStatus.delivered,
+      _ => throw '$value is not a valid value',
+    };
+  }
 }
 
 enum QuotationPickupStatus {
-  pending._('pending'),
+  pending._('pending', 1),
 
   @JsonValue('ready-for-pickup')
-  ready._('ready-for-pickup'),
+  ready._('ready-for-pickup', 2),
 
   @JsonValue('pickup-scheduled')
-  scheduled._('pickup-scheduled'),
+  scheduled._('pickup-scheduled', 3),
 
   @JsonValue('pickup-completed')
-  collected._('pickup-completed');
+  collected._('pickup-completed', 4);
 
   final String value;
-  const QuotationPickupStatus._(this.value);
+  final int rank;
+  const QuotationPickupStatus._(this.value, this.rank);
+
+  static QuotationPickupStatus build(String value) {
+    return switch (value) {
+      'pending' => QuotationPickupStatus.pending,
+      'ready-for-pickup' => QuotationPickupStatus.ready,
+      'pickup-scheduled' => QuotationPickupStatus.scheduled,
+      'pickup-completed' => QuotationPickupStatus.collected,
+      _ => throw '$value is not a valid value',
+    };
+  }
+}
+
+@JsonSerializable()
+class BidOrderStatus {
+  final String id;
+  final String status;
+  final String orderId;
+  final String requestId;
+  final bool isDeleted;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  // Construct.
+  const BidOrderStatus({
+    required this.id,
+    required this.status,
+    required this.orderId,
+    required this.requestId,
+    required this.isDeleted,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  QuotationPickupStatus get pickupStatus => QuotationPickupStatus.build(status);
+  QuotationDeliveryStatus get deliveryStatus =>
+      QuotationDeliveryStatus.build(status);
+
+  factory BidOrderStatus.fromJson(Map<String, dynamic> json) =>
+      _$BidOrderStatusFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BidOrderStatusToJson(this);
 }
 
 @JsonSerializable()
@@ -149,13 +201,16 @@ class BuyRequestModel {
     this.bids,
   });
 
-  QuotationBidModel? get acceptedBid => bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
+  QuotationBidModel? get acceptedBid =>
+      bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
 
   bool get hasAcceptedBid => acceptedBid != null;
 
-  String get fullname => '${brand?.isNotEmpty ?? false ? '${brand!.capitalize} ' : ''}${productName.capitalize}';
+  String get fullname =>
+      '${brand?.isNotEmpty ?? false ? '${brand!.toUpperCase()} ' : ''}${productName.toUpperCase()}';
 
-  factory BuyRequestModel.fromJson(Map<String, dynamic> json) => _$BuyRequestModelFromJson(json);
+  factory BuyRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$BuyRequestModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$BuyRequestModelToJson(this);
 
@@ -199,7 +254,8 @@ class BuyRequestModel {
       deliveryDetails: deliveryDetails ?? this.deliveryDetails,
       stateOfPurchase: stateOfPurchase ?? this.stateOfPurchase,
       lga: lga ?? this.lga,
-      vendorsCanSeeBidFromAnyDistance: vendorsCanSeeBidFromAnyDistance ?? this.vendorsCanSeeBidFromAnyDistance,
+      vendorsCanSeeBidFromAnyDistance: vendorsCanSeeBidFromAnyDistance ??
+          this.vendorsCanSeeBidFromAnyDistance,
       deliveryType: deliveryType ?? this.deliveryType,
       deliveryAddress: deliveryAddress ?? this.deliveryAddress,
       deliveryState: deliveryState ?? this.deliveryState,
@@ -228,12 +284,19 @@ class QuotationBidModel {
   final DateTime updatedAt;
   final DateTime createdAt;
   final String? counterAmount;
+  final String? deliveryCost;
 
   double get amount => double.tryParse(bidAmount.replaceAll(",", "")) ?? 0.0;
 
-  double? get counterValue => double.tryParse(counterAmount.toString().replaceAll(",", ""));
+  double? get counterValue =>
+      double.tryParse(counterAmount.toString().replaceAll(",", ""));
 
   double get usedAmount => counterValue ?? amount;
+
+  double? get deliveryCharge =>
+      double.tryParse(deliveryCost.toString().replaceAll(",", ""));
+
+  double get totalAmount => (deliveryCharge ?? 0) + usedAmount;
 
   QuotationBidModel({
     required this.id,
@@ -247,10 +310,12 @@ class QuotationBidModel {
     required this.shopId,
     required this.updatedAt,
     required this.createdAt,
+    this.deliveryCost,
     this.counterAmount,
   });
 
-  factory QuotationBidModel.fromJson(Map<String, dynamic> json) => _$QuotationBidModelFromJson(json);
+  factory QuotationBidModel.fromJson(Map<String, dynamic> json) =>
+      _$QuotationBidModelFromJson(json);
   Map<String, dynamic> toJson() => _$QuotationBidModelToJson(this);
 }
 
@@ -260,12 +325,14 @@ class BidActionModel {
   final BidActionAuthor lastCounterSentBy;
   final String bidId;
   final String? counterAmount;
+  final double? deliveryCost;
 
   const BidActionModel._({
     required this.bidId,
     required this.lastCounterSentBy,
     required this.action,
     required this.counterAmount,
+    this.deliveryCost,
   });
 
   /// Helper constructor used to create the bid action model for requests that
@@ -301,12 +368,14 @@ class BidActionModel {
     required String bidId,
     required BidActionAuthor lastCounterSentBy,
     required String counterAmount,
+    double? deliveryCost,
   }) =>
       BidActionModel._(
         bidId: bidId,
         lastCounterSentBy: lastCounterSentBy,
         action: BidActionType.negotiate,
         counterAmount: counterAmount,
+        deliveryCost: deliveryCost,
       );
 
   Map<String, dynamic> toJson() {
@@ -353,6 +422,7 @@ class BidOrderModel {
 
   double get amount => double.tryParse(totalAmount.replaceAll(",", "")) ?? 0.0;
 
-  factory BidOrderModel.fromJson(Map<String, dynamic> json) => _$BidOrderModelFromJson(json);
+  factory BidOrderModel.fromJson(Map<String, dynamic> json) =>
+      _$BidOrderModelFromJson(json);
   Map<String, dynamic> toJson() => _$BidOrderModelToJson(this);
 }

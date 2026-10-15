@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -27,7 +26,8 @@ class CreatePagePost extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _CreatePagePostState();
 }
 
-class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTickerProviderStateMixin {
+class _CreatePagePostState extends ConsumerState<CreatePagePost>
+    with SingleTickerProviderStateMixin {
   late final pageProvider = singlePageProvider("page-${widget.id}");
   late final notifier = ref.read(pageProvider.notifier);
 
@@ -46,6 +46,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
     for (final controller in videoControllers) {
       controller.dispose();
     }
+    pageController.dispose();
     super.dispose();
   }
 
@@ -74,7 +75,8 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
   }
 
   Future<void> pickVideo() async {
-    final XFile? pickedFile = await _pickers.pickVideo(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await _pickers.pickVideo(source: ImageSource.gallery);
     if (pickedFile != null) {
       //? Dispose the older video controllers
       for (final controller in videoControllers) {
@@ -99,6 +101,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(pageProvider);
+    final width = MediaQuery.of(context).size.width;
 
     //? Return the scaffold.
     return WayaScaffold(
@@ -110,45 +113,49 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(
-                width: context.width * 0.15,
-                child: viewModel.content.text.isEmpty
-                    ? WayaButton(
-                        callback: viewModel.isLoading
-                            ? () async {
-                                if (_formKey.currentState!.validate()) {}
-                              }
-                            : null,
-                        height: 30,
-                        text: 'Post',
-                        isLoading: viewModel.isLoading,
-                        textStyle: WayaTextStyles.bodySmall.copyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: wayaTheme.colorScheme.white,
-                        ),
-                      )
-                    : WayaButton(
-                        callback: !viewModel.isLoading
-                            ? () async {
-                                if (_formKey.currentState!.validate()) {
-                                  await notifier.createPagePost(
-                                    context,
-                                    viewModel.content.text,
-                                    sel ? "public" : "private",
-                                    _selectedImages,
-                                    widget.id,
-                                  );
-                                  notifier.reset();
-                                  WayaNav.goBack(closeOverlays: true);
-                                }
-                              }
-                            : null,
-                        height: 30,
-                        text: 'Post',
-                        isLoading: viewModel.isLoading,
-                        textStyle: WayaTextStyles.bodySmall
-                            .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.white),
-                      ),
+                width: width * 0.15,
+                child:
+                    // viewModel.content.text.isEmpty
+                    //     ? WayaButton(
+                    //         callback: viewModel.isLoading
+                    //             ? () async {
+                    //                 if (_formKey.currentState!.validate()) {}
+                    //               }
+                    //             : null,
+                    //         height: 30,
+                    //         text: 'Post',
+                    //         isLoading: viewModel.isLoading,
+                    //         textStyle: WayaTextStyles.bodySmall.copyWith(
+                    //           fontSize: 12.sp,
+                    //           fontWeight: FontWeight.w600,
+                    //           color: wayaTheme.colorScheme.white,
+                    //         ),
+                    //       )
+                    //     :
+                    WayaButton(
+                  callback: !viewModel.isLoading
+                      ? () async {
+                          if (_formKey.currentState!.validate()) {
+                            await notifier.createPagePost(
+                              context,
+                              viewModel.content.text,
+                              sel ? "public" : "private",
+                              _selectedImages,
+                              widget.id,
+                            );
+                            notifier.reset();
+                            WayaNav.goBack(closeOverlays: true);
+                          }
+                        }
+                      : null,
+                  height: 30,
+                  text: 'Post',
+                  isLoading: viewModel.isLoading,
+                  textStyle: WayaTextStyles.bodySmall.copyWith(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: wayaTheme.colorScheme.white),
+                ),
               ),
             ),
           ],
@@ -200,26 +207,35 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       return null;
                                     }, builder: (formState) {
                                       return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           WayaTextFormField(
                                             line: 6,
                                             showBorder: false,
-                                            keyboardType: TextInputType.multiline,
+                                            keyboardType:
+                                                TextInputType.multiline,
                                             controller: viewModel.content,
                                             hintText: 'what is on your mind?',
-                                            borderColor: formState.hasError && viewModel.content.text.isEmpty
+                                            borderColor: formState.hasError &&
+                                                    viewModel
+                                                        .content.text.isEmpty
                                                 ? wayaTheme.colorScheme.error
                                                 : null,
                                           ),
 
                                           //? This is fine.
-                                          if (formState.hasError && viewModel.content.text.isEmpty)
+                                          if (formState.hasError &&
+                                              viewModel.content.text.isEmpty)
                                             Padding(
-                                              padding: const EdgeInsets.only(top: 5),
+                                              padding:
+                                                  const EdgeInsets.only(top: 5),
                                               child: Text(
                                                 formState.errorText!,
-                                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                                style: TextStyle(
+                                                    color: wayaTheme
+                                                        .colorScheme.error,
+                                                    fontSize: 12.sp),
                                               ),
                                             ),
                                         ],
@@ -232,24 +248,31 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                         ],
                       ),
                       Container(
-                        decoration:
-                            BoxDecoration(borderRadius: BorderRadius.circular(15), color: wayaTheme.colorScheme.white),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: wayaTheme.colorScheme.white),
                         child: GridView.builder(
                           shrinkWrap: true,
                           padding: EdgeInsets.only(left: 20),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, mainAxisSpacing: 16, crossAxisSpacing: 16, childAspectRatio: 1.5),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 16,
+                                  crossAxisSpacing: 16,
+                                  childAspectRatio: 1.5),
                           itemCount: _selectedImages.length,
                           itemBuilder: (context, index) {
                             //? This is fine.
                             final resource = _selectedImages[index];
-                            final controller = videoControllers.elementAtOrNull(index);
+                            final controller =
+                                videoControllers.elementAtOrNull(index);
 
                             //? Return the view.
                             return Stack(
                               children: [
                                 if (WayaFileExtensions.videos.contains(
-                                  WayaFileHelper.getFileExtension(resource.path),
+                                  WayaFileHelper.getFileExtension(
+                                      resource.path),
                                 )) ...[
                                   SizedBox(
                                     height: 100.h,
@@ -270,7 +293,8 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                     child: Container(
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.white.withOpacity(0.7),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.7),
                                       ),
                                       padding: EdgeInsets.all(8),
                                       child: Icon(
@@ -318,7 +342,6 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                           },
                         ),
                       ),
-                      //const Gap(350),
                     ],
                   ),
                 ),
@@ -352,14 +375,18 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                   child: Row(
                     children: [
                       Image.asset(
-                        sel ? 'assets/images/pages/post.png' : 'assets/images/pages/lock.png',
+                        sel
+                            ? 'assets/images/pages/post.png'
+                            : 'assets/images/pages/lock.png',
                         height: 18.h,
                       ),
-                      Gap(5),
+                      const Gap(5),
                       Text(
                         sel ? 'Public post' : 'Private post',
                         style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14.sp, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary),
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: wayaTheme.colorScheme.primary),
                       ),
                     ],
                   ),
@@ -394,7 +421,9 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                       top: 10,
                     ),
                     child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: chk
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,37 +432,48 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,
-                                  decoration: BoxDecoration(color: wayaTheme.colorScheme.primary50),
+                                  decoration: BoxDecoration(
+                                      color: wayaTheme.colorScheme.primary50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Public',
-                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: wayaTheme.colorScheme.primary),
+                                          style: wayaTheme.textTheme.bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: wayaTheme
+                                                      .colorScheme.primary),
                                         ),
                                         Row(
                                           children: [
                                             Text(
                                               'Everybody can see and interact with this post',
-                                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: wayaTheme.colorScheme.primary),
+                                              style: wayaTheme
+                                                  .textTheme.bodyMedium!
+                                                  .wayaCopyWith(
+                                                      fontSize: 14.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: wayaTheme
+                                                          .colorScheme.primary),
                                             ),
                                             Spacer(),
                                             Padding(
-                                              padding: const EdgeInsets.only(right: 20),
+                                              padding: const EdgeInsets.only(
+                                                  right: 20),
                                               child: GestureDetector(
                                                 onTap: () => WayaNav.goBack(),
                                                 child: Container(
-                                                  padding: const EdgeInsets.all(2),
+                                                  padding:
+                                                      const EdgeInsets.all(2),
                                                   decoration: BoxDecoration(
-                                                    color: wayaTheme.colorScheme.primary,
+                                                    color: wayaTheme
+                                                        .colorScheme.primary,
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(
@@ -450,27 +490,33 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
-                                  decoration: BoxDecoration(color: Colors.white),
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Private',
-                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: wayaTheme.colorScheme.black),
+                                          style: wayaTheme.textTheme.bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: wayaTheme
+                                                      .colorScheme.black),
                                         ),
                                         Text(
                                           'Only your friends can see and interact with this post',
-                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: wayaTheme.colorScheme.greyColor500),
+                                          style: wayaTheme.textTheme.bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: wayaTheme.colorScheme
+                                                      .greyColor500),
                                         ),
                                       ],
                                     ),
@@ -483,65 +529,82 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Container(
-                                  decoration: BoxDecoration(color: Colors.white),
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Public',
-                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: wayaTheme.colorScheme.black),
+                                          style: wayaTheme.textTheme.bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: wayaTheme
+                                                      .colorScheme.black),
                                         ),
                                         Text(
                                           'Everybody can see and interact with this post',
-                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: wayaTheme.colorScheme.greyColor500),
+                                          style: wayaTheme.textTheme.bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: wayaTheme.colorScheme
+                                                      .greyColor500),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,
-                                  decoration: BoxDecoration(color: wayaTheme.colorScheme.primary50),
+                                  decoration: BoxDecoration(
+                                      color: wayaTheme.colorScheme.primary50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Private',
-                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: wayaTheme.colorScheme.primary),
+                                          style: wayaTheme.textTheme.bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: wayaTheme
+                                                      .colorScheme.primary),
                                         ),
                                         Row(
                                           children: [
                                             Text(
                                               'Only your friends can see and interact with this post',
-                                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: wayaTheme.colorScheme.primary),
+                                              style: wayaTheme
+                                                  .textTheme.bodyMedium!
+                                                  .wayaCopyWith(
+                                                      fontSize: 14.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: wayaTheme
+                                                          .colorScheme.primary),
                                             ),
                                             Spacer(),
                                             Padding(
-                                              padding: const EdgeInsets.only(right: 20),
+                                              padding: const EdgeInsets.only(
+                                                  right: 20),
                                               child: GestureDetector(
                                                 onTap: () => WayaNav.goBack(),
                                                 child: Container(
-                                                  padding: const EdgeInsets.all(2),
+                                                  padding:
+                                                      const EdgeInsets.all(2),
                                                   decoration: BoxDecoration(
-                                                    color: wayaTheme.colorScheme.primary,
+                                                    color: wayaTheme
+                                                        .colorScheme.primary,
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(

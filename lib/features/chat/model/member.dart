@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/shared/features/shop/model/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 part 'member.g.dart';
 
@@ -60,12 +60,14 @@ class ChatUser {
     required this.updatedAt,
   });
 
-  factory ChatUser.fromJson(Map<String, dynamic> json) => _$ChatUserFromJson(json);
+  factory ChatUser.fromJson(Map<String, dynamic> json) =>
+      _$ChatUserFromJson(json);
   Map<String, dynamic> toJson() => _$ChatUserToJson(this);
 
   /// Helper function used to get the details of this user if this person is a
   /// normal person.
-  Future<CachedUserDataTuple?> get userData => UserResource.getUserDetails(userId);
+  Future<CachedUserDataTuple?> get userData =>
+      UserResource.getUserDetails(userId);
 
   /// Helper function used to get the details of this user if the person is a in
   /// fact a shop.
@@ -110,11 +112,14 @@ class ChatMember {
     this.userData,
   });
 
-  factory ChatMember.fromJson(Map<String, dynamic> json) => _$ChatMemberFromJson(json);
+  factory ChatMember.fromJson(Map<String, dynamic> json) =>
+      _$ChatMemberFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatMemberToJson(this);
 
-  CachedUserDataTuple? get combined => userData == null || profileData == null ? null : (userData!, profileData!);
+  CachedUserDataTuple? get combined => userData == null || profileData == null
+      ? null
+      : (userData!, profileData!);
 
   ChatMember copyWith(UserDetailsModel user, SocialProfileModel profile) {
     return ChatMember(

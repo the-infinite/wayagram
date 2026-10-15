@@ -1,97 +1,97 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/service/logger_service.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/components/modals/error.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 
-class CreateNewPasswordVm extends ChangeNotifier {
-  final AuthRepository _authRepository = AuthRepository();
-  final _logger = getLogger('CreateNewPasswordVm');
-  final TextEditingController password = TextEditingController();
-  final TextEditingController confirmPassword = TextEditingController();
-  bool _isButtonEnabled = false;
-  bool isPasswordVisible = false;
-  bool isConfirmPasswordVisible = false;
-  bool _isConfirmPasswordFocused = false;
-  bool _isPasswordFocused = false;
-  bool _isLoading = false;
+part 'create_new_password_vm.g.dart';
 
-  final Ref ref;
+class CreateNewPasswordState {
+  final bool isPasswordVisible;
+  final bool isConfirmPasswordVisible;
+  final bool isConfirmPasswordFocused;
+  final bool isPasswordFocused;
+  final bool isLoading;
 
-  CreateNewPasswordVm(this.ref);
+  CreateNewPasswordState({
+    this.isPasswordVisible = false,
+    this.isConfirmPasswordVisible = false,
+    this.isConfirmPasswordFocused = false,
+    this.isPasswordFocused = false,
+    this.isLoading = false,
+  });
 
-  bool get isButtonEnabled => _isButtonEnabled;
-  bool get isConfirmPasswordFocused => _isConfirmPasswordFocused;
-  bool get isPasswordFocused => _isPasswordFocused;
-  bool get isLoading => _isLoading;
+  CreateNewPasswordState copyWith({
+    bool? isButtonEnabled,
+    bool? isPasswordVisible,
+    bool? isConfirmPasswordVisible,
+    bool? isConfirmPasswordFocused,
+    bool? isPasswordFocused,
+    bool? isLoading,
+  }) {
+    return CreateNewPasswordState(
+      isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
+      isConfirmPasswordVisible:
+          isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
+      isConfirmPasswordFocused:
+          isConfirmPasswordFocused ?? this.isConfirmPasswordFocused,
+      isPasswordFocused: isPasswordFocused ?? this.isPasswordFocused,
+      isLoading: isLoading ?? this.isLoading,
+    );
+  }
+}
+
+@riverpod
+class CreateNewPassword extends _$CreateNewPassword {
+  @override
+  CreateNewPasswordState build() {
+    return CreateNewPasswordState();
+  }
+
   void togglePasswordVisibility() {
-    isPasswordVisible = !isPasswordVisible;
-    notifyListeners();
+    state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
   }
 
   void toggleConfirmPasswordVisibility() {
-    isConfirmPasswordVisible = !isConfirmPasswordVisible;
-    notifyListeners();
+    state = state.copyWith(
+        isConfirmPasswordVisible: !state.isConfirmPasswordVisible);
   }
 
   void setConfirmPasswordFocus(bool hasFocus) {
-    _isConfirmPasswordFocused = hasFocus;
-    notifyListeners();
+    state = state.copyWith(isConfirmPasswordFocused: hasFocus);
   }
 
   void setPasswordFocus(bool hasFocus) {
-    _isPasswordFocused = hasFocus;
-    notifyListeners();
+    state = state.copyWith(isPasswordFocused: hasFocus);
   }
 
-  Future<void> onSubmit(String email, String otp) async {
-    debugPrint("$email $otp");
+  Future<void> onSubmit(
+    String email,
+    String otp,
+    String password,
+    String confirmPassword,
+  ) async {
     try {
-      _isLoading = true;
-      notifyListeners();
+      state = state.copyWith(isLoading: true);
 
-      final response = await _authRepository.resetPassword(ForgotPassword(
-          confirmPassword: confirmPassword.text,
-          newPassword: password.text,
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.resetPassword(ForgotPassword(
+          confirmPassword: confirmPassword,
+          newPassword: password,
           email: email,
           otp: otp));
 
       if (response.data["statusCode"] == 200) {
         WayaNav.toNamed('/changed-password-success');
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-    } catch (e) {
-      _logger.e(e);
+    } catch (_) {
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      state = state.copyWith(isLoading: false);
     }
   }
-
-  void validatePasswords() {
-    _isButtonEnabled = password.text.isNotEmpty &&
-        confirmPassword.text.isNotEmpty &&
-        password.text.length >= 8 &&
-        confirmPassword.text.length >= 8 &&
-        password.text == confirmPassword.text;
-    notifyListeners();
-  }
-
-  @override
-  void addListener(VoidCallback listener) {
-    super.addListener(listener);
-    password.addListener(validatePasswords);
-    confirmPassword.addListener(validatePasswords);
-  }
-
-  @override
-  void dispose() {
-    password.dispose();
-    confirmPassword.dispose();
-    super.dispose();
-  }
 }
-
-final createNewPasswordProvider = ChangeNotifierProvider.autoDispose((ref) {
-  return CreateNewPasswordVm(ref);
-});

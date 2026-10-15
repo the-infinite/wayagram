@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +36,6 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
   final textField = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-
   final ImagePicker _pickers = ImagePicker();
   final List<MyMediaType> _selectedImages = [];
 
@@ -82,11 +80,11 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
 
       //  File tempVideo = File("${tempDir.path}/assets/my_video_thumb.png");
 
-      VideoPlayerController controller =
+      VideoPlayerController videoPlayerController =
           VideoPlayerController.file(File(pickedVideoFile?.path ?? ""));
-      await controller.initialize();
+      await videoPlayerController.initialize();
 
-      if (controller.value.duration.inSeconds > 120) {
+      if (videoPlayerController.value.duration.inSeconds > 120) {
         WayaSnackBar.showToast("Please select a video under 2 minutes!");
         return;
       }
@@ -100,6 +98,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
             type: true,
             extention: pickedVideoFile?.mimeType ?? ""));
       });
+      videoPlayerController.dispose();
       // });
     }
   }
@@ -127,6 +126,13 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
   }
 
   @override
+  void dispose() {
+    pageController.dispose();
+    textField.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     // final viewModel = ref.watch(createPageProvider);
@@ -134,7 +140,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
     final isLoading = useState(false);
     final isEmptyTest = useState(false);
     var model = ref.watch(selectedContestProvider.notifier).state;
-
+    final width = MediaQuery.of(context).size.width;
     // final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return WayaScaffold(
@@ -146,7 +152,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(
-                width: context.width * 0.15,
+                width: width * 0.15,
                 child: /* !isEmptyTest.value
                     ? WayaButton(
                         callback: isLoading.value
@@ -249,16 +255,6 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                           WayaTextFormField(
                                             line: 5,
                                             showBorder: false,
-                                            onChanged: (value) {
-                                              debugPrint(value);
-                                              /* if (value.trim().isEmpty) {
-                                                debugPrint("ff   $value");
-                                                isEmptyTest.value = false;
-                                              } else {
-                                                debugPrint("bbb   $value");
-                                                isEmptyTest.value = true;
-                                              } */
-                                            },
                                             keyboardType:
                                                 TextInputType.multiline,
                                             controller: textField,
@@ -336,7 +332,8 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                   Container(
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.white.withOpacity(0.7),
+                                      color:
+                                          Colors.white.withValues(alpha: 0.7),
                                     ),
                                     padding: EdgeInsets.all(8),
                                     child: Icon(
@@ -417,7 +414,6 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                           },
                         ),
                       ),
-                      //const Gap(350),
                     ],
                   ),
                 ),
@@ -470,7 +466,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                             : 'assets/images/pages/lock.png',
                         height: 18.h,
                       ),
-                      Gap(5),
+                      const Gap(5),
                       Text(
                         sel ? 'Public post' : 'Private post',
                         style: Theme.of(context)
@@ -590,7 +586,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   decoration:
                                       BoxDecoration(color: Colors.white),
@@ -671,7 +667,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,

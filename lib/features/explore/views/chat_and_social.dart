@@ -36,7 +36,7 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
       title: "Chat & Socials",
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
       appBarTrailing: Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 15.w,
@@ -46,7 +46,8 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
               child: Padding(
                 padding: const EdgeInsets.all(3),
                 child: InkWell(
-                  onTap: () => WayaNav.toNamed(WayaSocialNotificationsScreen.route),
+                  onTap: () =>
+                      WayaNav.toNamed(WayaSocialNotificationsScreen.route),
                   child: WayaAssets.icons.notifications.svg(
                     height: 24,
                     width: 24,
@@ -78,7 +79,9 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
                   GestureDetector(
                     onTap: () {
                       //? Animate to the position in question.
-                      scrollController.animateTo(0, duration: const Duration(milliseconds: 650), curve: Curves.easeIn);
+                      scrollController.animateTo(0,
+                          duration: const Duration(milliseconds: 650),
+                          curve: Curves.easeIn);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -99,7 +102,8 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
 
                 //? This is fine.
                 WayaButton(
-                  callback: () => WayaUtils.showModalSheet(context, child: CreateSheet()),
+                  callback: () =>
+                      WayaUtils.showModalSheet(context, child: CreateSheet()),
                   height: 50,
                   centerWidget: Center(
                     child: Icon(

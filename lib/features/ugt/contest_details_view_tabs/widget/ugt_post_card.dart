@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -23,7 +22,7 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/media_card.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/my_full_media_type.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -59,6 +58,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
       return null;
     }, []);
     final hasClickedLiked = useState(false);
+    final width = MediaQuery.of(context).size.width;
+
     //final hasClickedShared = useState(false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +99,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(
-                              width: context.width * 0.4,
+                              width: width * 0.4,
                               child: Text(
                                 widget.contestApplicant?.contestApplicant
                                         ?.fullName ??
@@ -117,9 +118,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           ],
                         ),
                         // Spacer(),
-                        Gap(
-                          context.width * 0.15,
-                        ),
+                        Gap(width * 0.15),
                         //  post.isFollowing!
                         PopupMenuButton(
                           onSelected: (value) {},
@@ -131,8 +130,9 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                 child: _buildActionNav(
                                     context: context,
                                     onTap: () async {
-                                      await Share.share(
-                                        WayaValueHelper.getShareableUrl(
+                                      await SharePlus.instance
+                                          .share(ShareParams(
+                                        text: WayaValueHelper.getShareableUrl(
                                             WayaAppRoutes
                                                 .getContestantProfileRoute(
                                                     widget.post
@@ -141,7 +141,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                                     widget.post.contestId ??
                                                         "")),
                                         subject: "Share Contestant Profile",
-                                      );
+                                      ));
                                     },
                                     asset: WayaAssets.icons.genSet.share
                                         .svg(fit: BoxFit.none),
@@ -228,7 +228,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                         }); */
                       } else {
                         WayaNav.to(
-                          transition: Transition.circularReveal,
+                          transition: WayaTransition.circularReveal,
                           WayaVideoDetailScreen(
                             file: null,
                             videoUrl: url,
@@ -251,10 +251,16 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                     },
                     mediaUrls: [
                       // post.mediaContent![0].url!,
-                      ...widget.post.mediaContent!.map((e) {
+                      ...widget.post.mediaContent!
+                          .where((e) =>
+                              e.type?.toLowerCase() == "video" ||
+                              e.type?.toLowerCase() == "image")
+                          .map((e) => CardMediaContent(
+                              type: e.type ?? "", url: e.url ?? ""))
+                      /*    ...widget.post.mediaContent!.map((e) {
                         return CardMediaContent(
                             type: e.type ?? "", url: e.url ?? "");
-                      })
+                      }) */
                     ] // post.mediaContent![0].url!,
                     ),
               const Gap(20),
@@ -292,14 +298,17 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                         color: wayaTheme.colorScheme.primary,
                         onPressed: () async {
                           // if (hasClickedShared.value == false) {
-                          final result = await Share.share(
-                            WayaValueHelper.getShareableUrl(
-                                WayaAppRoutes.getContestantProfileRoute(
-                              widget.contestApplicant?.profileId ?? "",
-                              widget.contestApplicant?.contestId ?? "",
-                            )),
-                            subject: "Share Post",
+                          final result = await SharePlus.instance.share(
+                            ShareParams(
+                              text: WayaValueHelper.getShareableUrl(
+                                  WayaAppRoutes.getContestantProfileRoute(
+                                widget.contestApplicant?.profileId ?? "",
+                                widget.contestApplicant?.contestId ?? "",
+                              )),
+                              subject: "Share Post",
+                            ),
                           );
+
                           if (result.status == ShareResultStatus.success) {
                             notifier.toggleShare(widget.post.id!);
                           }
@@ -314,6 +323,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           contestModel2?.contestSettings?.stages);
 
                       if (contestModel2?.amountPerVote == 0) {
+                        if (!context.mounted) return;
                         WayaUtils.showModalSheet(
                           context,
                           child: ConfirmVoteOptionModal(
@@ -339,7 +349,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
 
                         return;
                       }
-
+                      if (!context.mounted) return;
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(

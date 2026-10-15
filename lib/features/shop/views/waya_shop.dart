@@ -66,7 +66,10 @@ class _WayaShopState extends ConsumerState<WayaShop>
                   fit: BoxFit.cover,
                   width: 18,
                   height: 18,
-                  color: wayaTheme.colorScheme.white,
+                  colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),

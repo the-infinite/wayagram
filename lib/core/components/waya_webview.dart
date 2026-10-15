@@ -50,7 +50,7 @@ class _CustomWebViewState extends State<WayaWebview> {
                 WayaNav.offNamed(VerifyTransactionScreen.route, arguments: {
                   "transactionId": transactionId,
                   "fundingOption": fundingOption,
-                  'redirect' : redirect
+                  'redirect': redirect
                 });
               }
             }
@@ -99,7 +99,7 @@ class _CustomWebViewState extends State<WayaWebview> {
               ],
             )
           : null,
-      padding: EdgeInsets.all(0),
+      padding: const EdgeInsets.all(0),
       body: Stack(
         children: [
           WebViewWidget(

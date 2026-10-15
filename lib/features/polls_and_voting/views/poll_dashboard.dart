@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
   static const route = '/poll-dashboard';
@@ -27,7 +30,6 @@ class PollDashboard extends ConsumerStatefulWidget {
 }
 
 class _PollDashboardState extends ConsumerState<PollDashboard> {
-
   @override
   void initState() {
     super.initState();
@@ -35,11 +37,12 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
       final dynamic args = ModalRoute.of(context)?.settings.arguments;
       ref.read(createPollVotingProvider.notifier).getDashboard(args['id']);
       ref.read(createPollVotingProvider.notifier).getPayoutCommission();
+      ref.read(walletVmProvider.notifier).getPayoutMethod();
       _startCountdown(context);
     });
   }
 
-  void _startCountdown(context) {
+  void _startCountdown(BuildContext context) {
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
     countdownTimer?.cancel(); // Cancel existing timer if any
     final pollEndTime = DateTime.parse('${args['endDate']}').toLocal();
@@ -82,7 +85,9 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
+    final walletViewModel = ref.watch(walletVmProvider);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final wayaTheme = Theme.of(context);
 
     return WayaScaffold(
         isLoading: viewModel.isLoading,
@@ -254,35 +259,94 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
                 ? WayaButton(
                     callback: !viewModel.isLoading
                         ? () {
+                            final percentage =
+                                '${(double.parse('${viewModel.commission}') / 100) * num.parse(viewModel.moneyGenerated)}';
+                            final amountDue =
+                                double.parse(viewModel.moneyGenerated) -
+                                    double.parse(percentage);
 
-                            final percentage = '${(double.parse('${viewModel.commission}') / 100) * num.parse(viewModel.moneyGenerated)}';
-                            final amountDue = int.parse(viewModel.moneyGenerated) - double.parse(percentage);
-
-                            debugPrint('DASHBOARD AMOUNT DUE $amountDue ');
-                            ref.read(credentialInputProvider.notifier)
-                                .onSubmitPayoutPin(() => WayaNav.toNamed(
-                                        '/payoutVerification',
-                                        arguments: {
-                                          "id": args['id'],
-                                          "Module": PayoutModule.polls,
-                                          "Model": PayoutReviewModel(
-                                              comission: percentage,
-                                              amount: viewModel.moneyGenerated,
-                                              amountDue: '$amountDue',
-                                              endDate: args['endDate'])
-                                        }));
-
+                            if (walletViewModel.payoutMethod.isEmpty) {
+                              WayaUtils.showModalSheet(
+                                context,
+                                child: AddPayoutModal(),
+                              );
+                            } else if (args['amountRaised'] == 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'No revenue was generated from this Poll.',
+                                    style: TextStyle(
+                                        fontFamily: WayaConstants.fontFamily,
+                                        fontSize: 12.sp),
+                                  ),
+                                  backgroundColor: WayaColors.primary,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            } else {
+                              ref
+                                  .read(credentialInputProvider.notifier)
+                                  .onSubmitPayoutPin(() => WayaNav.toNamed(
+                                          '/payoutVerification',
+                                          arguments: {
+                                            "id": args['id'],
+                                            "Module": PayoutModule.polls,
+                                            "Model": PayoutReviewModel(
+                                                comission: percentage,
+                                                amount:
+                                                    viewModel.moneyGenerated,
+                                                amountDue: '$amountDue',
+                                                endDate: args['endDate'])
+                                          }));
+                            }
                           }
                         : null,
                     centerWidget: LoadingState(
                         loading: viewModel.isLoading, text: 'Request Payout'),
                   )
                 : Container(),
+            const Gap(10),
+            GestureDetector(
+              onTap: () {
+                // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+                WayaNav.toNamed(PayoutHistory.route, arguments: {
+                  "referenceId": args['id'] ?? "",
+                  "Module": 'POLL'
+                });
+              },
+              child: Container(
+                width: double.infinity,
+                padding:
+                    REdgeInsets.symmetric(vertical: 8.dg, horizontal: 12.dg),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: wayaTheme.colorScheme.primary600,
+                    width: 1.5,
+                  ),
+                  color: wayaTheme.colorScheme.white,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Payout History',
+                      style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                        color: wayaTheme.colorScheme.primary600,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ));
   }
 
-  statisticCard(vote, position, name, color, positionColor) {
+  Widget statisticCard(String vote, String position, String name, Color color,
+      Color positionColor) {
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       height: 32.h,
@@ -326,7 +390,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard> {
     );
   }
 
-  pollCard(number, name) {
+  Widget pollCard(String number, String name) {
     return Container(
       width: 122.w,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),

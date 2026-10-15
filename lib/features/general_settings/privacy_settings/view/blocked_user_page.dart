@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/widget/blocked_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
@@ -33,8 +33,8 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
 
     // ✅ Fetch data only when scrolling **downward** and near the bottom
     if (currentOffset > _previousScrollOffset &&
-        _scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
-      // debugPrint("fetching .....${_scrollController.position.pixels}");
+        _scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 100) {
       ref.read(conversationProvider.notifier).getBlockedUsers();
     }
     _previousScrollOffset = currentOffset;
@@ -83,7 +83,8 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (viewModelReal.isLoading == true) Center(child: CircularProgressIndicator()),
+            if (viewModelReal.isLoading == true)
+              Center(child: CircularProgressIndicator()),
             if (viewModelReal.blocked.isEmpty) emptyWidget(),
             Expanded(
               // height: context.height - 200,
@@ -96,7 +97,7 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
                 },
               ),
             ),
-            Gap(100)
+            const Gap(100)
           ],
         ),
       ),

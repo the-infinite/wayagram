@@ -6,7 +6,7 @@ import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/features/follow/widget/follow_relationship.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/follow/vm/default.dart';
+import 'package:wayagram/shared/features/follow/vm/follow_notifier.dart';
 
 class FollowersDataView extends ConsumerWidget {
   final FollowProvider provider;

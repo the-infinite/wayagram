@@ -100,13 +100,48 @@ class WayaPaginatedListView<T> extends StatefulWidget {
   });
 
   @override
-  State<WayaPaginatedListView<T>> createState() => WayaPaginatedListViewState<T>();
+  State<WayaPaginatedListView<T>> createState() =>
+      WayaPaginatedListViewState<T>();
 }
 
-class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
+class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>>
+    with AutomaticKeepAliveClientMixin<WayaPaginatedListView<T>> {
   late final _scrollController = widget.controller ?? ScrollController();
   final _itemsNotifier = ValueNotifier(0);
   final _loadingController = ValueNotifier(false);
+  Timer? _scrollDebounceTimer;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  void _onScrollChanged() {
+    // Debounce scroll events to improve performance
+    _scrollDebounceTimer?.cancel();
+    _scrollDebounceTimer = Timer(const Duration(milliseconds: 100), () {
+      _handleScroll();
+    });
+  }
+
+  void _handleScroll() async {
+    if (!mounted) return;
+    
+    final target =
+        _scrollController.position.maxScrollExtent - widget.scrollNotice;
+    final current = _scrollController.offset;
+
+    //? Stop if this is at the end.
+    if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) {
+      return;
+    }
+
+    //? Call this function.
+    await widget.onScroll?.call(_scrollController);
+
+    //? If we should scroll.
+    if (current >= target) {
+      getPage(widget.nextPage);
+    }
+  }
 
   @override
   void initState() {
@@ -124,22 +159,7 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
         //? Add this listener to this one.
         _scrollController.addListener(
-          () async {
-            final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
-            final current = _scrollController.offset;
-
-            //? Stop if this is at the end.
-            if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) return;
-
-            //? Call this function.
-            await widget.onScroll?.call(_scrollController);
-
-            //? If we should scroll.
-            if (current >= target) {
-              debugPrint("paginated-list-builder> Fetching because (T: $target, X: $current)");
-              getPage(widget.nextPage);
-            }
-          },
+          _onScrollChanged,
         );
       },
     );
@@ -167,7 +187,9 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
     try {
       //? We are currently loading this up.
       widget.handler.hasScrolled = true;
-      _loadingController.value = true;
+      if (mounted) {
+        _loadingController.value = true;
+      }
 
       //? Get the items on the current page.
       debounce(
@@ -184,9 +206,11 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
           //? Now, notify the listeners of a change in state.
           try {
-            _itemsNotifier.value = _itemsNotifier.value + 1;
+            if (mounted) {
+              _itemsNotifier.value = _itemsNotifier.value + 1;
+              _loadingController.value = false;
+            }
           } catch (_) {}
-          _loadingController.value = false;
         },
       )();
     } catch (_) {}
@@ -194,7 +218,11 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollDebounceTimer?.cancel();
+    _scrollController.removeListener(_onScrollChanged);
+    if (widget.controller == null) {
+      _scrollController.dispose();
+    }
     _itemsNotifier.dispose();
     _loadingController.dispose();
     super.dispose();
@@ -202,82 +230,110 @@ class WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Stack(
       children: [
-        //? First, the scroll view.
-        SingleChildScrollView(
-          controller: _scrollController,
-          physics: widget.physics,
-          padding: widget.padding,
-          scrollDirection: widget.direction,
-          reverse: widget.reverse,
-          child: ValueListenableBuilder(
-            valueListenable: _itemsNotifier,
-            builder: (context, redraws, _) {
-              //? If this is empty and can show something in such a case...
-              if (widget.isEmpty && widget.whenEmpty != null) {
-                return widget.whenEmpty!;
-              }
+        ValueListenableBuilder(
+          valueListenable: _itemsNotifier,
+          builder: (context, redraws, _) {
+            // If empty, show empty widget
+            if (widget.isEmpty && widget.whenEmpty != null) {
+              return widget.whenEmpty!;
+            }
 
-              //? Now, build and return the widgets.
-              return Flex(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                direction: widget.direction,
-                children: [
-                  ...List.generate(
-                    widget.itemCount,
-                    (index) => widget.builder(context, index),
+            // Handle reverse lists properly for chat-like pagination
+            if (widget.reverse) {
+              return CustomScrollView(
+                controller: _scrollController,
+                physics: widget.physics,
+                reverse: true,
+                scrollDirection: widget.direction,
+                slivers: [
+                  SliverPadding(
+                    padding: widget.padding,
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          // For reverse, we need to map indices correctly
+                          final reversedIndex = widget.itemCount - 1 - index;
+                          return widget.builder(context, reversedIndex);
+                        },
+                        childCount: widget.itemCount,
+                      ),
+                    ),
                   ),
-
-                  //? If this is in fact needed...
-                  if (widget.child != null) widget.child!,
+                  if (widget.child != null)
+                    SliverToBoxAdapter(child: widget.child!),
                 ],
               );
-            },
-          ),
-        ),
+            }
 
-        //? Second, the loading indicator.
-        ValueListenableBuilder(
-          valueListenable: _loadingController,
-          builder: (context, isLoading, _) {
-            //? If this is not loading, empty space.
-            if (!isLoading) return const SizedBox();
-
-            //? Since it is loading, show the honours.
-            return Positioned(
-              top: 20,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 60.w,
-                width: 60.w,
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(width: 1, color: WayaColors.greyColor300),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: WayaPreloaderProgressBar(
-                    height: 20.h,
-                    width: double.infinity,
-                  ),
-                ),
-              ),
+            // Use ListView.builder for normal (non-reverse) lists
+            return ListView.builder(
+              controller: _scrollController,
+              physics: widget.physics,
+              padding: widget.padding,
+              scrollDirection: widget.direction,
+              itemCount: widget.itemCount + (widget.child != null ? 1 : 0),
+              itemBuilder: (context, index) {
+                // Show the child widget at the end if it exists
+                if (index == widget.itemCount && widget.child != null) {
+                  return widget.child!;
+                }
+                // Build regular items
+                return widget.builder(context, index);
+              },
             );
           },
         ),
+        _LoadingIndicator(loadingController: _loadingController),
       ],
+    );
+  }
+}
+
+
+class _LoadingIndicator extends StatelessWidget {
+  final ValueNotifier<bool> loadingController;
+
+  const _LoadingIndicator({required this.loadingController});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: loadingController,
+      builder: (context, isLoading, _) {
+        if (!isLoading) return const SizedBox();
+        return Positioned(
+          top: 20,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: 60.w,
+            width: 60.w,
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(width: 1, color: WayaColors.greyColor300),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Center(
+              child: WayaPreloaderProgressBar(
+                height: 20.h,
+                width: double.infinity,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

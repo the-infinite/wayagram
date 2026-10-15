@@ -100,7 +100,7 @@ class _FilterWidgetState extends ConsumerState<SocialNotificationFilterWidget> {
             //? First, the search text widget.
             Expanded(
               child: WayaTextFormField(
-                padding: EdgeInsets.symmetric(horizontal: 1),
+                padding: const EdgeInsets.symmetric(horizontal: 1),
                 prefixIcon: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 13),
                   child: WayaAssets.icons.actionSearch.svg(

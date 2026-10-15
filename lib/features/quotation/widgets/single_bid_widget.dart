@@ -27,7 +27,8 @@ class SingleBidWidget extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         if (isSeller) {
-          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
+          WayaNav.toNamed(
+              WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
         }
       },
       child: Container(
@@ -148,21 +149,25 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
    */
   }
 
-  Future<void> sellerBidAction(BuildContext context, QuotationBidModel bid) async {
+  Future<void> sellerBidAction(
+      BuildContext context, QuotationBidModel bid) async {
     WayaUtils.showNotice(
       context: context,
       buttonText: 'Add Delivery Details',
       secondButtonText: 'See your Order Details',
       title: 'Populate Delivery Details',
-      message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+      message:
+          "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
       onPress: () async {
         await addDeliveryDetail(context);
       },
-      onCancel: () => WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId)),
+      onCancel: () => WayaNav.toNamed(
+          WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId)),
       icon: Image.asset('assets/images/shop/delivery-van.png'),
     );
   }
 }
 
 final singleBidWidgetViewModelProvider =
-    ChangeNotifierProvider<SingleBidWidgetViewModel>((ref) => SingleBidWidgetViewModel(ref));
+    ChangeNotifierProvider<SingleBidWidgetViewModel>(
+        (ref) => SingleBidWidgetViewModel(ref));

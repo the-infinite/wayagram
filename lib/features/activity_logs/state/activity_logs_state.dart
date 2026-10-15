@@ -8,10 +8,13 @@ import 'package:wayagram/features/activity_logs/data/model/page_activity_model.d
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/search_log_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/ugt_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_actions_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/visited_pages_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/wallet_activity_model.dart';
+
+import '../data/model/event_log_model.dart';
 
 enum FilterType {
   allTime._("All Time"),
@@ -37,12 +40,13 @@ class ActivityLogsState {
   List<DonationDocs> donationDocs;
   List<WalletActivityDocs> walletActivityDocs;
   List<DonationDocs> donationDocs1;
-  List<PageDocs> shopDocs;
+  List<EventLogDocs> shopDocs;
   List<PageDocs> shopDocs1;
   List<PageDocs> walletDocs;
   List<PageDocs> walletDocs1;
-  List<PageDocs> quotationDocs;
+  List<EventLogDocs> quotationDocs;
   List<PageDocs> quotationDocs1;
+  List<UgtLogDocs> ugtLogDocs;
 
   final int? totalSize;
   final int? limit;
@@ -54,14 +58,12 @@ class ActivityLogsState {
 
   List<PollsActivityDocs> pollDocs;
   List<PollsActivityDocs> pollDocs1;
-  List<PageDocs> eventDocs;
+  List<EventLogDocs> eventDocs;
   List<PageDocs> eventDocs1;
   List<PageDocs> pageDocs;
   List<PageDocs> pageDocs1;
   List<PageDocs> socialDocs;
   List<PageDocs> socialDocs1;
-  List<PageDocs> ugtDocs;
-  List<PageDocs> ugtDocs1;
   List<GroupDocs> groupDocs;
   List<GroupDocs> groupDocs1;
   List<SearchLogDocs> searchLogDocs1;
@@ -83,8 +85,7 @@ class ActivityLogsState {
     this.cmsDocs1 = const [],
     this.pollDocs = const [],
     this.pollDocs1 = const [],
-    this.ugtDocs = const [],
-    this.ugtDocs1 = const [],
+    this.ugtLogDocs = const [],
     this.eventDocs = const [],
     this.eventDocs1 = const [],
     this.walletDocs = const [],
@@ -127,20 +128,15 @@ class ActivityLogsState {
   ActivityLogsState copyWith({
     TextEditingController? title,
     List<LoginHistoryDocs>? loginHistoryDocs,
-    List<PageDocs>? ugtDocs,
-    List<PageDocs>? ugtDocs1,
+    List<UgtLogDocs>? ugtLogDocs,
     List<PageDocs>? walletDocs,
-    List<PageDocs>? walletDocs1,
-    List<PageDocs>? shopDocs,
-    List<PageDocs>? shopDocs1,
-    List<PageDocs>? quotationDocs,
+    List<EventLogDocs>? shopDocs,
+    List<EventLogDocs>? quotationDocs,
     List<PageDocs>? quotationDocs1,
     List<PollsActivityDocs>? pollDocs,
     List<PollsActivityDocs>? pollDocs1,
-    List<PageDocs>? eventDocs,
-    List<PageDocs>? eventDocs1,
+    List<EventLogDocs>? eventDocs,
     List<PageDocs>? socialDocs,
-    List<PageDocs>? socialDocs1,
     List<CmsDocs>? cmsDocs,
     List<CmsDocs>? cmsDocs1,
     List<DonationDocs>? donationDocs,
@@ -149,19 +145,12 @@ class ActivityLogsState {
     List<PageDocs>? pageDocs,
     List<PageDocs>? pageDocs1,
     List<GroupDocs>? groupDocs,
-    List<GroupDocs>? groupDocs1,
     List<AccountActivityDocs>? accountActivityDocs,
-    List<AccountActivityDocs>? accountActivityDocs1,
     List<PaymentActivityDocs>? paymentActivityDocs,
-    List<PaymentActivityDocs>? paymentActivityDocs1,
     List<SearchLogDocs>? searchLogDocs,
-    List<SearchLogDocs>? searchLogDocs1,
     List<UserActionsDocs>? userActionsDocs,
-    List<UserActionsDocs>? userActionsDocs1,
     List<UserInteractionDocs>? userInteractionDocs,
-    List<UserInteractionDocs>? userInteractionDocs1,
     List<VisitedPagesDocs>? visitedPagesDocs,
-    List<VisitedPagesDocs>? visitedPagesDocs1,
     VisitedPagesModel? visitedPagesModel,
     bool? isLoading,
     int? totalSize,
@@ -182,32 +171,21 @@ class ActivityLogsState {
       pollDocs: pollDocs ?? this.pollDocs,
       pollDocs1: pollDocs1 ?? this.pollDocs1,
       walletDocs: walletDocs ?? this.walletDocs,
-      walletDocs1: walletDocs1 ?? this.walletDocs1,
       socialDocs: socialDocs ?? this.socialDocs,
-      socialDocs1: socialDocs1 ?? this.socialDocs1,
       groupDocs: groupDocs ?? this.groupDocs,
-      groupDocs1: groupDocs1 ?? this.groupDocs1,
       eventDocs: eventDocs ?? this.eventDocs,
-      eventDocs1: eventDocs1 ?? this.eventDocs1,
-      ugtDocs: ugtDocs1 ?? this.ugtDocs,
-      ugtDocs1: ugtDocs1 ?? this.ugtDocs1,
+      ugtLogDocs: ugtLogDocs ?? this.ugtLogDocs,
       pageDocs: pageDocs ?? this.pageDocs,
       pageDocs1: pageDocs1 ?? this.pageDocs1,
       donationDocs: donationDocs ?? this.donationDocs,
       donationDocs1: donationDocs1 ?? this.donationDocs1,
       walletActivityDocs: walletActivityDocs ?? this.walletActivityDocs,
       accountActivityDocs: accountActivityDocs ?? this.accountActivityDocs,
-      accountActivityDocs1: accountActivityDocs1 ?? this.accountActivityDocs1,
       paymentActivityDocs: paymentActivityDocs ?? this.paymentActivityDocs,
-      paymentActivityDocs1: paymentActivityDocs1 ?? this.paymentActivityDocs1,
       searchLogDocs: searchLogDocs ?? this.searchLogDocs,
-      searchLogDocs1: searchLogDocs1 ?? this.searchLogDocs1,
       userActionsDocs: userActionsDocs ?? this.userActionsDocs,
-      userActionsDocs1: userActionsDocs1 ?? this.userActionsDocs1,
       userInteractionDocs: userInteractionDocs ?? this.userInteractionDocs,
-      userInteractionDocs1: userInteractionDocs1 ?? this.userInteractionDocs1,
       visitedPagesDocs: visitedPagesDocs ?? this.visitedPagesDocs,
-      visitedPagesDocs1: visitedPagesDocs1 ?? this.visitedPagesDocs1,
       visitedPagesModel: visitedPagesModel ?? this.visitedPagesModel,
     );
   }
@@ -245,6 +223,166 @@ class ActivityLogsState {
     //? end date.
     result = result.where((wallet) {
       final timestamp = DateTime.parse(wallet.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<GroupDocs> filterGroupDocs(DateTime start, DateTime end) {
+    Iterable<GroupDocs> result = groupDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((group) {
+      final timestamp = DateTime.parse(group.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((group) {
+      final timestamp = DateTime.parse(group.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<PageDocs> filterPageDocs(DateTime start, DateTime end) {
+    Iterable<PageDocs> result = pageDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((page) {
+      final timestamp = DateTime.parse(page.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((page) {
+      final timestamp = DateTime.parse(page.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<PollsActivityDocs> filterPollDocs(DateTime start, DateTime end) {
+    Iterable<PollsActivityDocs> result = pollDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((polls) {
+      final timestamp = DateTime.parse(polls.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((polls) {
+      final timestamp = DateTime.parse(polls.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<AccountActivityDocs> filterAccountDocs(DateTime start, DateTime end) {
+    Iterable<AccountActivityDocs> result = accountActivityDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((account) {
+      final timestamp = DateTime.parse(account.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((account) {
+      final timestamp = DateTime.parse(account.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<EventLogDocs> filterEventDocs(DateTime start, DateTime end) {
+    Iterable<EventLogDocs> result = eventDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((account) {
+      final timestamp = DateTime.parse(account.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((account) {
+      final timestamp = DateTime.parse(account.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<UgtLogDocs> filterUgtDocs(DateTime start, DateTime end) {
+    Iterable<UgtLogDocs> result = ugtLogDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((ugt) {
+      final timestamp = DateTime.parse(ugt.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((ugt) {
+      final timestamp = DateTime.parse(ugt.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<EventLogDocs> filterShopDocs(DateTime start, DateTime end) {
+    Iterable<EventLogDocs> result = shopDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((shop) {
+      final timestamp = DateTime.parse(shop.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((shop) {
+      final timestamp = DateTime.parse(shop.createdAt!);
+      return !timestamp.isAfter(end);
+    });
+
+    // Return this one.
+    return result.toList();
+  }
+
+  List<EventLogDocs> filterQuotationDocs(DateTime start, DateTime end) {
+    Iterable<EventLogDocs> result = quotationDocs;
+
+    //? First, we want to only include things that have their start date before
+    result = result.where((quotation) {
+      final timestamp = DateTime.parse(quotation.createdAt!);
+      return !timestamp.isBefore(start);
+    });
+
+    //? Second, we want to only include things things that are on or before our
+    //? end date.
+    result = result.where((quotation) {
+      final timestamp = DateTime.parse(quotation.createdAt!);
       return !timestamp.isAfter(end);
     });
 

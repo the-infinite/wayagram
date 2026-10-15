@@ -32,7 +32,6 @@ class _PromoteState extends ConsumerState<Promote> {
       if (arg != null) {
         String contentId = arg['contentId'];
         String contentType = arg['contentType'];
-        
 
         ref.read(promotionVmProvider.notifier).fetchAndSetInitialState(
             contentType: contentType, contentId: contentId);
@@ -47,7 +46,7 @@ class _PromoteState extends ConsumerState<Promote> {
     final state = ref.watch(promotionVmProvider);
     final notifier = ref.read(promotionVmProvider.notifier);
 
-   final dynamic arg = ModalRoute.of(context)?.settings.arguments;
+    final dynamic arg = ModalRoute.of(context)?.settings.arguments;
     return PopScope(
         onPopInvokedWithResult: (didPop, result) {
           if (!didPop) return;
@@ -63,11 +62,8 @@ class _PromoteState extends ConsumerState<Promote> {
                 spacing: 10,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-                    PromotionCard(contentType: arg['contentType'], data: arg['data']),
-
-            
-
+                  PromotionCard(
+                      contentType: arg['contentType'], data: arg['data']),
                   FormField<String>(validator: (value) {
                     if (state.name.text.isEmpty) {
                       return 'Title is required';
@@ -285,7 +281,7 @@ class _PromoteState extends ConsumerState<Promote> {
                 ],
               )),
           bottomNavigationBar: Container(
-            padding: EdgeInsets.fromLTRB(15, 6, 15, 15),
+            padding: const EdgeInsets.fromLTRB(15, 6, 15, 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

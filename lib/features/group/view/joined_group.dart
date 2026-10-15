@@ -4,7 +4,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 class JoinedGroup extends ConsumerStatefulWidget {
@@ -14,7 +14,8 @@ class JoinedGroup extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _JoinedGroupState();
 }
 
-class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProviderStateMixin {
+class _JoinedGroupState extends ConsumerState<JoinedGroup>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -30,7 +31,7 @@ class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProv
       builder: (context, redraws, _) => myGroupNotifier.joinedGroups.isEmpty
           ? GroupEmptyState()
           : ListView.builder(
-              padding: EdgeInsets.only(bottom: 40),
+              padding: const EdgeInsets.only(bottom: 40),
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: myGroupNotifier.joinedGroups.length,
@@ -57,7 +58,8 @@ class GroupEmptyState extends StatelessWidget {
             onTap: () {},
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

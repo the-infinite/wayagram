@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -122,8 +121,8 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
                     ),
                     GestureDetector(
                         onTap: () {
-                          shareService
-                              .copyLink(ConversationState.profile.referenceCode ?? "");
+                          shareService.copyLink(
+                              ConversationState.profile.referenceCode ?? "");
                           WayaSnackBar.showToast("Copied");
                         },
                         child: Icon(Icons.copy, color: wayaTheme.primaryColor)),
@@ -132,13 +131,13 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
               ),
             ),
 
-            Gap(16),
+            const Gap(16),
             Text(
               "Invitation Link",
               textAlign: TextAlign.start,
               style: WayaTextStyles.hintStyleBold,
             ),
-            Gap(16),
+            const Gap(16),
             // Action Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,11 +145,10 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
               children: [
                 GestureDetector(
                     onTap: () async {
-                      await Share.share(
-                        WayaValueHelper.getShareableUrl(url),
-                        //  ConversationState.profile.referenceCode ?? "",
+                      await SharePlus.instance.share(ShareParams(
+                        text: WayaValueHelper.getShareableUrl(url),
                         subject: 'Share link',
-                      );
+                      ));
                     },
                     child:
                         _actionButton(context, Icons.share_outlined, "Share")),
@@ -169,7 +167,7 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
               ],
             ),
 
-            Gap(20),
+            const Gap(20),
 
             // View Referral History Button
             WayaButton(
@@ -191,7 +189,7 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
           title,
           style: WayaTextStyles.hintStyleBold,
         ),
-        Gap(4),
+        const Gap(4),
         Text(
           value,
           style: WayaTextStyles.headlineLarge,
@@ -218,7 +216,7 @@ class _ReferralPageState extends ConsumerState<ReferralPage> {
             color: wayaTheme.colorScheme.primary500,
             size: 20,
           ),
-          Gap(4),
+          const Gap(4),
           Text(label,
               style: WayaTextStyles.bodyMedium.copyWith(
                   color: wayaTheme.colorScheme.primary500, fontSize: 14.sp)),

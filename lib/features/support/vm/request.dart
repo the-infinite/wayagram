@@ -52,15 +52,13 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
     ValueNotifier<bool> isLoading,
   ) async {
     isLoading.value = true;
-    var map = {
+    var _ = {
       "topic": topicNotifier.value?.label ?? "",
       "details": details.text,
       "fullName": fullname.text,
       "email": email.text,
       "phoneNumber": phone.text
     };
-
-    print(map);
 
     final response = await _roleProfileRepository.postSupportDetails({
       "topic": topicNotifier.value?.label ?? "",
@@ -81,6 +79,7 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
 final supportRequestProvider =
     StateNotifierProvider<SupportRequestNotifier, SupportRequestState>(
   (ref) {
-    return SupportRequestNotifier(ProfileRepo());
+    final profileRepo = ref.watch(profileRepositoryProvider);
+    return SupportRequestNotifier(profileRepo);
   },
 );

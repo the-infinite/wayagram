@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -38,7 +37,7 @@ class MyMomentWidget extends ConsumerWidget {
       onTap: () async {
         WayaNav.goBack();
         await WayaNav.to(
-          transition: Transition.downToUp,
+          transition: WayaTransition.downToUp,
           duration: const Duration(milliseconds: 600),
           ViewMoment(moments: allMoments, isMine: isMine, index: index),
         );
@@ -74,7 +73,7 @@ class MyMomentWidget extends ConsumerWidget {
                             ]),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(3),
+                        padding: const EdgeInsets.all(3),
                         child: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,

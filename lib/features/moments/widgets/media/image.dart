@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 class ImageMomentScreen extends StatefulWidget {
   final String media;
@@ -69,7 +69,6 @@ class _ImageMomentScreenState extends State<ImageMomentScreen> {
   Widget build(BuildContext context) {
     //? This is fine.
     final size = MediaQuery.sizeOf(context);
-
     //? Return this here.
     if (!downloaded) {
       return StreamBuilder(
@@ -128,7 +127,7 @@ class _ImageMomentScreenState extends State<ImageMomentScreen> {
               widget.file,
               width: size.width,
               fit: BoxFit.contain,
-              errorBuilder: (context, e, _) => CachedNetworkImage(
+              errorBuilder: (context, e, _) => SafeCachedNetworkImage(
                 imageUrl: widget.media,
                 width: size.width,
                 fit: BoxFit.cover,

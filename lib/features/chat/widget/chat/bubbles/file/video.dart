@@ -10,7 +10,7 @@ import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 class VideoFileWidget extends StatefulWidget {
   final File video;
@@ -79,14 +79,25 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
   Widget build(BuildContext context) {
     //? This is fine.
     final size = MediaQuery.sizeOf(context);
+    final width = !widget.interactive && widget.totalSize < 3
+        ? size.width / widget.totalSize
+        : 100.0;
+    final height = !widget.interactive && widget.totalSize < 3
+        ? size.width / widget.totalSize
+        : 100.0;
 
     //? Return this here.
     return Padding(
-      padding: widget.index == min(widget.totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(right: 10),
+      padding: widget.index == min(widget.totalSize - 1, 2)
+          ? EdgeInsets.zero
+          : const EdgeInsets.only(right: 10),
       child: Stack(
         children: [
           //? First, the video file itself.
-          if (!downloaded && widget.message != null && widget.message?.dto == null && widget.message!.media!.isNotEmpty)
+          if (!downloaded &&
+              widget.message != null &&
+              widget.message?.dto == null &&
+              widget.message!.media!.isNotEmpty)
             //? Since this is not yet downloaded, first, a stream for this.
             StreamBuilder(
               stream: WayaFileRepository.instance.downloadFile(
@@ -94,11 +105,14 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                 widget.video,
                 (result) async {
                   if (result) {
-                    //! DO NOT REMOVE THIS LINE. It is us giving the operating 
+                    //! DO NOT REMOVE THIS LINE. It is us giving the operating
                     //! system enough time to flush the file to storage. Some
                     //! times the file might be lingering in memory as opposed
                     //! to storage.
                     await Future.delayed(const Duration(seconds: 4));
+                    // if (await widget.video.exists()) {
+                    //   await WayaFileHelper.saveNetworkVideo(widget.video.uri.toString());
+                    // }
                     if (!mounted) return;
                     setState(() {
                       downloaded = true;
@@ -179,13 +193,19 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: SizedBox(
-                width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: height,
+                  minHeight: height,
+                  maxWidth: width,
+                  minWidth: width,
+                ),
                 child: WayaVideoWidget.file(
                   widget.video,
                   controller: controller,
-                  controls: widget.interactive ? WayaVideoControls.message : WayaVideoControls.content,
+                  controls: widget.interactive
+                      ? WayaVideoControls.message
+                      : WayaVideoControls.content,
                   canFocus: widget.message?.dto == null,
                 ),
               ),
@@ -219,10 +239,13 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.white,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  padding: EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(2),
                 ),
                 icon: WayaAssets.icons.cMultiplyCircle.svg(
-                  color: WayaColors.greyColor400,
+                  colorFilter: ColorFilter.mode(
+                    WayaColors.greyColor400,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             )

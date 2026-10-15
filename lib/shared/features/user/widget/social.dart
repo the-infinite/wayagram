@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 import 'profile_picture.dart';
 
@@ -149,7 +149,7 @@ class SocialUserSelectionWidget extends StatelessWidget {
                 if (isSelected)
                   TextButton(
                       onPressed: () async {
-                       await  onSelect(user);
+                        await onSelect(user);
                       },
                       child: Text(
                         "Remove",

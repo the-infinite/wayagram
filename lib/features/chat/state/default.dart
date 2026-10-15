@@ -1,7 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/shared/cache/chat.dart';
@@ -35,7 +35,8 @@ class ConversationState {
   final bool archivedHasNextPage;
 
   /// Utility function used to get the total number of all unread messages inside of the app.
-  int get totalUnreadCount => conversations.fold(0, (value, chat) => value + chat.unreadCount);
+  int get totalUnreadCount =>
+      conversations.fold(0, (value, chat) => value + chat.unreadCount);
 
   // This is fine.
   const ConversationState({
@@ -59,9 +60,11 @@ class ConversationState {
   });
 
   // This is fine.
-  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile, [BusinessDetailsModel? business]) async {
+  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile,
+      [BusinessDetailsModel? business]) async {
     if (self != null) {
-      ConversationState._self = self.copyWith(accountType: _self?.id == self.id ? _self?.accountType : null);
+      ConversationState._self = self.copyWith(
+          accountType: _self?.id == self.id ? _self?.accountType : null);
     }
     if (profile != null) ConversationState._profile = profile;
     if (business != null) ConversationState._business = business;
@@ -70,14 +73,18 @@ class ConversationState {
     if (self != null && !kDebugMode) {
       //? First for crashlytics.
       await FirebaseCrashlytics.instance.setUserIdentifier(self.id);
-      await FirebaseCrashlytics.instance.setCustomKey("fullname", self.fullname);
-      await FirebaseCrashlytics.instance.setCustomKey("environment", WayaConstants.isProduction ? 'live' : 'test');
+      await FirebaseCrashlytics.instance
+          .setCustomKey("fullname", self.fullname);
+      await FirebaseCrashlytics.instance.setCustomKey(
+          "environment", Environment.isProduction ? 'live' : 'test');
 
       //? Next for analytics.
       await FirebaseAnalytics.instance.setUserId(id: self.id);
-      await FirebaseAnalytics.instance.setUserProperty(name: "fullname", value: self.fullname);
       await FirebaseAnalytics.instance
-          .setUserProperty(name: "environment", value: WayaConstants.isProduction ? 'live' : 'test');
+          .setUserProperty(name: "fullname", value: self.fullname);
+      await FirebaseAnalytics.instance.setUserProperty(
+          name: "environment",
+          value: Environment.isProduction ? 'live' : 'test');
     }
   }
 
@@ -112,10 +119,12 @@ class ConversationState {
   );
 
   /// Utility used to retrieve the list of pinned chats from this one.
-  List<ChatModel> get pinned => conversations.where((chat) => chat.self.isPined).toList();
+  List<ChatModel> get pinned =>
+      conversations.where((chat) => chat.self?.isPined ?? false).toList();
 
   /// Utility used to retrieve the list of chats that are not pinned.
-  List<ChatModel> get unpinned => conversations.where((chat) => !chat.self.isPined).toList();
+  List<ChatModel> get unpinned =>
+      conversations.where((chat) => !(chat.self?.isPined ?? false)).toList();
 
   /// The results displayed whenever you are looking at a list of conversations
   /// arranged in no particular order.
@@ -131,10 +140,14 @@ class ConversationState {
     //? This is fine.
     return conversations
         .where((chat) =>
-            (chat.chatType == ChatType.group && (chat.name ?? '').toLowerCase().contains(filter)) ||
-            (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
-            (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
-            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
+            (chat.chatType == ChatType.group &&
+                (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.other.userData?.fullname.toLowerCase().contains(filter) ??
+                false) ||
+            (chat.other.profileData?.username?.toLowerCase().contains(filter) ??
+                false) ||
+            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ??
+                false))
         .toList();
   }
 
@@ -152,10 +165,14 @@ class ConversationState {
     //? This is fine.
     return archived
         .where((chat) =>
-            (chat.chatType == ChatType.group && (chat.name ?? '').toLowerCase().contains(filter)) ||
-            (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
-            (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
-            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
+            (chat.chatType == ChatType.group &&
+                (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.other.userData?.fullname.toLowerCase().contains(filter) ??
+                false) ||
+            (chat.other.profileData?.username?.toLowerCase().contains(filter) ??
+                false) ||
+            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ??
+                false))
         .toList();
   }
 

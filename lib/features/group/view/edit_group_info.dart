@@ -78,8 +78,6 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
     final viewModel = ref.watch(groupProvider);
     final wayaTheme = Theme.of(context);
 
-    debugPrint('MY grOUP TYPE is ${widget.group.isPrivate}');
-
     //? Return this page's edit feature.
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -107,15 +105,18 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
               );
             } else if (_formKey.currentState!.validate()) {
               await notifier.editGroup(
-                context,
-                viewModel.groupName.text,
-                viewModel.groupDescription.text,
-                sel ? false : true,
-                _selectedImage == null ? editProfileImage! : (_selectedImage as File).path,
-                _coverImage == null ? editCoverImage! : (_coverImage as File).path,
-                widget.group.id,
-                  sel ?  true : false
-              );
+                  context,
+                  viewModel.groupName.text,
+                  viewModel.groupDescription.text,
+                  sel ? false : true,
+                  _selectedImage == null
+                      ? editProfileImage!
+                      : (_selectedImage as File).path,
+                  _coverImage == null
+                      ? editCoverImage!
+                      : (_coverImage as File).path,
+                  widget.group.id,
+                  sel ? true : false);
             }
           },
           text: 'Continue',
@@ -151,7 +152,8 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                               fit: BoxFit.cover,
                             )
                           : DecorationImage(
-                              image: NetworkImage(WayaAssets.images.pages.imagePlaceholder.path),
+                              image: NetworkImage(WayaAssets
+                                  .images.pages.imagePlaceholder.path),
                               fit: BoxFit.cover,
                             ),
                 ),
@@ -167,7 +169,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                     'assets/images/pages/cam.png',
                     height: 14.h,
                   ),
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   constraints: BoxConstraints(),
                   color: WayaColors.greyColor600, // Background overlay
                 ),
@@ -183,18 +185,23 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                       CircleAvatar(
                         radius: 20,
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
-                        backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
+                        backgroundImage: _coverImage != null
+                            ? FileImage(_coverImage!)
+                            : null,
                         child: _selectedImage != null
                             ? CircleAvatar(
                                 radius: 20,
-                                backgroundColor: wayaTheme.colorScheme.greyColor200,
+                                backgroundColor:
+                                    wayaTheme.colorScheme.greyColor200,
                                 backgroundImage: FileImage(_selectedImage!),
                               )
                             : editProfileImage != null
                                 ? CircleAvatar(
                                     radius: 20,
-                                    backgroundColor: wayaTheme.colorScheme.greyColor200,
-                                    backgroundImage: NetworkImage(editProfileImage!),
+                                    backgroundColor:
+                                        wayaTheme.colorScheme.greyColor200,
+                                    backgroundImage:
+                                        NetworkImage(editProfileImage!),
                                   )
                                 : Icon(
                                     Icons.person,
@@ -209,7 +216,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
           ),
           const Gap(30),
           Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -247,7 +254,9 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                                 keyboardType: TextInputType.text,
                                 controller: viewModel.groupName,
                                 hintText: 'Enter group name here',
-                                borderColor: formState.hasError ? wayaTheme.colorScheme.error : null,
+                                borderColor: formState.hasError
+                                    ? wayaTheme.colorScheme.error
+                                    : null,
                                 label: 'Group Name',
                               ),
                               if (formState.hasError)
@@ -255,7 +264,9 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -276,7 +287,9 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                                 keyboardType: TextInputType.text,
                                 controller: viewModel.groupDescription,
                                 hintText: 'Describe what your group does',
-                                borderColor: formState.hasError ? wayaTheme.colorScheme.error : null,
+                                borderColor: formState.hasError
+                                    ? wayaTheme.colorScheme.error
+                                    : null,
                                 label: 'Group Description',
                               ),
                               if (formState.hasError)
@@ -284,7 +297,9 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -332,7 +347,8 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Public Group", style: wayaTheme.textTheme.titleMedium),
+                          Text("Public Group",
+                              style: wayaTheme.textTheme.titleMedium),
                           const Gap(6),
                           FittedBox(
                             fit: BoxFit.contain,
@@ -377,7 +393,8 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Private Group", style: wayaTheme.textTheme.titleMedium),
+                          Text("Private Group",
+                              style: wayaTheme.textTheme.titleMedium),
                           const Gap(6),
                           Text(
                             "Not everyone can see activity on the group except invited\nmembers",

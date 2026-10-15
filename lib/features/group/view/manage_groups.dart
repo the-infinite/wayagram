@@ -5,7 +5,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 class ManageGroups extends ConsumerStatefulWidget {
@@ -15,7 +15,8 @@ class ManageGroups extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ManageGroupsState();
 }
 
-class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerProviderStateMixin {
+class _ManageGroupsState extends ConsumerState<ManageGroups>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -62,7 +63,8 @@ class GroupEmptyState extends StatelessWidget {
             buttontext: 'Create Group',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

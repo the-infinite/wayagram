@@ -1,16 +1,16 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 class ImageFileWidget extends StatefulWidget {
   final File image;
@@ -48,7 +48,12 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
             downloaded = false;
           });
         }
+
+        //? Now, wait for the download to finish...
+        return;
       }
+
+      //? Since the file exists, then let us do the needful.
     });
     super.initState();
   }
@@ -72,14 +77,25 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
   Widget build(BuildContext context) {
     //? This is fine.
     final size = MediaQuery.sizeOf(context);
+    final width = !widget.interactive && widget.totalSize < 3
+        ? size.width / widget.totalSize
+        : 100.0;
+    final height = !widget.interactive && widget.totalSize < 3
+        ? size.width / widget.totalSize
+        : 100.0;
 
     //? Return this here.
     return Padding(
-      padding: widget.index == min(widget.totalSize - 1, 2) ? EdgeInsets.zero : const EdgeInsets.only(right: 10),
+      padding: widget.index == min(widget.totalSize - 1, 2)
+          ? EdgeInsets.zero
+          : const EdgeInsets.only(right: 10),
       child: Stack(
         children: [
           //? First, the image file itself.
-          if (!downloaded && widget.message != null && widget.message?.dto == null && widget.message!.media!.isNotEmpty)
+          if (!downloaded &&
+              widget.message != null &&
+              widget.message?.dto == null &&
+              widget.message!.media!.isNotEmpty)
             //? Since this is not yet downloaded, first, a stream for this.
             StreamBuilder(
               stream: WayaFileRepository.instance.downloadFile(
@@ -91,7 +107,10 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                     //! system enough time to flush the file to storage. Some
                     //! times the file might be lingering in memory as opposed
                     //! to storage.
-                    await Future.delayed(const Duration(seconds: 4));
+                    await Future.delayed(const Duration(seconds: 2));
+                    // if (await widget.image.exists()) {
+                    //   await WayaFileHelper.saveNetworkImage(widget.image.uri.toString());
+                    // }
                     if (!mounted) return;
                     setState(() {
                       downloaded = true;
@@ -169,9 +188,13 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
               onTap: widget.message?.dto != null
                   ? null
                   : () async {
-                      final result = await WayaNavigationHelper.toImageDetailsScreen(
+                      final result =
+                          await WayaNavigationHelper.toImageDetailsScreen(
                         [widget.image],
-                        null,
+                        widget.message?.media
+                                ?.map((media) => media.mediaUrl)
+                                .toList() ??
+                            [],
                       );
 
                       //? Do nothing.
@@ -184,34 +207,54 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Image.file(
-                  widget.image,
-                  width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                  height: !widget.interactive && widget.totalSize < 3 ? null : 100,
-                  fit: BoxFit.cover,
-                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                    //? If this is synchronously loaded, return the child.
-                    if (wasSynchronouslyLoaded) return child;
-
-                    //? If this has been loaded, then return the child as is.
-                    if (frame != null) return child;
-
-                    //? Otherwise, return a placeholder.
-                    return AspectRatio(
-                      aspectRatio: 1,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: WayaColors.primary50,
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, e, _) => CachedNetworkImage(
-                    imageUrl: widget.message?.media?.first.mediaUrl ?? "",
-                    width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                    height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: height,
+                    minHeight: height,
+                    maxWidth: width,
+                    minWidth: width,
+                  ),
+                  child: Image.file(
+                    widget.image,
+                    width: !widget.interactive && widget.totalSize < 3
+                        ? size.width / widget.totalSize
+                        : 100,
+                    height: !widget.interactive && widget.totalSize < 3
+                        ? null
+                        : 100,
                     fit: BoxFit.cover,
+                    frameBuilder:
+                        (context, child, frame, wasSynchronouslyLoaded) {
+                      //? If this is synchronously loaded, return the child.
+                      if (wasSynchronouslyLoaded) return child;
+
+                      //? If this has been loaded, then return the child as is.
+                      if (frame != null) return child;
+
+                      //? Otherwise, return a placeholder.
+                      return AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          padding: EdgeInsets.all(70.dg),
+                          decoration: BoxDecoration(
+                            color: WayaColors.primary50,
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, e, _) => SafeCachedNetworkImage(
+                      imageUrl: widget.message?.media?.first.mediaUrl ?? "",
+                      width: !widget.interactive && widget.totalSize < 3
+                          ? size.width / widget.totalSize
+                          : 100,
+                      height: !widget.interactive && widget.totalSize < 3
+                          ? null
+                          : 100,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -245,10 +288,13 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                 style: IconButton.styleFrom(
                   backgroundColor: Colors.white,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  padding: EdgeInsets.all(2),
+                  padding: const EdgeInsets.all(2),
                 ),
                 icon: WayaAssets.icons.cMultiplyCircle.svg(
-                  color: WayaColors.greyColor400,
+                  colorFilter: ColorFilter.mode(
+                    WayaColors.greyColor400,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             )

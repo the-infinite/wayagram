@@ -80,6 +80,20 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
     }
   }
 
+  Future<void> unlikeProduct() async {
+    try {
+      final response = await _shopRepository.removeFromFavorite(
+          favoriteId: state.product!.id);
+      if (response.success) {
+        WayaSnackBar.showToast("Removed from your favorites");
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  //
+
   Future<List<FavoriteItem>?> getFavorites() async {
     try {
       final response = await _shopRepository.fetchFavorites();
@@ -136,5 +150,6 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
 }
 
 final productDetailVmProvider =
-    StateNotifierProvider<ProductDetailVm, ProductDetailState>(
-        (ref) => ProductDetailVm(ShopRepository.instance, ref));
+    StateNotifierProvider<ProductDetailVm, ProductDetailState>((ref) {
+  return ProductDetailVm(ShopRepository.instance, ref);
+});

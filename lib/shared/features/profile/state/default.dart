@@ -74,36 +74,42 @@ class PostState {
     if (filter.categories != null) {
       filtered = filtered.where(
         (post) => filter.categories!.any((category) {
-          return (post.categories ?? const <String>[]).contains(category);
+          return (post.categories ?? const <String>[]).contains(category.name);
         }),
       );
     }
 
     //? Third, we check if the filter has applied starting time.
     if (filter.timeStart != null) {
-      filtered = filtered.where((post) => !post.createdAt.isBefore(filter.timeStart!));
+      filtered =
+          filtered.where((post) => !post.createdAt.isBefore(filter.timeStart!));
     }
 
     //? Fourth, we check if the filter has any applied ending time.
     if (filter.timeEnd != null) {
-      filtered = filtered.where((post) => !post.createdAt.isAfter(filter.timeEnd!));
+      filtered =
+          filtered.where((post) => !post.createdAt.isAfter(filter.timeEnd!));
     }
 
     //? Fifth, we check if the filter has any activity start time set.
     if (filter.activityStart != null) {
-      filtered = filtered.where((post) => post.engagementCount >= filter.activityStart!);
+      filtered = filtered
+          .where((post) => post.engagementCount >= filter.activityStart!);
     }
 
     //? Sixth, we check if the filter has any activity end( time set.
     if (filter.activityEnd != null) {
-      filtered = filtered.where((post) => post.engagementCount <= filter.activityEnd!);
+      filtered =
+          filtered.where((post) => post.engagementCount <= filter.activityEnd!);
     }
 
     //? If the filter has any text you can use to search inside of it...
     if (filter.search?.isNotEmpty ?? false) {
       filtered = filtered.where((post) =>
           post.content.toString().toLowerCase().contains(filter.search!) ||
-          post.hashtags.map((e) => e.toString()).any((tag) => tag.toLowerCase().contains(filter.search!)));
+          post.hashtags
+              .map((e) => e.toString())
+              .any((tag) => tag.toLowerCase().contains(filter.search!)));
     }
 
     //? Now, we filter into the
@@ -177,7 +183,8 @@ class SavedPostState {
 
   factory SavedPostState.fromJson(Map<String, dynamic> json) {
     return SavedPostState(
-      bookmarks: (json["docs"] as List).map((e) => BookmarkModel.fromJson(e)).toList(),
+      bookmarks:
+          (json["docs"] as List).map((e) => BookmarkModel.fromJson(e)).toList(),
       totalSize: json["totalDocs"],
       limit: json["limit"],
       page: json["page"],
@@ -217,29 +224,35 @@ class SavedPostState {
 
     //? Third, we check if the filter has applied starting time.
     if (filter.timeStart != null) {
-      filtered = filtered.where((post) => !post.createdAt.isBefore(filter.timeStart!));
+      filtered =
+          filtered.where((post) => !post.createdAt.isBefore(filter.timeStart!));
     }
 
     //? Fourth, we check if the filter has any applied ending time.
     if (filter.timeEnd != null) {
-      filtered = filtered.where((post) => !post.createdAt.isAfter(filter.timeEnd!));
+      filtered =
+          filtered.where((post) => !post.createdAt.isAfter(filter.timeEnd!));
     }
 
     //? Fifth, we check if the filter has any activity start time set.
     if (filter.activityStart != null) {
-      filtered = filtered.where((post) => post.engagementCount >= filter.activityStart!);
+      filtered = filtered
+          .where((post) => post.engagementCount >= filter.activityStart!);
     }
 
     //? Sixth, we check if the filter has any activity end( time set.
     if (filter.activityEnd != null) {
-      filtered = filtered.where((post) => post.engagementCount <= filter.activityEnd!);
+      filtered =
+          filtered.where((post) => post.engagementCount <= filter.activityEnd!);
     }
 
     //? If the filter has any text you can use to search inside of it...
     if (filter.search?.isNotEmpty ?? false) {
       filtered = filtered.where((post) =>
           post.content.toString().toLowerCase().contains(filter.search!) ||
-          post.hashtags.map((e) => e.toString()).any((tag) => tag.toLowerCase().contains(filter.search!)));
+          post.hashtags
+              .map((e) => e.toString())
+              .any((tag) => tag.toLowerCase().contains(filter.search!)));
     }
 
     //? Now, we filter into the
@@ -299,11 +312,11 @@ class SavedPostState {
     );
   }
 
-  BookmarkModel? find(String id) {
-    return bookmarks.where((post) => post.postId == id).firstOrNull;
+  PostModel? find(String id) {
+    return docs.where((post) => post.id == id).firstOrNull;
   }
 
   bool isSaved(String id) {
-    return bookmarks.any((post) => post.postId == id);
+    return docs.any((post) => post.id == id);
   }
 }

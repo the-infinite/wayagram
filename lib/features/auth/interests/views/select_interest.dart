@@ -41,74 +41,70 @@ class _SelectInterestState extends ConsumerState<SelectInterest> {
     }
 
     return PopScope(
-        onPopInvokedWithResult: (popping, _) {
-          if (!popping) return;
-          notifier.reset();
-        },
-        child: WayaScaffold(
-          isLoading: state.isLoading || state.isPostingInterest,
-          isScrollable: true,
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Choose some interest to personalize your feed",
-                  style: WayaTextStyles.titleLarge),
-              const Gap(5),
-              Text("We’ll try and suggest some of those interest for you",
-                  style: WayaTextStyles.hintStyle),
-              const Gap(30),
-              if (state.interests.isNotEmpty)
-                Column(
-                  children: state.interests.map<Widget>((entry) {
-                    return SelectInterestWidget(
-                      selectedInterests: selectedInterests,
-                      interestData: entry.subcategory,
-                      onTap: (value) {
-                        ref
-                            .read(selectInterestProvider.notifier)
-                            .updateSelected(interest: value);
+      onPopInvokedWithResult: (popping, _) {
+        if (!popping) return;
+        notifier.reset();
+      },
+      child: WayaScaffold(
+        isLoading: state.isLoading || state.isPostingInterest,
+        isScrollable: true,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Choose some interest to personalize your feed",
+                style: WayaTextStyles.titleLarge),
+            const Gap(5),
+            Text("We’ll try and suggest some of those interest for you",
+                style: WayaTextStyles.hintStyle),
+            const Gap(30),
+            if (state.interests.isNotEmpty)
+              Column(
+                children: state.interests.map<Widget>((entry) {
+                  return SelectInterestWidget(
+                    selectedInterests: selectedInterests,
+                    interestData: entry.subcategory,
+                    onTap: (value) {
+                      notifier.updateSelected(interest: value);
+                    },
+                    title: entry.category,
+                  );
+                }).toList(),
+              ),
+            const Gap(25),
+            if (!state.isLoading) ...[
+              WayaButton(
+                callback: selectedInterests.isEmpty
+                    ? null
+                    : () async {
+                        notifier.addInterest();
                       },
-                      title: entry.category,
-                    );
-                  }).toList(),
+                text: "Save Interests",
+              ),
+              const Gap(20),
+              Align(
+                  child: GestureDetector(
+                onTap: () async {
+                  final accountState = ref.read(selectAccountProvider);
+                  if (accountState.selectedType!.type == 'BUSINESS') {
+                    WayaNav.toNamed('/add-business-account');
+                  } else {
+                    WayaNav.to(const SuccessfulSetup());
+                  }
+                },
+                child: Text(
+                  "Skip for now",
+                  style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customPrimary,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600),
                 ),
-              const Gap(25),
-              if (!state.isLoading) ...[
-                WayaButton(
-                  callback: selectedInterests.isEmpty
-                      ? null
-                      : () async {
-                          ref
-                              .read(selectInterestProvider.notifier)
-                              .addInterest();
-                        },
-                  text: "Save Interests",
-                ),
-                const Gap(20),
-                Align(
-                    child: GestureDetector(
-                  onTap: () async {
-                    final accountState = ref.read(selectAccountProvider);
-
-                    if (accountState.selectedType!.type == 'BUSINESS') {
-                      WayaNav.toNamed('/add-business-account');
-                    } else {
-                      WayaNav.to(const SuccessfulSetup());
-                    }
-                  },
-                  child: Text(
-                    "Skip for now",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600),
-                  ),
-                )),
-                const Gap(20),
-              ]
-            ],
-          ),
-        ));
+              )),
+              const Gap(20),
+            ]
+          ],
+        ),
+      ),
+    );
   }
 }

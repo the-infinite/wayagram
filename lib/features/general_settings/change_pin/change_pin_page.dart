@@ -29,12 +29,10 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
 
     final isInValid = ref.watch(isChangePinValidProvider);
     final viewModel = ref.read(transactionPinProvider.notifier);
-    //final pinModel = ref.watch(credentialInputProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: ref.watch(loadingProvider),
         isScrollable: true,
-
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,

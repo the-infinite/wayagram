@@ -2,13 +2,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-import 'package:wayagram/shared/features/user/repo/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/repo/user_repository.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import 'package:wayagram/shared/features/user/state/search.dart';
 
 class UserSearchNotifier extends StateNotifier<UserSearchState> {
-  final repo = UserRepository.instance;
-  UserSearchNotifier(super.state);
+  final UserRepository repo;
+  UserSearchNotifier(
+    super.state,
+    this.repo,
+  );
 
   /// Retrieves a list of users based on the search query.
   ///
@@ -52,7 +55,8 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
     state = state.copyWith(isLoading: true);
 
     //? Try sending the request.
-    final response = await repo.getSearchResults(query, state.limit, state.page);
+    final response =
+        await repo.getSearchResults(query, state.limit, state.page);
 
     //? If this was fine...
     if (response.success) {
@@ -60,7 +64,8 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
       final data = response.data['data'];
 
       //? Parse the users as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => UserDetailsModel.fromJson(doc));
+      final docs =
+          (data['docs'] as List).map((doc) => UserDetailsModel.fromJson(doc));
 
       //? Get the user resource for each of these ones.
       for (final user in docs) {
@@ -139,8 +144,10 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
   }
 }
 
-final userSearchProvider = StateNotifierProvider<UserSearchNotifier, UserSearchState>(
+final userSearchProvider =
+    StateNotifierProvider<UserSearchNotifier, UserSearchState>(
   (ref) {
-    return UserSearchNotifier(UserSearchState.initial);
+    final userRepo = ref.watch(userRepositoryProvider);
+    return UserSearchNotifier(UserSearchState.initial, userRepo);
   },
 );

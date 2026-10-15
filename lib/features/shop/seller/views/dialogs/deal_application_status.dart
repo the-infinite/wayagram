@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 
@@ -25,22 +25,6 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
     final wayaTheme = Theme.of(context);
 
     String status = widget.product.wayagramDeal;
-
-    // if (widget.product.wayagramDealApprove == false &&
-    //     widget.product.wayagramDealRejectedReason == null) {
-    //   setState(() {
-    //     status = 'Pending';
-    //   });
-    // } else if (widget.product.wayagramDealApprove == false &&
-    //     widget.product.wayagramDealRejectedReason != null) {
-    //   setState(() {
-    //     status = 'Rejected';
-    //   });
-    // } else if (widget.product.wayagramDealApprove == true) {
-    //   setState(() {
-    //     status = 'Approved';
-    //   });
-    // }
 
     return Container(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
@@ -99,7 +83,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
                     child: AboutProductApplication(
                         title: 'Price Per Unit',
                         content: WayaHelpers.formatPrice(
-                            double.parse(widget.product.price).toInt())),
+                            double.parse(widget.product.price ?? '').toInt())),
                   ),
                   const Gap(2),
                   Expanded(
@@ -114,7 +98,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
                         title: 'Application Status',
                         content: '',
                         contentWidget: Text(
-                           status.toString().capitalizeFirst!,
+                          status.capitalizeFirst,
                           style: TextStyle().wayaCopyWith(
                               color: status == 'approved'
                                   ? wayaTheme.colorScheme.success
@@ -182,7 +166,7 @@ class AboutProductApplication extends StatelessWidget {
         const Gap(5),
         contentWidget != null
             ? contentWidget!
-            : Text(content.capitalizeFirst!,
+            : Text(content.capitalizeFirst,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.customBlack,
                   fontSize: 14.sp,

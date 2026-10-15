@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
@@ -89,7 +89,6 @@ class AddEventVm extends StateNotifier<AddEventState> {
     List<DocType> e = List.from(state.eventImage);
     e = e.where((i) => i.type != 'event-image').toList();
     state = state.copyWith(eventImage: e);
-    debugPrint(state.toString());
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
@@ -207,8 +206,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
         }
         return response.success;
       }
-    } catch (error) {
-      debugPrint(error.toString());
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -261,6 +259,8 @@ class AddEventVm extends StateNotifier<AddEventState> {
 
 final addEventVmProvider =
     StateNotifierProvider<AddEventVm, AddEventState>((ref) {
-  return AddEventVm(
-      UploadFileRepository(), WayaSecureDataSource(), EventRepository(), ref);
+  final eventRepo = ref.watch(eventRepositoryProvider);
+  final uploadRepo = ref.watch(uploadFileRepositoryProvider);
+
+  return AddEventVm(uploadRepo, WayaSecureDataSource(), eventRepo, ref);
 });

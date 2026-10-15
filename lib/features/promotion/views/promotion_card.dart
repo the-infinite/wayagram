@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
@@ -68,7 +68,8 @@ class PromotionCard extends ConsumerWidget {
         showTimeLeft: showTimeLeft,
         timeLeft: timeLeft,
         id: id,
-        description: WayaHelpers.formatPrice(double.parse(data.price).toInt()),
+        description:
+            WayaHelpers.formatPrice(double.parse(data.price ?? '').toInt()),
         image: image);
   }
 

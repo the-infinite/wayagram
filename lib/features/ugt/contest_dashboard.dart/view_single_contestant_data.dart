@@ -18,7 +18,6 @@ import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dar
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
-
 class ViewSingleContestantData extends StatefulHookConsumerWidget {
   static const route = '/view-contestant-single-data';
   const ViewSingleContestantData({super.key});
@@ -162,6 +161,7 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                   "status": "APPROVED",
                 });
                 if (isPass) {
+                  if (!context.mounted) return;
                   WayaUtils.showModalSheet(
                     context,
                     child: SuccessfulModal(

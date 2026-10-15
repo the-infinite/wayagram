@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 
 class SingleDisputeWidget extends ConsumerWidget {
   final DisputeModel dispute;
@@ -25,7 +25,7 @@ class SingleDisputeWidget extends ConsumerWidget {
     void toDispute() async {
       conversationNotifier.dismissOverlay();
       notifier.setChat(
-          (await conversationNotifier.getChatDetails(dispute.chatId??""))!);
+          (await conversationNotifier.getChatDetails(dispute.chatId ?? ""))!);
       notifier.markAllAsRead().then((result) {
         if (!result) return;
         conversationNotifier.getChats(true);
@@ -77,11 +77,12 @@ class SingleDisputeWidget extends ConsumerWidget {
                   padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
                   decoration: BoxDecoration(
                       color: dispute.status == 'open'
-                          ? wayaTheme.colorScheme.primary75.withOpacity(0.3)
+                          ? wayaTheme.colorScheme.primary75
+                              .withValues(alpha: 0.3)
                           : wayaTheme.colorScheme.success50,
                       borderRadius: BorderRadius.circular(6)),
                   child: Text(
-                    dispute.status.capitalizeFirst!,
+                    dispute.status.capitalizeFirst,
                     style: TextStyle().wayaCopyWith(
                         color: dispute.status == 'open'
                             ? wayaTheme.colorScheme.primary600

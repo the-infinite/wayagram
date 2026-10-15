@@ -13,7 +13,7 @@ import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 class UgtPostAllContestant extends ConsumerStatefulWidget {
   //final  MyContestContestantModel? contestApplicant;
   final Contest? model;
-  final canViewDashboard;
+  final bool canViewDashboard;
   const UgtPostAllContestant(this.model,
       {this.canViewDashboard = false, super.key});
 
@@ -23,11 +23,6 @@ class UgtPostAllContestant extends ConsumerStatefulWidget {
 
 class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
   final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +43,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
           //? button to switch between approved contest
           Column(
             children: [
-              Gap(10),
+              const Gap(10),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +65,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                       textColor: wayaTheme.colorScheme.greyColor700,
                     ),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Expanded(
                     child: WayaButton(
                       callback: () {
@@ -92,7 +87,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                   ),
                 ],
               ),
-              Gap(15),
+              const Gap(15),
             ],
           ),
         if (viewModel.myPostList.isEmpty) emptyWidget(),
@@ -118,8 +113,6 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
       ],
     );
   }
-
-
 
   Widget emptyWidget() {
     return UgtEmptyState(

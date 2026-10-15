@@ -59,7 +59,8 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
       notifier.fetchHostedContest();
       userManagementField.clear();
       if (viewModel!.roles!.isNotEmpty) {
-        if (viewModel.roles?.first.permissionsWithActions?.length != 0) {
+        if (viewModel.roles?.first.permissionsWithActions?.isNotEmpty ??
+            false) {
           List<Action>? list =
               viewModel.roles?.first.permissionsWithActions?[0].actions ?? [];
           for (var model in list) {
@@ -135,12 +136,10 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
               context, "Last Active", formatDate(viewModel.updatedAt ?? "")),
           _buildStatusTile(
               "Status", viewModel.isActive == true ? "Active" : "Deactivated"),
-          Gap(20),
+          const Gap(20),
           Text("User Permissions",
               style: WayaTextStyles.hintStyleBold
                   .wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
-          // Gap(20),
-
           _buildPermissionTile(
               context,
               viewModel.roles!.isNotEmpty
@@ -175,7 +174,7 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
             ),
           ),
         ),
-        Gap(10)
+        const Gap(10)
       ],
     );
   }
@@ -252,7 +251,7 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
                 activeColor: wayaTheme.colorScheme.primary,
               ),
               Text(key, style: WayaTextStyles.bodyBold),
-              Gap(30)
+              const Gap(30)
             ],
           );
         }), /*  Padding(

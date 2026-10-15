@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
 import 'package:wayagram/features/chat/widget/search.dart';
 import 'package:wayagram/shared/features/chat/widget/empty_conversation.dart';
@@ -77,7 +77,8 @@ class ArchivedChatsScreen extends ConsumerWidget {
                 (index) => ConversationWidget(
                   index: index,
                   chatId: state.archivedResults[index].id,
-                  notifier: ref.read(chatProvider(state.archivedResults[index].id).notifier),
+                  notifier: ref.read(
+                      chatProvider(state.archivedResults[index].id).notifier),
                   conversationNotifier: notifier,
                 ),
               ),

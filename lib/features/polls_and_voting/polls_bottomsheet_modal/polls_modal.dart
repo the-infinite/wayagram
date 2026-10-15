@@ -5,20 +5,25 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
-import 'package:wayagram/features/event/vm/event_vm.dart';
+import 'package:wayagram/features/event/views/event_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
+import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
+import 'package:wayagram/features/wallet/view/request_payout.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PollsModal extends ConsumerStatefulWidget {
   final String url;
@@ -59,6 +64,8 @@ class _PollsModalState extends ConsumerState<PollsModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
+                WayaNav.toNamed('/poll-and-voting',
+                    arguments: {'poll': 'poll'});
                 // await ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
                 WayaNav.toNamed('/poll-and-voting',
                     arguments: {'poll': 'poll'});
@@ -236,8 +243,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                       height: 56.h,
                     )),
                 Text(
-                  '${ref.read(createPollVotingProvider.notifier).formatAm(amount)}',
-                  //amount,
+                  amount.formatAm(),
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                       fontSize: 48.sp,
                       fontWeight: FontWeight.w600,
@@ -269,8 +275,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                 // );
               },
               //text: "Total: ₦${num.parse(amount)*100}",
-              text:
-                  "Total: ₦${ref.read(createPollVotingProvider.notifier).formatAm(calculateAmount())}",
+              text: "Total: ₦${calculateAmount().formatAm()}",
               textColor: WayaColors.primary,
             ),
             const Gap(20),
@@ -308,11 +313,10 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
     );
   }
 
-  calculateAmount() {
+  String calculateAmount() {
     num x = 0;
     x = num.parse(widget.voteFee) * num.parse(amount);
-    debugPrint(x.toString());
-    return x;
+    return x.toString();
   }
 }
 
@@ -379,7 +383,6 @@ class _PollPinEntryBottomSheetState
           .read(createPollVotingProvider.notifier)
           .verifyWalletPin(_pin, context);
       if (isPass) {
-        debugPrint('Poll AMOUNT ${widget.amount}');
         await ref.read(createPollVotingProvider.notifier).castYourVote(
               '${num.parse(widget.amount) * num.parse(widget.voteFee)}',
               widget.amount,
@@ -427,7 +430,7 @@ class _PollPinEntryBottomSheetState
             const SizedBox(height: 24),
             GridView.builder(
               itemCount: _pinLength,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
@@ -534,9 +537,19 @@ class _PollPinEntryBottomSheetState
 class PinEntryBottomSheet2 extends ConsumerStatefulWidget {
   final String id;
   final PayoutModule module;
+  final String bankName;
+  final String acctName;
+  final String acctNumber;
+  final String bankCode;
 
   const PinEntryBottomSheet2(
-      {super.key, required this.id, required this.module});
+      {super.key,
+      required this.id,
+      required this.module,
+      required this.bankName,
+      required this.bankCode,
+      required this.acctName,
+      required this.acctNumber});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -563,41 +576,73 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
     }
   }
 
-  // void _submitPin() {
-  //   if (_pin.length == _pinLength) {
-  //
-  //     WayaNav.goBack();
-  //
-  //      WayaUtils.showModalSheet(
-  //       context,
-  //       child: DonationGenerosityModal(),
-  //     );
-  //
-  //
-  //
-  //   }
-  // }
-
   void _submitPin() async {
     if (_pin.length == _pinLength) {
       var isPass = await ref
           .read(donationVmProvider.notifier)
           .verifyWalletPin(_pin, context);
-      debugPrint('PINENTRY POLLID ==>> ${widget.id}');
       if (isPass) {
         if (widget.module == PayoutModule.polls) {
-          ref
+          /*  ref
               .read(createPollVotingProvider.notifier)
-              .requestSettlement(context, widget.id);
+              .requestSettlement(context, widget.id); */
+
+          ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
+              purpose: "POLL & VOTE",
+              referenceId: widget.id,
+              accountNumber: widget.acctNumber,
+              accountName: widget.acctName,
+              bankName: widget.bankName,
+              bankCode: widget.bankCode, goBackTo: () {
+            WayaNav.removeAllUntil(PollAndVoting(), PollAndVoting.route);
+          });
         } else if (widget.module == PayoutModule.contest) {
-          ref
+          /*  ref
               .read(contestNotifierProvider.notifier)
-              .requestPayout(context, widget.id);
+              .requestPayout(context, widget.id); */
+          ref.read(walletVmProvider.notifier).requestPayoutMethod(context,
+              purpose: PayoutModule.contest.name.toUpperCase(),
+              referenceId: widget.id,
+              accountNumber: widget.acctNumber,
+              accountName: widget.acctName,
+              bankName: widget.bankName,
+              bankCode: widget.bankCode, goBackTo: () {
+            WayaNav.removeAllUntil(
+                DashboardContestPage(), DashboardContestPage.route);
+          });
         } else if (widget.module == PayoutModule.event) {
-          //TODO event payout method
-          ref
+          ref.read(walletVmProvider.notifier).requestPayoutMethod(
+            context,
+            purpose: PayoutModule.event.name.toUpperCase(),
+            referenceId: widget.id,
+            accountNumber: widget.acctNumber,
+            accountName: widget.acctName,
+            bankName: widget.bankName,
+            bankCode: widget.bankCode,
+            goBackTo: () {
+              WayaNav.removeAllUntil(
+                  EventDashboard(id: widget.id), EventDashboard.route);
+            },
+          );
+          /*  ref
               .read(eventVmProvider.notifier)
-              .requestForEventPayout(context, widget.id);
+              .requestForEventPayout(context, widget.id);   */
+        } else if (widget.module == PayoutModule.donation) {
+          ref.read(walletVmProvider.notifier).requestPayoutMethod(
+            context,
+            purpose: PayoutModule.donation.name.toUpperCase(),
+            referenceId: widget.id,
+            accountNumber: widget.acctNumber,
+            accountName: widget.acctName,
+            bankName: widget.bankName,
+            bankCode: widget.bankCode,
+            goBackTo: () {
+              WayaNav.removeAllUntil(Donations(), Donations.route);
+            },
+          );
+          /*   ref
+              .read(eventVmProvider.notifier)
+              .requestForEventPayout(context, widget.id); */
         }
       } else {
         WayaNav.goBack();
@@ -640,7 +685,7 @@ class _PinEntryBottomSheet2State extends ConsumerState<PinEntryBottomSheet2> {
             const SizedBox(height: 24),
             GridView.builder(
               itemCount: _pinLength,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
@@ -801,8 +846,7 @@ class _ConfirmVoteOptionModalState
                     ),
                   ),
                   TextSpan(
-                    text:
-                        '${ref.read(createPollVotingProvider.notifier).formatAm(widget.amountPaid)} Votes ',
+                    text: '${widget.amountPaid.formatAm()} Votes ',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
                       fontSize: 12.sp,
@@ -819,7 +863,7 @@ class _ConfirmVoteOptionModalState
                   ),
                   TextSpan(
                     text:
-                        '₦${ref.read(createPollVotingProvider.notifier).formatAm('${num.parse(widget.amountPaid) * num.parse(widget.voteFee)}')}',
+                        '₦${('${num.parse(widget.amountPaid) * num.parse(widget.voteFee)}'.formatAm())}',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
                       fontSize: 12.sp,
@@ -935,14 +979,14 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                debugPrint('YOUR URL ${widget.votingLink}');
-                Share.share(
-                  WayaValueHelper.getShareableUrl(
+                SharePlus.instance.share(ShareParams(
+                  text: WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getPollDetailsPage(widget.pollId)),
                   subject: 'Share Poll',
-                );
-                Share.share(widget.votingLink);
-
+                ));
+                // SharePlus.instance.share(ShareParams(
+                //   text: widget.votingLink,
+                // ));
                 //WayaNav.toNamed('/share-voting', arguments: widget.votingLink);
               },
               text: "Share Voting Invitation",
@@ -1013,15 +1057,13 @@ class _VoteSuccessModalTwoState extends ConsumerState<VoteSuccessModalTwo> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                debugPrint('YOUR URL ${widget.votingLink}');
-                Share.share(
-                  WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getPollDetailsPage(widget.pollId)),
-                  subject: 'Share Poll',
+                SharePlus.instance.share(
+                  ShareParams(
+                    text: WayaValueHelper.getShareableUrl(
+                        WayaAppRoutes.getPollDetailsPage(widget.pollId)),
+                    subject: 'Share Poll',
+                  ),
                 );
-                //Share.share(widget.votingLink);
-
-                //WayaNav.toNamed('/share-voting', arguments: widget.votingLink);
               },
               text: "Share Voting Invitation",
               textColor: WayaColors.black,
@@ -1086,6 +1128,67 @@ class _VoteInsufficientModalState extends State<VoteInsufficientModal> {
                 WayaNav.toNamed("/poll-and-voting");
               },
               text: "Go Back to Polls",
+              textColor: WayaColors.black,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AddPayoutModal extends StatefulWidget {
+  const AddPayoutModal({super.key});
+
+  @override
+  State<AddPayoutModal> createState() => _AddPayoutModalState();
+}
+
+class _AddPayoutModalState extends State<AddPayoutModal> {
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/polls/cancel.png',
+              height: 116.h,
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              'Add Payout Method',
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.black),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 3.h),
+            Text(
+              "It seems you have not added any payout method. Click the button below to add Payout method.",
+              style: wayaTheme.textTheme.hintStyle,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 30.h),
+            WayaButton(
+              callback: () async {
+                WayaNav.goBack();
+                WayaNav.toNamed(RequestPayout.route);
+              },
+              text: "Add Payout Method",
+            ),
+            SizedBox(height: 17.h),
+            WayaButton(
+              border: Border.all(color: WayaColors.greyColor300),
+              color: Colors.white,
+              callback: () async {
+                WayaNav.goBack();
+              },
+              text: "Go Back",
               textColor: WayaColors.black,
             ),
           ],

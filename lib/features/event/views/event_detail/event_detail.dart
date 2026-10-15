@@ -16,15 +16,18 @@ import 'package:wayagram/features/event/bottom_sheets/join_event.dart';
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/bottom_sheets/report_event.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/features/event/data/model/payout_response_model.dart';
+import 'package:wayagram/features/event/data/model/payout/payout.dart';
+import 'package:wayagram/features/event/views/event_detail/awaiting_approval.dart';
 import 'package:wayagram/features/event/views/event_detail/event_attendees.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail_widget.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 
 class EventDetail extends ConsumerStatefulWidget {
@@ -51,6 +54,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
+        ref.read(walletVmProvider.notifier).getPayoutMethod();
         try {
           notifier.getAttendees(page: 1, id: widget.id);
         } catch (_) {}
@@ -83,6 +87,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     final wayaTheme = Theme.of(context);
     final event = viewModel.singleEvent;
     final size = MediaQuery.sizeOf(context);
+    final walletViewModel = ref.watch(walletVmProvider);
 
     //? If this one sef dey.
     if (event == null) {
@@ -136,17 +141,17 @@ class _EventDetailState extends ConsumerState<EventDetail> {
       final today = DateTime(now.year, now.month, now.day);
 
       //? Check ticket sales end date
-      if (event.ticketSalesEndDate != null) {
-        final ticketEnd = DateTime(
-          event.ticketSalesEndDate!.year,
-          event.ticketSalesEndDate!.month,
-          event.ticketSalesEndDate!.day,
-        );
-        if (today.isAtSameMomentAs(ticketEnd.add(const Duration(days: 1))) ||
-            today.isAfter(ticketEnd.add(const Duration(days: 1)))) {
-          return true;
-        }
-      }
+      // if (event.ticketSalesEndDate != null) {
+      //   final ticketEnd = DateTime(
+      //     event.ticketSalesEndDate!.year,
+      //     event.ticketSalesEndDate!.month,
+      //     event.ticketSalesEndDate!.day,
+      //   );
+      //   if (today.isAtSameMomentAs(ticketEnd.add(const Duration(days: 1))) ||
+      //       today.isAfter(ticketEnd.add(const Duration(days: 1)))) {
+      //     return true;
+      //   }
+      // }
       //? Check event end date
       final eventEnd = DateTime(
         event.endDate.year,
@@ -197,16 +202,22 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                   text: 'Attendees',
                   onTap: () => setState(() => _selectedIndex = 1),
                 ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 2,
+                  text: 'Awaitng Approval',
+                  onTap: () => setState(() => _selectedIndex = 2),
+                ),
               ],
             ),
             const Gap(10),
             if (_selectedIndex == 0) EventDetailWidget(event: event),
             if (_selectedIndex == 1) EventAttendees(eventId: event.id),
+            if (_selectedIndex == 2) AwaitingApproval(eventId: event.id),
           ],
         ),
         bottomNavigationBar: Container(
           width: double.infinity,
-          padding: EdgeInsets.fromLTRB(10, 4, 10, 25),
+          padding: const EdgeInsets.fromLTRB(10, 4, 10, 25),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
           ),
@@ -218,29 +229,39 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: () {
-                          if (payoutList.isEmpty) {
-                            if (event.noOfAttendees < 1 &&
-                                event.eventType == 'paid') {
-                              WayaSnackBar.showToast(
-                                  "No attendee has paid for the event");
-                              return;
-                            }
+                        callback: isDayAfterTicketOrEventEnd(event)
+                            ? () {
+                                //?check if user have payout method added
+                                if (walletViewModel.payoutMethod.isEmpty) {
+                                  WayaUtils.showModalSheet(
+                                    context,
+                                    child: AddPayoutModal(),
+                                  );
+                                  return;
+                                }
+                                if (payoutList.isEmpty) {
+                                  if (event.noOfAttendees < 1 &&
+                                      event.eventType == 'paid') {
+                                    WayaSnackBar.showToast(
+                                        "No attendee has paid for the event");
+                                    return;
+                                  }
 
-                            ref
-                                .read(credentialInputProvider.notifier)
-                                .onSubmitPayoutPin(() => WayaNav.toNamed(
-                                        '/payoutVerification',
-                                        arguments: {
-                                          "id": event.id,
-                                          "Module": PayoutModule.event,
-                                        }));
-                          } else {
-                            WayaNav.toNamed(
-                                WayaAppRoutes.getSingleEventDashboard(
-                                    event.id));
-                          }
-                        },
+                                  ref
+                                      .read(credentialInputProvider.notifier)
+                                      .onSubmitPayoutPin(() => WayaNav.toNamed(
+                                              '/payoutVerification',
+                                              arguments: {
+                                                "id": event.id,
+                                                "Module": PayoutModule.event,
+                                              }));
+                                } else {
+                                  WayaNav.toNamed(
+                                      WayaAppRoutes.getSingleEventDashboard(
+                                          event.id));
+                                }
+                              }
+                            : null,
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
                             width: 1,
@@ -266,45 +287,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                           ],
                         ),
                       ),
-
-                      //WayaButton(
-                      //   callback: () {
-                      //     WayaNav.toNamed(WayaAppRoutes.getEventInviteScreen(
-                      //         viewModel.singleEvent?.id ?? '',
-                      //         viewModel.singleEvent?.title ?? ''));
-                      //     /**
-                      //      Share.share(
-                      //     subject: "Share event",
-                      //     WayaValueHelper.getShareableUrl(
-                      //         WayaAppRoutes.getEventDetailsScreen(widget.id)),
-                      //   )
-                      //      */
-                      //   },
-                      //   color: wayaTheme.colorScheme.transparent,
-                      //   border: Border.all(
-                      //       width: 1,
-                      //       color: wayaTheme.colorScheme.customPrimary),
-                      //   centerWidget: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     crossAxisAlignment: CrossAxisAlignment.center,
-                      //     children: [
-                      //       Icon(Icons.share,
-                      //           size: 22,
-                      //           color: wayaTheme.colorScheme.customPrimary),
-                      //       const Gap(4),
-                      //       Text(
-                      //         'Share Invite',
-                      //         style:
-                      //             wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                      //           fontWeight: FontWeight.w600,
-                      //           color: wayaTheme.colorScheme.customPrimary,
-                      //         ),
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
                     ),
-                    //  Gap(context.width * 0.04),
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
@@ -325,11 +308,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     Expanded(
                       child: WayaButton(
                         callback: () {
-                          Share.share(
+                          SharePlus.instance.share(ShareParams(
                             subject: "Share event",
-                            WayaValueHelper.getShareableUrl(
+                            text: WayaValueHelper.getShareableUrl(
                                 WayaAppRoutes.getEventDetailsScreen(event.id)),
-                          );
+                          ));
                         },
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
@@ -406,11 +389,11 @@ class EventDetailAction extends StatelessWidget {
           PopupMenuItem<int>(
             value: 0,
             onTap: () {
-              Share.share(
+              SharePlus.instance.share(ShareParams(
                 subject: "Share event",
-                WayaValueHelper.getShareableUrl(
+                text: WayaValueHelper.getShareableUrl(
                     WayaAppRoutes.getEventDetailsScreen(event.id)),
-              );
+              ));
             },
             child: WayaActionNav(
                 context: context,
@@ -509,7 +492,10 @@ class EventDetailAction extends StatelessWidget {
                 color: wayaTheme.colorScheme.customBlack,
                 asset: SvgPicture.asset(
                   WayaAssets.icons.mFire.path,
-                  color: wayaTheme.colorScheme.customBlack,
+                  colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.customBlack,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 text: "Promote Event",
               ),

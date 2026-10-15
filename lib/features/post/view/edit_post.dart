@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/files.dart';
@@ -45,7 +44,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
 
   List<String> prevSelected = [];
 
-  bool sel = false;
+  bool sel = true;
 
   @override
   void initState() {
@@ -66,6 +65,15 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
       sel = widget.privacy == 'public';
       _contentController.text = widget.initialContent;
     });
+  }
+
+  @override
+  void dispose() {
+    _contentController.dispose();
+    for (final controller in videoControllers) {
+      controller.dispose();
+    }
+    super.dispose();
   }
 
   Future<void> _pickImages() async {
@@ -135,6 +143,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
     final viewModel = ref.watch(createPageProvider);
     final wayaTheme = Theme.of(context);
     //final postId = ModalRoute.of(context)?.settings.arguments as String?;
+    final width = MediaQuery.of(context).size.width;
 
     return WayaScaffold(
         resizeToAvoidBottomInset: true,
@@ -146,7 +155,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
               Padding(
                 padding: const EdgeInsets.only(right: 20),
                 child: SizedBox(
-                  width: context.width * 0.26,
+                  width: width * 0.26,
                   child: _contentController.text.isEmpty
                       ? WayaButton(
                           callback: viewModel.isLoading
@@ -313,7 +322,8 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.white.withOpacity(0.7),
+                                      color:
+                                          Colors.white.withValues(alpha: 0.7),
                                     ),
                                     padding: EdgeInsets.all(8),
                                     child: Icon(
@@ -407,7 +417,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                           : 'assets/images/pages/lock.png',
                       height: 18.h,
                     ),
-                    Gap(5),
+                    const Gap(5),
                     Text(
                       sel ? 'Public post' : 'Private post',
                       style: Theme.of(context)

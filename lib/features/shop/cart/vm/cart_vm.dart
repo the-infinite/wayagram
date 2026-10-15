@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_data.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_item.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:uuid/uuid.dart';
@@ -116,18 +119,19 @@ class CartVm extends StateNotifier<CartState> {
     for (int i = 0; i < updatedItems.length; i++) {
       if (updatedItems[i].shopId == shopId) {
         final updatedProducts = [...updatedItems[i].products];
-
+        bool? success = true;
         for (int j = 0; j < updatedProducts.length; j++) {
           if (updatedProducts[j].productId == productId) {
             updatedProducts[j] = updatedProducts[j].copyWith(
               quantity: updatedProducts[j].quantity + count,
             );
             productAdded = true;
-            debugPrint("updating");
-            await updateCartItem(id: productId, shopId: shopId);
+            success = await updateCartItem(id: productId, shopId: shopId);
             break;
           }
         }
+        //? don't add item to the cart
+        if (success == false) return;
 
         if (!productAdded) {
           updatedProducts.add(
@@ -142,7 +146,6 @@ class CartVm extends StateNotifier<CartState> {
                 deliveryOptions: ''),
           );
           productAdded = true;
-          debugPrint("add item for a shop ");
           final success = await postCartItem(id: productId, shopId: shopId);
 
           if (!success) return;
@@ -154,7 +157,8 @@ class CartVm extends StateNotifier<CartState> {
               0,
               (sum, product) =>
                   sum +
-                  (double.parse(product.unitPrice).toInt() * product.quantity),
+                  (double.parse(product.unitPrice ?? '').toInt() *
+                      product.quantity),
             );
         updatedItems[i] = updatedItems[i].copyWith(totalFee: totalFee);
 
@@ -191,25 +195,12 @@ class CartVm extends StateNotifier<CartState> {
       if (!success) return;
     }
 
-    // final total = updatedItems.fold<double>(
-    //   0,
-    //   (sum, item) =>
-    //       sum +
-    //       item.products.fold(
-    //         0,
-    //         (prodSum, prod) => prodSum + (prod.price * prod.quantity),
-    //       ),
-    // );
-
     state = state.copyWith(
       cart: existingCart.copyWith(
         items: updatedItems,
       ),
     );
     getTotalProductQuantity();
-    // Update cart
-    //
-    debugPrint(state.cart?.toJson().toString());
   }
 
   void removeFromCart(
@@ -218,8 +209,6 @@ class CartVm extends StateNotifier<CartState> {
       bool isNotWayaDeal = true}) async {
     final existingCart = state.cart;
     if (existingCart == null) return;
-    debugPrint(productId);
-    debugPrint(existingCart.toJson().toString());
     final updatedItems = existingCart.items
         .map((item) {
           final updatedProducts = item.products
@@ -239,24 +228,14 @@ class CartVm extends StateNotifier<CartState> {
             0,
             (sum, product) =>
                 sum +
-                (double.parse(product.unitPrice).toInt() * product.quantity),
+                (double.parse(product.unitPrice ?? '').toInt() *
+                    product.quantity),
           );
 
           return item.copyWith(products: updatedProducts, totalFee: totalFee);
         })
         .where((item) => item.products.isNotEmpty)
         .toList();
-
-    // // Calculate total
-    // final total = updatedItems.fold<double>(
-    //   0,
-    //   (sum, item) =>
-    //       sum +
-    //       item.products.fold(
-    //         0,
-    //         (prodSum, prod) => prodSum + (prod.price * prod.quantity),
-    //       ),
-    // );
 
     state = state.copyWith(
       cart: existingCart.copyWith(
@@ -283,7 +262,6 @@ class CartVm extends StateNotifier<CartState> {
       bool isSuccess = false;
       if (response.success) {
         isSuccess = true;
-        debugPrint(response.data.toString());
       } else if (response.data['responseCode'] == 703) {
         isSuccess = false;
         removeFromCart(productId: id, shopId: shopId, isNotWayaDeal: false);
@@ -298,7 +276,7 @@ class CartVm extends StateNotifier<CartState> {
     }
   }
 
-  Future<void> updateCartItem(
+  Future<bool?> updateCartItem(
       {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
@@ -308,11 +286,19 @@ class CartVm extends StateNotifier<CartState> {
         userId: userId!,
         shopId: shopId,
       );
+      bool isSuccess = false;
       if (response.success) {
-        debugPrint(response.data.toString());
+        isSuccess = true;
+      } else if (response.data['responseCode'] == 703) {
+        isSuccess = false;
+        removeFromCart(productId: id, shopId: shopId, isNotWayaDeal: false);
+        WayaSnackBar.showToast(
+            "You are not yet eligible to purchase another wayagram deal");
       }
+      return isSuccess;
     } catch (e) {
       debugPrint(e.toString());
+      return false;
     }
   }
 
@@ -321,14 +307,11 @@ class CartVm extends StateNotifier<CartState> {
     try {
       final userId = await _secureDataSource.getUserId();
 
-      final response = await _cartRepository.decreaseQuantity(
+      await _cartRepository.decreaseQuantity(
         productId: id,
         userId: userId!,
         shopId: shopId,
       );
-      if (response.success) {
-        debugPrint(response.data.toString());
-      }
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -347,8 +330,6 @@ class CartVm extends StateNotifier<CartState> {
             (productSum, product) => productSum + product.quantity,
           ),
     );
-    debugPrint(totalQuantity.toString());
-    debugPrint(existingCart.toJson().toString());
     state = state.copyWith(totalItem: totalQuantity);
   }
 
@@ -366,7 +347,6 @@ class CartVm extends StateNotifier<CartState> {
       if (response.success) {
         WayaSnackBar.showToast(
             "You have successfully requested for the delivery price");
-        debugPrint(response.data.toString());
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -411,11 +391,12 @@ class CartVm extends StateNotifier<CartState> {
         WayaSnackBar.showToast("An error occured. Try again!!");
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }
 
 final cartVmProvider = StateNotifierProvider<CartVm, CartState>((ref) {
-  return CartVm(ref, CartRepository(), WayaSecureDataSource());
+  final cartRepo = ref.watch(cartRepositoryProvider);
+  return CartVm(ref, cartRepo, WayaSecureDataSource());
 });

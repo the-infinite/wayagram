@@ -12,7 +12,8 @@ class Events extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _EventsState();
 }
 
-class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateMixin {
+class _EventsState extends ConsumerState<Events>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

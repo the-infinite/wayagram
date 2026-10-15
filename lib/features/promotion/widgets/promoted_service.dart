@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 
@@ -39,7 +39,6 @@ class PromotedService extends StatelessWidget {
         highlightColor: theme.colorScheme.primary.withAlpha(30),
         onTap: id != null
             ? () {
-                debugPrint(id);
                 WayaAppRoutes.getPromotionDetailScreen(id ?? '');
               }
             : null,
@@ -69,7 +68,7 @@ class PromotedService extends StatelessWidget {
                         spacing: 3.h,
                         children: [
                           Text(
-                            title.capitalizeFirst ?? '',
+                            title.capitalizeFirst,
                             style: theme.textTheme.bodyMedium,
                           ),
                           Text(

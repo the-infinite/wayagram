@@ -129,6 +129,9 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
 final supportDisputeProvider =
     StateNotifierProvider<SupportDisputeNotifier, SupportDisputeState>(
   (ref) {
-    return SupportDisputeNotifier(ProfileRepo(), UploadFileRepository());
+    final profileRepo = ref.watch(profileRepositoryProvider);
+    final uploadFileRepo = ref.watch(uploadFileRepositoryProvider);
+
+    return SupportDisputeNotifier(profileRepo, uploadFileRepo);
   },
 );

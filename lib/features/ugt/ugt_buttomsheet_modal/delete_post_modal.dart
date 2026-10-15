@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -43,6 +42,7 @@ class _DeletePostModalState extends ConsumerState<DeletePostModal> {
   Widget build(BuildContext context) {
     //? First, we obtain all things needed to build this widget.
     final theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
 
     //?manage loading state
     final isLoading = useState(false);
@@ -50,7 +50,7 @@ class _DeletePostModalState extends ConsumerState<DeletePostModal> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
-        width: Get.width,
+        width: width,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
@@ -113,12 +113,15 @@ class _DeletePostModalState extends ConsumerState<DeletePostModal> {
                 callback: () async {
                   bool isSuccess = await ref
                       .read(votersContestNotifier.notifier)
-                      .deletePost(isLoading, widget.postId, widget.contestId, () {
+                      .deletePost(isLoading, widget.postId, widget.contestId,
+                          () {
                     WayaNav.goBack();
                   });
 
                   if (isSuccess) {
-                    ref.watch(ugtContestantProfileVm.notifier).fetchSingleContestantPosts(widget.contestantId);
+                    ref
+                        .watch(ugtContestantProfileVm.notifier)
+                        .fetchSingleContestantPosts(widget.contestantId);
                   }
                 },
                 text: "Delete Post",

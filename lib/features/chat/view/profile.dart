@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/shared/cache/chat.dart';
 
 import 'profile/dispute.dart';
@@ -20,7 +20,8 @@ class ChatProfilePage extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ChatProfilePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ChatProfilePageState();
 }
 
 class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
@@ -37,7 +38,7 @@ class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
       return ValueListenableBuilder(
         valueListenable: wayaChatsCache,
         builder: (context, redraws, _) => GroupChatProfilePage(
-          chat: wayaChatsCache.getCachedData(state.chat!.id)!,
+          chat: wayaChatsCache.getCachedData(state.chatId)!,
           ref: ref,
         ),
       );
@@ -48,7 +49,7 @@ class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
       return ValueListenableBuilder(
         valueListenable: wayaChatsCache,
         builder: (context, redraws, _) => DisputeChatProfilePage(
-          chat: wayaChatsCache.getCachedData(state.chat!.id)!,
+          chat: wayaChatsCache.getCachedData(state.chatId)!,
           ref: ref,
         ),
       );
@@ -58,7 +59,7 @@ class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
     return ValueListenableBuilder(
       valueListenable: wayaChatsCache,
       builder: (context, redraws, _) => PersonalChatProfilePage(
-        chat: wayaChatsCache.getCachedData(state.chat!.id)!,
+        chat: wayaChatsCache.getCachedData(state.chatId)!,
         ref: ref,
       ),
     );

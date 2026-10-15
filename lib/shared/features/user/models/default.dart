@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:get/get.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 
 part 'default.g.dart';
 
@@ -59,7 +59,6 @@ class UserDetailsModel {
   final String? roleId;
   final String? accountTypeId;
 
-
   @JsonKey(name: '_v')
   final String? v;
   final DateTime? createdAt;
@@ -101,7 +100,6 @@ class UserDetailsModel {
     required this.accountType,
     required this.lga,
     required this.postalCode,
-    
   });
 
   String get fullname =>
@@ -136,7 +134,6 @@ class UserDetailsModel {
       accountStatus: json['accountStatus'] as String?,
       tcAgreement: json['tcAgreement'] as bool?,
       policyAgreement: json['policyAgreement'] as bool?,
-    
       emailVerifiedDate: json['emailVerifiedDate'] == null
           ? null
           : DateTime.parse(json['emailVerifiedDate'] as String),

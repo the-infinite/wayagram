@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -41,52 +40,54 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
     final bool canViewDashboard =
         args != null ? args["canViewDashboard"] ?? false : false;
-    final String myPassedContestId = Get.parameters['id'] ?? 'Unknown';
-    final myContestId = useState("");
+
     var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
-    //  debugPrint("COntest DI $myPassedContestId");
+    var model = ref.watch(selectedContestProvider.notifier).state;
+
+    final String myPassedContestId = model?.id ?? "";
+    final myContestId = useState(myPassedContestId);
     useEffect(() {
       // viewModelNotifier.changeActive(true);
-      String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
-          myPassedContestId;
-      Future.delayed(Duration(seconds: 2), () {
-        myContestId.value = contestId;
+      /*   String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
+          myPassedContestId; */
+      Future.delayed(Duration.zero, () {
+        // myContestId.value = contestId;
       });
 
-      debugPrint("COntest DI  2 $contestId");
       ref
           .read(postProvider.notifier)
-          .fetchSingleContest(contestId: contestId, ref: ref);
+          .fetchSingleContest(contestId: myContestId.value, ref: ref);
       ref
           .read(votersContestNotifier.notifier)
-          .getContestantProfileVoteDetails(contestId);
+          .getContestantProfileVoteDetails(myContestId.value);
 
+      ref.read(votersContestNotifier.notifier).fetchAllContestUnApprovedPosts(
+          myContestId.value,
+          hostApproved: false);
       ref
           .read(votersContestNotifier.notifier)
-          .fetchAllContestUnApprovedPosts(contestId, hostApproved: false);
-      ref.read(votersContestNotifier.notifier).fetchAllContestPosts(contestId);
+          .fetchAllContestPosts(myContestId.value);
       ref
           .read(votersContestNotifier.notifier)
-          .fetchAllContestApplicant(contestId);
+          .fetchAllContestApplicant(myContestId.value);
+
       return null;
-    }, []);
+    }, [myContestId.value]);
     var viewModel = ref.watch(votersContestNotifier);
     // var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
-    var model = ref.watch(selectedContestProvider.notifier).state;
-    print(
-        "COntest DI ${model?.participationStartDate} 1 ${model?.participationEndDate} ${isTodayInRange(model?.participationStartDate ?? "2025-06-19", model?.participationEndDate ?? "2025-06-19")}");
+
     //? to change the active post seen on the post page
     final selectedViewIndex = useState(0);
     //? check if app is open with link
     return PopScope(
       canPop: false, // Prevents automatic back navigation
       onPopInvokedWithResult: (didPop, _) async {
-        WayaNav.goBack();
-        /*  if (WayaNav.canPop()) {
-          WayaNav.goBack();
-        } else {
-          WayaNav.closeApp();
-        } */
+        if (!didPop) {
+          // Only navigate if the pop hasn't already occurred
+          if (WayaNav.canPop()) {
+            WayaNav.goBack();
+          }
+        }
       },
       child: WayaScaffold(
         isLoading: false,
@@ -238,7 +239,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     ],
                   ),
 
-                //  const Gap(20),
                 if (model?.contestStatus?.toLowerCase() != "rejected" &&
                     model?.contestStatus?.toLowerCase() != "pending")
                   Column(
@@ -249,11 +249,13 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         children: [
                           UpcomingWidgetAdmin(
                               title: "Start Date",
-                              content: formatDate(model?.startDate)),
+                              content: formatDate(model?.startDate ??
+                                  "2025-03-03T07:21:39.036Z")),
                           const Gap(20),
                           UpcomingWidgetAdmin(
                               title: "End Date",
-                              content: formatDate(model?.endDate)),
+                              content: formatDate(model?.endDate ??
+                                  "2025-03-03T07:21:39.036Z")),
                           const Gap(20),
                           UpcomingWidgetAdmin(
                               title: "Entry Type",
@@ -315,9 +317,13 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                             model;
                         WayaNav.toNamed(
                           '/contest-profile-page',
+                          arguments: {
+                            "id": viewModel.createPostProfileId.trim(),
+                            "contest": model?.id ?? "",
+                          },
                         );
                       } catch (e) {
-                        print(e);
+                        debugPrint(e.toString());
                       }
                     },
                     color: wayaTheme.colorScheme.primary50,
@@ -339,18 +345,13 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
 
                         WayaNav.toNamed("/upcoming-contest-details");
                       } catch (e) {
-                        print(e);
+                        debugPrint(e.toString());
                       }
                     },
                     color: wayaTheme.colorScheme.primary50,
                     text: "Contest Registration",
                     textColor: wayaTheme.colorScheme.customPrimary,
                   ),
-
-                /*  Text("View Full Details",
-                    style: wayaTheme.textTheme.bodyMedium
-                        ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),
-                const Gap(15), */
                 const Gap(15),
                 Text("Top Contestants",
                     style: wayaTheme.textTheme.bodyMedium
@@ -371,6 +372,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                                 model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
+                              arguments: {
+                                "id":
+                                    viewModel.myContestList[1].profileId ?? "",
+                                "contest": model?.id ?? "",
+                              },
                             );
                           },
                           child: AdminCard(
@@ -394,6 +400,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                                 model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
+                              arguments: {
+                                "id":
+                                    viewModel.myContestList[0].profileId ?? "",
+                                "contest": model?.id ?? "",
+                              },
                             );
                           },
                           child: AdminCard(
@@ -419,6 +430,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                                 model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
+                              arguments: {
+                                "id":
+                                    viewModel.myContestList[2].profileId ?? "",
+                                "contest": model?.id ?? "",
+                              },
                             );
                           },
                           child: AdminCard(

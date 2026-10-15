@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/report_group_post.dart';
@@ -25,7 +25,7 @@ import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/shared/features/media/video.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
-import 'package:wayagram/shared/features/profile/vm/default.dart';
+import 'package:wayagram/shared/features/profile/vm/post_notifier.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
 class WayaPostWidget extends StatefulWidget {
@@ -76,7 +76,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
   void showComments(BuildContext context) async {
     final result = await WayaNav.to(
-      transition: Transition.downToUp,
+      transition: WayaTransition.downToUp,
       PostCommentsWidget(
         id: widget.data.id,
         post: widget.data,
@@ -87,8 +87,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     if (result == null) return;
   }
 
-  void _sharePost(
-      engagementMonitor, pageNotifier, serviceNotifier, WidgetRef ref) async {
+  void _sharePost(PostEngagementMonitor engagementMonitor, pageNotifier,
+      serviceNotifier, WidgetRef ref) async {
     //? Acknowledge this user's choice to share the post.
     postEngagement(engagementMonitor, widget.data, PostPoints.sharePoint.value);
 
@@ -105,8 +105,6 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final screenSize = MediaQuery.sizeOf(context);
-
-   
 
     //? Listening to the consumer here might have the downside of every post
     //? that is spawned using this listening for state changes by itself. Might
@@ -216,7 +214,9 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(postData.pageId ?? ''));
+                                  WayaNav.toNamed(
+                                      WayaAppRoutes.getPageDetailsPage(
+                                          postData.pageId ?? ''));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +357,10 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                         context: context,
                                         asset:
                                             WayaAssets.images.pages.delete.svg(
-                                          color: wayaTheme.colorScheme.error500,
+                                          colorFilter: ColorFilter.mode(
+                                            wayaTheme.colorScheme.error500,
+                                            BlendMode.srcIn,
+                                          ),
                                           height: 20,
                                         ),
                                         text: "Delete Post",
@@ -459,8 +462,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                         //? For the post description.
                         WayaCollapsibleText(
-                          removeHashtags(
-                              '${postData.content}'.capitalizeFirst!),
+                          removeHashtags('${postData.content}'.capitalizeFirst),
                           maxLines: 2,
                           fontSize: 14.sp,
                           style: wayaTheme.textTheme.bodyMedium!.copyWith(
@@ -547,8 +549,6 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                             child: GestureDetector(
                                               onTap: () async {
                                                 final result = await WayaNav.to(
-                                                  transition:
-                                                      Transition.circularReveal,
                                                   WayaVideoDetailScreen(
                                                     file: null,
                                                     videoUrl: resource,
@@ -563,9 +563,10 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
                                                     color: Colors.white
-                                                        .withOpacity(0.7),
+                                                        .withValues(alpha: 0.7),
                                                   ),
-                                                  padding: EdgeInsets.all(8),
+                                                  padding:
+                                                      const EdgeInsets.all(8),
                                                   child: Icon(
                                                     Icons.play_arrow,
                                                     size: 30.dg,

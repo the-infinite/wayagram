@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
@@ -23,14 +22,17 @@ class OrderInfoWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          color: wayaTheme.colorScheme.scaffoldColor,
+          borderRadius: BorderRadius.circular(8)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            title.capitalize!,
-            style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor500, fontSize: 12.sp),
+            title.toUpperCase(),
+            style: TextStyle().wayaCopyWith(
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 12.sp),
           ),
 
           //? Show the child or the description.
@@ -38,9 +40,11 @@ class OrderInfoWidget extends StatelessWidget {
               Container(
                 constraints: BoxConstraints(maxWidth: 150),
                 child: Text(
-                  description.capitalize!,
+                  description.toUpperCase(),
                   textAlign: TextAlign.start,
-                  style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor500, fontSize: 14.sp),
+                  style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.greyColor500,
+                      fontSize: 14.sp),
                 ),
               ),
         ],

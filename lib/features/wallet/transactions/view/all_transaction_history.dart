@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
+import 'package:wayagram/core/extensions/string_extension.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/transactions/components/export_transaction.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
@@ -59,13 +59,19 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
         context: context,
         firstDate: DateTime(firstDate, 1, 1),
         lastDate: DateTime.now(),
+        locale: const Locale('en', 'NG'),
         currentDate: DateTime.now(),
         saveText: 'Apply',
       );
 
       if (dateRange != null) {
+        var startDate = dateRange.start.toLocal();
+        var endDate = dateRange.end.toLocal();
+
+        endDate = dateRange.end
+            .add(const Duration(hours: 11, minutes: 59, seconds: 59));
         appliedFilter =
-            "startDate=${DateFormat('yyyy-MM-dd').format(dateRange.start)}&endDate=${DateFormat('yyyy-MM-dd').format(dateRange.end)}";
+            "startDate=${DateFormat('yyyy-MM-dd').format(startDate)}&endDate=${DateFormat('yyyy-MM-dd hh:mm a').format(endDate)}";
       } else {
         return;
       }
@@ -88,7 +94,6 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
         filters: appliedFilter, isFirst: true, page: 1, limit: 10);
 
     ref.read(transactionVmProvider.notifier).setModelList(list);
-    //.fetchTransactions(filters: appliedFilter);
   }
 
   @override
@@ -98,6 +103,13 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(transactionVmProvider.notifier).loadInitialData();
     });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _scrollListener() {
@@ -147,7 +159,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(16),
+          const Gap(16),
           // Filter Dropdown
           PopupMenuButton<DateFilter>(
             offset: const Offset(0, 40),
@@ -283,7 +295,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
                         transactionType: '${trans.type}',
                         amount: trans.amount.toString(),
                         date:
-                            '${ref.read(createPollVotingProvider.notifier).formatDt2(trans.updatedAt)},${DateFormat.jm().format(dateTime)}',
+                            '${trans.updatedAt?.formatDt2()},${DateFormat.jm().format(dateTime)}',
                       );
                     },
                   ),

@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
@@ -20,21 +20,21 @@ import 'package:wayagram/features/general_settings/profile/view/edit_profile_pag
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/vm/donation.dart';
 import 'package:wayagram/shared/features/profile/vm/groups.dart';
 import 'package:wayagram/shared/features/profile/vm/pages.dart';
 import 'package:wayagram/shared/features/profile/vm/poll.dart';
 import 'package:wayagram/shared/features/profile/vm/product.dart';
-import 'package:wayagram/shared/features/profile/vm/default.dart';
+import 'package:wayagram/shared/features/profile/vm/post_notifier.dart';
 import 'package:wayagram/shared/features/profile/vm/event.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 import 'package:wayagram/shared/features/profile/widget/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 import 'package:wayagram/shared/model/base_model.dart';
 
@@ -55,16 +55,23 @@ class MyProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<MyProfilePage> {
   late final postNotifier = ref.read(userPostsProvider.notifier);
-  late final commentedPostNotifier = ref.read(userCommentedPostsProvider.notifier);
+  late final commentedPostNotifier =
+      ref.read(userCommentedPostsProvider.notifier);
   late final likedPostNotifier = ref.read(userLikedPostsProvider.notifier);
   late final repostPostNotifier = ref.read(userRepostsProvider.notifier);
   late final savedPostNotifier = ref.read(userSavedPostsProvider.notifier);
-  late final groupsNotifier = ref.read(userGroupsProvider(widget.data.$1.id).notifier);
-  late final pagesNotifier = ref.read(userPagesProvider(widget.data.$1.id).notifier);
-  late final donationsNotifier = ref.read(userDonationsProvider(widget.data.$1.id).notifier);
-  late final eventNotifier = ref.read(userEventsProvider(widget.data.$1.id).notifier);
-  late final pollsNotifier = ref.read(userPollsProvider(widget.data.$1.id).notifier);
-  late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
+  late final groupsNotifier =
+      ref.read(userGroupsProvider(widget.data.$1.id).notifier);
+  late final pagesNotifier =
+      ref.read(userPagesProvider(widget.data.$1.id).notifier);
+  late final donationsNotifier =
+      ref.read(userDonationsProvider(widget.data.$1.id).notifier);
+  late final eventNotifier =
+      ref.read(userEventsProvider(widget.data.$1.id).notifier);
+  late final pollsNotifier =
+      ref.read(userPollsProvider(widget.data.$1.id).notifier);
+  late final productsNotifier =
+      ref.read(userProductsProvider(widget.data.$1.id).notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
   late final interestsNotifier = ref.read(selectInterestProvider.notifier);
   final paginationController = ValueNotifier<bool>(false);
@@ -182,16 +189,17 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
   void _shareProfile() async {
     //? Share the post.
-    final result = await Share.share(
-      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id, 'profile', widget.data.$2.username)),
+    final result = await SharePlus.instance.share(ShareParams(
+      text: WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(
+          widget.data.$1.id, 'profile', widget.data.$2.username)),
       subject: 'Share Profile',
-    );
+    ));
 
     // This is fi
     if (result.status == ShareResultStatus.success) return;
   }
 
-  void _triggerSearch(States interestState) async {
+  void _triggerSearch(SelectInterestState interestState) async {
     final result = await WayaUtils.showModalSheet(
       context,
       isDismissible: false,
@@ -283,7 +291,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                       onTap: _shareProfile,
                       child: WayaActionNav(
                         context: context,
-                        asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                        asset:
+                            WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
                         text: "Share profile",
                         color: wayaTheme.colorScheme.customBlack,
                       ),
@@ -293,7 +302,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                 ),
 
                 // This is fine.
-                Gap(8)
+                const Gap(8)
               ],
             ),
             title: '',
@@ -313,9 +322,11 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                   builder: (context, selectedPage, _) {
                     //? Get the filtered data for each type.
                     final filteredPosts = postState.posts(search);
-                    final filteredRepostedPosts = repostedPostState.posts(search);
+                    final filteredRepostedPosts =
+                        repostedPostState.posts(search);
                     final filteredLikedPosts = likedPostState.posts(search);
-                    final filteredCommentedPosts = commentedPostState.posts(search);
+                    final filteredCommentedPosts =
+                        commentedPostState.posts(search);
                     final filteredSavedPosts = savedPostsState.posts(search);
                     final filteredPolls = pollsState.polls(search);
                     final filteredEvents = eventState.events(search);
@@ -327,11 +338,16 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                     //? Is this empty?
                     final isEmpty = switch (selectedPage) {
                       0 => filteredPosts.isEmpty && postState.hasLoaded,
-                      1 => filteredRepostedPosts.isEmpty && repostedPostState.hasLoaded,
-                      2 => filteredLikedPosts.isEmpty && likedPostState.hasLoaded,
-                      3 => filteredCommentedPosts.isEmpty && commentedPostState.hasLoaded,
-                      4 => filteredSavedPosts.isEmpty && savedPostsState.hasLoaded,
-                      5 => filteredDonations.isEmpty && donationsState.hasLoaded,
+                      1 => filteredRepostedPosts.isEmpty &&
+                          repostedPostState.hasLoaded,
+                      2 =>
+                        filteredLikedPosts.isEmpty && likedPostState.hasLoaded,
+                      3 => filteredCommentedPosts.isEmpty &&
+                          commentedPostState.hasLoaded,
+                      4 =>
+                        filteredSavedPosts.isEmpty && savedPostsState.hasLoaded,
+                      5 =>
+                        filteredDonations.isEmpty && donationsState.hasLoaded,
                       6 => filteredPolls.isEmpty && pollsState.hasLoaded,
                       7 => filteredPages.isEmpty && pagesState.hasLoaded,
                       8 => filteredGroups.isEmpty && groupsState.hasLoaded,
@@ -400,22 +416,28 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
                                   //? How we go to the edit profile page.
                                   GestureDetector(
-                                    onTap: () => WayaNav.toNamed(EditProfilePage.route),
+                                    onTap: () =>
+                                        WayaNav.toNamed(EditProfilePage.route),
                                     child: Container(
                                       margin: EdgeInsets.only(right: 20.w),
-                                      padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                      padding: REdgeInsets.symmetric(
+                                          vertical: 5.dg, horizontal: 10.dg),
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: wayaTheme.colorScheme.primary600,
+                                          color:
+                                              wayaTheme.colorScheme.primary600,
                                           width: 1.5,
                                         ),
                                         color: wayaTheme.colorScheme.white,
-                                        borderRadius: BorderRadius.circular(7.r),
+                                        borderRadius:
+                                            BorderRadius.circular(7.r),
                                       ),
                                       child: Text(
                                         'Edit Profile',
-                                        style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                                          color: wayaTheme.colorScheme.primary600,
+                                        style: wayaTheme.textTheme.labelSmall
+                                            ?.wayaCopyWith(
+                                          color:
+                                              wayaTheme.colorScheme.primary600,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -443,14 +465,16 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
                           //? Second, the profile set.
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 //? First, the name of the user in question.
                                 Text(
                                   profile.displayName ?? '',
-                                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                  style:
+                                      wayaTheme.textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: wayaTheme.colorScheme.black,
                                   ),
@@ -463,7 +487,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                 if (profile.username != null) ...[
                                   Text(
                                     '@${profile.username}',
-                                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                    style: wayaTheme.textTheme.labelSmall
+                                        ?.wayaCopyWith(
                                       color: wayaTheme.colorScheme.greyColor500,
                                       fontSize: 13.sp,
                                     ),
@@ -477,7 +502,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                 if (profile.bio != null) ...[
                                   Text(
                                     profile.bio!,
-                                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                    style: wayaTheme.textTheme.labelSmall
+                                        ?.wayaCopyWith(
                                       color: wayaTheme.colorScheme.greyColor700,
                                     ),
                                   ),
@@ -489,25 +515,34 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                 //? Fourth the profile overview.
                                 InkWell(
                                   customBorder: const StadiumBorder(),
-                                  onTap: () => WayaNav.toNamed(FollowRelationshipsPage.route),
+                                  onTap: () => WayaNav.toNamed(
+                                      FollowRelationshipsPage.route),
                                   borderRadius: BorderRadius.circular(12.r),
-                                  splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
-                                  focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
-                                  highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
+                                  splashColor: wayaTheme.colorScheme.primary
+                                      .withAlpha(30),
+                                  focusColor:
+                                      const Color.fromARGB(255, 179, 173, 170)
+                                          .withAlpha(30),
+                                  highlightColor: wayaTheme.colorScheme.primary
+                                      .withAlpha(30),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     spacing: 10.w,
                                     children: [
                                       //? Users following.
                                       WayaRichText(
-                                        title1: WayaValueHelper.formatNumber(state.followingTotalSize),
+                                        title1: WayaValueHelper.formatNumber(
+                                            state.followingTotalSize),
                                         title2: ' Following',
-                                        style1: wayaTheme.textTheme.bodySmall?.copyWith(
+                                        style1: wayaTheme.textTheme.bodySmall
+                                            ?.copyWith(
                                           color: wayaTheme.colorScheme.black,
                                           fontSize: 12.sp,
                                         ),
-                                        style2: wayaTheme.textTheme.bodySmall?.copyWith(
-                                          color: wayaTheme.colorScheme.greyColor500,
+                                        style2: wayaTheme.textTheme.bodySmall
+                                            ?.copyWith(
+                                          color: wayaTheme
+                                              .colorScheme.greyColor500,
                                           fontWeight: FontWeight.w500,
                                           fontSize: 12.sp,
                                         ),
@@ -515,14 +550,18 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
                                       //? Followers.
                                       WayaRichText(
-                                        title1: WayaValueHelper.formatNumber(state.followersTotalSize),
+                                        title1: WayaValueHelper.formatNumber(
+                                            state.followersTotalSize),
                                         title2: ' Followers',
-                                        style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                        style1: wayaTheme.textTheme.bodySmall
+                                            ?.wayaCopyWith(
                                           color: wayaTheme.colorScheme.black,
                                           fontSize: 12.sp,
                                         ),
-                                        style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                          color: wayaTheme.colorScheme.greyColor500,
+                                        style2: wayaTheme.textTheme.bodySmall
+                                            ?.wayaCopyWith(
+                                          color: wayaTheme
+                                              .colorScheme.greyColor500,
                                           fontWeight: FontWeight.w500,
                                           fontSize: 12.sp,
                                         ),
@@ -530,14 +569,18 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
                                       //? Posts.
                                       WayaRichText(
-                                        title1: WayaValueHelper.formatNumber(postState.totalSize),
+                                        title1: WayaValueHelper.formatNumber(
+                                            postState.totalSize),
                                         title2: ' Posts',
-                                        style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                        style1: wayaTheme.textTheme.bodySmall
+                                            ?.wayaCopyWith(
                                           color: wayaTheme.colorScheme.black,
                                           fontSize: 12.sp,
                                         ),
-                                        style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                          color: wayaTheme.colorScheme.greyColor500,
+                                        style2: wayaTheme.textTheme.bodySmall
+                                            ?.wayaCopyWith(
+                                          color: wayaTheme
+                                              .colorScheme.greyColor500,
                                           fontWeight: FontWeight.w500,
                                           fontSize: 12.sp,
                                         ),
@@ -552,12 +595,15 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                 //? Some more space.
                                 WayaRichText(
                                   title1: 'Joined: ',
-                                  title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
-                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  title2: WayaDateHelper.getMonthlyTimestamp(
+                                      user.createdAt ?? DateTime.now()),
+                                  style1: wayaTheme.textTheme.bodySmall
+                                      ?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
                                     fontSize: 12.sp,
                                   ),
-                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  style2: wayaTheme.textTheme.bodySmall
+                                      ?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp,
@@ -783,41 +829,55 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                               filteredDonations.length,
                               (index) {
                                 final donation = filteredDonations[index];
-                                int daysLeft = donation.expirationDate.difference(donation.startDate).inDays;
-                                int amountRaised = double.parse(donation.amountRaised!).toInt();
-                                int targetedAmount = double.parse(donation.targetAmount!).toInt();
-                                double ratioLeft = amountRaised / targetedAmount;
+                                int daysLeft = donation.expirationDate
+                                    .difference(donation.startDate)
+                                    .inDays;
+                                int amountRaised =
+                                    double.parse(donation.amountRaised!)
+                                        .toInt();
+                                int targetedAmount =
+                                    double.parse(donation.targetAmount!)
+                                        .toInt();
+                                double ratioLeft =
+                                    amountRaised / targetedAmount;
 
                                 return Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 5.w),
                                   child: ManageDonationWidget(
                                     text: "Donate",
-                                    amountRaised: WayaHelpers.formatPrice(
-                                        int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
-                                    targetAmount: WayaHelpers.formatPrice(
-                                        int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                                    amountRaised: WayaHelpers.formatPrice(int.parse(
+                                        '${donation.amountRaised?.replaceAll('.00', '')}')),
+                                    targetAmount: WayaHelpers.formatPrice(int.parse(
+                                        '${donation.targetAmount?.replaceAll('.00', '')}')),
                                     title: donation.title.capitalizeFirst,
                                     image: donation.imageURL,
                                     dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
                                     donationCount: donation.donationCount,
                                     rangeRatio: ratioLeft,
                                     onTap: () {
-                                      WayaNav.toNamed('/donationDetails', arguments: {
-                                        'title': '${donation.title.capitalizeFirst}',
-                                        'image': '${donation.imageURL}',
-                                        'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                                        'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
-                                        'desc': donation.description,
-                                        'solution': donation.solution,
-                                        'impact': donation.impact,
-                                        'url': '${donation.url}',
-                                        'minimumDonationAmount': '${donation.minimumDonationAmount}',
-                                        'daysLeft': '$daysLeft',
-                                        'privacy': '${donation.privacy}',
-                                        'id': donation.id,
-                                        'donationCount': '${donation.donationCount}',
-                                        "donation": donation
-                                      });
+                                      WayaNav.toNamed('/donation-details',
+                                          arguments: {
+                                            'title':
+                                                donation.title.capitalizeFirst,
+                                            'image': '${donation.imageURL}',
+                                            'amountRaised':
+                                                '${donation.amountRaised?.replaceAll('.00', '')}',
+                                            'targetAmount':
+                                                '${donation.targetAmount?.replaceAll('.00', '')}',
+                                            'desc': donation.description,
+                                            'solution': donation.solution,
+                                            'impact': donation.impact,
+                                            'url': '${donation.url}',
+                                            'minimumDonationAmount':
+                                                '${donation.minimumDonationAmount}',
+                                            'daysLeft': '$daysLeft',
+                                            'privacy': '${donation.privacy}',
+                                            'id': donation.id,
+                                            'donationCount':
+                                                '${donation.donationCount}',
+                                            "donation": donation
+                                          });
                                     },
                                     buttonWidth: 60.0,
                                   ),
@@ -874,9 +934,11 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                           //? Finally, if there is more to see...
                           if (!isAtEnd)
                             Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 70.w),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20.h, horizontal: 70.w),
                               child: WayaProgressiveButton(
-                                callback: () async => await scrollHandler.getMore(),
+                                callback: () async =>
+                                    await scrollHandler.getMore(),
                                 notifier: paginationController,
                                 isDisabled: isLoading,
                                 text: 'See more',

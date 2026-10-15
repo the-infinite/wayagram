@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -20,7 +21,6 @@ import 'package:wayagram/features/shop/widgets/card_loading_state.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
-import 'package:flutter_screenutil/src/size_extension.dart';
 
 class AllSellerOrders extends ConsumerStatefulWidget {
   static const route = '/seller-orders';
@@ -35,6 +35,10 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
   List<SalesMetric> orders = orderMetrics;
   int _selectedIndex = 0;
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,13 +48,12 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
       ref.read(sellerOrdersVmProvider.notifier).getShopId(shopId);
     });
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -86,7 +89,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
       }).toList();
     }
 
-    final List<String> _tabs = [
+    final List<String> tabs = [
       "Pending Orders",
       "Completed Orders",
       "Cancelled Orders",
@@ -116,7 +119,10 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                     fit: BoxFit.cover,
                     width: 18,
                     height: 18,
-                    color: wayaTheme.colorScheme.white,
+                    colorFilter: ColorFilter.mode(
+                      wayaTheme.colorScheme.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
@@ -155,7 +161,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                   const EdgeInsets.symmetric(horizontal: 1.0, vertical: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(_tabs.length, (index) {
+                children: List.generate(tabs.length, (index) {
                   return GestureDetector(
                     onTap: () {
                       setState(() {
@@ -177,7 +183,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                         ),
                       ),
                       child: Text(
-                        _tabs[index],
+                        tabs[index],
                         style: TextStyle(
                             color: _selectedIndex == index
                                 ? wayaTheme.colorScheme.customPrimary

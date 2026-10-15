@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -44,11 +44,11 @@ class _BlockUserDialogState extends State<BlockUserDialog> {
     final user = widget.user;
     final profile = widget.profile;
     final theme = Theme.of(context);
-
+    final width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
-        width: Get.width,
+        width: width,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(

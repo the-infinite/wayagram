@@ -33,7 +33,6 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
 //? get user settings to update the UI Once
     useEffect(() {
       notifier.getEventSettings().then((value) {
-        print("value: ${value?.toJson()}");
         if (value != null) {
           letEveryOneJoin.value = value.letEveryoneJoin ?? false;
           approveJoinRequest.value = value.approveJoinRequest ?? false;
@@ -65,11 +64,11 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(10),
+            const Gap(10),
             Text("Event Preferences",
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
-            Gap(20),
+            const Gap(20),
             //? card for each of the switch
             /* 
             setting event- on and off for ...let everyone join, approve join request before joining
@@ -84,7 +83,7 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
                       approveJoinRequest: approveJoinRequest.value);
                 },
                 switchValue: letEveryOneJoin),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Approve join request",
                 value: "Approve join request before allow any body to join",
@@ -95,7 +94,7 @@ class _UgtHomeState extends ConsumerState<EventSettingsPage> {
                       approveJoinRequest: value);
                 },
                 switchValue: approveJoinRequest),
-            Gap(10),
+            const Gap(10),
           ],
         ),
       ),

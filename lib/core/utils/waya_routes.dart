@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
-import 'package:wayagram/features/activity_logs/view/donation_logs.dart';
 import 'package:wayagram/features/auth/account_creation/view/two_factor_auth.dart';
-import 'package:wayagram/features/activity_logs/view/page_logs.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
@@ -14,7 +11,7 @@ import 'package:wayagram/features/chat/view/profile.dart';
 import 'package:wayagram/features/chat/view/profile/edit_group.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
 import 'package:wayagram/features/donation/view/donation_details.dart';
-import 'package:wayagram/features/donation/view/donation_management.dart';
+import 'package:wayagram/features/donation/view/donation_dashboard.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/donation/view/see_all_approved_donation.dart';
 import 'package:wayagram/features/donation/view/see_all_live_donation.dart';
@@ -90,7 +87,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/payout_review_mode
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_request_payout.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_review.dart';
-import 'package:wayagram/features/polls_and_voting/views/single_poll_screen.dart';
+import 'package:wayagram/features/polls_and_voting/views/poll_detail_screen.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
@@ -148,7 +145,6 @@ import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disq
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_leaderboard_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/view_single_contestant_data.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
@@ -159,11 +155,10 @@ import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/voters_list_page.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/search_transaction.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
@@ -185,304 +180,683 @@ import 'package:wayagram/features/explore/search/search.dart';
 import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 
 import '../../features/activity_logs/view/cms_clicks.dart';
-import '../../features/activity_logs/view/account_activity.dart';
 import '../../features/activity_logs/view/logs_and_audit.dart';
 import '../../features/activity_logs/view/payment_activity.dart';
 import '../../features/activity_logs/view/search_log.dart';
 import '../../features/activity_logs/view/user_action.dart';
 import '../../features/activity_logs/view/user_interaction.dart';
 import '../../features/activity_logs/view/visited_page.dart';
+import '../../features/donation/view/see_all_closed_donation.dart';
 import '../../features/group/view/mute_group.dart';
 import '../../features/group/view/search_group.dart';
 
 class WayaAppRoutes {
   WayaAppRoutes._();
-  static final routes = <String, Widget Function()>{
-    '/': () => SplashScreen(),
-    LoginCoverPage.route: () => LoginCoverPage(),
-    OnboardingView.route: () => OnboardingView(),
-    AccountCreation.route: () =>
-        AccountCreation(referral: WayaNav.search['referral'].toString()),
-    ChangedPasswordSuccess.route: () => ChangedPasswordSuccess(),
-    SetNotification.route: () => SetNotification(),
-    SuccessfulSetup.route: () => SuccessfulSetup(),
-    ForgotPasswordStep.route: () => ForgotPasswordStep(),
-    TransactionPinView.route: () => TransactionPinView(),
-    SelectInterest.route: () => SelectInterest(),
-    AddBusinessAccountView.route: () => AddBusinessAccountView(),
-    LoginPage.route: () => LoginPage(),
-    WelcomeBackPage.route: () => WelcomeBackPage(),
-    BottomView.route: () => BottomView(),
-    ProductDetail.route: () =>
-        ProductDetail(id: WayaNav.search['id'].toString()),
-    OrderDetails.route: () => OrderDetails(),
-    ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
-    CartView.route: () => CartView(),
-    AllSellerOrders.route: () => AllSellerOrders(),
-    SellerOrderDetails.route: () => SellerOrderDetails(),
-    SellerBidDetails.route: () => SellerBidDetails(
-          id: WayaNav.search['id'].toString(),
-          requestId: WayaNav.search['requestId'].toString(),
+  static final routes = <String, WidgetBuilder>{
+    '/': (context) => SplashScreen(),
+    LoginCoverPage.route: (context) => LoginCoverPage(),
+    OnboardingView.route: (context) => OnboardingView(),
+    AccountCreation.route: (context) =>
+        AccountCreation(referral: WayaNav.parameters['referral'].toString()),
+    ChangedPasswordSuccess.route: (context) => ChangedPasswordSuccess(),
+    SetNotification.route: (context) => SetNotification(),
+    SuccessfulSetup.route: (context) => SuccessfulSetup(),
+    ForgotPasswordStep.route: (context) => ForgotPasswordStep(),
+    TransactionPinView.route: (context) => TransactionPinView(),
+    SelectInterest.route: (context) => SelectInterest(),
+    AddBusinessAccountView.route: (context) => AddBusinessAccountView(),
+    LoginPage.route: (context) => LoginPage(),
+    BottomView.route: (context) => BottomView(),
+    ProductDetail.route: (context) =>
+        ProductDetail(id: WayaNav.parameters['id'].toString()),
+    OrderDetails.route: (context) => OrderDetails(),
+    ConfirmOrderDelivery.route: (context) => ConfirmOrderDelivery(),
+    CartView.route: (context) => CartView(),
+    AllSellerOrders.route: (context) => AllSellerOrders(),
+    SellerOrderDetails.route: (context) => SellerOrderDetails(),
+    SellerBidDetails.route: (context) => SellerBidDetails(
+          id: WayaNav.parameters['id'].toString(),
+          requestId: WayaNav.parameters['requestId'].toString(),
         ),
-    SellerSettlement.route: () => SellerSettlement(),
-    SeeSellerBids.route: () => SeeSellerBids(
-          id: WayaNav.search['id'].toString(),
-          requestId: WayaNav.search['requestId'].toString(),
+    SellerSettlement.route: (context) => SellerSettlement(),
+    SeeSellerBids.route: (context) => SeeSellerBids(
+          id: WayaNav.parameters['id'].toString(),
+          requestId: WayaNav.parameters['requestId'].toString(),
         ),
-    SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
-    Checkout.route: () => Checkout(),
-    BuyerCheckout.route: () => BuyerCheckout(
-          id: WayaNav.search['id'].toString(),
-          requestId: WayaNav.search['requestId'].toString(),
+    SeeBuyerBids.route: (context) =>
+        SeeBuyerBids(id: WayaNav.parameters['id'].toString()),
+    Checkout.route: (context) => Checkout(),
+    BuyerCheckout.route: (context) => BuyerCheckout(
+          id: WayaNav.parameters['id'].toString(),
+          requestId: WayaNav.parameters['requestId'].toString(),
         ),
-    FilterView.route: () => FilterView(),
-    GeneralSettingsPage.route: () => GeneralSettingsPage(),
-    ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
-    ChangePinPage.route: () => ChangePinPage(),
-    ResetPinPage.route: () => ResetPinPage(),
-    VerifyYourIdentityPage.route: () => VerifyYourIdentityPage(),
-    WayaWebview.route: () => WayaWebview(),
-    FundWalletOptionsScreen.route: () => FundWalletOptionsScreen(),
-    WalletPage.route: () => WalletPage(),
-    FundAccountScreen.route: () => FundAccountScreen(),
-    TransactionDetailsScreen.route: () => TransactionDetailsScreen(),
-    VerifyTransactionScreen.route: () => VerifyTransactionScreen(),
-    AllTransactionHistory.route: () => AllTransactionHistory(),
-    BankTransferScreen.route: () => BankTransferScreen(),
-    ProfilePage.route: () => ProfilePage(
-          id: WayaNav.search['id'].toString(),
-          source: WayaNav.search['source'].toString(),
-          username: WayaNav.search['u'],
-        ),
-    EditNamePage.route: () => EditNamePage(),
-    EditProfilePage.route: () => EditProfilePage(),
-    AddProduct.route: () => AddProduct(),
+    FilterView.route: (context) => FilterView(),
+    GeneralSettingsPage.route: (context) => GeneralSettingsPage(),
+    ChangePasswordGenSettings.route: (context) => ChangePasswordGenSettings(),
+    ChangePinPage.route: (context) => ChangePinPage(),
+    ResetPinPage.route: (context) => ResetPinPage(),
+    VerifyYourIdentityPage.route: (context) => VerifyYourIdentityPage(),
+    WayaWebview.route: (context) => WayaWebview(),
+    FundWalletOptionsScreen.route: (context) => FundWalletOptionsScreen(),
+    WalletPage.route: (context) => WalletPage(),
+    FundAccountScreen.route: (context) => FundAccountScreen(),
+    TransactionDetailsScreen.route: (context) => TransactionDetailsScreen(),
+    VerifyTransactionScreen.route: (context) => VerifyTransactionScreen(),
+    AllTransactionHistory.route: (context) => AllTransactionHistory(),
+    BankTransferScreen.route: (context) => BankTransferScreen(),
+    EditNamePage.route: (context) => EditNamePage(),
+    EditProfilePage.route: (context) => EditProfilePage(),
+    AddProduct.route: (context) => AddProduct(),
     //ProductListing.route: () => ProductListing(),
-    WayaDealAd.route: () => WayaDealAd(),
-    WayaGramDeals.route: () => WayaGramDeals(),
-    ApplicationProductDetails.route: () => ApplicationProductDetails(),
-    CreateShop.route: () => CreateShop(),
-    SellerDispute.route: () => SellerDispute(),
-    SellerDisputeDetail.route: () => SellerDisputeDetail(),
-    AddEvidence.route: () => AddEvidence(),
-    DisputeChat.route: () => DisputeChat(id: WayaNav.search['id'].toString()),
-    UgtGetStarted.route: () => UgtGetStarted(),
-    UgtHome.route: () => UgtHome(),
-    CreateContest.route: () => CreateContest(),
-    CreateContestPost.route: () => CreateContestPost(),
-    EditContestantProfile.route: () => EditContestantProfile(),
-    ViewSingleContestantData.route: () => ViewSingleContestantData(),
-    ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
-    AllStateContest.route: () => AllStateContest(),
-    ContestProfilePage.route: () => ContestProfilePage(
-          id: WayaNav.search['id'].toString(),
-          contest: WayaNav.search['contest'].toString(),
+    WayaDealAd.route: (context) => WayaDealAd(),
+    WayaGramDeals.route: (context) => WayaGramDeals(),
+    ApplicationProductDetails.route: (context) => ApplicationProductDetails(),
+    CreateShop.route: (context) => CreateShop(),
+    SellerDispute.route: (context) => SellerDispute(),
+    SellerDisputeDetail.route: (context) => SellerDisputeDetail(),
+    AddEvidence.route: (context) => AddEvidence(),
+    DisputeChat.route: (context) =>
+        DisputeChat(id: WayaNav.parameters['id'].toString()),
+    UgtGetStarted.route: (context) => UgtGetStarted(),
+    UgtHome.route: (context) => UgtHome(),
+    CreateContest.route: (context) => CreateContest(),
+    CreateContestPost.route: (context) => CreateContestPost(),
+    EditContestantProfile.route: (context) => EditContestantProfile(),
+    ViewSingleContestantData.route: (context) => ViewSingleContestantData(),
+    ContestActiveDisqualify.route: (context) => ContestActiveDisqualify(),
+    AllStateContest.route: (context) => AllStateContest(),
+    ContestProfilePage.route: (context) => ContestProfilePage(
+          id: WayaNav.parameters['id'].toString(),
+          contest: WayaNav.parameters['contest'].toString(),
         ),
-    ManageApplicationContest.route: () => ManageApplicationContest(),
-    ManageStateSingleContest.route: () => ManageStateSingleContest(),
-    DashboardContestPage.route: () => DashboardContestPage(),
-    UgtPayoutHistory.route: () => UgtPayoutHistory(),
-    WayaSocialNotificationsScreen.route: () => WayaSocialNotificationsScreen(),
-    ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
-    AdminTransactionHistory.route: () => AdminTransactionHistory(),
-    ContestSettingContent.route: () => ContestSettingContent(),
-    EditStagePreference.route: () => EditStagePreference(),
-    CreateRequest.route: () => CreateRequest(),
-    AllSellerBids.route: () => AllSellerBids(),
-    ManageShop.route: () => ManageShop(),
-    UpgradeToBusiness.route: () => UpgradeToBusiness(),
-    CreatePoll.route: () => CreatePoll(),
-    PollAndVoting.route: () => PollAndVoting(),
-    AddChoices.route: () => AddChoices(),
-    PollSummary.route: () => PollSummary(),
-    PollDashboard.route: () => PollDashboard(),
-    PollReview.route: () => PollReview(
-      id: WayaNav.search['id'].toString(),
-      module: WayaNav.search['Module'] as PayoutModule,
-      model: WayaNav.search['Model'] as PayoutReviewModel,
-    ),
-    PageSetting.route: () => PageSetting(),
-    PollRequestPayout.route: () => PollRequestPayout(),
-    SearchGroupAndPage.route: () => SearchGroupAndPage(),
-    SearchGroup.route: () => SearchGroup(),
-    PayoutVerification.route: () => PayoutVerification(),
-    SearchTransaction.route: () => SearchTransaction(),
-    UpcomingContestDetails.route: () => UpcomingContestDetails(),
-    CreateProfile.route: () => CreateProfile(),
-    RegisterContest.route: () => RegisterContest(),
-    EditInterest.route: () => EditInterest(),
-    VotersListPage.route: () => VotersListPage(),
-    AdminContestDetails.route: () => AdminContestDetails(
-          id: WayaNav.search['id'].toString(),
+    ManageApplicationContest.route: (context) => ManageApplicationContest(),
+    ManageStateSingleContest.route: (context) => ManageStateSingleContest(),
+    DashboardContestPage.route: (context) => DashboardContestPage(),
+    PayoutHistory.route: (context) => PayoutHistory(),
+    WayaSocialNotificationsScreen.route: (context) =>
+        WayaSocialNotificationsScreen(),
+    ManageLeaderboardContest.route: (context) => ManageLeaderboardContest(),
+    AdminTransactionHistory.route: (context) => AdminTransactionHistory(),
+    ContestSettingContent.route: (context) => ContestSettingContent(),
+    EditStagePreference.route: (context) => EditStagePreference(),
+    CreateRequest.route: (context) => CreateRequest(),
+    AllSellerBids.route: (context) => AllSellerBids(),
+    ManageShop.route: (context) => ManageShop(),
+    UpgradeToBusiness.route: (context) => UpgradeToBusiness(),
+    CreatePoll.route: (context) => CreatePoll(),
+    PollAndVoting.route: (context) => PollAndVoting(),
+    AddChoices.route: (context) => AddChoices(),
+    PollSummary.route: (context) => PollSummary(),
+    PollDashboard.route: (context) => PollDashboard(),
+    PollReview.route: (context) => PollReview(
+          id: WayaNav.parameters['id'].toString(),
+          module: WayaNav.parameters['Module'] as PayoutModule,
+          model: WayaNav.parameters['Model'] as PayoutReviewModel,
         ),
-    ShareVotingLink.route: () => ShareVotingLink(),
-    DeliveryRequest.route: () => DeliveryRequest(),
-    SellerProducts.route: () => SellerProducts(),
-    ProductsViewPage.route: () => ProductsViewPage(),
-    WayaNotifications.route: () => WayaNotifications(),
-    NotificationSettingsScreen.route: () => NotificationSettingsScreen(),
-    Moment.route: () => Moment(),
-    EventView.route: () => EventView(),
-    AddEvent.route: () => AddEvent(),
-    EventDetail.route: () => EventDetail(id: WayaNav.search['id'].toString()),
-    CreatePage.route: () => CreatePage(),
-    CreateGroup.route: () => CreateGroup(),
-    ConfirmPageDetails.route: () => ConfirmPageDetails(),
-    ConfirmGroupDetails.route: () => ConfirmGroupDetails(),
-    SuccessPage.route: () => SuccessPage(),
-    SuccessGroup.route: () => SuccessGroup(),
-    Pages.route: () => Pages(),
-    SearchPage.route: () => SearchPage(),
-    Groups.route: () => Groups(),
-    Suggestion.route: () => Suggestion(),
-    GroupSuggestion.route: () => GroupSuggestion(),
-    Promote.route: () => Promote(),
-    PromotionDashboard.route: () => PromotionDashboard(),
-    PromotionDetail.route: () =>
-        PromotionDetail(id: WayaNav.search['id'].toString()),
-    PublicPage.route: () => PublicPage(
-          id: WayaNav.search['id'].toString(),
+    PageSetting.route: (context) => PageSetting(),
+    PollRequestPayout.route: (context) => PollRequestPayout(),
+    SearchGroupAndPage.route: (context) => SearchGroupAndPage(),
+    SearchGroup.route: (context) => SearchGroup(),
+    PayoutVerification.route: (context) => PayoutVerification(),
+    SearchTransaction.route: (context) => SearchTransaction(),
+    UpcomingContestDetails.route: (context) => UpcomingContestDetails(),
+    CreateProfile.route: (context) => CreateProfile(),
+    RegisterContest.route: (context) => RegisterContest(),
+    EditInterest.route: (context) => EditInterest(),
+    VotersListPage.route: (context) => VotersListPage(),
+    AdminContestDetails.route: (context) => AdminContestDetails(
+          id: WayaNav.parameters['id'].toString(),
         ),
-    MembersScreen.route: () => MembersScreen(
-          id: WayaNav.search['id'].toString(),
+    ShareVotingLink.route: (context) => ShareVotingLink(),
+    DeliveryRequest.route: (context) => DeliveryRequest(),
+    SellerProducts.route: (context) => SellerProducts(),
+    ProductsViewPage.route: (context) => ProductsViewPage(),
+    WayaNotifications.route: (context) => WayaNotifications(),
+    NotificationSettingsScreen.route: (context) => NotificationSettingsScreen(),
+    Moment.route: (context) => Moment(),
+    EventView.route: (context) => EventView(),
+    AddEvent.route: (context) => AddEvent(),
+    EventDetail.route: (context) =>
+        EventDetail(id: WayaNav.parameters['id'].toString()),
+    CreatePage.route: (context) => CreatePage(),
+    CreateGroup.route: (context) => CreateGroup(),
+    ConfirmPageDetails.route: (context) => ConfirmPageDetails(),
+    ConfirmGroupDetails.route: (context) => ConfirmGroupDetails(),
+    SuccessPage.route: (context) => SuccessPage(),
+    SuccessGroup.route: (context) => SuccessGroup(),
+    Pages.route: (context) => Pages(),
+    SearchPage.route: (context) => SearchPage(),
+    Groups.route: (context) => Groups(),
+    Suggestion.route: (context) => Suggestion(),
+    GroupSuggestion.route: (context) => GroupSuggestion(),
+    Promote.route: (context) => Promote(),
+    PromotionDashboard.route: (context) => PromotionDashboard(),
+    PromotionDetail.route: (context) =>
+        PromotionDetail(id: WayaNav.parameters['id'].toString()),
+    PublicPage.route: (context) => PublicPage(
+          id: WayaNav.parameters['id'].toString(),
         ),
-    CreatePost.route: () => CreatePost(),
-    CreateGroupPost.route: () => CreateGroupPost(
-          id: WayaNav.search['id'].toString(),
+    MembersScreen.route: (context) => MembersScreen(
+          id: WayaNav.parameters['id'].toString(),
         ),
-    CreatePagePost.route: () => CreatePagePost(
-          id: WayaNav.search['id'].toString(),
+    CreatePost.route: (context) => CreatePost(),
+    CreateGroupPost.route: (context) => CreateGroupPost(
+          id: WayaNav.parameters['id'].toString(),
         ),
-    MutualPage.route: () => MutualPage(
-          initialTab: WayaNav.search['tab'] ?? 'followers',
-          userId: WayaNav.search['uid'].toString(),
-          source: WayaNav.search['source'] ?? 'any',
+    CreatePagePost.route: (context) => CreatePagePost(
+          id: WayaNav.parameters['id'].toString(),
         ),
-    FollowRelationshipsPage.route: () => FollowRelationshipsPage(),
-    PublicGroup.route: () => PublicGroup(id: WayaNav.search['id'].toString()),
-    AddTeamMember.route: () =>
-        AddTeamMember(id: WayaNav.search['id'].toString()),
-    SingleChatScreen.route: () =>
-        SingleChatScreen(chatId: WayaNav.search['id'].toString()),
-    ChatProfilePage.route: () =>
-        ChatProfilePage(chatId: WayaNav.search['id'].toString()),
-    DisplayFeed.route: () => DisplayFeed(),
-    GroupSetting.route: () => GroupSetting(),
-    PageFollowerScreen.route: () => PageFollowerScreen(
-          id: WayaNav.search['id'].toString(),
+    MutualPage.route: (context) => MutualPage(
+          initialTab: WayaNav.parameters['tab'] ?? 'followers',
+          userId: WayaNav.parameters['uid'].toString(),
+          source: WayaNav.parameters['source'] ?? 'any',
         ),
-    AllUpcomingEvents.route: () => AllUpcomingEvents(),
-    MediaMoment.route: () => MediaMoment(),
-    MyMoments.route: () => MyMoments(),
-    CandidatePostScreen.route: () => CandidatePostScreen(),
-    VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
-    ViewFullMedia.route: () => ViewFullMedia(),
-    FullVideoView.route: () => FullVideoView(),
-    EndedContestPage.route: () => EndedContestPage(
-          id: WayaNav.search['id'].toString(),
+    FollowRelationshipsPage.route: (context) => FollowRelationshipsPage(),
+    PublicGroup.route: (context) =>
+        PublicGroup(id: WayaNav.parameters['id'].toString()),
+    AddTeamMember.route: (context) =>
+        AddTeamMember(id: WayaNav.parameters['id'].toString()),
+    DisplayFeed.route: (context) => DisplayFeed(),
+    GroupSetting.route: (context) => GroupSetting(),
+    PageFollowerScreen.route: (context) => PageFollowerScreen(
+          id: WayaNav.parameters['id'].toString(),
         ),
-    EditPost.route: () => EditPost(
-          initialContent: WayaNav.search['initialContent'].toString(),
-          initialMedia: WayaNav.search['initialMedia'].toString(),
-          postId: WayaNav.search['postId'].toString(),
-          privacy: WayaNav.search['privacy'].toString(),
+    AllUpcomingEvents.route: (context) => AllUpcomingEvents(),
+    MediaMoment.route: (context) => MediaMoment(),
+    MyMoments.route: (context) => MyMoments(),
+    VideoTrimmerScreen.route: (context) => VideoTrimmerScreen(),
+    ViewFullMedia.route: (context) => ViewFullMedia(),
+    EndedContestPage.route: (context) => EndedContestPage(
+          id: WayaNav.parameters['id'].toString(),
         ),
-    AddGroupMember.route: () =>
-        AddGroupMember(id: WayaNav.search['id'].toString()),
-    SearchView.route: () => SearchView(),
-    EditGroupMemberInfo.route: () =>
-        EditGroupMemberInfo(id: WayaNav.search['id'].toString()),
-    EditPageMemberInfo.route: () =>
-        EditPageMemberInfo(id: WayaNav.search['id'].toString()),
-    SinglePollScreen.route: () => SinglePollScreen(id: WayaNav.search['id'].toString()),
-    ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
-    Donations.route: () => Donations(),
-    DonationDetails.route: () => DonationDetails(id: WayaNav.search['id'].toString()),
-    CreateDonation.route: () => CreateDonation(),
-    DonationManagement.route: () => DonationManagement(),
-    SeeAllDonations.route: () => SeeAllDonations(),
-    SeeAllLiveDonations.route: () => SeeAllLiveDonations(),
-    SeeAllRejectedDonations.route: () => SeeAllRejectedDonations(),
-    SeeAllApprovedDonations.route: () => SeeAllApprovedDonations(),
-    ChatAndSocial.route: () => ChatAndSocial(),
-    SupportRequestScreen.route: () => SupportRequestScreen(),
-    SupportDisputeScreen.route: () => SupportDisputeScreen(),
-    SupportChatScreen.route: () => SupportChatScreen(),
-    InitDispute.route: () => InitDispute(),
-    DisputeDetail.route: () =>
-        DisputeDetail(id: WayaNav.search['id'].toString()),
-    ProductSearchResult.route: () => ProductSearchResult(),
-    LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
-    AccountActivity.route: () => AccountActivity(),
-    ActivityLog.route: () => ActivityLog(),
-    QuotationSellerOrders.route: () => QuotationSellerOrders(),
-    VisitedPage.route: () => VisitedPage(),
-    PageLogs.route: () => PageLogs(),
-    DonationLogs.route: () => DonationLogs(),
-    DonationSettingsPage.route: () => DonationSettingsPage(),
-    QuotationSettingsPage.route: () => QuotationSettingsPage(),
-    ShopSettingPage.route: () => ShopSettingPage(),
-    PageGeneralSetting.route: () => PageGeneralSetting(),
-    GroupSettingPage.route: () => GroupSettingPage(),
-    MuteGroup.route:() => MuteGroup(),
-    UserPageInvitation.route: () => UserPageInvitation(),
-    SinglePageInvitation.route: () => SinglePageInvitation(id: WayaNav.search['id'].toString()),
-    SingleGroupInvitation.route: () => SingleGroupInvitation(id: WayaNav.search['id'].toString()),
-    UserGroupInvitation.route: () => UserGroupInvitation(),
-    EventSettingsPage.route: () => EventSettingsPage(),
-    PostSettingsPage.route: () => PostSettingsPage(),
-    UserAction.route: () => UserAction(),
-    CmsClicks.route: () => CmsClicks(),
-    UserInteraction.route: () => UserInteraction(),
-    PaymentActivity.route: () => PaymentActivity(),
-    SearchLog.route: () => SearchLog(),
-    KycUpdate.route: () => KycUpdate(),
-    QuotationOrderDetails.route: () => QuotationOrderDetails(
-          requestId: WayaNav.search['id'].toString(),
+    EditPost.route: (context) => EditPost(
+          initialContent: WayaNav.parameters['initialContent'].toString(),
+          initialMedia: WayaNav.parameters['initialMedia'].toString(),
+          postId: WayaNav.parameters['postId'].toString(),
+          privacy: WayaNav.parameters['privacy'].toString(),
         ),
-    SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
-    BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
-    RoleAccessPage.route: () => RoleAccessPage(),
-    AddTeamMemberPage.route: () => AddTeamMemberPage(),
-    MemberDetailsPage.route: () => MemberDetailsPage(),
-    VerifyEmail.route: () => VerifyEmail(),
-    ReferralPage.route: () => ReferralPage(),
-    ReferralHistoryPage.route: () => ReferralHistoryPage(),
-    PrivacySettingsPage.route: () => PrivacySettingsPage(),
-    FriendFollowerPage.route: () => FriendFollowerPage(),
-    RequestPayout.route: () => RequestPayout(),
-    AddPayoutMethodScreen.route: () => AddPayoutMethodScreen(),
-    PayoutDetails.route: () => PayoutDetails(),
-    PayoutSuccessScreen.route: () => PayoutSuccessScreen(),
-    EnterRequestAmountScreen.route: () => EnterRequestAmountScreen(),
-    BlockedUserPage.route: () => BlockedUserPage(),
-    AccountSecurity.route: () => AccountSecurity(),
-    EditChatGroupScreen.route: () => EditChatGroupScreen(
-          groupId: WayaNav.search['id'].toString(),
-          chatId: WayaNav.search['chatId'].toString(),
+    AddGroupMember.route: (context) =>
+        AddGroupMember(id: WayaNav.parameters['id'].toString()),
+    SearchView.route: (context) => SearchView(),
+    EditGroupMemberInfo.route: (context) =>
+        EditGroupMemberInfo(id: WayaNav.parameters['id'].toString()),
+    EditPageMemberInfo.route: (context) =>
+        EditPageMemberInfo(id: WayaNav.parameters['id'].toString()),
+    PollDetailScreen.route: (context) =>
+        PollDetailScreen(id: WayaNav.parameters['id'].toString()),
+    ArchivedChatsScreen.route: (context) => ArchivedChatsScreen(),
+    Donations.route: (context) => Donations(),
+    DonationDetails.route: (context) =>
+        DonationDetails(id: WayaNav.parameters['id'].toString()),
+    CreateDonation.route: (context) => CreateDonation(),
+    DonationDashboard.route: (context) => DonationDashboard(),
+    SeeAllDonations.route: (context) => SeeAllDonations(),
+    SeeAllLiveDonations.route: (context) => SeeAllLiveDonations(),
+    SeeAllRejectedDonations.route: (context) => SeeAllRejectedDonations(),
+    SeeAllApprovedDonations.route: (context) => SeeAllApprovedDonations(),
+    SeeAllClosedDonations.route: (context) => SeeAllClosedDonations(),
+    ChatAndSocial.route: (context) => ChatAndSocial(),
+    SupportRequestScreen.route: (context) => SupportRequestScreen(),
+    SupportDisputeScreen.route: (context) => SupportDisputeScreen(),
+    SupportChatScreen.route: (context) => SupportChatScreen(),
+    InitDispute.route: (context) => InitDispute(),
+    DisputeDetail.route: (context) =>
+        DisputeDetail(id: WayaNav.parameters['id'].toString()),
+    ProductSearchResult.route: (context) => ProductSearchResult(),
+    LogsAndAuditTrials.route: (context) => LogsAndAuditTrials(),
+    ActivityLog.route: (context) => ActivityLog(),
+    QuotationSellerOrders.route: (context) => QuotationSellerOrders(),
+    VisitedPage.route: (context) => VisitedPage(),
+    DonationSettingsPage.route: (context) => DonationSettingsPage(),
+    QuotationSettingsPage.route: (context) => QuotationSettingsPage(),
+    ShopSettingPage.route: (context) => ShopSettingPage(),
+    PageGeneralSetting.route: (context) => PageGeneralSetting(),
+    GroupSettingPage.route: (context) => GroupSettingPage(),
+    MuteGroup.route: (context) => MuteGroup(),
+    UserPageInvitation.route: (context) => UserPageInvitation(),
+    SinglePageInvitation.route: (context) =>
+        SinglePageInvitation(id: WayaNav.parameters['id'].toString()),
+    SingleGroupInvitation.route: (context) =>
+        SingleGroupInvitation(id: WayaNav.parameters['id'].toString()),
+    UserGroupInvitation.route: (context) => UserGroupInvitation(),
+    EventSettingsPage.route: (context) => EventSettingsPage(),
+    PostSettingsPage.route: (context) => PostSettingsPage(),
+    UserAction.route: (context) => UserAction(),
+    CmsClicks.route: (context) => CmsClicks(),
+    UserInteraction.route: (context) => UserInteraction(),
+    PaymentActivity.route: (context) => PaymentActivity(),
+    SearchLog.route: (context) => SearchLog(),
+    KycUpdate.route: (context) => KycUpdate(),
+    QuotationOrderDetails.route: (context) => QuotationOrderDetails(
+          requestId: WayaNav.parameters['id'].toString(),
         ),
-    SellerShopProducts.route: () => SellerShopProducts(
-          vendorId: WayaNav.search['id'].toString(),
-          shopId: WayaNav.search['shopId'].toString(),
+    SellerBuyRequestsScreen.route: (context) => SellerBuyRequestsScreen(),
+    BuyerBuyRequestsScreen.route: (context) => BuyerBuyRequestsScreen(),
+    RoleAccessPage.route: (context) => RoleAccessPage(),
+    AddTeamMemberPage.route: (context) => AddTeamMemberPage(),
+    MemberDetailsPage.route: (context) => MemberDetailsPage(),
+    VerifyEmail.route: (context) => VerifyEmail(),
+    ReferralPage.route: (context) => ReferralPage(),
+    ReferralHistoryPage.route: (context) => ReferralHistoryPage(),
+    PrivacySettingsPage.route: (context) => PrivacySettingsPage(),
+    FriendFollowerPage.route: (context) => FriendFollowerPage(),
+    RequestPayout.route: (context) => RequestPayout(),
+    AddPayoutMethodScreen.route: (context) => AddPayoutMethodScreen(),
+    PayoutDetails.route: (context) => PayoutDetails(),
+    PayoutSuccessScreen.route: (context) => PayoutSuccessScreen(),
+    EnterRequestAmountScreen.route: (context) => EnterRequestAmountScreen(),
+    BlockedUserPage.route: (context) => BlockedUserPage(),
+    AccountSecurity.route: (context) => AccountSecurity(),
+    EditChatGroupScreen.route: (context) => EditChatGroupScreen(
+          groupId: WayaNav.parameters['id'].toString(),
+          chatId: WayaNav.parameters['chatId'].toString(),
         ),
-    EventInvite.route: () => EventInvite(
-          eventId: WayaNav.search["id"].toString(),
-          eventTitle: WayaNav.search["title"].toString(),
+    SellerShopProducts.route: (context) => SellerShopProducts(
+          vendorId: WayaNav.parameters['id'].toString(),
+          shopId: WayaNav.parameters['shopId'].toString(),
         ),
-    FavoritesProducts.route: () => FavoritesProducts(),
-    TopSellingList.route: () => TopSellingList(),
-    VerifyTransactionIdentity.route: () => VerifyTransactionIdentity(),
-    TwoFactorAuth.route: () =>
-        TwoFactorAuth(email: WayaNav.search["email"].toString()),
-    SinglePost.route: () =>
-        SinglePost(postId: WayaNav.search["postId"].toString()),
-        EventDashboard.route: () => EventDashboard(id:  WayaNav.search["id"].toString() ),
-    CommentDetailsScreen.route: () => CommentDetailsScreen(
-          id: WayaNav.search["id"].toString(),
-          postId: WayaNav.search["post"].toString(),
-          source: WayaNav.search["id"].toString(),
+    EventInvite.route: (context) => EventInvite(
+          eventId: WayaNav.parameters["id"].toString(),
+          eventTitle: WayaNav.parameters["title"].toString(),
+        ),
+    FavoritesProducts.route: (context) => FavoritesProducts(),
+    TopSellingList.route: (context) => TopSellingList(),
+    VerifyTransactionIdentity.route: (context) => VerifyTransactionIdentity(),
+    TwoFactorAuth.route: (context) =>
+        TwoFactorAuth(email: WayaNav.parameters["email"].toString()),
+    SinglePost.route: (context) =>
+        SinglePost(postId: WayaNav.parameters["postId"].toString()),
+    EventDashboard.route: (context) =>
+        EventDashboard(id: WayaNav.parameters["id"].toString()),
+    CommentDetailsScreen.route: (context) => CommentDetailsScreen(
+          id: WayaNav.parameters["id"].toString(),
+          postId: WayaNav.parameters["post"].toString(),
+          source: WayaNav.parameters["id"].toString(),
         ),
   };
+
+  /// Route generator for handling routes with query parameters
+  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    final uri = Uri.parse(settings.name ?? '');
+    final routeName = uri.path;
+    final queryParams = uri.queryParameters;
+
+    // Handle routes with query parameters
+    switch (routeName) {
+      case '/conversation/chat':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => SingleChatScreen(chatId: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+      case '/p': // ProfilePage route
+        final username = queryParams['u'];
+        final id = queryParams['id'];
+        final source = queryParams['source'] ?? 'any';
+
+        if (username != null) {
+          return MaterialPageRoute(
+            builder: (context) => ProfilePage(
+              id: '',
+              username: username,
+              source: source,
+            ),
+            settings: settings,
+          );
+        } else if (id != null) {
+          return MaterialPageRoute(
+            builder: (context) => ProfilePage(
+              id: id,
+              username: null,
+              source: source,
+            ),
+            settings: settings,
+          );
+        }
+        break;
+      case '/conversation/chat/profile':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => ChatProfilePage(chatId: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/quotation/buyer/order':
+        final id = queryParams['id'];
+        final requestId = queryParams['requestId'];
+        if (id != null && requestId != null) {
+          return MaterialPageRoute(
+            builder: (context) => BuyerCheckout(id: id, requestId: requestId),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/quotation/seller/order':
+        final id = queryParams['id'];
+        final requestId = queryParams['requestId'];
+        if (id != null && requestId != null) {
+          return MaterialPageRoute(
+            builder: (context) =>
+                SellerBidDetails(id: id, requestId: requestId),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/quotation/buyer/bids':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => SeeBuyerBids(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/quotation/seller/bids':
+        final id = queryParams['id'];
+        final requestId = queryParams['requestId'];
+        if (id != null && requestId != null) {
+          return MaterialPageRoute(
+            builder: (context) => SeeSellerBids(id: id, requestId: requestId),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/quotation/seller/bid':
+        final id = queryParams['id'];
+        final requestId = queryParams['requestId'];
+        if (id != null && requestId != null) {
+          return MaterialPageRoute(
+            builder: (context) =>
+                SellerBidDetails(id: id, requestId: requestId),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/quotation/seller/orders/one':
+        final requestId = queryParams['requestId'] ?? queryParams['id'];
+        if (requestId != null) {
+          return MaterialPageRoute(
+            builder: (context) => QuotationOrderDetails(requestId: requestId),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/product':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => ProductDetail(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/donation':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => DonationDetails(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/group':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => PublicGroup(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/groups/public':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => PublicGroup(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/page':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => PublicPage(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/pages/public':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => PublicPage(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/group/invitation':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => SingleGroupInvitation(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/page/invitation':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => SinglePageInvitation(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/group/members':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => MembersScreen(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/group/add_member':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => AddGroupMember(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/page/add_member':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => AddTeamMember(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/page/post':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => CreatePagePost(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/group/post':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => CreateGroupPost(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/event':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => EventDetail(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/event-detail':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => EventDetail(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/contest':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => AdminContestDetails(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/dispute/chat':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => DisputeChat(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/dispute':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => DisputeDetail(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/follow':
+        final uid = queryParams['uid'];
+        final tab = queryParams['tab'] ?? 'followers';
+        final source = queryParams['source'] ?? 'any';
+        if (uid != null) {
+          return MaterialPageRoute(
+            builder: (context) =>
+                MutualPage(userId: uid, initialTab: tab, source: source),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/follow/relationships':
+        final uid = queryParams['uid'];
+        final tab = queryParams['tab'] ?? 'followers';
+        final source = queryParams['source'] ?? 'any';
+        if (uid != null) {
+          return MaterialPageRoute(
+            builder: (context) =>
+                MutualPage(userId: uid, initialTab: tab, source: source),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/userGroupInvitation/single':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => SingleGroupInvitation(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/userPageInvitation/single':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => SinglePageInvitation(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/groups/members':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => MembersScreen(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/groups/members/add':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => AddGroupMember(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/pages/team/add':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => AddTeamMember(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/groups/post/new':
+        if (queryParams.containsKey('id')) {
+          return MaterialPageRoute(
+            builder: (context) => CreateGroupPost(id: queryParams['id']!),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/contest-profile-page':
+        final id = queryParams['id'];
+        final contest = queryParams['contest'];
+        if (id != null && contest != null) {
+          return MaterialPageRoute(
+            builder: (context) => ContestProfilePage(id: id, contest: contest),
+            settings: settings,
+          );
+        }
+        break;
+
+      case '/two-factor-authentication':
+        final email = queryParams['email'];
+        if (email != null) {
+          return MaterialPageRoute(
+            builder: (context) => TwoFactorAuth(email: email),
+            settings: settings,
+          );
+        }
+        break;
+    }
+
+    // If no custom route matches, return null to fall back to default route handling
+    return null;
+  }
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
@@ -497,11 +871,6 @@ class WayaAppRoutes {
     String? username,
   ]) =>
       "${ProfilePage.route}?${username != null ? 'u=$username' : 'id=$id&source=$source'}";
-
-  /// Helper function that is used to get the route to the details of a single
-  /// dispute by its ID.
-  static String getDisputeDetailsRoute(String id) =>
-      "${DisputeDetail.route}?id=$id";
 
   /// Helper function that is used to get the route to the chat of a single
   /// dispute by its ID.
@@ -588,7 +957,8 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
-  static String getPollDetailsPage(String id) => "${SinglePollScreen.route}?id=$id";
+  static String getPollDetailsPage(String id) =>
+      "${PollDetailScreen.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
@@ -602,7 +972,8 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
-  static String getDonationDetailsPage(String id) => "${DonationDetails.route}?id=$id";
+  static String getDonationDetailsPage(String id) =>
+      "${DonationDetails.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single bid's details screen.
@@ -647,7 +1018,8 @@ class WayaAppRoutes {
   static String getSinglePostScreen(String postId) =>
       "${SinglePost.route}?postId=$postId";
 
-  static String getCommentDetailsScreen(String id, String postId, [String? source]) =>
+  static String getCommentDetailsScreen(String id, String postId,
+          [String? source]) =>
       "${CommentDetailsScreen.route}?id=$id&post=$postId&source=$source";
 
   static String get2FaScreen(
@@ -657,14 +1029,4 @@ class WayaAppRoutes {
   static String getSingleEventDashboard(String id) =>
       "${EventDashboard.route}?id=$id";
 //
-  /// This is fine.
-  static List<GetPage> get getPages {
-    return routes.entries
-        .map((entry) => GetPage(
-              name: entry.key,
-              page: entry.value,
-              transition: Transition.cupertino,
-            ))
-        .toList();
-  }
 }

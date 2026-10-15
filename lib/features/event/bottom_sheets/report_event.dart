@@ -48,7 +48,7 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
     final wayaTheme = Theme.of(context);
     final reportState = ref.watch(eventVmProvider);
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -68,14 +68,14 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
                   thickness: 1,
                 ),
               ),
-              Gap(10),
+              const Gap(10),
               Text(
                 "Choose Reason for Reporting",
                 style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                   color: wayaTheme.colorScheme.greyColor600,
                 ),
               ),
-              Gap(10),
+              const Gap(10),
               Expanded(
                 child: Divider(
                   color: wayaTheme.colorScheme.greyColor200,
@@ -157,7 +157,6 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
                                   reason: selectedStatus,
                                   comment: comment.text,
                                   context: context);
-                               
                             }
                           : null,
                       centerWidget: LoadingState(
@@ -168,8 +167,7 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
           const Gap(10),
           WayaButton(
               callback: () {
-                 WayaNav.goBack();
-             
+                WayaNav.goBack();
               },
               textColor: wayaTheme.colorScheme.greyColor500,
               color: wayaTheme.colorScheme.transparent,

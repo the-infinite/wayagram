@@ -145,5 +145,9 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
   }
 }
 
-final checkoutVmProvider = StateNotifierProvider<CheckoutVm, CheckoutState>(
-    (ref) => CheckoutVm(OrderRepository(), WayaSecureDataSource(), ref));
+final checkoutVmProvider =
+    StateNotifierProvider<CheckoutVm, CheckoutState>((ref) {
+  final orderRepo = ref.watch(orderRepositoryProvider);
+
+  return CheckoutVm(orderRepo, WayaSecureDataSource(), ref);
+});

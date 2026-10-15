@@ -67,7 +67,7 @@ class SellerProduct extends BaseModel<SellerProduct> {
   final String? discountTypeId;
   final String name;
   final String description;
-  final String price;
+  final String? price;
   final List<String> images;
   final int? height;
   final int? width;

@@ -6,7 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/vm/group.dart';
 import 'package:wayagram/features/chat/widget/chat_selection.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
@@ -15,13 +15,16 @@ class CreateConversationGroupScreen extends ConsumerStatefulWidget {
   const CreateConversationGroupScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CreateConversationGroupScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CreateConversationGroupScreenState();
 }
 
-class _CreateConversationGroupScreenState extends ConsumerState<CreateConversationGroupScreen> {
+class _CreateConversationGroupScreenState
+    extends ConsumerState<CreateConversationGroupScreen> {
   late final notifier = ref.read(createChatGroupProvider.notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
-  late final selection = ValueNotifier<List<UserDetailsModel>>(ref.read(createChatGroupProvider).members);
+  late final selection = ValueNotifier<List<UserDetailsModel>>(
+      ref.read(createChatGroupProvider).members);
   final formKey = GlobalKey<FormState>();
   final loadingController = ValueNotifier(false);
   final nameController = TextEditingController();
@@ -104,10 +107,14 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
                   child: CircleAvatar(
                     radius: 60.r,
                     backgroundColor: theme.colorScheme.greyColor200,
-                    backgroundImage: state.image != null ? FileImage(state.image!) : null,
+                    backgroundImage:
+                        state.image != null ? FileImage(state.image!) : null,
                     child: state.image == null
                         ? WayaAssets.icons.cAttachCamera.svg(
-                            color: theme.colorScheme.greyColor600,
+                            colorFilter: ColorFilter.mode(
+                              theme.colorScheme.greyColor600,
+                              BlendMode.srcIn,
+                            ),
                           )
                         : null,
                   ),
@@ -138,7 +145,8 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
               onChanged: (value) => debounce(
                 key: "save-name",
                 () {
-                  notifier.saveData(nameController.text.trim(), descriptionController.text.trim());
+                  notifier.saveData(nameController.text.trim(),
+                      descriptionController.text.trim());
                 },
               ),
               validator: (value) {
@@ -164,7 +172,8 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
               padding: EdgeInsets.all(15),
               onChanged: (value) => debounce(
                 key: "save-name",
-                () => notifier.saveData(nameController.text.trim(), descriptionController.text.trim()),
+                () => notifier.saveData(nameController.text.trim(),
+                    descriptionController.text.trim()),
               ),
               validator: (value) {
                 if (descriptionController.text.trim().isEmpty) {
@@ -202,7 +211,8 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
                   id: user.id,
                   index: index,
                   controller: selection,
-                  onSelect: (chat, isSelected) => notifier.saveUsers(selection.value),
+                  onSelect: (chat, isSelected) =>
+                      notifier.saveUsers(selection.value),
                 );
               },
             )

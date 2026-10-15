@@ -19,6 +19,7 @@ class EventState {
   final EventDoc? singleEvent;
   final bool isUserEvent;
   final List<Doc> attendees;
+   final List<Doc> attendeesAwaitApproval;
   final String userId;
   final List<UserDetailsModel> invitees;
 
@@ -36,6 +37,7 @@ class EventState {
     this.isLoadingSingleEvent = false,
     this.isReportingEvent = false,
     this.attendees = const [],
+    this.attendeesAwaitApproval =  const [],
     this.joinedEvents = const [],
     this.userId = '',
     this.isLoadingUserEvents = false,
@@ -64,6 +66,7 @@ class EventState {
       bool? isJoiningEvent,
       bool? isReportingEvent,
       List<Doc>? attendees,
+      List<Doc>? attendeesAwaitApproval,
       List<UserDetailsModel>? invitees,
       bool? isLoadingUserEvents}) {
     return EventState(
@@ -77,6 +80,7 @@ class EventState {
       singleEvent: singleEvent ?? this.singleEvent,
       isUserEvent: isUserEvent ?? this.isUserEvent,
       isJoiningEvent: isJoiningEvent ?? this.isJoiningEvent,
+      attendeesAwaitApproval: attendeesAwaitApproval ?? this.attendeesAwaitApproval,
       attendees: attendees ?? this.attendees,
       userId: userId ?? this.userId,
       isReportingEvent: isReportingEvent ?? this.isReportingEvent,

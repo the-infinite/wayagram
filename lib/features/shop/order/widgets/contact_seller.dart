@@ -15,7 +15,6 @@ class ContactSeller extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     final wayaTheme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
@@ -49,8 +48,8 @@ class ContactSeller extends StatelessWidget {
                   .copyWith(color: wayaTheme.colorScheme.greyColor600),
             ),
           ),
-           const Gap(10),
-            Container(
+          const Gap(10),
+          Container(
             width: double.infinity,
             decoration: BoxDecoration(
                 color: wayaTheme.colorScheme.greyColor100,
@@ -75,12 +74,12 @@ class ContactSeller extends StatelessWidget {
           //         .copyWith(color: wayaTheme.colorScheme.greyColor600),
           //   ),
           // ),
-         
+
           const Gap(24),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.primary75.withOpacity(0.3),
+                color: wayaTheme.colorScheme.primary75.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 2),
             child: Text(
@@ -95,9 +94,8 @@ class ContactSeller extends StatelessWidget {
           const Gap(10),
           WayaButton(
               callback: () {
-                 WayaNav.goBack();
+                WayaNav.goBack();
                 WayaNav.toNamed(InitDispute.route, arguments: order);
-               
               },
               text: "Yes, Contact Seller"),
           const Gap(10),

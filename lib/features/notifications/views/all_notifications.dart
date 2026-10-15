@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
-import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/notifications/vm/notification_vm.dart';
 import 'package:wayagram/features/notifications/widgets/notification_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 

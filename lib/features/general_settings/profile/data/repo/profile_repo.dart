@@ -3,13 +3,19 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart' as waya;
 import 'package:http_parser/http_parser.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
-class ProfileRepo extends BaseRepository {
+part 'profile_repo.g.dart';
+
+class ProfileRepo extends BaseRepositoryRiverpod {
   String get serviceUrl => WayaServiceUri.account;
   String get serviceUrl2 => WayaServiceUri.product;
+
+  ProfileRepo(super.ref);
 
   Future<WayaRequestResponse> updateAccountRepo({
     required String userId,
@@ -28,15 +34,18 @@ class ProfileRepo extends BaseRepository {
   }
 
   Future<WayaRequestResponse> updateEmailOrPhone(
-      {required String userId, required String purpose, required String otp, String? email, String? phone}) {
+      {required String userId,
+      required String purpose,
+      required String otp,
+      String? email,
+      String? phone}) {
     final payload = {"purpose": purpose, "otp": otp};
 
     if (email != null) payload['newEmail'] = email;
     if (phone != null) payload['newPhoneNumber'] = phone;
 
-    print(payload);
-
-    return patch('$serviceUrl/client/users/$userId/email-or-phone/update', payload, showErrors: true);
+    return patch(
+        '$serviceUrl/client/users/$userId/email-or-phone/update', payload);
   }
 
   Future<WayaRequestResponse> updateProfileRepo(
@@ -71,30 +80,31 @@ class ProfileRepo extends BaseRepository {
     return get("$serviceUrl/client/users/$userId");
   }
 
-  Future<WayaRequestResponse> postSupportDetails(payload) async {
+  Future<WayaRequestResponse> postSupportDetails(dynamic payload) async {
     return post("$serviceUrl2/client/support", payload, formdata: false);
   }
 
   Future<WayaRequestResponse> removeCoverPhoto() async {
     return patch(
-      "$serviceUrl/client/profiles/${ConversationState.self.id}/remove-imagaes",
-      {
-        "fields": ["coverImage"]
-      },
-      showErrors: true,
-    );
+        "$serviceUrl/client/profiles/${ConversationState.self.id}/remove-imagaes",
+        {
+          "fields": ["coverImage"]
+        });
   }
 
-  Future<WayaRequestResponse> postDisputeDetails(payload) async {
+  Future<WayaRequestResponse> postDisputeDetails(dynamic payload) async {
     return post("$serviceUrl2/client/dispute", payload, formdata: false);
   }
 
-  Future<WayaRequestResponse> getUserProfileRepo({required String userId}) async {
+  Future<WayaRequestResponse> getUserProfileRepo(
+      {required String userId}) async {
     return get("$serviceUrl/client/users/$userId/profile");
   }
 
   Future<WayaRequestResponse> updateProfileImageRepo(
-      {required String userId, required Uint8List image, required String fileName}) async {
+      {required String userId,
+      required Uint8List image,
+      required String fileName}) async {
     waya.MultipartFile pictureImage = waya.MultipartFile.fromBytes(
       image,
       filename: fileName,
@@ -102,10 +112,17 @@ class ProfileRepo extends BaseRepository {
     );
     final payload = {'profilePicture': pictureImage};
 
-    return patch('$serviceUrl/client/users/$userId/update-pfp', payload, formdata: true);
+    return patch('$serviceUrl/client/users/$userId/update-pfp', payload,
+        formdata: true);
   }
 
-  Future<WayaRequestResponse> getBusinessDataRepo({required String userId}) async {
+  Future<WayaRequestResponse> getBusinessDataRepo(
+      {required String userId}) async {
     return get("$serviceUrl/client/businesses/user-business/$userId");
   }
+}
+
+@riverpod
+ProfileRepo profileRepository(Ref ref) {
+  return ProfileRepo(ref);
 }

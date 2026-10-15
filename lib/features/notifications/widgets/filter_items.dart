@@ -6,7 +6,7 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/notifications/state/filter_notification.dart';
-import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/notifications/vm/notification_vm.dart';
 import 'package:wayagram/features/notifications/widgets/filter_modal.dart';
 
 class NotificationFilterWidget<TItem> extends ConsumerStatefulWidget {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -12,7 +11,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
-import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/explore/widgets/polls_card.dart';
@@ -20,6 +18,7 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
@@ -31,7 +30,7 @@ import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 import 'package:wayagram/shared/features/profile/widget/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 import '../../group/vm/group_vm.dart';
 import '../../pages/vm/pages_vm.dart';
@@ -55,6 +54,22 @@ class _SearchState extends ConsumerState<SearchView> {
   // Tracks selected services
   Set<String> selectedServices = {};
 
+  void _onSearchChanged() {
+    final value = searchController.text.trim();
+
+    //? Leave when this has no content.
+    if (value.isEmpty) return;
+
+    //? Now, try to update it.
+    debounce(
+      key: "search-discovery",
+      delay: const Duration(milliseconds: 750),
+      () {
+        setState(() {}); // Rebuild when search text changes
+      },
+    )();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -76,25 +91,12 @@ class _SearchState extends ConsumerState<SearchView> {
     searchController = TextEditingController();
 
     //? How we get all users from storage.
-    searchController.addListener(() {
-      final value = searchController.text.trim();
-
-      //? Leave when this has no content.
-      if (value.isEmpty) return;
-
-      //? Now, try to update it.
-      debounce(
-        key: "search-discovery",
-        delay: const Duration(milliseconds: 750),
-        () {
-          setState(() {}); // Rebuild when search text changes
-        },
-      )();
-    });
+    searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -102,7 +104,7 @@ class _SearchState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final exploreNotifier = ref.watch(exploreVmProvider);
+    //  final exploreNotifier = ref.watch(exploreVmProvider);
     final state = ref.watch(servicesProvider);
     final pageState = ref.watch(createPageProvider);
     final pollState = ref.watch(createPollVotingProvider);
@@ -125,7 +127,7 @@ class _SearchState extends ConsumerState<SearchView> {
 
     //? Searching posts.
     final List<PostModel> filteredPosts = WayaUtils.strictSearch<PostModel>(
-        exploreNotifier.posts, ['hashtags'], query);
+        wayaPostCache.data.toList(), ['hashtags', 'content'], query);
     final history = storage.getSearchHistory();
 
     // //? Moments
@@ -316,7 +318,7 @@ class _SearchState extends ConsumerState<SearchView> {
                           backgroundColor: wayaTheme.colorScheme.transparent,
                           selectedColor: wayaTheme.colorScheme.primary50,
                           showCheckmark: false,
-                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                             side: BorderSide(
@@ -378,7 +380,7 @@ class _SearchState extends ConsumerState<SearchView> {
                   SearchedMoment(
                     onTap: () {
                       WayaNav.to(
-                          transition: Transition.downToUp,
+                          transition: WayaTransition.downToUp,
                           duration: const Duration(milliseconds: 600),
                           ViewMoment(moments: [data[index]], isMine: false));
                     },

@@ -22,18 +22,20 @@ class AllJoinedEvents extends ConsumerStatefulWidget {
 
 class _AllJoinedEventsState extends ConsumerState<AllJoinedEvents> {
   TextEditingController searchController = TextEditingController();
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
 
   @override
   void initState() {
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
   @override
   void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -54,7 +56,6 @@ class _AllJoinedEventsState extends ConsumerState<AllJoinedEvents> {
             message: "You are yet to register for an event"),
         fetchData: ref.read(eventVmProvider.notifier).getJoinedEvents,
         result: (data, s) {
-          print("wefewfwefwefwe $data");
           final filteredEvents = WayaUtils.search<EventDoc>(
             data,
             ['title', 'organizerName', 'eventType', 'location'],
@@ -88,5 +89,3 @@ class _AllJoinedEventsState extends ConsumerState<AllJoinedEvents> {
     );
   }
 }
-
-

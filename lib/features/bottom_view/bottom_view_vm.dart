@@ -34,8 +34,9 @@ class BottomViewVm extends ChangeNotifier {
       icon: WayaAssets.icons.bExplore.path,
       label: 'Explore',
       onTap: (ref) {
-        exploreScrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
-        ref.read(successfulSetupVmProvider.notifier).getUserData();
+        exploreScrollController.animateTo(0,
+            duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
+        ref.read(successfulSetupProvider.notifier).getUserData();
         ref.read(selectInterestProvider.notifier).getUserInterest();
         ref.read(shopVmProvider.notifier).allCategories(1);
         ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
@@ -47,9 +48,11 @@ class BottomViewVm extends ChangeNotifier {
     BottomBarItem(icon: WayaAssets.icons.bShop.path, label: 'Shop'),
     BottomBarItem(icon: WayaAssets.icons.bDonation.path, label: 'Donations'),
     BottomBarItem(icon: WayaAssets.icons.bBid.path, label: 'Bid'),
-    BottomBarItem(icon: WayaAssets.icons.bChat.path, label: 'Chat', isChat: true),
+    BottomBarItem(
+        icon: WayaAssets.icons.bChat.path, label: 'Chat', isChat: true),
     BottomBarItem(icon: WayaAssets.icons.bMenu.path, label: 'More'),
   ];
 }
 
-final bottomViewVmProvider = ChangeNotifierProvider.autoDispose((ref) => BottomViewVm(ref));
+final bottomViewVmProvider =
+    ChangeNotifierProvider.autoDispose((ref) => BottomViewVm(ref));

@@ -35,8 +35,9 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
   @override
   Widget build(BuildContext context) {
     //? The both parameters cannot be null.
-    assert(widget.imageUrl != null || widget.file != null, "This must contain either a file or a network URL");
-    assert(widget.imageUrl == null || widget.file == null, "The two properties cannot have non-null values");
+    assert(widget.imageUrl != null || widget.file != null,
+        "This must contain either a file or a network URL");
+    //assert(widget.imageUrl == null || widget.file == null, "The two properties cannot have non-null values");
 
     // Then get the theme.
     final wayaTheme = Theme.of(context);
@@ -61,7 +62,10 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
                   onTap: () async {
                     bool hasSaved = await WayaFileHelper.saveNetworkImage(
                       widget.imageUrl?.elementAt(pageController.page!.ceil()) ??
-                          widget.file!.elementAt(pageController.page!.ceil()).uri.toString(),
+                          widget.file!
+                              .elementAt(pageController.page!.ceil())
+                              .uri
+                              .toString(),
                     );
 
                     if (hasSaved) {
@@ -85,7 +89,10 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
             },
             child: WayaAssets.icons.genSet.moreHorz.svg(
               fit: BoxFit.none,
-              color: Colors.white,
+              colorFilter: ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           Gap(8.sp),
@@ -97,13 +104,13 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
         color: Colors.black,
         child: SafeArea(
           child: Center(
-            child: widget.file != null
+            child: widget.file == null
                 ? PageView(
                     controller: pageController,
                     children: List.generate(
-                      widget.file!.length,
+                      widget.imageUrl!.length,
                       (index) => PhotoView(
-                        imageProvider: FileImage(widget.file![index]),
+                        imageProvider: NetworkImage(widget.imageUrl![index]),
                         minScale: PhotoViewComputedScale.contained * 1,
                         maxScale: PhotoViewComputedScale.covered * 5,
                       ),
@@ -112,9 +119,19 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
                 : PageView(
                     controller: pageController,
                     children: List.generate(
-                      widget.imageUrl!.length,
+                      widget.file!.length,
                       (index) => PhotoView(
-                        imageProvider: NetworkImage(widget.imageUrl![index]),
+                        imageProvider: FileImage(widget.file![index]),
+                        errorBuilder: (context, e, stackTrace) {
+                          debugPrint("Error: $e");
+
+                          //? This is fine.
+                          return Icon(
+                            Icons.broken_image,
+                            size: 80.sp,
+                            color: wayaTheme.colorScheme.greyColor300,
+                          );
+                        },
                         minScale: PhotoViewComputedScale.contained * 1,
                         maxScale: PhotoViewComputedScale.covered * 5,
                       ),

@@ -15,11 +15,12 @@ class Report extends ConsumerStatefulWidget {
   final List<String> statuses;
   final String momentId;
 
-  const Report(
-      {super.key,
-      required this.statuses,
-      required this.currentStatus,
-      required this.momentId});
+  const Report({
+    super.key,
+    required this.statuses,
+    required this.currentStatus,
+    required this.momentId,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReportEventState();
@@ -73,14 +74,14 @@ class _ReportEventState extends ConsumerState<Report> {
                     thickness: 1,
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Text(
                   "Choose Reason for Reporting",
                   style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                     color: wayaTheme.colorScheme.greyColor600,
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: Divider(
                     color: wayaTheme.colorScheme.greyColor200,
@@ -148,9 +149,9 @@ class _ReportEventState extends ConsumerState<Report> {
                     const Gap(24),
                     WayaButton(
                         callback: () async {
-                          if (selectedStatus.isEmpty)
+                          if (selectedStatus.isEmpty) {
                             return WayaSnackBar.showToast("Reason is required");
-
+                          }
                           setState(() => isLoading = true);
 
                           final resp = await ref
@@ -163,10 +164,7 @@ class _ReportEventState extends ConsumerState<Report> {
                             isLoading = false;
                           });
 
-
                           return WayaNav.goBack(result: resp);
-
-                         
                         },
                         centerWidget: LoadingState(
                             loading: isLoading, text: "Submit Report")),

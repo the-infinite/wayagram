@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -14,15 +13,15 @@ import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.da
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/payout_review_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/payout_verification.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/ugt_payout_history.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-
-import '../../../core/components/waya_scaffold.dart';
 
 class AdminTransactionHistory extends StatefulHookConsumerWidget {
   static const route = '/admin-transaction-page';
@@ -37,12 +36,18 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final dashboardVm = ref.read(ugtAdminDashboardVm);
+    final dashboardVm = ref.watch(ugtAdminDashboardVm);
     final notifier = ref.read(ugtAdminDashboardVm.notifier);
+    final width = MediaQuery.of(context).size.width;
     //final viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestProvider);
+    //? for commission
+    final viewModel = ref.watch(createPollVotingProvider);
+    final percentage = (double.parse('${viewModel.commission}') / 100) *
+        num.parse(dashboardVm.revenueGenerated?.toString() ?? "0");
     useEffect(() {
       notifier.fetchUserTransaction(model?.id ?? "");
+      ref.read(createPollVotingProvider.notifier).getPayoutCommission();
 
       return null;
     }, []);
@@ -51,22 +56,33 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
       isScrollable: true,
       title: "Transaction History",
       backgroundColor: Colors.white,
-      floatingActionButton: DateTime.now().isAfter(
-              DateTime.parse(model?.endDate ?? "2096-01-01T00:00:00.000Z"))
+      floatingActionButton: DateTime.now().isAfter(DateTime.parse(
+                  model?.endDate ?? "2096-01-01T00:00:00.000Z")) &&
+              dashboardVm.revenueGenerated != 0
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Gap(40),
+                const Gap(40),
                 if (ConversationState.self.accountType ==
                     UserAccountType.business)
                   SizedBox(
-                    width: context.width / 2.8,
+                    width: width / 2.8,
                     child: WayaButton(
                         horizontalPadding: 10,
                         fontSize: 14.sp,
                         height: 45.h,
                         text: "Request Payout",
                         callback: () async {
+                          final percentage =
+                              (double.parse('${viewModel.commission}') / 100) *
+                                  num.parse(dashboardVm.revenueGenerated
+                                          ?.toString() ??
+                                      "0");
+                          final amountDue = double.parse(
+                                  dashboardVm.revenueGenerated?.toString() ??
+                                      '0') -
+                              double.parse(percentage.toString());
+
                           ref
                               .read(credentialInputProvider.notifier)
                               .onSubmitPayoutPin(() => WayaNav.toNamed(
@@ -75,25 +91,23 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                                         "id": model?.id ?? "",
                                         "Module": PayoutModule.contest,
                                         "Model": PayoutReviewModel(
-                                            comission: dashboardVm
-                                                .totalCommission
-                                                .toString(),
+                                            comission: percentage.toString(),
+                                            amountDue: amountDue.toString(),
                                             amount: dashboardVm.revenueGenerated
-                                                    ?.toString() ??
-                                                '0',
-                                            amountDue: dashboardVm
-                                                    .revenueGenerated
                                                     ?.toString() ??
                                                 '0',
                                             endDate: model?.endDate ?? "")
                                       }));
                         }),
                   ),
-                Gap(10),
+                const Gap(10),
                 GestureDetector(
                   onTap: () {
-                    WayaNav.toNamed(UgtPayoutHistory.route);
-                    //  WayaNav.toNamed('/admin-transaction-page');
+                    // "ECOMMERCE" "CONTEST" "DONATION" "POLL & VOTE" "QUOTATION" "EVENT" "COMMISSION",
+                    WayaNav.toNamed(PayoutHistory.route, arguments: {
+                      "referenceId": model?.id ?? "",
+                      "Module": 'CONTEST'
+                    });
                   },
                   child: Container(
                     //  margin: EdgeInsets.only(right: 20.w),
@@ -113,13 +127,6 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        /*   WayaAssets.icons.export.svg(
-                          width: 18,
-                          height: 18,
-                          fit: BoxFit.scaleDown,
-                          color: wayaTheme.colorScheme.primary600,
-                        ),
-                        Gap(8), */
                         Text(
                           'Payout History',
                           style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
@@ -193,7 +200,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                 _buildStatCard(
                     context,
                     "Total\nCommissions",
-                    "₦${formatMoney(dashboardVm.totalCommission?.toString() ?? '0')}",
+                    "₦${formatMoney(percentage.toString())}",
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
@@ -268,7 +275,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
                     child: widget)
               ],
             ),
-            Gap(10),
+            const Gap(10),
             Text(value, style: WayaTextStyles.headlineMedium),
           ],
         ),

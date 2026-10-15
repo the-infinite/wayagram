@@ -89,7 +89,9 @@ class CommentInputField extends ConsumerWidget {
                             keyboardType: TextInputType.multiline,
                             controller: controller.content,
                             hintText: 'Write comment here',
-                            borderColor: formState.hasError ? wayaTheme.colorScheme.error : null,
+                            borderColor: formState.hasError
+                                ? wayaTheme.colorScheme.error
+                                : null,
                           ),
 
                           //? If this raised an error.
@@ -98,7 +100,9 @@ class CommentInputField extends ConsumerWidget {
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 formState.errorText!,
-                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12),
                               ),
                             ),
                         ],
@@ -125,12 +129,14 @@ class CommentInputField extends ConsumerWidget {
 
                     //? If this is editing.
                     if (controller.isEditing) {
-                      await notifier.editComment(post.id, controller.replyingTo!.id, controller.content.text);
+                      await notifier.editComment(post.id,
+                          controller.replyingTo!.id, controller.content.text);
                     }
 
                     //? Since this is sending.
                     else {
-                      await notifier.createComment(post.id, controller.content.text, controller.replyingTo?.id);
+                      await notifier.createComment(post.id,
+                          controller.content.text, controller.replyingTo?.id);
                     }
 
                     // Clear the text in the text editing controller.

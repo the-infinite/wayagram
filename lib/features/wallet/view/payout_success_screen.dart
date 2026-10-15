@@ -16,17 +16,17 @@ class PayoutSuccessScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PayoutSuccessScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PayoutSuccessScreenState();
 }
 
 class _PayoutSuccessScreenState extends ConsumerState<PayoutSuccessScreen> {
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
 
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
       automaticallyImplyLeading: false,
       removeAppBar: false,
@@ -37,7 +37,11 @@ class _PayoutSuccessScreenState extends ConsumerState<PayoutSuccessScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Gap(50),
-          Image.asset('assets/images/wallet/check.png', height: 100.h, width: 100.w,),
+          Image.asset(
+            'assets/images/wallet/check.png',
+            height: 100.h,
+            width: 100.w,
+          ),
           const Gap(50),
           Text(
             'Payout Request Sent Successfully',
@@ -70,11 +74,11 @@ class _PayoutSuccessScreenState extends ConsumerState<PayoutSuccessScreen> {
           WayaButton(
             callback: !viewModel.isLoading!
                 ? () async {
-              WayaNav.removeAllUntil(WalletPage(), '/wallet');
-            }
+                    WayaNav.removeAllUntil(WalletPage(), '/wallet');
+                  }
                 : null,
-            centerWidget: LoadingState(loading: viewModel.isLoading!,
-                text: 'Done'),
+            centerWidget:
+                LoadingState(loading: viewModel.isLoading!, text: 'Done'),
             height: 50.h,
           ),
           const Gap(10),

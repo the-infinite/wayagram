@@ -16,15 +16,22 @@ class WayaSellerQuotation extends ConsumerStatefulWidget {
   const WayaSellerQuotation({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _WayaSellerQuotationState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _WayaSellerQuotationState();
 }
 
-class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation> with SingleTickerProviderStateMixin {
+class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   PageController pageController = PageController(
     initialPage: 0,
   );
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +82,8 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation> with 
               children: [
                 //? Icon.
                 WayaAssets.icons.create.svg(
-                  colorFilter: ColorFilter.mode(wayaTheme.colorScheme.primary200, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                      wayaTheme.colorScheme.primary200, BlendMode.srcIn),
                 ),
 
                 // Space.

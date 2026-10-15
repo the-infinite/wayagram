@@ -67,5 +67,6 @@ class OrderVm extends StateNotifier<OrderState> {
 }
 
 final orderVmProvider = StateNotifierProvider<OrderVm, OrderState>((ref) {
-  return OrderVm(OrderRepository(), WayaSecureDataSource(), ref);
+  final orderRepo = ref.watch(orderRepositoryProvider);
+  return OrderVm(orderRepo, WayaSecureDataSource(), ref);
 });

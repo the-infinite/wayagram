@@ -2,13 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/gender_data.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
@@ -29,11 +29,11 @@ class PersonalFirstStepView extends ConsumerStatefulWidget {
 
 class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   final _formKey = GlobalKey<FormState>();
-  late final notifier = ref.read(personalFirstStepProvider.notifier);
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final notifier = ref.read(personalFirstStepProvider.notifier);
       notifier.fetchBusinessTypes();
       notifier.fetchLocation();
 
@@ -143,8 +143,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               ),
                           ],
                         );
-                      }
-                      ),
+                      }),
                     )
                   ],
                 ),
@@ -731,7 +730,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 : Icons.visibility_off_outlined),
                             color: wayaTheme.colorScheme.greyColor300,
                           ),
-                            helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
+                          helperText:
+                              "Password must be 8 or more character and contain at least 1 number and 1 special character",
                         ),
                       ),
                       if (formState.hasError && !viewModel.isPasswordFocused)
@@ -825,28 +825,33 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                         textAlign: TextAlign.start,
                         text: TextSpan(
                           children: [
-                            TextSpan(text: "I agree to the ", style: WayaTextStyles.bodySmall),
+                            TextSpan(
+                                text: "I agree to the ",
+                                style: WayaTextStyles.bodySmall),
                             TextSpan(
                               text: "Terms and conditions ",
                               style: WayaTextStyles.smallActiveLinkStyle,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async => await WayaNav.to(
-                                      transition: Transition.circularReveal,
-                                      duration: const Duration(milliseconds: 500),
+                                      transition: WayaTransition.circularReveal,
+                                      duration:
+                                          const Duration(milliseconds: 500),
                                       WayaBrowserView(
                                         name: "Terms and Conditions",
                                         url: "https://wayagram.ng/terms",
                                       ),
                                     ),
                             ),
-                            TextSpan(text: "and ", style: WayaTextStyles.bodySmall),
+                            TextSpan(
+                                text: "and ", style: WayaTextStyles.bodySmall),
                             TextSpan(
                               text: "Privacy policy",
                               style: WayaTextStyles.smallActiveLinkStyle,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async => await WayaNav.to(
-                                      transition: Transition.circularReveal,
-                                      duration: const Duration(milliseconds: 500),
+                                      transition: WayaTransition.circularReveal,
+                                      duration:
+                                          const Duration(milliseconds: 500),
                                       WayaBrowserView(
                                         name: "Privacy Privacy",
                                         url: "https://wayagram.ng/policy",

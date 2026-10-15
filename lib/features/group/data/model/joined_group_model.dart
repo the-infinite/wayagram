@@ -143,6 +143,7 @@ class JoinedGroupDocs {
     this.memberCount,
     this.description,
     this.isOpen,
+    this.approveJoinRequest,
     this.isPrivate,
     this.coverImage,
     this.profileImage,
@@ -157,6 +158,7 @@ class JoinedGroupDocs {
     memberCount = json['memberCount'];
     description = json['description'];
     isOpen = json['isOpen'];
+    approveJoinRequest = json['approveJoinRequest'];
     isPrivate = json['isPrivate'];
     coverImage = json['coverImage'];
     profileImage = json['profileImage'];
@@ -171,6 +173,7 @@ class JoinedGroupDocs {
   num? memberCount;
   String? description;
   bool? isOpen;
+  bool? approveJoinRequest;
   bool? isPrivate;
   String? coverImage;
   String? profileImage;
@@ -184,6 +187,7 @@ class JoinedGroupDocs {
     num? memberCount,
     String? description,
     bool? isOpen,
+    bool? approveJoinRequest,
     bool? isPrivate,
     String? coverImage,
     String? profileImage,
@@ -197,6 +201,7 @@ class JoinedGroupDocs {
         memberCount: memberCount ?? this.memberCount,
         description: description ?? this.description,
         isOpen: isOpen ?? this.isOpen,
+        approveJoinRequest: approveJoinRequest ?? this.approveJoinRequest,
         isPrivate: isPrivate ?? this.isPrivate,
         coverImage: coverImage ?? this.coverImage,
         profileImage: profileImage ?? this.profileImage,
@@ -211,6 +216,7 @@ class JoinedGroupDocs {
     map['memberCount'] = memberCount;
     map['description'] = description;
     map['isOpen'] = isOpen;
+    map['approveJoinRequest'] = approveJoinRequest;
     map['isPrivate'] = isPrivate;
     map['coverImage'] = coverImage;
     map['profileImage'] = profileImage;

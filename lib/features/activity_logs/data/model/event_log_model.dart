@@ -1,0 +1,321 @@
+import 'dart:convert';
+EventLogModel eventLogModelFromJson(String str) => EventLogModel.fromJson(json.decode(str));
+String eventLogModelToJson(EventLogModel data) => json.encode(data.toJson());
+class EventLogModel {
+  EventLogModel({
+      this.message, 
+      this.status, 
+      this.statusCode, 
+      this.data,});
+
+  EventLogModel.fromJson(dynamic json) {
+    message = json['message'];
+    status = json['status'];
+    statusCode = json['statusCode'];
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
+  }
+  String? message;
+  bool? status;
+  num? statusCode;
+  Data? data;
+EventLogModel copyWith({  String? message,
+  bool? status,
+  num? statusCode,
+  Data? data,
+}) => EventLogModel(  message: message ?? this.message,
+  status: status ?? this.status,
+  statusCode: statusCode ?? this.statusCode,
+  data: data ?? this.data,
+);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['message'] = message;
+    map['status'] = status;
+    map['statusCode'] = statusCode;
+    if (data != null) {
+      map['data'] = data?.toJson();
+    }
+    return map;
+  }
+
+}
+
+Data dataFromJson(String str) => Data.fromJson(json.decode(str));
+String dataToJson(Data data) => json.encode(data.toJson());
+class Data {
+  Data({
+      this.docs, 
+      this.totalDocs, 
+      this.limit, 
+      this.page, 
+      this.totalPages, 
+      this.hasNextPage, 
+      this.nextPage, 
+      this.hasPrevPage, 
+      this.prevPage, 
+      this.pagingCounter, 
+      this.metadata,});
+
+  Data.fromJson(dynamic json) {
+    if (json['docs'] != null) {
+      docs = [];
+      json['docs'].forEach((v) {
+        docs?.add(EventLogDocs.fromJson(v));
+      });
+    }
+    totalDocs = json['totalDocs'];
+    limit = json['limit'];
+    page = json['page'];
+    totalPages = json['totalPages'];
+    hasNextPage = json['hasNextPage'];
+    nextPage = json['nextPage'];
+    hasPrevPage = json['hasPrevPage'];
+    prevPage = json['prevPage'];
+    pagingCounter = json['pagingCounter'];
+    metadata = json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null;
+  }
+  List<EventLogDocs>? docs;
+  num? totalDocs;
+  num? limit;
+  num? page;
+  num? totalPages;
+  bool? hasNextPage;
+  dynamic nextPage;
+  bool? hasPrevPage;
+  dynamic prevPage;
+  num? pagingCounter;
+  Metadata? metadata;
+Data copyWith({  List<EventLogDocs>? docs,
+  num? totalDocs,
+  num? limit,
+  num? page,
+  num? totalPages,
+  bool? hasNextPage,
+  dynamic nextPage,
+  bool? hasPrevPage,
+  dynamic prevPage,
+  num? pagingCounter,
+  Metadata? metadata,
+}) => Data(  docs: docs ?? this.docs,
+  totalDocs: totalDocs ?? this.totalDocs,
+  limit: limit ?? this.limit,
+  page: page ?? this.page,
+  totalPages: totalPages ?? this.totalPages,
+  hasNextPage: hasNextPage ?? this.hasNextPage,
+  nextPage: nextPage ?? this.nextPage,
+  hasPrevPage: hasPrevPage ?? this.hasPrevPage,
+  prevPage: prevPage ?? this.prevPage,
+  pagingCounter: pagingCounter ?? this.pagingCounter,
+  metadata: metadata ?? this.metadata,
+);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    if (docs != null) {
+      map['docs'] = docs?.map((v) => v.toJson()).toList();
+    }
+    map['totalDocs'] = totalDocs;
+    map['limit'] = limit;
+    map['page'] = page;
+    map['totalPages'] = totalPages;
+    map['hasNextPage'] = hasNextPage;
+    map['nextPage'] = nextPage;
+    map['hasPrevPage'] = hasPrevPage;
+    map['prevPage'] = prevPage;
+    map['pagingCounter'] = pagingCounter;
+    if (metadata != null) {
+      map['metadata'] = metadata?.toJson();
+    }
+    return map;
+  }
+
+}
+
+/*
+Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
+String metadataToJson(Metadata data) => json.encode(data.toJson());
+class Metadata {
+  Metadata({
+      this.offset, 
+      this.searchApplied, 
+      this.searchFields, 
+      this.appliedFilters,});
+
+  Metadata.fromJson(dynamic json) {
+    offset = json['offset'];
+    searchApplied = json['searchApplied'];
+    if (json['searchFields'] != null) {
+      searchFields = [];
+      json['searchFields'].forEach((v) {
+        searchFields?.add(Dynamic.fromJson(v));
+      });
+    }
+    appliedFilters = json['appliedFilters'] != null ? AppliedFilters.fromJson(json['appliedFilters']) : null;
+  }
+  num? offset;
+  bool? searchApplied;
+  List<dynamic>? searchFields;
+  AppliedFilters? appliedFilters;
+Metadata copyWith({  num? offset,
+  bool? searchApplied,
+  List<dynamic>? searchFields,
+  AppliedFilters? appliedFilters,
+}) => Metadata(  offset: offset ?? this.offset,
+  searchApplied: searchApplied ?? this.searchApplied,
+  searchFields: searchFields ?? this.searchFields,
+  appliedFilters: appliedFilters ?? this.appliedFilters,
+);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['offset'] = offset;
+    map['searchApplied'] = searchApplied;
+    if (searchFields != null) {
+      map['searchFields'] = searchFields?.map((v) => v.toJson()).toList();
+    }
+    if (appliedFilters != null) {
+      map['appliedFilters'] = appliedFilters?.toJson();
+    }
+    return map;
+  }
+
+}
+*/
+
+AppliedFilters appliedFiltersFromJson(String str) => AppliedFilters.fromJson(json.decode(str));
+String appliedFiltersToJson(AppliedFilters data) => json.encode(data.toJson());
+class AppliedFilters {
+  AppliedFilters({
+      this.logType, 
+      this.userId,});
+
+  AppliedFilters.fromJson(dynamic json) {
+    logType = json['logType'];
+    userId = json['userId'];
+  }
+  String? logType;
+  String? userId;
+AppliedFilters copyWith({  String? logType,
+  String? userId,
+}) => AppliedFilters(  logType: logType ?? this.logType,
+  userId: userId ?? this.userId,
+);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['logType'] = logType;
+    map['userId'] = userId;
+    return map;
+  }
+
+}
+
+EventLogDocs docsFromJson(String str) => EventLogDocs.fromJson(json.decode(str));
+String docsToJson(EventLogDocs data) => json.encode(data.toJson());
+class EventLogDocs {
+  EventLogDocs({
+      this.id, 
+      this.userId, 
+      this.logType, 
+      this.description, 
+      this.actionType, 
+      this.metadata, 
+      this.createdAt, 
+      this.updatedAt,});
+
+  DateTime get createdTime => DateTime.parse(createdAt!);
+  DateTime get updatedTime => DateTime.parse(updatedAt!);
+
+  EventLogDocs.fromJson(dynamic json) {
+    id = json['id'];
+    userId = json['userId'];
+    logType = json['logType'];
+    description = json['description'];
+    actionType = json['actionType'];
+    metadata = json['metadata'] != null ? Metadata.fromJson(json['metadata']) : null;
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+  }
+  String? id;
+  String? userId;
+  String? logType;
+  String? description;
+  String? actionType;
+  Metadata? metadata;
+  String? createdAt;
+  String? updatedAt;
+  EventLogDocs copyWith({  String? id,
+  String? userId,
+  String? logType,
+  String? description,
+  String? actionType,
+  Metadata? metadata,
+  String? createdAt,
+  String? updatedAt,
+}) => EventLogDocs(  id: id ?? this.id,
+  userId: userId ?? this.userId,
+  logType: logType ?? this.logType,
+  description: description ?? this.description,
+  actionType: actionType ?? this.actionType,
+  metadata: metadata ?? this.metadata,
+  createdAt: createdAt ?? this.createdAt,
+  updatedAt: updatedAt ?? this.updatedAt,
+);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['id'] = id;
+    map['userId'] = userId;
+    map['logType'] = logType;
+    map['description'] = description;
+    map['actionType'] = actionType;
+    if (metadata != null) {
+      map['metadata'] = metadata?.toJson();
+    }
+    map['createdAt'] = createdAt;
+    map['updatedAt'] = updatedAt;
+    return map;
+  }
+
+}
+
+Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
+String metadataToJson(Metadata data) => json.encode(data.toJson());
+class Metadata {
+  Metadata({
+      this.eventId, 
+      this.location, 
+      this.eventType, 
+      this.startDate, 
+      this.eventTitle,});
+
+  Metadata.fromJson(dynamic json) {
+    eventId = json['eventId'];
+    location = json['location'];
+    eventType = json['eventType'];
+    startDate = json['startDate'];
+    eventTitle = json['eventTitle'];
+  }
+  String? eventId;
+  String? location;
+  String? eventType;
+  String? startDate;
+  String? eventTitle;
+Metadata copyWith({  String? eventId,
+  String? location,
+  String? eventType,
+  String? startDate,
+  String? eventTitle,
+}) => Metadata(  eventId: eventId ?? this.eventId,
+  location: location ?? this.location,
+  eventType: eventType ?? this.eventType,
+  startDate: startDate ?? this.startDate,
+  eventTitle: eventTitle ?? this.eventTitle,
+);
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['eventId'] = eventId;
+    map['location'] = location;
+    map['eventType'] = eventType;
+    map['startDate'] = startDate;
+    map['eventTitle'] = eventTitle;
+    return map;
+  }
+
+}

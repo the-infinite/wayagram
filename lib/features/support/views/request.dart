@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -25,13 +24,6 @@ class SupportRequestScreen extends StatefulHookConsumerWidget {
 class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
   late final notifier = ref.read(supportRequestProvider.notifier);
   final _formKey = GlobalKey<FormState>();
-  //final loadingNotifier = ValueNotifier(false);
-
-  @override
-  void dispose() {
-    // loadingNotifier.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +125,6 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                 if (notifier.email.text.isEmpty) {
                   return 'Email is required';
                 }
-
-                // TODO: Streamline this by making it a helper.
                 final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                 if (!regexp.hasMatch(notifier.email.text)) {
                   return 'Invalid email address';
@@ -385,10 +375,12 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                   WayaNav.goBack();
 
                   //? Show the popup on the previous screen.
-                  await WayaUtils.showModalSheet(
-                    Get.context!,
-                    child: SuccessfulSupportRequestDialog(id: ticketID),
-                  );
+                  if (context.mounted) {
+                    await WayaUtils.showModalSheet(
+                      context,
+                      child: SuccessfulSupportRequestDialog(id: ticketID),
+                    );
+                  }
                 }
               },
               notifier: isLoading,

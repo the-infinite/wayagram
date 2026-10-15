@@ -8,7 +8,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/components.dart';
 
 mixin WalletMixin {
-  Future<void> shareReceipt(ScreenshotController screenshotController,Widget buildReceiptContent) async {
+  Future<void> shareReceipt(ScreenshotController screenshotController,
+      Widget buildReceiptContent) async {
     try {
       final Uint8List imageBytes = await screenshotController.captureFromWidget(
         buildReceiptContent,
@@ -20,15 +21,13 @@ mixin WalletMixin {
       final imageFile = File(imagePath);
       await imageFile.writeAsBytes(imageBytes);
 
-      await Share.shareXFiles(
-        [XFile(imagePath)],
+      await SharePlus.instance.share(ShareParams(
+        files: [XFile(imagePath)],
         text: 'Transaction Receipt',
         subject: 'Transaction Receipt from Wayagram',
-      );
+      ));
     } catch (e) {
       WayaSnackBar.showToast('Failed to share receipt');
     }
   }
-
-  
 }

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/applied_contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 
 class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
   final ContestRepo _contestRepository;
@@ -95,7 +95,6 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
         AppliedContest responseModel = AppliedContest.fromJson(response.data);
 
         if (responseModel.data?.docs?.isNotEmpty == true) {
-          print("dude ww: ${responseModel.data?.docs?.first.fullName}");
           return responseModel.data?.docs?.first;
         } else {
           return null;
@@ -140,5 +139,6 @@ final selectedAppliedContestProvider =
 // Provider
 final appliedContestProvider =
     StateNotifierProvider<AppliedContestNotifier, AppliedContestState>((ref) {
-  return AppliedContestNotifier(ContestRepo(), WayaLocalDataSource());
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return AppliedContestNotifier(contestRepo, WayaLocalDataSource());
 });

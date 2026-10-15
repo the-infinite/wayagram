@@ -11,7 +11,7 @@ import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/shared/features/chat/modal/start_conversation.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/conversation.dart';
 import 'package:wayagram/features/chat/widget/search.dart';
 import 'package:wayagram/shared/features/chat/widget/empty_conversation.dart';
@@ -20,7 +20,8 @@ class ConversationScreen extends ConsumerStatefulWidget {
   const ConversationScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ConversationScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ConversationScreenState();
 }
 
 class _ConversationScreenState extends ConsumerState<ConversationScreen> {
@@ -31,7 +32,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         await WayaSocketController.instance.connect(ref);
-        await WayaSocketController.instance.listen();
+        await WayaSocketController.instance.listen(ref);
         notifier.getChats(true);
         notifier.getArchivedChats(true);
       },
@@ -47,7 +48,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
       (_) async {
         await WayaSocketController.instance.disconnect();
         await WayaSocketController.instance.connect(ref);
-        await WayaSocketController.instance.listen();
+        await WayaSocketController.instance.listen(ref);
         notifier.getChats(true);
         notifier.getArchivedChats(true);
       },
@@ -129,7 +130,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                     WayaNav.toNamed(ArchivedChatsScreen.route);
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(200),
                       color: WayaColors.primary50,
@@ -173,7 +175,10 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                     callback: _startConversation,
                     height: null,
                     centerWidget: WayaAssets.icons.cPlus.svg(
-                      color: WayaColors.white,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.white,
+                        BlendMode.srcIn,
+                      ),
                       height: 24,
                       width: 24,
                     ),
@@ -186,7 +191,8 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
             ],
           ),
         ),
-        body: conversationState.conversations.isEmpty && conversationState.hasLoaded
+        body: conversationState.conversations.isEmpty &&
+                conversationState.hasLoaded
             ? SizedBox.expand(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 17),
@@ -234,7 +240,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       (index) => ConversationWidget(
                         index: index,
                         chatId: conversationState.results[index].id,
-                        notifier: ref.read(chatProvider(conversationState.results[index].id).notifier),
+                        notifier: ref.read(
+                            chatProvider(conversationState.results[index].id)
+                                .notifier),
                         conversationNotifier: notifier,
                       ),
                     ),
@@ -261,7 +269,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         (index) => ConversationWidget(
                           index: index,
                           chatId: conversationState.pinned[index].id,
-                          notifier: ref.read(chatProvider(conversationState.pinned[index].id).notifier),
+                          notifier: ref.read(
+                              chatProvider(conversationState.pinned[index].id)
+                                  .notifier),
                           conversationNotifier: notifier,
                         ),
                       ),
@@ -290,7 +300,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       (index) => ConversationWidget(
                         index: index,
                         chatId: conversationState.unpinned[index].id,
-                        notifier: ref.read(chatProvider(conversationState.unpinned[index].id).notifier),
+                        notifier: ref.read(
+                            chatProvider(conversationState.unpinned[index].id)
+                                .notifier),
                         conversationNotifier: notifier,
                       ),
                     ),

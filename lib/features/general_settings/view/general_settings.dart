@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/helpers/package.dart';
@@ -41,7 +42,8 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -98,14 +100,18 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(
+                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //
               GeneralSettingsOptionModel(
                 title: 'Change Password',
                 iconPath: 'password',
-                onTap: () => WayaNav.toNamed('/change-password-gen-set'),
+                onTap: () => {
+                  WayaNav.toNamed(VerifyTransactionIdentity.route,
+                      arguments: "change-password"),
+                },
               ),
 
               //
@@ -121,12 +127,18 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Change Transaction PIN',
                 iconPath: 'password',
-                onTap: () => WayaNav.toNamed('/change-pin-page'),
+                onTap: () => {
+                  WayaNav.toNamed(VerifyTransactionIdentity.route,
+                      arguments: "change-transaction-pin"),
+                },
               ),
               GeneralSettingsOptionModel(
                 title: 'Set Transaction PIN',
                 iconPath: 'password',
-                onTap: () => {WayaNav.toNamed(VerifyTransactionIdentity.route, arguments: "account-setting"),},
+                onTap: () => {
+                  WayaNav.toNamed(VerifyTransactionIdentity.route,
+                      arguments: "account-setting"),
+                },
               ),
               /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
@@ -248,7 +260,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: WayaAssets.icons.chat.path,
                 onTap: () => WayaNavigationHelper.showComingSoonModal(false),
               ),
-               GeneralSettingsOptionModel(
+              GeneralSettingsOptionModel(
                 title: 'Page Settings',
                 isRealPath: true,
                 iconPath: WayaAssets.icons.mPages.path,
@@ -260,7 +272,6 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: WayaAssets.icons.mGroup.path,
                 onTap: () => WayaNav.toNamed(GroupSettingPage.route),
               ),
-             
             ],
           ),
           GeneralSettingsOptionTile(
@@ -308,7 +319,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               return const SizedBox();
             },
             builder: (context) => Text(
-              "v${PackageData.info.version}-${WayaConstants.isProduction ? "live" : "test"}",
+              "v${PackageData.info.version}-${Environment.isProduction ? "live" : "test"}",
               textAlign: TextAlign.center,
               style: WayaTextStyles.bodySmall.copyWith(
                 color: WayaColors.greyColor400,

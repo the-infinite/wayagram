@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -11,6 +10,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_item.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
@@ -30,12 +31,16 @@ class _CartCardState extends ConsumerState<CartCard> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     //  final viewModel = ref.watch(cartCardVmProvider);
 
 //? check if the delveryCharge is true and there is no delivery date set by the seller,
 //or if the deliveryOption is delivery and the seller has not set the delivery date
     final bool isDeliveryCharge = widget.cartItem.products.any((prod) =>
-        (prod.deliveryCharge && widget.cartItem.deliveryDate == null) ||
+        (prod.deliveryCharge &&
+            widget.cartItem.deliveryDate == null &&
+            prod.deliveryOptions != 'Both') ||
         (prod.deliveryOptions == 'Delivery' &&
             widget.cartItem.deliveryDate == null));
 
@@ -84,7 +89,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                         ),
                         if (isDeliveryCharge || isAddedDeliveryDate)
                           Text(
-                            "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not Requested'}",
+                            "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not added'}",
                             style: TextStyle().wayaCopyWith(
                                 color: wayaTheme.colorScheme.greyColor400,
                                 fontSize: 14.sp),
@@ -142,7 +147,6 @@ class _CartCardState extends ConsumerState<CartCard> {
                   })
               : SizedBox.shrink(),
         ),
-        // const Gap(10),
         Container(
           padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
           decoration: BoxDecoration(
@@ -154,7 +158,7 @@ class _CartCardState extends ConsumerState<CartCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: context.width * 0.40,
+                width: width * 0.40,
                 child: Center(
                   child: Text(
                       WayaHelpers.formatPrice(widget.cartItem.totalFee ?? 0),
@@ -162,7 +166,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                 ),
               ),
               SizedBox(
-                width: context.width * 0.40,
+                width: width * 0.40,
                 child: WayaButton(
                     callback: () {
                       if (isDeliveryCharge) {
@@ -201,6 +205,8 @@ class CartProductCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     //)
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         Container(
@@ -228,7 +234,7 @@ class CartProductCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: context.width * 0.3,
+                        width: width * 0.3,
                         child: Text(
                           cartProduct.productName,
                           style: TextStyle().wayaCopyWith(
@@ -240,13 +246,13 @@ class CartProductCard extends ConsumerWidget {
                       ),
                       const Gap(5),
                       Text(
-                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice((double.parse(cartProduct.unitPrice)).toInt())}",
+                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice((double.parse(cartProduct.unitPrice ?? '')).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       const Gap(5),
                       Text(
                         WayaHelpers.formatPrice(
-                            double.parse(cartProduct.unitPrice).toInt() *
+                            double.parse(cartProduct.unitPrice ?? '').toInt() *
                                 cartProduct.quantity),
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
@@ -265,7 +271,8 @@ class CartProductCard extends ConsumerWidget {
                           count: 1,
                           productId: cartProduct.productId,
                           shopId: shopId,
-                          price: double.parse(cartProduct.unitPrice).toInt(),
+                          price:
+                              double.parse(cartProduct.unitPrice ?? '').toInt(),
                           productImage: cartProduct.productImage ?? '',
                           productName: cartProduct.productName);
                     },

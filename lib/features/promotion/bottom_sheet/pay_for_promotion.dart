@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/promotion/vm/create_promotion_vm.dart';
@@ -31,9 +31,10 @@ class _JoinEventState extends ConsumerState<PayForPromotion> {
     final walletState = ref.watch(walletVmProvider);
     final state = ref.watch(promotionVmProvider);
     final walletBalance = walletState.data?.balance ?? '0';
-    final isInsufficientBalance = double.parse(walletBalance).toInt() < widget.budget;
+    final isInsufficientBalance =
+        double.parse(walletBalance).toInt() < widget.budget;
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -61,7 +62,7 @@ class _JoinEventState extends ConsumerState<PayForPromotion> {
           ),
           const Gap(30),
           Container(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             width: double.infinity,
             decoration: BoxDecoration(
                 color: wayaTheme.colorScheme.primary50,
@@ -80,7 +81,7 @@ class _JoinEventState extends ConsumerState<PayForPromotion> {
                 const Gap(6),
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       color: wayaTheme.colorScheme.white,
                       borderRadius: BorderRadius.circular(12)),

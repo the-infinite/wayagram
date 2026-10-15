@@ -3,22 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
-// Add this import for GetX
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/chat/view/default.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/donation/view/donations.dart';
-//import 'package:wayagram/features/chat/view/default.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/more/views/more.dart';
 import 'package:wayagram/features/quotation/buyer/views/waya_buyer_quotation.dart';
 import 'package:wayagram/features/shop/views/waya_shop.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 import '../quotation/seller/views/waya_seller_quotation.dart';
 
@@ -113,9 +111,6 @@ class _BottomViewState extends ConsumerState<BottomView> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(bottomViewVmProvider);
-    final successfulSetupState = ref.watch(successfulSetupVmProvider);
-    final userData = successfulSetupState.user;
-    final userType = userData?.user?.role;
     final dynamic data = ModalRoute.of(context)?.settings.arguments;
     final List<Widget> pages = [
       Explore(),
@@ -124,7 +119,9 @@ class _BottomViewState extends ConsumerState<BottomView> {
             data != null && data is Map<String, dynamic> ? data['current'] : 0,
       ),
       Donations(),
-      userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
+      ShopResource.hasSelectedShop
+          ? WayaSellerQuotation()
+          : WayaBuyerQuotation(),
       ConversationScreen(),
       MoreView(),
     ];

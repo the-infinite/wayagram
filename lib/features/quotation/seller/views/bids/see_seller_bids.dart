@@ -17,7 +17,7 @@ import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_timer.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 class SeeSellerBids extends ConsumerStatefulWidget {
   static const route = '/quotation/seller/bids';
@@ -57,9 +57,13 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
         WayaPreloaderController.instance.show();
 
         //? This is fine.
-        final foundBid = notifier.getBid(widget.id) ?? await notifier.getSingleBid(widget.id);
-        final foundQuote = notifier.getBidQuote(widget.requestId) ?? await notifier.getBuyRequest(widget.requestId);
-        final foundUser = foundQuote != null ? await UserResource.getUserDetails(foundQuote.buyerId) : null;
+        final foundBid = notifier.getBid(widget.id) ??
+            await notifier.getSingleBid(widget.id);
+        final foundQuote = notifier.getBidQuote(widget.requestId) ??
+            await notifier.getBuyRequest(widget.requestId);
+        final foundUser = foundQuote != null
+            ? await UserResource.getUserDetails(foundQuote.buyerId)
+            : null;
 
         //? Update these values in state.
         setState(() {
@@ -91,7 +95,8 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
     super.dispose();
   }
 
-  Future<void> _negotiateBid(BuyRequestModel request, QuotationBidModel bid) async {
+  Future<void> _negotiateBid(
+      BuyRequestModel request, QuotationBidModel bid) async {
     final amount = await WayaUtils.showModalSheet<double>(
       context,
       child: EditOfferModal(
@@ -113,6 +118,7 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
       bidId: bid.id,
       lastCounterSentBy: BidActionAuthor.vendor,
       counterAmount: amount.toStringAsFixed(2),
+      deliveryCost: bid.deliveryCharge,
     ));
 
     //! Since bidding failed, you can leave.
@@ -123,7 +129,8 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
     WayaSnackBar.showToast("Bid countered successfully");
   }
 
-  Future<void> _acceptBid(BuyRequestModel request, QuotationBidModel bid) async {
+  Future<void> _acceptBid(
+      BuyRequestModel request, QuotationBidModel bid) async {
     final wayaTheme = Theme.of(context);
     final acceptController = ValueNotifier(false);
 
@@ -132,7 +139,8 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
       context: context,
       onCancel: () => WayaNav.goBack(),
       title: 'Are you sure you want to accept this bid?',
-      message: 'Are you sure you want to accept this bid? Once confirmed this can\'t be undone',
+      message:
+          'Are you sure you want to accept this bid? Once confirmed this can\'t be undone',
       icon: WayaAssets.images.dCodeValid.image(
         height: 117.dg,
         width: 117.dg,
@@ -172,7 +180,8 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
     );
   }
 
-  Future<void> _rejectBid(BuyRequestModel request, QuotationBidModel bid) async {
+  Future<void> _rejectBid(
+      BuyRequestModel request, QuotationBidModel bid) async {
     final wayaTheme = Theme.of(context);
     final acceptController = ValueNotifier(false);
 
@@ -181,7 +190,8 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
       context: context,
       onCancel: () => WayaNav.goBack(),
       title: 'Are you sure you want to reject this bid?',
-      message: 'Are you sure you want to reject this bid? Once confirmed this can\'t be undone',
+      message:
+          'Are you sure you want to reject this bid? Once confirmed this can\'t be undone',
       icon: WayaAssets.images.dCodeInvalid.image(
         height: 117.dg,
         width: 117.dg,
@@ -215,7 +225,8 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
     final wayaTheme = Theme.of(context);
 
     //? If this has been
-    if (bid?.lastCounterSentBy == BidActionAuthor.buyer && bid?.status == BidActionType.accept) {
+    if (bid?.lastCounterSentBy == BidActionAuthor.buyer &&
+        bid?.status == BidActionType.accept) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) {
           if (!locked) {
@@ -259,7 +270,10 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                       WayaDp(
                         radius: 20.r,
                         image: user!.$1.profilePicture,
+                        onTap: () => WayaNav.toNamed(
+                            WayaAppRoutes.getProfileRoute(user!.$1.id)),
                         isSelf: false,
+                        canFocus: false,
                       ),
 
                       //? Second, the user's name.
@@ -290,7 +304,9 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                             //* The name of the user that is making the condition of the product
                             WayaRichText(
                               title1: user!.$2.displayName ?? user!.$1.fullname,
-                              title2: request!.condition == "new" ? "   Brand New" : "   Fairly Used",
+                              title2: request!.condition == "new"
+                                  ? "   Brand New"
+                                  : "   Fairly Used",
                               style1: wayaTheme.textTheme.bodyBold.copyWith(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.normal,
@@ -307,7 +323,8 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
 
                       //? Third, the request timer.
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 6.w, vertical: 1.h),
                         decoration: BoxDecoration(
                           color: wayaTheme.colorScheme.primaryBrown50,
                           borderRadius: BorderRadius.circular(6000.r),
@@ -340,7 +357,8 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                   ),
 
                   // Divider that should create some space.
-                  Divider(color: wayaTheme.colorScheme.greyColor200, thickness: 1),
+                  Divider(
+                      color: wayaTheme.colorScheme.greyColor200, thickness: 1),
 
                   //? Second, the amount of money that we are keeping notice of here.
                   Text(
@@ -350,7 +368,9 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                       fontWeight: sentBid ? FontWeight.normal : FontWeight.w500,
                       decoration: sentBid ? TextDecoration.lineThrough : null,
                       decorationColor: wayaTheme.colorScheme.greyColor300,
-                      color: sentBid ? wayaTheme.colorScheme.greyColor300 : wayaTheme.colorScheme.customBlack,
+                      color: sentBid
+                          ? wayaTheme.colorScheme.greyColor300
+                          : wayaTheme.colorScheme.customBlack,
                     ),
                   ),
 
@@ -372,21 +392,36 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                   // Boundless space.
                   const Spacer(),
 
-                  //? This is fine too.
-                  if (bid!.status != BidActionType.reject) ...[
+                  //? Since this bid is just opened, the seller cannot accept or reject it. So
+                  //? we will show a disabled button.
+                  if (bid!.status == BidActionType.noop) ...[
+                    //* The button to negotiate an offer.
+                    WayaButton(
+                      callback: null,
+                      isDisabled: true,
+                      text: "Waiting for response",
+                    ),
+
+                    // Some space.
+                    Gap(10.h),
+                  ]
+
+                  //? If this bid is not accepted or rejected, then we can show the buttons to negotiate, accept, and reject.
+                  else if (![BidActionType.accept, BidActionType.reject]
+                      .contains(bid!.status)) ...[
                     //* The button to negotiate an offer.
                     WayaProgressiveButton(
                       callback: () => _negotiateBid(request!, bid!),
                       notifier: loadingController,
                       color: wayaTheme.colorScheme.info,
-                      text: bid!.lastCounterSentBy == BidActionAuthor.buyer ? "Negotiate" : "Renegotiate",
+                      text: bid!.lastCounterSentBy == BidActionAuthor.buyer
+                          ? "Negotiate"
+                          : "Renegotiate",
                     ),
 
                     // Some space.
                     if (bid!.lastCounterSentBy == BidActionAuthor.buyer)
-                      Gap(
-                        10.h,
-                      ),
+                      Gap(10.h),
 
                     //? The buttons to accept and reject an offer.
                     if (bid!.lastCounterSentBy == BidActionAuthor.buyer)

@@ -33,15 +33,18 @@ class FollowRelationshipWidget extends StatelessWidget {
           : Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: InkWell(
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
+                onTap: () => WayaNav.toNamed(
+                    WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
                 borderRadius: BorderRadius.circular(12.r),
                 splashColor: theme.colorScheme.primary.withAlpha(30),
-                focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+                focusColor:
+                    const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
                 highlightColor: theme.colorScheme.primary.withAlpha(30),
                 child: Card(
                   elevation: 0,
                   child: Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 15),
+                    padding:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 15),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.r),
@@ -51,7 +54,8 @@ class FollowRelationshipWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          contentPadding: EdgeInsets.only(left: 0, right: 0),
+                          contentPadding:
+                              const EdgeInsets.only(left: 0, right: 0),
                           leading: ChatProfilePicture(
                             user: data.$1,
                             radius: 20.h,
@@ -73,7 +77,8 @@ class FollowRelationshipWidget extends StatelessWidget {
                               GestureDetector(
                                 onTap: () async {
                                   //? If this user is following this one.
-                                  if (myFollowProvider.isUserFollowing(data.$1.id)) {
+                                  if (myFollowProvider
+                                      .isUserFollowing(data.$1.id)) {
                                     await notifier.unfollowUser(data.$1.id);
                                   }
 
@@ -84,23 +89,29 @@ class FollowRelationshipWidget extends StatelessWidget {
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(right: 20.w),
-                                  padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                  padding: REdgeInsets.symmetric(
+                                      vertical: 5.dg, horizontal: 10.dg),
                                   decoration: BoxDecoration(
-                                    border: myFollowProvider.isUserFollowing(data.$1.id)
+                                    border: myFollowProvider
+                                            .isUserFollowing(data.$1.id)
                                         ? Border.all(
                                             color: theme.colorScheme.primary,
                                             width: 1.5,
                                           )
                                         : null,
-                                    color: myFollowProvider.isUserFollowing(data.$1.id)
+                                    color: myFollowProvider
+                                            .isUserFollowing(data.$1.id)
                                         ? theme.colorScheme.white
                                         : theme.colorScheme.primary,
                                     borderRadius: BorderRadius.circular(7.r),
                                   ),
                                   child: Text(
-                                    myFollowProvider.isUserFollowing(data.$1.id) ? "Following" : "Follow",
+                                    myFollowProvider.isUserFollowing(data.$1.id)
+                                        ? "Following"
+                                        : "Follow",
                                     style: theme.textTheme.labelSmall?.copyWith(
-                                      color: myFollowProvider.isUserFollowing(data.$1.id)
+                                      color: myFollowProvider
+                                              .isUserFollowing(data.$1.id)
                                           ? theme.colorScheme.primary
                                           : theme.colorScheme.white,
                                       fontWeight: FontWeight.w600,
@@ -111,7 +122,9 @@ class FollowRelationshipWidget extends StatelessWidget {
                             ],
                           ),
                           subtitle: Text(
-                            data.$2.username != null ? '@${data.$2.username}' : 'ID: ${data.$1.id}',
+                            data.$2.username != null
+                                ? '@${data.$2.username}'
+                                : 'ID: ${data.$1.id}',
                             style: theme.textTheme.bodySmall!.copyWith(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
@@ -119,9 +132,6 @@ class FollowRelationshipWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-
-                        //Gap(10),
-
                         //? This is the user's bio.
                         Text(
                           data.$2.bio ?? '',

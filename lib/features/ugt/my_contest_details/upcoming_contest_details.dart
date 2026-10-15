@@ -9,8 +9,9 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart'
-    as appliedContest;
+    as applied_contest;
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
@@ -38,18 +39,14 @@ class _UpcomingContestDetailsState
     var viewModel = ref.watch(votersContestNotifier.notifier);
     final hasProfile = useState(false);
     final appliedContestModel =
-        useState<appliedContest.AppliedContestModel?>(null);
-    debugPrint("my value ${model?.hasApplied}");
+        useState<applied_contest.AppliedContestModel?>(null);
 
     useEffect(() {
-      print("dude 1");
       ref
           .read(appliedContestProvider.notifier)
           .fetchSingleAppliedContest(model?.id ?? "")
           .then((value1) {
-        print("dude 2 ${value1?.fullName}");
         if (value1 != null) {
-          print("dude ${value1.fullName}");
           appliedContestModel.value = value1;
         }
       });
@@ -59,12 +56,9 @@ class _UpcomingContestDetailsState
               ref, model?.id ?? "", viewModel.getLoggedInUserId() ?? "")
           .then((model) {
         if (model != null) {
-          debugPrint("i am here");
           if (model.data?.totalDocs == 1) {
-            debugPrint("i am here 2");
             if (model.data?.docs?.first.profilePhoto != null &&
                 model.data?.docs?.first.bio != null) {
-              debugPrint("i am here 3");
               hasProfile.value = true;
             }
           } else {
@@ -136,12 +130,18 @@ class _UpcomingContestDetailsState
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
                       )
-                    : Image.network(
-                        model?.uploadCoverImages ?? "",
+                    : SafeCachedNetworkImage(
+                        imageUrl: model?.uploadCoverImages ?? "",
                         width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
+                        errorWidget: Container(
+                          width: context.width,
+                          height: 200,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.error),
+                        ),
                       ),
               ),
               const Gap(15),
@@ -180,7 +180,7 @@ class _UpcomingContestDetailsState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AboutUgtWidget(
-                      title: "Total Stages",
+                      title: "Multiple Stages",
                       content: model?.multipleStages ?? ""),
                   const Gap(20),
                   AboutUgtWidget(
@@ -230,7 +230,7 @@ class _UpcomingContestDetailsState
                     text: "View Contest Details",
                   ),
                 ),
-              Gap(20),
+              const Gap(20),
               Center(
                 child: WayaButton(
                   color: Colors.white,

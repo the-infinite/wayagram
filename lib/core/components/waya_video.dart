@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -243,7 +242,8 @@ class WayaVideoWidget extends StatefulWidget {
   }
 }
 
-class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderStateMixin {
+class _WayaVideoWidgetState extends State<WayaVideoWidget>
+    with TickerProviderStateMixin {
   AnimationController? animationController;
   bool _controlsHidden = false;
   Timer? _timer;
@@ -352,6 +352,19 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
     } catch (_) {}
   }
 
+  void _viewVideo() async {
+    final result = await WayaNav.to(
+      transition: WayaTransition.circularReveal,
+      WayaVideoDetailScreen(
+        file: widget.file,
+        videoUrl: widget.networkUrl?.toString(),
+      ),
+    );
+
+    //? Do nothing.
+    if (result == null) return;
+  }
+
   @override
   Widget build(BuildContext context) {
     //? If these are not initialized, initialize them.
@@ -407,7 +420,12 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
           //? Third, the clickable area of the screen that is used to switch
           //? hide or unhide the buttons.
           GestureDetector(
-            onTap: _controlsHidden ? _unhideControls : _hideControls,
+            onTap: widget.canFocus
+                ? _viewVideo
+                : _controlsHidden
+                    ? _unhideControls
+                    : _hideControls,
+            behavior: HitTestBehavior.translucent,
             onDoubleTap: () {
               //? On double tap this thing, pause if this is playing.
               if (widget.controller.isPlaying) {
@@ -434,20 +452,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
 
     //? Since this has no complex controls, just return the composition widget.
     return GestureDetector(
-      onTap: !widget.canFocus
-          ? null
-          : () async {
-              final result = await WayaNav.to(
-                transition: Transition.circularReveal,
-                WayaVideoDetailScreen(
-                  file: widget.file,
-                  videoUrl: widget.networkUrl.toString(),
-                ),
-              );
-
-              //? Do nothing.
-              if (result == null) return;
-            },
+      onTap: !widget.canFocus ? null : _viewVideo,
       child: composition,
     );
   }
@@ -505,13 +510,18 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                         ),
                         icon: SvgPicture.asset(
-                          isPlaying ? WayaAssets.icons.cPause.path : WayaAssets.icons.cPlay.path,
+                          isPlaying
+                              ? WayaAssets.icons.cPause.path
+                              : WayaAssets.icons.cPlay.path,
                           height: 26,
                           width: 26,
-                          color: theme.colorScheme.primary,
+                          colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       );
               },
@@ -551,13 +561,18 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.white,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.all(2),
+                        padding: const EdgeInsets.all(2),
                       ),
                       icon: SvgPicture.asset(
-                        isMuted ? WayaAssets.icons.actionVolumeMute.path : WayaAssets.icons.actionVolumeUnmute.path,
+                        isMuted
+                            ? WayaAssets.icons.actionVolumeMute.path
+                            : WayaAssets.icons.actionVolumeUnmute.path,
                         height: 20,
                         width: 20,
-                        color: theme.colorScheme.primary,
+                        colorFilter: ColorFilter.mode(
+                          theme.colorScheme.primary,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     );
             },
@@ -620,13 +635,18 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                         ),
                         icon: SvgPicture.asset(
-                          isPlaying ? WayaAssets.icons.cPause.path : WayaAssets.icons.cPlay.path,
+                          isPlaying
+                              ? WayaAssets.icons.cPause.path
+                              : WayaAssets.icons.cPlay.path,
                           height: 26,
                           width: 26,
-                          color: theme.colorScheme.primary,
+                          colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       );
               },
@@ -668,13 +688,18 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(2),
                         ),
                         icon: SvgPicture.asset(
-                          isMuted ? WayaAssets.icons.actionVolumeMute.path : WayaAssets.icons.actionVolumeUnmute.path,
+                          isMuted
+                              ? WayaAssets.icons.actionVolumeMute.path
+                              : WayaAssets.icons.actionVolumeUnmute.path,
                           height: 20,
                           width: 20,
-                          color: theme.colorScheme.primary,
+                          colorFilter: ColorFilter.mode(
+                            theme.colorScheme.primary,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       );
               },

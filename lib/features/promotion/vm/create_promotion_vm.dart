@@ -106,7 +106,7 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
 
   Future<void> getAllStates() async {
     final response =
-        await ref.read(upgradeToBusinessVmProvider.notifier).fetchStates();
+        await ref.read(upgradeToBusinessProvider.notifier).fetchStates();
 
     if (response != null) {
       state = state.copyWith(states: response);
@@ -134,14 +134,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
       }
 
       int budget = numberOfDays * selectedPlan.price;
-      debugPrint(budget.toString());
       state = state.copyWith(budget: budget);
       state = state.copyWith(selectedAgeRanges: "18-25");
-
-      debugPrint(state.createPromotionModel.toJson().toString());
-
-      // return;
-
       await WayaUtils.showModalSheet(context,
           child: PayForPromotion(title: state.contentType, budget: budget));
     } catch (error) {
@@ -186,5 +180,6 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
 
 final promotionVmProvider =
     StateNotifierProvider<CreatePromotionVm, CreatePromotionState>((ref) {
-  return CreatePromotionVm(ref, PromotionRepository());
+  final repo = ref.watch(promotionRepositoryProvider);
+  return CreatePromotionVm(ref, repo);
 });

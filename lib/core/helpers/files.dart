@@ -208,6 +208,17 @@ class WayaFileExtensions {
     // Default fallback for unknown types
     return MediaType('application', 'octet-stream');
   }
+
+  /// Extracts the file extension from a given file path string.
+  ///
+  /// Returns the extension without the dot, or an empty string if no extension is found.
+  /// Example:
+  ///   WayaFileExtensions.getExtensionFromPath('example/file.txt'); // returns 'txt'
+  static String getExtensionFromPath(String path) {
+    final filename = path.split(Platform.pathSeparator).last;
+    final extensionIndex = filename.lastIndexOf(".");
+    return extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+  }
 }
 
 class WayaFileHelper {
@@ -219,6 +230,36 @@ class WayaFileHelper {
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(2)} KB';
     if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+  }
+
+  /// Returns a helper used to calculate the the downloads directory.
+  static Future<Directory?> getDownloadedFilesDirectory() async {
+    Directory? directory;
+    try {
+      if (Platform.isIOS) {
+        directory = await getApplicationDocumentsDirectory();
+      } else {
+        directory = Directory('/storage/emulated/0/Download');
+        // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+        // ignore: avoid_slow_async_io
+        if (!await directory.exists()) directory = await getExternalStorageDirectory();
+      }
+    } catch (err) {
+      // Error handled silently
+    }
+
+    //? This is fine.
+    if (directory == null) {
+      return null;
+    }
+
+    //? If this does not exist...
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? We can tent.
+    return directory;
   }
 
   /// Returns the base storage directory for the application.
@@ -233,9 +274,9 @@ class WayaFileHelper {
     var directory = await getApplicationDocumentsDirectory();
 
     //?  If this is Android.
-    if (Platform.isAndroid) {
-      directory = Directory("${(await getExternalStorageDirectory())!.parent.parent.parent.path}/media/ng.wayagram");
-    }
+    // if (Platform.isAndroid) {
+    //   directory = Directory("${(await getExternalStorageDirectory())!.parent.parent.parent.path}/media/ng.wayagram");
+    // }
 
     //? If this does not exist...
     if (!await directory.exists()) {

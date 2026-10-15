@@ -58,8 +58,9 @@ class WayaSelectField<T> extends ConsumerWidget {
             ),
           ),
         AppTextField(
-          textFieldType: TextFieldType.NAME,
-          onTap: () => viewModel.selectValue(context, hintText, items, onSelected, multi),
+          textFieldType: TextFieldType.name,
+          onTap: () => viewModel.selectValue(
+              context, hintText, items, onSelected, multi),
           readOnly: true,
           decoration: inputDecoration(
             wayaTheme: wayaTheme,
@@ -74,7 +75,8 @@ class WayaSelectField<T> extends ConsumerWidget {
               fontSize: 14.sp,
               color: (value == null ||
                       value.toString().isEmpty ||
-                      (value is List<Select> && (value as List<Select>).isEmpty))
+                      (value is List<Select> &&
+                          (value as List<Select>).isEmpty))
                   ? wayaTheme.colorScheme.greyColor300
                   : wayaTheme.colorScheme.customBlack,
             ),
@@ -129,6 +131,7 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
   }
 }
 
-final wayaSelectFieldViewModelProvider = ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>(
+final wayaSelectFieldViewModelProvider =
+    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>(
   (ref, uniqueKey) => WayaSelectFieldViewModel(ref),
 );

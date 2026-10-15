@@ -14,10 +14,15 @@ class ReportGroupPost extends ConsumerStatefulWidget {
   final String currentStatus;
   final String postId;
   final List<String> statuses;
-  const ReportGroupPost({super.key, required this.statuses, required this.currentStatus, required this.postId});
+  const ReportGroupPost(
+      {super.key,
+      required this.statuses,
+      required this.currentStatus,
+      required this.postId});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ReportGroupPostState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ReportGroupPostState();
 }
 
 class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
@@ -41,7 +46,6 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
 
   @override
   Widget build(BuildContext context) {
-    
     final wayaTheme = Theme.of(context);
     final reportState = ref.watch(createPageProvider);
     return SingleChildScrollView(
@@ -49,7 +53,8 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Report ", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+          Text("Report ",
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
           const Gap(5),
           Text(
               maxLines: 3,
@@ -64,14 +69,14 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
                   thickness: 1,
                 ),
               ),
-              Gap(10),
+              const Gap(10),
               Text(
                 "Choose Reason for Reporting",
                 style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                   color: wayaTheme.colorScheme.greyColor600,
                 ),
               ),
-              Gap(10),
+              const Gap(10),
               Expanded(
                 child: Divider(
                   color: wayaTheme.colorScheme.greyColor200,
@@ -96,19 +101,25 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
                             ListTile(
                               minTileHeight: 30,
                               selectedTileColor:
-                                  selectedStatus == widget.statuses[index] ? wayaTheme.colorScheme.scaffoldColor : null,
+                                  selectedStatus == widget.statuses[index]
+                                      ? wayaTheme.colorScheme.scaffoldColor
+                                      : null,
                               trailing: selectedStatus == widget.statuses[index]
                                   ? Icon(
                                       Icons.check_circle,
                                       size: 20,
-                                      color: wayaTheme.colorScheme.customPrimary,
+                                      color:
+                                          wayaTheme.colorScheme.customPrimary,
                                     )
                                   : null,
-                              contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 1, horizontal: 1),
                               title: Text(
-                                WayaHelpers.removeCamelCaseAndUnderscore(widget.statuses[index]),
-                                style:
-                                    TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                                WayaHelpers.removeCamelCaseAndUnderscore(
+                                    widget.statuses[index]),
+                                style: TextStyle().wayaCopyWith(
+                                    color: wayaTheme.colorScheme.customBlack,
+                                    fontSize: 14.sp),
                               ),
                               onTap: () {
                                 setState(() {
@@ -116,7 +127,8 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
                                 });
                               },
                             ),
-                            if (index < widget.statuses.length - 1) const Gap(0), // Adjust the gap as needed
+                            if (index < widget.statuses.length - 1)
+                              const Gap(0), // Adjust the gap as needed
                           ],
                         );
                       }),
@@ -148,7 +160,9 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
                                   );
                             }
                           : null,
-                      centerWidget: LoadingState(loading: reportState.isReportingPost, text: "Submit Report")),
+                      centerWidget: LoadingState(
+                          loading: reportState.isReportingPost,
+                          text: "Submit Report")),
                 ],
               )),
           const Gap(10),
@@ -158,7 +172,8 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
             },
             textColor: wayaTheme.colorScheme.greyColor500,
             color: wayaTheme.colorScheme.transparent,
-            border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+            border:
+                Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
             text: 'Cancel',
           )
         ],

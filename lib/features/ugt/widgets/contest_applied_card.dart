@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -10,7 +9,7 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/my_full_media_type.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
@@ -27,6 +26,7 @@ class ContestAppliedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +48,7 @@ class ContestAppliedCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: context.width * 0.8,
+                    width: width * 0.8,
                     child: Row(
                       children: [
                         /*SvgPicture.asset(
@@ -97,7 +97,7 @@ class ContestAppliedCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: context.width * 0.6,
+                              width: width * 0.6,
                               child: Text(
                                 post.contest?.title ?? "",
                                 overflow: TextOverflow.ellipsis,
@@ -142,7 +142,7 @@ class ContestAppliedCard extends StatelessWidget {
                         ? WayaImage(
                             imageUrl: post.contest?.uploadCoverImages ?? "",
                             height: 200,
-                            width: context.width,
+                            width: width,
                             fit: BoxFit.cover,
                             radius: BorderRadius.circular(10),
                           )
@@ -191,8 +191,7 @@ class ContestAppliedCard extends StatelessWidget {
                       const Gap(20),
                       AboutUgtWidget(
                           title: "Prize",
-                          content:
-                              "${post.contest?.winnerPrize}"),
+                          content: "${post.contest?.winnerPrize}"),
                     ],
                   ),
                   Column(
@@ -221,7 +220,6 @@ class ContestAppliedCard extends StatelessWidget {
                 ],
               ),
               const Gap(10),
-              // const Gap(25),
               WayaButton(
                 callback: () {
                   if (post.contest?.status == "CLOSED") {
@@ -231,7 +229,7 @@ class ContestAppliedCard extends StatelessWidget {
                   } else {
                     WayaUtils.showModalSheetUgt(
                       context,
-                      child: ApplicationStatus(post,  post.contestId),
+                      child: ApplicationStatus(post, post.contestId),
                     );
                   }
                 },

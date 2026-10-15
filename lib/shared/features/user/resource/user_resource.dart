@@ -1,0 +1,138 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
+import 'package:wayagram/shared/features/user/repo/user_repository.dart';
+
+typedef CachedUserDataTuple = (UserDetailsModel, SocialProfileModel);
+
+class UserResource {
+  UserResource._();
+  static final userCache = <String, CachedUserDataTuple>{};
+  static final cachedTimestamps = <String, DateTime>{};
+  static final logger = Logger();
+
+  static Future<CachedUserDataTuple?> getUserDetails(String id) async {
+    final found = userCache[id];
+    final now = DateTime.now();
+
+    //? Since this is here.
+    if (found != null) {
+      final lastCached = cachedTimestamps[id]!;
+
+      //? Cache again if you should.
+      if (now.difference(lastCached).inMinutes >= 30) {
+        // Background refresh
+        ProviderContainer()
+            .read(userRepositoryProvider)
+            .getUserDetails(id)
+            .then((response) {
+          if (response.success) {
+            final data = response.data['data']['userdata'];
+            final result = (
+              UserDetailsModel.fromJson(data['user']),
+              SocialProfileModel.fromJson(data['profile'])
+            );
+            _save(id, result);
+          }
+        }).catchError((_) {});
+      }
+
+      //? Return this as the case may be.
+      return found;
+    }
+
+    //? Return what you get when you get and save it.
+    return _getAndSave(id);
+  }
+
+  static Future<SocialProfileModel?> getSocialProfile(String id) async {
+    return (await getUserDetails(id))?.$2;
+  }
+
+  static Future<CachedUserDataTuple?> getByUsername(String username) async {
+    final found = userCache.entries
+        .where((data) => data.value.$2.username == username)
+        .firstOrNull
+        ?.value;
+    final now = DateTime.now();
+
+    //? Since this is here.
+    if (found != null) {
+      final id = found.$1.id;
+      final lastCached = cachedTimestamps[id]!;
+
+      //? Cache again if you should.
+      if (now.difference(lastCached).inMinutes >= 30) {
+        _getFromNetworkByUsername(username);
+      }
+
+      //? Return this as the case may be.
+      return found;
+    }
+
+    //? Return what you get when you get and save it.
+    return _getFromNetworkByUsername(username);
+  }
+
+  static Future<CachedUserDataTuple?> _getFromNetworkByUsername(
+      String username) async {
+    final repo = ProviderContainer().read(userRepositoryProvider);
+    final response = await repo.getUserByUsername(username);
+
+    //? If it failed, return nothing.
+    if (!response.success) {
+      return null;
+    }
+
+    //? Retrieve this too.
+    final data = response.data['data']['userdata'];
+    final result = (
+      UserDetailsModel.fromJson(data['user']),
+      SocialProfileModel.fromJson(data['profile'])
+    );
+
+    //? Cache this.
+    await _save(result.$1.id, result);
+
+    //? Return this.
+    return result;
+  }
+
+  static Future<CachedUserDataTuple?> _getAndSave(String id) async {
+    final repo = ProviderContainer().read(userRepositoryProvider);
+    final response = await repo.getUserDetails(id);
+
+    //? If it failed, return nothing.
+    if (!response.success) {
+      return null;
+    }
+
+    //? Retrieve this too.
+    final data = response.data['data']['userdata'];
+    final result = (
+      UserDetailsModel.fromJson(data['user']),
+      SocialProfileModel.fromJson(data['profile'])
+    );
+
+    //? Cache this.
+    _save(id, result);
+
+    //? Return this.
+    return result;
+  }
+
+  static Future<bool> _save(String id, CachedUserDataTuple details) async {
+    //? Try to do this later on.
+    userCache[id] = details;
+    cachedTimestamps[id] = DateTime.now();
+
+    //? Tell them.
+    await logger.init;
+
+    //? Now, log this.
+    // logger.i("Invalidated cache for user ${details.$1.fullname}", time: cachedTimestamps[id]);
+
+    //? Always return true for now.
+    return true;
+  }
+}

@@ -19,7 +19,8 @@ class ViewFullMedia extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ViewFullMediaState();
 }
 
-class _ViewFullMediaState extends ConsumerState<ViewFullMedia> with SingleTickerProviderStateMixin {
+class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -57,56 +58,67 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia> with SingleTicker
         spacing: 12,
         children: [
           PopupMenuButton(
-              onSelected: (value) {},
-              iconColor: wayaTheme.colorScheme.white,
-              position: PopupMenuPosition.under,
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem<int>(
-                    value: 0,
-                    child: WayaActionNav(
-                        context: context,
-                        onTap: () {
-                          WayaNav.goBack();
-                        },
-                        asset: SvgPicture.asset(
-                          'assets/icons/download.svg',
-                          height: 20,
-                        ),
-                        text: "  Download Media",
-                        color: wayaTheme.colorScheme.customBlack),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 1,
-                    child: WayaActionNav(
-                        context: context,
-                        onTap: () {
-                          Share.share('${args['url']}', subject: 'Share Options');
-                        },
-                        asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-                        text: "  Share Post link",
-                        color: wayaTheme.colorScheme.customBlack),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 2,
-                    child: WayaActionNav(
-                        context: context,
-                        onTap: () async {
-                          WayaNav.goBack();
-                          /*await WayaUtils.showModalSheet(context,
+            onSelected: (value) {},
+            iconColor: wayaTheme.colorScheme.white,
+            position: PopupMenuPosition.under,
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: WayaActionNav(
+                      context: context,
+                      onTap: () {
+                        WayaNav.goBack();
+                      },
+                      asset: SvgPicture.asset(
+                        'assets/icons/download.svg',
+                        height: 20,
+                      ),
+                      text: "  Download Media",
+                      color: wayaTheme.colorScheme.customBlack),
+                ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  child: WayaActionNav(
+                      context: context,
+                      onTap: () {
+                        SharePlus.instance.share(ShareParams(
+                          text: '${args['url']}',
+                          subject: 'Share Options',
+                        ));
+                      },
+                      asset:
+                          WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                      text: "  Share Post link",
+                      color: wayaTheme.colorScheme.customBlack),
+                ),
+                PopupMenuItem<int>(
+                  value: 2,
+                  child: WayaActionNav(
+                      context: context,
+                      onTap: () async {
+                        WayaNav.goBack();
+                        /*await WayaUtils.showModalSheet(context,
                                 child: ReportGroup(
                                     statuses: groupReport,
                                     currentStatus: "",
                                     groupId: '${args['groupId']}'));*/
-                        },
-                        asset: SvgPicture.asset('assets/images/pages/flag.svg'),
-                        text: "  Report Post",
-                        color: wayaTheme.colorScheme.customBlack),
-                  ),
-                ];
-              },
-              child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none, color: Colors.white)),
-          Gap(8)
+                      },
+                      asset: SvgPicture.asset('assets/images/pages/flag.svg'),
+                      text: "  Report Post",
+                      color: wayaTheme.colorScheme.customBlack),
+                ),
+              ];
+            },
+            child: WayaAssets.icons.genSet.moreHorz.svg(
+              fit: BoxFit.none,
+              colorFilter: ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          const Gap(8)
         ],
       ),
       body: viewModel2.groupPostdocs?.isEmpty ?? true
@@ -138,7 +150,8 @@ class PostEmptyState extends StatelessWidget {
             onTap: () {},
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

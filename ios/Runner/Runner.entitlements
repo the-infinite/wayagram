@@ -12,6 +12,7 @@
 	<array>
 		<string>applinks:wayagram.ng</string>
 		<string>applinks:staging.wayagram.ng</string>
+		<string>applinks:dev.wayagram.ng</string>
 	</array>
 </dict>
 </plist>

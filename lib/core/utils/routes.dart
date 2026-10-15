@@ -7,7 +7,6 @@ export 'package:wayagram/features/auth/forgot_password/view/forgot_password_step
 export 'package:wayagram/features/auth/interests/views/select_interest.dart';
 export 'package:wayagram/features/auth/login/view/login_cover_page.dart';
 export 'package:wayagram/features/auth/login/view/login_page.dart';
-export 'package:wayagram/features/auth/login/view/welcome_back.dart';
 export 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 export 'package:wayagram/features/bottom_view/bottom_view.dart';
 export 'package:wayagram/features/general_settings/view/general_settings.dart';
@@ -19,4 +18,3 @@ export 'package:wayagram/features/shop/cart/views/checkout.dart';
 export 'package:wayagram/features/shop/filter/views/filter_view.dart';
 export 'package:wayagram/features/shop/order/views/order_details.dart';
 export 'package:wayagram/features/shop/views/product_detail.dart';
-//export 'package:wayagram/features/quotation/buyer/views/create_request.dart';

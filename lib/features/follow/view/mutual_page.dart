@@ -6,7 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/follow/view/mutuals.dart';
 import 'package:wayagram/features/follow/widget/follows.dart';
-import 'package:wayagram/shared/features/follow/vm/default.dart';
+import 'package:wayagram/shared/features/follow/vm/follow_notifier.dart';
 
 class MutualPage extends ConsumerStatefulWidget {
   static const route = '/follow/relationships';
@@ -25,7 +25,8 @@ class MutualPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MutualPageState();
 }
 
-class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProviderStateMixin {
+class _MutualPageState extends ConsumerState<MutualPage>
+    with SingleTickerProviderStateMixin {
   late final userFollowProvider = userFollowersProvider(widget.userId);
   late final notifier = ref.read(userFollowProvider.notifier);
   final followersHandler = WayaObservableScrollController();
@@ -69,7 +70,7 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
             WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
 
             //? A strange padding.
-            Gap(8),
+            const Gap(8),
           ],
         ),
         body: Column(
@@ -92,7 +93,9 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
                 WayaTabButton(
                   isSelected: _selectedIndex == 1,
                   text: 'Following',
-                  count: followingState.hasLoadedFollowing ? followingState.followingTotalSize : null,
+                  count: followingState.hasLoadedFollowing
+                      ? followingState.followingTotalSize
+                      : null,
                   onTap: () => setState(() => _selectedIndex = 1),
                 ),
 
@@ -100,7 +103,9 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
                 WayaTabButton(
                   isSelected: _selectedIndex == 2,
                   text: 'Followers',
-                  count: followingState.hasLoadedFollowers ? followingState.followersTotalSize : null,
+                  count: followingState.hasLoadedFollowers
+                      ? followingState.followersTotalSize
+                      : null,
                   onTap: () => setState(() => _selectedIndex = 2),
                 ),
               ],

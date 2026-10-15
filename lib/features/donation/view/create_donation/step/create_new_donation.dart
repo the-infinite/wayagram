@@ -2,13 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
@@ -19,10 +19,12 @@ import 'package:wayagram/shared/features/browser/activity.dart';
 class CreateNewDonation extends ConsumerStatefulWidget {
   final Function gotoNextTab;
   final Function gotoPreviousTab;
-  const CreateNewDonation({super.key, required this.gotoPreviousTab, required this.gotoNextTab});
+  const CreateNewDonation(
+      {super.key, required this.gotoPreviousTab, required this.gotoNextTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CreateNewDonationState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CreateNewDonationState();
 }
 
 class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
@@ -68,9 +70,11 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
               children: [
                 AddDocumentWidget(
                     addFile: ref.read(donationVmProvider.notifier).addFile,
-                    removeFile: ref.read(donationVmProvider.notifier).removeFile,
-                    title:
-                        viewModel.donationImage.isNotEmpty ? viewModel.donationImage[0].name : "Upload Event Thumbnail",
+                    removeFile:
+                        ref.read(donationVmProvider.notifier).removeFile,
+                    title: viewModel.donationImage.isNotEmpty
+                        ? viewModel.donationImage[0].name
+                        : "Upload Event Thumbnail",
                     isUploaded: viewModel.donationImage.isNotEmpty,
                     description: "IMG , JPG Format"),
                 const Gap(10),
@@ -89,7 +93,9 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         controller: viewModel.title,
                         hintText: 'e.g., Help Build a Community Library',
                         borderColor:
-                            formState.hasError && viewModel.title.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                            formState.hasError && viewModel.title.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
                         label: 'Cause Title',
                       ),
                       if (formState.hasError && viewModel.title.text.isEmpty)
@@ -97,7 +103,9 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -118,18 +126,23 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.description,
                         line: 4,
-                        hintText: 'Provide detailed information about the issue or challenge you\'re addressing',
-                        borderColor: formState.hasError && viewModel.description.text.isEmpty
+                        hintText:
+                            'Provide detailed information about the issue or challenge you\'re addressing',
+                        borderColor: formState.hasError &&
+                                viewModel.description.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Cause Description',
                       ),
-                      if (formState.hasError && viewModel.description.text.isEmpty)
+                      if (formState.hasError &&
+                          viewModel.description.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -150,9 +163,12 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.solution,
                         line: 4,
-                        hintText: 'Explain your solution and why you need this specific amount.',
-                        borderColor:
-                            formState.hasError && viewModel.solution.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                        hintText:
+                            'Explain your solution and why you need this specific amount.',
+                        borderColor: formState.hasError &&
+                                viewModel.solution.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
                         label: 'Proposed Solution',
                       ),
                       if (formState.hasError && viewModel.solution.text.isEmpty)
@@ -160,7 +176,9 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -181,17 +199,23 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         keyboardType: TextInputType.streetAddress,
                         controller: viewModel.statement,
                         line: 4,
-                        hintText: ' Describe how this donation will positively affect the community or individuals.',
-                        borderColor:
-                            formState.hasError && viewModel.statement.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                        hintText:
+                            ' Describe how this donation will positively affect the community or individuals.',
+                        borderColor: formState.hasError &&
+                                viewModel.statement.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
                         label: 'Impact Statement',
                       ),
-                      if (formState.hasError && viewModel.statement.text.isEmpty)
+                      if (formState.hasError &&
+                          viewModel.statement.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -213,20 +237,25 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         controller: viewModel.targetAmount,
                         hintText: 'e.g., 500,000',
                         suffixIcon: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          child: Text("NGN", style: wayaTheme.textTheme.hintStyle),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          child:
+                              Text("NGN", style: wayaTheme.textTheme.hintStyle),
                         ),
-                        borderColor: formState.hasError && viewModel.targetAmount.text.isEmpty
+                        borderColor: formState.hasError &&
+                                viewModel.targetAmount.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Target Amount',
                       ),
-                      if (formState.hasError && viewModel.targetAmount.text.isEmpty)
+                      if (formState.hasError &&
+                          viewModel.targetAmount.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -248,20 +277,25 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         controller: viewModel.minimumDonationAmount,
                         hintText: 'e.g., 500,000',
                         suffixIcon: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          child: Text("NGN", style: wayaTheme.textTheme.hintStyle),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          child:
+                              Text("NGN", style: wayaTheme.textTheme.hintStyle),
                         ),
-                        borderColor: formState.hasError && viewModel.minimumDonationAmount.text.isEmpty
+                        borderColor: formState.hasError &&
+                                viewModel.minimumDonationAmount.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Minimum Donation Amount',
                       ),
-                      if (formState.hasError && viewModel.minimumDonationAmount.text.isEmpty)
+                      if (formState.hasError &&
+                          viewModel.minimumDonationAmount.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -285,14 +319,17 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           hintText: 'Select Category',
                           value: viewModel.category.capitalizeFirst,
                           items: viewModel.categories,
-                          onSelected: (value) =>
-                              ref.read(donationVmProvider.notifier).selectCategory(value.first)),
+                          onSelected: (value) => ref
+                              .read(donationVmProvider.notifier)
+                              .selectCategory(value.first)),
                       if (formState.hasError && viewModel.category.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -305,14 +342,21 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                   children: [
                     Switch(
                         value: viewModel.showAmountRaised,
-                        onChanged: (value) => ref.read(donationVmProvider.notifier).updateAmountRaised(value)),
+                        onChanged: (value) => ref
+                            .read(donationVmProvider.notifier)
+                            .updateAmountRaised(value)),
                     const Gap(10),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Text(
                         "Show Amount Raised",
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 16.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .wayaCopyWith(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).colorScheme.black),
                       ),
                     ),
                   ],
@@ -330,7 +374,9 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                               formErrorMessage: "Date is required",
                               hintText: 'Select Start Date',
                               label: '',
-                              selectDate: ref.read(donationVmProvider.notifier).selectStartDate)),
+                              selectDate: ref
+                                  .read(donationVmProvider.notifier)
+                                  .selectStartDate)),
                       const Gap(6),
                       Expanded(
                           child: EventDateWidget(
@@ -339,7 +385,9 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                               formErrorMessage: "Date is required",
                               hintText: 'Select End Date',
                               label: '',
-                              selectDate: ref.read(donationVmProvider.notifier).selectEndDate)),
+                              selectDate: ref
+                                  .read(donationVmProvider.notifier)
+                                  .selectEndDate)),
                     ],
                   ),
                 ),
@@ -350,7 +398,9 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                   children: [
                     Switch(
                         value: viewModel.showNumberOfDonors,
-                        onChanged: (value) => ref.read(donationVmProvider.notifier).updateNumberOfDonors(value)),
+                        onChanged: (value) => ref
+                            .read(donationVmProvider.notifier)
+                            .updateNumberOfDonors(value)),
                     const Gap(10),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -358,8 +408,13 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                       children: [
                         Text(
                           "Show Number of Donors",
-                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 16.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .wayaCopyWith(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: Theme.of(context).colorScheme.black),
                         ),
                         const Gap(6),
                         Text(
@@ -385,9 +440,12 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.details,
                         line: 4,
-                        hintText: 'e.g., John Doe, 123 Charity Street, Lagos, NG',
+                        hintText:
+                            'e.g., John Doe, 123 Charity Street, Lagos, NG',
                         borderColor:
-                            formState.hasError && viewModel.details.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                            formState.hasError && viewModel.details.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
                         label: 'Fundraiser Details',
                       ),
                       if (formState.hasError && viewModel.details.text.isEmpty)
@@ -395,7 +453,9 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -405,7 +465,9 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                 Text(
                   'Privacy Options',
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 14.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.black),
                 ),
                 const Gap(10),
                 Row(
@@ -415,12 +477,17 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                       child: RadioSelect(
                         title: Text("Public",
                             style: wayaTheme.textTheme.titleMedium!
-                                .wayaCopyWith(fontSize: 14.sp, color: wayaTheme.colorScheme.customBlack)),
+                                .wayaCopyWith(
+                                    fontSize: 14.sp,
+                                    color: wayaTheme.colorScheme.customBlack)),
                         value: 'public',
                         groupedValue: selectedOption,
                         onChanged: (value) {
-                          ref.read(radioSelectProvider(key).notifier).state = value;
-                          ref.read(donationVmProvider.notifier).updatePrivacyOption(value!);
+                          ref.read(radioSelectProvider(key).notifier).state =
+                              value;
+                          ref
+                              .read(donationVmProvider.notifier)
+                              .updatePrivacyOption(value!);
                         },
                       ),
                     ),
@@ -428,14 +495,18 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     Expanded(
                         child: RadioSelect(
                       title: Text("Private",
-                          style: wayaTheme.textTheme.titleMedium!
-                              .wayaCopyWith(fontSize: 14.sp, color: wayaTheme.colorScheme.customBlack)),
+                          style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
+                              fontSize: 14.sp,
+                              color: wayaTheme.colorScheme.customBlack)),
                       value: 'private',
                       groupedValue: selectedOption,
                       onChanged: (value) {
-                        ref.read(radioSelectProvider(key).notifier).state = value;
+                        ref.read(radioSelectProvider(key).notifier).state =
+                            value;
 
-                        ref.read(donationVmProvider.notifier).updatePrivacyOption(value!);
+                        ref
+                            .read(donationVmProvider.notifier)
+                            .updatePrivacyOption(value!);
                       },
                     )),
                   ],
@@ -462,13 +533,14 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                               style: WayaTextStyles.smallActiveLinkStyle,
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async => await WayaNav.to(
-                                  transition: Transition.circularReveal,
-                                  duration: const Duration(milliseconds: 500),
-                                  WayaBrowserView(
-                                    name: "Terms and Conditions",
-                                    url: "https://wayagram.ng/terms",
-                                  ),
-                                ),
+                                      transition: WayaTransition.circularReveal,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      WayaBrowserView(
+                                        name: "Terms and Conditions",
+                                        url: "https://wayagram.ng/terms",
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
@@ -491,7 +563,8 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
           text: 'Go Back',
           color: wayaTheme.colorScheme.transparent,
           textColor: wayaTheme.colorScheme.customBlack,
-          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+          border:
+              Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
           callback: () {
             WayaNav.goBack();
             // widget.gotoPreviousTab();

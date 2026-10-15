@@ -7,13 +7,16 @@ import 'package:wayagram/features/donation/view/create_donation/step/review_dona
 
 class CreateDonation extends ConsumerStatefulWidget {
   static const route = '/createDonation';
-  const CreateDonation({super.key,});
+  const CreateDonation({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateDonationState();
 }
 
-class _CreateDonationState extends ConsumerState<CreateDonation> with SingleTickerProviderStateMixin {
+class _CreateDonationState extends ConsumerState<CreateDonation>
+    with SingleTickerProviderStateMixin {
   //final _formKey = GlobalKey<FormState>();
   late TabController _tabController;
 
@@ -21,6 +24,12 @@ class _CreateDonationState extends ConsumerState<CreateDonation> with SingleTick
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void _goToNextTab() {
@@ -46,7 +55,7 @@ class _CreateDonationState extends ConsumerState<CreateDonation> with SingleTick
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
-         CreateNewDonation(
+          CreateNewDonation(
             gotoNextTab: _goToNextTab,
             gotoPreviousTab: _goToPreviousTab,
           ),

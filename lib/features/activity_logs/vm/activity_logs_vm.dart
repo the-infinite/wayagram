@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/event_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/polls_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/ugt_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/wallet_activity_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -36,11 +36,10 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getPageLogs(page);
       state = state.copyWith(isLoading: false);
-      debugPrint('API Response==>>>: ${response.data}');
-      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        PageActivityModel responseModel =
+            PageActivityModel.fromJson(response.data);
         state = state.copyWith(pageDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
@@ -48,7 +47,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     } finally {}
   }
 
-  Future<PaginatedResult<AccountActivityDocs>?> getAccountActivity({required int page}) async {
+  /* Future<PaginatedResult<AccountActivityDocs>?> getAccountActivity({required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getAccountActivity(page);
@@ -60,7 +59,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchAccountActivityHistoryDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(accountActivityDocs: fetchAccountActivityHistoryDocs);
-        state = state.copyWith(accountActivityDocs1: responseModel.data?.docs);
+
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -72,10 +71,51 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }
     return null;
   }
+*/
+  Future<PaginatedResult<AccountActivityDocs>?> getAccountLogs(
+      {required int page}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getAccountActivity(page);
+      List<AccountActivityDocs>? fetchAccountDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        AccountActivityModel responseModel =
+            AccountActivityModel.fromJson(response.data);
+        fetchAccountDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
+        hasNextPage = responseModel.data?.hasNextPage;
 
-  Future<PaginatedResult<DonationDocs>?> getDonationLogs({required int page}) async {
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchAccountDocs.addAll(state.accountActivityDocs);
+        }
 
+        state = state.copyWith(
+          accountActivityDocs: fetchAccountDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchAccountDocs);
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+    return null;
+  }
 
+  Future<PaginatedResult<DonationDocs>?> getDonationLogs(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getDonationLogs(page);
@@ -83,8 +123,10 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
-        fetchDonationDocs = (responseModel.data?.docs ?? [])..sort((a, b) => b.createdTime.compareTo(a.createdTime));
+        DonationActivityModel responseModel =
+            DonationActivityModel.fromJson(response.data);
+        fetchDonationDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
         hasNextPage = responseModel.data?.hasNextPage;
 
         //? If the previous page had a next page, offload them onto this place.
@@ -104,7 +146,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchDonationDocs);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchDonationDocs);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -113,9 +156,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<WalletActivityDocs>?> getWalletLogs({required int page}) async {
-
-
+  Future<PaginatedResult<WalletActivityDocs>?> getWalletLogs(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getWalletLogs(page);
@@ -123,8 +165,10 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        WalletActivityModel responseModel = WalletActivityModel.fromJson(response.data);
-        fetchWalletDocs = (responseModel.data?.docs ?? [])..sort((a, b) => b.createdTime.compareTo(a.createdTime));
+        WalletActivityModel responseModel =
+            WalletActivityModel.fromJson(response.data);
+        fetchWalletDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
         hasNextPage = responseModel.data?.hasNextPage;
 
         //? If the previous page had a next page, offload them onto this place.
@@ -153,7 +197,84 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
+  Future<PaginatedResult<GroupDocs>?> getGroupLogs({required int page}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getGroupLogs(page);
+      List<GroupDocs>? fetchGroupDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        GroupActivityModel responseModel =
+            GroupActivityModel.fromJson(response.data);
+        fetchGroupDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
+        hasNextPage = responseModel.data?.hasNextPage;
 
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchGroupDocs.addAll(state.groupDocs);
+        }
+
+        state = state.copyWith(
+          groupDocs: fetchGroupDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchGroupDocs);
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+    return null;
+  }
+
+  Future<PaginatedResult<UgtLogDocs>?> getUgtLogs({required int page}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getUgtLogs(page);
+      List<UgtLogDocs>? fetchUgtDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        UgtLogModel responseModel = UgtLogModel.fromJson(response.data);
+        fetchUgtDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
+        hasNextPage = responseModel.data?.hasNextPage;
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchUgtDocs.addAll(state.ugtLogDocs);
+        }
+
+        state = state.copyWith(
+          ugtLogDocs: fetchUgtDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchUgtDocs);
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+    return null;
+  }
 
   Future<PaginatedResult<PageDocs>?> getPageLogs({required int page}) async {
     try {
@@ -163,15 +284,30 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
-        fetchPageDocs = responseModel.data?.docs;
+        PageActivityModel responseModel =
+            PageActivityModel.fromJson(response.data);
+        fetchPageDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(pageDocs: fetchPageDocs);
-        state = state.copyWith(pageDocs1: responseModel.data?.docs);
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchPageDocs.addAll(state.pageDocs);
+        }
+
+        state = state.copyWith(
+          pageDocs: fetchPageDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchPageDocs!);
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchPageDocs);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -180,23 +316,39 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<GroupDocs>?> getGroupLogs({required int page}) async {
+  Future<PaginatedResult<PollsActivityDocs>?> getPollsLogs(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _activityLogsRepository.getGroupLogs(page);
-      List<GroupDocs>? fetchGroupDocs = [];
+      final response = await _activityLogsRepository.getPollLogs(page);
+      List<PollsActivityDocs>? fetchPollDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        GroupActivityModel responseModel = GroupActivityModel.fromJson(response.data);
-        fetchGroupDocs = responseModel.data?.docs;
+        PollsActivityModel responseModel =
+            PollsActivityModel.fromJson(response.data);
+        fetchPollDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(groupDocs: fetchGroupDocs);
-        state = state.copyWith(groupDocs1: responseModel.data?.docs);
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchPollDocs.addAll(state.pollDocs);
+        }
+
+        state = state.copyWith(
+          pollDocs: fetchPollDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchGroupDocs!);
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchPollDocs);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -213,15 +365,16 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        PageActivityModel responseModel =
+            PageActivityModel.fromJson(response.data);
         fetchSocialDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(socialDocs: fetchSocialDocs);
-        state = state.copyWith(socialDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchSocialDocs!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchSocialDocs!);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -230,48 +383,38 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<PageDocs>?> getUgtLogs({required int page}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _activityLogsRepository.getUgtLogs(page);
-      List<PageDocs>? fetchUgtDocs = [];
-      bool? hasNextPage = false;
-      state = state.copyWith(isLoading: false);
-      if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
-        fetchUgtDocs = responseModel.data?.docs;
-        hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(ugtDocs: fetchUgtDocs);
-        state = state.copyWith(ugtDocs1: responseModel.data?.docs);
-      } else {
-        state = state.copyWith(isLoading: false);
-      }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchUgtDocs!);
-    } catch (e) {
-      _logger.e(e);
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-    return null;
-  }
-
-  Future<PaginatedResult<PageDocs>?> getEventLogs({required int page}) async {
+  Future<PaginatedResult<EventLogDocs>?> getEventLogs(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getEventLogs(page);
-      List<PageDocs>? fetchEventDocs = [];
+      List<EventLogDocs>? fetchEventDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
-        fetchEventDocs = responseModel.data?.docs;
+        EventLogModel responseModel = EventLogModel.fromJson(response.data);
+        fetchEventDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(ugtDocs: fetchEventDocs);
-        state = state.copyWith(ugtDocs1: responseModel.data?.docs);
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchEventDocs.addAll(state.eventDocs);
+        }
+
+        state = state.copyWith(
+          eventDocs: fetchEventDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchEventDocs!);
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchEventDocs);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -280,23 +423,38 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<PageDocs>?> getShopLogs({required int page}) async {
+  Future<PaginatedResult<EventLogDocs>?> getShopLogs(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getShopLogs(page);
-      List<PageDocs>? fetchShopDocs = [];
+      List<EventLogDocs>? fetchEventDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
-        fetchShopDocs = responseModel.data?.docs;
+        EventLogModel responseModel = EventLogModel.fromJson(response.data);
+        fetchEventDocs = (responseModel.data?.docs ?? [])
+          ..sort((a, b) => b.createdTime.compareTo(a.createdTime));
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(shopDocs: fetchShopDocs);
-        state = state.copyWith(shopDocs1: responseModel.data?.docs);
+
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          fetchEventDocs.addAll(state.eventDocs);
+        }
+
+        state = state.copyWith(
+          shopDocs: fetchEventDocs,
+          totalSize: int.tryParse('${responseModel.data?.totalDocs}'),
+          totalPages: int.tryParse('${responseModel.data?.totalDocs}') ?? 1,
+          hasNextPage: responseModel.data?.hasNextPage,
+          page: int.tryParse('${responseModel.data?.page}'),
+          nextPage: int.tryParse('${responseModel.data?.nextPage}') ?? 1,
+          isLoading: true,
+        );
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchShopDocs!);
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchEventDocs);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -305,71 +463,24 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<void> getPollActivity(int page) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _activityLogsRepository.getPollLogs(page);
-      state = state.copyWith(isLoading: false);
-
-      if (response.success) {
-        PollsActivityModel responseModel = PollsActivityModel.fromJson(response.data);
-        state = state.copyWith(pollDocs: responseModel.data?.docs, pollDocs1: responseModel.data?.docs);
-      } else {
-        state = state.copyWith(isLoading: false);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.donations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {}
-  }
-
-  Future<PaginatedResult<PollsActivityDocs>?> getPollLogs({required int page}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _activityLogsRepository.getPollLogs(page);
-      List<PollsActivityDocs>? fetchPollDocs = [];
-      bool? hasNextPage = false;
-      state = state.copyWith(isLoading: false);
-      if (response.success) {
-        PollsActivityModel responseModel = PollsActivityModel.fromJson(response.data);
-        fetchPollDocs = responseModel.data?.docs;
-        hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(pollDocs: fetchPollDocs);
-        state = state.copyWith(pollDocs1: responseModel.data?.docs);
-      } else {
-        state = state.copyWith(isLoading: false);
-      }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchPollDocs!);
-    } catch (e) {
-      _logger.e(e);
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-    return null;
-  }
-
-
-  Future<PaginatedResult<PageDocs>?> getQuotationLogs({required int page}) async {
+  Future<PaginatedResult<EventLogDocs>?> getQuotationLogs(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getQuotationLogs(page);
-      List<PageDocs>? fetchQuotationDocs = [];
+      List<EventLogDocs>? fetchQuotationDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        EventLogModel responseModel = EventLogModel.fromJson(response.data);
         fetchQuotationDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(quotationDocs: fetchQuotationDocs);
-        state = state.copyWith(quotationDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchQuotationDocs!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchQuotationDocs!);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -378,7 +489,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<VisitedPagesDocs>?> getVisitedPages({required int page}) async {
+  Future<PaginatedResult<VisitedPagesDocs>?> getVisitedPages(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getVisitedPages(page);
@@ -387,15 +499,16 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        VisitedPagesModel responseModel = VisitedPagesModel.fromJson(response.data);
+        VisitedPagesModel responseModel =
+            VisitedPagesModel.fromJson(response.data);
         fetchVisitedPagesDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(visitedPagesDocs: fetchVisitedPagesDocs);
-        state = state.copyWith(visitedPagesDocs: responseModel.data?.docs, visitedPagesDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchVisitedPagesDocs!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchVisitedPagesDocs!);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -416,7 +529,9 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchCmsDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(cmsDocs: fetchCmsDocs);
-        state = state.copyWith(cmsDocs: responseModel.data?.docs, cmsDocs1: responseModel.data?.docs);
+        state = state.copyWith(
+            cmsDocs: responseModel.data?.docs,
+            cmsDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -429,7 +544,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<UserActionsDocs>?> getUserAction({required int page}) async {
+  Future<PaginatedResult<UserActionsDocs>?> getUserAction(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getUserActions(page);
@@ -437,15 +553,16 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        UserActionsModel responseModel = UserActionsModel.fromJson(response.data);
+        UserActionsModel responseModel =
+            UserActionsModel.fromJson(response.data);
         fetchUserActionDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(userActionsDocs: fetchUserActionDocs);
-        state = state.copyWith(userActionsDocs: responseModel.data?.docs, userActionsDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchUserActionDocs!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchUserActionDocs!);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -454,7 +571,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<PaymentActivityDocs>?> getPaymentActivity({required int page}) async {
+  Future<PaginatedResult<PaymentActivityDocs>?> getPaymentActivity(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getPaymentActivity(page);
@@ -462,18 +580,19 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PaymentActivityModel responseModel = PaymentActivityModel.fromJson(response.data);
+        PaymentActivityModel responseModel =
+            PaymentActivityModel.fromJson(response.data);
         fetchPaymentActivityDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(paymentActivityDocs: fetchPaymentActivityDocs);
         state = state.copyWith(
           paymentActivityDocs: responseModel.data?.docs,
-          paymentActivityDocs1: responseModel.data?.docs,
         );
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchPaymentActivityDocs!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchPaymentActivityDocs!);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -482,7 +601,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<UserInteractionDocs>?> getUserInteraction({required int page}) async {
+  Future<PaginatedResult<UserInteractionDocs>?> getUserInteraction(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getUserInteractions(page);
@@ -490,16 +610,16 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        UserInteractionModel responseModel = UserInteractionModel.fromJson(response.data);
+        UserInteractionModel responseModel =
+            UserInteractionModel.fromJson(response.data);
         fetchUserInteractionDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(userInteractionDocs: fetchUserInteractionDocs);
-        state = state.copyWith(
-            userInteractionDocs: responseModel.data?.docs, userInteractionDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchUserInteractionDocs!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchUserInteractionDocs!);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -508,7 +628,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     return null;
   }
 
-  Future<PaginatedResult<SearchLogDocs>?> getSearchLog({required int page}) async {
+  Future<PaginatedResult<SearchLogDocs>?> getSearchLog(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getSearchLogs(page);
@@ -520,11 +641,11 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchSearchLogsDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(searchLogDocs: fetchSearchLogsDocs);
-        state = state.copyWith(searchLogDocs: responseModel.data?.docs, searchLogDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchSearchLogsDocs!);
+      return PaginatedResult(
+          hasNextPage: hasNextPage!, items: fetchSearchLogsDocs!);
     } catch (e) {
       _logger.e(e);
     } finally {
@@ -534,6 +655,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
   }
 }
 
-final activityLogsVmProvider = StateNotifierProvider<ActivityLogsVm, ActivityLogsState>((ref) {
-  return ActivityLogsVm(ActivityLogsRepository(), ref);
+final activityLogsVmProvider =
+    StateNotifierProvider<ActivityLogsVm, ActivityLogsState>((ref) {
+  final repository = ref.watch(activityLogsRepositoryProvider);
+  return ActivityLogsVm(repository, ref);
 });

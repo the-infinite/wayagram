@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class WayaSnackBar {
   WayaSnackBar._();
 
-  static void showToast(String message, {bool showSuccess = false, String? buttonText, VoidCallback? onPressed}) {
-    Get.showSnackbar(
-      GetSnackBar(
-        message: message,
-        duration: Duration(seconds: 1),
-        snackPosition: SnackPosition.BOTTOM, // Position of the Toast
-        backgroundColor: showSuccess ? WayaColors.success700 : WayaColors.primary,
-        isDismissible: true, // Whether the toast can be dismissed by tapping
-        mainButton: buttonText != null
-            ? TextButton(
-                onPressed: onPressed,
-                child: Text(
-                  buttonText,
-                  style: WayaTextStyles.bodyBold.copyWith(
-                    color: WayaColors.white,
-                  ),
-                ),
-              )
-            : null,
-      ),
-    );
+  static void showToast(String message,
+      {bool showSuccess = false, String? buttonText, VoidCallback? onPressed}) {
+    final context = WayaNav.navigatorKey.currentContext;
+    if (context != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: WayaTextStyles.bodyBold.copyWith(
+              color: WayaColors.white,
+            ),
+          ),
+          duration: const Duration(seconds: 1),
+          backgroundColor:
+              showSuccess ? WayaColors.success700 : WayaColors.primary,
+          behavior: SnackBarBehavior.floating,
+          action: buttonText != null
+              ? SnackBarAction(
+                  label: buttonText,
+                  onPressed: onPressed ?? () {},
+                  textColor: WayaColors.white,
+                )
+              : null,
+        ),
+      );
+    }
   }
 
   static void setUpSnackBarUI() {
@@ -43,8 +48,8 @@ class WayaSnackBar {
         margin: const EdgeInsets.only(bottom: 0, right: 0, left: 0),
         barBlur: 0.6,
         messageColor: WayaColors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        snackStyle: SnackStyle.FLOATING,
+        isFloating: true,
+        isDismissible: true,
       ),
     );
 
@@ -58,8 +63,8 @@ class WayaSnackBar {
         margin: const EdgeInsets.only(bottom: 0, right: 0, left: 0),
         barBlur: 0.6,
         messageColor: WayaColors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        snackStyle: SnackStyle.FLOATING,
+        isFloating: true,
+        isDismissible: true,
       ),
     );
   }

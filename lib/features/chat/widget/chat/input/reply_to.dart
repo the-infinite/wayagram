@@ -111,7 +111,10 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                             padding: const EdgeInsets.all(2),
                           ),
                           icon: WayaAssets.icons.cMultiplyCircle.svg(
-                            color: widget.isDarkMode ? WayaColors.cardBorderColor200 : WayaColors.greyColor400,
+                            colorFilter: ColorFilter.mode(
+                              widget.isDarkMode ? WayaColors.cardBorderColor200 : WayaColors.greyColor400,
+                              BlendMode.srcIn,
+                            ),
                           ),
                         ),
                     ],

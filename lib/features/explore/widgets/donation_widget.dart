@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
@@ -57,7 +57,7 @@ class DonationWidget extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -89,24 +89,26 @@ class DonationWidget extends ConsumerWidget {
                             width: 65,
                             child: WayaButton(
                               callback: () {
-                                WayaNav.toNamed('/donationDetails', arguments: {
-                                  'title': '${donation.title?.capitalizeFirst}',
-                                  'image': '${donation.imageURL}',
-                                  'amountRaised':
-                                      '${donation.amountRaised?.replaceAll('.00', '')}',
-                                  'targetAmount':
-                                      '${donation.targetAmount?.replaceAll('.00', '')}',
-                                  'desc': '${donation.description}',
-                                  'solution': '${donation.solution}',
-                                  'impact': '${donation.impact}',
-                                  'url': '${donation.url}',
-                                  'minimumDonationAmount':
-                                      '${donation.minimumDonationAmount}',
-                                  'daysLeft': '$daysLeft',
-                                  'privacy': '${donation.privacy}',
-                                  'id': '${donation.id}',
-                                  "donation": donation
-                                });
+                                WayaNav.toNamed('/donation-details',
+                                    arguments: {
+                                      'title':
+                                          '${donation.title?.capitalizeFirst}',
+                                      'image': '${donation.imageURL}',
+                                      'amountRaised':
+                                          '${donation.amountRaised?.replaceAll('.00', '')}',
+                                      'targetAmount':
+                                          '${donation.targetAmount?.replaceAll('.00', '')}',
+                                      'desc': '${donation.description}',
+                                      'solution': '${donation.solution}',
+                                      'impact': '${donation.impact}',
+                                      'url': '${donation.url}',
+                                      'minimumDonationAmount':
+                                          '${donation.minimumDonationAmount}',
+                                      'daysLeft': '$daysLeft',
+                                      'privacy': '${donation.privacy}',
+                                      'id': '${donation.id}',
+                                      "donation": donation
+                                    });
                               },
                               text: "Donate",
                               height: 30,

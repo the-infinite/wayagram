@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -24,7 +23,6 @@ import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
-import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/media/video.dart';
@@ -50,35 +48,28 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
   Future<String> getImageUrl(String videoLink) async {
     return '';
-    // XFile thumbnailFile = await VideoThumbnail.thumbnailFile(
-    //   video: videoLink,
-    //   thumbnailPath: (await getTemporaryDirectory()).path,
-    //   imageFormat: ImageFormat.WEBP,
-    //   maxHeight:
-    //       200, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
-    //   quality: 70,
-    // );
-    //
-    // return thumbnailFile.path;
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     //var model = ref.watch(selectedContestProvider.notifier).state;
-    final String id = Get.parameters['id'] ?? 'Unknown';
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final String id = args['id'] ?? "";
     var model = ref.watch(selectedContestantProfile);
-    final String contestId =
-        Get.parameters['contest'] ?? model?.contestId ?? "";
+
+    final String contestId = args['contest'] ?? "";
     var viewModel = ref.watch(votersContestNotifier.notifier);
     var notifier = ref.watch(postProvider.notifier);
     final imagePath = useState("");
 
     useEffect(() {
       notifier.fetchSingleContest(contestId: contestId, ref: ref);
-
-      ref.read(postProvider.notifier).fetchSingleContestantDetails(
-          ref, model?.contestId ?? contestId, model?.profileId ?? id);
+      var model = ref.watch(selectedContestantProfile);
+      ref
+          .watch(postProvider.notifier)
+          .fetchSingleContestantDetails(ref, contestId, id)
+          .then((value) {});
 
       //? check if contestant is active before going on to active a page
 
@@ -86,14 +77,12 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         //? check if viewer is the owner of the contest
         if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
           model?.stages?.forEach((element) {
-            //  debugPrint("i am looping");
             if (element.entryType?.toLowerCase() != "free" &&
                 element.isActive == true &&
                 element.hasPaid != true) {
-              //  debugPrint("looping and have picked one");
-
               selectedStage = element;
               Future.delayed(Duration(seconds: 2), () {
+                if (!context.mounted) return;
                 WayaUtils.showModalSheetUgt(
                   context,
                   child: SuccessfulModal(
@@ -140,9 +129,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
           });
         }
       }
-      ref
-          .watch(ugtContestantProfileVm.notifier)
-          .fetchSingleContestantPosts(model?.id ?? id);
 
       /*  getImageUrl(model.introVideo ?? "").then((value) {
         imageUrl.value = value;
@@ -157,30 +143,22 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
       isLoading: false,
       isScrollable: true,
       onRefresh: () {
-        ref
-            .watch(ugtContestantProfileVm.notifier)
-            .fetchSingleContestantPosts(model?.id ?? id);
-        return ref.read(postProvider.notifier).fetchSingleContestantDetails(
-            ref, model?.contestId ?? contestId, model?.id ?? id);
+        return ref
+            .read(postProvider.notifier)
+            .fetchSingleContestantDetails(ref, contestId, id);
       },
-      title: model?.profileId == viewModel.getLoggedInUserId()
+      title: id == viewModel.getLoggedInUserId()
           ? "My Profile"
           : "${model?.contestApplicant?.fullName?.split(" ").first}`s Profile",
       appBarTrailing: Row(
         children: [
           GestureDetector(
               onTap: () async {
-                //  print(model?.id ?? id);
-                await Share.share(
-                  WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getContestantProfileRoute(
-                    model?.profileId ?? id,
-                    model?.contestId ?? contestId,
-                  )),
+                await SharePlus.instance.share(ShareParams(
+                  text: WayaValueHelper.getShareableUrl(
+                      WayaAppRoutes.getContestantProfileRoute(id, contestId)),
                   subject: "Share Contestant Profile",
-
-                  // https://staging.wayagram.ng/contest-profile-page?id=acabf193-dd12-48c5-9030-157efa4c012a&contestId=10c8c1b5-f720-4633-a14e-646313230192
-                );
+                ));
               },
               child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none)),
           const Gap(20),
@@ -200,22 +178,12 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                     GestureDetector(
                       onTap: () {
                         WayaNav.to(
-                          transition: Transition.circularReveal,
+                          transition: WayaTransition.circularReveal,
                           WayaVideoDetailScreen(
                             file: null,
                             videoUrl: model?.introVideo ?? "",
                           ),
                         );
-                        /*   WayaNav.toNamed(FullVideoView.route, arguments: {
-                          "url": model?.introVideo ?? "",
-                          "title": "",
-                          "createdAt": "",
-                          "likeCount": "",
-                          "isLike": "",
-                          "showDescription": false,
-                          "discription": "",
-                          "shareCount": "",
-                        }); */
                       },
                       child: AbsorbPointer(
                         child: Stack(children: [
@@ -255,8 +223,8 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
-                                            color:
-                                                Colors.white.withOpacity(0.7),
+                                            color: Colors.white
+                                                .withValues(alpha: 0.7),
                                           ),
                                           padding: EdgeInsets.all(8),
                                           child: Icon(
@@ -282,7 +250,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       ), */
                     ),
                     const Gap(20),
-                    if (model?.profileId == viewModel.getLoggedInUserId())
+                    if (id == viewModel.getLoggedInUserId())
                       Container(
                         margin: EdgeInsets.only(right: 20.w),
                         padding: REdgeInsets.symmetric(
@@ -297,7 +265,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            debugPrint("Edit Profile");
+                            if (id != viewModel.getLoggedInUserId()) return;
                             WayaNav.toNamed('/edit-profile-contest');
                           },
                           child: Text(
@@ -346,7 +314,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
             const Gap(15),
             GestureDetector(
               onTap: () {
-                debugPrint("Edit Profile");
+                if (id != viewModel.getLoggedInUserId()) return;
                 WayaNav.toNamed('/edit-profile-contest');
               },
               child: Text(model?.contestApplicant?.fullName ?? "",
@@ -382,6 +350,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       contestModel, contestModel?.contestSettings?.stages);
 
                   if (contestModel?.amountPerVote == 0) {
+                    if (!context.mounted) return;
                     WayaUtils.showModalSheet(
                       context,
                       child: ConfirmVoteOptionModal(
@@ -404,7 +373,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
                     return;
                   }
-
+                  if (!context.mounted) return;
                   WayaUtils.showModalSheet(
                     context,
                     child: VoteOptionModal(
@@ -472,7 +441,8 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
               width: 50,
               child: WayaButton(
                 callback: () {
-                  viewModel.updateContestantId(model?.id);
+                  viewModel.updateContestantId(
+                      model?.id, model?.profileId ?? "");
                   WayaNav.toNamed('/create-contest-post');
                 },
                 height: 50,

@@ -61,8 +61,6 @@ class _PublicPageState extends ConsumerState<PublicPage>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-
-      debugPrint('DIALA PAGEID ${widget.id}');
       if (wayaPageCache.getCachedData(widget.id) != null) return;
 
       final result = await myPageNotifier.getSinglePage(widget.id);
@@ -94,7 +92,9 @@ class _PublicPageState extends ConsumerState<PublicPage>
 
     //? Fetch the data of this page.
     if (page.ownerId == ConversationState.self.id) {
-      return PrivatePage(page: page,);
+      return PrivatePage(
+        page: page,
+      );
     }
 
     //? Return the Scaffolded screen here.
@@ -112,11 +112,11 @@ class _PublicPageState extends ConsumerState<PublicPage>
               },
               child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
-            onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(
+            onTap: () => SharePlus.instance.share(ShareParams(
+              text: WayaValueHelper.getShareableUrl(
                   WayaAppRoutes.getPageDetailsPage(widget.id)),
               subject: 'Share ${page.name}',
-            ),
+            )),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
           PopupMenuButton(
@@ -148,11 +148,11 @@ class _PublicPageState extends ConsumerState<PublicPage>
                   ),
                 PopupMenuItem<int>(
                   value: 1,
-                  onTap: () => Share.share(
-                    WayaValueHelper.getShareableUrl(
+                  onTap: () => SharePlus.instance.share(ShareParams(
+                    text: WayaValueHelper.getShareableUrl(
                         WayaAppRoutes.getPageDetailsPage(widget.id)),
                     subject: 'Share ${page.name}',
-                  ),
+                  )),
                   child: WayaActionNav(
                     context: context,
                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
@@ -188,7 +188,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
               fit: BoxFit.none,
             ),
           ),
-          Gap(8)
+          const Gap(8)
         ],
       ),
       body: WayaObservableScrollView(
@@ -308,18 +308,15 @@ class _PublicPageState extends ConsumerState<PublicPage>
                         color: wayaTheme.colorScheme.greyColor500,
                       ),
                     ),
+
                     /// 0e2f98e8-2b78-455f-8ade-567298ee648f
                     const Gap(10),
                     Row(
                       children: [
                         //? This is fine too.
                         InkWell(
-                          onTap: () => WayaNav.toNamed(
-                              '/pageFollowerScreen',
-                              arguments: {
-                                'pageId': widget.id
-                              }
-                          ),
+                          onTap: () => WayaNav.toNamed('/pageFollowerScreen',
+                              arguments: {'pageId': widget.id}),
                           child: actionType2(
                             WayaValueHelper.formatNumber(page.followerCount),
                             'Followers',
@@ -434,10 +431,10 @@ class _PublicPageState extends ConsumerState<PublicPage>
     );
   }
 
-  actionType2(
-    txt,
-    txt2, {
-    onPressed,
+  Widget actionType2(
+    String txt,
+    String txt2, {
+    Function()? onPressed,
   }) {
     final wayaTheme = Theme.of(context);
     return InkWell(

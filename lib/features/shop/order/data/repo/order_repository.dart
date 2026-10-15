@@ -1,9 +1,14 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 
-class OrderRepository extends BaseRepository {
+part 'order_repository.g.dart';
+
+class OrderRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = "wayagram-shop/api/v2";
+
+  OrderRepository(super.key);
 
   Future<WayaRequestResponse> createOrder(
       {required String cartId,
@@ -17,7 +22,6 @@ class OrderRepository extends BaseRepository {
     };
 
     if (pickupAddress != null) payload['pickupAddress'] = pickupAddress;
-    debugPrint(payload.toString());
     return post("$serviceUrl/orders/place-order", payload);
   }
 
@@ -26,7 +30,7 @@ class OrderRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getSellerOrders(
-     {  required String shopId, required int page, String? status}) async {
+      {required String shopId, required int page, String? status}) async {
     final queryParams = [
       'shopId=$shopId',
       'page=$page',
@@ -60,4 +64,9 @@ class OrderRepository extends BaseRepository {
     return post("$serviceUrl/orders/decline-order?shopId=$shopId",
         {"orderId": orderId, "reason": reason});
   }
+}
+
+@riverpod
+OrderRepository orderRepository(Ref ref) {
+  return OrderRepository(ref);
 }

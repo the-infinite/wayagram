@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:get_thumbnail_video/index.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
 import 'package:wayagram/features/ugt/data/model/single_contestant_profile.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class ContestForYou extends StateNotifier<ContextForYouState> {
@@ -31,7 +33,11 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
       }
 
       //  state = state.copyWith(isLoading: true);
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+      //  state = state.copyWith(isLoading: false);
+      return;
+    }
 
     try {
       final response = await _contestRepository.getContestForYou(
@@ -64,6 +70,7 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
 
   void updateFilter(String? filter) {
     state = state.copyWith(filter: filter);
+
     fetchContestForYou(true);
   }
 
@@ -85,9 +92,6 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     }
   }
 
-
-
-
   //> generate video preview
   Future<File?> generateVideoPreview(String videoPath) async {
     final thumb = await VideoThumbnail.thumbnailFile(
@@ -97,7 +101,7 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
       quality: 60,
     );
 
-    return thumb != null ? File(thumb) : null;
+    return File(thumb.path);
   }
 
   Future<SingleContestProfileBase?> fetchSingleContestantDetails(
@@ -110,8 +114,14 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
         SingleContestProfileBase responseModel =
             SingleContestProfileBase.fromJson(response.data);
 
-        ref.read(selectedContestantProfile.notifier).state =
-            responseModel.data?.docs?.first;
+        final docs = responseModel.data?.docs;
+        if (docs != null && docs.isNotEmpty) {
+          ref.read(selectedContestantProfile.notifier).state = docs.first;
+
+          ref
+              .watch(ugtContestantProfileVm.notifier)
+              .fetchSingleContestantPosts(docs.first.id ?? "");
+        }
 
         return responseModel;
       }
@@ -123,7 +133,6 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-    debugPrint("Contest for you");
     state = state.copyWith(
         listContestForYou: state.listContestForYou.map((post) {
       if (post.id == postId) {
@@ -140,14 +149,12 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   }
 
   void doOnLikeLike(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.likeContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.copyWith(
           listContestForYou: state.listContestForYou.map((post) {
         if (post.id == postId) {
@@ -163,12 +170,10 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       //WayaSnackBar.showToast("Contest already liked");
-      debugPrint("Contest already liked");
     }
   }
 
   void doFollow(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.followContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
@@ -188,12 +193,8 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     doshare(postId);
 
     if (response.success) {
-      //  debugPrint("do like stuff Fail");
-
       // WayaSnackBar.showToast("Contest followed", showSuccess: true);
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   void toggleShare(String postId) {
@@ -212,14 +213,12 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   }
 
   void doshare(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.copyWith(
           listContestForYou: state.listContestForYou.map((post) {
         if (post.id == postId) {
@@ -231,9 +230,7 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
         return post;
       }).toList());
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   // Toggle Follow
@@ -253,5 +250,6 @@ final selectedContestProvider = StateProvider<Contest?>((ref) {
 // Provider
 final postProvider =
     StateNotifierProvider<ContestForYou, ContextForYouState>((ref) {
-  return ContestForYou(ContestRepo(), WayaLocalDataSource());
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return ContestForYou(contestRepo, WayaLocalDataSource());
 });

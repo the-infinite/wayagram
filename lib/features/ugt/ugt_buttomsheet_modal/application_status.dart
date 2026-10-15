@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -99,7 +98,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
             ),
             SizedBox(height: 3.h),
             Text(
-              "Stay updated with the progress of your University Got Talent application. Below are the details and current status of your submission",
+              "Stay updated with the progress of your Contests application. Below are the details and current status of your submission",
               style: WayaTextStyles.hintStyleBold.wayaCopyWith(
                   color: WayaColors.greyColor500, fontWeight: FontWeight.w400),
               textAlign: TextAlign.start,
@@ -132,8 +131,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
               children: [
                 UpcomingWidget(
                     title: "Talent\nCategory",
-                    content: formatDate(
-                        appliedContestModel.value?.contest?.startDate ?? "")),
+                    content: appliedContestModel.value?.categoryName ?? ""),
                 //  const Gap(20),
                 UpcomingWidget(
                     title: "Submission\nDate",
@@ -281,9 +279,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                             "0",
                         // model: widget.model,
                         votingLink: "",
-                        onTap: () {
-                          debugPrint("i am on the verge");
-                        },
+                        onTap: () {},
                         candidateName: "",
                       ),
                     );
@@ -328,7 +324,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
     );
   }
 
-  _lineThick() {
+  Widget _lineThick() {
     return Column(
       children: [
         const Gap(5),
@@ -359,13 +355,14 @@ class UpcomingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width:
-              isFromDetailsPage ? context.width * 0.18 : context.width * 0.21,
+          width: isFromDetailsPage ? width * 0.18 : width * 0.21,
           child: Text(title,
               style: WayaTextStyles.hintStyleBold.wayaCopyWith(
                   color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
@@ -373,8 +370,7 @@ class UpcomingWidget extends StatelessWidget {
         const Gap(5),
         if (!status)
           SizedBox(
-            width:
-                isFromDetailsPage ? context.width * 0.18 : context.width * 0.21,
+            width: isFromDetailsPage ? width * 0.18 : width * 0.21,
             child: Text(content,
                 // overflow: TextOverflow.ellipsis,
                 style: wayaTheme.textTheme.bodyMedium),

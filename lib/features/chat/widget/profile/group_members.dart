@@ -12,7 +12,7 @@ import 'package:wayagram/features/chat/modals/group/remove.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/chat_selection.dart';
 
 class GroupMembersWidget extends StatefulWidget {
@@ -70,7 +70,10 @@ class _GroupMembersWidgetState extends State<GroupMembersWidget> {
                 text: "Add New Member",
                 textColor: theme.colorScheme.greyColor500,
                 leadingIcon: WayaAssets.icons.cPlus.svg(
-                  color: theme.colorScheme.greyColor500,
+                  colorFilter: ColorFilter.mode(
+                    theme.colorScheme.greyColor500,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 textStyle: theme.textTheme.bodySemiBold.copyWith(
                   fontSize: 14.sp,
@@ -81,12 +84,16 @@ class _GroupMembersWidgetState extends State<GroupMembersWidget> {
             //? The button to add a share an invitation link.
             Expanded(
               child: WayaButton(
-                callback: () async => await WayaNavigationHelper.showComingSoonModal(false),
+                callback: () async =>
+                    await WayaNavigationHelper.showComingSoonModal(false),
                 color: theme.colorScheme.greyColor200,
                 text: "Share Invite Link",
                 textColor: theme.colorScheme.greyColor500,
                 leadingIcon: WayaAssets.icons.cLink.svg(
-                  color: theme.colorScheme.greyColor500,
+                  colorFilter: ColorFilter.mode(
+                    theme.colorScheme.greyColor500,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 textStyle: theme.textTheme.bodySemiBold.copyWith(
                   fontSize: 14.sp,
@@ -114,12 +121,14 @@ class _GroupMembersWidgetState extends State<GroupMembersWidget> {
               ),
             ),
             actionText: "Remove",
-            hideAction: widget.chat.chatMembers[index].userId == ConversationState.self.id,
+            hideAction: widget.chat.chatMembers[index].userId ==
+                ConversationState.self.id,
             actionAvailable: widget.chat.membersCanAddMembers,
             child: widget.chat.chatMembers[index].role == ChatMemberRole.member
                 ? null
                 : Container(
-                    padding: EdgeInsets.symmetric(vertical: 3.w, horizontal: 12.h),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 3.w, horizontal: 12.h),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary50,
                       borderRadius: BorderRadius.circular(6),

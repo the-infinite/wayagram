@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -12,7 +11,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/cart/vm/checkout_vm.dart';
@@ -79,6 +78,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final wayaTheme = Theme.of(context);
     final key = "checkout";
     final viewModel = ref.watch(checkoutVmProvider);
@@ -94,7 +94,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
             0,
             (prodSum, prod) =>
                 prodSum +
-                (double.parse(prod.unitPrice).toInt() * prod.quantity),
+                (double.parse(prod.unitPrice ?? '').toInt() * prod.quantity),
           );
     final int deliveryCharge = arg?.cartItem.deliveryFee ?? 0;
 
@@ -140,8 +140,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
       );
     }
 
-    debugPrint(isBothDeliveryOption.toString());
-    debugPrint(selectedOption);
     return WayaScaffold(
       title: "Checkout",
       isLoading: viewModel.isLoading || isLoading,
@@ -167,7 +165,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
                   onChanged: (value) =>
                       ref.read(radioSelectProvider(key).notifier).state = value,
                 ),
-                //      const Gap(10),
                 RadioSelect(
                   title: Text("Pick-up",
                       style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
@@ -243,11 +240,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
           Text("Cost Breakdown", style: wayaTheme.textTheme.bodyMedium),
           const Gap(10),
           DottedBorder(
-            borderType: BorderType.RRect,
-            color: wayaTheme.colorScheme.greyColor300,
-            radius: Radius.circular(8),
-            padding: EdgeInsets.all(14),
-            dashPattern: [5, 5],
+            options: RoundedRectDottedBorderOptions(
+              color: wayaTheme.colorScheme.greyColor300,
+              radius: Radius.circular(8),
+              padding: EdgeInsets.all(14),
+              dashPattern: [5, 5],
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: SizedBox(
@@ -276,11 +274,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
           ),
           const Gap(10),
           DottedBorder(
-            borderType: BorderType.RRect,
-            color: wayaTheme.colorScheme.greyColor300,
-            radius: Radius.circular(8),
-            padding: EdgeInsets.all(14),
-            dashPattern: [5, 5],
+            options: RoundedRectDottedBorderOptions(
+              color: wayaTheme.colorScheme.greyColor300,
+              radius: Radius.circular(8),
+              padding: EdgeInsets.all(14),
+              dashPattern: [5, 5],
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: Container(
@@ -328,11 +327,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
           ],
           const Gap(10),
           DottedBorder(
-            borderType: BorderType.RRect,
-            color: wayaTheme.colorScheme.greyColor300,
-            radius: Radius.circular(8),
-            padding: EdgeInsets.all(14),
-            dashPattern: [5, 5],
+            options: RoundedRectDottedBorderOptions(
+              color: wayaTheme.colorScheme.greyColor300,
+              radius: Radius.circular(8),
+              padding: EdgeInsets.all(14),
+              dashPattern: [5, 5],
+            ),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(8)),
               child: Container(
@@ -461,7 +461,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-                width: context.width * 0.35,
+                width: width * 0.35,
                 height: 50,
                 child: Stack(
                   alignment: Alignment.centerLeft,
@@ -487,7 +487,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
                   ],
                 )),
             SizedBox(
-              width: context.width * 0.45,
+              width: width * 0.45,
               child: WayaButton(
                 callback: (selectedOption == 'Delivery' &&
                         arg?.cartItem.deliveryAddress == null)

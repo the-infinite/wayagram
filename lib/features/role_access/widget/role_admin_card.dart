@@ -30,7 +30,8 @@ class RoleAdminCard extends StatelessWidget {
                 radius: 20,
                 child: Text(
                   getInitials("You"),
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ),
             SizedBox(width: 12),
@@ -44,7 +45,7 @@ class RoleAdminCard extends StatelessWidget {
                     style: WayaTextStyles.bodyBold,
                   ),
                   //  if (tru)
-                  Gap(5),
+                  const Gap(5),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                     decoration: BoxDecoration(
@@ -58,8 +59,8 @@ class RoleAdminCard extends StatelessWidget {
                         SizedBox(width: 4),
                         Text(
                           "Super Admin",
-                          style:
-                              WayaTextStyles.hintStyleBold.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
+                          style: WayaTextStyles.hintStyleBold.copyWith(
+                              color: Colors.green, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),

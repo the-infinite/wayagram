@@ -17,9 +17,9 @@ class PostMomentWidget extends ConsumerWidget {
     final state = ref.watch(momentVmProvider);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
       decoration: BoxDecoration(
-        color: wayaTheme.colorScheme.white.withOpacity(0.1),
+        color: wayaTheme.colorScheme.white.withValues(alpha: 0.1),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,9 +48,8 @@ class PostMomentWidget extends ConsumerWidget {
               radius: 36,
               callback: !state.isCreatingMoment
                   ? () async {
-                      ref
-                          .read(momentVmProvider.notifier)
-                          .submitMoment(context: context, previewKey: previewKey);
+                      ref.read(momentVmProvider.notifier).submitMoment(
+                          context: context, previewKey: previewKey);
                     }
                   : null,
               centerWidget: Center(

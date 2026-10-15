@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/quotation/widgets/single_negotiation_bid.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
@@ -37,23 +38,31 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
   final extendNotifier = ValueNotifier(false);
   final requestState = ValueNotifier<BuyRequestModel?>(null);
   Timer? _timer;
+  BidOrderModel? order;
+
+  Future<void> _ingestBid() async {
+    //? Update this guy in the list.
+    final result = await notifier.getBuyRequest(widget.id);
+    final finalOrder = await notifier.getOrderDetails(widget.id);
+    order = finalOrder;
+    if (result != null) requestState.value = result;
+  }
+
+  Future<void> _viewOrder() async {
+    WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(widget.id));
+  }
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         //? Now, let the timer keep ticking.
-        final result = await notifier.getBuyRequest(widget.id);
-        if (result != null) requestState.value = result;
+        await _ingestBid();
 
         //? Now, listen to this periodically.
         _timer = Timer.periodic(
           const Duration(seconds: 7),
-          (timer) async {
-            //? Update this guy in the list.
-            final result = await notifier.getBuyRequest(widget.id);
-            if (result != null) requestState.value = result;
-          },
+          (timer) async => await _ingestBid(),
         );
       },
     );
@@ -61,6 +70,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
   }
 
   void _cancelAndFinish() async {
+    _timer?.cancel();
     await notifier.cancelRequest(widget.id);
     WayaNav.goBack();
   }
@@ -101,6 +111,9 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
     final wayaTheme = Theme.of(context);
     final _ = ref.watch(userQuotationsProvider);
 
+    final participatedOrder = order?.buyerId == ConversationState.self.id ||
+        order?.vendorId == ConversationState.self.id;
+
     //? This is fine too.
     return WayaScaffold(
       isLoading: false,
@@ -111,14 +124,17 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
         child: ValueListenableBuilder(
           valueListenable: requestState,
           builder: (context, request, _) => Column(
-            mainAxisAlignment: request?.bids?.isEmpty ?? true ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: request?.bids?.isEmpty ?? true
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               //? If nobody has bid yet...
               if (request?.bids?.isEmpty ?? true) ...[
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 20.w),
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
                   decoration: BoxDecoration(
                     color: wayaTheme.colorScheme.scaffoldColor,
                     borderRadius: BorderRadius.circular(16.r),
@@ -187,6 +203,8 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                         request: request,
                         timer: _timer,
                         bid: bid,
+                        order: order,
+                        onBidReacted: _ingestBid,
                       );
                     },
                   ),
@@ -194,14 +212,19 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
 
               //? This is fine.
               if (request?.hasAcceptedBid ?? false)
-                //? The button for proceeding to payment for a quote.
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: WayaButton(
-                    callback: () async => WayaNav.toNamed(
-                      WayaAppRoutes.getQuotationCheckoutScreen(request!.acceptedBid!.id, request.id),
-                    ),
-                    text: "Proceed to Payment",
+                    callback: participatedOrder && order!.isPaid
+                        ? _viewOrder
+                        : () async => WayaNav.offNamed(
+                              WayaAppRoutes.getQuotationCheckoutScreen(
+                                  request!.acceptedBid!.id, request.id),
+                            ),
+                    text: participatedOrder && order!.isPaid
+                        ? "View Order"
+                        : "Proceed to Payment",
                   ),
                 )
               else
@@ -222,7 +245,8 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                       Row(
                         children: [
                           Text(
-                            WayaValueHelper.formatPrice(request?.bidStartingAmount ?? 0),
+                            WayaValueHelper.formatPrice(
+                                request?.bidStartingAmount ?? 0),
                             style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontSize: 20.sp,
@@ -237,13 +261,15 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                           InkWell(
                             onTap: () async {
                               //? Show the edit offer modal.
-                              final amount = await WayaUtils.showModalSheet<double>(
+                              final amount =
+                                  await WayaUtils.showModalSheet<double>(
                                 context,
                                 child: EditOfferModal(
                                   delta: 100,
                                   maxAmount: request?.maxBidAmount ?? 5000000,
                                   title: 'Edit your Offer',
-                                  hint: 'Update your base price for this request',
+                                  hint:
+                                      'Update your base price for this request',
                                 ),
                               );
 
@@ -251,19 +277,22 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                               if (amount == null) return;
 
                               //? Since this was fine...
-                              final result = await notifier.updateRequestAmount(widget.id, amount);
+                              final result = await notifier.updateRequestAmount(
+                                  widget.id, amount);
 
                               //? If this did not go well, leave.
                               if (!result) return;
 
                               //? Since it went well...
-                              requestState.value = requestState.value!.copyWith(bidStartingAmount: amount);
+                              requestState.value = requestState.value!
+                                  .copyWith(bidStartingAmount: amount);
 
                               //? Now, tell the user that it went well.
                               WayaUtils.showNotice(
                                 context: context,
                                 title: "Offer Updated",
-                                message: "Your offer has been updated successfully",
+                                message:
+                                    "Your offer has been updated successfully",
                                 icon: WayaAssets.images.bid.accept.image(
                                   height: 116.h,
                                   width: 116.h,
@@ -309,7 +338,8 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                                 await WayaUtils.showNotice(
                                   context: context,
                                   title: 'Cancel Buy Request',
-                                  message: 'Are you sure you want to cancel this request?',
+                                  message:
+                                      'Are you sure you want to cancel this request?',
                                   icon: WayaAssets.images.bid.cancel.image(
                                     height: 116.h,
                                     width: 116.h,
@@ -336,7 +366,8 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                           //? The button to extend a bid's time.
                           Expanded(
                             child: WayaProgressiveButton(
-                              callback: () async => await _extendBidTime(request!),
+                              callback: () async =>
+                                  await _extendBidTime(request!),
                               text: 'Extend Bid Time',
                               notifier: extendNotifier,
                             ),

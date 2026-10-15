@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 
@@ -94,7 +94,8 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                   }
 
                   //? If there are  no images selected for this group yet...
-                  else if (!(_selectedImage?.existsSync() ?? false) || !(_coverImage?.existsSync() ?? false)) {
+                  else if (!(_selectedImage?.existsSync() ?? false) ||
+                      !(_coverImage?.existsSync() ?? false)) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -122,8 +123,10 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               : null,
           text: 'Create',
           horizontalPadding: 12,
-          textStyle: WayaTextStyles.bodySmall
-              .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+          textStyle: WayaTextStyles.bodySmall.copyWith(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.white),
           height: 30,
         ),
       ),
@@ -167,14 +170,14 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                             'assets/images/pages/cam.png',
                             height: 14.h,
                           ),
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           constraints: BoxConstraints(),
                           color: WayaColors.greyColor600, // Background overlay
                         ),
                       ),
                     ],
                   ),
-                  Gap(15),
+                  const Gap(15),
                 ],
               ),
               Positioned(
@@ -187,7 +190,9 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                       CircleAvatar(
                         radius: 20,
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
-                        backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
+                        backgroundImage: _coverImage != null
+                            ? FileImage(_coverImage!)
+                            : null,
                         child: _coverImage == null
                             ? GestureDetector(
                                 onTap: _pickCoverImage,
@@ -239,17 +244,21 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.groupName,
                           hintText: 'Enter group name here',
-                          borderColor: formState.hasError && viewModel.groupName.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.groupName.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Group Name',
                         ),
-                        if (formState.hasError && viewModel.groupName.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.groupName.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -271,17 +280,21 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.groupDescription,
                           hintText: 'Describe what your group does',
-                          borderColor: formState.hasError && viewModel.groupDescription.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.groupDescription.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Group Description',
                         ),
-                        if (formState.hasError && viewModel.groupDescription.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.groupDescription.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -305,14 +318,17 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                             hintText: 'Select Category',
                             value: viewModel.category.capitalizeFirst,
                             items: viewModel.categories,
-                            onSelected: (value) =>
-                                ref.read(createGroupProvider.notifier).selectCategory(value.first)),
+                            onSelected: (value) => ref
+                                .read(createGroupProvider.notifier)
+                                .selectCategory(value.first)),
                         if (formState.hasError && viewModel.category.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
                             ),
                           ),
                       ],
@@ -358,7 +374,8 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Public Group", style: wayaTheme.textTheme.titleMedium),
+                    Text("Public Group",
+                        style: wayaTheme.textTheme.titleMedium),
                     const Gap(6),
                     FittedBox(
                       fit: BoxFit.contain,
@@ -403,7 +420,8 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Private Group", style: wayaTheme.textTheme.titleMedium),
+                    Text("Private Group",
+                        style: wayaTheme.textTheme.titleMedium),
                     const Gap(6),
                     Text(
                       "Not everyone can see activity on the group except invited\nmembers",

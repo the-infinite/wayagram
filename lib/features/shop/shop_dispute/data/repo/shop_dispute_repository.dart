@@ -1,10 +1,15 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 
-class ShopDisputeRepository extends BaseRepository {
+part 'shop_dispute_repository.g.dart';
+
+class ShopDisputeRepository extends BaseRepositoryRiverpod {
   static const serviceUrl = "wayagram-products/api/v1";
+
+  ShopDisputeRepository(super.ref);
 
   Future<WayaRequestResponse> openTicket(
       {required String reasonCategory,
@@ -33,12 +38,11 @@ class ShopDisputeRepository extends BaseRepository {
     if (media != null) payload['media'] = media;
     if (metadata.isNotEmpty) payload['metadata'] = metadata;
 
-    debugPrint(payload.toString());
-
     return post("$serviceUrl/client/dispute", payload);
   }
 
-  Future<WayaRequestResponse> getUserDisputes({int? page = 1, int? limit = 10}) async {
+  Future<WayaRequestResponse> getUserDisputes(
+      {int? page = 1, int? limit = 10}) async {
     return get("$serviceUrl/client/dispute?limit=1000&page=$page");
   }
 
@@ -76,12 +80,17 @@ class ShopDisputeRepository extends BaseRepository {
     if (media != null) payload['media'] = media;
     if (metadata.isNotEmpty) payload['metadata'] = metadata;
 
-    debugPrint(payload.toString());
-
     return patch("$serviceUrl/client/dispute/$disputeId", payload);
   }
 
-  Future<WayaRequestResponse> escalate({required String id, required String escalatedBy}) async {
-    return post("$serviceUrl/client/dispute/escalate-to-mediator/$id", {"escalatedBy": escalatedBy});
+  Future<WayaRequestResponse> escalate(
+      {required String id, required String escalatedBy}) async {
+    return post("$serviceUrl/client/dispute/escalate-to-mediator/$id",
+        {"escalatedBy": escalatedBy});
   }
+}
+
+@riverpod
+ShopDisputeRepository shopDisputeRepository(Ref ref) {
+  return ShopDisputeRepository(ref);
 }

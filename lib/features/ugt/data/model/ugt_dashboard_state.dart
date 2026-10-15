@@ -1,5 +1,6 @@
 import 'package:wayagram/features/ugt/data/model/contest_transaction_model.dart';
 import 'package:wayagram/features/ugt/data/model/contestant_transaction_model.dart';
+import 'package:wayagram/features/wallet/data/model/payout_history_model.dart';
 
 class UgtDashboardState {
   final int? revenueGenerated;
@@ -8,7 +9,7 @@ class UgtDashboardState {
   final int? totalCommission;
   final List<Transaction> transactionList;
   final List<ContestTransactionModel> contestTransactionHistoryList;
-  final List<ContestTransactionModel> contestPayoutHistoryList;
+  final List<PayoutHistoryModel> contestPayoutHistoryList;
 
   UgtDashboardState({
     this.revenueGenerated = 0,
@@ -27,7 +28,7 @@ class UgtDashboardState {
     int? totalCommission,
     List<Transaction>? transactionList,
     List<ContestTransactionModel>? contestTransactionHistoryList,
-    List<ContestTransactionModel>? contestPayoutHistoryList,
+    List<PayoutHistoryModel>? contestPayoutHistoryList,
   }) =>
       UgtDashboardState(
         revenueGenerated: revenueGenerated ?? this.revenueGenerated,

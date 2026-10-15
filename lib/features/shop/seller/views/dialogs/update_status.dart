@@ -42,7 +42,6 @@ class _UpdateStatusState extends State<UpdateStatus> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    debugPrint(widget.currentStatus);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
       decoration: BoxDecoration(

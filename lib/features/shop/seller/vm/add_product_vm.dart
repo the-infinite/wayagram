@@ -21,8 +21,11 @@ import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 final addProductProvider =
     StateNotifierProvider.family<AddProductVm, AddProductState, String>(
-        (ref, uniqueKey) =>
-            AddProductVm(UploadFileRepository(), ShopRepository.instance, ref));
+        (ref, uniqueKey) {
+  final uploadFileRepository = ref.watch(uploadFileRepositoryProvider);
+
+  return AddProductVm(uploadFileRepository, ShopRepository.instance, ref);
+});
 
 class AddProductVm extends StateNotifier<AddProductState> {
   final ShopRepository _shopRepository;
@@ -76,8 +79,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
               file: file, type: 'image', name: file.path.split('/').last));
         }
         state = state.copyWith(uploadedDocuments: updatedDocuments);
-      } else {
-        debugPrint("No images were selected.");
       }
     }).catchError((error) {
       debugPrint("Error picking images: $error");
@@ -270,7 +271,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
         }
 
         WayaSnackBar.showToast("${response.data["data"]}");
-        //debugPrint(response.data.toString());
       }
       //
     } catch (e) {
@@ -359,7 +359,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         materialType: TextEditingController(text: product.materialType),
         selectedColor: product.color,
         pricePerUnit: TextEditingController(
-            text: double.parse(product.price).toInt().toString()),
+            text: double.parse(product.price ?? '').toInt().toString()),
         pickUpAddress: TextEditingController(text: product.pickupAddress),
         productCategory: product.categoryId,
         shopId: product.shopId,

@@ -2,13 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 
 class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   final ContestRepo _contestRepository;
   final WayaLocalDataSource _localDataSource;
 
-  ContestDetailNotifier(this._contestRepository, this._localDataSource) : super([]);
+  ContestDetailNotifier(this._contestRepository, this._localDataSource)
+      : super([]);
 
   final int _page = 1; // Pagination tracking
   bool isLoading = false;
@@ -31,7 +32,8 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
     });
  */
     try {
-      final response = await _contestRepository.fetchHostedContest(_localDataSource.getUserId().toString(), _page);
+      final response = await _contestRepository.fetchHostedContest(
+          _localDataSource.getUserId().toString(), _page);
       List<Contest> contestList = [];
       if (response.success) {
         state = [];
@@ -52,7 +54,6 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
 /*   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-     debugPrint("Contest hosted contest");
     state = state.map((post) {
       if (post.id == postId) {
         if (!post.hasLiked!) {
@@ -70,7 +71,6 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-    debugPrint("Contest for you");
     state = state.map((post) {
       if (post.id == postId) {
         doOnLikeLike(postId);
@@ -86,12 +86,12 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   }
 
   void doOnLikeLike(String postId) async {
-    // debugPrint("do like stuff");
-    final response = await _contestRepository
-        .likeContest({"profileId": _localDataSource.getUserId().toString(), "contestId": postId});
+    final response = await _contestRepository.likeContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
           bool value = post.hasLiked == null ? false : post.hasLiked ?? false;
@@ -106,17 +106,18 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       //WayaSnackBar.showToast("Contest already liked");
-      //  debugPrint("Contest already liked");
     }
   }
 
   void doFollow(String postId) async {
-    // debugPrint("do like stuff");
-    final response = await _contestRepository
-        .followContest({"profileId": _localDataSource.getUserId().toString(), "contestId": postId});
+    final response = await _contestRepository.followContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
     state = state.map((post) {
       if (post.id == postId) {
-        bool value = post.isFollowing == null ? false : post.isFollowing ?? false;
+        bool value =
+            post.isFollowing == null ? false : post.isFollowing ?? false;
         return post.copyWith(
           // isLiked: true,
           isFollowing: !value,
@@ -127,12 +128,8 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
     doShare(postId);
 
     if (response.success) {
-      //  debugPrint("do like stuff Fail");
-
       // WayaSnackBar.showToast("Contest followed", showSuccess: true);
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   void toggleShare(String postId) {
@@ -150,12 +147,12 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   }
 
   void doShare(String postId) async {
-    // debugPrint("do like stuff");
-    final response = await _contestRepository
-        .shareContest({"profileId": _localDataSource.getUserId().toString(), "contestId": postId});
+    final response = await _contestRepository.shareContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
@@ -166,9 +163,7 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
         return post;
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   // Toggle Follow
@@ -183,6 +178,8 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
 }
 
 // Provider
-final contestDetailProvider = StateNotifierProvider<ContestDetailNotifier, List<Contest>>((ref) {
-  return ContestDetailNotifier(ContestRepo(), WayaLocalDataSource());
+final contestDetailProvider =
+    StateNotifierProvider<ContestDetailNotifier, List<Contest>>((ref) {
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return ContestDetailNotifier(contestRepo, WayaLocalDataSource());
 });

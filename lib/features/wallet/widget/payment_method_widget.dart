@@ -14,6 +14,8 @@ class PaymentMethodWidget extends StatelessWidget {
   final ThemeData wayaTheme;
   final VoidCallback? onTap;
   final VoidCallback? onClick;
+  final bool isChecked;
+
   const PaymentMethodWidget({
     super.key,
     required this.initial,
@@ -22,13 +24,15 @@ class PaymentMethodWidget extends StatelessWidget {
     required this.bankName,
     required this.wayaTheme,
     required this.onTap,
-    required this.onClick
+    required this.onClick,
+    required this.isChecked,
   });
 
 
 
   @override
   Widget build(BuildContext context) {
+
 
     return Container(
       margin: EdgeInsets.all(10),
@@ -65,7 +69,11 @@ class PaymentMethodWidget extends StatelessWidget {
                 color: wayaTheme.colorScheme.greyColor600)),
         trailing: InkWell(
             onTap: onTap,
-            child: Image.asset('assets/images/wallet/del.png', height: 24.h,)),
+            child: isChecked ? Image.asset('assets/images/wallet/del.png', height: 24.h,): Icon(
+    Icons.radio_button_unchecked,
+    color: Colors.grey,
+    size: 25,
+    )),
       ),
     );
   }

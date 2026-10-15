@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
@@ -41,7 +40,6 @@ class _EventInviteState extends ConsumerState<EventInvite> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(eventVmProvider);
-    // TODO: implement build
     return PopScope(
         onPopInvokedWithResult: (isPopping, _) {
           if (!isPopping) return;
@@ -103,7 +101,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                         await notifier.inviteToEvent(
                             eventTitle: widget.eventTitle,
                             eventId: widget.eventId);
-                            setState(() {
+                        setState(() {
                           isLoading = false;
                         });
                       },

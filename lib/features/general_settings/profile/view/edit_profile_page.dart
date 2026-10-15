@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -35,14 +34,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);
+    final height = MediaQuery.of(context).size.height;
+
     return WayaScaffold(
       isScrollable: true,
       isLoading: userState.isLoading,
@@ -56,18 +52,18 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             clipBehavior: Clip.none,
             children: [
               SizedBox(
-                height: Get.height * 0.24,
+                height: height * 0.24,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     WayaImage2(
-                      height: Get.height * 0.2,
+                      height: height * 0.2,
                       imageUrl: userState.userAccountModel?.data?.userdata
                           ?.profile?.coverImage,
                       isEdit: true,
                       canDelete: true,
                     ),
-                    Gap(15),
+                    const Gap(15),
                   ],
                 ),
               ),
@@ -92,14 +88,14 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     color: wayaTheme.colorScheme.greyColor600,
                   ),
                 ),
-                Gap(20),
+                const Gap(20),
                 Text(
                   'Profile Information',
                   style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                     color: wayaTheme.colorScheme.greyColor600,
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 ProfileTile(
                   title: 'Full Name',
                   value: userState.userAccountModel?.data?.userdata?.profile
@@ -115,7 +111,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 ProfileTile(
                   title: 'User Name',
                   value:
@@ -130,7 +126,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 ProfileTile(
                   title: 'Bio',
                   value: userState
@@ -146,7 +142,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 ProfileTile(
                   title: 'Location',
                   value: userState
@@ -162,7 +158,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 ProfileTile(
                   title: 'Date of Birth',
                   value: WayaHelpers.formatDateString(userState
@@ -182,7 +178,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     ),
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 ProfileTile(
                   title: 'Email',
                   value: userState.userAccountModel?.data?.userdata?.user?.email
@@ -199,7 +195,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     );
                   },
                 ),
-                Gap(10),
+                const Gap(10),
                 ProfileTile(
                   title: 'Phone Number',
                   value: userState
@@ -218,7 +214,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                     );
                   },
                 ),
-                Gap(12),
+                const Gap(12),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -241,7 +237,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         },
                       ),
                     ),
-                    Gap(5),
+                    const Gap(5),
                     Flexible(
                       flex: 1,
                       child: Column(
@@ -269,7 +265,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               ],
             ),
           ),
-          Gap(10)
+          const Gap(10)
         ],
       ),
     );
@@ -290,6 +286,8 @@ class ProfileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -304,13 +302,13 @@ class ProfileTile extends StatelessWidget {
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
             Spacer(),
             SizedBox(
-              width: title == 'Bio' ? Get.width * 0.65 : Get.width * 0.5,
+              width: title == 'Bio' ? width * 0.65 : width * 0.5,
               child: Text(value,
                   textAlign: TextAlign.end,
                   style: wayaTheme.textTheme.bodyXtraMedium
                       .wayaCopyWith(color: wayaTheme.colorScheme.greyColor600)),
             ),
-            Gap(2),
+            const Gap(2),
             Icon(Icons.arrow_forward_ios,
                 size: 18, color: wayaTheme.colorScheme.greyColor600)
           ],

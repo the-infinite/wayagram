@@ -38,7 +38,8 @@ class CommentNotifier extends StateNotifier<CommentState> {
     return wayaCommentCache.getCachedData(commentId);
   }
 
-  Future<bool> editComment(String postId, String commentId, String content) async {
+  Future<bool> editComment(
+      String postId, String commentId, String content) async {
     try {
       final response = await _pageRepository.editComment(commentId, content);
 
@@ -61,15 +62,18 @@ class CommentNotifier extends StateNotifier<CommentState> {
     return false;
   }
 
-  Future<CommentModel?> createComment(String postId, String content, [String? parentId]) async {
+  Future<CommentModel?> createComment(String postId, String content,
+      [String? parentId]) async {
     try {
-      final response = await _pageRepository.commentOnPost(postId, content, parentId);
+      final response =
+          await _pageRepository.commentOnPost(postId, content, parentId);
 
       if (response.success) {
         final comment = CommentModel.fromJson(response.data["data"]);
         resetComments();
         await getCommentsStream(postId);
-        if (parentId != null && parentId == state.replies.firstOrNull?.parentCommentId) {
+        if (parentId != null &&
+            parentId == state.replies.firstOrNull?.parentCommentId) {
           await getSingleComment(postId, parentId);
           await getReplies(postId, parentId);
         }
@@ -88,9 +92,11 @@ class CommentNotifier extends StateNotifier<CommentState> {
     return null;
   }
 
-  Future<CommentModel?> getSingleComment(String postId, String commentId) async {
+  Future<CommentModel?> getSingleComment(
+      String postId, String commentId) async {
     try {
-      final response = await _pageRepository.getSingleComment(postId, commentId);
+      final response =
+          await _pageRepository.getSingleComment(postId, commentId);
 
       //? This is fine.
       if (response.success) {
@@ -123,7 +129,8 @@ class CommentNotifier extends StateNotifier<CommentState> {
     final result = <CommentModel>[];
 
     try {
-      final response = await _pageRepository.getComments(postId, null, state.page, state.limit);
+      final response = await _pageRepository.getComments(
+          postId, null, state.page, state.limit);
 
       //? This
       if (response.success) {
@@ -161,7 +168,8 @@ class CommentNotifier extends StateNotifier<CommentState> {
     return result;
   }
 
-  Future<List<CommentModel>> getReplies(String postId, [String? parentId]) async {
+  Future<List<CommentModel>> getReplies(String postId,
+      [String? parentId]) async {
     final result = <CommentModel>[];
 
     try {
@@ -307,11 +315,12 @@ class CommentNotifier extends StateNotifier<CommentState> {
   }
 }
 
-final commentProvider = Provider((ref) => PageRepository());
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-final createCommentProvider = StateNotifierProvider.family<CommentNotifier, CommentState, String>((ref, id) {
-  return CommentNotifier(CommentState.initial, PageRepository());
+final createCommentProvider =
+    StateNotifierProvider.family<CommentNotifier, CommentState, String>(
+        (ref, id) {
+  return CommentNotifier(CommentState.initial, PageRepository.instance);
 });

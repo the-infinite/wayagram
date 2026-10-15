@@ -16,10 +16,10 @@ class AnalyticsWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
             border:
                 Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
           ),

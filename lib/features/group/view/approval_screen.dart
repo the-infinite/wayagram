@@ -23,7 +23,8 @@ class ApprovalScreen extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ApprovalScreenState();
 }
 
-class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTickerProviderStateMixin {
+class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -37,7 +38,6 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(widget.provider);
     final request = ref.watch(widget.provider.notifier);
-    debugPrint('APPROVAL GROYUPID ${widget.groupId}');
 
     return Container(
       width: double.infinity,
@@ -73,8 +73,10 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen> with SingleTick
                 itemBuilder: (_, index) {
                   final joinRequest = viewModel.joinRequestDocs![index];
                   return JoinRequestWidget(
-                      reject: ()=> request.rejectRequest(context, '${joinRequest.id}', widget.groupId),
-                      accept: ()=> request.approveRequest(context, '${joinRequest.id}', widget.groupId),
+                      reject: () => request.rejectRequest(
+                          context, '${joinRequest.id}', widget.groupId),
+                      accept: () => request.approveRequest(
+                          context, '${joinRequest.id}', widget.groupId),
                       joinRequest: joinRequest);
                 }),
         ],

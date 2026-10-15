@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -23,11 +22,12 @@ class WayaWarningDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     //? First, we obtain all things needed to build this widget.
     final theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
 
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
-        width: Get.width,
+        width: width,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(

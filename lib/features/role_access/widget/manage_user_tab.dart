@@ -15,7 +15,7 @@ class ManageUserTab extends ConsumerStatefulWidget {
   const ManageUserTab({super.key});
 
   @override
-  _ForYouContestState createState() => _ForYouContestState();
+  ConsumerState<ManageUserTab> createState() => _ForYouContestState();
 }
 
 class _ForYouContestState extends ConsumerState<ManageUserTab> {
@@ -37,7 +37,6 @@ class _ForYouContestState extends ConsumerState<ManageUserTab> {
     if (currentOffset > _previousScrollOffset &&
         _scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent - 100) {
-      // debugPrint("fetching .....${_scrollController.position.pixels}");
       ref.read(roleAccessVm.notifier).getAllMembers(false);
     }
     _previousScrollOffset = currentOffset;
@@ -99,7 +98,7 @@ class _ForYouContestState extends ConsumerState<ManageUserTab> {
               },
             ),
           ),
-          Gap(100)
+          const Gap(100)
         ],
       ),
     );

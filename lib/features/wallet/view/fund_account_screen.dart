@@ -61,7 +61,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
   void _handleSubmit() async {
     // Convert amount string to double for comparison
     double numericAmount = double.tryParse(amount) ?? 0;
-    
+
     if (amount == "0.00" || amount == "0" || amount.startsWith("00")) {
       setState(() {
         errorMessage = "Please enter a valid amount";
@@ -93,7 +93,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
       case "WAYAQUICK":
         WayaLoadingDialog.show(context);
         final data = await ref
-            .read(walletFundingOptionsVmProvider.notifier)
+            .read(walletFundingOptionsProvider.notifier)
             .walletFunding(
                 amount: double.parse(amount), fundOptionCode: fundOptionCode);
         if (mounted) {
@@ -113,7 +113,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
       case "WAYABANK":
         WayaLoadingDialog.show(context);
         final data = await ref
-            .read(walletFundingOptionsVmProvider.notifier)
+            .read(walletFundingOptionsProvider.notifier)
             .walletFunding(
                 amount: double.parse(amount), fundOptionCode: fundOptionCode);
         if (mounted) {
@@ -127,9 +127,9 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
       case "9PSB":
         WayaLoadingDialog.show(context);
         final data = await ref
-            .read(walletFundingOptionsVmProvider.notifier)
+            .read(walletFundingOptionsProvider.notifier)
             .walletFunding(
-            amount: double.parse(amount), fundOptionCode: fundOptionCode);
+                amount: double.parse(amount), fundOptionCode: fundOptionCode);
         if (mounted) {
           WayaLoadingDialog.hide(context);
           if (data != null) {
@@ -159,7 +159,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => WayaNav.goBack(),
         ),
-        title:  Text(
+        title: Text(
           'Fund With Bank Account',
           style: TextStyle(
             color: Colors.black,
@@ -192,7 +192,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
             ),
           ),
           const SizedBox(height: 40),
-           Text(
+          Text(
             'Enter Amount',
             style: TextStyle(
               color: Colors.black54,

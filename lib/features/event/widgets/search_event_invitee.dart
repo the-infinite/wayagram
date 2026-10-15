@@ -41,7 +41,9 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
           //? This is fine.
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: _peer != null ? CrossAxisAlignment.center : CrossAxisAlignment.stretch,
+            crossAxisAlignment: _peer != null
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.stretch,
             mainAxisSize: _peer != null ? MainAxisSize.min : MainAxisSize.max,
             children: [
               //? First, the title of the popup.
@@ -64,7 +66,10 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
                       backgroundColor: theme.colorScheme.greyColor200,
                     ),
                     icon: WayaAssets.icons.actonDismiss.svg(
-                      color: theme.colorScheme.black,
+                      colorFilter: ColorFilter.mode(
+                        theme.colorScheme.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ],
@@ -97,8 +102,6 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
                 UserSearchBarWidget(
                   onSelect: (users) async {
                     //? This is fine.
-                    print(users.length);
-
                     eventNotifier.updateSelectedInvitee(invitee: users.first);
 
                     await Future.delayed(const Duration(milliseconds: 800));
@@ -134,9 +137,11 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
                             : InkWell(
                                 onTap: () async {
                                   //? This is fine.
-                                  eventNotifier.updateSelectedInvitee(invitee: data.$1);
+                                  eventNotifier.updateSelectedInvitee(
+                                      invitee: data.$1);
 
-                                  await Future.delayed(const Duration(milliseconds: 800));
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 800));
 
                                   WayaNav.goBack();
 
@@ -146,11 +151,16 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
                                   });
                                 },
                                 borderRadius: BorderRadius.circular(10),
-                                splashColor: theme.colorScheme.primary.withAlpha(30),
-                                focusColor: theme.colorScheme.primary.withAlpha(30),
-                                highlightColor: theme.colorScheme.primary.withAlpha(30),
+                                splashColor:
+                                    theme.colorScheme.primary.withAlpha(30),
+                                focusColor:
+                                    theme.colorScheme.primary.withAlpha(30),
+                                highlightColor:
+                                    theme.colorScheme.primary.withAlpha(30),
                                 child: Container(
-                                  margin: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 5.h),
+                                  margin: index == 0
+                                      ? EdgeInsets.zero
+                                      : EdgeInsets.only(top: 5.h),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                   ),

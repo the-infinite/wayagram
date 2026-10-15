@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/explore/vm/social_notifications.dart';
-import 'package:wayagram/features/notifications/vm/default.dart';
+import 'package:wayagram/features/notifications/vm/notification_vm.dart';
 import 'package:wayagram/features/notifications/widgets/filter_button.dart';
 
 class SocialFilterOverlayController {
@@ -189,140 +189,148 @@ class SocialFilterModal extends StatelessWidget {
       final isFiltering = notifier.currentState.filters.isApplied;
 
       // Build the actual thing.
-      return Material(
-        child: Container(
-          width: size.width * 0.75,
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          decoration: BoxDecoration(
-            color: WayaColors.transparent,
-            border: Border.all(width: 1, color: WayaColors.greyColor300),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              //? First, text that is and corresponds to the titles of this section.
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  "Filter",
-                  style: WayaTextStyles.titleMedium.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Text(
-                  "Choose a filter",
-                  style: WayaTextStyles.labelMedium.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: WayaColors.greyColor600,
-                  ),
-                ),
-              ),
+      return PopScope(
+        onPopInvokedWithResult: (didPop, result) {
+          if (!didPop) return;
 
-              // Some space.
-              const Gap(5),
-
-              //? For the preliminary filters.
-              FilterToggleButton(
-                name: "Event Notifications",
-                controller: controller._showEvent,
-                isFiltering: isFiltering,
-              ),
-              //? For the preliminary filters.
-              FilterToggleButton(
-                name: "Poll Notifications",
-                controller: controller._showPoll,
-                isFiltering: isFiltering,
-              ),
-              FilterToggleButton(
-                name: "Like Notifications",
-                controller: controller._showLikes,
-                isFiltering: isFiltering,
-              ),
-              FilterToggleButton(
-                name: "Comment Notifications",
-                controller: controller._showComments,
-                isFiltering: isFiltering,
-              ),
-              FilterToggleButton(
-                name: "Follow Requests",
-                controller: controller._showFollowRequests,
-                isFiltering: isFiltering,
-              ),
-              FilterToggleButton(
-                name: "Livestream Notifications",
-                controller: controller._showLivestream,
-                isFiltering: isFiltering,
-              ),
-              FilterToggleButton(
-                name: "Group Invitations",
-                controller: controller._showGroupInvite,
-                isFiltering: isFiltering,
-              ),
-              FilterToggleButton(
-                name: "Call Notifications",
-                controller: controller._showCalls,
-                isFiltering: isFiltering,
-              ),
-              FilterToggleButton(
-                name: "Share Notifications",
-                controller: controller._showShares,
-                isFiltering: isFiltering,
-              ),
-              FilterToggleButton(
-                name: "View Notifications",
-                controller: controller._showView,
-                isFiltering: isFiltering,
-              ),
-
-              // Now, do it like this.
-              const Gap(20),
-
-              //* Now for the buttons that would be used to accept or reject
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    // Accept invite button.
-                    Expanded(
-                      child: WayaButton(
-                        text: "Apply",
-                        textColor: WayaColors.white,
-                        callback: controller.apply,
-                        color: WayaColors.primary500,
-                        height: null,
-                        verticalPadding: 8,
-                        horizontalPadding: 12,
-                      ),
+          //? This is fine.
+          controller.clear();
+        },
+        child: Material(
+          child: Container(
+            width: size.width * 0.75,
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(
+              color: WayaColors.transparent,
+              border: Border.all(width: 1, color: WayaColors.greyColor300),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //? First, text that is and corresponds to the titles of this section.
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    "Filter",
+                    style: WayaTextStyles.titleMedium.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    "Choose a filter",
+                    style: WayaTextStyles.labelMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: WayaColors.greyColor600,
+                    ),
+                  ),
+                ),
 
-                    // Some space.
-                    const Gap(10),
+                // Some space.
+                const Gap(5),
 
-                    // Accept invite button.
-                    Expanded(
-                      child: WayaButton(
-                        text: "Clear",
-                        textColor: WayaColors.customBlack,
-                        callback: controller.clear,
-                        color: WayaColors.transparent,
-                        height: null,
-                        verticalPadding: 8,
-                        horizontalPadding: 12,
-                        border: Border.all(
-                          color: WayaColors.greyColor500,
+                //? For the preliminary filters.
+                FilterToggleButton(
+                  name: "Event Notifications",
+                  controller: controller._showEvent,
+                  isFiltering: isFiltering,
+                ),
+                //? For the preliminary filters.
+                FilterToggleButton(
+                  name: "Poll Notifications",
+                  controller: controller._showPoll,
+                  isFiltering: isFiltering,
+                ),
+                FilterToggleButton(
+                  name: "Like Notifications",
+                  controller: controller._showLikes,
+                  isFiltering: isFiltering,
+                ),
+                FilterToggleButton(
+                  name: "Comment Notifications",
+                  controller: controller._showComments,
+                  isFiltering: isFiltering,
+                ),
+                FilterToggleButton(
+                  name: "Follow Requests",
+                  controller: controller._showFollowRequests,
+                  isFiltering: isFiltering,
+                ),
+                FilterToggleButton(
+                  name: "Livestream Notifications",
+                  controller: controller._showLivestream,
+                  isFiltering: isFiltering,
+                ),
+                FilterToggleButton(
+                  name: "Group Invitations",
+                  controller: controller._showGroupInvite,
+                  isFiltering: isFiltering,
+                ),
+                FilterToggleButton(
+                  name: "Call Notifications",
+                  controller: controller._showCalls,
+                  isFiltering: isFiltering,
+                ),
+                FilterToggleButton(
+                  name: "Share Notifications",
+                  controller: controller._showShares,
+                  isFiltering: isFiltering,
+                ),
+                FilterToggleButton(
+                  name: "View Notifications",
+                  controller: controller._showView,
+                  isFiltering: isFiltering,
+                ),
+
+                // Now, do it like this.
+                const Gap(20),
+
+                //* Now for the buttons that would be used to accept or reject
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // Accept invite button.
+                      Expanded(
+                        child: WayaButton(
+                          text: "Apply",
+                          textColor: WayaColors.white,
+                          callback: controller.apply,
+                          color: WayaColors.primary500,
+                          height: null,
+                          verticalPadding: 8,
+                          horizontalPadding: 12,
                         ),
                       ),
-                    ),
-                  ],
+
+                      // Some space.
+                      const Gap(10),
+
+                      // Accept invite button.
+                      Expanded(
+                        child: WayaButton(
+                          text: "Clear",
+                          textColor: WayaColors.customBlack,
+                          callback: controller.clear,
+                          color: WayaColors.transparent,
+                          height: null,
+                          verticalPadding: 8,
+                          horizontalPadding: 12,
+                          border: Border.all(
+                            color: WayaColors.greyColor500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );

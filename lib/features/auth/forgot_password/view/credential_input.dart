@@ -18,6 +18,7 @@ class CredentialInput extends ConsumerStatefulWidget {
 
 class _CredentialInputState extends ConsumerState<CredentialInput> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController email = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +43,11 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
               children: [
                 const Gap(20),
                 FormField<String>(validator: (value) {
-                  if (viewModel.isEmail && viewModel.email.text.isEmpty) {
+                  if (viewModel.isEmail && email.text.isEmpty) {
                     return 'Email is required';
                   }
                   final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                  if (viewModel.isEmail &&
-                      !regexp.hasMatch(viewModel.email.text)) {
+                  if (viewModel.isEmail && !regexp.hasMatch(email.text)) {
                     return 'Invalid email address';
                   }
                   return null;
@@ -57,15 +57,14 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.emailAddress,
-                        controller: viewModel.email,
+                        controller: email,
                         hintText: 'example@gmail.com',
-                        borderColor:
-                            formState.hasError && viewModel.email.text.isEmpty
-                                ? wayaTheme.colorScheme.error
-                                : null,
+                        borderColor: formState.hasError && email.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
                         label: 'Email Address',
                       ),
-                      if (formState.hasError && viewModel.email.text.isEmpty)
+                      if (formState.hasError && email.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -78,104 +77,6 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                     ],
                   );
                 }),
-                // : FormField<String>(validator: (value) {
-                //     if (!viewModel.isEmail &&
-                //         viewModel.phone.text.isEmpty) {
-                //       return 'Phone is required';
-                //     }
-
-                //     return null;
-                //   }, builder: (formState) {
-                //     return Column(
-                //       crossAxisAlignment: CrossAxisAlignment.start,
-                //       children: [
-                //         Text(
-                //           "Phone Number",
-                //           style: WayaTextStyles.labelMedium,
-                //         ),
-                //         const Gap(3),
-                //         Row(
-                //           children: [
-                //             //   Expanded(
-                //             Container(
-                //               height: 55,
-                //               width: 90,
-                //               padding: EdgeInsets.all(8),
-                //               decoration: BoxDecoration(
-                //                   border: Border.all(
-                //                       color: wayaTheme
-                //                           .colorScheme.greyColor300,
-                //                       width: 1),
-                //                   borderRadius: BorderRadius.all(
-                //                       Radius.circular(8.0))),
-                //               child: Row(
-                //                 mainAxisAlignment: MainAxisAlignment.center,
-                //                 crossAxisAlignment:
-                //                     CrossAxisAlignment.center,
-                //                 children: [
-                //                   Image.asset(
-                //                     'assets/images/onboarding/flag.png',
-                //                     width: 30,
-                //                     height: 30,
-                //                   ),
-                //                   const Gap(3),
-                //                   Text(
-                //                     "+234",
-                //                     style: WayaTextStyles.hintStyle,
-                //                   )
-                //                 ],
-                //               ),
-                //             ),
-                //             const Gap(4),
-                //             Expanded(
-                //               child: WayaTextFormField(
-                //                 keyboardType: TextInputType.phone,
-                //                 controller: viewModel.phone,
-                //                 hintText: '000-000-000',
-                //                 borderColor: formState.hasError &&
-                //                         viewModel.email.text.isEmpty
-                //                     ? wayaTheme.colorScheme.error
-                //                     : null,
-                //               ),
-                //             )
-                //           ],
-                //         ),
-                //         if (formState.hasError &&
-                //             viewModel.email.text.isEmpty)
-                //           Padding(
-                //             padding: const EdgeInsets.only(top: 5),
-                //             child: Text(
-                //               formState.errorText!,
-                //               style: TextStyle(
-                //                   color: wayaTheme.colorScheme.error,
-                //                   fontSize: 12),
-                //             ),
-                //           ),
-                //       ],
-                //     );
-                //   }),
-                // const Gap(10),
-                // Align(
-                //     alignment: Alignment.centerRight,
-                //     child: GestureDetector(
-                //       onTap: () {
-                //         viewModel.toggle();
-                //       },
-                //       child: Text(
-                //         !viewModel.isEmail
-                //             ? "Use Email Address"
-                //             : "Use Phone Instead",
-                //         style: TextStyle().wayaCopyWith(
-                //             color: wayaTheme.colorScheme.customPrimary,
-                //             fontWeight: FontWeight.w500,
-                //             fontSize: 14),
-                //       ),
-                //     )),
-
-                /**
-                 * viewModel.isButtonEnabled
-                        ?
-                 */
                 const Gap(60),
                 WayaButton(
                   callback: !viewModel.isLoading
@@ -183,7 +84,8 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                           if (_formKey.currentState!.validate()) {
                             ref.read(credentialInputProvider.notifier).onSubmit(
                                 () => widget.goToNextTab(
-                                    emailAddress: viewModel.email.text));
+                                    emailAddress: email.text),
+                                email.text);
                           }
                         }
                       : null,

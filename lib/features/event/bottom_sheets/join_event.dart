@@ -30,9 +30,10 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
     final walletState = ref.watch(walletVmProvider);
     final eventState = ref.watch(eventVmProvider);
     final walletBalance = walletState.data?.balance ?? '0';
-    final isInsufficientBalance = double.parse(walletBalance).toInt() < widget.event.fee;
+    final isInsufficientBalance =
+        double.parse(walletBalance).toInt() < widget.event.fee;
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -62,10 +63,11 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
           const Gap(30),
           if (widget.event.eventType.toLowerCase() == "paid") ...[
             Container(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               width: double.infinity,
-              decoration:
-                  BoxDecoration(color: wayaTheme.colorScheme.primary50, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                  color: wayaTheme.colorScheme.primary50,
+                  borderRadius: BorderRadius.circular(12)),
               child: Center(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,13 +82,17 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
                   const Gap(6),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10),
-                    decoration:
-                        BoxDecoration(color: wayaTheme.colorScheme.white, borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: wayaTheme.colorScheme.white,
+                        borderRadius: BorderRadius.circular(12)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(isInsufficientBalance ? "Insufficient Balance" : "Wallet Balance",
+                        Text(
+                            isInsufficientBalance
+                                ? "Insufficient Balance"
+                                : "Wallet Balance",
                             style: isInsufficientBalance
                                 ? wayaTheme.textTheme.errorHintStyle
                                 : wayaTheme.textTheme.hintStyle),
@@ -95,7 +101,8 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
                           color: wayaTheme.colorScheme.customBlack,
                           balanceColor: wayaTheme.colorScheme.customBlack,
                           koboValueColor: wayaTheme.colorScheme.greyColor600,
-                          amount: double.parse(walletState.data?.balance ?? "0"),
+                          amount:
+                              double.parse(walletState.data?.balance ?? "0"),
                         ),
                       ],
                     ),
@@ -108,13 +115,18 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
           WayaButton(
             callback: !eventState.isJoiningEvent
                 ? () async {
-                    if (widget.event.eventType.toLowerCase() == "paid" && isInsufficientBalance) {
-                      await WayaNav.toNamed(FundWalletOptionsScreen.route, arguments: '/events');
+                    if (widget.event.eventType.toLowerCase() == "paid" &&
+                        isInsufficientBalance) {
+                      await WayaNav.toNamed(FundWalletOptionsScreen.route,
+                          arguments: '/events');
                       return;
                     }
 
                     //? Then just join.
-                    await notifier.joinEvent(eventId: widget.event.id, context: context, event: widget.event);
+                    await notifier.joinEvent(
+                        eventId: widget.event.id,
+                        context: context,
+                        event: widget.event);
                   }
                 : null,
             centerWidget: LoadingState(
@@ -127,7 +139,8 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
             callback: () => WayaNav.goBack(),
             textColor: wayaTheme.colorScheme.greyColor500,
             color: wayaTheme.colorScheme.transparent,
-            border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+            border:
+                Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
             text: 'Go Back',
           )
         ],

@@ -53,12 +53,9 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
           moduleID.value = "Contest";
           modulePicker.value = "Contest";
           for (var model in viewModel.listShop) {
-            print("${model.label} ${model.value}");
-            print("my own ${viewModelSelected?.contestId}");
             if (model.value == viewModelSelected?.contestId) {
               shopPicker.value = model.label;
               shopPicker.value = model.value;
-              print("I am here sha ${model.label}");
             }
           }
         } else {
@@ -146,14 +143,13 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
               )
             ],
           ),
-          Gap(20),
+          const Gap(20),
           Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //  const Gap(10),
                 FormField<String>(validator: (value) {
                   if (rollAccessNotifier.email.text.isEmpty) {
                     return 'Email is required';
@@ -191,7 +187,6 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                     ],
                   );
                 }),
-
                 const Gap(20),
                 FormField<String>(validator: (value) {
                   if (modulePicker.value.isEmpty ||
@@ -221,7 +216,6 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                               rollAccessNotifier.fetchHostedContest();
                               //  rollAccessNotifier.ge
                             } else {
-                              print("i am in role selected");
                               rollAccessNotifier.getRoles();
                               rollAccessNotifier.getShops();
                             }
@@ -241,8 +235,6 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                   );
                 }),
                 const Gap(10),
-                //  const Gap(20),
-
                 if (moduleID.value == "Shop" || moduleID.value == "Contest")
                   FormField<String>(validator: (value) {
                     if (shopPicker.value.isEmpty ||
@@ -320,7 +312,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                   );
                 }),
                 const Gap(10),
-                 ],
+              ],
             ),
           ),
         ],

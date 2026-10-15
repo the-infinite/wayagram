@@ -20,10 +20,13 @@ class EventCard extends ConsumerWidget {
     return Column(
       children: [
         GestureDetector(
-          onTap: () => WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(event.id)),
+          onTap: () =>
+              WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(event.id)),
           child: Container(
             padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(color: wayaTheme.colorScheme.white, borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(
+                color: wayaTheme.colorScheme.white,
+                borderRadius: BorderRadius.circular(12)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,8 +49,9 @@ class EventCard extends ConsumerWidget {
                       children: [
                         SizedBox(
                           width: 150.w,
-                          child:
-                              Text(event.title, overflow: TextOverflow.ellipsis, style: wayaTheme.textTheme.bodyMedium),
+                          child: Text(event.title,
+                              overflow: TextOverflow.ellipsis,
+                              style: wayaTheme.textTheme.bodyMedium),
                         ),
                         SizedBox(
                           height: 8.h,
@@ -67,11 +71,14 @@ class EventCard extends ConsumerWidget {
                 SizedBox(
                   width: 60,
                   child: WayaButton(
-                    callback: () => WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(event.id)),
+                    callback: () => WayaNav.toNamed(
+                        WayaAppRoutes.getEventDetailsScreen(event.id)),
                     text: event.userId == userId ? 'View' : 'Register',
                     height: 30,
-                    textStyle: wayaTheme.textTheme.hintStyle
-                        .wayaCopyWith(color: wayaTheme.colorScheme.white, fontSize: 12.sp, fontWeight: FontWeight.w500),
+                    textStyle: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                        color: wayaTheme.colorScheme.white,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500),
                     radius: 6,
                   ),
                 )

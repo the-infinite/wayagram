@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
@@ -19,7 +19,8 @@ class ConfirmPageDetails extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ConfirmPageDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ConfirmPageDetailsState();
 }
 
 class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
@@ -37,6 +38,8 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
     final viewModel = ref.watch(createPageProvider);
     final viewModel2 = ref.watch(createPageProvider.notifier);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final height = MediaQuery.of(context).size.height;
+
     return WayaScaffold(
       title: "Confirm Details",
       isLoading: viewModel.isLoading,
@@ -53,7 +56,7 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                 args['type'] == 'Public Page' ? true : false,
                 (args['image'] as File).path,
                 (args['coverImage'] as File).path,
-                  viewModel.category,
+                viewModel.category,
                 //args['type'] == 'Public Page' ? false : true,
               );
               viewModel2.reset();
@@ -87,40 +90,43 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                   args['coverImage'] == null
                       ? Image.asset(
                           'assets/images/pages/image_placeholder.png',
-                          height: Get.height * 0.2,
+                          height: height * 0.2,
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           fit: BoxFit.fitWidth,
                         )
                       : Image.file(
                           File('${args['image'].absolute.path}'),
-                          height: Get.height * 0.2,
+                          height: height * 0.2,
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           fit: BoxFit.fitWidth,
                         ),
-                  Gap(15),
+                  const Gap(15),
                 ],
               ),
               Positioned(
                   left: 16.w,
                   bottom: -20.h,
                   child: CircleAvatar(
-                      radius: 20, backgroundImage: FileImage(File('${args['coverImage'].absolute.path}')))),
+                      radius: 20,
+                      backgroundImage: FileImage(
+                          File('${args['coverImage'].absolute.path}')))),
             ],
           ),
           const Gap(50),
           details('Page Name', viewModel.pageName.text.capitalizeFirst),
-          Gap(20),
-          details('Page Description', viewModel.pageDescription.text.capitalizeFirst),
-          Gap(20),
+          const Gap(20),
+          details('Page Description',
+              viewModel.pageDescription.text.capitalizeFirst),
+          const Gap(20),
           details('Page Type', args['type'])
         ],
       ),
     );
   }
 
-  details(title, subTitle) {
+  Widget details(String title, String? subTitle) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -139,7 +145,7 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
           child: Padding(
             padding: EdgeInsets.only(left: 15.h),
             child: Text(
-              subTitle,
+              subTitle ?? '',
               maxLines: 2,
               textAlign: TextAlign.right,
               style: TextStyle(

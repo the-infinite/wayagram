@@ -13,7 +13,7 @@ import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/chat/widget/profile/chat_media.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
@@ -129,7 +129,7 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
               ProfileActionButton(
                 onTap: () {
                   //? This is muted.
-                  if (widget.chat.self.isMuted) {
+                  if (widget.chat.self?.isMuted ?? false) {
                     notifier.muteOrUnmuteGroup(widget.chat.id, null);
                   }
 
@@ -144,11 +144,11 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
                     );
                   }
                 },
-                icon: widget.chat.self.isMuted
+                icon: widget.chat.self?.isMuted ?? false
                     ? WayaAssets.icons.cProfileUnmute.path
                     : WayaAssets.icons.cProfileMute.path,
-                isBad: !widget.chat.self.isMuted,
-                text: widget.chat.self.isMuted ? "Unmute" : "Mute",
+                isBad: !(widget.chat.self?.isMuted ?? false),
+                text: widget.chat.self?.isMuted ?? false ? "Unmute" : "Mute",
               ),
 
               //* Next, report a user.

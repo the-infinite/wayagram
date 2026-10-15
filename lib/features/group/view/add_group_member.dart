@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/modals/error.dart';
@@ -10,6 +9,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/data/model/role_type.dart';
@@ -36,7 +36,6 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
 
   @override
   Widget build(BuildContext context) {
-    print('GROUPID ==>>> ${widget.id}');
     final viewModel = ref.watch(groupProvider);
 
     final wayaTheme = Theme.of(context);
@@ -50,7 +49,6 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
             ? WayaButton(
                 callback: viewModel.isLoading
                     ? () async {
-
                         if (_formKey.currentState!.validate()) {}
                       }
                     : null,
@@ -68,7 +66,8 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                   if (viewModel.foundUserId == null) {
                     await WayaUtils.showModalSheet(
                       context,
-                      child: WayaErrorDialog(title: "You must select the user you wish to add"),
+                      child: WayaErrorDialog(
+                          title: "You must select the user you wish to add"),
                     );
                     return;
                   }
@@ -81,6 +80,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                       viewModel.roleType,
                       viewModel.foundUserId!,
                     )) {
+                      if (!context.mounted) return;
                       await showCustomDialog(
                         context,
                         'Success!',
@@ -121,7 +121,8 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                 children: [
                   WayaConfirmationView(
                     debounceTimer: const Duration(milliseconds: 20),
-                    getResult: ref.read(userSearchProvider.notifier).getUserByEmail,
+                    getResult:
+                        ref.read(userSearchProvider.notifier).getUserByEmail,
                     getText: (user) => user?.fullname ?? "User not found",
                     onResult: (user) {
                       notifier.setAddedUser(user?.id);
@@ -160,7 +161,9 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -168,7 +171,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                   }),
                 ],
               )),
-          Gap(20),
+          const Gap(20),
           viewModel.roleType.isEmpty
               ? Container()
               : viewModel.roleType == 'admin'
@@ -215,10 +218,11 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                                   color: WayaColors.greyColor700,
                                 )),
                             const Gap(15),
-                            _permissionType(
-                                "Community Safety", "Manage and moderate comments to keep discussions civil."),
+                            _permissionType("Community Safety",
+                                "Manage and moderate comments to keep discussions civil."),
                             const Gap(15),
-                            _permissionType("User Management", "Block or ban users if necessary"),
+                            _permissionType("User Management",
+                                "Block or ban users if necessary"),
                             const Gap(15),
                           ],
                         )
@@ -233,19 +237,41 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                                       color: WayaColors.greyColor700,
                                     )),
                                 const Gap(15),
-                                _permissionType("Content Focused", "Create and manage all page posts and media"),
+                                _permissionType("Content Focused",
+                                    "Create and manage all page posts and media"),
                                 const Gap(15),
-                                _permissionType("Comment & Message Handling", "Respond to user comments and messages"),
+                                _permissionType("Comment & Message Handling",
+                                    "Respond to user comments and messages"),
                                 const Gap(15),
                               ],
                             )
-                          : Container(),
+                          : viewModel.roleType == 'member'
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Permission & Access',
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: WayaColors.greyColor700,
+                                        )),
+                                    const Gap(15),
+                                    _permissionType("Content Focused",
+                                        "Create and manage all page posts and media"),
+                                    const Gap(15),
+                                    _permissionType(
+                                        "Comment & Message Handling",
+                                        "Respond to user comments and messages"),
+                                    const Gap(15),
+                                  ],
+                                )
+                              : Container(),
         ],
       ),
     );
   }
 
-  Widget _permissionType(title, subTitle) {
+  Widget _permissionType(String title, String? subTitle) {
     return FittedBox(
       fit: BoxFit.fitWidth,
       child: Row(
@@ -273,7 +299,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(
-                  subTitle,
+                  subTitle ?? '',
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
@@ -312,7 +338,9 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                     child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -335,11 +363,12 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                                   ),
                                 ),
                               ),
-                              Gap(10),
+                              const Gap(10),
                               Text(
                                 title,
                                 maxLines: 7,
-                                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                                style: wayaTheme.textTheme.bodyMedium!
+                                    .wayaCopyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
                                   color: wayaTheme.colorScheme.black,
@@ -365,7 +394,8 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                             child: Text(
                               subTitle,
                               maxLines: 7,
-                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                              style:
+                                  wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: wayaTheme.colorScheme.greyColor500,

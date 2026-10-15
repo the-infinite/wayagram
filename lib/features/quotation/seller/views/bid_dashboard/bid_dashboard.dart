@@ -17,7 +17,7 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_ac
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
 class BidDashboard extends ConsumerStatefulWidget {
   const BidDashboard({super.key});
@@ -117,7 +117,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
 
         //? Our section for all quick action widgets.
         Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.scaffoldColor,
             borderRadius: BorderRadius.circular(10),
@@ -179,18 +179,16 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                   icon: WayaAssets.icons.settlement.svg(
                     width: 28,
                     height: 28,
-                    colorFilter: ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
+                    colorFilter:
+                        ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
                   ),
                   color: Color(0xffFBEAE9),
                   onTap: () {
-                    //? Show the coming soon modal.
-                    if (WayaConstants.isProduction) {
-                      WayaNavigationHelper.showComingSoonModal(true);
-                      return;
-                    }
+                    WayaNavigationHelper.showComingSoonModal(true);
+                    return;
 
                     //? Now, continue as needed in staging.
-                    WayaNav.toNamed('/seller-settlement');
+                    // WayaNav.toNamed('/seller-settlement');
                   },
                 ),
               ],

@@ -11,8 +11,8 @@ import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
-import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
 import 'package:wayagram/features/shop/order/widgets/contact_seller.dart';
 import 'package:wayagram/features/shop/order/widgets/order_address_widget.dart';
@@ -157,33 +157,33 @@ class OrderDetails extends ConsumerWidget {
                     ? arg?.order.pickupStatusHistory
                     : arg?.order.deliveryStatusHistory),
             const Gap(25),
-          if (arg?.order.status != 'cancelled') ... [
+            if (arg?.order.status != 'cancelled') ...[
               Visibility(
-                visible: arg?.order.status != 'completed' &&
-                    ((arg?.order.deliveryStatusHistory.isNotEmpty == true &&
-                            arg?.order.deliveryStatusHistory.last.status ==
-                                'completed') ||
-                        (arg?.order.pickupStatusHistory.isNotEmpty == true &&
-                            arg?.order.pickupStatusHistory.last.status ==
-                                'completed')),
-                child: WayaButton(
-                  callback: () {
-                    WayaNav.replaceNamed(ConfirmOrderDelivery.route,
-                        arguments: arg?.order);
-                  },
-                  text: "Confirm Order Delivery",
-                )),
-            const Gap(10),
-            Visibility(
-                visible: arg?.order.status == 'completed',
-                child: WayaButton(
-                  callback: () async {
-                    WayaUtils.showModalSheet(context,
-                        child: ContactSeller(order: arg!.order));
-                  },
-                  text: "Report a problem",
-                ))
-          ]
+                  visible: arg?.order.status != 'completed' &&
+                      ((arg?.order.deliveryStatusHistory.isNotEmpty == true &&
+                              arg?.order.deliveryStatusHistory.last.status ==
+                                  'completed') ||
+                          (arg?.order.pickupStatusHistory.isNotEmpty == true &&
+                              arg?.order.pickupStatusHistory.last.status ==
+                                  'completed')),
+                  child: WayaButton(
+                    callback: () {
+                      WayaNav.replaceNamed(ConfirmOrderDelivery.route,
+                          arguments: arg?.order);
+                    },
+                    text: "Confirm Order Delivery",
+                  )),
+              const Gap(10),
+              Visibility(
+                  visible: arg?.order.status == 'completed',
+                  child: WayaButton(
+                    callback: () async {
+                      WayaUtils.showModalSheet(context,
+                          child: ContactSeller(order: arg!.order));
+                    },
+                    text: "Report a problem",
+                  ))
+            ]
           ],
         ));
   }

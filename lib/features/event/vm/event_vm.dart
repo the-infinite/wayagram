@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
-import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -11,7 +10,8 @@ import 'package:wayagram/features/event/bottom_sheets/share/social_share.dart';
 import 'package:wayagram/features/event/data/model/event_setting_response.dart';
 import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/features/event/data/model/payout_response_model.dart';
+import 'package:wayagram/features/event/data/model/payout/payout.dart';
+import 'package:wayagram/features/event/data/model/payout/payout_response_model.dart';
 import 'package:wayagram/features/event/data/model/transaction_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
@@ -32,19 +32,8 @@ class EventVm extends StateNotifier<EventState> {
 
   Future<void> getEvents() async {
     try {
-      final response = await _eventRepository.getEvents();
-
-      if (response.success) {
-        debugPrint(response.data.toString());
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+      final _ = await _eventRepository.getEvents();
+    } catch (_) {}
   }
 
   Future<void> joinedEvents() async {
@@ -56,14 +45,7 @@ class EventVm extends StateNotifier<EventState> {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
         state = state.copyWith(joinedEvents: eventResponse.data.docs);
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
   }
 
   Future<PaginatedResult<EventDoc>?> getEventWithStatus(
@@ -88,13 +70,7 @@ class EventVm extends StateNotifier<EventState> {
       }
 
       return PaginatedResult(hasNextPage: hasNextPage, items: upcoming);
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
       return null;
     } finally {
       state = state.copyWith(isLoadingEventWithStatus: false);
@@ -147,9 +123,7 @@ class EventVm extends StateNotifier<EventState> {
         payout = payoutResponse.data.docs;
       }
       return payout;
-    } catch (e) {
-      debugPrint(e.toString());
-
+    } catch (_) {
       return null;
     }
   }
@@ -167,14 +141,12 @@ class EventVm extends StateNotifier<EventState> {
       }
 
       return transactions;
-    } catch (e) {
-      debugPrint(e.toString());
-
+    } catch (_) {
       return null;
     }
   }
 
-  Future<void> requestForEventPayout(ctx, String eventId) async {
+  Future<void> requestForEventPayout(BuildContext ctx, String eventId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _eventRepository.requestForEventPayout(eventId);
@@ -190,13 +162,7 @@ class EventVm extends StateNotifier<EventState> {
           ),
         );
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -220,13 +186,7 @@ class EventVm extends StateNotifier<EventState> {
       }
 
       return PaginatedResult(hasNextPage: hasNextPage, items: myEvents);
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
       return null;
     } finally {
       state = state.copyWith(isLoadingUserEvents: false);
@@ -250,53 +210,28 @@ class EventVm extends StateNotifier<EventState> {
         WayaNav.goBack();
         WayaSnackBar.showToast("Invite Successfully Sent");
       }
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    } catch (_) {}
   }
 
   Future<PaginatedResult<EventDoc>?> getJoinedEvents(
       {required int page}) async {
     try {
       // state = state.copyWith(isLoadingUserEvents: true);
-      print("fewfewfwef b4");
       final response = await _eventRepository.eventsJoined(
           userId: ConversationState.self.id, page: page);
       List<EventDoc> myEvents = [];
       bool hasNextPage = false;
-      print("fewfewfwef after b4 success");
       if (response.success) {
-        // print("fewfewfwef after success ${response.data["data"]['docs']}");
-        //  final data = response.data["data"]['docs'];
-
-        //    print("vergergesdfsdfsfsdfsfd ${((response.data["data"]['docs'] as List).map((d) => d['eventDetails']).toList())}" );
-
-        // JoinedEventResponse eventResponse =
-        //     JoinedEventResponse.fromJson(response.data);
-//
         final doeecs = (response.data["data"]['docs'] as List)
             .map((d) => EventDoc.fromJson(d['eventDetails']))
             .toList();
-        print("dddd $doeecs");
-        //     .map((doc) => EventDoc.fromJson(doc));
-
-        // final docs =
-        //     eventResponse.data.docs.map((c) => c.eventDetails).toList();
-
-        // print("dddd $docs");
         myEvents = doeecs;
 
         hasNextPage = response.data["data"]['hasNextPage'];
       }
 
       return PaginatedResult(hasNextPage: hasNextPage, items: myEvents);
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
       return null;
     } finally {
       // state = state.copyWith(isLoadingUserEvents: false);
@@ -311,8 +246,6 @@ class EventVm extends StateNotifier<EventState> {
       state = state.copyWith(isJoiningEvent: true);
       final userId = await _secureDataSource.getUserId();
 
-      //package:wayagram/shared/components/pin_entry_bottom_sheet.dart
-      //
       if (context.mounted) {
         final result = await WayaUtils.showModalSheet(context,
             child: PinEntryBottomSheet());
@@ -345,6 +278,9 @@ class EventVm extends StateNotifier<EventState> {
                 onCancel: () => WayaNav.toNamed(EventView.route),
               );
             }
+          } else if (response.data['responseCode'] == 1806) {
+            WayaSnackBar.showToast(
+                'Only the organizer follower can join this event');
           } else {
             WayaNav.goBack();
             String? message = response.data['message'];
@@ -355,13 +291,7 @@ class EventVm extends StateNotifier<EventState> {
           return;
         }
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isJoiningEvent: false);
     }
@@ -393,15 +323,8 @@ class EventVm extends StateNotifier<EventState> {
                   'Your report has been submitted. Our team will review the issue and take appropriate action.',
               buttonText: 'Go to Event Page');
         }
-        debugPrint(response.data.toString());
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isReportingEvent: false);
     }
@@ -413,14 +336,7 @@ class EventVm extends StateNotifier<EventState> {
       await _eventRepository.updateEventSettings(
           letEveryoneJoin: letEveryoneJoin,
           approveJoinRequest: approveJoinRequest);
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {}
+    } catch (_) {}
   }
 
   /// Helper function used to retrieve all of the details of just one conversation.
@@ -461,17 +377,58 @@ class EventVm extends StateNotifier<EventState> {
         hasNextPage: hasNextPage,
         items: attendees,
       );
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
       return null;
     } finally {
       state = state.copyWith(isLoadingAttendees: false);
     }
+  }
+
+  Future<PaginatedResult<Doc>?> getAttendeesAwaitingApproval(
+      {required int page, String? id}) async {
+    try {
+      state = state.copyWith(isLoadingAttendees: true);
+      final userId = await _secureDataSource.getUserId();
+      state = state.copyWith(userId: userId);
+      final response = await _eventRepository.pendingApprovals(
+          id: id ?? state.singleEvent!.id, page: page);
+      List<Doc> attendees = [];
+      bool hasNextPage = false;
+
+      //? This is fine.
+      if (response.success) {
+        AttendeeResponse attendeeResponse =
+            AttendeeResponse.fromJson(response.data);
+        attendees = attendeeResponse.data.docs;
+        hasNextPage = attendeeResponse.data.hasNextPage;
+        state = state.copyWith(attendees: attendees, isLoadingAttendees: false);
+      }
+
+      //? This is fine.
+      return PaginatedResult(
+        hasNextPage: hasNextPage,
+        items: attendees,
+      );
+    } catch (_) {
+      return null;
+    } finally {
+      state = state.copyWith(isLoadingAttendees: false);
+    }
+  }
+
+  Future<void> updateApproval(
+      {required String userId,
+      required String eventId,
+      required String status}) async {
+    try {
+      final response = await _eventRepository.updateApprovalStatus(
+          userId: userId, eventId: eventId, status: status);
+
+      if (response.success) {
+        await getAttendeesAwaitingApproval(page: 1);
+        WayaSnackBar.showToast("Request successfully ${status}ed");
+      }
+    } catch (_) {}
   }
 
   Future<EventDoc?> fetchSingleEvent(String id) async {
@@ -480,20 +437,12 @@ class EventVm extends StateNotifier<EventState> {
       final response = await _eventRepository.getSingleEvent(id);
 
       if (response.success) {
-        print("fwefwfw, eventId- $id , ${response.data}");
         SingleEventResponse eventResponse =
             SingleEventResponse.fromJson(response.data);
-        print("ewfwef fetching event");
         state = state.copyWith(singleEvent: eventResponse.data);
         return eventResponse.data;
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.events,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
     } finally {
       state = state.copyWith(isLoadingSingleEvent: false);
     }
@@ -511,5 +460,6 @@ class EventVm extends StateNotifier<EventState> {
 }
 
 final eventVmProvider = StateNotifierProvider<EventVm, EventState>((ref) {
-  return EventVm(WayaSecureDataSource(), EventRepository(), ref);
+  final eventRepo = ref.watch(eventRepositoryProvider);
+  return EventVm(WayaSecureDataSource(), eventRepo, ref);
 });

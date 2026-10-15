@@ -15,15 +15,16 @@ class ManagePages extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ManagePagesState();
 }
 
-class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProviderStateMixin {
+class _ManagePagesState extends ConsumerState<ManagePages>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       //myPageNotifier.getCreatedPages();
-      myPageNotifier.getManagedPages();
+      //myPageNotifier.getManagedPages();
+      myPageNotifier.getMyPages();
     });
-
   }
 
   @override
@@ -63,7 +64,8 @@ class PageEmptyState extends StatelessWidget {
             buttontext: 'Create a Page',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

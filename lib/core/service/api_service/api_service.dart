@@ -1,3 +1,3 @@
 export 'dio_exceptions.dart';
-export 'dio_http_client.dart';
 export 'request_model.dart';
+export 'waya_dio_client.dart';

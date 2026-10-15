@@ -34,30 +34,36 @@ class _AllBuyRequestsScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<_AllBuyRequestsScreen> createState() => _AllBuyRequestsScreenState();
+  ConsumerState<_AllBuyRequestsScreen> createState() =>
+      _AllBuyRequestsScreenState();
 }
 
 class _AllBuyRequestsScreenState extends ConsumerState<_AllBuyRequestsScreen> {
-  late final provider = widget.isSelf ? userQuotationsProvider : othersQuotationsProvider;
+  late final provider =
+      widget.isSelf ? userQuotationsProvider : othersQuotationsProvider;
+  final controller = TextEditingController();
   late final notifier = ref.read(provider.notifier);
   final handler = WayaObservableScrollController();
   late final _value = ref.read(provider).isSyncingRequests;
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => notifier.setSyncingState(true));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => notifier.setSyncingState(true));
     super.initState();
   }
 
   @override
   void dispose() {
     notifier.setSyncingState(_value);
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(provider);
+    final request = state.filterRequests(controller.text);
 
     //? This is fine.
     return WayaScaffold(
@@ -67,12 +73,12 @@ class _AllBuyRequestsScreenState extends ConsumerState<_AllBuyRequestsScreen> {
         shouldFetch: !state.isLoadingRequests,
         isAtEnd: !state.hasNextRequest,
         nextPage: state.requestPage,
-        itemCount: state.requests.length,
+        itemCount: request.length,
         handler: handler,
         getPage: (page) => notifier.getBuyRequests(),
         builder: (context, index) => QuotationBuyRequestWidget(
           index: index,
-          data: state.requests[index],
+          data: request[index],
           notifier: notifier,
         ),
       ),

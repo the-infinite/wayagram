@@ -18,7 +18,7 @@ import 'package:wayagram/features/group/view/media_post.dart';
 import 'package:wayagram/features/group/view/report_group.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/shared/cache/group.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 
 import 'private_group.dart';
@@ -37,7 +37,8 @@ class PublicGroup extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PublicGroupState();
 }
 
-class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProviderStateMixin {
+class _PublicGroupState extends ConsumerState<PublicGroup>
+    with SingleTickerProviderStateMixin {
   late final groupProvider = singleGroupProvider("group-${widget.id}");
   late final notifier = ref.read(groupProvider.notifier);
   final handler = WayaObservableScrollController();
@@ -48,12 +49,19 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await notifier.getGroupMembers(widget.id);
       final result = await myGroupNotifier.getSingleGroup(widget.id);
       setState(() {
         _thisGroup = result;
       });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    loadingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -66,16 +74,24 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
     final wayaTheme = Theme.of(context);
     final state = ref.watch(groupProvider);
 
+    final members = state.allGroupMemberDocs ?? [];
+
     //? You can now return this.
     final group = wayaGroupCache.getCachedData(widget.id) ?? _thisGroup;
 
     //? If the page is not yet found.
-    if (group == null) {
+    if (group == null || members.isEmpty) {
       return const ColoredBox(color: Colors.white);
     }
 
     //? Fetch the data of this page.
-    if (group.ownerId == ConversationState.self.id) {
+    if (group.ownerId == ConversationState.self.id ||
+        members
+                .where((member) =>
+                    member.userId == ConversationState.self.id &&
+                    member.role != 'member')
+                .firstOrNull !=
+            null) {
       return PrivateGroup(group: group);
     }
 
@@ -88,18 +104,15 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
         spacing: 12,
         children: [
           InkWell(
-              onTap: ()=> WayaNav.toNamed('/searchGroupAndPage',
-                arguments: {
-                'groupId': widget.id,
-                  'name': 'group'
-                }
-              ),
+              onTap: () => WayaNav.toNamed('/searchGroupAndPage',
+                  arguments: {'groupId': widget.id, 'name': 'group'}),
               child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
-            onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.id)),
+            onTap: () => SharePlus.instance.share(ShareParams(
+              text: WayaValueHelper.getShareableUrl(
+                  WayaAppRoutes.getGroupDetailsPage(widget.id)),
               subject: 'Share ${group.name}',
-            ),
+            )),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
           PopupMenuButton(
@@ -108,31 +121,33 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
             position: PopupMenuPosition.under,
             itemBuilder: (context) {
               return [
-                  PopupMenuItem<int>(
-                    value: 0,
-                    onTap: () {
-                      WayaNav.goBack();
-                      WayaNav.toNamed('/muteGroup', arguments: {
-                        'groupId': widget.id
-                      });
+                PopupMenuItem<int>(
+                  value: 0,
+                  onTap: () {
+                    WayaNav.goBack();
+                    WayaNav.toNamed('/muteGroup',
+                        arguments: {'groupId': widget.id});
                     //ref.read(createGroupProvider.notifier).muteAndUnMuteGroup(context, group.mutedAt == null ? true : false, widget.id);
-                    },
-                    child: WayaActionNav(
-                      context: context,
-                      asset: group.mutedAt == null ?  SvgPicture.asset(
-                        'assets/images/pages/mute.svg',
-                        height: 20,
-                      ): Icon(Icons.notifications_off),
-                      text: "  Mute Group",
-                      color: wayaTheme.colorScheme.customBlack,
-                    ),
+                  },
+                  child: WayaActionNav(
+                    context: context,
+                    asset: group.mutedAt == null
+                        ? SvgPicture.asset(
+                            'assets/images/pages/mute.svg',
+                            height: 20,
+                          )
+                        : Icon(Icons.notifications_off),
+                    text: "  Mute Group",
+                    color: wayaTheme.colorScheme.customBlack,
                   ),
+                ),
                 PopupMenuItem<int>(
                   value: 1,
-                  onTap: () => Share.share(
-                    WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.id)),
+                  onTap: () => SharePlus.instance.share(ShareParams(
+                    text: WayaValueHelper.getShareableUrl(
+                        WayaAppRoutes.getGroupDetailsPage(widget.id)),
                     subject: 'Share ${group.name}',
-                  ),
+                  )),
                   child: WayaActionNav(
                     context: context,
                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
@@ -160,7 +175,6 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                     color: wayaTheme.colorScheme.customBlack,
                   ),
                 ),
-
                 if (myGroupNotifier.isMemberOf(widget.id))
                   PopupMenuItem<int>(
                     value: 3,
@@ -172,7 +186,10 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                     child: WayaActionNav(
                       context: context,
                       asset: WayaAssets.images.pages.doorOpen.svg(
-                        color: wayaTheme.colorScheme.error500,
+                        colorFilter: ColorFilter.mode(
+                          wayaTheme.colorScheme.error500,
+                          BlendMode.srcIn,
+                        ),
                         height: 20,
                       ),
                       text: "  Leave Group",
@@ -185,7 +202,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
               fit: BoxFit.none,
             ),
           ),
-          Gap(8)
+          const Gap(8)
         ],
       ),
       body: WayaObservableScrollView(
@@ -219,7 +236,8 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                                     fit: BoxFit.cover,
                                   )
                                 : DecorationImage(
-                                    image: AssetImage(WayaAssets.images.pages.imagePlaceholder.path),
+                                    image: AssetImage(WayaAssets
+                                        .images.pages.imagePlaceholder.path),
                                     fit: BoxFit.cover,
                                   ),
                           ),
@@ -236,18 +254,22 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                               ? CrossFadeState.showFirst
                               : CrossFadeState.showSecond,
                           firstChild: GestureDetector(
-                            onTap: () => WayaNav.toNamed(WayaAppRoutes.getGroupMembersPage(group.id)),
+                            onTap: () => WayaNav.toNamed(
+                                WayaAppRoutes.getGroupMembersPage(group.id)),
                             child: Container(
                               margin: EdgeInsets.only(right: 20.w),
                               padding: EdgeInsets.all(5.0),
                               decoration: BoxDecoration(
-                                border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                                border: Border.all(
+                                    color: wayaTheme.colorScheme.primary600,
+                                    width: 1.5),
                                 color: wayaTheme.colorScheme.white,
                                 borderRadius: BorderRadius.circular(7.r),
                               ),
                               child: Text(
                                 'Member',
-                                style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                style: wayaTheme.textTheme.labelSmall
+                                    ?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.primary600,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -258,15 +280,19 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                             onTap: () => myGroupNotifier.joinGroup(widget.id),
                             child: Container(
                               margin: EdgeInsets.only(right: 20.w),
-                              padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5.h, horizontal: 10.w),
                               decoration: BoxDecoration(
-                                border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                                border: Border.all(
+                                    color: wayaTheme.colorScheme.primary600,
+                                    width: 1.5),
                                 color: wayaTheme.colorScheme.white,
                                 borderRadius: BorderRadius.circular(7.r),
                               ),
                               child: Text(
                                 'Join',
-                                style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                style: wayaTheme.textTheme.labelSmall
+                                    ?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.primary600,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -318,7 +344,8 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                           actionType(
                             WayaValueHelper.formatNumber(group.memberCount),
                             'Members',
-                            onPressed: () => WayaNav.toNamed(WayaAppRoutes.getGroupMembersPage(group.id)),
+                            onPressed: () => WayaNav.toNamed(
+                                WayaAppRoutes.getGroupMembersPage(group.id)),
                           ),
                           const Gap(10),
 
@@ -383,7 +410,8 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                 ]
 
                 //? Since the user has not joined and it is private
-                else if (group.isPrivate) ...[
+                //else if (group.isPrivate) ...[
+                else if (group.approveJoinRequest) ...[
                   Gap(100.h),
 
                   //? Fair enough.
@@ -400,7 +428,8 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                         Gap(10.h),
 
                         //? The private text.
-                        Text('This group is private', style: wayaTheme.textTheme.titleLarge),
+                        Text('This group is private',
+                            style: wayaTheme.textTheme.titleLarge),
 
                         // Some space.
                         Gap(10.h),
@@ -421,7 +450,8 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                         //? Now, let this fly.
                         WayaProgressiveButton(
                           notifier: loadingController,
-                          callback: () async => await myGroupNotifier.joinGroup(widget.id),
+                          callback: () async =>
+                              await myGroupNotifier.joinGroup(widget.id),
                           text: 'Join & Request Access',
                         ),
                       ],
@@ -433,12 +463,14 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
           },
         ),
       ),
-      floatingActionButton: myGroupNotifier.isMemberOf(group.id) || group.ownerId == ConversationState.self.id
+      floatingActionButton: myGroupNotifier.isMemberOf(group.id) ||
+              group.ownerId == ConversationState.self.id
           ? SizedBox(
               height: 50,
               width: 50,
               child: WayaButton(
-                callback: () => WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(group.id)),
+                callback: () =>
+                    WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(group.id)),
                 height: 50,
                 centerWidget: Center(
                   child: Icon(
@@ -453,7 +485,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
     );
   }
 
-  actionType(txt, txt2, {onPressed}) {
+  Widget actionType(String txt, String txt2, {Function()? onPressed}) {
     final wayaTheme = Theme.of(context);
     return InkWell(
       splashFactory: NoSplash.splashFactory,
@@ -465,15 +497,17 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
           const Gap(3),
           Text(
             txt2,
-            style: wayaTheme.textTheme.bodyMedium!
-                .wayaCopyWith(fontSize: 12.sp, fontWeight: FontWeight.w400, color: wayaTheme.colorScheme.greyColor500),
+            style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: wayaTheme.colorScheme.greyColor500),
           ),
         ],
       ),
     );
   }
 
-  cancelRequest(onTap, cancel) {
+  Widget cancelRequest(Function()? onTap, Function()? cancel) {
     final wayaTheme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -482,7 +516,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
           WayaAssets.icons.genSet.lock.path,
         ),
         Text('This group is private', style: wayaTheme.textTheme.titleLarge),
-        Gap(10),
+        const Gap(10),
         Text('You must join to see posts and participate',
             style: wayaTheme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w400,
@@ -496,7 +530,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
           textColor: wayaTheme.colorScheme.greyColor700,
           text: 'Access to Group requested',
         ),
-        Gap(10),
+        const Gap(10),
         InkWell(
           onTap: cancel,
           child: Text('Cancel request', style: wayaTheme.textTheme.titleSmall),

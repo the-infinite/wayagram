@@ -7,6 +7,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
+import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/widget/muted_post.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 import '../../../assetsgen/assets.gen.dart';
@@ -28,7 +30,10 @@ class GroupPost extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupPostState();
 }
 
-class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProviderStateMixin {
+class _GroupPostState extends ConsumerState<GroupPost>
+    with SingleTickerProviderStateMixin {
+  GroupModel? group;
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +45,6 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(widget.provider);
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,10 +71,15 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.getAllPost?.length ?? 0,
-            itemBuilder: (_, index) => WayaPostWidget(
-              data: viewModel.getAllPost![index],
-              index: index,
-            ),
+            itemBuilder: (_, index) => group?.mutedAt == null
+                ? WayaPostWidget(
+                    data: viewModel.getAllPost![index],
+                    index: index,
+                  )
+                : WayaMutedPostWidget(
+                    data: viewModel.getAllPost![index],
+                    index: index,
+                  ),
           ),
 
         // Some space.
@@ -88,7 +97,7 @@ class PostEmptyState extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return Center(
       child: Container(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: EmptyState(
             hasButton: false,
             onTap: () {
@@ -97,7 +106,8 @@ class PostEmptyState extends StatelessWidget {
             buttontext: 'Create a Post',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

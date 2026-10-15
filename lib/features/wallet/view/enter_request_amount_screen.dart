@@ -14,10 +14,12 @@ class EnterRequestAmountScreen extends ConsumerStatefulWidget {
   const EnterRequestAmountScreen({super.key});
 
   @override
-  ConsumerState<EnterRequestAmountScreen> createState() => _EnterRequestAmountScreenState();
+  ConsumerState<EnterRequestAmountScreen> createState() =>
+      _EnterRequestAmountScreenState();
 }
 
-class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScreen> {
+class _EnterRequestAmountScreenState
+    extends ConsumerState<EnterRequestAmountScreen> {
   String amount = "0.00";
   final double maxAmount = 50000000;
   String? errorMessage;
@@ -307,7 +309,9 @@ class NumPadButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(32),
         side: BorderSide(
-          color: backgroundColor != null ? Colors.transparent : Colors.grey.shade300,
+          color: backgroundColor != null
+              ? Colors.transparent
+              : Colors.grey.shade300,
         ),
       ),
       child: InkWell(

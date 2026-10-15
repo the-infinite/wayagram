@@ -145,7 +145,9 @@ class ShareGenModal extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () async {
                           await WayaUtils.copyText(link);
-                          WayaNav.goBack(result: ShareResult("copy", ShareResultStatus.success));
+                          WayaNav.goBack(
+                              result: ShareResult(
+                                  "copy", ShareResultStatus.success));
                           return;
 
                           /*  WayaNav.goBack(
@@ -180,15 +182,18 @@ class ShareGenModal extends StatelessWidget {
                     //? The fifth option, is to share outward.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => Share.share(link, subject: 'Share Post URL').then(
+                        onTap: () async => SharePlus.instance
+                            .share(ShareParams(
+                                title: link, subject: 'Share Post URL'))
+                            .then(
                           (value) async {
                             if (value.status == ShareResultStatus.success) {
                               // Share the post.
-                              await Share.share(
-                                WayaValueHelper.getShareableUrl(link),
-                                subject: "Share Contest",
-
-                                // https://staging.wayagram.ng/contest-profile-page?id=acabf193-dd12-48c5-9030-157efa4c012a&contestId=10c8c1b5-f720-4633-a14e-646313230192
+                              SharePlus.instance.share(
+                                ShareParams(
+                                  subject: "Share Contest",
+                                  text: WayaValueHelper.getShareableUrl(link),
+                                ),
                               );
 
                               // Now stop.
@@ -239,7 +244,8 @@ class ShareGenModal extends StatelessWidget {
 
               //? Then, to share the post.
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
                 child: ShareChatsWidget(
                   url: link,
                   notifier: pageNotifier,
@@ -248,7 +254,10 @@ class ShareGenModal extends StatelessWidget {
               ),
 
               //? One divider.
-              Divider(color: theme.colorScheme.greyColor200, height: 1, thickness: 3),
+              Divider(
+                  color: theme.colorScheme.greyColor200,
+                  height: 1,
+                  thickness: 3),
 
               // Some space.
               const Gap(13),
@@ -269,7 +278,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Second, the button for instagram.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -298,7 +309,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Third, the button for snapchat.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -327,7 +340,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Fourth, the button for telegram.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -356,7 +371,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Fifth, the button for whatsapp.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -399,7 +416,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Sixth, the button for facebook.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -428,7 +447,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Seventh, the button for LinkedIn.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -457,7 +478,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Eighth, the button for snapchat story.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -486,7 +509,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Ninth, the button for WhatsApp status.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -515,7 +540,9 @@ class ShareGenModal extends StatelessWidget {
                     //? Tenth, the button for Twitter.
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async => await WayaNavigationHelper.showComingSoonModal(true),
+                        onTap: () async =>
+                            await WayaNavigationHelper.showComingSoonModal(
+                                true),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,

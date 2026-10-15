@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -89,7 +87,7 @@ class WayaUtils {
     return result ?? [];
   }
 
-  static copyText(String text) async {
+  static Future<void> copyText(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
     WayaSnackBar.showToast('Copied');
   }
@@ -100,58 +98,64 @@ class WayaUtils {
     bool isDismissible = true,
     Color? backgroundColor,
   }) {
-    // Get the theme.
+    final context = WayaNav.context;
     final theme = Theme.of(context);
-
+    final screenHeight = MediaQuery.of(context).size.height;
     // Return the modal.
-    return Get.bottomSheet(
-      ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-        child: child,
-      ),
+    return showModalBottomSheet<T>(
+      context: context,
       backgroundColor: backgroundColor ?? theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       isDismissible: isDismissible,
       useRootNavigator: true,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
-    );
-  }
-
-  static showModalSheetUgt(BuildContext context, {required Widget child}) {
-    // Get the theme.
-    final theme = Theme.of(context);
-
-    // Return the modal.
-    return Get.bottomSheet(
-      ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
+      builder: (context) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
         child: child,
       ),
-      backgroundColor: theme.colorScheme.scaffoldColor2,
-      isScrollControlled: true,
-      useRootNavigator: true,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
     );
   }
 
-  static showModalSheetQuotation(BuildContext context,
+  static Future<void> showModalSheetUgt(BuildContext context,
       {required Widget child}) {
     // Get the theme.
     final theme = Theme.of(context);
+    final screenHeight = MediaQuery.of(context).size.height;
 
     // Return the modal.
-    return Get.bottomSheet(
-      ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-        child: child,
-      ),
+    return showModalBottomSheet<void>(
+      context: context,
       backgroundColor: theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       useRootNavigator: true,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      builder: (context) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
+        child: child,
+      ),
+    );
+  }
+
+  static Future<void> showModalSheetQuotation(BuildContext context,
+      {required Widget child}) {
+    // Get the theme.
+    final theme = Theme.of(context);
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // Return the modal.
+    return showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: theme.colorScheme.scaffoldColor2,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      builder: (context) => ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: screenHeight * 0.8),
+        child: child,
+      ),
     );
   }
 
@@ -268,21 +272,18 @@ class WayaUtils {
     String searchTerm, {
     List<List<String>>? combinedFields,
   }) {
-   
     if (searchTerm.isEmpty) {
       return [];
     }
-     print("search terms $searchTerm $accessorKeys $data");
 
     final lowerSearchTerm = searchTerm.toLowerCase();
 
     final filteredData = data.where((item) {
       final map = item.toMap();
-print("accessorKeys $accessorKeys");
+
       final hasMatchInIndividualFields = accessorKeys.any((key) {
-          print("accessorKeys $accessorKeys ");
         final value = map[key];
-      
+
         return _checkValueMatch(value, lowerSearchTerm);
       });
 
@@ -316,12 +317,10 @@ print("accessorKeys $accessorKeys");
     if (value == null) return false;
 
     if (value is String) {
-      print("wefwefwefew yes string ");
       return value.toLowerCase().contains(lowerSearchTerm);
     }
 
     if (value is List) {
-      print("wefwefwefew yes ");
       return value.any((element) {
         if (element is String) {
           return element.toLowerCase().contains(lowerSearchTerm);

@@ -15,14 +15,14 @@ import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as model;
 import 'package:wayagram/features/ugt/data/model/voter_contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/voter_user_list_model.dart';
 
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import '../../../core/data/local_data_source.dart';
 
 import '../../../core/service/logger_service.dart';
@@ -52,7 +52,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
         userId: _localDataSource.getUserId().toString(), pin: pin));
     if (response.success) {
-      debugPrint(map.toString());
       return await voteContestant(isLoading, map);
     } else {
       if (response.data["message"] == null) {
@@ -76,7 +75,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       ConfirmWalletPin(
           userId: _localDataSource.getUserId().toString(), pin: pin),
     );
-    debugPrint(map.toString());
     if (response.success) {
       // map[] =  _localDataSource.getUserId().toString();
       return await payForPaidContest(isLoading, map);
@@ -90,14 +88,13 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   Future<bool> verifyAndPayForPaidStageContest(ValueNotifier<bool> isLoading,
-      String pin, Map<String, String> map) async {
+      String contestID, String pin, Map<String, String> map) async {
     isLoading.value = true;
     final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
         userId: _localDataSource.getUserId().toString(), pin: pin));
-    debugPrint(map.toString());
     if (response.success) {
       // map[] =  _localDataSource.getUserId().toString();
-      return await payForPaidStageContest(isLoading, map);
+      return await acceptPaidStageContest(isLoading, contestID, map);
     } else {
       if (response.data["message"] == null) {
         WayaSnackBar.showToast(
@@ -136,9 +133,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> payForPaidStageContest(
+/*   Future<bool> payForPaidStageContest(
       ValueNotifier<bool> isLoading, Map<String, String> map) async {
-    final response = await _contestRepository.payForPaidStageContest(map);
+    final response = await _contestRepository.acceptPaidStageContest(map);
     isLoading.value = false;
     if (response.success) {
       return true;
@@ -155,7 +152,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       return false;
     }
   }
-
+ */
   Future<bool> deletePost(ValueNotifier<bool> isLoading, String postId,
       String contestId, VoidCallback onTap) async {
     final response = await _contestRepository.deletePost(postId);
@@ -189,7 +186,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   Future<bool> startStageContest(
       String stageName, Map<String, String> map) async {
-    debugPrint("mapkkkk $map");
     final response = await _contestRepository.startStage(map);
 
     //  isLoading.value = false;
@@ -248,10 +244,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> acceptPaidStageContest(
+  Future<bool> acceptPaidStageContest(ValueNotifier<bool> isLoading,
       String contestId, Map<String, String> map) async {
     final response = await _contestRepository.acceptPaidStageContest(map);
-    // isLoading.value = false;
+    isLoading.value = false;
     if (response.success) {
       fetchAllContestApplicant(contestId);
       getContestantProfileVoteDetails(contestId);
@@ -331,16 +327,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           myContestListCopy: [],
         ); */
 
-        print("here 1");
-
         ContestContestantModelMean responseModel =
             ContestContestantModelMean.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
-        print("here 2");
         MyContestContestantModel? model;
-        print("here 3");
         contestList.sort((a, b) => b.votes!.compareTo(a.votes!));
-        print("here 4");
         //? this may not contain what i am looking for that y i am using try here
         try {
           model = contestList.firstWhere(
@@ -349,10 +340,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           debugPrint(e.toString());
         }
 
-        print("here 5");
         // createPostId = ;
         final myContestantList = contestList.where((e) {
-          print("ErrorOLODO ${e.status?.toLowerCase()}");
           return e.status?.toLowerCase() == "active" &&
               e.contestApplicant != null;
         }).toList();
@@ -364,6 +353,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
             myContestList: myContestantList,
             myContestListCopy: myContestantList,
             myFullContestantList: myContestantList2,
+            createPostProfileId: model?.profileId ?? "",
             createPostId: model?.id ?? "");
 
         updateStateList(contestList);
@@ -372,7 +362,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       }
       // return contestList;
     } catch (e) {
-      print("ErrorOLODO , ${e.toString()}}");
       _logger.e(e.toString());
     } finally {
       // isLoading = false;
@@ -404,7 +393,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
 
     for (var entry in mapState.entries) {
-      print("ErrorOLODO ${entry.key}  ${entry.value.toString()},");
       listStates.add(State(state: entry.key, id: entry.value.toString()));
     }
     listStates.sort((a, b) => b.id.compareTo(a.id));
@@ -429,6 +417,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       final response =
           await _contestRepository.fetchAllContestGallery(id, hostApproved);
       List<UgtAllPostContestModel> contestList = [];
+      state = state.copyWith(myPostList: []);
       if (response.success) {
         UgtAllPostContestModelBase responseModel =
             UgtAllPostContestModelBase.fromJson(response.data);
@@ -436,16 +425,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
         List<UgtAllPostContestModel> contestList2 = [];
         for (var model in contestList) {
-          // print('Hello name one ${model.profileId}');
           var data = await UserResource.getUserDetails(
               model.contestantProfile?.profileId ?? "");
           var userModel = data?.$2;
-          var userModel1 = data?.$1;
-          print('Hello name one');
+          //var userModel1 = data?.$1;
 
-          print('Hello ${userModel?.toJson()}');
-          print('Hello 2 ${userModel1?.toJson()}');
-          print('Hello name one ${userModel?.displayName ?? ""}');
           model.fullName = userModel?.displayName ?? "";
           contestList2.add(model);
         }
@@ -456,7 +440,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         }
       }
     } catch (e) {
-      //debugPrint(e.toString());
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -476,12 +460,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         state = state.copyWith(pendingPostCount: contestList.length);
       }
     } catch (e) {
-      //debugPrint(e.toString());
+      debugPrint(e.toString());
     } finally {}
   }
 
   void approveDisapprovePost(String galleryId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.approveDisapprovePost(galleryId);
 
     if (response.success) {
@@ -489,7 +472,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           showSuccess: true);
     } else {
       WayaSnackBar.showToast("unable to update post status");
-      //  debugPrint("Contest already liked");
     }
   }
 
@@ -510,7 +492,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
             myFilteredContestApplicantList: myFilteredListt);
       }
     } catch (e) {
-      //debugPrint(e.toString());
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -558,23 +540,19 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       state = state.copyWith(isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
-      //debugPrint(e.toString());
     } finally {}
   }
 
   void searchList(String value) {
     if (value.trim().isEmpty) {
-      debugPrint("i am here $value");
       state = state.copyWith(myContestList: state.myContestListCopy);
     } else {
-      debugPrint("i am yyyyyy $value");
       var myList = state.myContestListCopy;
       state = state.copyWith(
           myContestList: myList.where((e) {
         String name = e.contestApplicant?.fullName ?? "";
         return name.toLowerCase().contains(value.toLowerCase());
       }).toList());
-      debugPrint("i am rrrrrr $value");
     }
   }
 
@@ -619,7 +597,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (videoUrl != null) {
       listMap.add({"type": "VIDEO", "url": videoUrl});
     }
-    if(text.trim().isNotEmpty) {
+    if (text.trim().isNotEmpty) {
       listMap.add({"type": "TEXT", "url": text});
     }
     // listMap.add({"type": "TEXT", "url": text});
@@ -631,7 +609,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       "description": text,
       "mediaContent": listMap
     };
-    debugPrint('wert $map');
     final response = await _contestRepository.createContestPost(map);
     isLoading.value = false;
     if (response.success) {
@@ -654,18 +631,15 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     state = state.copyWith(contestId: id);
   }
 
-  void updateContestantId(String? id) {
-    state = state.copyWith(createPostId: id);
+  void updateContestantId(String? id, String profileId) {
+    state = state.copyWith(createPostId: id, createPostProfileId: profileId);
   }
 
   void toggleLike(String postId, String galleryId) {
     // Contest? contestPost = null;
-    debugPrint("Contest for you");
     //state.copyWith(myPostList: contestList)
     var list = state.myPostList.map((post) {
-      debugPrint("i dey here 11");
       if (post.id == galleryId) {
-        debugPrint("i dey here 2");
         bool isMyLiked = post.hasLiked ?? false;
         // if (isMyLiked) {
         doOnLikeLike(postId, galleryId);
@@ -681,7 +655,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   void doOnLikeLike(String postId, String galleryId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.likeContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId,
@@ -689,11 +662,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
       var list = state.myPostList.map((post) {
-        debugPrint("i dey here 3");
         if (post.id == postId) {
-          debugPrint("i dey here 3");
           bool isMyLiked = post.hasLiked ?? false;
           return post.copyWith(
             hasLiked: !isMyLiked,
@@ -706,7 +676,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       // WayaSnackBar.showToast("Contest already liked");
-      debugPrint("Contest already liked");
     }
   }
 
@@ -714,9 +683,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     // Contest? contestPost = null;
 
     var list = state.myPostList.map((post) {
-      debugPrint("i dey here wwww");
       if (post.id == postId) {
-        debugPrint("i dey here pppppp");
         return post.copyWith(
           // isLiked: true,
           shares: post.shares! + 1,
@@ -724,13 +691,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       }
       return post;
     }).toList();
-    debugPrint("i dey here pppppp");
     state = state.copyWith(myPostList: [...list]);
     doshare(postId, galleryId);
   }
 
   void doshare(String postId, String galleryId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId,
@@ -738,8 +703,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     });
 
     if (!response.success) {
-      //  debugPrint("do like stuff Fail");
-
       var list = state.myPostList.map((post) {
         if (post.id == postId) {
           return post.copyWith(
@@ -750,9 +713,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       }).toList();
       state = state.copyWith(myPostList: [...list]);
       //  WayaSnackBar.showToast("Unable to like, Please try again");
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 
   void addStages(List<model.Stage> stages) {
@@ -760,31 +721,24 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   void doFollow(String postId) async {
-    // debugPrint("do like stuff");
     final response = await _contestRepository.followContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
 
     if (response.success) {
-      //  debugPrint("do like stuff Fail");
-
       WayaSnackBar.showToast("Contest Followed", showSuccess: true);
-    } else {
-      debugPrint("do like stuff Success");
-    }
+    } else {}
   }
 }
 
 /* 
   Future<void> createPost(ctx, content, postType, List<XFile> images) async {
-    debugPrint("before the loop");
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     final choiceMap = <String>[];
     // get url
     for (XFile image in images) {
-      debugPrint("In the loop ${image.name} ${image.path} ${image.mimeType}");
 
       final uploadImageResponse =
           await _pageRepository.getUploadImage(image.name);
@@ -814,9 +768,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         );
         break;
       }
-
-      //? This is fine.
-      debugPrint("Data ${putImageResponse.data}");
     }
     //WayaHelpers.
 
@@ -839,7 +790,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       //? If it failed...
       else {
         _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        debugPrint('Create post');
         _logger.i(response.data['data']);
       }
     } catch (e) {
@@ -856,13 +806,12 @@ final selectedContestantProfile =
 final selectedApplicantProfile =
     StateProvider<ApplicantContestModel?>((ref) => null);
 
-final authRepositoryProvider = Provider((ref) => ContestRepo());
-
 final votersContestNotifier =
     StateNotifierProvider<VotersContestNotifier, VoterDetailState>(
   (ref) {
+    final contestRepo = ref.watch(contestRepositoryProvider);
     return VotersContestNotifier(
-        ContestRepo(), WayaLocalDataSource(), WalletRepository.instance);
+        contestRepo, WayaLocalDataSource(), WalletRepository.instance);
   },
 );
 

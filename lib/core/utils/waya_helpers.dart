@@ -66,19 +66,30 @@ class WayaHelpers {
     }
   }
 
-  static String formatPrice(int price) {
-    final formattedCurrency = NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
+  static String formatPrice(int? price) {
+    final formattedCurrency =
+        NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price ?? 0);
 
     return formattedCurrency;
   }
 
-  static void countFormCharacters(TextEditingController controller, int length) {
+  static void countFormCharacters(
+      TextEditingController controller, int length) {
     if (controller.text.length >= length) {
-      controller.text = controller.text.substring(0, length);
+      final truncatedText = controller.text.substring(0, length);
 
-      controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: controller.text.length),
-      );
+      try {
+        // Update text and selection together to avoid race conditions
+        controller.value = TextEditingValue(
+          text: truncatedText,
+          selection: TextSelection.fromPosition(
+            TextPosition(offset: truncatedText.length),
+          ),
+        );
+      } catch (e) {
+        // Fallback: just set the text if selection setting fails
+        controller.text = truncatedText;
+      }
     }
   }
 
@@ -114,9 +125,7 @@ class WayaHelpers {
 
   static Future<MultipartFile> formattedImageFromUrl(String imageUrl) async {
     // Download
-    debugPrint("?? $imageUrl");
     final response = await http.get(Uri.parse(imageUrl));
-    debugPrint("??? 2");
     if (response.statusCode == 200) {
       final fileName = basename(Uri.parse(imageUrl).path);
 
@@ -136,8 +145,8 @@ class WayaHelpers {
     }
   }
 
-  static String calculatedDiscountPrice(String price, int pct) {
-    int intPrice = double.parse(price).toInt();
+  static String calculatedDiscountPrice(String? price, int pct) {
+    int intPrice = double.parse(price ?? '').toInt();
 
     double discount = intPrice - (intPrice * (pct / 100));
 
@@ -148,7 +157,9 @@ class WayaHelpers {
     final regex = RegExp(r'(?<=[a-z])(?=[A-Z])|_');
     final words = text.split(regex);
     return words
-        .map((word) => word.isNotEmpty ? word[0].toUpperCase() + word.substring(1).toLowerCase() : '')
+        .map((word) => word.isNotEmpty
+            ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+            : '')
         .join(' ');
   }
 
@@ -166,7 +177,9 @@ class WayaHelpers {
 
   static String _formatNumber(int number, int divisor, String suffix) {
     double result = number / divisor;
-    return result % 1 == 0 ? "${result.toInt()}$suffix" : "${result.toStringAsFixed(1)}$suffix";
+    return result % 1 == 0
+        ? "${result.toInt()}$suffix"
+        : "${result.toStringAsFixed(1)}$suffix";
   }
 
   static String format24HRSToAPM(String time) {

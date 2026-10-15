@@ -14,9 +14,9 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
 import 'package:wayagram/features/buyer_dispute/modals/failure.dart';
-import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class ReportDisputeModal extends ConsumerStatefulWidget {
@@ -24,7 +24,10 @@ class ReportDisputeModal extends ConsumerStatefulWidget {
   final String disputeId;
   final String tobeEscalatedBy;
   const ReportDisputeModal(
-      {super.key, required this.order, required this.disputeId, required  this.tobeEscalatedBy});
+      {super.key,
+      required this.order,
+      required this.disputeId,
+      required this.tobeEscalatedBy});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -76,13 +79,8 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
         mediaDoc: mediaDoc.isNotEmpty ? mediaDoc[0] : null,
         details: details);
 
-    //? After sending this one...
     if (result) {
       WayaNav.goBack();
-      // await WayaUtils.showModalSheet(
-      //   context,
-      //   child: BuyerDisputeSuccessModal(),
-      // );
     }
 
     //? Await this one.

@@ -66,64 +66,6 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
                   url: viewModel.uploadedDocuments[index].url,
                   imagePath: viewModel.uploadedDocuments[index].file);
             }),
-        // Text(
-        //   "Product Thumbnail",
-        //   style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-        //         fontSize: 14,
-        //         color: wayaTheme.colorScheme.greyColor900,
-        //       ),
-        // ),
-        // const Gap(10),
-        // Container(
-        //   height: 280,
-        //   width: double.infinity,
-        //   decoration: BoxDecoration(
-        //     color: wayaTheme.colorScheme.white,
-        //     borderRadius: BorderRadius.circular(12),
-        //     border:
-        //         Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
-        //   ),
-        //   child: WayaImage(
-        //     imageUrl:
-        //         'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-        //     height: 250,
-        //     fit: BoxFit.contain,
-        //   ),
-        // ),
-        // const Gap(15),
-        // Text(
-        //   "Front, Left, Right, and Back View",
-        //   style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-        //         fontSize: 14,
-        //         color: wayaTheme.colorScheme.greyColor900,
-        //       ),
-        // ),
-        // const Gap(10),
-        // GridView.builder(
-        //     itemCount: 4,
-        //     physics: const NeverScrollableScrollPhysics(),
-        //     shrinkWrap: true,
-        //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        //         crossAxisCount: 4,
-        //         mainAxisSpacing: 0,
-        //         childAspectRatio: 1,
-        //         crossAxisSpacing: 8),
-        //     itemBuilder: (context, index) {
-        //       return Container(
-        //         decoration: BoxDecoration(
-        //           color: wayaTheme.colorScheme.white,
-        //           borderRadius: BorderRadius.circular(8),
-        //           border: Border.all(
-        //               color: wayaTheme.colorScheme.greyColor300, width: 1),
-        //         ),
-        //         child: WayaImage(
-        //           imageUrl:
-        //               'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374122/Frame_1984078250_timcfp.png',
-        //           height: 100,
-        //           fit: BoxFit.contain,
-        //         ),
-        //       );
-        //     }),
         const Gap(30),
         EditHeader(
           onTap: () {
@@ -187,7 +129,7 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
         AboutProduct(
             title: 'Price Per Unit',
             content: WayaHelpers.formatPrice(
-                int.parse(viewModel.pricePerUnit.text ))),
+                int.parse(viewModel.pricePerUnit.text))),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -291,7 +233,8 @@ class EditHeader extends StatelessWidget {
                 Text(
                   "Edit",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                      color: wayaTheme.colorScheme.customBlack,
+                      fontSize: 14.sp),
                 )
               ],
             ),

@@ -62,7 +62,7 @@ class Product extends BaseModel<Product> {
   final String name;
   final String description;
   final String? vendorId;
-  final dynamic price;
+  final String? price;
   final int stockQuantity;
   final List<String> images;
   final int? height;
@@ -78,13 +78,13 @@ class Product extends BaseModel<Product> {
   final bool deliveryCharge;
   final String options;
   final String? pickupAddress;
-  final int? rating;
+  final dynamic rating;
   final int discountPercentage;
   final String shopId;
-  final dynamic discountedPrice;
+  final String? discountedPrice;
   final String shopName;
   final String shopPhone;
-  final dynamic shopRating;
+  final int? shopRating;
   final String? shopLogo;
   final String categoryName;
   final bool isDeleted;
@@ -130,9 +130,9 @@ class Product extends BaseModel<Product> {
     this.shopLogo,
   });
 
-  int get engagementCount => rating ?? 0;
+  int get engagementCount => rating?.toInt() ?? 0;
 
-  double get earnings => price;
+  double get earnings => double.parse(price ?? '');
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -143,7 +143,8 @@ class Product extends BaseModel<Product> {
       description: json['description'] ?? '',
       price: json['price'],
       stockQuantity: json['stockQuantity'] ?? 0,
-      images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      images:
+          (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
       height: json['height'],
       width: json['width'],
       color: json['color'] ?? '',
@@ -252,18 +253,18 @@ class Product extends BaseModel<Product> {
     bool? deliveryCharge,
     String? options,
     String? pickupAddress,
-    int? rating,
+    double? rating,
     int? discountPercentage,
     String? shopId,
     String? version,
     bool? isDeleted,
     DateTime? createdAt,
     DateTime? updatedAt,
-    dynamic discountedPrice,
+    String? discountedPrice,
     String? shopName,
     String? shopPhone,
     String? categoryName,
-    dynamic shopRating,
+    int? shopRating,
     String? vendorId,
     String? shopLogo,
   }) {
@@ -304,13 +305,4 @@ class Product extends BaseModel<Product> {
         vendorId: vendorId ?? this.vendorId,
         shopRating: shopRating ?? this.shopRating);
   }
-
-  //   static int _parseToInt(dynamic value) {
-  //     if (value == null) return 0;
-  //     if (value is int) return value;
-  //     if (value is String) {
-  //       return int.parse(value);
-  //     }
-  //     return 0;
-  //   }
 }

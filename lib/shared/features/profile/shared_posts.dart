@@ -36,7 +36,6 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
     final state = ref.watch(servicesProvider);
     final exploreNotifier = ref.watch(exploreVmProvider);
 
-  //  print("some --------------------------------- ${exploreNotifier.posts.length}");
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

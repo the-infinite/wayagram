@@ -1,10 +1,16 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wayagram/core/service/repos/base_repository_riverpod.dart';
 
-class RoleAccessRepo extends BaseRepository {
+part 'role_access_repo.g.dart';
+
+class RoleAccessRepo extends BaseRepositoryRiverpod {
   static const serviceUrl2 = WayaServiceUri.shop;
   static const serviceUrl1 = WayaServiceUri.contest;
+
+  RoleAccessRepo(super.ref);
 
   Future<WayaRequestResponse> getRoles() {
     return get('$serviceUrl2/admin/role/get-roles');
@@ -14,13 +20,13 @@ class RoleAccessRepo extends BaseRepository {
     return get('$serviceUrl1/admin/role/get-roles');
   }
 
-  Future<WayaRequestResponse> addContestTeamMember(payLoad) {
-    print(payLoad);
+  Future<WayaRequestResponse> addContestTeamMember(
+      Map<String, dynamic>? payLoad) {
     return post('$serviceUrl1/judges/create', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> editContestTeamMember(String judgeId, payLoad) {
-    print(payLoad);
+  Future<WayaRequestResponse> editContestTeamMember(
+      String judgeId, Map<String, dynamic>? payLoad) {
     return patch('$serviceUrl1/judges/update/$judgeId', payLoad,
         formdata: false);
   }
@@ -41,7 +47,7 @@ class RoleAccessRepo extends BaseRepository {
     return get('$serviceUrl2/shopMember/role-management/$vendorId');
   }
 
-  Future<WayaRequestResponse> addTeamMember(payLoad) {
+  Future<WayaRequestResponse> addTeamMember(Map<String, dynamic>? payLoad) {
     return post('$serviceUrl2/shopMember/create', payLoad, formdata: false);
   }
 
@@ -55,32 +61,9 @@ class RoleAccessRepo extends BaseRepository {
     return put('$serviceUrl2/shopMember/status/$shopMemberId', payLoad,
         formdata: false);
   }
+}
 
-/* 
-  Future<WayaRequestResponse> createContest(payLoad) {
-    return post('$serviceUrl2/contests/create', payLoad, formdata: false);
-  }
-
-  Future<WayaRequestResponse> editContest(String contestId, payLoad) {
-    return patch('$serviceUrl2/contests/edit-contest/$contestId', payLoad,
-        formdata: false);
-  }
-
-  Future<WayaRequestResponse> registerContest(payLoad) {
-    return post('$serviceUrl2/application/', payLoad, formdata: false);
-  }
-
-  Future<WayaRequestResponse> getContestForYou(int page) {
-    return get('$serviceUrl2/contests/contest-for-you?page=$page');
-  }
-
-  Future<WayaRequestResponse> fetchHostedContest(String userId, int page) {
-    return get(
-        '$serviceUrl2/contests/hostedContests-by-profile?profileId=$userId&page=$page');
-  }
-
-  Future<WayaRequestResponse> fetchAppliedContest(String userId) {
-    return get('$serviceUrl2/application/$userId/appliedContest');
-  }
- */
+@riverpod
+RoleAccessRepo roleAccessRepository(Ref ref) {
+  return RoleAccessRepo(ref);
 }

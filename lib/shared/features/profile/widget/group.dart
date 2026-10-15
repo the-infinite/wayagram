@@ -6,7 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/cache/group.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 
 class SingleGroupWidget extends StatefulWidget {
@@ -43,7 +43,6 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
     //? Then leave the group.
     if (myGroupNotifier.isMemberOf(widget.group.id)) {
       await myGroupNotifier.leaveGroup(widget.group.id);
-
     }
 
     //? Then, join the group.
@@ -75,7 +74,7 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
               child: Container(
                 margin: widget.index == 0
                     ? EdgeInsets.zero
-                    : EdgeInsets.only(left: 10),
+                    : const EdgeInsets.only(left: 10),
                 width: 150.w,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
@@ -167,8 +166,8 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
             borderRadius: BorderRadius.circular(12.r),
             onTap: _toGroup,
             child: Container(
-                margin: EdgeInsets.only(bottom: 15),
-                padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                margin: const EdgeInsets.only(bottom: 15),
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(
@@ -181,7 +180,7 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
                   spacing: 5.h,
                   children: [
                     ListTile(
-                      contentPadding: EdgeInsets.only(left: 0, right: 0),
+                      contentPadding: const EdgeInsets.only(left: 0, right: 0),
                       leading: CircleAvatar(
                         radius: 40,
                         backgroundColor: wayaTheme.colorScheme.greyColor100,

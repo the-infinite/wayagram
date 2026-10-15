@@ -25,12 +25,6 @@ class _ContestProfileStagesSectionState
   final ScrollController _scrollController = ScrollController();
 
   @override
-  void initState() {
-    debugPrint("i am looping ${widget.stages?.length}");
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
     // final wayaTheme = Theme.of(context);
@@ -81,7 +75,6 @@ class _ContestProfileStagesSectionState
                         : model.position?.toString() ?? ""),
               ],
             ),
-            //  const Gap(20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,

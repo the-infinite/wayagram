@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/group/notifier/group_notifier.dart';
 
 class ConfirmGroupDetails extends ConsumerStatefulWidget {
   static const route = '/confirmGroupDetails';
@@ -19,7 +19,8 @@ class ConfirmGroupDetails extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ConfirmGroupDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ConfirmGroupDetailsState();
 }
 
 class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
@@ -37,6 +38,7 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
     final viewModel = ref.watch(createGroupProvider);
     final notifier = ref.read(createGroupProvider.notifier);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final height = MediaQuery.of(context).size.height;
 
     return WayaScaffold(
       title: "Confirm Details",
@@ -49,20 +51,20 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
             notifier: createController,
             callback: () async {
               final createdGroup = await myGroupNotifier.createGroup(
-                viewModel.groupName.text,
-                viewModel.groupDescription.text,
-                args['type'] == 'Public Group' ? false : true,
-                (args['image'] as File).path,
-                (args['coverImage'] as File).path,
-                viewModel.category,
-                  args['type'] == 'Public Group' ? false : true
-              );
+                  viewModel.groupName.text,
+                  viewModel.groupDescription.text,
+                  args['type'] == 'Public Group' ? false : true,
+                  (args['image'] as File).path,
+                  (args['coverImage'] as File).path,
+                  viewModel.category,
+                  args['type'] == 'Public Group' ? false : true);
               notifier.reset();
               WayaNav.goBack();
               await Future.delayed(const Duration(milliseconds: 350));
               WayaNav.goBack();
               await Future.delayed(const Duration(milliseconds: 350));
-              WayaNav.replaceNamed("/successGroup", arguments: {'type': args['type'], 'id': createdGroup?.id});
+              WayaNav.replaceNamed("/successGroup",
+                  arguments: {'type': args['type'], 'id': createdGroup?.id});
             },
             height: null,
             verticalPadding: 6.h,
@@ -88,14 +90,14 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
                   args['coverImage'] == null
                       ? Image.asset(
                           'assets/images/pages/image_placeholder.png',
-                          height: Get.height * 0.2,
+                          height: height * 0.2,
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           fit: BoxFit.fitWidth,
                         )
                       : Image.file(
                           File('${args['image'].absolute.path}'),
-                          height: Get.height * 0.2,
+                          height: height * 0.2,
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           fit: BoxFit.fitWidth,
@@ -119,7 +121,8 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
           const Gap(50),
           details('Group Name', viewModel.groupName.text.capitalizeFirst),
           Gap(20),
-          details('Group Description', viewModel.groupDescription.text.capitalizeFirst),
+          details('Group Description',
+              viewModel.groupDescription.text.capitalizeFirst),
           Gap(20),
           //details('Group Type', '$type')
           details('Group Type', args['type'])
@@ -128,7 +131,7 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
     );
   }
 
-  details(title, subTitle) {
+  Widget details(String title, String? subTitle) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -147,7 +150,7 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
           child: Padding(
             padding: EdgeInsets.only(left: 15.h),
             child: Text(
-              subTitle,
+              subTitle ?? '',
               maxLines: 2,
               textAlign: TextAlign.right,
               style: TextStyle(

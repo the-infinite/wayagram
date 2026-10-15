@@ -30,7 +30,7 @@ class FilterView extends ConsumerStatefulWidget {
 }
 
 class _FilterViewState extends ConsumerState<FilterView> {
-  late final statesNotifier = ref.read(upgradeToBusinessVmProvider.notifier);
+  late final statesNotifier = ref.read(upgradeToBusinessProvider.notifier);
   List<Product> filteredProducts = [];
   List<Product> allProducts = [];
   List<Select> allStates = [];

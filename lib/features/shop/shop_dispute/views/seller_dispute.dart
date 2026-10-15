@@ -6,8 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-// import 'package:wayagram/core/utils/waya_utils.dart';
-import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/dispute_vm.dart';
 import 'package:wayagram/features/shop/shop_dispute/widgets/single_dispute_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
@@ -31,6 +30,12 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
       ref.read(disputeVmProvider.notifier).getDisputes();
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   // This is fine.
@@ -63,7 +68,6 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
               search: searchController,
               hintText: 'Search Dispute by status (pending, resolved)',
               onTextChanged: (value) {
-                // TODO: Filter this.
                 notifier.filterList(searchController.text);
               },
             ),

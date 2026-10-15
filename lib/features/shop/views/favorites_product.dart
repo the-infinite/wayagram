@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
@@ -33,7 +33,6 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
   List<FavoriteItem> favoriteItems = [];
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setState(() => isLoading = true);
       try {
@@ -49,16 +48,24 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
     });
 
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {}); // Rebuild when search text changes
-    });
+    searchController.addListener(_onSearchChanged);
     super.initState();
+  }
+
+  void _onSearchChanged() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    
-     // search filter
+    // search filter
     final searchFilteredProducts = WayaUtils.search<FavoriteItem>(
         favoriteItems,
         [
@@ -72,32 +79,30 @@ class _FavoritesProductState extends ConsumerState<FavoritesProducts> {
         ],
         searchController.text);
 
-    // TODO: implement build
     return WayaScaffold(
         isScrollable: true,
         isLoading: isLoading,
         title: "Favorite Products",
-        body: Expanded(
-            child: RefreshIndicator(
-                onRefresh: () async {},
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FilterWidget(
-                        isPopFilter: false,
-                        hintText: 'Search Product',
-                        search: searchController,
-                      ),
-                      const Gap(5),
-                      const Gap(25),
-                      if (isLoading)
-                        _favoriteProductLoadingState(context: context)
-                      else
-                        ProductsGrid(products: searchFilteredProducts)
-                    ],
+        body: RefreshIndicator(
+            onRefresh: () async {},
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FilterWidget(
+                    isPopFilter: false,
+                    hintText: 'Search Product',
+                    search: searchController,
                   ),
-                ))));
+                  const Gap(5),
+                  const Gap(25),
+                  if (isLoading)
+                    _favoriteProductLoadingState(context: context)
+                  else
+                    ProductsGrid(products: searchFilteredProducts)
+                ],
+              ),
+            )));
   }
 
   Widget _favoriteProductLoadingState({required BuildContext context}) {
@@ -158,7 +163,7 @@ class ProductsGrid extends StatelessWidget {
               Expanded(child: FavoriteProductCard(product: products[i])),
               if (i + 1 < products.length) ...[
                 const SizedBox(width: 12),
-                Expanded(child: FavoriteProductCard(product: products[i])),
+                Expanded(child: FavoriteProductCard(product: products[i + 1])),
               ] else ...[
                 const SizedBox(width: 12),
                 Expanded(child: SizedBox()),
@@ -190,8 +195,6 @@ class FavoriteProductCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final String image = product.images.isEmpty ? "" : product.images[0];
-    debugPrint(
-        "${product.discountPercentage} ${product.name} ${product.discountPercentage.toString() == "0"}");
 
     return GestureDetector(
       onTap: () {
@@ -228,7 +231,7 @@ class FavoriteProductCard extends ConsumerWidget {
           //       ],
           //     )),
           SizedBox(height: 3),
-          Text(product.name.capitalizeFirst!,
+          Text(product.name.capitalizeFirst,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: wayaTheme.textTheme.bodyXtraMedium),
@@ -264,7 +267,7 @@ class FavoriteProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   Text(
                     WayaHelpers.formatPrice(
-                        double.parse(product.price).toInt()),
+                        double.parse(product.price ?? '').toInt()),
                     style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -280,7 +283,7 @@ class FavoriteProductCard extends ConsumerWidget {
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage)
                   : WayaHelpers.formatPrice(
-                      double.parse(product.price).toInt()),
+                      double.parse(product.price ?? '').toInt()),
               style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -294,7 +297,7 @@ class FavoriteProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   WayaButton(
                     callback: () async {
-                      int intPrice = double.parse(product.price).toInt();
+                      int intPrice = double.parse(product.price ?? '').toInt();
                       int price = product.discountPercentage > 0
                           ? (intPrice -
                                   (intPrice * product.discountPercentage / 100))

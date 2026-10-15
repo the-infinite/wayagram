@@ -70,14 +70,14 @@ class _ReportPageState extends ConsumerState<ReportPage> {
                     thickness: 1,
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Text(
                   "Choose Reason for Reporting",
                   style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                     color: wayaTheme.colorScheme.greyColor600,
                   ),
                 ),
-                Gap(10),
+                const Gap(10),
                 Expanded(
                   child: Divider(
                     color: wayaTheme.colorScheme.greyColor200,

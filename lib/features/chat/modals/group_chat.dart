@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -19,10 +18,13 @@ class StartConversationGroupModal extends StatefulWidget {
   const StartConversationGroupModal({super.key});
 
   @override
-  State<StartConversationGroupModal> createState() => _StartConversationGroupModalState();
+  State<StartConversationGroupModal> createState() =>
+      _StartConversationGroupModalState();
 }
 
-class _StartConversationGroupModalState extends State<StartConversationGroupModal> with SingleTickerProviderStateMixin {
+class _StartConversationGroupModalState
+    extends State<StartConversationGroupModal>
+    with SingleTickerProviderStateMixin {
   final selection = ValueNotifier<List<UserDetailsModel>>([]);
   final controller = TextEditingController();
   final loadingController = ValueNotifier(false);
@@ -111,43 +113,22 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
                               IconButton(
                                 onPressed: () => WayaNav.goBack(result: null),
                                 style: IconButton.styleFrom(
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                   padding: const EdgeInsets.all(2),
-                                  backgroundColor: theme.colorScheme.greyColor200,
+                                  backgroundColor:
+                                      theme.colorScheme.greyColor200,
                                 ),
                                 icon: WayaAssets.icons.actonDismiss.svg(
-                                  color: theme.colorScheme.black,
+                                  colorFilter: ColorFilter.mode(
+                                    theme.colorScheme.black,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
 
-                          // Some space.
-                          // const Gap(10),
-
-                          // //? This is fine.
-                          // PopScope(
-                          //   onPopInvokedWithResult: (popping, result) {
-                          //     notifier.reset();
-                          //   },
-                          //   child: SizedBox(
-                          //     height: 50,
-                          //     child: WayaTextFormField(
-                          //       padding: EdgeInsets.symmetric(horizontal: 1),
-                          //       onChanged: (value) {},
-                          //       prefixIcon: Padding(
-                          //         padding: const EdgeInsets.symmetric(vertical: 13),
-                          //         child: WayaAssets.icons.actionSearch.svg(
-                          //           fit: BoxFit.contain,
-                          //         ),
-                          //       ),
-                          //       controller: controller,
-                          //       hintText: "Search friends",
-                          //     ),
-                          //   ),
-                          // ),
-
-                          // Some  space.
                           const Gap(10),
 
                           //? Next, our list of users to send this to.
@@ -172,7 +153,8 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
 
                                     //? If this is no longer empty.
                                     if (selection.value.length == 1) {
-                                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) {
                                         try {
                                           animationController?.forward();
                                         } catch (_) {}
@@ -189,10 +171,12 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
                             //? Empty conversations
                             Center(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 17),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 17),
                                 child: EmptyConversationsWidget(
                                   title: "No Friends Yet",
-                                  text: "Follow your friends that follow you on Wayagram to get started",
+                                  text:
+                                      "Follow your friends that follow you on Wayagram to get started",
                                 ),
                               ),
                             ),
@@ -229,7 +213,8 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
                               callback: () async {
                                 notifier.saveUsers(choices);
                                 final result = await WayaNav.to<ChatModel?>(
-                                  transition: Transition.rightToLeftWithFade,
+                                  transition:
+                                      WayaTransition.rightToLeftWithFade,
                                   CreateConversationGroupScreen(),
                                 );
 
@@ -237,9 +222,12 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
                                 if (result == null) return;
 
                                 //? This is fine.
-                                final chatNotifier = ref.read(chatProvider(result.id).notifier);
+                                final chatNotifier =
+                                    ref.read(chatProvider(result.id).notifier);
                                 chatNotifier.setChat(result);
-                                WayaNav.replaceNamed(WayaAppRoutes.getSingleChatRoute(result.id));
+                                WayaNav.replaceNamed(
+                                    WayaAppRoutes.getSingleChatRoute(
+                                        result.id));
                               },
                               text: "Add ${choices.length} members",
                             ),

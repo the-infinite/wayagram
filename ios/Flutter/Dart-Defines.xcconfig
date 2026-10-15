@@ -1,0 +1,7 @@
+ENVIRONMENT=production
+API_BASE_URL=https://services.wayagram.ng/
+APP_NAME=Wayagram
+BUNDLE_ID=ng.wayagram
+APP_WEB_URL=https://wayagram.ng/
+FIREBASE_ANDROID_APP_ID=1:276195200870:android:948a35f4f34ec7978b42a7
+FIREBASE_IOS_APP_ID=1:276195200870:ios:c5b085cee4bdadf88b42a7

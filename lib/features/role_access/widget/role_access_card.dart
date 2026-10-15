@@ -29,23 +29,16 @@ class RoleAccessCard extends StatelessWidget {
           children: [
             // Profile Avatar or Initials
             if (showImage)
-              Container(
-                child: /* user != null
-                    ? CircleAvatar(
-                        backgroundImage: NetworkImage(user["image"]),
-                        radius: 20,
-                      )
-                    : */
-                    CircleAvatar(
-                  backgroundColor: wayaTheme.colorScheme.pending50,
-                  radius: 20,
-                  child: Text(
-                    getInitials(user.email ?? "none"),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
+              CircleAvatar(
+                backgroundColor: wayaTheme.colorScheme.pending50,
+                radius: 20,
+                child: Text(
+                  getInitials(user.email ?? "none"),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ),
+
             SizedBox(width: 12),
             // Name and Role
             Expanded(
@@ -107,7 +100,7 @@ class RoleAccessCard extends StatelessWidget {
                           : Colors.orange[700],
                       fontWeight: FontWeight.bold)),
             ),
-            Gap(4),
+            const Gap(4),
             Icon(
               Icons.chevron_right,
               color: Colors.grey,

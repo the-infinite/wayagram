@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/modals/error.dart';
@@ -12,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/data/model/role_type.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -75,7 +75,9 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                         if (viewModel.foundUserId == null) {
                           await WayaUtils.showModalSheet(
                             context,
-                            child: WayaErrorDialog(title: "You must select the user you wish to add"),
+                            child: WayaErrorDialog(
+                                title:
+                                    "You must select the user you wish to add"),
                           );
                           return;
                         }
@@ -91,7 +93,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                             await showCustomDialog(
                               context,
                               'Success!',
-                              '${viewModel.username.text} has been added as a Moderator. You can now collaborate seamlessly and manage the page together.',
+                              '${viewModel.username.text} has been added as a ${viewModel.roleType}. You can now collaborate seamlessly and manage the page together.',
                             );
                             notifier.reset();
                             WayaNav.goBack();
@@ -129,7 +131,8 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                 children: [
                   WayaConfirmationView(
                     debounceTimer: const Duration(milliseconds: 20),
-                    getResult: ref.read(userSearchProvider.notifier).getUserByEmail,
+                    getResult:
+                        ref.read(userSearchProvider.notifier).getUserByEmail,
                     getText: (user) => user?.fullname ?? "User not found",
                     onResult: (user) {
                       notifier.setAddedUser(user?.id);
@@ -168,7 +171,9 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -176,7 +181,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                   }),
                 ],
               )),
-          Gap(20),
+          const Gap(20),
           viewModel.roleType.isEmpty
               ? Container()
               : viewModel.roleType == 'admin'
@@ -190,20 +195,21 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                               color: WayaColors.greyColor700,
                             )),
                         const Gap(15),
-                        _permissionType(
-                            "Manage Roles", "Assign, update, or remove roles for other members (except\nthe owner)"),
+                        _permissionType("Manage Roles",
+                            "Assign, update, or remove roles for other members (except\nthe owner)"),
                         const Gap(15),
-                        _permissionType("Page Settings", "Edit page info, update images, and modify general settings."),
+                        _permissionType("Page Settings",
+                            "Edit page info, update images, and modify general settings."),
                         const Gap(15),
-                        _permissionType("Content Creation:", "Post updates, photos, and manage page content."),
+                        _permissionType("Content Creation:",
+                            "Post updates, photos, and manage page content."),
                         const Gap(15),
-                        _permissionType(
-                            "Community Management", "Respond to comments, messages, and moderate\ninteractions."),
+                        _permissionType("Community Management",
+                            "Respond to comments, messages, and moderate\ninteractions."),
                         const Gap(15),
                       ],
                     )
-                  :
-        /*  viewModel.roleType == 'moderator'
+                  : viewModel.roleType == 'member'
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -214,15 +220,15 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                                   color: WayaColors.greyColor700,
                                 )),
                             const Gap(15),
-                            _permissionType(
-                                "Community Safety", "Manage and moderate comments to keep discussions civil."),
+                            _permissionType("Content Focused",
+                                "Create and manage all page posts and media"),
                             const Gap(15),
-                            _permissionType("User Management", "Block or ban users if necessary"),
+                            _permissionType("Comment & Message Handling",
+                                "Respond to user comments and messages"),
                             const Gap(15),
                           ],
                         )
-                      : */
-          viewModel.roleType == 'editor'
+                      : viewModel.roleType == 'editor'
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -233,9 +239,11 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                                       color: WayaColors.greyColor700,
                                     )),
                                 const Gap(15),
-                                _permissionType("Content Focused", "Create and manage all page posts and media"),
+                                _permissionType("Content Focused",
+                                    "Create and manage all page posts and media"),
                                 const Gap(15),
-                                _permissionType("Comment & Message Handling", "Respond to user comments and messages"),
+                                _permissionType("Comment & Message Handling",
+                                    "Respond to user comments and messages"),
                                 const Gap(15),
                               ],
                             )
@@ -245,7 +253,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
     );
   }
 
-  Widget _permissionType(title, subTitle) {
+  Widget _permissionType(String title, String? subTitle) {
     return FittedBox(
       fit: BoxFit.fitWidth,
       child: Row(
@@ -273,7 +281,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
               FittedBox(
                 fit: BoxFit.contain,
                 child: Text(
-                  subTitle,
+                  subTitle ?? '',
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
@@ -312,7 +320,9 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                     child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -335,11 +345,12 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                                   ),
                                 ),
                               ),
-                              Gap(10),
+                              const Gap(10),
                               Text(
                                 title,
                                 maxLines: 7,
-                                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                                style: wayaTheme.textTheme.bodyMedium!
+                                    .wayaCopyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
                                   color: wayaTheme.colorScheme.black,
@@ -365,7 +376,8 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                             child: Text(
                               subTitle,
                               maxLines: 7,
-                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                              style:
+                                  wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: wayaTheme.colorScheme.greyColor500,

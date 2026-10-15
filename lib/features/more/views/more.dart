@@ -35,7 +35,8 @@ class MoreView extends ConsumerWidget {
     );
   }
 
-  Widget buildMoreOptionsList(List<MoreOptionModel> moreOptions, BuildContext context) {
+  Widget buildMoreOptionsList(
+      List<MoreOptionModel> moreOptions, BuildContext context) {
     return Column(
       children: [
         for (int i = 0; i < moreOptions.length; i += 2)
@@ -60,9 +61,10 @@ class MoreView extends ConsumerWidget {
           onTap: moreOption.onTap,
           child: Container(
             height: 165.h,
-            padding: EdgeInsets.all(10),
-            decoration:
-                BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(12)),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: wayaTheme.colorScheme.scaffoldColor,
+                borderRadius: BorderRadius.circular(12)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,

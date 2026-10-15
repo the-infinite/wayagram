@@ -26,7 +26,8 @@ class CommentDetailsScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CommentDetailsScreen> createState() => _CommentDetailsScreenState();
+  ConsumerState<CommentDetailsScreen> createState() =>
+      _CommentDetailsScreenState();
 }
 
 class _CommentDetailsScreenState extends ConsumerState<CommentDetailsScreen> {
@@ -41,7 +42,8 @@ class _CommentDetailsScreenState extends ConsumerState<CommentDetailsScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        final comment = await notifier.getSingleComment(widget.postId, widget.id);
+        final comment =
+            await notifier.getSingleComment(widget.postId, widget.id);
         await myPageNotifier.refreshPost(widget.postId);
 
         //? If this is still mounted.
@@ -65,8 +67,12 @@ class _CommentDetailsScreenState extends ConsumerState<CommentDetailsScreen> {
         title: loading ? "Loading..." : "Deleted Resource",
         body: Center(
           child: EmptyState(
-            assetImage: loading ? const CircularProgressIndicator() : WayaAssets.icons.emptyState.svg(),
-            message: loading ? "Please wait while we fetch this post" : "This comment or post has been deleted",
+            assetImage: loading
+                ? const CircularProgressIndicator()
+                : WayaAssets.icons.emptyState.svg(),
+            message: loading
+                ? "Please wait while we fetch this post"
+                : "This comment or post has been deleted",
           ),
         ),
       );

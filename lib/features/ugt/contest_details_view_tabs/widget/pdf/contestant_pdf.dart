@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
-
-import 'package:share_plus/share_plus.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 
@@ -140,12 +139,19 @@ Future<void> convertContestantToPDF(
   File contestantFile = File(path);
   contestantFile.writeAsBytesSync(await pdf.save());
 
-  Share.shareXFiles([
+  /*  Share.shareXFiles([
     XFile(path),
-  ], text: 'Contestants');
+  ], text: 'Contestants'); */
 
   final pdfBytes = await pdf.save();
   await contestantFile.writeAsBytes(pdfBytes.toList());
+  await FileSaver.instance.saveAs(
+    name: "Contestants Details",
+    bytes: pdfBytes,
+    file: contestantFile,
+    fileExtension: 'pdf',
+    mimeType: MimeType.pdf,
+  );
 }
 
 Widget _buildStatCard(String title, String value, Widget widget) {

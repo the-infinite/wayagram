@@ -21,7 +21,7 @@ class BidStatusCard extends StatelessWidget {
 
     //? Return the status card.
     return Container(
-      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
       decoration: BoxDecoration(
         color: switch (bid.status) {
           BidActionType.negotiate => wayaTheme.colorScheme.primary50,
@@ -64,7 +64,7 @@ class OrderStatusCard extends StatelessWidget {
 
     //? Return the status card.
     return Container(
-      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
       decoration: BoxDecoration(
         color: switch (order.orderStatus) {
           QuotationOrderStatus.inProgress => wayaTheme.colorScheme.info50,
@@ -93,11 +93,108 @@ class OrderStatusCard extends StatelessWidget {
   }
 }
 
+class DeliveryStatusCard extends StatelessWidget {
+  final QuotationDeliveryStatus status;
+
+  // Construct.
+  const DeliveryStatusCard({super.key, required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+
+    //? Return the status card.
+    return Container(
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
+      decoration: BoxDecoration(
+        color: switch (status) {
+          QuotationDeliveryStatus.pending ||
+          QuotationDeliveryStatus.processing ||
+          QuotationDeliveryStatus.readyForDispatch =>
+            wayaTheme.colorScheme.info50,
+          QuotationDeliveryStatus.outForDelivery ||
+          QuotationDeliveryStatus.inTransit =>
+            wayaTheme.colorScheme.primary50,
+          QuotationDeliveryStatus.delivered => wayaTheme.colorScheme.success50,
+        },
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        switch (status) {
+          QuotationDeliveryStatus.pending => "Pending",
+          QuotationDeliveryStatus.processing => "Processing",
+          QuotationDeliveryStatus.readyForDispatch => "Ready for Dispatch",
+          QuotationDeliveryStatus.inTransit => throw "In Transit",
+          QuotationDeliveryStatus.outForDelivery => "Out for Delivery",
+          QuotationDeliveryStatus.delivered => "Delivered",
+        },
+        style: wayaTheme.textTheme.bodyMedium?.copyWith(
+          color: switch (status) {
+            QuotationDeliveryStatus.pending ||
+            QuotationDeliveryStatus.processing ||
+            QuotationDeliveryStatus.readyForDispatch =>
+              wayaTheme.colorScheme.info,
+            QuotationDeliveryStatus.outForDelivery ||
+            QuotationDeliveryStatus.inTransit =>
+              wayaTheme.colorScheme.primary,
+            QuotationDeliveryStatus.delivered => wayaTheme.colorScheme.success,
+          },
+          fontWeight: FontWeight.w500,
+          fontSize: 11.sp,
+        ),
+      ),
+    );
+  }
+}
+
+class PickupStatusCard extends StatelessWidget {
+  final QuotationPickupStatus status;
+
+  // Construct.
+  const PickupStatusCard({super.key, required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+
+    //? Return the status card.
+    return Container(
+      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
+      decoration: BoxDecoration(
+        color: switch (status) {
+          QuotationPickupStatus.pending => wayaTheme.colorScheme.info50,
+          QuotationPickupStatus.ready || QuotationPickupStatus.scheduled => wayaTheme.colorScheme.primary50,
+          QuotationPickupStatus.collected => wayaTheme.colorScheme.success50,
+        },
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        switch (status) {
+          QuotationPickupStatus.pending => "Pending",
+          QuotationPickupStatus.ready => "Ready for Pickup",
+          QuotationPickupStatus.scheduled => "Pickup Scheduled",
+          QuotationPickupStatus.collected => "Picked Up",
+        },
+        style: wayaTheme.textTheme.bodyMedium?.copyWith(
+          color: switch (status) {
+            QuotationPickupStatus.pending => wayaTheme.colorScheme.info,
+            QuotationPickupStatus.ready || QuotationPickupStatus.scheduled => wayaTheme.colorScheme.primary,
+            QuotationPickupStatus.collected => wayaTheme.colorScheme.success,
+          },
+          fontWeight: FontWeight.w500,
+          fontSize: 11.sp,
+        ),
+      ),
+    );
+  }
+}
+
 class BidNegotiationStatusCard extends StatelessWidget {
   final QuotationBidModel bid;
   final BidActionAuthor user;
 
-  const BidNegotiationStatusCard({super.key, required this.bid, required this.user});
+  const BidNegotiationStatusCard(
+      {super.key, required this.bid, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +207,8 @@ class BidNegotiationStatusCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
         decoration: BoxDecoration(
           color: switch (bid.status) {
-            BidActionType.negotiate => isMe ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.info,
+            BidActionType.negotiate =>
+              isMe ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.info,
             BidActionType.reject => wayaTheme.colorScheme.error,
             _ => wayaTheme.colorScheme.success,
           },
@@ -126,19 +224,25 @@ class BidNegotiationStatusCard extends StatelessWidget {
               switch (bid.status) {
                 BidActionType.accept => WayaAssets.icons.bid.path,
                 BidActionType.reject => WayaAssets.icons.bidError.path,
-                BidActionType.negotiate => isMe ? WayaAssets.icons.bidSent.path : WayaAssets.icons.bidReceived.path,
+                BidActionType.negotiate => isMe
+                    ? WayaAssets.icons.bidSent.path
+                    : WayaAssets.icons.bidReceived.path,
                 _ => bid.vendorId == ConversationState.self.id
                     ? WayaAssets.icons.bidSent.path
                     : WayaAssets.icons.bidReceived.path,
               },
-              color: wayaTheme.colorScheme.white,
+              colorFilter: ColorFilter.mode(
+                wayaTheme.colorScheme.white,
+                BlendMode.srcIn,
+              ),
               height: 12.sp,
             ),
 
             //? The text in this place.
             Text(
               switch (bid.status) {
-                BidActionType.negotiate => isMe ? "Counteroffer Sent" : "Counteroffer received",
+                BidActionType.negotiate =>
+                  isMe ? "Counteroffer Sent" : "Counteroffer received",
                 BidActionType.accept => "Accepted",
                 BidActionType.reject => isMe ? "Declined" : "Rejected",
                 _ => "Open Bid",

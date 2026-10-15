@@ -20,7 +20,7 @@ class EditNamePage extends ConsumerStatefulWidget {
 
 class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
   TextEditingController nameController = TextEditingController();
-  dynamic dateIsoFormat;
+  String dateIsoFormat = '';
 
   @override
   void didChangeDependencies() {
@@ -91,12 +91,12 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
                             .onSave,
             text: 'Save',
           ),
-          Gap(15)
+          const Gap(15)
         ],
       ),
       body: Column(
         children: [
-          Gap(20),
+          const Gap(20),
           WayaTextFormField(
             keyboardType: arg.editType == ProfileEditType.phone
                 ? TextInputType.phone
@@ -123,7 +123,7 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
                     }
                   }
                 : null,
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             fillColor: wayaTheme.colorScheme.white,
             line: arg.editType == ProfileEditType.bio ? 4 : 1,
             label: getEditOperation(
@@ -159,7 +159,7 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
                     value: nameController.text)
                 .hintText,
           ),
-          Gap(10),
+          const Gap(10),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(

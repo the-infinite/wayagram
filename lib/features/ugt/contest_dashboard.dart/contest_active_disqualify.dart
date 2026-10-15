@@ -144,8 +144,7 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                         ),
                       ),
                     ),
-                    DataCell(Text(
-                        getUserCurrentStage(item))),
+                    DataCell(Text(getUserCurrentStage(item))),
                     DataCell(
                       PopupMenuButton(
                         onSelected: (value) {},
@@ -162,7 +161,10 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                                         '/contest-mydashboard-profile-page');
                                   },
                                   asset: WayaAssets.icons.cProfileUser.svg(
-                                    color: wayaTheme.colorScheme.customBlack,
+                                    colorFilter: ColorFilter.mode(
+                                      wayaTheme.colorScheme.customBlack,
+                                      BlendMode.srcIn,
+                                    ),
                                     height: 20,
                                   ),
                                   text: "View Profile",
@@ -183,10 +185,17 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                                         .state = model;
                                     WayaNav.toNamed(
                                       '/contest-profile-page',
+                                      arguments: {
+                                        "id": item.profileId ?? "",
+                                        "contest": model?.id ?? "",
+                                      },
                                     );
                                   },
                                   asset: WayaAssets.icons.mComments.svg(
-                                    color: wayaTheme.colorScheme.customBlack,
+                                    colorFilter: ColorFilter.mode(
+                                      wayaTheme.colorScheme.customBlack,
+                                      BlendMode.srcIn,
+                                    ),
                                     height: 20,
                                   ),
                                   text: "Send Message",
@@ -210,10 +219,12 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                                     });
                                   },
                                   asset: WayaAssets.images.pages.flag.svg(
-                                    color:
-                                        item.status?.toLowerCase() == "active"
-                                            ? wayaTheme.colorScheme.primary
-                                            : wayaTheme.colorScheme.error500,
+                                    colorFilter: ColorFilter.mode(
+                                      item.status?.toLowerCase() == "active"
+                                          ? wayaTheme.colorScheme.primary
+                                          : wayaTheme.colorScheme.error500,
+                                      BlendMode.srcIn,
+                                    ),
                                     height: 20,
                                   ),
                                   text: item.status?.toLowerCase() == "active"
@@ -235,14 +246,13 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
     );
   }
 
-  String getUserCurrentStage(
-      MyContestContestantModel myFullContestantList) {
+  String getUserCurrentStage(MyContestContestantModel myFullContestantList) {
     String currentUserStage = "None";
-    for(var model in myFullContestantList.stages!){
-        if(model.hasAccepted == true){
-          currentUserStage = model.stageName ?? "";
-          break;
-        }
+    for (var model in myFullContestantList.stages!) {
+      if (model.hasAccepted == true) {
+        currentUserStage = model.stageName ?? "";
+        break;
+      }
     }
 
     return currentUserStage;

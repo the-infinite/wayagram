@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -10,15 +9,15 @@ import 'package:wayagram/features/group/widget/invitation_card.dart';
 class SingleGroupInvitation extends ConsumerStatefulWidget {
   final String id;
   static const route = '/userGroupInvitation/single';
-  const SingleGroupInvitation ({super.key, required this.id});
+  const SingleGroupInvitation({super.key, required this.id});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SingleGroupInvitationState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SingleGroupInvitationState();
 }
 
 class _SingleGroupInvitationState extends ConsumerState<SingleGroupInvitation>
     with SingleTickerProviderStateMixin {
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -27,10 +26,8 @@ class _SingleGroupInvitationState extends ConsumerState<SingleGroupInvitation>
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
     return WayaScaffold(
@@ -38,27 +35,31 @@ class _SingleGroupInvitationState extends ConsumerState<SingleGroupInvitation>
       isLoading: viewModel.isLoading,
       isScrollable: false,
       title: 'Group Invitation',
-      body:Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          viewModel.groupInvitationModelDocs!.isEmpty ?
-          GroupPageEmptyState(
-              text: "You don't have any invitation yet"
-          ):
-          ListView.builder(
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: viewModel.groupInvitationModelDocs?.length,
-              itemBuilder: (_, index) {
-                final group = viewModel.groupInvitationModelDocs![index];
-                return InvitationCard(group: group, wayaTheme: wayaTheme, ref: ref,
-                  accept: ()=> ref.read(createGroupProvider.notifier)
-                      .acceptGroupInvitation(context, '${group.id}'),
-                  reject:()=> ref.read(createGroupProvider.notifier)
-                      .rejectGroupInvitation(context, '${group.id}'),);
-              }),
+          viewModel.groupInvitationModelDocs!.isEmpty
+              ? GroupPageEmptyState(text: "You don't have any invitation yet")
+              : ListView.builder(
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: viewModel.groupInvitationModelDocs?.length,
+                  itemBuilder: (_, index) {
+                    final group = viewModel.groupInvitationModelDocs![index];
+                    return InvitationCard(
+                      group: group,
+                      wayaTheme: wayaTheme,
+                      ref: ref,
+                      accept: () => ref
+                          .read(createGroupProvider.notifier)
+                          .acceptGroupInvitation(context, '${group.id}'),
+                      reject: () => ref
+                          .read(createGroupProvider.notifier)
+                          .rejectGroupInvitation(context, '${group.id}'),
+                    );
+                  }),
         ],
       ),
     );

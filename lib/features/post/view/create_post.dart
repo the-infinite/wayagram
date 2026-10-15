@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -30,12 +29,12 @@ class _CreatePostState extends ConsumerState<CreatePost>
   List<XFile> _selectedImages = [];
   List<WayaVideoController> videoControllers = [];
 
-  bool sel = false;
+  bool sel = true;
   bool isTyping = false;
 
   @override
   void dispose() {
-    //? Dispose the older video controllers
+    pageController.dispose();
     for (final controller in videoControllers) {
       controller.dispose();
     }
@@ -49,15 +48,15 @@ class _CreatePostState extends ConsumerState<CreatePost>
         controller.dispose();
       }
 
-      final images = await _pickers.pickMultiImage(
-        imageQuality: 80, // Adjust image quality (0-100)
-        maxWidth: 1200, // Max width of images
-        maxHeight: 1200, // Max height of images
-      );
+      final images = await _pickers.pickImage(
+          imageQuality: 80, // Adjust image quality (0-100)
+          maxWidth: 1200, // Max width of images
+          maxHeight: 1200, // Max height of images
+          source: ImageSource.camera);
 
-      if (images.isNotEmpty) {
+      if (images != null) {
         setState(() {
-          _selectedImages = images.take(5).toList();
+          _selectedImages = [images];
         });
       }
     } catch (e) {
@@ -67,8 +66,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
   }
 
   Future<void> pickVideo() async {
-    final XFile? pickedFile =
-        await _pickers.pickVideo(source: ImageSource.gallery);
+    final XFile? pickedFile = await _pickers.pickMedia();
     if (pickedFile != null) {
       //? Dispose the older video controllers
       for (final controller in videoControllers) {
@@ -94,6 +92,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
     //final args = ModalRoute.of(context)?.settings.arguments as dynamic;
+    final width = MediaQuery.of(context).size.width;
 
     return WayaScaffold(
         resizeToAvoidBottomInset: true,
@@ -104,48 +103,51 @@ class _CreatePostState extends ConsumerState<CreatePost>
             Padding(
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(
-                width: context.width * 0.15,
+                width: width * 0.15,
                 child:
-                // !isTyping
-                //     ? WayaButton(
-                //         callback: viewModel.isLoading
-                //             ? () async {
-                //                 if (_formKey.currentState!.validate()) {}
-                //               }
-                //             : null,
-                //         height: 30,
-                //         text: 'Post',
-                //         isLoading: viewModel.isLoading,
-                //         textStyle: WayaTextStyles.bodySmall.copyWith(
-                //             fontSize: 12.sp,
-                //             fontWeight: FontWeight.w600,
-                //             color: Theme.of(context).colorScheme.white),
-                //       )
-                   // :
-                  WayaButton(
-                        callback: !viewModel.isLoading
-                            ? () async {
-                                if (_formKey.currentState!.validate()) {
-                                  await notifier.createPost(
-                                    context,
-                                    viewModel.content.text,
-                                    sel ? "public" : "private",
-                                    _selectedImages,
-                                  );
-                                  notifier.reset();
-                                  WayaNav.goBack();
-                                }
-                              }
-                            : null,
-                        height: 30,
-                        text: 'Post',
-                        isLoading: viewModel.isLoading,
-                        textStyle: WayaTextStyles.bodySmall.copyWith(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.white,
-                        ),
-                      ),
+                    // !isTyping
+                    //     ? WayaButton(
+                    //         callback: viewModel.isLoading
+                    //             ? () async {
+                    //                 if (_formKey.currentState!.validate()) {}
+                    //               }
+                    //             : null,
+                    //         height: 30,
+                    //         text: 'Post',
+                    //         isLoading: viewModel.isLoading,
+                    //         textStyle: WayaTextStyles.bodySmall.copyWith(
+                    //             fontSize: 12.sp,
+                    //             fontWeight: FontWeight.w600,
+                    //             color: Theme.of(context).colorScheme.white),
+                    //       )
+                    // :
+                    WayaButton(
+                  callback: !viewModel.isLoading
+                      ? () async {
+                          if (_selectedImages.isNotEmpty ||
+                              viewModel.content.text.isNotEmpty) {
+                            await notifier.createPost(
+                              context,
+                              viewModel.content.text.isNotEmpty
+                                  ? viewModel.content.text
+                                  : '',
+                              sel ? "public" : "private",
+                              _selectedImages,
+                            );
+                            notifier.reset();
+                            WayaNav.goBack();
+                          }
+                        }
+                      : null,
+                  height: 30,
+                  text: 'Post',
+                  isLoading: viewModel.isLoading,
+                  textStyle: WayaTextStyles.bodySmall.copyWith(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.white,
+                  ),
+                ),
               ),
             ),
           ],
@@ -287,9 +289,10 @@ class _CreatePostState extends ConsumerState<CreatePost>
                                     child: Container(
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.white.withOpacity(0.7),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.7),
                                       ),
-                                      padding: EdgeInsets.all(8),
+                                      padding: const EdgeInsets.all(8),
                                       child: Icon(
                                         Icons.play_arrow,
                                         size: 30,
@@ -337,7 +340,6 @@ class _CreatePostState extends ConsumerState<CreatePost>
                           },
                         ),
                       ),
-                      //const Gap(350),
                     ],
                   ),
                 ),
@@ -348,7 +350,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                 InkWell(
                   onTap: pickVideo,
                   child: Image.asset(
-                    'assets/images/pages/sn.png',
+                    'assets/images/pages/gallery.png',
                     height: 32.h,
                   ),
                 ),
@@ -356,7 +358,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                 InkWell(
                   onTap: _pickImages,
                   child: Image.asset(
-                    'assets/images/pages/gallery.png',
+                    'assets/images/pages/sn.png',
                     height: 32.h,
                   ),
                 ),
@@ -376,7 +378,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                             : 'assets/images/pages/lock.png',
                         height: 18.h,
                       ),
-                      Gap(5),
+                      const Gap(5),
                       Text(
                         sel ? 'Public post' : 'Private post',
                         style: Theme.of(context)
@@ -496,7 +498,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   decoration:
                                       BoxDecoration(color: Colors.white),
@@ -577,7 +579,7 @@ class _CreatePostState extends ConsumerState<CreatePost>
                                     ),
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,

@@ -32,7 +32,6 @@ class _VerifyAccountState extends ConsumerState<VerifyAccount> {
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startCountdown();
     });
@@ -61,7 +60,6 @@ class _VerifyAccountState extends ConsumerState<VerifyAccount> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     cancelTimer();
     super.dispose();
   }
@@ -143,7 +141,7 @@ class _VerifyAccountState extends ConsumerState<VerifyAccount> {
                             countDown = 60;
                           });
                           startCountdown();
-                         viewModel.resend2faOtp(email: widget.email);
+                          viewModel.resend2faOtp(email: widget.email);
                         }
                       },
                       child: Container(

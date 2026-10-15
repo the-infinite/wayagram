@@ -14,16 +14,13 @@ class UgtDetailsContestants extends ConsumerStatefulWidget {
   const UgtDetailsContestants(this.model, {super.key});
 
   @override
-  _UgtDetailsContestantsState createState() => _UgtDetailsContestantsState();
+  ConsumerState<UgtDetailsContestants> createState() =>
+      _UgtDetailsContestantsState();
 }
 
 class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
   final ScrollController _scrollController = ScrollController();
   final searchController = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +46,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
           controller: searchController,
           hintText: "search by name",
         ),
-        Gap(10),
+        const Gap(10),
 
         //  if (posts.isEmpty) emptyWidget(),
         //  if (posts.isNotEmpty)
@@ -74,7 +71,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
           },
         ),
 
-        Gap(50)
+        const Gap(50)
       ],
     );
   }
@@ -93,6 +90,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
   @override
   void dispose() {
     _scrollController.dispose();
+    searchController.dispose();
     super.dispose();
   }
 }

@@ -16,7 +16,7 @@ class BankModel {
     if (json['data'] != null) {
       data = [];
       json['data'].forEach((v) {
-        data?.add(Data.fromJson(v));
+        data?.add(BankModelData.fromJson(v));
       });
     }
     responseCode = json['responseCode'];
@@ -24,12 +24,12 @@ class BankModel {
   String? message;
   bool? status;
   num? statusCode;
-  List<Data>? data;
+  List<BankModelData>? data;
   num? responseCode;
 BankModel copyWith({  String? message,
   bool? status,
   num? statusCode,
-  List<Data>? data,
+  List<BankModelData>? data,
   num? responseCode,
 }) => BankModel(  message: message ?? this.message,
   status: status ?? this.status,
@@ -51,17 +51,17 @@ BankModel copyWith({  String? message,
 
 }
 
-Data dataFromJson(String str) => Data.fromJson(json.decode(str));
-String dataToJson(Data data) => json.encode(data.toJson());
-class Data {
-  Data({
+BankModelData dataFromJson(String str) => BankModelData.fromJson(json.decode(str));
+String dataToJson(BankModelData data) => json.encode(data.toJson());
+class BankModelData {
+  BankModelData({
       this.code, 
       this.name, 
       this.id, 
       this.status, 
       this.requestStatus,});
 
-  Data.fromJson(dynamic json) {
+  BankModelData.fromJson(dynamic json) {
     code = json['Code'];
     name = json['Name'];
     id = json['ID'];
@@ -70,15 +70,15 @@ class Data {
   }
   String? code;
   String? name;
-  String? id;
+  num? id;
   bool? status;
   bool? requestStatus;
-Data copyWith({  String? code,
+  BankModelData copyWith({  String? code,
   String? name,
-  String? id,
+  num? id,
   bool? status,
   bool? requestStatus,
-}) => Data(  code: code ?? this.code,
+}) => BankModelData(  code: code ?? this.code,
   name: name ?? this.name,
   id: id ?? this.id,
   status: status ?? this.status,

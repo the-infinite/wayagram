@@ -26,7 +26,8 @@ class SelectAccount extends ConsumerWidget {
       children: [
         Text("Select Account Type", style: WayaTextStyles.titleLarge),
         const Gap(5),
-        Text("Which type of account do you want to \n create", style: WayaTextStyles.hintStyle),
+        Text("Which type of account do you want to \n create",
+            style: WayaTextStyles.hintStyle),
         const Gap(20),
         accountTypes.when(
             data: (accounts) => ListView.builder(
@@ -42,16 +43,19 @@ class SelectAccount extends ConsumerWidget {
                         child: Container(
                           height: 120,
                           width: double.infinity,
-                          padding: EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
-                              color: type != null && accounts[index].type == type.type
+                              color: type != null &&
+                                      accounts[index].type == type.type
                                   ? wayaTheme.colorScheme.primary75
                                   : wayaTheme.colorScheme.greyColor100,
                               border: Border.all(
-                                  color: type != null && accounts[index].type == type.type
+                                  color: type != null &&
+                                          accounts[index].type == type.type
                                       ? wayaTheme.colorScheme.customPrimary
                                       : wayaTheme.colorScheme.greyColor100),
-                              borderRadius: BorderRadius.all(Radius.circular(12))),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -62,10 +66,12 @@ class SelectAccount extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(accounts[index].title, style: wayaTheme.textTheme.titleMedium),
+                                  Text(accounts[index].title,
+                                      style: wayaTheme.textTheme.titleMedium),
                                   const Gap(3),
                                   Text(accounts[index].description,
-                                      textAlign: TextAlign.start, style: wayaTheme.textTheme.hintStyle)
+                                      textAlign: TextAlign.start,
+                                      style: wayaTheme.textTheme.hintStyle)
                                 ],
                               )
                             ],
@@ -101,10 +107,11 @@ class SelectAccount extends ConsumerWidget {
               Container(
                 width: double.infinity,
                 height: 100,
-                padding: EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                     color: wayaTheme.colorScheme.scaffoldColor,
-                    border: Border.all(color: wayaTheme.colorScheme.greyColor100),
+                    border:
+                        Border.all(color: wayaTheme.colorScheme.greyColor100),
                     borderRadius: BorderRadius.all(Radius.circular(12))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,

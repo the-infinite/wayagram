@@ -1,12 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 
 class WayaChatSocketArgs {
   static int _lastId = -1;
@@ -37,7 +40,8 @@ class WayaChatSocketArgs {
     this.isFlag,
   });
 
-  factory WayaChatSocketArgs.typing(String chatId, bool isTyping, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.typing(String chatId, bool isTyping,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -51,7 +55,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.sendMessage(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.sendMessage(String chatId, String messageId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -65,7 +70,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.markAsRead(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.markAsRead(String chatId, String messageId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -79,7 +85,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.markAllAsRead(String chatId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.markAllAsRead(String chatId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -92,7 +99,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.deleteMessage(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.deleteMessage(String chatId, String messageId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -106,7 +114,8 @@ class WayaChatSocketArgs {
     );
   }
 
-  factory WayaChatSocketArgs.join(String chatId, [bool? isSynced, bool? isFlagged]) {
+  factory WayaChatSocketArgs.join(String chatId,
+      [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
       id: _lastId++,
       eventUid: WayaValueHelper.createUid(),
@@ -183,6 +192,7 @@ class WayaSocketController {
   final _retryDuration = const Duration(milliseconds: 500);
   final secureDataSource = WayaSecureDataSource();
   WidgetRef? ref;
+  Timer? _timer;
   socket_io.Socket? _socket;
 
   WayaChatSocketArgs _quickDecode(dynamic data) {
@@ -191,6 +201,22 @@ class WayaSocketController {
 
   // This is fine.
   WayaSocketController._();
+
+  /// Safe method to execute code that uses ref, handling disposed widget state
+  Future<T?> safeRefExecution<T>(Future<T> Function() action) async {
+    try {
+      if (ref == null) return null;
+      return await action();
+    } catch (e) {
+      if (e
+          .toString()
+          .contains('Cannot use "ref" after the widget was disposed')) {
+        debugPrint('Ignoring socket event - widget was disposed');
+        return null;
+      }
+      rethrow;
+    }
+  }
 
   /// Our utility function used to connect to the chat socket for this client.
   Future<void> connect(WidgetRef ref) async {
@@ -203,7 +229,7 @@ class WayaSocketController {
 
     //? This should only be update when necessary.
     _socket = socket_io.io(
-      WayaConstants.baseUrl,
+      AppEnvironment.apiBaseUrl,
       socket_io.OptionBuilder()
           .setPath("/communication-service/socket.io/")
           .setTransports(['websocket', 'polling']) // Our transport options.
@@ -245,27 +271,67 @@ class WayaSocketController {
     _socket!.disconnect();
     _socket!.dispose();
     _socket = null;
+    ref = null; // Clear the ref to prevent further usage
+  }
+
+  /// Our utility that is required ot help us ensure that our socket is always
+  /// connected to the internet.
+  Future<void> ensureConnected(WidgetRef ref) async {
+    //? Update the reference.
+    this.ref = ref;
+
+    //? This is
+    _timer ??= Timer.periodic(
+      _retryDuration,
+      (_) async {
+        //? This is fine.
+        if (_socket?.connected == true) return;
+
+        //? If this is not
+        await connect(ref);
+        await listen(ref);
+      },
+    );
   }
 
   /// Our utility function used to update the contents of each chat list inside
   /// of a users conversations geed.
   Future<void> updateChats() async {
-    final notifier = ref!.read(conversationProvider.notifier);
+    await safeRefExecution(() async {
+      final notifier = ref!.read(conversationProvider.notifier);
 
-    //? Wait for this to finish
-    await debounce(key: "chat-list-update", () async {
-      await notifier.getChats(true);
-      await notifier.getArchivedChats(true);
-    })();
+      //? Wait for this to finish
+      await debounce(key: "chat-list-update", () async {
+        await notifier.getChats(true);
+        await notifier.getArchivedChats(true);
+      })();
+    });
   }
 
   /// Our utility function that is used to start listening for socket events.
-  Future<void> listen() async {
+  Future<void> listen(WidgetRef ref) async {
     final socket = _socket!;
 
+    //? This is fine.
+    this.ref = ref;
+
+    //? If this has been done.
     if (socket.hasListeners("messageRead")) {
       return;
     }
+
+    //? When you connect, notify the user that you have connected.
+    socket.onConnect(
+      (data) {
+        //? If you connect, notify the peers to pull the chat.
+        _timer?.cancel();
+        _timer = null;
+      },
+    );
+
+    //? When you disconnect, notify the controller to start trying to reconnect.
+    //? This should keep trying until it succeeds.
+    socket.onDisconnect((data) => ensureConnected(ref));
 
     //? On any event.
     socket.onAny(
@@ -278,7 +344,9 @@ class WayaSocketController {
     socket.on(
       "chatListUpdate",
       (data) async {
-        await updateChats();
+        await safeRefExecution(() async {
+          await updateChats();
+        });
       },
     );
 
@@ -286,14 +354,16 @@ class WayaSocketController {
     socket.on(
       "messageRead",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        await safeRefExecution(() async {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? Since we are in this chat...
-        await chatNotifier.getMessages(true);
+          //? Since we are in this chat...
+          await chatNotifier.getMessages(true);
 
-        //? Wait for this to finish
-        await updateChats();
+          //? Wait for this to finish
+          await updateChats();
+        });
       },
     );
 
@@ -301,14 +371,16 @@ class WayaSocketController {
     socket.on(
       "start-typing",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        await safeRefExecution(() async {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.senderId == ConversationState.self.id) return;
+          //? If this is not fine.
+          if (args.senderId == ConversationState.self.id) return;
 
-        // This is fine.
-        chatNotifier.startTyping(args.senderId);
+          // This is fine.
+          chatNotifier.startTyping(args.senderId);
+        });
       },
     );
 
@@ -316,14 +388,16 @@ class WayaSocketController {
     socket.on(
       "stop-typing",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        await safeRefExecution(() async {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.senderId == ConversationState.self.id) return;
+          //? If this is not fine.
+          if (args.senderId == ConversationState.self.id) return;
 
-        // This is fine.
-        chatNotifier.stopTyping(args.senderId);
+          // This is fine.
+          chatNotifier.stopTyping(args.senderId);
+        });
       },
     );
 
@@ -331,17 +405,19 @@ class WayaSocketController {
     socket.on(
       "messageDeleted",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        await safeRefExecution(() async {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.messageId == null) return;
+          //? If this is not fine.
+          if (args.messageId == null) return;
 
-        // This is fine.
-        chatNotifier.removeMessage(args.messageId!);
+          // This is fine.
+          chatNotifier.removeMessage(args.messageId!);
 
-        //? Wait for this to finish
-        await updateChats();
+          //? Wait for this to finish
+          await updateChats();
+        });
       },
     );
 
@@ -349,21 +425,25 @@ class WayaSocketController {
     socket.on(
       "recieveMessage",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        await safeRefExecution(() async {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? If this is not fine.
-        if (args.messageId == null) return;
+          //? If this is not fine.
+          if (args.messageId == null) return;
 
-        // This is fine.
-        await chatNotifier.getMessage(args.messageId!);
-        await chatNotifier.updateMessageStatus(
-          chatNotifier.isActive ? MessageStatusCode.read : MessageStatusCode.delivered,
-          args.messageId!,
-        );
+          // This is fine.
+          await chatNotifier.getMessage(args.messageId!);
+          await chatNotifier.updateMessageStatus(
+            chatNotifier.isActive
+                ? MessageStatusCode.read
+                : MessageStatusCode.delivered,
+            args.messageId!,
+          );
 
-        //? Wait for this to finish
-        await updateChats();
+          //? Wait for this to finish
+          await updateChats();
+        });
       },
     );
 
@@ -371,17 +451,19 @@ class WayaSocketController {
     socket.on(
       "readMessages",
       (data) async {
-        final args = _quickDecode(data);
-        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
+        await safeRefExecution(() async {
+          final args = _quickDecode(data);
+          final chatNotifier = ref.read(chatProvider(args.chatId).notifier);
 
-        //? Ban this user from triggering infinite refreshes.
-        if (args.senderId == ConversationState.self.id) return;
+          //? Ban this user from triggering infinite refreshes.
+          if (args.senderId == ConversationState.self.id) return;
 
-        // This is fine.
-        await chatNotifier.markAllAsRead();
+          // This is fine.
+          await chatNotifier.markAllAsRead();
 
-        // This is fine.
-        await updateChats();
+          // This is fine.
+          await updateChats();
+        });
       },
     );
 
@@ -389,7 +471,9 @@ class WayaSocketController {
     socket.on(
       "join",
       (data) async {
-        await updateChats();
+        await safeRefExecution(() async {
+          await updateChats();
+        });
       },
     );
   }

@@ -68,7 +68,6 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
     useEffect(() {
       if (isEditing) {
         Future.delayed(Duration(seconds: 1), () {
-          //  debugPrint("my title ${contestViewModel?.toJson()}");
           notifier.title.text = contestViewModel?.title ?? "";
           notifier.description.text = contestViewModel?.description ?? "";
           notifier.winnerPrize.text = contestViewModel?.winnerPrize ?? "";
@@ -186,7 +185,6 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   items:
                       ref.read(contestNotifierProvider.notifier).ugtCategory(),
                   onSelected: (value) {
-                    debugPrint('eee ${value.first.toJson()}');
                     ref
                         .read(contestNotifierProvider.notifier)
                         .update(value.first, "contestCat");
@@ -223,7 +221,6 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   hintText: 'Select Contest State',
                   items: ref.read(contestNotifierProvider.notifier).ugtStates(),
                   onSelected: (value) {
-                    debugPrint(" heree $value");
                     return ref
                         .read(contestNotifierProvider.notifier)
                         .selectState(value.first);
@@ -525,7 +522,6 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                       .read(contestNotifierProvider.notifier)
                       .ugtPaymentType(),
                   onSelected: (value) {
-                    debugPrint(" i am poo ${value.first.label}");
                     if (value.first.label == "Free") {
                       notifier.amountPerVote.text = "0";
                     }
@@ -567,8 +563,6 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                           name: 'NGN', symbol: 'NGN', locale: 'en_NG')
                     ],
                     onChanged: (value) {
-                      debugPrint(
-                          "Amount in word${value.replaceAll(",", "").substring(3)}");
                       if (value.trim().isNotEmpty) {
                         if (double.parse(
                                 value.replaceAll(",", "").substring(3).trim()) >
@@ -850,7 +844,7 @@ class UgtRadioSelect extends StatelessWidget {
           minLeadingWidth: 0,
           minVerticalPadding: 0,
         ),
-        const SizedBox(height: 4), // Replaced Gap(4) for flexibility
+        const SizedBox(height: 4),
       ],
     );
   }

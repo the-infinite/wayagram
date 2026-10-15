@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -32,7 +31,6 @@ class MomentRepository extends BaseRepository {
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
     if (fontType != null) payload['fontType'] = fontType;
-    debugPrint("$fontType  $payload");
     return post("$serviceUrl/moments/create", payload);
   }
 
@@ -54,8 +52,6 @@ class MomentRepository extends BaseRepository {
     };
     if (likeMoment != null) payload['likeMoment'] = likeMoment;
     if (comment != null) payload['comment'] = comment;
-
-    print(payload);
 
     return post("$serviceUrl/view-moments/view", payload);
   }
@@ -97,14 +93,10 @@ class MomentRepository extends BaseRepository {
     );
   }
 
-  ///moments/get
   Future<WayaRequestResponse> getSingleMoment({required String id}) {
     return get("$serviceUrl/moments/get?id=$id");
   }
 
-  ///moments/:momentId
-  ///
-  ///
   Future<WayaRequestResponse> reportMoment(
       {required String userId,
       required String momentId,

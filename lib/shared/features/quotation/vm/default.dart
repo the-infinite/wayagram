@@ -1,17 +1,19 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/cache/quotation.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
-import 'package:wayagram/shared/features/quotation/repo/default.dart';
+import 'package:wayagram/shared/features/quotation/repo/quotation_repository.dart';
 import 'package:wayagram/shared/features/quotation/state/default.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class QuotationsNotifier extends StateNotifier<QuotationsState> {
-  final repo = QuotationRepository.instance;
-  QuotationsNotifier(super.value);
+  final QuotationRepository repo;
+  QuotationsNotifier(super.value, this.repo);
 
   /// Helper function used to call [getBuyRequests] only if this has not yet been
   /// loaded.
@@ -40,11 +42,10 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       state = state.copyWith(isLoadingRequests: true);
 
       //? This is fine.
-      final response = !state.isUser &&
-              ConversationState.self.accountType == UserAccountType.business &&
-              ShopResource.hasSelectedShop
+      final response = !state.isUser && ShopResource.hasSelectedShop
           ? await repo.getAllAvailableQuotation(state.limit, state.requestPage)
-          : await repo.getBuyerRequest(state.limit, state.requestPage, state.requestStatus, state.isUser);
+          : await repo.getBuyerRequest(state.limit, state.requestPage,
+              state.requestStatus, state.isUser);
 
       //? This is fine.
       if (response.success) {
@@ -57,7 +58,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final data = response.data['data'];
 
         //? Parse the conversations as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
+        final docs = (data['docs'] as List)
+            .map((doc) => BuyRequestModel.fromJson(doc))
+            .toList();
 
         //? This is fine.
         result.addAll(docs);
@@ -80,6 +83,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         state = state.copyWith(isLoadingRequests: false);
       }
     } catch (e) {
+      debugPrint("Error: $e");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
@@ -122,7 +126,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final data = response.data['data'];
 
         //? Parse the conversations as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
+        final docs = (data['docs'] as List)
+            .map((doc) => BuyRequestModel.fromJson(doc))
+            .toList();
 
         //? This is fine.
         result.addAll(docs);
@@ -145,6 +151,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         state = state.copyWith(isLoadingRequests: false);
       }
     } catch (e) {
+      debugPrint("Error: $e");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
@@ -188,14 +195,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         //? Return the document.
         return doc;
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
 
     //? Since it failed.
     return null;
@@ -208,16 +208,15 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? This is an okay attempt.
       final response = await repo.verifyPaymentStatus(id, value);
 
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       //? Now, try to send the request.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
+    } catch (_) {}
 
     //? Fail here.
     return false;
@@ -241,6 +240,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? Update the buy request in the list of buy requests.
         final index = state.requests.indexWhere((element) => element.id == id);
+        wayaQuotationsCache.cache(id, doc);
 
         //? This is fine.
         if (index != -1) {
@@ -249,7 +249,6 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
           state = state.copyWith(
             requests: [...previous],
           );
-          wayaQuotationsCache.cache(id, doc);
         }
 
         //? Return the document.
@@ -275,37 +274,17 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
       //? If it was fine...
       if (response.success) {
-        final found = state.requests.indexWhere((request) => request.id == id);
-
-        //? If this is in this place.
-        if (found != -1) {
-          final current = state.requests[found];
-          final copy = state.requests;
-
-          // This is fine.
-          copy[found] = current.copyWith(
-            status: BuyRequestStatus.cancelled,
-          );
-
-          //? This is fine.
-          state = state.copyWith(
-            requests: copy,
-          );
+        await getBuyRequest(id);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
         }
       }
-
-      //? Return this value if it was fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    return false;
   }
 
   /// Helper function used to send a bid action request to the server. We use it
@@ -314,27 +293,29 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.sendBidAction(data);
 
-      // This is fine.
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
+
       return response.success;
     } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+      return false;
     }
-    return false;
   }
 
   /// Helper function used to place a bid so that we can enter a quote auction.
-  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId) async {
+  Future<QuotationBidModel?> sendBid(String requestId, double amount,
+      String shopId, double? deliveryCost) async {
     try {
       final response = await repo.placeBid(
         requestId: requestId,
         amount: amount,
         shopId: shopId,
         vendorId: ConversationState.self.id,
+        deliveryCost: deliveryCost,
       );
 
       //? This is fine.
@@ -358,18 +339,16 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
         //? Return the document.
         return doc;
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+        return null;
       }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return null;
     }
-
-    //? Since it failed.
-    return null;
   }
 
   /// Helper function used to get all bids from the server that a given user has
@@ -383,7 +362,8 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       state = state.copyWith(isLoadingRequests: true);
 
       //? This is fine.
-      final response = await repo.getVendorQuotation(shopId, state.limit, state.bidPage);
+      final response =
+          await repo.getVendorQuotation(shopId, state.limit, state.bidPage);
 
       //? This is fine.
       if (response.success) {
@@ -397,12 +377,16 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final data = response.data['data'];
 
         //? Parse the buy requests first so we can extrapolate what we need.
-        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
+        final docs = (data['docs'] as List)
+            .map((doc) => BuyRequestModel.fromJson(doc))
+            .toList();
 
         //? Next, we can parse and add the bids to this place that they might be
         //? worth generating and using.
         for (final quote in docs) {
-          result.addAll(quote.bids?.where((bid) => bid.vendorId == ConversationState.self.id) ?? []);
+          result.addAll(quote.bids
+                  ?.where((bid) => bid.vendorId == ConversationState.self.id) ??
+              []);
         }
 
         //? Then add all the quotes (buy requests)
@@ -517,7 +501,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       state = state.copyWith(isLoadingOrders: true);
 
       //? This is fine.
-      final response = ConversationState.self.accountType == UserAccountType.business
+      final response = ShopResource.hasSelectedShop
           ? await repo.getSellerOrders(entityId, state.limit, state.orderPage)
           : await repo.getBuyerOrders(entityId, state.limit, state.orderPage);
 
@@ -532,7 +516,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final data = response.data['data'];
 
         //? Parse the buy requests first so we can extrapolate what we need.
-        final docs = (data['docs'] as List).map((doc) => BidOrderModel.fromJson(doc)).toList();
+        final docs = (data['docs'] as List)
+            .map((doc) => BidOrderModel.fromJson(doc))
+            .toList();
 
         //? Then add all the quotes (buy requests)
         result.addAll(docs);
@@ -572,61 +558,56 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     try {
       final response = await repo.updateOrderStatus(id, status.value);
 
-      //? This is fine.
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       return response.success;
     } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to update the delivery status of a single order. This is
   ///  useful when we want to update the status of a single order in the system.
-  Future<bool> updateDeliveryStatus(String id, QuotationDeliveryStatus status) async {
+  Future<bool> updateDeliveryStatus(
+      String id, QuotationDeliveryStatus status) async {
     try {
       final response = await repo.updateDeliveryStatus(id, status.value);
 
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to update the pickup status of a single order. This is
   ///  useful when we want to update the status of a single order in the system.
-  Future<bool> updatePickupStatus(String id, QuotationPickupStatus status) async {
+  Future<bool> updatePickupStatus(
+      String id, QuotationPickupStatus status) async {
     try {
       final response = await repo.updatePickupStatus(id, status.value);
 
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to extend the time of a bid. This is useful when we
@@ -638,47 +619,40 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? When this was fine, update the buy request in question.
       if (response.success) {
         await getBuyRequest(id);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
-
-      //? This is fine.
       return response.success;
     } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to update the amount of a single request. This is useful
   /// when we want to update the amount of a single request in the system.
   Future<bool> updateRequestAmount(String id, double amount) async {
     try {
-      final response = await repo.updateRequestAmount(id: id, amount: amount.toStringAsFixed(2));
+      final response = await repo.updateRequestAmount(
+          id: id, amount: amount.toStringAsFixed(2));
 
       //? When this was fine, update the buy request in question.
       if (response.success) {
         await getBuyRequest(id);
+      } else {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
       }
 
       //? This is fine.
       return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.quotations,
-        WayaDebugHelpers.getStackTrace(e),
-      );
+    } catch (_) {
+      return false;
     }
-
-    //? Since it failed.
-    return false;
   }
 
   /// Helper function used to complete an order. This is useful when we want to
@@ -686,10 +660,31 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   Future<bool> completeOrder(String id, String token) async {
     try {
       final response = await repo.completeOrder(orderId: id, token: token);
-
+      if (!response.success) {
+        if (WayaNav.context.mounted) {
+          WayaUtils.showModalSheet(WayaNav.context,
+              child: WayaErrorDialog(title: response.responseCodeError ?? ''));
+        }
+      }
       //? This is fine.
       return response.success;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Helper function used to complete an order. This is useful when we want to
+  /// complete an order in the system.
+  Future<List<BidOrderStatus>?> trackDelivery(String id) async {
+    try {
+      final response = await repo.trackDelivery(requestId: id);
+      //? If this went well...
+      if (response.success) {
+        final data = response.data['data'] as List;
+        return [...data.map((payload) => BidOrderStatus.fromJson(payload))];
+      }
     } catch (e) {
+      debugPrint("Order: Error: $e");
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
@@ -699,7 +694,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     }
 
     //? Since it failed.
-    return false;
+    return null;
   }
 
   /// Helper function used to search the list of quotes that this store has bid
@@ -740,10 +735,14 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   }
 }
 
-final userQuotationsProvider = StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
-  return QuotationsNotifier(QuotationsState.self);
+final userQuotationsProvider =
+    StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
+  final repo = ref.watch(quotationRepositoryProvider);
+  return QuotationsNotifier(QuotationsState.self, repo);
 });
 
-final othersQuotationsProvider = StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
-  return QuotationsNotifier(QuotationsState.others);
+final othersQuotationsProvider =
+    StateNotifierProvider<QuotationsNotifier, QuotationsState>((ref) {
+  final repo = ref.watch(quotationRepositoryProvider);
+  return QuotationsNotifier(QuotationsState.others, repo);
 });

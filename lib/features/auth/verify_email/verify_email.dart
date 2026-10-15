@@ -24,132 +24,116 @@ class VerifyEmail extends ConsumerWidget {
     final arg = ModalRoute.of(context)!.settings.arguments as String?;
 
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: false,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            //? First, for the page title.
-            Text(
-              "Verify your Account",
-              style: WayaTextStyles.titleLarge,
+      isLoading: false,
+      isScrollable: false,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            "Verify your Account",
+            style: WayaTextStyles.titleLarge,
+          ),
+          const Gap(5),
+          Text(
+            "Enter the 6-digits code sent to your email address and Phone number",
+            maxLines: 3,
+            style: WayaTextStyles.hintStyle,
+          ),
+          const Gap(20),
+          Align(
+            alignment: Alignment.center,
+            child: VerificationCode(
+              textStyle: TextStyle(fontSize: 20.0.sp),
+              keyboardType: TextInputType.number,
+              underlineColor: wayaTheme.colorScheme.customBlack,
+              fullBorder: true,
+              fillColor: Colors.transparent,
+              itemSize: 42,
+              length: 6,
+              padding: const EdgeInsets.all(8.0),
+              margin: const EdgeInsets.symmetric(horizontal: 3.0),
+              cursorColor: wayaTheme.colorScheme.customPrimary,
+              onCompleted: (String value) {
+                viewModel.onCodeChanged(value);
+              },
+              onEditing: (bool value) {
+                viewModel.onEdited(value);
+                if (!viewModelState.isEditing) {
+                  FocusScope.of(context).unfocus();
+                }
+              },
             ),
-
-            // Some space.
-            const Gap(5),
-
-            //? Give it a little bit more space.
-            Text(
-              "Enter the 6-digits code sent to your email address and Phone number",
-              maxLines: 3,
-              style: WayaTextStyles.hintStyle,
-            ),
-
-            // Some space.
-            const Gap(20),
-
-            //? Next, the OTP code text field.
-            Align(
-              alignment: Alignment.center,
-              child: VerificationCode(
-                textStyle:  TextStyle(fontSize: 20.0.sp),
-                keyboardType: TextInputType.number,
-                underlineColor: wayaTheme.colorScheme.customBlack,
-                fullBorder: true,
-                fillColor: Colors.transparent,
-                itemSize: 42,
-                
-                length: 6,
-                padding: const EdgeInsets.all(8.0),
-                margin: const EdgeInsets.symmetric(horizontal: 3.0),
-                cursorColor: wayaTheme.colorScheme.customPrimary,
-                onCompleted: (String value) {
-                  viewModel.onCodeChanged(value);
-                },
-                onEditing: (bool value) {
-                  viewModel.onEdited(value);
-                  if (!viewModelState.isEditing) {
-                    FocusScope.of(context).unfocus();
-                  }
-                },
-              ),
-            ),
-
-            // Some space.
-            const Gap(20),
-
-            //? Our button.
-            Align(
-              alignment: Alignment.center,
-              child: viewModelState.isResend
-
-                  //? What to show when the user can resend this.
-                  ? GestureDetector(
-                      onTap: () {
-                        if (!viewModelState.isLoading) {
-                        if (arg != null)  viewModel.resendOtpForRegisteredButNotVerifiedUser(email: arg);
+          ),
+          const Gap(20),
+          Align(
+            alignment: Alignment.center,
+            child: viewModelState.isResend
+                ? GestureDetector(
+                    onTap: () {
+                      if (!viewModelState.isLoading) {
+                        if (arg != null) {
+                          viewModel.resendOtpForRegisteredButNotVerifiedUser(
+                              email: arg);
                         }
-                      },
-                      child: Container(
-                        width: 110,
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            color: wayaTheme.colorScheme.primary75,
-                            borderRadius: BorderRadius.all(Radius.circular(8))),
-                        child: Text(
-                          "Resend OTP",
-                          style: WayaTextStyles.smallActiveLinkStyle,
-                        ),
-                      ),
-                    )
-                  : Container(
-                      width: 200,
+                      }
+                    },
+                    child: Container(
+                      width: 110,
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: wayaTheme.colorScheme.primary75,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Didn't get any code? ",
-                              style: WayaTextStyles.bodySmall,
-                            ),
-                            TextSpan(
-                              text:
-                                  "Resend ${viewModelState.countdown ~/ 60}:${(viewModelState.countdown % 60).toString().padLeft(2, '0')}",
-                              style: WayaTextStyles.smallActiveLinkStyle,
-                            ),
-                          ],
-                        ),
+                          color: wayaTheme.colorScheme.primary75,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Text(
+                        "Resend OTP",
+                        style: WayaTextStyles.smallActiveLinkStyle,
                       ),
                     ),
+                  )
+                : Container(
+                    width: 200,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.primary75,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Didn't get any code? ",
+                            style: WayaTextStyles.bodySmall,
+                          ),
+                          TextSpan(
+                            text:
+                                "Resend ${viewModelState.countdown ~/ 60}:${(viewModelState.countdown % 60).toString().padLeft(2, '0')}",
+                            style: WayaTextStyles.smallActiveLinkStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+          ),
+          const Gap(50),
+          WayaButton(
+            callback: !viewModelState.isLoading
+                ? () {
+                    final code = ref.watch(verifyAccountProvider).inputCode;
+                    viewModel.verifyAccountForRegisteredButNotVerifiedUser(
+                        arg!, code);
+                  }
+                : null,
+            centerWidget: LoadingState(
+              loading: viewModelState.isLoading,
+              text: 'Continue to Login',
             ),
-
-            // Some space.
-            const Gap(50),
-
-            // The final button.
-            WayaButton(
-              callback: !viewModelState.isLoading
-                  ? () {
-                      final code = ref.watch(verifyAccountProvider).inputCode;
-                      viewModel.verifyAccountForRegisteredButNotVerifiedUser(
-                          arg!, code);
-                    }
-                  : null,
-              centerWidget: LoadingState(
-                loading: viewModelState.isLoading,
-                text: 'Continue to Login',
-              ),
-            ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }

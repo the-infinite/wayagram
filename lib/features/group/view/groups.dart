@@ -20,7 +20,8 @@ class Groups extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupsState();
 }
 
-class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateMixin {
+class _GroupsState extends ConsumerState<Groups>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
@@ -30,7 +31,6 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
       // final id  = ModalRoute.of(context)?.settings.arguments as String;
       // final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
       // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
-      //debugPrint('THE PUBLIC GROUP ID is $id');
     });
   }
 
@@ -56,17 +56,18 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
       isScrollable: true,
       title: 'Groups',
       appBarTrailing: Padding(
-        padding:  EdgeInsets.only(right: 20.w),
+        padding: EdgeInsets.only(right: 20.w),
         child: Row(
           spacing: 20,
           children: [
             InkWell(
-                onTap: ()=> WayaNav.toNamed('/searchGroup'),
+                onTap: () => WayaNav.toNamed('/searchGroup'),
                 child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
-            Gap(8),
+            const Gap(8),
             InkWell(
-                onTap: ()=> WayaNav.toNamed('/userGroupInvitation'),
-                child: WayaAssets.icons.notifGroupRequest.svg(fit: BoxFit.none)),
+                onTap: () => WayaNav.toNamed('/userGroupInvitation'),
+                child:
+                    WayaAssets.icons.notifGroupRequest.svg(fit: BoxFit.none)),
           ],
         ),
       ),
@@ -106,7 +107,8 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () => WayaNav.toNamed('/createGroup', arguments: 'groupForYou'),
+          callback: () =>
+              WayaNav.toNamed('/createGroup', arguments: 'groupForYou'),
           height: 50,
           centerWidget: Center(
             child: Icon(

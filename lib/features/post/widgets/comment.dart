@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
@@ -146,7 +145,10 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                                   child: WayaActionNav(
                                     context: context,
                                     asset: WayaAssets.images.pages.delete.svg(
-                                      color: wayaTheme.colorScheme.error500,
+                                      colorFilter: ColorFilter.mode(
+                                        wayaTheme.colorScheme.error500,
+                                        BlendMode.srcIn,
+                                      ),
                                       height: 20,
                                     ),
                                     text: "Delete Comment",
@@ -162,7 +164,10 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                                   child: WayaActionNav(
                                     context: context,
                                     asset: WayaAssets.icons.mEdit.svg(
-                                      color: wayaTheme.colorScheme.customBlack,
+                                      colorFilter: ColorFilter.mode(
+                                        wayaTheme.colorScheme.customBlack,
+                                        BlendMode.srcIn,
+                                      ),
                                       height: 20,
                                     ),
                                     text: "Edit Comment",
@@ -300,7 +305,7 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
 
                       //? Now, let us continue.
                       final result = await WayaNav.to(
-                        transition: Transition.leftToRightWithFade,
+                        transition: WayaTransition.leftToRightWithFade,
                         preventDuplicates: false,
                         WayaCommentRepliesScreen(
                           comment: widget.comment,
@@ -324,7 +329,9 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                     }
                   },
                   child: Text(
-                    commentCount == 1 ? "View reply" : "View $commentCount replies",
+                    commentCount == 1
+                        ? "View reply"
+                        : "View $commentCount replies",
                     style: wayaTheme.textTheme.bodyBold.copyWith(
                       color: wayaTheme.colorScheme.primary,
                       fontSize: 14.sp,

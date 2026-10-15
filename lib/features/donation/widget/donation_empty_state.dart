@@ -13,12 +13,14 @@ class DonationEmptyState extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return Center(
       child: Container(
-        padding: EdgeInsets.only(left: 30, right: 30, bottom: 30,),
+        padding: const EdgeInsets.only(
+          left: 30,
+          right: 30,
+          bottom: 30,
+        ),
         child: EmptyState(
             hasButton: false,
-            onTap: () {
-              //WayaNav.toNamed(CreatePost.route);
-            },
+            onTap: () {},
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
               colorFilter: ColorFilter.mode(

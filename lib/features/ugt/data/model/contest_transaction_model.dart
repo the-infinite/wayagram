@@ -63,6 +63,7 @@ class ContestTransactionModel {
     required this.userId,
     required this.type,
     required this.status,
+    required this.name,
     required this.settledAt,
     required this.totalAmount,
     required this.amountToBePaid,
@@ -75,6 +76,7 @@ class ContestTransactionModel {
   final String? contestId;
   final String? userId;
   final String? type;
+  String? name;
   final String? status;
   final dynamic settledAt;
   final int? totalAmount;

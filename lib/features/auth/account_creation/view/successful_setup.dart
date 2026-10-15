@@ -12,7 +12,7 @@ class SuccessfulSetup extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(successfulSetupVmProvider);
+    final viewModel = ref.watch(successfulSetupProvider);
     return WayaScaffold(
       removeAppBar: true,
       isLoading: viewModel.isloading,
@@ -43,7 +43,7 @@ class SuccessfulSetup extends ConsumerWidget {
           ),
           WayaButton(
             callback: () async {
-              await ref.read(successfulSetupVmProvider.notifier).getUserData();
+              await ref.read(successfulSetupProvider.notifier).getUserData();
               WayaNav.toNamed('/explore');
             },
             text: "Explore Wayagram",

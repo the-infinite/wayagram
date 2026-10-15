@@ -18,10 +18,12 @@ class ProductsViewPage extends ConsumerStatefulWidget {
   const ProductsViewPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ProductsViewPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ProductsViewPageState();
 }
 
-class _ProductsViewPageState extends ConsumerState<ProductsViewPage> with ProductMixin {
+class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
+    with ProductMixin {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -32,9 +34,8 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage> with Produc
 
   @override
   Widget build(BuildContext context) {
-    
-
-    final ProductDetailType? arg = ModalRoute.of(context)?.settings.arguments as ProductDetailType?;
+    final ProductDetailType? arg =
+        ModalRoute.of(context)?.settings.arguments as ProductDetailType?;
 
     final productDetail = getProduct(type: arg!, ref: ref);
     return WayaScaffold(
@@ -53,7 +54,9 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage> with Produc
             child: PaginatedDataView<Product>(
               uniqueKey: 'product',
               emptyState: EmptyState(
-                  assetImage: WayaAssets.images.wallet.searchDocu.image(scale: 1.5), message: "No Product Yet"),
+                  assetImage:
+                      WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
+                  message: "No Product Yet"),
               loadingState: _recommendedProductLoadingState(context: context),
               fetchData: productDetail.fetchData,
               result: (data, s) {
@@ -71,10 +74,9 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage> with Produc
                     ],
                     searchController.text);
 
-                debugPrint(filteredProducts.map((s) => s.toJson()).toString());
-
                 return ProductsGrid(
-                  isWayaGramDeal: arg == ProductDetailType.wayagramdeal ? true : false,
+                  isWayaGramDeal:
+                      arg == ProductDetailType.wayagramdeal ? true : false,
                   products: filteredProducts,
                 );
               },

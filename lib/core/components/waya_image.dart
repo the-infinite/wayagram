@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/safe_cached_image.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
@@ -32,7 +32,13 @@ class WayaDp extends ConsumerWidget {
 
     final avatar = !isSelf || (image?.isNotEmpty ?? false)
         ? image
-        : ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user?.profilePicture;
+        : ref
+            .watch(profileVmProvider)
+            .userAccountModel
+            ?.data
+            ?.userdata
+            ?.user
+            ?.profilePicture;
 
     return GestureDetector(
       onTap: isEdit
@@ -57,7 +63,14 @@ class WayaDp extends ConsumerWidget {
           CircleAvatar(
             radius: radius,
             backgroundColor: wayaTheme.colorScheme.greyColor200,
-            backgroundImage: avatar?.isNotEmpty == true ? NetworkImage(avatar!) : null,
+            backgroundImage:
+                avatar?.isNotEmpty == true ? NetworkImage(avatar!) : null,
+            onBackgroundImageError: avatar?.isNotEmpty == true
+                ? (exception, stackTrace) {
+                    // Log error but don't crash
+                    debugPrint('Avatar image failed to load: $exception');
+                  }
+                : null,
             child: avatar?.isEmpty ?? true
                 ? Icon(
                     Icons.person,
@@ -69,7 +82,8 @@ class WayaDp extends ConsumerWidget {
             Positioned.fill(
               child: CircleAvatar(
                 radius: radius,
-                backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
+                backgroundColor:
+                    Colors.black.withValues(alpha: 0.1), // Transparent overlay
                 child: Icon(
                   Icons.camera_alt_outlined,
                   color: Colors.white,
@@ -108,7 +122,8 @@ class WayaImage2 extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    final coverImage =
+        ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
     return GestureDetector(
       onTap: isEdit
           ? () {
@@ -129,14 +144,14 @@ class WayaImage2 extends ConsumerWidget {
               },
       child: Stack(
         children: [
-          imageUrl == null && coverImage == null
+          imageUrl == null && coverImage == null && imageUrl?.isEmpty == true
               ? errorWidget(wayaTheme)
-              : CachedNetworkImage(
-                  errorWidget: (context, url, error) => errorWidget(wayaTheme),
+              : SafeCachedNetworkImage(
+                  errorWidget: errorWidget(wayaTheme),
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: height,
-                  imageUrl: imageUrl ?? coverImage,
+                  imageUrl: imageUrl ?? coverImage ?? '',
                 ),
 
           //? If this is in edit mode...
@@ -167,7 +182,10 @@ class WayaImage2 extends ConsumerWidget {
                   child: WayaAssets.images.pages.delete.svg(
                     height: 18.h,
                     width: 18.w,
-                    color: Colors.white,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
                   ),
                 ),
               ),
@@ -221,7 +239,8 @@ class WayaImage3 extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
+    final coverImage =
+        ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
     return coverImage == null
         ? errorWidget(wayaTheme)
         : GestureDetector(
@@ -233,7 +252,8 @@ class WayaImage3 extends ConsumerWidget {
                     () async {
                       if (imageUrl == null && coverImage == null) return;
 
-                      final result = await WayaNavigationHelper.toImageDetailsScreen(
+                      final result =
+                          await WayaNavigationHelper.toImageDetailsScreen(
                         null,
                         [imageUrl ?? coverImage!],
                       );
@@ -241,12 +261,12 @@ class WayaImage3 extends ConsumerWidget {
                       //? Do nothing.
                       if (result == null) return;
                     },
-            child: CachedNetworkImage(
-              errorWidget: (context, url, error) => errorWidget(wayaTheme),
+            child: SafeCachedNetworkImage(
+              errorWidget: errorWidget(wayaTheme),
               fit: BoxFit.fill,
               width: double.infinity,
               height: height,
-              imageUrl: imageUrl ?? coverImage,
+              imageUrl: imageUrl ?? coverImage ?? '',
             ),
           );
   }
@@ -309,8 +329,7 @@ class WayaImage extends StatelessWidget {
         //? Do nothing.
         if (result == null) return;
       },
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
+      child: SafeCachedNetworkImage(
         imageBuilder: (context, imageProvider) => Container(
           height: height,
           width: width,
@@ -320,19 +339,27 @@ class WayaImage extends StatelessWidget {
             image: DecorationImage(
               image: imageProvider,
               fit: fit ?? BoxFit.cover,
+              onError: (error, stackTrace) {
+                debugPrint('Image decoration error: $error');
+              },
             ),
           ),
           child: overlay ?? SizedBox.shrink(),
         ),
-        placeholder: (context, url) => AnimatedContainer(
+        imageUrl: imageUrl,
+        width: width,
+        height: height,
+        fit: fit ?? BoxFit.cover,
+        placeholderBuilder: (context, url) => AnimatedContainer(
           duration: const Duration(milliseconds: 700),
           curve: Curves.easeInOut,
           height: height,
           width: width,
           decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
+              color: wayaTheme.colorScheme.scaffoldColor,
+              borderRadius: radius ?? BorderRadius.circular(8)),
         ),
-        errorWidget: (context, url, error) => AnimatedContainer(
+        errorWidgetBuilder: (context, url, error) => AnimatedContainer(
           duration: const Duration(milliseconds: 700),
           curve: Curves.easeInOut,
           height: height,

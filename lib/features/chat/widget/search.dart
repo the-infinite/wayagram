@@ -16,7 +16,8 @@ class SearchConversationWidget extends StatefulWidget {
   });
 
   @override
-  State<SearchConversationWidget> createState() => _SearchConversationWidgetState();
+  State<SearchConversationWidget> createState() =>
+      _SearchConversationWidgetState();
 }
 
 class _SearchConversationWidgetState extends State<SearchConversationWidget> {
@@ -30,7 +31,7 @@ class _SearchConversationWidgetState extends State<SearchConversationWidget> {
       height: 50,
       width: size.width,
       child: WayaTextFormField(
-        padding: EdgeInsets.only(left: 1, right: 10),
+        padding: const EdgeInsets.only(left: 1, right: 10),
         prefixIcon: Padding(
           padding: const EdgeInsets.symmetric(vertical: 13),
           child: WayaAssets.icons.actionSearch.svg(),

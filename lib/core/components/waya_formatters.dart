@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -80,7 +79,7 @@ class _WayaAmountFormatterState extends ConsumerState<WayaAmountFormatter> {
                 _toggleAmount(showAmount);
               },
               child: Container(
-                  padding: EdgeInsets.all(3.71),
+                  padding: const EdgeInsets.all(3.71),
                   decoration: BoxDecoration(
                     // ignore: deprecated_member_use
                     color: widget.color?.withOpacity(0.2) ??

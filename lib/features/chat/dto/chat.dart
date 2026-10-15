@@ -6,7 +6,7 @@ import 'package:wayagram/core/utils/utils.dart';
 
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 part 'chat.g.dart';
 

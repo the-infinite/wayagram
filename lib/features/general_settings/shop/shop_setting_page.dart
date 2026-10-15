@@ -32,11 +32,11 @@ class _UgtHomeState extends ConsumerState<ShopSettingPage> {
 
 //? get user settings to update the UI Once
     useEffect(() {
-       shopNotifier.getShopSettings().then((value) {
+      shopNotifier.getShopSettings().then((value) {
         if (value != null) {
-          notifyShop.value = value.data?.notifyFriendsAboutProductPosts ?? false;
+          notifyShop.value =
+              value.data?.notifyFriendsAboutProductPosts ?? false;
           shopPublicPrivate.value = value.data?.makeProductPostsPublic ?? false;
-         
         }
       });
       return null;
@@ -58,13 +58,13 @@ class _UgtHomeState extends ConsumerState<ShopSettingPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Gap(10),
+            const Gap(10),
             Text("Shop Preferences",
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
-            Gap(20),
+            const Gap(20),
             //? card for each of the switch
-         
+
             PrivacyWidget(
                 title: "Notify Friend",
                 value: "Notify my Friends when i post product",
@@ -75,7 +75,7 @@ class _UgtHomeState extends ConsumerState<ShopSettingPage> {
                       makeProductPostsPublic: shopPublicPrivate.value);
                 },
                 switchValue: notifyShop),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Shop Product Private",
                 value:
@@ -87,7 +87,7 @@ class _UgtHomeState extends ConsumerState<ShopSettingPage> {
                       makeProductPostsPublic: shopPublicPrivate.value);
                 },
                 switchValue: shopPublicPrivate),
-            Gap(10),
+            const Gap(10),
           ],
         ),
       ),

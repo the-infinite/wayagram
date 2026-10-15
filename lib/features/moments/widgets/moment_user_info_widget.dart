@@ -40,7 +40,7 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
           WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.moment.userId)),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -110,10 +110,9 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                   );
 
                   widget.continues();
-              
+
                   // if (response) {
                   if (response == false) {
-                    //  print("fwefewfw $response");
                     return WayaSnackBar.showToast(
                         "You already submitted a report");
                   }
@@ -125,11 +124,14 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
 
                   // }
 
-                // }
+                  // }
                 },
                 child: SvgPicture.asset(
                   WayaAssets.icons.mThreeDots.path,
-                  color: wayaTheme.colorScheme.white,
+                  colorFilter: ColorFilter.mode(
+                    wayaTheme.colorScheme.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
               )
           ],

@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
 import 'package:wayagram/features/general_settings/notifications/dto/default.dart';
-import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
+import 'package:wayagram/features/general_settings/notifications/vm/notification_settings_vm.dart';
 
 class NotificationSwitchButton extends StatefulWidget {
   final String name;
@@ -27,7 +27,8 @@ class NotificationSwitchButton extends StatefulWidget {
   });
 
   @override
-  State<NotificationSwitchButton> createState() => _NotificationSwitchButtonState();
+  State<NotificationSwitchButton> createState() =>
+      _NotificationSwitchButtonState();
 }
 
 class _NotificationSwitchButtonState extends State<NotificationSwitchButton> {

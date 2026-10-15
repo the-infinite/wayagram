@@ -73,11 +73,28 @@ class SocialNotificationFilters {
       searchController: searchController,
     );
   }
+
+  @override
+  String toString() {
+    return 'SocialNotificationFilters('
+        'showLikes: $showLikes, '
+        'showComments: $showComments, '
+        'showFollowRequests: $showFollowRequests, '
+        'showLivestream: $showLivestream, '
+        'showGroupInvite: $showGroupInvite, '
+        'showCalls: $showCalls, '
+        'showPolls: $showPolls, '
+        'showEvents: $showEvents, '
+        'showShares: $showShares, '
+        'showView: $showView, '
+        'isApplied: $isApplied, '
+        'searchController.text: "${searchController.text}"'
+        ')';
+  }
 }
 
 class SocialNotificationState {
   final bool isLoading;
-  final bool requestsOnly;
   final String searchQuery;
   final List<NotificationModel> notifications;
   final int page;
@@ -86,7 +103,6 @@ class SocialNotificationState {
 
   //  Construct.
   SocialNotificationState({
-    required this.requestsOnly,
     required this.isLoading,
     required this.searchQuery,
     required this.notifications,
@@ -98,7 +114,6 @@ class SocialNotificationState {
   static final initial = SocialNotificationState(
     page: 1,
     totalSize: 24,
-    requestsOnly: false,
     isLoading: false,
     searchQuery: "",
     filters: SocialNotificationFilters.initial,
@@ -108,7 +123,6 @@ class SocialNotificationState {
   // Copy with.
   SocialNotificationState copyWith({
     bool? isLoading,
-    bool? requestsOnly,
     String? searchQuery,
     List<NotificationModel>? notifications,
     int? page,
@@ -116,7 +130,6 @@ class SocialNotificationState {
     SocialNotificationFilters? filters,
   }) {
     return SocialNotificationState(
-      requestsOnly: requestsOnly ?? this.requestsOnly,
       isLoading: isLoading ?? this.isLoading,
       searchQuery: searchQuery ?? this.searchQuery,
       notifications: notifications ?? this.notifications,
@@ -128,16 +141,13 @@ class SocialNotificationState {
 
   /// Controller utility used to retrieve the currently browsed list of all
   /// notifications after considering the
-  List<NotificationModel> get currentNotifications {
+  List<NotificationModel> currentNotifications() {
     //? The first pass is filtering by notification type.
-    var aggregate = requestsOnly
-        ? notifications.where(
-            (notif) => [
-              NotificationMessageType.groupInvite,
-              NotificationMessageType.followRequest,
-            ].contains(notif.messageType),
-          )
-        : notifications;
+    Iterable<NotificationModel> aggregate = notifications;
+    final shown = [...NotificationMessageType.values];
+
+    // Remove the oddities.
+    shown.remove(NotificationMessageType.donation);
 
     //? If we are filtering by notification search query, do the needful.
     if (searchQuery.trim().isNotEmpty) {
@@ -146,55 +156,66 @@ class SocialNotificationState {
           notif.message.subject.toLowerCase().contains(searchQuery));
     }
 
+    //? If filters are not applies...
+    if (!filters.isApplied) {
+      return aggregate.toList();
+    }
+
     //? First, if the filter is applied and we are filtering out likes.
-    if (filters.isApplied && !filters.showLikes) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.like);
+    if (!filters.showLikes) {
+      shown.remove(NotificationMessageType.like);
     }
 
     //? Second, filter out comment notifications.
-    if (filters.isApplied && !filters.showComments) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.comment);
+    if (!filters.showComments) {
+      shown.remove(NotificationMessageType.comment);
     }
 
     //? Third, filter out follow request notifications.
-    if (filters.isApplied && !filters.showFollowRequests) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.followRequest);
+    if (!filters.showFollowRequests) {
+      shown.remove(NotificationMessageType.followRequest);
     }
 
     //? Fourth, filter out livestream notifications.
-    if (filters.isApplied && !filters.showLivestream) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.liveStream);
+    if (!filters.showLivestream) {
+      shown.remove(NotificationMessageType.liveStream);
     }
 
     //? Fifth, filter out group invite notifications.
-    if (filters.isApplied && !filters.showGroupInvite) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.groupInvite);
+    if (!filters.showGroupInvite) {
+      shown.remove(NotificationMessageType.groupInvite);
+      shown.remove(NotificationMessageType.groups);
+      shown.remove(NotificationMessageType.pages);
     }
 
     //? Sixth, filter out call notifications.
-    if (filters.isApplied && !filters.showCalls) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.calls);
+    if (!filters.showCalls) {
+      shown.remove(NotificationMessageType.calls);
+      shown.remove(NotificationMessageType.chat);
     }
 
     //? Seventh, filter out follow request notifications.
-    if (filters.isApplied && !filters.showPolls) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.poll);
+    if (!filters.showPolls) {
+      shown.remove(NotificationMessageType.poll);
     }
 
     //? Eighth, filter out follow event notifications.
-    if (filters.isApplied && !filters.showEvents) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.event);
+    if (!filters.showEvents) {
+      shown.remove(NotificationMessageType.event);
     }
 
     //? Ninth, filter out shares notifications.
-    if (filters.isApplied && !filters.showShares) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.share);
+    if (!filters.showShares) {
+      shown.remove(NotificationMessageType.share);
     }
 
     //? Finally, filter out follow view notifications.
-    if (filters.isApplied && !filters.showView) {
-      aggregate = aggregate.where((notif) => notif.messageType != NotificationMessageType.view);
+    if (!filters.showView) {
+      shown.remove(NotificationMessageType.view);
     }
+
+    //? Update the aggregate using only what is in shown.
+    aggregate = aggregate.where((e) => shown.contains(e.messageType));
 
     // This is fine.
     return aggregate.toList();

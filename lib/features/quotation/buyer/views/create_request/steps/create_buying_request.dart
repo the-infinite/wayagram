@@ -5,17 +5,18 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
-import 'package:wayagram/shared/features/location/vm/default.dart';
+import 'package:wayagram/shared/features/location/vm/waya_location_repository.dart';
 
 class CreateBuyingRequest extends ConsumerStatefulWidget {
   final Function gotoNextTab;
   final Function gotoPreviousTab;
-  const CreateBuyingRequest({super.key, required this.gotoNextTab, required this.gotoPreviousTab});
+  const CreateBuyingRequest(
+      {super.key, required this.gotoNextTab, required this.gotoPreviousTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CreateBuyingRequestState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CreateBuyingRequestState();
 }
 
 class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
@@ -27,7 +28,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      regionNotifier.setUseAll(true);
+      regionNotifier.setUseAll(false);
       regionNotifier.getStates();
     });
     super.initState();
@@ -90,17 +91,21 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.productName,
                           hintText: 'Enter Product Name',
-                          borderColor: formState.hasError && viewModel.productName.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.productName.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Product Name',
                         ),
-                        if (formState.hasError && viewModel.productName.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.productName.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -128,17 +133,21 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.brandName,
                           hintText: 'Enter Brand Name',
-                          borderColor: formState.hasError && viewModel.brandName.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.brandName.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Brand Name (Optional)',
                         ),
-                        if (formState.hasError && viewModel.brandName.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.brandName.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -168,16 +177,20 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                           hintText: 'Select Product Category',
                           items: notifier.restructuredCategory(),
                           value: viewModel.productCategory,
-                          onSelected: (value) => notifier.update(value.first, "productCategory"),
+                          onSelected: (value) =>
+                              notifier.update(value.first, "productCategory"),
                         ),
 
                         //? Error section.
-                        if (formState.hasError && viewModel.productCategory.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.productCategory.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -206,16 +219,20 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                           hintText: 'Select Product Condition',
                           items: notifier.restructuredCondition(),
                           value: viewModel.productCondition,
-                          onSelected: (value) => notifier.update(value.first, "productCondition"),
+                          onSelected: (value) =>
+                              notifier.update(value.first, "productCondition"),
                         ),
 
                         //? Error
-                        if (formState.hasError && viewModel.productCondition.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.productCondition.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -245,17 +262,21 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                           controller: viewModel.productDescription,
                           hintText:
                               'Write a Brief Product Description Include size, type, color, and additional specifications',
-                          borderColor: formState.hasError && viewModel.productDescription.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.productDescription.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Product Description',
                         ),
-                        if (formState.hasError && viewModel.productDescription.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.productDescription.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -282,17 +303,21 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                           keyboardType: TextInputType.number,
                           controller: viewModel.quantity,
                           hintText: 'Specify the number of items needed',
-                          borderColor: formState.hasError && viewModel.quantity.text.isEmpty
+                          borderColor: formState.hasError &&
+                                  viewModel.quantity.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Quantity',
                         ),
-                        if (formState.hasError && viewModel.quantity.text.isEmpty)
+                        if (formState.hasError &&
+                            viewModel.quantity.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -329,18 +354,23 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                                 value: viewModel.stateOfPurchase,
                                 onSelected: (value) async {
                                   if (value.isEmpty) return;
-                                  notifier.update(value.first, "stateOfPurchase");
-                                  regionNotifier.getLGAs(value.first.value, regionsData.countries.first.isoCode);
+                                  notifier.update(
+                                      value.first, "stateOfPurchase");
+                                  regionNotifier.getLGAs(value.first.value,
+                                      regionsData.countries.first.isoCode);
                                 },
                               ),
 
                               //? Error view.
-                              if (formState.hasError && viewModel.stateOfPurchase.isEmpty)
+                              if (formState.hasError &&
+                                  viewModel.stateOfPurchase.isEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -370,7 +400,9 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                                 items: regionsData.areaItems,
                                 value: viewModel.lga,
                                 onSelected: (value) {
-                                  if (value.isNotEmpty) notifier.update(value.first, "lga");
+                                  if (value.isNotEmpty) {
+                                    notifier.update(value.first, "lga");
+                                  }
                                 },
                               ),
 
@@ -380,7 +412,9 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -395,17 +429,17 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 const Gap(10),
 
                 //? For distance ranges.
-                Text(
-                  "Distance Range",
-                  style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.sp,
-                  ),
-                ),
+                // Text(
+                //   "Distance Range",
+                //   style: TextStyle().wayaCopyWith(
+                //     color: wayaTheme.colorScheme.black,
+                //     fontWeight: FontWeight.w500,
+                //     fontSize: 14.sp,
+                //   ),
+                // ),
 
                 // Some space.
-                const Gap(10),
+                // const Gap(10),
 
                 //? Our range controls.
                 // RangeSlider(
@@ -539,7 +573,8 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   children: [
                     Switch(
                         value: viewModel.vendorSeeBuyRequest,
-                        onChanged: (value) => notifier.updateVendorSeeBuyRequest(value)),
+                        onChanged: (value) =>
+                            notifier.updateVendorSeeBuyRequest(value)),
                     const Gap(10),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -577,7 +612,8 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   text: 'Go Back',
                   color: wayaTheme.colorScheme.transparent,
                   textColor: wayaTheme.colorScheme.customBlack,
-                  border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300),
                   callback: () {
                     widget.gotoPreviousTab();
                   },

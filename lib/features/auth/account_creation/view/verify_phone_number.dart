@@ -29,6 +29,7 @@ class VerifyPhoneNumber extends ConsumerWidget {
     //final credentialProvider = ref.watch(credentialInputProvider);
     String personalPhone =
         ref.watch(personalFirstStepProvider).phoneNumber.text;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,

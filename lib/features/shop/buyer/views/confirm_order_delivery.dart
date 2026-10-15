@@ -9,6 +9,7 @@ import 'package:wayagram/features/auth/transaction_pin/widget/pin_keyboard.dart'
 import 'package:wayagram/features/shop/buyer/vm/confirm_order_delivery_vm.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/widgets/copy_code.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class ConfirmOrderDelivery extends ConsumerStatefulWidget {
   static const route = '/confirm-order-delivery';
@@ -20,6 +21,14 @@ class ConfirmOrderDelivery extends ConsumerStatefulWidget {
 }
 
 class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref.read(walletVmProvider.notifier).getPayoutMethod();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final pin = ref.watch(orderPinProvider);
@@ -47,18 +56,20 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                 Text("Enter 10 digits code to complete the handover",
                     style: WayaTextStyles.hintStyle),
                 const Gap(30),
-                CopyCode(code: arg!.deliveryToken!, title: "Delivery Confirmation Token"),
+                CopyCode(
+                    code: arg!.deliveryToken!,
+                    title: "Delivery Confirmation Token"),
                 const Gap(2),
-               Align(
-                alignment: Alignment.center,
-                child:  PinInputField(
-                  pin: pin,
-                  digits: 10,
-                  margin: 2.5,
-                  ratio: 0.075,
-                  height: 40,
+                Align(
+                  alignment: Alignment.center,
+                  child: PinInputField(
+                    pin: pin,
+                    digits: 10,
+                    margin: 2.5,
+                    ratio: 0.075,
+                    height: 40,
+                  ),
                 ),
-               ),
                 const Gap(25),
                 Align(
                   alignment: Alignment.center,
@@ -70,14 +81,13 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                           color: wayaTheme.colorScheme.primary75,
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: RichText(
-                          text:  TextSpan(children: [
+                          text: TextSpan(children: [
                         TextSpan(
                             text: "Having issue? ",
                             style: WayaTextStyles.bodySmall),
                         TextSpan(
                             text: "Contact Support",
                             style: WayaTextStyles.smallActiveLinkStyle),
-                  
                       ]))),
                 ),
               ],
@@ -89,7 +99,12 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                 SizedBox(
                     child: PinKeyboard(
                         onKeyTap: viewModel.handleKeyPress,
-                        onSubmit: () => viewModel.submitPins(context, arg),
+                        onSubmit: () {
+                          viewModel.submitPins(
+                            context: context,
+                            order: arg,
+                          );
+                        },
                         onBackspace: viewModel.handleBackspace)),
                 const Gap(20),
               ],

@@ -83,11 +83,9 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                 index: index,
               ),
             ),
-              // Some space.
-          Gap(25.h),
+            // Some space.
+            Gap(25.h),
           ],
-
-        
 
           //? Suggestions.
           GroupedWidgetHeader(
@@ -114,12 +112,12 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                 ),
               ),
             ),
-          Gap(20),
+          const Gap(20),
           if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
-          //  - @the-infinite, I removed this PostEmptyState(),
-          // because i think the UI looks better without it, 
-          // you can add it back if you think it will be better to have it
-            SizedBox.shrink() 
+            //  - @the-infinite, I removed this PostEmptyState(),
+            // because i think the UI looks better without it,
+            // you can add it back if you think it will be better to have it
+            SizedBox.shrink()
           else
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

@@ -13,11 +13,12 @@ import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   final ShopRepository _shopRepository;
   final AuthRepository _authRepository;
+  final WayaFileRepository fileRepository;
   final ImagePicker _picker;
   //final WayaSecureDataSource _secureDataSource;
 
@@ -25,8 +26,12 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
   final _logger = getLogger('CreateAdditionalShopVm');
   CreateAdditionalShopVm(
-      this._shopRepository, this._authRepository, this._picker, this.ref)
-      : super(CreateShopState());
+    this._shopRepository,
+    this._authRepository,
+    this._picker,
+    this.ref,
+    this.fileRepository,
+  ) : super(CreateShopState());
 
   Future<void> selectState(Select value) async {
     String finalState = state.state;
@@ -54,8 +59,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
       }
       state = state.copyWith(isLoading: true);
       if (state.image != null) {
-        String? url =
-            await WayaFileRepository.instance.uploadFile(state.image!);
+        String? url = await fileRepository.uploadFile(state.image!);
         state = state.copyWith(logo: url);
       }
       state = state.copyWith(vendorId: ConversationState.self.id);
@@ -157,6 +161,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
 final createAdditionalShopVmProvider = StateNotifierProvider.family<
     CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
-  return CreateAdditionalShopVm(
-      ShopRepository.instance, AuthRepository(), ImagePicker(), ref);
+  final authRepository = ref.watch(authRepositoryProvider);
+  return CreateAdditionalShopVm(ShopRepository.instance, authRepository,
+      ImagePicker(), ref, WayaFileRepository.instance);
 });

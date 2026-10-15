@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 
 part 'default.g.dart';
 
@@ -8,6 +8,7 @@ part 'default.g.dart';
 enum FollowRelationship {
   accepted,
   none,
+  pending,
   rejected,
 }
 
@@ -97,9 +98,9 @@ class FollowStatusModel {
 class UserSettingsDto {
   final bool? showPeopleFollowMe;
   final bool? showPeopleFollowing;
-
   final bool? restrictRequestToPeopleFollow;
 
+  // Construct.
   UserSettingsDto({
     required this.showPeopleFollowMe,
     required this.showPeopleFollowing,

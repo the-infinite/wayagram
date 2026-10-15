@@ -7,10 +7,10 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/data/repository/contest_repo.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
-import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/file/repo/waya_file_repository.dart';
 
 final uuid = Uuid();
 
@@ -80,7 +80,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     ]; */
 
     for (var model in model) {
-      //  debugPrint("Model type ${model.requirementType}");
       if (model.requirementType == "TEXT") {
         fieldList.add(
           DynamicField(
@@ -107,14 +106,9 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
       String mySelectedState, VoidCallback onPressed) async {
     isLoading.value = true;
-    debugPrint("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
       (model) {
         String? image = model.imagePath;
-        debugPrint("Mean1  ${model.imagePath}");
-        debugPrint("Mean1  ${model.title}");
-        debugPrint("Mean2  ${model.textController?.text}");
-        // debugPrint("Mean  sow ${model.textController?.text}");
         /*  if(model.type== FieldType.image ){
             image = await WayaFileRepository.instance.uploadFile(
       File(image!),
@@ -127,8 +121,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
         };
       },
     ).toList();
-    debugPrint("Mean $detailsList");
-    List<Map<String, dynamic>> detailsListRight = [];
     var mapNew = {};
     for (var oldMap in detailsList) {
       if (oldMap["type"] == FieldType.image) {
@@ -141,8 +133,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
         // detailsListRight.add({oldMap["title"]: oldMap["data"]});
       }
     }
-
-    debugPrint("Mean 1 $detailsListRight");
 
     var map = {
       "userId": _localDataSource.getUserId().toString(),
@@ -157,11 +147,11 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       "state": mySelectedState,
       "applicationData": mapNew
     };
-    debugPrint(map.toString());
     final response = await _contestRepository.registerContest(map);
     isLoading.value = false;
 
     if (response.success) {
+      if (!context.mounted) return;
       WayaUtils.showModalSheetUgt(
         context,
         child: SuccessfulModal(
@@ -169,7 +159,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
             subtitle:
                 "Your application has been sent for review. You will be notified once the review is complete. Once notified,Please go to Applied Contest Section under 'My Contest' to view your application status, and create a profile.",
             showCopyLink: false,
-            buttonText: null,
+            buttonText: "Go back to Contest",
             onShareTap: () async {},
             onTap: (_, __) {
               // WayaNav.removeUntilNamed("/ugt-home");
@@ -204,7 +194,6 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   void updateText(String id, String text) {
     state = state.map((field) {
       if (field.id == id && field.type == FieldType.text) {
-        debugPrint("Mean jjj ");
         return field.copyWith(imagePath: text);
       }
       return field;
@@ -223,9 +212,10 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
 
 // Provider for the StateNotifier
 final registerFormProvider =
-    StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>(
-  (ref) => RegisterFormNotifier(ContestRepo(), WayaLocalDataSource()),
-);
+    StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>((ref) {
+  final contestRepo = ref.watch(contestRepositoryProvider);
+  return RegisterFormNotifier(contestRepo, WayaLocalDataSource());
+});
 
 enum FieldType { text, image }
 

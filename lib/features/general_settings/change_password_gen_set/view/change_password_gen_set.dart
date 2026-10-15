@@ -95,7 +95,8 @@ class _ChangePasswordGenSettingsState
                       hintText: 'Enter your new password',
                       label: 'New Password',
                       isPassword: true,
-                        helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
+                      helperText:
+                          "Password must be 8 or more character and contain at least 1 number and 1 special character",
                     ),
                   ),
                   if (formState.hasError && !isNewPasswordFocused)
@@ -149,7 +150,7 @@ class _ChangePasswordGenSettingsState
                 ],
               );
             }),
-            Gap(10),
+            const Gap(10),
             WayaButton(
               text: 'Confirm Change',
               color: wayaTheme.colorScheme.primary500,
@@ -174,6 +175,9 @@ class _ChangePasswordGenSettingsState
 
   @override
   void dispose() {
+    oldPassword.dispose();
+    newPassword.dispose();
+    confirmPassword.dispose();
     super.dispose();
   }
 }

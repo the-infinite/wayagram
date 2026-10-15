@@ -1,21 +1,22 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
-import 'package:wayagram/features/event/data/model/payout_response_model.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/event/data/model/payout/payout.dart';
 import 'package:wayagram/features/event/data/model/transaction_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:csv/csv.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:wayagram/features/wallet/transactions/view/payout_history.dart';
 
 class EventDashboard extends ConsumerStatefulWidget {
   static const route = "/event-dashboard";
@@ -32,7 +33,6 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final transResponse = await ref
           .read(eventVmProvider.notifier)
@@ -66,19 +66,20 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     if (payouts.isEmpty) {
       return Container(
         color: wayaTheme.colorScheme.white,
-        width: context.width,
-        height: context.height,
+        width: width,
+        height: height,
         child: Center(
           child: CircularProgressIndicator(),
         ),
       );
     }
 
-    // TODO: implement build
     return WayaScaffold(
       title: "Event Dashboard",
       body: Column(
@@ -86,10 +87,26 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Gap(10.h),
-          Text(
-            payouts[0].eventPayouts.title,
-            style: wayaTheme.textTheme.headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w600, fontSize: 18.sp),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                payouts[0].eventPayouts.title,
+                style: wayaTheme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.w600, fontSize: 18.sp),
+              ),
+              WayaButton(
+                height: 30,
+                callback: () {
+                  WayaNav.toNamed(PayoutHistory.route, arguments: {
+                    "referenceId": widget.id,
+                    "Module": 'CONTEST'
+                  });
+                },
+                text: 'Request Payout',
+                textStyle: wayaTheme.textTheme.descriptionStyle,
+              )
+            ],
           ),
           Gap(10.h),
           GridView(
@@ -121,7 +138,7 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
                 title: "Commission",
               ),
               InventoryWidget(
-                metrics: payouts[0].status.capitalizeFirst ?? '',
+                metrics: payouts[0].status.capitalizeFirst,
                 color: const Color.fromARGB(255, 236, 242, 213),
                 title: "Payout Status",
               ),
@@ -163,6 +180,7 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
   }
 
   Widget _buildTransactionList(ThemeData theme) {
+    final width = MediaQuery.of(context).size.width;
     if (transactions.isEmpty) {
       return Center(
         child: Padding(
@@ -170,7 +188,7 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
           child: Text(
             "No transactions yet",
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ),
@@ -181,7 +199,7 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
       scrollDirection: Axis.horizontal,
       child: Container(
         constraints: BoxConstraints(
-          minWidth: context.width,
+          minWidth: width,
         ),
         child: DataTable(
           columnSpacing: 15.w,
@@ -273,15 +291,15 @@ class _EventDashboardState extends ConsumerState<EventDashboard> {
 
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final fileName = 'transactions_$timestamp.csv';
-      final result = await Share.shareXFiles(
-        [
+      final result = await SharePlus.instance.share(ShareParams(
+        text:
+            'Attached is the transactions export for ${payouts[0].eventPayouts.title}',
+        subject: 'Event Transactions Export',
+        files: [
           XFile.fromData(Uint8List.fromList(csvData.codeUnits),
               name: fileName, mimeType: 'text/csv')
         ],
-        subject: 'Event Transactions Export',
-        text:
-            'Attached is the transactions export for ${payouts[0].eventPayouts.title}',
-      );
+      ));
 
       if (result.status == ShareResultStatus.success) {
         WayaSnackBar.showToast("Transactions exported successfully");

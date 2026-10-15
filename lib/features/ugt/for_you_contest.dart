@@ -63,7 +63,7 @@ class ForYouContest extends ConsumerStatefulWidget {
   const ForYouContest({super.key});
 
   @override
-  _ForYouContestState createState() => _ForYouContestState();
+  ConsumerState<ForYouContest> createState() => _ForYouContestState();
 }
 
 class _ForYouContestState extends ConsumerState<ForYouContest> {
@@ -77,7 +77,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
   void initState() {
     super.initState();
 
-    debugPrint("user ${ConversationState.self.accountType}");
     // Scroll listener for pagination
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.addListener(_scrollListener);
@@ -95,7 +94,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         // 👇 Scrolled to the top
         if (!isAtTop) {
           setState(() => isAtTop = true);
-          debugPrint("Scrolled to the top!");
         }
       } else {
         if (isAtTop) {
@@ -106,13 +104,11 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
       if (currentOffset < _previousScrollOffset) {
         // ✅ Scrolling Up (Show Widget)
         if (!isScrollingUp) {
-          debugPrint("Scrolling Up - Show Widget");
           setState(() => isScrollingUp = true);
         }
       } else if (currentOffset > _previousScrollOffset) {
         // ✅ Scrolling Down (Hide Widget)
         if (isScrollingUp) {
-          debugPrint("Scrolling Down - Hide Widget");
           setState(() => isScrollingUp = false);
         }
       }
@@ -122,7 +118,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
     if (currentOffset > _previousScrollOffset &&
         _scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent - 150) {
-      // debugPrint("fetching .....${_scrollController.position.pixels}");
       ref.read(postProvider.notifier).fetchContestForYou(false);
     }
     _previousScrollOffset = currentOffset;
@@ -147,7 +142,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // const Gap(10),
           if (isAtTop)
             Column(
               children: [
@@ -179,11 +173,9 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                           context: context,
                                           onTap: () {
                                             WayaNav.goBack();
-                                            if (e.text == "All States") {
-                                              postNotifier.updateFilter(null);
-                                            } else {
-                                              postNotifier.updateFilter(e.text);
-                                            }
+
+                                            postNotifier.updateFilter(e.text);
+
                                             /*   dashboardNotifier.fetchTotalEarnings(
                                             model?.id ?? "", e.text.toLowerCase()); */
 
@@ -211,8 +203,10 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                             selectPresentTap(e);
                                           },
                                           asset: WayaAssets.icons.mComments.svg(
-                                            color: wayaTheme
-                                                .colorScheme.customBlack,
+                                            colorFilter: ColorFilter.mode(
+                                              wayaTheme.colorScheme.customBlack,
+                                              BlendMode.srcIn,
+                                            ),
                                             height: 20,
                                           ),
                                           text: e.text,
@@ -243,11 +237,12 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       WayaAssets.icons.actionFilter.svg(
-                                        color:
-                                            wayaTheme.colorScheme.greyColor400,
-                                        //  color: wayaTheme.colorScheme.primary600,
+                                        colorFilter: ColorFilter.mode(
+                                          wayaTheme.colorScheme.greyColor400,
+                                          BlendMode.srcIn,
+                                        ),
                                       ),
-                                      Gap(5),
+                                      const Gap(5),
                                       Text(
                                         'Filter By',
                                         style: wayaTheme.textTheme.labelSmall
@@ -257,11 +252,12 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                      Gap(5),
+                                      const Gap(5),
                                       WayaAssets.icons.downArrow.svg(
-                                        color:
-                                            wayaTheme.colorScheme.greyColor400,
-                                        //color: wayaTheme.colorScheme.primary600,
+                                        colorFilter: ColorFilter.mode(
+                                          wayaTheme.colorScheme.greyColor400,
+                                          BlendMode.srcIn,
+                                        ),
                                       )
                                     ],
                                   ),
@@ -316,7 +312,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                 },
               ),
             ),
-          Gap(50)
+          const Gap(50)
         ],
       ),
     );
@@ -360,8 +356,6 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // asset,
-          //const Gap(4),
           Text(
             text,
             style: WayaTextStyles.bodyMedium.copyWith(color: color),

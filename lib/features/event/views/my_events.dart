@@ -28,17 +28,20 @@ class MyEvents extends ConsumerStatefulWidget {
 class _MyEventState extends ConsumerState<MyEvents> {
   late TextEditingController searchController;
 
+  void _onSearchChanged() {
+    setState(() {}); // Rebuild when search text changes
+  }
+
   @override
   void initState() {
     searchController = TextEditingController();
-    searchController.addListener(() {
-      setState(() {});
-    });
+    searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
   @override
-void dispose() {
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
     searchController.dispose();
     super.dispose();
   }
@@ -79,7 +82,8 @@ void dispose() {
     );
   }
 
-  Column _buildTrailing({required BuildContext context, required EventState state}) {
+  Column _buildTrailing(
+      {required BuildContext context, required EventState state}) {
     final wayaTheme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,13 +100,16 @@ void dispose() {
               children: [
                 SvgPicture.asset(
                   WayaAssets.icons.addEventIcon.path,
-                  colorFilter: ColorFilter.mode(wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(
+                      wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
                 ),
                 const Gap(6),
                 Text(
                   "Create an Event",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w500),
+                      color: wayaTheme.colorScheme.customPrimary,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500),
                 )
               ],
             ),
@@ -126,7 +133,7 @@ class EventEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.all(30),
+      padding: const EdgeInsets.all(30),
       child: EmptyState(
           hasButton: true,
           onTap: () {
@@ -135,7 +142,8 @@ class EventEmptyState extends StatelessWidget {
           buttontext: 'Create an Event',
           buttonTrailingIcon: SvgPicture.asset(
             WayaAssets.icons.addEventIcon.path,
-            colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            colorFilter:
+                ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
           ),
           assetImage: Image.asset(
             WayaAssets.images.emptyEvent.path,

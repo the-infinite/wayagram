@@ -51,9 +51,11 @@ class _ChatSettingsPageState extends State<ChatSettingsPage> {
             //? Number one, for dark mode.
             PrivacyWidget(
               title: "Dark Mode",
-              value: "Use darker colors in the chats for easier visibility in darker environments",
+              value:
+                  "Use darker colors in the chats for easier visibility in darker environments",
               showSwitch: true,
-              onSwitchChanged: (value) => ChatSettingsNotifier.instance.setDarkMode(value),
+              onSwitchChanged: (value) =>
+                  ChatSettingsNotifier.instance.setDarkMode(value),
               switchValue: darkModeNotifier,
             ),
 
@@ -63,11 +65,13 @@ class _ChatSettingsPageState extends State<ChatSettingsPage> {
             //? Number two, for the font size.
             WayaScaleSetting(
               title: "Font Size",
-              description: "Change the scale of the text on all messages inside WayaGram",
+              description:
+                  "Change the scale of the text on all messages inside WayaGram",
               min: 0.75,
               max: 1.25,
               value: ChatSettingsNotifier.instance.textScale,
-              onValueChanged: (value) => ChatSettingsNotifier.instance.setTextScale(value),
+              onValueChanged: (value) =>
+                  ChatSettingsNotifier.instance.setTextScale(value),
               getLabel: (value) => switch (value) {
                 0.750 => "Very Small",
                 0.875 => "Small",

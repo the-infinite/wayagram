@@ -1,4 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'account_creation_vm.g.dart';
 
 class AccountCreationState {
   String accountType = "";
@@ -6,7 +8,8 @@ class AccountCreationState {
   AccountCreationState({this.accountType = ''});
 }
 
-class AccountCreationVm extends Notifier<AccountCreationState> {
+@riverpod
+class AccountCreation extends _$AccountCreation {
   @override
   AccountCreationState build() {
     return AccountCreationState();
@@ -16,9 +19,3 @@ class AccountCreationVm extends Notifier<AccountCreationState> {
     state = AccountCreationState(accountType: type);
   }
 }
-
-// Add provider
-final accountCreationProvider =
-    NotifierProvider<AccountCreationVm, AccountCreationState>(() {
-  return AccountCreationVm();
-});

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -54,11 +53,14 @@ class _AccountSecurityState extends ConsumerState<AccountSecurity> {
   Widget build(BuildContext context) {
     final state = ref.watch(kycVmProvider);
     final theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     if (user == null) {
       return Container(
         color: theme.colorScheme.white,
-        width: context.width,
-        height: context.height,
+        width: width,
+        height: height,
         child: Center(
           child: CircularProgressIndicator(),
         ),

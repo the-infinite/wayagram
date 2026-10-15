@@ -39,6 +39,12 @@ class WayaObservableScrollController {
     /// Set the flag to false.
     hasScrolled = false;
   }
+
+  void dispose() {
+    _scrollView = null;
+    paginatedListView = null;
+    hasScrolled = false;
+  }
 }
 
 class WayaObservableScrollView extends StatefulWidget {
@@ -92,12 +98,29 @@ class WayaObservableScrollView extends StatefulWidget {
   });
 
   @override
-  State<WayaObservableScrollView> createState() => _WayaObservableScrollViewState();
+  State<WayaObservableScrollView> createState() =>
+      _WayaObservableScrollViewState();
 }
 
 class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
   final _scrollController = ScrollController();
   final _loadingController = ValueNotifier(false);
+
+  void _onScrollChanged() {
+    final target =
+        _scrollController.position.maxScrollExtent - widget.scrollNotice;
+    final current = _scrollController.offset;
+
+    //? Stop if this is at the end.
+    if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) {
+      return;
+    }
+
+    //? If we should scroll.
+    if (current >= target) {
+      _getPage();
+    }
+  }
 
   @override
   void initState() {
@@ -114,21 +137,7 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
         if (!widget.shouldFetch) return;
 
         //? Add a listener to the scroll controller, if we are allowed to keep listening.
-        _scrollController.addListener(
-          () {
-            final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
-            final current = _scrollController.offset;
-
-            //? Stop if this is at the end.
-            if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) return;
-
-            //? If we should scroll.
-            if (current >= target) {
-              debugPrint("observable-scroll> Fetching because (T: $target, X: $current)");
-              _getPage();
-            }
-          },
-        );
+        _scrollController.addListener(_onScrollChanged);
       },
     );
 
@@ -159,6 +168,7 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScrollChanged);
     _scrollController.dispose();
     _loadingController.dispose();
     super.dispose();

@@ -19,7 +19,8 @@ class ManageLeaderboardContest extends StatefulHookConsumerWidget {
   const ManageLeaderboardContest({super.key});
 
   @override
-  ConsumerState<ManageLeaderboardContest> createState() => _ManageStateContestState();
+  ConsumerState<ManageLeaderboardContest> createState() =>
+      _ManageStateContestState();
 }
 
 class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
@@ -45,37 +46,6 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Overview", style: WayaTextStyles.bodyExtraMedium),
-                /*   GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    //  margin: EdgeInsets.only(right: 20.w),
-                    padding: REdgeInsets.symmetric(
-                        vertical: 8.dg, horizontal: 12.dg),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: wayaTheme.colorScheme.primary600,
-                        width: 1.5,
-                      ),
-                      color: wayaTheme.colorScheme.white,
-                      borderRadius: BorderRadius.circular(5.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Filter',
-                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                            color: wayaTheme.colorScheme.primary600,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Gap(5),
-                        WayaAssets.icons.actionFilter.svg(
-                          color: wayaTheme.colorScheme.primary600,
-                        )
-                      ],
-                    ),
-                  ),
-                ), */
               ],
             ),
             const Gap(20),
@@ -114,7 +84,10 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
                   final post = viewModel.myContestList[index];
                   return GestureDetector(
                     onTap: () {},
-                    child: UgtLeaderboardCard(model: model!, position: index + 1, contestantData: post),
+                    child: UgtLeaderboardCard(
+                        model: model!,
+                        position: index + 1,
+                        contestantData: post),
                   );
                 },
               ),
@@ -126,7 +99,8 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String title, String value, Widget widget) {
+  Widget _buildStatCard(
+      BuildContext context, String title, String value, Widget widget) {
     final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
@@ -144,12 +118,15 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title, textAlign: TextAlign.start, style: WayaTextStyles.hintStyleBold),
+                Text(title,
+                    textAlign: TextAlign.start,
+                    style: WayaTextStyles.hintStyleBold),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
                     decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.primary500, // Background color
+                      color:
+                          wayaTheme.colorScheme.primary500, // Background color
                       shape: BoxShape.circle, // Makes the container circular
                       border: Border.all(
                         color: Colors.white, // Optional: Border color
@@ -159,7 +136,7 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
                     child: widget)
               ],
             ),
-            Gap(10),
+            const Gap(10),
             Text(value, style: WayaTextStyles.headlineMedium),
           ],
         ),

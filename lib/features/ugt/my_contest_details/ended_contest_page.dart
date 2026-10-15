@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
@@ -29,17 +30,18 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
     var selectedContest = ref.watch(selectedContestProvider.notifier).state;
 
     final notifier = ref.read(votersContestNotifier.notifier);
-    final data = Get.arguments;
+
+    final data =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
     useEffect(() {
-      debugPrint("id card ${widget.id}");
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref
             .read(postProvider.notifier)
-            .fetchSingleContest(contestId: data["id"] ?? "", ref: ref);
+            .fetchSingleContest(contestId: data?["id"] ?? "", ref: ref);
         ref
             .read(votersContestNotifier.notifier)
-            .getContestantProfileVoteDetails(data["id"] ?? "");
+            .getContestantProfileVoteDetails(data?["id"] ?? "");
       });
       return null;
     }, []);
@@ -77,6 +79,16 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
               // padding: EdgeInsets.all(10),
               child: Column(
                 children: [
+                  if (notifier.getLoggedInUserId() == model?.profileId)
+                    WayaButton(
+                      callback: () {
+                        WayaNav.toNamed('/contest-mydashboard-profile-page');
+                      },
+                      color: wayaTheme.colorScheme.primary50,
+                      text: "View Contest Dashboard",
+                      textColor: wayaTheme.colorScheme.customPrimary,
+                    ),
+                  const Gap(10),
                   if (viewModel.isLoading == true)
                     Center(child: CircularProgressIndicator()),
                   ListView.builder(
@@ -101,9 +113,9 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
                     child: _buildStateItem(
                         context, "Obubra Inengite", "View application"),
                   ),
-                  Gap(20),
+                  const Gap(20),
                   _buildStateItem(context, "Oluchi Obiano", "View application"),
-                  Gap(20),
+                  const Gap(20),
                   _buildStateItem(context, "Sadiya Wakili", "View application"), */
                 ],
               ),
@@ -115,43 +127,6 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
       ),
     );
   }
-
-//   Widget _buildStateItem(BuildContext context, MyContestContestantModel? post) {
-//     final wayaTheme = Theme.of(context);
-//     return Column(
-//       children: [
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Row(
-//               children: [
-//                 WayaImage(
-//                   imageUrl: post?.profilePhoto ?? "",
-//                   height: 45,
-//                   width: 45,
-//                   fit: BoxFit.cover,
-//                   radius: BorderRadius.circular(45),
-//                 ),
-//                 Gap(10),
-//                 Text(post?.contestApplicant?.fullName ?? "",
-//                     style: WayaTextStyles.bodyBold),
-//               ],
-//             ),
-//             Row(
-//               children: [
-//                 Text(post?.votes.toString() ?? "0",
-//                     style: WayaTextStyles.hintStyleBold),
-//                 Gap(10),
-//                 //   Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-//                 Gap(10)
-//               ],
-//             ),
-//           ],
-//         ),
-//         Gap(10)
-//       ],
-//     );
-//   }
 }
 
 Color getColor(bool isText, String text) {

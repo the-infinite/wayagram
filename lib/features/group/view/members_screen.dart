@@ -22,7 +22,8 @@ class MembersScreen extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MembersScreenState();
 }
 
-class _MembersScreenState extends ConsumerState<MembersScreen> with SingleTickerProviderStateMixin {
+class _MembersScreenState extends ConsumerState<MembersScreen>
+    with SingleTickerProviderStateMixin {
   late final groupProvider = singleGroupProvider("group-${widget.id}");
   late final notifier = ref.read(groupProvider.notifier);
 
@@ -46,7 +47,10 @@ class _MembersScreenState extends ConsumerState<MembersScreen> with SingleTicker
       title: 'Members',
       appBarTrailing: Row(
         spacing: 12,
-        children: [WayaAssets.icons.genSet.search.svg(fit: BoxFit.none), Gap(8)],
+        children: [
+          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          const Gap(8)
+        ],
       ),
       body: viewModel.allGroupMemberDocs?.isEmpty ?? true
           ? MemberEmptyState()
@@ -79,7 +83,8 @@ class MemberEmptyState extends StatelessWidget {
             buttontext: '',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

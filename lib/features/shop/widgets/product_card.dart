@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
@@ -35,7 +36,6 @@ class ProductCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final String image = product.images.isEmpty ? "" : product.images[0];
-    debugPrint("${product.discountPercentage} ${product.name} ${product.discountPercentage.toString() == "0"}");
 
     return GestureDetector(
       onTap: () {
@@ -93,7 +93,7 @@ class ProductCard extends ConsumerWidget {
                 ],
               )),
           SizedBox(height: 3),
-          Text(product.name.capitalizeFirst!,
+          Text(product.name.capitalizeFirst,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: wayaTheme.textTheme.bodyXtraMedium),
@@ -129,7 +129,7 @@ class ProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   Text(
                     WayaHelpers.formatPrice(
-                        double.parse(product.price).toInt()),
+                        double.parse(product.price ?? '').toInt()),
                     style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -145,7 +145,7 @@ class ProductCard extends ConsumerWidget {
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage)
                   : WayaHelpers.formatPrice(
-                      double.parse(product.price).toInt()),
+                      double.parse(product.price ?? '').toInt()),
               style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -159,7 +159,7 @@ class ProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   WayaButton(
                     callback: () async {
-                      int intPrice = double.parse(product.price).toInt();
+                      int intPrice = double.parse(product.price ?? '').toInt();
                       int price = product.discountPercentage > 0
                           ? (intPrice -
                                   (intPrice * product.discountPercentage / 100))
@@ -231,7 +231,7 @@ class SellerProductCard extends ConsumerWidget {
             radius: BorderRadius.circular(8),
             color: wayaTheme.colorScheme.transparent,
           ),
-             if (product.discountPercentage == 0)
+          if (product.discountPercentage == 0)
             SizedBox(
               height: 20,
             ),
@@ -267,7 +267,7 @@ class SellerProductCard extends ConsumerWidget {
                 ],
               )),
           SizedBox(height: 3),
-          Text(product.name.capitalizeFirst!,
+          Text(product.name.capitalizeFirst,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: wayaTheme.textTheme.bodyXtraMedium),
@@ -303,7 +303,7 @@ class SellerProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   Text(
                     WayaHelpers.formatPrice(
-                        double.parse(product.price).toInt()),
+                        double.parse(product.price ?? '').toInt()),
                     style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -319,7 +319,7 @@ class SellerProductCard extends ConsumerWidget {
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage.toInt())
                   : WayaHelpers.formatPrice(
-                      double.parse(product.price).toInt()),
+                      double.parse(product.price ?? '').toInt()),
               style: TextStyle().wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -332,16 +332,38 @@ class SellerProductCard extends ConsumerWidget {
                 children: [
                   SizedBox(height: 3),
                   WayaButton(
-                    callback: () {
-                      WayaNav.toNamed(AddProduct.route,
-                          arguments: UpdateProductArg(
-                              uniqueKey: Uuid().v4(), product: product));
+                    callback: () async {
+                      if (product.vendorId == ConversationState.self.id) {
+                        WayaNav.toNamed(AddProduct.route,
+                            arguments: UpdateProductArg(
+                                uniqueKey: Uuid().v4(), product: product));
+                      } else {
+                        int intPrice =
+                            double.parse(product.price ?? '').toInt();
+                        int price = product.discountPercentage > 0
+                            ? (intPrice -
+                                    (intPrice *
+                                        product.discountPercentage /
+                                        100))
+                                .toInt()
+                            : intPrice;
+                        ref.read(cartVmProvider.notifier).addToCart(
+                            count: 1,
+                            productId: product.id,
+                            productImage: image,
+                            productName: product.name,
+                            price: price,
+                            shopId: product.shopId);
+                        WayaSnackBar.showToast("Item added to cart");
+                      }
                     },
                     height: 38,
                     radius: 6,
                     color: wayaTheme.colorScheme.primary50,
                     centerWidget: Text(
-                      'Manage Product',
+                      product.vendorId == ConversationState.self.id
+                          ? 'Manage Product'
+                          : 'Add To Cart',
                       style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                           color: wayaTheme.colorScheme.customPrimary,
                           fontSize: 14.sp),

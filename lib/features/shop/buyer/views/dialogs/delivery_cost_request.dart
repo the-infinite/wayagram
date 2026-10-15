@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_product.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
@@ -34,10 +34,10 @@ class DeliveryCostRequest extends ConsumerWidget {
     final state = ref.watch(cartVmProvider);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16,horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.horizontal(left: Radius.circular(16), right: Radius.circular(16)),
-
+          borderRadius: BorderRadius.horizontal(
+              left: Radius.circular(16), right: Radius.circular(16)),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -45,11 +45,9 @@ class DeliveryCostRequest extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                "Delivery Cost Request",
-                textAlign: TextAlign.start,
-                style: wayaTheme.textTheme.headlineMedium
-              ),
+              Text("Delivery Cost Request",
+                  textAlign: TextAlign.start,
+                  style: wayaTheme.textTheme.headlineMedium),
               const Gap(12),
               Text(
                 "Add delivery address this to order so the seller can review and send the delivery cost for it.",
@@ -73,7 +71,7 @@ class DeliveryCostRequest extends ConsumerWidget {
                     ),
                     const Gap(6),
                     Text(
-                      shopName.capitalizeFirst!,
+                      shopName.capitalizeFirst,
                       style: wayaTheme.textTheme.labelMedium,
                     )
                   ],
@@ -96,14 +94,14 @@ class DeliveryCostRequest extends ConsumerWidget {
                       thickness: 1,
                     ),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Text(
                     "Enter Delivery Details",
                     style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor600,
                     ),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Expanded(
                     child: Divider(
                       color: wayaTheme.colorScheme.greyColor200,
@@ -138,8 +136,7 @@ class DeliveryCostRequest extends ConsumerWidget {
               const Gap(10),
               WayaButton(
                   callback: () {
-                     WayaNav.goBack();
-             
+                    WayaNav.goBack();
                   },
                   textColor: wayaTheme.colorScheme.greyColor500,
                   color: wayaTheme.colorScheme.transparent,

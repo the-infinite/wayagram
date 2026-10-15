@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/widget/block_dialog.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
+import 'package:wayagram/shared/features/user/resource/user_resource.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class BlockedCard extends StatelessWidget {
@@ -16,9 +16,9 @@ class BlockedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
 
-      //? future to get the user details before populating the UI
+    //? future to get the user details before populating the UI
     return WayaFutureSubscriber(
       future: UserResource.getUserDetails(user.userId),
       suspense: (context) => const SizedBox(),
@@ -82,7 +82,7 @@ class BlockedCard extends StatelessWidget {
                       size: 20.0,
                     ),
                     onPressed: () {
-                     //? show the block dialog to confirm unblocking the user
+                      //? show the block dialog to confirm unblocking the user
                       WayaUtils.showModalSheetUgt(
                         context,
                         child: BlockDialog(

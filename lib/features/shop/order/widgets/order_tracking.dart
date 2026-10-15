@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -52,7 +51,8 @@ class _OrderTrackingState extends State<OrderTracking> {
     super.initState();
 
     setState(() {
-      currentStatusList = widget.currentStatuses?.map((s) => s.status).toList() ?? [];
+      currentStatusList =
+          widget.currentStatuses?.map((s) => s.status).toList() ?? [];
     });
     _updateOrderStatusList();
   }
@@ -66,24 +66,27 @@ class _OrderTrackingState extends State<OrderTracking> {
   }
 
   void _updateOrderStatusList() {
-    final List<String> expectedStatuses = widget.type == 'Pickup' ? pickupStatus : deliveryStatus;
+    final List<String> expectedStatuses =
+        widget.type == 'Pickup' ? pickupStatus : deliveryStatus;
 
     // final List<String> currentStatusList =
     //     widget.currentStatuses?.map((s) => s.status.toLowerCase()).toList() ??
     //         [];
-    debugPrint(expectedStatuses.toString());
-    debugPrint(currentStatusList.toString());
-    int lastActiveIndex = expectedStatuses.lastIndexWhere((status) => currentStatusList.contains(status));
+    int lastActiveIndex = expectedStatuses
+        .lastIndexWhere((status) => currentStatusList.contains(status));
 
     setState(() {
       orderStatusList = expectedStatuses.map((s) {
         final int statusIndex = expectedStatuses.indexOf(s);
         final bool isActive = statusIndex <= lastActiveIndex;
-        final CartOrderStatus? cartStatus =
-            widget.currentStatuses?.firstWhereOrNull((c) => c.status.toLowerCase() == s);
-        final DateTime? updatedAt = cartStatus != null ? DateTime.tryParse(cartStatus.updatedAt) : null;
-        final String formattedDate = updatedAt != null ? formatter.format(updatedAt) : '';
-        final String formattedTime = updatedAt != null ? DateFormat('h:mm a').format(updatedAt) : '';
+        final CartOrderStatus? cartStatus = widget.currentStatuses
+            ?.where((c) => c.status.toLowerCase() == s).firstOrNull;
+        final DateTime? updatedAt =
+            cartStatus != null ? DateTime.tryParse(cartStatus.updatedAt) : null;
+        final String formattedDate =
+            updatedAt != null ? formatter.format(updatedAt) : '';
+        final String formattedTime =
+            updatedAt != null ? DateFormat('h:mm a').format(updatedAt) : '';
 
         return OrderStatus(
           description: getStatusDescription(s),
@@ -161,6 +164,7 @@ class StepWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,10 +173,11 @@ class StepWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            StepIndicator(status: orderStatus.status, showStraightLine: isNotLast),
+            StepIndicator(
+                status: orderStatus.status, showStraightLine: isNotLast),
             const Gap(12),
             SizedBox(
-              width: context.width * 0.6,
+              width: width * 0.6,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,7 +239,9 @@ class StepIndicator extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(
               width: 1,
-              color: !status ? wayaTheme.colorScheme.greyColor300 : wayaTheme.colorScheme.customPrimary,
+              color: !status
+                  ? wayaTheme.colorScheme.greyColor300
+                  : wayaTheme.colorScheme.customPrimary,
             ),
           ),
           child: Center(
@@ -269,7 +276,9 @@ class StraightLineVertical extends StatelessWidget {
       child: Container(
         width: 1,
         height: 60,
-        color: status ? Theme.of(context).colorScheme.customPrimary : Theme.of(context).colorScheme.greyColor300,
+        color: status
+            ? Theme.of(context).colorScheme.customPrimary
+            : Theme.of(context).colorScheme.greyColor300,
       ),
     );
   }

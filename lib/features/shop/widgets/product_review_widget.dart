@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/string_extension.dart';
 import 'package:wayagram/features/shop/seller/data/model/review_repsonse_model.dart';
 
 class ProductReviewWidget extends StatelessWidget {

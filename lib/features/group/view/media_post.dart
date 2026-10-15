@@ -6,8 +6,9 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/group/widget/group_empty_state.dart';
+import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/widget/muted_post.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
-
 
 class MediaPost extends ConsumerStatefulWidget {
   final GroupProviderFamily provider;
@@ -22,8 +23,11 @@ class MediaPost extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _MediaPostState();
 }
 
-class _MediaPostState extends ConsumerState<MediaPost> with SingleTickerProviderStateMixin {
+class _MediaPostState extends ConsumerState<MediaPost>
+    with SingleTickerProviderStateMixin {
   int like = 0;
+
+  GroupModel? group;
 
   @override
   void initState() {
@@ -61,14 +65,16 @@ class _MediaPostState extends ConsumerState<MediaPost> with SingleTickerProvider
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.getAllPost?.length ?? 0,
-            itemBuilder: (_, index) => WayaPostWidget(
+            itemBuilder: (_, index) => group?.mutedAt == null ? WayaPostWidget(
               data: viewModel.getAllPost![index],
               index: index,
-            ),
+            ): WayaMutedPostWidget(
+              data: viewModel.getAllPost![index],
+              index: index,
+            )
           ),
         const Gap(25),
       ],
     );
   }
 }
-

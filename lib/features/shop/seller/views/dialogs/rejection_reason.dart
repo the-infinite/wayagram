@@ -13,11 +13,8 @@ import 'package:wayagram/features/shop/order/vm/order_vm.dart';
 class RejectionReason extends ConsumerWidget {
   final String orderId;
   final String shopId;
-  const RejectionReason({
-    super.key,
-    required this.orderId,
-    required this.shopId
-  });
+  const RejectionReason(
+      {super.key, required this.orderId, required this.shopId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,14 +51,14 @@ class RejectionReason extends ConsumerWidget {
                       thickness: 1,
                     ),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Text(
                     "Enter Rejection Reason",
                     style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor600,
                     ),
                   ),
-                  Gap(10),
+                  const Gap(10),
                   Expanded(
                     child: Divider(
                       color: wayaTheme.colorScheme.greyColor200,

@@ -62,8 +62,6 @@ class ShopVm extends StateNotifier<ShopState> {
       required String review,
       required BuildContext context}) async {
     try {
-      debugPrint(productId);
-
       state = state.copyWith(isReviewing: true);
       final response = await _repository.createRating(
           raterId: raterId,
@@ -74,7 +72,6 @@ class ShopVm extends StateNotifier<ShopState> {
 
       bool isSuccess = false;
       if (response.success) {
-        debugPrint(response.data.toString());
         isSuccess = true;
       } else {
         isSuccess = false;
@@ -97,7 +94,6 @@ class ShopVm extends StateNotifier<ShopState> {
         ReviewRepsonseModel responseModel =
             ReviewRepsonseModel.fromJson(response.data);
         state = state.copyWith(reviews: responseModel.data);
-        debugPrint(response.data.toString());
       }
     } catch (error) {
       debugPrint(error.toString());
@@ -113,8 +109,6 @@ class ShopVm extends StateNotifier<ShopState> {
 
         state = state.copyWith(
             topSelling: data.map((c) => Product.fromJson(c)).toList());
-
-      
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -195,7 +189,6 @@ class ShopVm extends StateNotifier<ShopState> {
         ShopMetricsResponse shopMetricResponse =
             ShopMetricsResponse.fromJson(response.data);
         state = state.copyWith(sellerMetrics: shopMetricResponse.data);
-        debugPrint(response.data.toString());
       }
     } catch (error) {
       debugPrint(error.toString());
@@ -227,15 +220,12 @@ class ShopVm extends StateNotifier<ShopState> {
       {bool notifyFriendsAboutProductPosts = false,
       bool makeProductPostsPublic = false}) async {
     try {
-      // debugPrint(productId);
-
       //  state = state.copyWith(isReviewing: true);
       final response = await _repository.updateShopSettings(
           notifyFriendsAboutProductPosts, makeProductPostsPublic);
 
       bool isSuccess = false;
       if (response.success) {
-        debugPrint(response.data.toString());
         isSuccess = true;
       } else {
         isSuccess = false;
@@ -256,8 +246,6 @@ class ShopVm extends StateNotifier<ShopState> {
     bool? displayQuotationRequestsInFeed,
   }) async {
     try {
-      // debugPrint(productId);
-
       //  state = state.copyWith(isReviewing: true);
       final response = await _repository.updateQuotationSettings(
           receiveQuotationRequests!,
@@ -266,7 +254,6 @@ class ShopVm extends StateNotifier<ShopState> {
 
       bool isSuccess = false;
       if (response.success) {
-        debugPrint(response.data.toString());
         isSuccess = true;
       } else {
         isSuccess = false;
@@ -288,8 +275,6 @@ class ShopVm extends StateNotifier<ShopState> {
       if (response.success) {
         ShopSettingsModel shopMetricResponse =
             ShopSettingsModel.fromJson(response.data);
-
-        debugPrint(response.data.toString());
         return shopMetricResponse;
       }
     } catch (error) {
@@ -297,27 +282,6 @@ class ShopVm extends StateNotifier<ShopState> {
     }
     return null;
   }
-
-  // List<Product> get filteredWayagramDealProducts {
-  //   if (state.products.isEmpty) return [];
-  //   return state.products.where((product) {
-  //     // category filter
-  //     if (state.selectedCategoryId != null &&
-  //         state.selectedCategoryId!.isNotEmpty &&
-  //         !state.selectedCategoryId!.contains(product.categoryId)) {
-  //       return false;
-  //     }
-
-  //     // search filter
-  //     if (state.searchQuery.isNotEmpty) {
-  //       final query = state.searchQuery.toLowerCase();
-  //       return product.name.toLowerCase().contains(query) ||
-  //           product.description.toLowerCase().contains(query);
-  //     }
-
-  //     return product.wayagramDeal == true;
-  //   }).toList();
-  // }
 }
 
 final shopVmProvider = StateNotifierProvider<ShopVm, ShopState>((ref) {

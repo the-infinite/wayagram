@@ -48,7 +48,7 @@ class FavoriteItem extends BaseModel<FavoriteItem> {
   final String? discountTypeId;
   final String name;
   final String description;
-  final String price;
+  final String? price;
   final String discountedPrice;
   final int stockQuantity;
   final List<String> images;
@@ -145,7 +145,7 @@ class FavoriteItem extends BaseModel<FavoriteItem> {
     );
   }
 
-    @override
+  @override
   Map<String, dynamic> toMap() => {
         'id': id,
         'categoryId': categoryId,
@@ -158,6 +158,5 @@ class FavoriteItem extends BaseModel<FavoriteItem> {
         'options': options,
         'pickupAddress': pickupAddress,
         'discountPercentage': discountPercentage,
-       
       };
 }

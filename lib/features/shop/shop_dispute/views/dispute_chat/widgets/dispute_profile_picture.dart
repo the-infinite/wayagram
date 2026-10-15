@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/theme.dart';
 
-
 class DisputeProfilePicture extends StatelessWidget {
   final String? picture;
   final double radius;
@@ -30,7 +29,8 @@ class DisputeProfilePicture extends StatelessWidget {
             child: CircleAvatar(
               radius: radius,
               backgroundColor: WayaColors.greyColor200,
-              backgroundImage: picture != null ? CachedNetworkImageProvider(picture!) : null,
+              backgroundImage:
+                  picture != null ? CachedNetworkImageProvider(picture!) : null,
               child: picture == null
                   ? Icon(
                       Icons.person,

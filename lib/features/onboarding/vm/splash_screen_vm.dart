@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -9,15 +9,18 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/shop/resource/shop_resource.dart';
 
-class SplashScreenVm extends StateNotifier<void> {
-  final ProfileRepo _profileRepo;
-  final AuthRepository repo;
-  final WayaSecureDataSource _secureDataSource;
-  final SuccessfulSetupVm _setupVm;
+part 'splash_screen_vm.g.dart';
 
-  SplashScreenVm(this.repo, this._profileRepo, this._secureDataSource, this._setupVm) : super(null);
+@riverpod
+class SplashScreen extends _$SplashScreen {
+  final WayaSecureDataSource _secureDataSource = WayaSecureDataSource();
+
+  @override
+  void build() {
+    // No initial state needed for splash screen logic
+  }
 
   Future<void> getUserData() async {
     try {
@@ -36,13 +39,18 @@ class SplashScreenVm extends StateNotifier<void> {
 
       //>  get a new auth token
       await getNewToken();
-      final response = await _profileRepo.getUserDataRepo(userId: userId);
+      final response = await ref
+          .watch(profileRepositoryProvider)
+          .getUserDataRepo(userId: userId);
 
       //? This was fine so move forward.
       if (response.success) {
-        UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
+        UserAccountModel userAccountModel =
+            UserAccountModel.fromJson(response.data);
 
-        _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+        final setupVm = ref.read(successfulSetupProvider.notifier);
+        setupVm.state =
+            setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
         //? Now, it is time to save this one.
         ConversationState.setSelf(
@@ -76,18 +84,24 @@ class SplashScreenVm extends StateNotifier<void> {
           );
         }
 
-        if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != 'PERSONAL') {
-          final bizResponse = await _profileRepo.getBusinessDataRepo(userId: userId);
+        if (userAccountModel.data != null &&
+            userAccountModel.data!.userdata!.user!.role != 'PERSONAL') {
+          final bizResponse = await ref
+              .watch(profileRepositoryProvider)
+              .getBusinessDataRepo(userId: userId);
 
           if (bizResponse.success) {
-            BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
+            BusinessAccountData bizData =
+                BusinessAccountData.fromJson(bizResponse.data["data"]);
             //? Update the business configuration when there is a need to.
             ConversationState.setSelf(
-              ConversationState.self.copyWith(accountType: UserAccountType.business),
+              ConversationState.self
+                  .copyWith(accountType: UserAccountType.business),
               null,
               BusinessDetailsModel.fromJson(bizResponse.data["data"]),
             );
-            _setupVm.state = _setupVm.state.copyWith(business: bizData);
+            final setupVm = ref.read(successfulSetupProvider.notifier);
+            setupVm.state = setupVm.state.copyWith(business: bizData);
             await _secureDataSource.saveBusinessId(bizData.businessId);
           }
         }
@@ -107,7 +121,8 @@ class SplashScreenVm extends StateNotifier<void> {
   Future<void> getNewToken() async {
     try {
       final refreshToken = await _secureDataSource.getRefreshToken();
-      final response = await repo.refreshToken(token: refreshToken!);
+      final authRepository = ref.read(authRepositoryProvider);
+      final response = await authRepository.refreshToken(token: refreshToken!);
       if (response.success) {
         final newToken = response.data['data']['token']['token'];
         final newRefreshToken = response.data['data']['token']['refreshToken'];
@@ -129,8 +144,3 @@ class SplashScreenVm extends StateNotifier<void> {
     await getUserData();
   }
 }
-
-final splashScreenVmProvider = StateNotifierProvider((ref) {
-  final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
-  return SplashScreenVm(AuthRepository(), ProfileRepo(), WayaSecureDataSource(), successfulSetupVm);
-});

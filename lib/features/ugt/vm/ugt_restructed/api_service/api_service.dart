@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = "https://services.staging.wayagram.ng/school-contest/api/v1";
+  final String baseUrl =
+      "https://services.staging.wayagram.ng/school-contest/api/v1";
   Future<List> fetchUser() async {
     final response = await http.get(Uri.parse('$baseUrl/category/getAll'));
     if (response.statusCode == 200) {
@@ -20,9 +21,6 @@ class ApiService {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({"name": name, "job": job}),
     );
-    if (kDebugMode) {
-      debugPrint("response => ${response.body}");
-    }
     if (response.statusCode == 201) {
       return CreateUser.fromJson(jsonDecode(response.body));
     } else {

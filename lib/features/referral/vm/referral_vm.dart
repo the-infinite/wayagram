@@ -11,9 +11,7 @@ import '../../../core/data/local_data_source.dart';
 class ReferralVm extends StateNotifier<ReferralState> {
   final ReferralRepo _referralRepository;
 
-  ReferralVm(this._referralRepository)
-      : super(ReferralState());
-
+  ReferralVm(this._referralRepository) : super(ReferralState());
 
   Future<void> getReferralCount() async {
     final response =
@@ -46,14 +44,13 @@ class ReferralVm extends StateNotifier<ReferralState> {
     }
     var list = state.referralListCopy.where((dispute) {
       String name = dispute.referredUser?.displayName ?? "";
-    //  String phone = dispute.referredUser?.displayName ?? "";
+      //  String phone = dispute.referredUser?.displayName ?? "";
       //String email = dispute.referredUser?.displayName ?? "";
       if (name.toLowerCase().contains(filterString)) {
         return true;
       }
       return false;
     }).toList();
-   // print("object $list");
     state = state.copyWith(referralList: [...list]);
   }
 
@@ -117,7 +114,8 @@ class ReferralVm extends StateNotifier<ReferralState> {
 
 final referralVm = StateNotifierProvider<ReferralVm, ReferralState>(
   (ref) {
-    return ReferralVm(ReferralRepo());
+    final repo = ref.watch(referralRepositoryProvider);
+    return ReferralVm(repo);
   },
 );
 

@@ -10,8 +10,8 @@ import 'package:wayagram/core/components/waya_select_field.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/chat/dto/default.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/chat/dto/create_conversation_dto.dart';
+import 'package:wayagram/features/chat/vm/conversation_vm.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
@@ -46,13 +46,12 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
 
     useEffect(() {
       viewModelNotifier.getChatSettings().then((value) {
-        debugPrint("value: $value");
         if (value != null) {
-          debugPrint("value: $value");
           readReceipt.value = value.canSeeReadReceipt ?? false;
           lastSeen.value = value.canSeeLastSeen ?? false;
           showOnline.value = value.canSeeOnlineStatus ?? false;
-          whoCanContactme.value = value.everyoneCanContactMe == true ? "Everyone" : "Friends";
+          whoCanContactme.value =
+              value.everyoneCanContactMe == true ? "Everyone" : "Friends";
           //videoCallPermission.value = value.ci ?? false;
         }
       });
@@ -91,7 +90,8 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                         canSeeReadReceipt: readReceipt.value,
                         canSeeProfilePicture: true,
                         canSeeProfileDescription: true,
-                        everyoneCanContactMe: whoCanContactme.value == "Everyone"),
+                        everyoneCanContactMe:
+                            whoCanContactme.value == "Everyone"),
                   );
                 }, false);
               },
@@ -102,7 +102,7 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                   whoCanContactMe: whoCanContactme,
                   switchValue: lastSeen),
             ),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
                 title: "Read Receipts",
                 value: "Allow others to see when you've read their messages.",
@@ -115,12 +115,13 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                         canSeeReadReceipt: value,
                         canSeeProfilePicture: true,
                         canSeeProfileDescription: true,
-                        everyoneCanContactMe: whoCanContactme.value == "Everyone"),
+                        everyoneCanContactMe:
+                            whoCanContactme.value == "Everyone"),
                   );
                 },
                 showSwitch: true,
                 switchValue: readReceipt),
-            Gap(10),
+            const Gap(10),
             PrivacyWidget(
               title: "Last Seen Visibility",
               value: "Control who can view your last active status.",
@@ -134,12 +135,13 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
                       canSeeReadReceipt: readReceipt.value,
                       canSeeProfilePicture: true,
                       canSeeProfileDescription: true,
-                      everyoneCanContactMe: whoCanContactme.value == "Everyone"),
+                      everyoneCanContactMe:
+                          whoCanContactme.value == "Everyone"),
                 );
               },
               switchValue: lastSeen,
             ),
-            Gap(10),
+            const Gap(10),
             GestureDetector(
               onTap: () {
                 //? go to blocked user page

@@ -11,12 +11,11 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      ref.read(splashScreenVmProvider.notifier).runStartUpLogic();
+      ref.read(splashScreenProvider.notifier).runStartUpLogic();
     });
 
     super.initState();
@@ -41,4 +40,3 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     );
   }
 }
-

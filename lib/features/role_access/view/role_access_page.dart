@@ -32,7 +32,6 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
     final viewModel = ref.read(roleAccessVm);
 
     //  ConversationState.self.id
-    // debugPrint("UGT HOME ${ConversationState.self.role?.name}");
 
     //? init necessary data with useEffect
     useEffect(() {
@@ -85,12 +84,14 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
                             } else if (e.text == "Contest") {
                               rollAccessNotifier.setTypeRole(TypeRole.contest);
                               rollAccessNotifier.getAllContestMembers(true);
-                              print("I am fetching for Contest");
                             }
                             selectPresentTap(e);
                           },
                           asset: WayaAssets.icons.mComments.svg(
-                            color: wayaTheme.colorScheme.customBlack,
+                            colorFilter: ColorFilter.mode(
+                              wayaTheme.colorScheme.customBlack,
+                              BlendMode.srcIn,
+                            ),
                             height: 20,
                           ),
                           text: e.text,
@@ -101,7 +102,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
                 ];
               },
               child: Icon(Icons.more_vert)),
-          Gap(15)
+          const Gap(15)
         ],
       ),
       body: Column(
@@ -128,7 +129,6 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
           //? the tabs themselves
           if (_selectedIndex == 0) ManageUserTab(),
           if (_selectedIndex == 1) RoleManagementTab(),
-          // const Gap(50),
         ],
       ),
       /*   floatingActionButton:
@@ -167,8 +167,6 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // asset,
-          //const Gap(4),
           Text(
             text,
             style: WayaTextStyles.bodyMedium.copyWith(color: color),

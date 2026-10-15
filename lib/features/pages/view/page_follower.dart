@@ -18,10 +18,12 @@ class PageFollowerScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PageFollowerScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PageFollowerScreenState();
 }
 
-class _PageFollowerScreenState extends ConsumerState<PageFollowerScreen> with SingleTickerProviderStateMixin {
+class _PageFollowerScreenState extends ConsumerState<PageFollowerScreen>
+    with SingleTickerProviderStateMixin {
   late final pageProvider = singlePageProvider("page-${widget.id}");
   late final notifier = ref.read(pageProvider.notifier);
 
@@ -45,20 +47,16 @@ class _PageFollowerScreenState extends ConsumerState<PageFollowerScreen> with Si
       isLoading: viewModel.isLoading,
       isScrollable: false,
       title: 'Followers',
-      // appBarTrailing: Row(
-      //   spacing: 12,
-      //   children: [WayaAssets.icons.genSet.search.svg(fit: BoxFit.none), Gap(8)],
-      // ),
       body: viewModel.pageFollowerDocs?.isEmpty ?? true
           ? FollowerEmptyState()
           : ListView.builder(
-        shrinkWrap: true,
-        padding: EdgeInsets.only(top: 15),
-        itemCount: viewModel.pageFollowerDocs?.length ?? 0,
-        itemBuilder: (_, index) => FollowUserWidget(
-          userId: viewModel.pageFollowerDocs![index].user?.id ?? '',
-        ),
-      ),
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: 15),
+              itemCount: viewModel.pageFollowerDocs?.length ?? 0,
+              itemBuilder: (_, index) => FollowUserWidget(
+                userId: viewModel.pageFollowerDocs![index].user?.id ?? '',
+              ),
+            ),
     );
   }
 }
@@ -80,7 +78,8 @@ class FollowerEmptyState extends StatelessWidget {
             buttontext: '',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

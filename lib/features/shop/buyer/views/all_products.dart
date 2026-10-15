@@ -76,6 +76,14 @@ class _AllProductsState extends ConsumerState<AllProducts> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    timer.cancel();
+    pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(shopVmProvider);
 

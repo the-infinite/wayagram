@@ -1,0 +1,4 @@
+enum MyFullMediaType {
+  image,
+  video,
+}

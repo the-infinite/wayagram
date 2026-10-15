@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:wayagram/config/environment.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 
 class DioInterceptor extends Interceptor {
@@ -9,21 +10,43 @@ class DioInterceptor extends Interceptor {
   DioInterceptor(this.dio, this.secureDataSource, this.baseURL);
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    final token = await secureDataSource.getToken();
-    debugPrint('token: $token');
-    options.headers['Authorization'] = 'Bearer $token';
-    debugPrint('options: $options');
+  Future<void> onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
+    if (options.path.contains(AppEnvironment.apiBaseUrl)) {
+      final token = await secureDataSource.getToken();
+      options.headers['Authorization'] = 'Bearer $token';
+    }
+
     return handler.next(options);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    final errData = err.response?.data['data'];
+    // Safely access response data
+    dynamic responseData = err.response?.data;
+    dynamic errData;
+    int? statusCodeFromData;
+
+    // Handle different response data types
+    if (responseData is Map<String, dynamic>) {
+      errData = responseData['data'];
+      statusCodeFromData = responseData['statusCode'];
+    } else if (responseData != null) {
+      if (kDebugMode) {
+        debugPrint(
+            'DioInterceptor: Unexpected response data type: ${responseData.runtimeType}');
+      }
+      errData = null;
+      statusCodeFromData = null;
+    } else {
+      // Handle null response data gracefully
+      errData = null;
+      statusCodeFromData = null;
+    }
 
     if (err.response?.statusCode == 401 ||
-        err.response?.data['statusCode'] == 401 ||
-        (err.response?.data['statusCode'] == 400 &&
+        statusCodeFromData == 401 ||
+        (statusCodeFromData == 400 &&
             errData != null &&
             errData is String &&
             errData.contains("token"))) {
@@ -31,12 +54,45 @@ class DioInterceptor extends Interceptor {
       if (refreshToken != null) {
         try {
           final response = await dio.post(
-              'https://services.staging.wayagram.ng/wayagram-profile/api/v2/client/auth/refresh-token',
+              '${AppEnvironment.apiBaseUrl}wayagram-profile/api/v2/client/auth/refresh-token',
               data: {"token": refreshToken});
 
-          final newtoken = response.data['data']['token']['token'];
-          final newrefreshToken = response.data['data']['token']['refreshToken'];
-          debugPrint(" new token $newtoken");
+          // Safely access nested response data
+          dynamic tokenResponseData = response.data;
+          if (tokenResponseData is! Map<String, dynamic>) {
+            if (kDebugMode) {
+              debugPrint('DioInterceptor: Invalid token response data type');
+            }
+            return handler.next(err);
+          }
+
+          final tokenData = tokenResponseData['data'];
+          if (tokenData is! Map<String, dynamic>) {
+            if (kDebugMode) {
+              debugPrint('DioInterceptor: Invalid token data structure');
+            }
+            return handler.next(err);
+          }
+
+          final tokenInfo = tokenData['token'];
+          if (tokenInfo is! Map<String, dynamic>) {
+            if (kDebugMode) {
+              debugPrint('DioInterceptor: Invalid token info structure');
+            }
+            return handler.next(err);
+          }
+
+          final newtoken = tokenInfo['token']?.toString();
+          final newrefreshToken = tokenInfo['refreshToken']?.toString();
+
+          if (newtoken == null || newrefreshToken == null) {
+            if (kDebugMode) {
+              debugPrint(
+                  'DioInterceptor: Missing token information in response');
+            }
+            return handler.next(err);
+          }
+
           secureDataSource.saveToken(newtoken);
           secureDataSource.saveRefreshToken(newrefreshToken);
 
@@ -54,7 +110,9 @@ class DioInterceptor extends Interceptor {
 
           return handler.resolve(retryResponse);
         } catch (e) {
-          debugPrint(" new token $e");
+          if (kDebugMode) {
+            debugPrint("DioInterceptor: Token refresh failed - $e");
+          }
           return handler.next(err);
         }
       }

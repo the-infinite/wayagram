@@ -9,24 +9,29 @@ import 'package:wayagram/shared/features/quotation/widget/buy_request.dart';
 class SharedUserBuyRequestsWidget extends ConsumerStatefulWidget {
   /// Should this show all the entries that have been gathered?
   final bool isExpanded;
+  final TextEditingController controller;
 
   // Construct.
   const SharedUserBuyRequestsWidget({
     super.key,
     required this.isExpanded,
+    required this.controller,
   });
 
   @override
-  ConsumerState<SharedUserBuyRequestsWidget> createState() => _SharedUserBuyRequestsWidgetState();
+  ConsumerState<SharedUserBuyRequestsWidget> createState() =>
+      _SharedUserBuyRequestsWidgetState();
 }
 
-class _SharedUserBuyRequestsWidgetState extends ConsumerState<SharedUserBuyRequestsWidget> {
+class _SharedUserBuyRequestsWidgetState
+    extends ConsumerState<SharedUserBuyRequestsWidget> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //? Only fetch the requests if they have not been loaded yet.
+      notifier.reset();
       notifier.getBuyRequestsIfNotLoaded();
     });
     super.initState();
@@ -48,22 +53,31 @@ class _SharedUserBuyRequestsWidgetState extends ConsumerState<SharedUserBuyReque
     final state = ref.watch(userQuotationsProvider);
 
     //? Return our component
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        //? First, the entries themselves.
-        ...List.generate(
-          widget.isExpanded ? state.requests.length : min(state.requests.length, 3),
-          (index) => QuotationBuyRequestWidget(
-            index: index,
-            data: state.requests[index],
-            notifier: notifier,
-          ),
-        ),
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (context, _) {
+        //? Get here.
+        final request = state.filterRequests(widget.controller.text);
 
-        // Next, space.
-        const SizedBox(height: 25),
-      ],
+        //? Return this.
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //? First, the entries themselves.
+            ...List.generate(
+              widget.isExpanded ? request.length : min(request.length, 3),
+              (index) => QuotationBuyRequestWidget(
+                index: index,
+                data: request[index],
+                notifier: notifier,
+              ),
+            ),
+
+            // Next, space.
+            const SizedBox(height: 25),
+          ],
+        );
+      },
     );
   }
 }
@@ -71,36 +85,52 @@ class _SharedUserBuyRequestsWidgetState extends ConsumerState<SharedUserBuyReque
 class SharedOthersBuyRequestsWidget extends ConsumerStatefulWidget {
   /// Should this show all the entries that have been gathered?
   final bool isExpanded;
+  final TextEditingController controller;
 
   // Construct.
   const SharedOthersBuyRequestsWidget({
     super.key,
     required this.isExpanded,
+    required this.controller,
   });
 
   @override
-  ConsumerState<SharedOthersBuyRequestsWidget> createState() => _SharedOthersBuyRequestsWidgetState();
+  ConsumerState<SharedOthersBuyRequestsWidget> createState() =>
+      _SharedOthersBuyRequestsWidgetState();
 }
 
-class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyRequestsWidget> {
+class _SharedOthersBuyRequestsWidgetState
+    extends ConsumerState<SharedOthersBuyRequestsWidget> {
   late final notifier = ref.read(othersQuotationsProvider.notifier);
 
   Timer? _timer;
+
+  void _restartTimer() {
+    //? First, cancel the timer if it exists.
+    _timer?.cancel();
+    _timer = null;
+
+    //? Now reassign the timer.
+
+    _timer ??= Timer.periodic(
+      const Duration(seconds: 7),
+      (timer) async {
+        if (mounted) {
+          await notifier.reloadQuotationsOrder();
+        }
+      },
+    );
+  }
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //? Only fetch the requests if they have not been loaded yet.
+      notifier.reset();
       notifier.getBuyRequestsIfNotLoaded();
 
       //? This is fine.
-      _timer ??= Timer.periodic(
-        const Duration(seconds: 7),
-        (timer) async {
-          debugPrint("Reloading quotations order");
-          await notifier.reloadQuotationsOrder();
-        },
-      );
+      _restartTimer();
     });
     super.initState();
   }
@@ -111,6 +141,7 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
       //? Only fetch the requests if they have not been loaded yet.
       notifier.reset();
       notifier.getBuyRequestsIfNotLoaded();
+      _restartTimer();
     });
     super.reassemble();
   }
@@ -118,6 +149,7 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
   @override
   void dispose() {
     _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 
@@ -127,22 +159,31 @@ class _SharedOthersBuyRequestsWidgetState extends ConsumerState<SharedOthersBuyR
     final state = ref.watch(othersQuotationsProvider);
 
     //? Return our component
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        //? First, the entries themselves.
-        ...List.generate(
-          widget.isExpanded ? state.requests.length : min(state.requests.length, 3),
-          (index) => QuotationBuyRequestWidget(
-            index: index,
-            data: state.requests[index],
-            notifier: notifier,
-          ),
-        ),
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (context, _) {
+        //? Get here.
+        final request = state.filterRequests(widget.controller.text);
 
-        // Next, space.
-        const SizedBox(height: 25),
-      ],
+        //? Return this.
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            //? First, the entries themselves.
+            ...List.generate(
+              widget.isExpanded ? request.length : min(request.length, 3),
+              (index) => QuotationBuyRequestWidget(
+                index: index,
+                data: request[index],
+                notifier: notifier,
+              ),
+            ),
+
+            // Next, space.
+            const SizedBox(height: 25),
+          ],
+        );
+      },
     );
   }
 }

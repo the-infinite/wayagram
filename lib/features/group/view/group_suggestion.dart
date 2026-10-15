@@ -19,10 +19,12 @@ class GroupSuggestion extends ConsumerStatefulWidget {
   const GroupSuggestion({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GroupSuggestionState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _GroupSuggestionState();
 }
 
-class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTickerProviderStateMixin {
+class _GroupSuggestionState extends ConsumerState<GroupSuggestion>
+    with SingleTickerProviderStateMixin {
   PageController pageController = PageController(
     initialPage: 0,
   );
@@ -44,10 +46,20 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
       _loadInitialData();
     });
   }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    pageController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadInitialData() async {
     try {
       await ref
-          .read(createGroupProvider.notifier).getRecommendedGroups(limit: limit, page: page);
+          .read(createGroupProvider.notifier)
+          .getRecommendedGroups(limit: limit, page: page);
       if (mounted) {
         setState(() {
           isFirstLoad = false;
@@ -68,6 +80,7 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
       }
     }
   }
+
   void _scrollListener() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
@@ -81,7 +94,6 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
       isLoadingMore = true;
     });
     try {
-
       page++;
       await ref.read(createGroupProvider.notifier).getRecommendedGroups();
 
@@ -118,13 +130,6 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
   }
 
   @override
-  void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
@@ -152,17 +157,17 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
           // if (viewModel.recommendedGroupDocs!.isEmpty)
           //   GroupEmptyState()
           // else
-            ListView.builder(
-              controller: _scrollController,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: 15),
-              itemCount: viewModel.recommendedGroupDocs?.length ?? 0,
-              itemBuilder: (_, index) => SingleGroupWidget(
-                group: viewModel.recommendedGroupDocs![index],
-                index: index,
-              ),
+          ListView.builder(
+            controller: _scrollController,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: const EdgeInsets.only(top: 15),
+            itemCount: viewModel.recommendedGroupDocs?.length ?? 0,
+            itemBuilder: (_, index) => SingleGroupWidget(
+              group: viewModel.recommendedGroupDocs![index],
+              index: index,
             ),
+          ),
           if (isLoadingMore)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -186,7 +191,7 @@ class GroupEmptyState extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     return Center(
       child: Container(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: EmptyState(
             hasButton: true,
             onTap: () {
@@ -194,7 +199,8 @@ class GroupEmptyState extends StatelessWidget {
             },
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,
